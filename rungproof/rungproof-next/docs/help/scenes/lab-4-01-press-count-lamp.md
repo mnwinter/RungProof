@@ -15,7 +15,6 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
 | `pulse_received` | `BOOL` | **PC** | `False` |
-| `count_at_threshold` | `BOOL` | **PC** | `False` |
 | `threshold_lamp` | `BOOL` | **PLC** | `False` |
 
 ## Operator actions

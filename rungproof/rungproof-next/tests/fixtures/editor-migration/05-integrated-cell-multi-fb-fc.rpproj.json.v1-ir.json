@@ -1,0 +1,1136 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-5-integrated-palletizer",
+  "name": "Palletizing_Cell_Main",
+  "language": "LD",
+  "scanPeriodMs": 20,
+  "variables": [
+    {
+      "name": "carton_at_pick",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "carton_at_pick",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "gantry_home",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "gantry_home",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pallet_position_valid",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "pallet_position_valid",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "vacuum_pick",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "vacuum_pick",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "gantry_cycle",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "gantry_cycle",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "layer_complete",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "layer_complete",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "start_command",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "start_command",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "at_pickup",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "at_pickup",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "at_place",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "at_place",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "carton_attached",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "carton_attached",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pick_complete",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "pick_complete",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "cycle_in_progress",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "cycle_in_progress",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "palletizer_fault",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "palletizer_fault",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "placed_cartons",
+      "type": "DINT",
+      "role": "input",
+      "initial": 0,
+      "binding": "placed_cartons",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "cell_permissive",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pick_permissive",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "sequence_ready",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "cell_active",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "always_scan",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": true,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "layer_count",
+      "type": "DINT",
+      "role": "memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "position_sum",
+      "type": "DINT",
+      "role": "memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pick_timer",
+      "type": "TIMER",
+      "role": "memory",
+      "initial": "00:00:00",
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "cycle_count",
+      "type": "COUNTER",
+      "role": "memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    }
+  ],
+  "watchVariables": [
+    "carton_at_pick",
+    "gantry_home",
+    "pallet_position_valid",
+    "vacuum_pick",
+    "gantry_cycle",
+    "layer_complete",
+    "layer_count",
+    "cycle_count",
+    "cell_active",
+    "position_sum"
+  ],
+  "networks": [
+    {
+      "id": "rung-31",
+      "label": "Permissive block call",
+      "logic": {
+        "id": "branch-32",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-33",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "call": {
+        "id": "rung-31-call",
+        "targetBlock": "block-3"
+      }
+    },
+    {
+      "id": "rung-34",
+      "label": "Pick and place block call",
+      "logic": {
+        "id": "branch-35",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-36",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "call": {
+        "id": "rung-34-call",
+        "targetBlock": "block-4"
+      }
+    },
+    {
+      "id": "rung-37",
+      "label": "Sequence supervisor function call",
+      "logic": {
+        "id": "branch-38",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-39",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "call": {
+        "id": "rung-37-call",
+        "targetBlock": "block-5"
+      }
+    },
+    {
+      "id": "rung-40",
+      "label": "Inspection math function call",
+      "logic": {
+        "id": "branch-41",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-42",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "call": {
+        "id": "rung-40-call",
+        "targetBlock": "block-6"
+      }
+    },
+    {
+      "id": "rung-43",
+      "label": "Count placement and home-return feedback",
+      "logic": {
+        "id": "branch-44",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-45",
+            "kind": "contact",
+            "variable": "pick_complete",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "counter": {
+        "id": "rung-43-counter",
+        "variable": "cycle_count",
+        "preset": 4,
+        "kind": "CountUp"
+      }
+    },
+    {
+      "id": "rung-46",
+      "label": "Layer completion output",
+      "logic": {
+        "id": "branch-47",
+        "kind": "series",
+        "children": [
+          {
+            "id": "compare-48",
+            "kind": "compare",
+            "left": "cycle_count.ACC",
+            "operator": "GreaterOrEqual",
+            "right": "4"
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-46-coil",
+        "variable": "layer_complete",
+        "mode": "assign"
+      }
+    },
+    {
+      "id": "rung-49",
+      "label": "Gantry cycle latch; Stop clears this output",
+      "logic": {
+        "id": "rung-49-parallel",
+        "kind": "parallel",
+        "children": [
+          {
+            "id": "branch-50",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-51",
+                "kind": "contact",
+                "variable": "pick_permissive",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-52",
+                "kind": "contact",
+                "variable": "cell_permissive",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-53",
+                "kind": "contact",
+                "variable": "layer_complete",
+                "contact": "normallyClosed"
+              }
+            ]
+          },
+          {
+            "id": "branch-54",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-55",
+                "kind": "contact",
+                "variable": "gantry_cycle",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-56",
+                "kind": "contact",
+                "variable": "cell_permissive",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-57",
+                "kind": "contact",
+                "variable": "pick_complete",
+                "contact": "normallyClosed"
+              },
+              {
+                "id": "contact-58",
+                "kind": "contact",
+                "variable": "layer_complete",
+                "contact": "normallyClosed"
+              }
+            ]
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-49-coil",
+        "variable": "gantry_cycle",
+        "mode": "assign"
+      }
+    },
+    {
+      "id": "rung-59",
+      "label": "Vacuum pickup dwell",
+      "logic": {
+        "id": "branch-60",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-61",
+            "kind": "contact",
+            "variable": "gantry_cycle",
+            "contact": "normallyOpen"
+          },
+          {
+            "id": "contact-62",
+            "kind": "contact",
+            "variable": "at_pickup",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "timer": {
+        "id": "rung-59-timer",
+        "variable": "pick_timer",
+        "presetMs": 750,
+        "kind": "OnDelay"
+      }
+    },
+    {
+      "id": "rung-63",
+      "label": "Vacuum after dwell; release only at supported place",
+      "logic": {
+        "id": "rung-63-parallel",
+        "kind": "parallel",
+        "children": [
+          {
+            "id": "branch-64",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-65",
+                "kind": "contact",
+                "variable": "pick_timer.Q",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-66",
+                "kind": "contact",
+                "variable": "gantry_cycle",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-67",
+                "kind": "contact",
+                "variable": "at_place",
+                "contact": "normallyClosed"
+              }
+            ]
+          },
+          {
+            "id": "branch-68",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-69",
+                "kind": "contact",
+                "variable": "carton_attached",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-70",
+                "kind": "contact",
+                "variable": "gantry_cycle",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-71",
+                "kind": "contact",
+                "variable": "at_place",
+                "contact": "normallyClosed"
+              }
+            ]
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-63-coil",
+        "variable": "vacuum_pick",
+        "mode": "assign"
+      }
+    },
+    {
+      "id": "rung-72",
+      "label": "Advance layer count",
+      "logic": {
+        "id": "branch-73",
+        "kind": "series",
+        "children": [
+          {
+            "id": "edge-74",
+            "kind": "contact",
+            "variable": "layer_complete",
+            "contact": "normallyOpen",
+            "edge": "rising"
+          }
+        ]
+      },
+      "numericOperation": {
+        "id": "rung-72-numeric",
+        "operation": "Add",
+        "sourceA": "layer_count",
+        "sourceB": "1",
+        "sourceC": "0",
+        "destination": "layer_count"
+      }
+    },
+    {
+      "id": "rung-75",
+      "label": "Cell active status: either commanded actuator",
+      "logic": {
+        "id": "rung-75-parallel",
+        "kind": "parallel",
+        "children": [
+          {
+            "id": "branch-76",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-77",
+                "kind": "contact",
+                "variable": "vacuum_pick",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          {
+            "id": "branch-78",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-79",
+                "kind": "contact",
+                "variable": "gantry_cycle",
+                "contact": "normallyOpen"
+              }
+            ]
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-75-coil",
+        "variable": "cell_active",
+        "mode": "assign"
+      }
+    }
+  ],
+  "entryBlock": "block-1",
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Palletizing_Cell_Main",
+      "networks": [
+        {
+          "id": "rung-31",
+          "label": "Permissive block call",
+          "logic": {
+            "id": "branch-32",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-33",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "call": {
+            "id": "rung-31-call",
+            "targetBlock": "block-3"
+          }
+        },
+        {
+          "id": "rung-34",
+          "label": "Pick and place block call",
+          "logic": {
+            "id": "branch-35",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-36",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "call": {
+            "id": "rung-34-call",
+            "targetBlock": "block-4"
+          }
+        },
+        {
+          "id": "rung-37",
+          "label": "Sequence supervisor function call",
+          "logic": {
+            "id": "branch-38",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-39",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "call": {
+            "id": "rung-37-call",
+            "targetBlock": "block-5"
+          }
+        },
+        {
+          "id": "rung-40",
+          "label": "Inspection math function call",
+          "logic": {
+            "id": "branch-41",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-42",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "call": {
+            "id": "rung-40-call",
+            "targetBlock": "block-6"
+          }
+        },
+        {
+          "id": "rung-43",
+          "label": "Count placement and home-return feedback",
+          "logic": {
+            "id": "branch-44",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-45",
+                "kind": "contact",
+                "variable": "pick_complete",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "counter": {
+            "id": "rung-43-counter",
+            "variable": "cycle_count",
+            "preset": 4,
+            "kind": "CountUp"
+          }
+        },
+        {
+          "id": "rung-46",
+          "label": "Layer completion output",
+          "logic": {
+            "id": "branch-47",
+            "kind": "series",
+            "children": [
+              {
+                "id": "compare-48",
+                "kind": "compare",
+                "left": "cycle_count.ACC",
+                "operator": "GreaterOrEqual",
+                "right": "4"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-46-coil",
+            "variable": "layer_complete",
+            "mode": "assign"
+          }
+        },
+        {
+          "id": "rung-49",
+          "label": "Gantry cycle latch; Stop clears this output",
+          "logic": {
+            "id": "rung-49-parallel",
+            "kind": "parallel",
+            "children": [
+              {
+                "id": "branch-50",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-51",
+                    "kind": "contact",
+                    "variable": "pick_permissive",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-52",
+                    "kind": "contact",
+                    "variable": "cell_permissive",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-53",
+                    "kind": "contact",
+                    "variable": "layer_complete",
+                    "contact": "normallyClosed"
+                  }
+                ]
+              },
+              {
+                "id": "branch-54",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-55",
+                    "kind": "contact",
+                    "variable": "gantry_cycle",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-56",
+                    "kind": "contact",
+                    "variable": "cell_permissive",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-57",
+                    "kind": "contact",
+                    "variable": "pick_complete",
+                    "contact": "normallyClosed"
+                  },
+                  {
+                    "id": "contact-58",
+                    "kind": "contact",
+                    "variable": "layer_complete",
+                    "contact": "normallyClosed"
+                  }
+                ]
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-49-coil",
+            "variable": "gantry_cycle",
+            "mode": "assign"
+          }
+        },
+        {
+          "id": "rung-59",
+          "label": "Vacuum pickup dwell",
+          "logic": {
+            "id": "branch-60",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-61",
+                "kind": "contact",
+                "variable": "gantry_cycle",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-62",
+                "kind": "contact",
+                "variable": "at_pickup",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "timer": {
+            "id": "rung-59-timer",
+            "variable": "pick_timer",
+            "presetMs": 750,
+            "kind": "OnDelay"
+          }
+        },
+        {
+          "id": "rung-63",
+          "label": "Vacuum after dwell; release only at supported place",
+          "logic": {
+            "id": "rung-63-parallel",
+            "kind": "parallel",
+            "children": [
+              {
+                "id": "branch-64",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-65",
+                    "kind": "contact",
+                    "variable": "pick_timer.Q",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-66",
+                    "kind": "contact",
+                    "variable": "gantry_cycle",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-67",
+                    "kind": "contact",
+                    "variable": "at_place",
+                    "contact": "normallyClosed"
+                  }
+                ]
+              },
+              {
+                "id": "branch-68",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-69",
+                    "kind": "contact",
+                    "variable": "carton_attached",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-70",
+                    "kind": "contact",
+                    "variable": "gantry_cycle",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-71",
+                    "kind": "contact",
+                    "variable": "at_place",
+                    "contact": "normallyClosed"
+                  }
+                ]
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-63-coil",
+            "variable": "vacuum_pick",
+            "mode": "assign"
+          }
+        },
+        {
+          "id": "rung-72",
+          "label": "Advance layer count",
+          "logic": {
+            "id": "branch-73",
+            "kind": "series",
+            "children": [
+              {
+                "id": "edge-74",
+                "kind": "contact",
+                "variable": "layer_complete",
+                "contact": "normallyOpen",
+                "edge": "rising"
+              }
+            ]
+          },
+          "numericOperation": {
+            "id": "rung-72-numeric",
+            "operation": "Add",
+            "sourceA": "layer_count",
+            "sourceB": "1",
+            "sourceC": "0",
+            "destination": "layer_count"
+          }
+        },
+        {
+          "id": "rung-75",
+          "label": "Cell active status: either commanded actuator",
+          "logic": {
+            "id": "rung-75-parallel",
+            "kind": "parallel",
+            "children": [
+              {
+                "id": "branch-76",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-77",
+                    "kind": "contact",
+                    "variable": "vacuum_pick",
+                    "contact": "normallyOpen"
+                  }
+                ]
+              },
+              {
+                "id": "branch-78",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-79",
+                    "kind": "contact",
+                    "variable": "gantry_cycle",
+                    "contact": "normallyOpen"
+                  }
+                ]
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-75-coil",
+            "variable": "cell_active",
+            "mode": "assign"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-3",
+      "name": "FB_CellPermissive",
+      "networks": [
+        {
+          "id": "rung-9",
+          "label": "Pallet and plant permissive",
+          "logic": {
+            "id": "branch-10",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-11",
+                "kind": "contact",
+                "variable": "pallet_position_valid",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-12",
+                "kind": "contact",
+                "variable": "palletizer_fault",
+                "contact": "normallyClosed"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-9-coil",
+            "variable": "cell_permissive",
+            "mode": "assign"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-4",
+      "name": "FB_PickAndPlace",
+      "networks": [
+        {
+          "id": "rung-13",
+          "label": "Accept fresh Start at home or resume held carton",
+          "logic": {
+            "id": "rung-13-parallel",
+            "kind": "parallel",
+            "children": [
+              {
+                "id": "branch-14",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "edge-15",
+                    "kind": "contact",
+                    "variable": "start_command",
+                    "contact": "normallyOpen",
+                    "edge": "rising"
+                  },
+                  {
+                    "id": "contact-16",
+                    "kind": "contact",
+                    "variable": "gantry_home",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-17",
+                    "kind": "contact",
+                    "variable": "carton_at_pick",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-18",
+                    "kind": "contact",
+                    "variable": "cell_permissive",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "compare-19",
+                    "kind": "compare",
+                    "left": "cycle_count.ACC",
+                    "operator": "LessThan",
+                    "right": "4"
+                  }
+                ]
+              },
+              {
+                "id": "branch-20",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "edge-21",
+                    "kind": "contact",
+                    "variable": "start_command",
+                    "contact": "normallyOpen",
+                    "edge": "rising"
+                  },
+                  {
+                    "id": "contact-22",
+                    "kind": "contact",
+                    "variable": "cycle_in_progress",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-23",
+                    "kind": "contact",
+                    "variable": "cell_permissive",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "compare-24",
+                    "kind": "compare",
+                    "left": "cycle_count.ACC",
+                    "operator": "LessThan",
+                    "right": "4"
+                  }
+                ]
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-13-coil",
+            "variable": "pick_permissive",
+            "mode": "assign"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-5",
+      "name": "FC_SequenceSupervisor",
+      "networks": [
+        {
+          "id": "rung-25",
+          "label": "Sequence ready",
+          "logic": {
+            "id": "branch-26",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-27",
+                "kind": "contact",
+                "variable": "cell_permissive",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-25-coil",
+            "variable": "sequence_ready",
+            "mode": "assign"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-6",
+      "name": "FC_InspectionMath",
+      "networks": [
+        {
+          "id": "rung-28",
+          "label": "Add layer position",
+          "logic": {
+            "id": "branch-29",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-30",
+                "kind": "contact",
+                "variable": "sequence_ready",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "numericOperation": {
+            "id": "rung-28-numeric",
+            "operation": "Add",
+            "sourceA": "layer_count",
+            "sourceB": "1",
+            "sourceC": "0",
+            "destination": "position_sum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-7",
+      "name": "DB_CellData",
+      "networks": []
+    },
+    {
+      "id": "block-8",
+      "name": "DB_CellStatus",
+      "networks": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ]
+}

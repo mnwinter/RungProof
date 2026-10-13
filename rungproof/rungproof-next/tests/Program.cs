@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using RungProof.Next.VirtualController;
 
 internal static partial class Program
@@ -17,8 +18,28 @@ internal static partial class Program
         throw new DirectoryNotFoundException("RungProof project root was not found above the test output.");
     }
 
-    private static int Main()
+    private static int Main(string[] args)
     {
+        // Stack exhaustion terminates a process rather than throwing a catchable
+        // exception. Keep the adversarial flat CALL chain in its own process.
+        if (args.Contains("--deep-call-probe", StringComparer.Ordinal))
+        {
+            TestDeepCallChain();
+            return 0;
+        }
+        RunEditorCommandTests();
+        RegisterInstructionObservationTests();
+        RegisterCompactObservationRegressionTests();
+        RegisterObservationLifecycleTests();
+        RegisterRecursiveEditorTests();
+        RegisterEditorMigrationTests();
+        RegisterParameterizedCallTests();
+        RegisterParameterizedCallAcceptanceTests();
+        RegisterParameterizedCallContractRegressionTests();
+        RegisterEditorTransactionTests();
+        RegisterCallEditorTests();
+        RegisterInstructionPresentationTests();
+        Test("flat imported CALL chains compile without process stack exhaustion", TestDeepCallChainProcess);
         Test("STRING and ENUM are declared controller types", TestTextTypeSupport);
         Test("scene text initial data is validated before construction", TestSceneTextBoundary);
         Test("malformed enum member JSON returns a diagnostic", TestEnumMalformedJson);
@@ -66,6 +87,10 @@ internal static partial class Program
         Test("editor project save/load preserves invalid work in progress", TestEditableProjectRoundTrip);
         Test("TIA block types and FB interfaces persist", TestBlockTypesAndInterfaces);
         Test("editor project loader rejects unreadable structure", TestEditableProjectMalformed);
+        Test("editor project rejects null elements at every collection boundary", TestProjectNullEntries);
+        Test("scan coordinator rejects nonfinite time without poisoning future scans", TestSessionInvalidTime);
+        Test("scan coordinator bounds batches without dropping pending time", TestSessionBudget);
+        Test("compiler rejects unsupported sub-millisecond scan periods", TestMinimumScanPeriod);
         Test("new project reset clears all prior engineering state", TestNewProjectReset);
         Test("typed tag initial values parse persist and initialize runtime", TestTagInitialValues);
         Test("watch table persists and follows tag lifecycle", TestWatchTablePersistence);
@@ -917,6 +942,82 @@ internal static partial class Program
         var nullTags = LadderEditorProjectJson.Save(editor)
             .Replace("\"tags\": [", "\"tags\": null,\n  \"discardedTags\": [", StringComparison.Ordinal);
         False(LadderEditorProjectJson.Load(nullTags).IsReadable);
+    }
+
+    private static void TestProjectNullEntries()
+    {
+        var original = LadderEditorProjectJson.Save(LadderEditorDocument.CreateConveyorExample());
+        foreach (var key in new[] { "blocks", "tags", "tasks", "rungs", "branches", "contacts", "interface", "watchVariables" })
+        {
+            var root = JsonNode.Parse(original)!;
+            var block = root["blocks"]![0]!;
+            var rung = block["rungs"]![0]!;
+            // v2 uses a recursive root; retain a deliberately malformed legacy
+            // collection too so neither format can hide null collection entries.
+            if (rung["branches"]!.AsArray().Count == 0)
+                rung["branches"]!.AsArray().Add(new JsonObject { ["id"] = "legacy-probe", ["contacts"] = new JsonArray() });
+            var branch = rung["branches"]![0]!;
+            var target = key switch { "rungs" or "interface" => block, "branches" => rung, "contacts" => branch, _ => root };
+            target[key] = new JsonArray((JsonNode?)null);
+            var result = LadderEditorProjectJson.Load(root.ToJsonString());
+            False(result.IsReadable);
+            True(result.Document is null && result.Issues.Count > 0);
+        }
+        var malformedTree = JsonNode.Parse(original)!;
+        malformedTree["blocks"]![0]!["rungs"]![0]!["root"]!["children"] = new JsonArray((JsonNode?)null);
+        False(LadderEditorProjectJson.Load(malformedTree.ToJsonString()).IsReadable);
+        True(LadderEditorProjectJson.Load(original).IsReadable);
+    }
+
+    private static void TestSessionInvalidTime()
+    {
+        var session = new VirtualControllerSession(DemoRuntime());
+        session.Run();
+        foreach (var delta in new[] { double.NaN, double.PositiveInfinity, double.NegativeInfinity })
+        {
+            var rejected = false;
+            try { session.Advance(delta, () => Inputs(), _ => { }, _ => { }); }
+            catch (ArgumentOutOfRangeException) { rejected = true; }
+            True(rejected);
+        }
+        Equal(1, session.Advance(.020, () => Inputs(), _ => { }, _ => { }));
+    }
+
+    private static void TestSessionBudget()
+    {
+        var session = new VirtualControllerSession(DemoRuntime());
+        session.Run();
+        Equal(1000, session.Advance(20.04, () => Inputs(), _ => { }, _ => { }));
+        Equal(2, session.Advance(0, () => Inputs(), _ => { }, _ => { }));
+        Equal(0, session.Advance(0, () => Inputs(), _ => { }, _ => { }));
+        session.Advance(20.04, () => Inputs(), _ => { }, _ => { });
+        session.Stop();
+        var stoppedScan = session.Snapshot.ScanNumber;
+        var stoppedCallbacks = 0;
+        session.SnapshotPublished += _ => stoppedCallbacks++;
+        session.ScanCompleted += _ => stoppedCallbacks++;
+        Equal(0, session.Advance(20.04,
+            () => { stoppedCallbacks++; return Inputs(); },
+            _ => stoppedCallbacks++, _ => stoppedCallbacks++));
+        Equal(0, stoppedCallbacks);
+        Equal(stoppedScan, session.Snapshot.ScanNumber);
+        session.Run();
+        Equal(0, session.Advance(0, () => Inputs(), _ => { }, _ => { }));
+        var rejectedCommits = 0;
+        var rejectedPlantTicks = 0;
+        Equal(0, session.Advance(.020,
+            () => { session.Stop(); return Inputs(); },
+            _ => rejectedCommits++, _ => rejectedPlantTicks++));
+        Equal(0, rejectedCommits);
+        Equal(0, rejectedPlantTicks);
+        Equal(stoppedScan, session.Snapshot.ScanNumber);
+    }
+
+    private static void TestMinimumScanPeriod()
+    {
+        var program = new LadderProgram(1, "period-review", "Period review", "LD", TimeSpan.FromTicks(1), [], []);
+        False(LadderCompiler.Compile(program).IsValid);
+        True(LadderCompiler.Compile(program with { ScanPeriod = TimeSpan.FromMilliseconds(1) }).IsValid);
     }
 
     private static void TestNewProjectReset()
@@ -1819,6 +1920,51 @@ internal static partial class Program
         var main = program.Blocks![0];
         var badCall = main.Networks[0] with { Call = new LadderCall("call-sub", "missing") };
         HasIssue(program with { Blocks = [main with { Networks = [badCall, main.Networks[1]] }, program.Blocks[1]] }, "VC010");
+    }
+
+    private static void TestDeepCallChainProcess()
+    {
+        var start = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!)
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+        };
+        if (Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet")
+            start.ArgumentList.Add(typeof(Program).Assembly.Location);
+        start.ArgumentList.Add("--deep-call-probe");
+        using var child = System.Diagnostics.Process.Start(start)!;
+        var output = child.StandardOutput.ReadToEndAsync();
+        var errors = child.StandardError.ReadToEndAsync();
+        if (!child.WaitForExit(45000))
+        {
+            child.Kill(entireProcessTree: true);
+            throw new Exception("Deep CALL chain exceeded 45-second test budget.");
+        }
+        var stderr = errors.GetAwaiter().GetResult();
+        if (child.ExitCode != 0)
+            throw new Exception($"CALL chain child exited {child.ExitCode}: {stderr[..Math.Min(300, stderr.Length)]}");
+        True(output.GetAwaiter().GetResult().Contains("DEEP_CALL_CHAIN_PASS", StringComparison.Ordinal));
+    }
+
+    private static void TestDeepCallChain()
+    {
+        const int count = 20000;
+        var blocks = Enumerable.Range(0, count).Select(index => new LadderBlock(
+            $"deep-{index}", $"Block {index}", [new LadderNetwork($"network-{index}", "Call chain",
+                Contact($"contact-{index}", "enabled"),
+                Call: index + 1 < count ? new LadderCall($"call-{index}", $"deep-{index + 1}") : null,
+                Return: index + 1 == count ? new LadderReturn($"return-{index}") : null)],
+            index == 0 ? LadderBlockType.OrganizationBlock : LadderBlockType.Function)).ToArray();
+        var program = new LadderProgram(1, "deep", "Deep chain", "LD", TimeSpan.FromMilliseconds(20),
+            [new PlcVariable("enabled", PlcVariableType.Bool, PlcVariableRole.Memory, true)], [], blocks, blocks[0].Id);
+        True(LadderCompiler.Compile(program).IsValid);
+        // A back edge at the far end must still be rejected, without recursion.
+        var last = blocks[^1];
+        blocks[^1] = last with { Networks = [new LadderNetwork("back-network", "Back edge",
+            Contact("back-contact", "enabled"), Call: new LadderCall("back-call", blocks[1].Id))] };
+        HasIssue(program, "VC011");
+        Console.WriteLine("DEEP_CALL_CHAIN_PASS");
     }
 
     private static void TestRecursiveCallRejected()
@@ -2974,3 +3120,5 @@ internal static partial class Program
             throw new InvalidOperationException($"Expected {expected}; actual {actual}.");
     }
 }
+
+

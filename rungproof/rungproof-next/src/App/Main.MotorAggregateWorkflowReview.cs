@@ -92,12 +92,17 @@ public partial class Main
         }
         System.IO.File.WriteAllText(ProjectSettings.GlobalizePath("res://.tools/aaa-motor-struct-aggregate-native-qa.rpproj.json"), LadderEditorProjectJson.Save(doc));
         EnableVirtualControllerProgram(doc.BuildProgram());
+        var structMotion = CaptureMotorProgramMotion(check);
         try
         {
             RunActiveController(); _PhysicsProcess(.02);
             check(scene.Points["motor_command.enable"] is false, "motor_struct_aggregate_idle_off");
             scene.SetAggregateSceneInput("motor_feedback", Feedback(true)); _PhysicsProcess(.02);
             check(scene.Points["motor_command.enable"] is true && scene.Points["motor_command.record_ready"] is true && scene.Points["motor_enable"] is false, "motor_struct_aggregate_owns_outputs_without_legacy_commands");
+            structMotion.Step(1, "motor_struct_accepted_QA_scan");
+            structMotion.StopReset("motor_struct_running_QA_program");
+            RunActiveController();
+            scene.SetAggregateSceneInput("motor_feedback", Feedback(true)); _PhysicsProcess(.02);
             check(Convert.ToDouble(scene.Points["motor_feedback.temperature"]) == 42.25, "motor_struct_explicit_fixture_numeric_value_preserved");
             var readout = _sceneCompositionRoot!.GetNode<Node3D>("training_accessory_4").GetNodeOrNull<Label3D>("NumericReadout");
             check(readout?.Text.Contains("42.25", StringComparison.Ordinal) == true, "motor_struct_actual_readout_projects_fixture_value");
@@ -129,6 +134,7 @@ public partial class Main
         }
         System.IO.File.WriteAllText(ProjectSettings.GlobalizePath("res://.tools/aaa-motor-array-aggregate-native-qa.rpproj.json"), LadderEditorProjectJson.Save(doc));
         EnableVirtualControllerProgram(doc.BuildProgram());
+        var arrayMotion = CaptureMotorProgramMotion(check);
         try
         {
             RunActiveController();
@@ -140,7 +146,13 @@ public partial class Main
                     "motor_array_typed_prefix_" + count);
                 check(MotorReviewCommandBits(scene.Points) == new string('1', count) + new string('0', 10 - count),
                     "motor_array_review_effective_typed_prefix_" + count);
+                arrayMotion.Step(count, "motor_array_accepted_QA_prefix_" + count);
             }
+            arrayMotion.StopReset("motor_array_running_QA_program");
+            RunActiveController();
+            foreach (var input in new[] { "group_start_request", "all_motors_ready", "group_alarm_clear" }) ExecuteSelectedControllerAction("toggle-" + input);
+            for (var scan = 0; scan < 250; scan++) _PhysicsProcess(.02);
+            check(Enumerable.Range(0, 10).All(i => scene.Points[$"motor_commands[{i}]"] is true), "motor_array_QA_restart_all_before_alarm_loss");
             ExecuteSelectedControllerAction("toggle-group_alarm_clear"); _PhysicsProcess(.02);
             check(Enumerable.Range(0, 10).All(i => scene.Points[$"motor_commands[{i}]"] is false), "motor_array_typed_alarm_loss");
             var rejected = false;

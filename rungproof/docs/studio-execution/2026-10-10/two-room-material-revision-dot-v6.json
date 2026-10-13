@@ -1,0 +1,33 @@
+{
+  "frames": [
+    {
+      "personallyViewed": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v6\\01-classroom.scene.png",
+      "imageSha256": "595541C270237B2D2D89D37720739102757A7E6A5A6A91988D80125379E7528D",
+      "qualified": true
+    },
+    {
+      "personallyViewed": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v6\\01-classroom.split.png",
+      "imageSha256": "A5BF1668A290CBE0AD235CCD400AAEC8102C67E60AF85AF4CACB9609EAE15BD4",
+      "qualified": true
+    },
+    {
+      "personallyViewed": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v6\\02-dispatch.scene.png",
+      "imageSha256": "22E3509991452C3AF799069D9F08DB416046F93049BDFC142DB6D4886BDCC16F",
+      "qualified": true
+    },
+    {
+      "personallyViewed": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v6\\02-dispatch.split.png",
+      "imageSha256": "876E1B36942C006CDE5B0E4EC45BC834585690138A4D515699D17B1633BA5ACA",
+      "qualified": true
+    }
+  ],
+  "dllSha256": "B931FC3644D10642F623AEE2F82EDE15F286B1C8820CFF9ABD19D92F78A4F6EC",
+  "status": "BOUNDED_VISUAL_REVIEW_WITH_LIMITS",
+  "humanStyleApproved": false,
+  "finalSameBinaryNative": "Pending terminal result at review time",
+  "wholeCatalogApproved": false
+}

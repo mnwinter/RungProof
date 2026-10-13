@@ -66,7 +66,11 @@ public sealed class ExternalPlcRuntimeClient : IGuardedRuntimeClient, IDisposabl
     public event Action? StateChanged;
 
     public ExternalPlcRuntimeClient(string projectRoot) : this(() => CreateChannel(projectRoot)) { }
-    public ExternalPlcRuntimeClient(Func<ProcessBridgeChannel> channelFactory) => _channelFactory = channelFactory;
+    public ExternalPlcRuntimeClient(Func<ProcessBridgeChannel> channelFactory)
+    {
+        RuntimeBuildPolicy.RequireExternalPlc();
+        _channelFactory = channelFactory;
+    }
 
     public void DescribeProfile(string profileId, Action<JsonElement> completed, Action<Exception> failed)
     {

@@ -1083,7 +1083,18 @@ class NativeQtLifecycleTests(unittest.TestCase):
         )
         self.assertEqual(len(window.production_scene_actions), 2)
         self.assertEqual(len(window.review_scene_actions), 4)
-        self.assertEqual(len(window.training_lab_actions), 25)
+        # The training catalog has expanded beyond the original 25 Chapter 2
+        # labs. Prove that every delivered lab is represented exactly once;
+        # the assertions below separately keep all lab actions fail-closed.
+        scene_root = Path(__file__).resolve().parents[1] / "prototype" / "scenes"
+        expected_labs = {
+            json.loads(path.read_text(encoding="utf-8"))["id"]
+            for path in scene_root.iterdir()
+            if path.is_file() and path.suffix.lower() in {".json", ".plcscene"}
+            and path.name.startswith("lab-")
+        }
+        self.assertGreaterEqual(len(expected_labs), 25)
+        self.assertEqual(set(window.training_lab_actions), expected_labs)
         self.assertTrue(
             window.scene_actions["scene-2-conveyor-pusher"].isChecked()
         )

@@ -3,7 +3,7 @@
   "version": 1,
   "id": "lab-10-06-ten-motor-array-startup",
   "name": "Lab 10.6 - Ten-Motor Array Startup",
-  "description": "Ten-motor fixed BOOL ARRAY [0..9] command exercise. Aggregate, independent legacy and group commands combine with OR; keep legacy/group commands false for aggregate-only sequencing. Author or load controller logic before Run.",
+  "description": "Ten-zone conveyor BOOL ARRAY [0..9] command exercise. Plant-generated zone occupancy returns on the next accepted scan. Aggregate, independent legacy and group commands combine with OR; keep legacy/group commands false for array-only control. Write or load valid logic before Run.",
   "camera": {
     "position": [
       11,
@@ -18,6 +18,16 @@
     "fov": 45
   },
   "equipment": [
+    {"id":"zone_sensor_0","type":"photoeye","label":"Zone 0 sensing-line occupancy","position":[-6.82,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":true}},
+    {"id":"zone_sensor_1","type":"photoeye","label":"Zone 1 sensing-line occupancy","position":[-5.42,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_2","type":"photoeye","label":"Zone 2 sensing-line occupancy","position":[-4.0200000000000005,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_3","type":"photoeye","label":"Zone 3 sensing-line occupancy","position":[-2.620000000000001,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_4","type":"photoeye","label":"Zone 4 sensing-line occupancy","position":[-1.2200000000000006,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_5","type":"photoeye","label":"Zone 5 sensing-line occupancy","position":[0.17999999999999972,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_6","type":"photoeye","label":"Zone 6 sensing-line occupancy","position":[1.5799999999999983,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_7","type":"photoeye","label":"Zone 7 sensing-line occupancy","position":[2.9799999999999986,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_8","type":"photoeye","label":"Zone 8 sensing-line occupancy","position":[4.379999999999999,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
+    {"id":"zone_sensor_9","type":"photoeye","label":"Zone 9 sensing-line occupancy","position":[5.779999999999999,0,0],"config":{"span":1.8,"beamCenterHeightM":1.46,"blocked":false}},
     {
       "id": "motor_0",
       "type": "motor",
@@ -268,6 +278,16 @@
   "simulation": {
     "type": "booleanPanel",
     "points": [
+      {"name":"zone_occupied_0","type":"BOOL","owner":"PC","role":"input","initial":true},
+      {"name":"zone_occupied_1","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_2","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_3","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_4","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_5","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_6","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_7","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_8","type":"BOOL","owner":"PC","role":"input","initial":false},
+      {"name":"zone_occupied_9","type":"BOOL","owner":"PC","role":"input","initial":false},
       {
         "name": "group_start_request",
         "type": "BOOL",
@@ -417,6 +437,16 @@
     "rules": [],
     "edgeRules": [],
     "pointBindings": [
+      {"point":"zone_occupied_0","equipmentId":"zone_sensor_0","mode":"photoeye"},
+      {"point":"zone_occupied_1","equipmentId":"zone_sensor_1","mode":"photoeye"},
+      {"point":"zone_occupied_2","equipmentId":"zone_sensor_2","mode":"photoeye"},
+      {"point":"zone_occupied_3","equipmentId":"zone_sensor_3","mode":"photoeye"},
+      {"point":"zone_occupied_4","equipmentId":"zone_sensor_4","mode":"photoeye"},
+      {"point":"zone_occupied_5","equipmentId":"zone_sensor_5","mode":"photoeye"},
+      {"point":"zone_occupied_6","equipmentId":"zone_sensor_6","mode":"photoeye"},
+      {"point":"zone_occupied_7","equipmentId":"zone_sensor_7","mode":"photoeye"},
+      {"point":"zone_occupied_8","equipmentId":"zone_sensor_8","mode":"photoeye"},
+      {"point":"zone_occupied_9","equipmentId":"zone_sensor_9","mode":"photoeye"},
       {
         "point": "group_start_request",
         "equipmentId": "switch_9",
@@ -600,28 +630,28 @@
   },
   "training": {
     "hints": [
-      "Translate the lesson into explicit state and permissive logic: The array starts in order with a delay between motors and stops safely on a group alarm.",
-      "Inputs are simulator feedback (group_start_request, all_motors_ready, group_alarm_clear); PLC logic owns motor_array_run, startup_sequence_active.",
-      "Test the initial state, the valid condition, and at least one missing permissive."
+      "Write explicit BOOL commands for each zone; any timed sequence or alarm response must be authored in your ladder, not assumed from the plant.",
+      "Inspect actual zone_occupied_0 through zone_occupied_9 feedback. Manual ready/alarm points are not automatic physical interlocks.",
+      "Compare intended and wrong valid logic, then confirm invalid current logic cannot execute the previously loaded program."
     ],
     "solution": {
-      "summary": "This is an original functional reference for the control concept, not a copy of the photographed solution.",
+      "summary": "This prose describes the commanded conveyor exercise; it is not an executable grader or a required ladder solution.",
       "steps": [
-        "Require the documented inputs: group_start_request, all_motors_ready, group_alarm_clear.",
-        "Command the documented outputs: motor_array_run, startup_sequence_active.",
-        "Remove PLC commands when the permissive is lost."
+        "Use declared operator inputs and actual zone occupancy feedback in your own control logic.",
+        "Command motor_commands[0..9]; legacy motor_i_run and motor_array_run remain OR-combined alternate commands.",
+        "Remove the relevant PLC command in your ladder; a stopped downstream zone blocks material handoff."
       ],
-      "acceptance": "The array starts in order with a delay between motors and stops safely on a group alarm."
+      "acceptance": "Accepted commands drive their corresponding conveyor zones and actual occupancy follows material motion. Valid wrong logic has its actual consequence; invalid current logic cannot execute. No automatic delay, alarm interlock or grader is implied."
     },
     "assetRequirements": [
-      "ten-motor lineup asset",
+      "ten commanded conveyor zones with retained motor IDs",
       "group motor status panel",
-      "staggered-start sequence display"
+      "accepted array command display"
     ],
     "machineGuide": {
-      "purpose": "Ten motors accept independent BOOL commands for controller-timed startup. The retained motor_array_run BOOL requests all motors together; keep it false when sequencing individual outputs. Author or load controller logic before Run.",
+      "purpose": "Ten conveyor zones retain independent motor IDs and BOOL bindings. Shafts and material follow accepted commands; actual occupancy returns on the next scan. Write your own logic before Run.",
       "startConditions": [
-        "The common PLC/watchdog foundation is healthy.",
+        "The current draft compiles and matches the loaded program in the offline controller.",
         "All required simulator inputs are at their documented initial state."
       ],
       "normalSequence": [
@@ -629,14 +659,14 @@
         "Verify only the documented PLC outputs respond."
       ],
       "stopBehavior": [
-        "Removing the permissive removes PLC-owned commands.",
+        "Your ladder controls command removal; simulation Stop independently freezes the accepted clock and plant.",
         "Reset returns the module to its initial state."
       ],
       "faultBehavior": [
-        "A missing or stale input must fail safe and remain diagnosable."
+        "Invalid or mismatched current drafts block execution and remain diagnosable; no automatic physical alarm response is claimed."
       ],
       "expectedObservations": [
-        "The array starts in order with a delay between motors and stops safely on a group alarm."
+        "Accepted commands drive their corresponding conveyor zones and actual occupancy follows material motion. Valid wrong logic has its actual consequence; invalid current logic cannot execute. No automatic delay, alarm interlock or grader is implied."
       ]
     },
     "sequenceNumber": 64,
@@ -670,7 +700,7 @@
     "previousAcceptance": [
       "lab-10-05-motor-struct-data"
     ],
-    "purpose": "Ten-motor fixed BOOL ARRAY [0..9] command exercise. Aggregate, independent legacy and group commands combine with OR; keep legacy/group commands false for aggregate-only sequencing. Author or load controller logic before Run."
+    "purpose": "Ten-zone conveyor BOOL ARRAY [0..9] command exercise. Plant-generated zone occupancy returns on the next accepted scan. Aggregate, independent legacy and group commands combine with OR; keep legacy/group commands false for array-only control. Write or load valid logic before Run."
   },
   "verification": {
     "cases": [

@@ -1,0 +1,20 @@
+{
+  "status": "REJECTED REPRESENTATIVE CHECKPOINT - corrections in progress",
+  "scope": "6 scenes, 12 actual native scene/split images",
+  "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+  "captureManifest": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\capture-manifest.json",
+  "imagesDirectory": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1",
+  "findings": [
+    "Unsupported wastewater rear canopy",
+    "Unsupported extraction side soffit",
+    "Unsupported grouping rear canopy",
+    "Student pair still has repeated two-wall room; windows and bench finish insufficient",
+    "Washroom broad white surfaces overbright; service panel dominates"
+  ],
+  "automatedEvidence": [
+    "diversity-build-v4.log: zero warnings/errors",
+    "diversity-environments-v4.log: 77 exact profiles and art directions; sibling hierarchy/world axes/restoration pass",
+    "diversity-controls-v1.log: scripted77/71cases/163picks/138presses/17selectors/35projection checks on earlier compiled draft"
+  ],
+  "limitation": "No new distinct-environment visual approval. Historical154 images baseline only; final77 full/split review remains required."
+}

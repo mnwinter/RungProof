@@ -1,0 +1,9 @@
+# Dot bounded numeric-cycle QA approval
+
+Read twelve-numeric-cycle-input-qa-plan-v21.md and root exact authored-contract extraction. Approve finite QA implementation:12 PC DINT controls across Labs9.1/9.2/9.3/9.4/9.10,62 full-cycle presses plus12 final capture-state presses,74 total with matching releases. Preserve authored99 function choice and exact numeric/defaultG semantics.
+
+Reuse ordinary routed camera helper narrowly and add post-navigation diagnostic callback. Real viewport left press/release must exercise Main input/picker/action path; TryPick is observation only and successful handler return alone is insufficient. Assert exact expected PC successor, readout text, no double advance on release, non-target/PLC-output invariance and fixed housing/head/support transforms. Normal reset callback must restore initial state before capture-state click. No loaded controller/external/run or externalclock=false/local illustrative rules; no product picker/camera/runtime/source contract change.
+
+Require each12 target actual PNG with exact contract/point-owner/value-list/source identity, event trace, reset proof and per-target finite caps.18px line box/full quad12px aperture margin and actual occlusion review remain mandatory. This closes that sampled routed PC input integration gap only, not PLC calculation, physical input, accessibility or all77 approval.
+
+After this concrete gap, smallest justified ordinary-view sample remains service-door, pickup and dense sum/count bench scene+split; reuse numeric9.3 evidence if it actually covers the collective station rather than recapturing it automatically. Service-door wall edge and pickup selector full-ring/mode association are distinct view risks. No unresolved geometry defect inferred from a global retained-limit string. Do not replay154 baseline images without a new reason. Material75 pending/HELD, Handle OPEN, all77 ACTIVE.

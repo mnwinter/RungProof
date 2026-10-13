@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-1-press-count",
+  "name": "Press_Count_Main",
+  "language": "LD",
+  "scanPeriodMs": 20,
+  "variables": [
+    {
+      "name": "pulse_received",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "pulse_received",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "threshold_lamp",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "threshold_lamp",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "press_count",
+      "type": "COUNTER",
+      "role": "memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "lamp_enable",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    }
+  ],
+  "watchVariables": [
+    "pulse_received",
+    "press_count",
+    "threshold_lamp"
+  ],
+  "networks": [
+    {
+      "id": "rung-3",
+      "label": "Count press pulses",
+      "logic": {
+        "id": "branch-4",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-5",
+            "kind": "contact",
+            "variable": "pulse_received",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "counter": {
+        "id": "rung-3-counter",
+        "variable": "press_count",
+        "preset": 3,
+        "kind": "CountUp"
+      }
+    },
+    {
+      "id": "rung-6",
+      "label": "Turn on threshold lamp",
+      "logic": {
+        "id": "branch-7",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-8",
+            "kind": "contact",
+            "variable": "press_count.DN",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-6-coil",
+        "variable": "threshold_lamp",
+        "mode": "assign"
+      }
+    }
+  ],
+  "entryBlock": "block-1",
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Press_Count_Main",
+      "networks": [
+        {
+          "id": "rung-3",
+          "label": "Count press pulses",
+          "logic": {
+            "id": "branch-4",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-5",
+                "kind": "contact",
+                "variable": "pulse_received",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "counter": {
+            "id": "rung-3-counter",
+            "variable": "press_count",
+            "preset": 3,
+            "kind": "CountUp"
+          }
+        },
+        {
+          "id": "rung-6",
+          "label": "Turn on threshold lamp",
+          "logic": {
+            "id": "branch-7",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-8",
+                "kind": "contact",
+                "variable": "press_count.DN",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-6-coil",
+            "variable": "threshold_lamp",
+            "mode": "assign"
+          }
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ]
+}

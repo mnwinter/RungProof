@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable><ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" /><Compile Include="ChallengeBoundaryTests.cs" /><Compile Include="ChallengeProgressTests.cs" /><Compile Include="ChallengeFixtures.cs" /><Compile Include="ChallengeContractTests.cs" />
+    <Compile Include="ChallengeBehaviorTests.cs" /><Compile Include="ChallengeIsolationTests.cs" />
+    <Compile Include="../../src/VirtualController/*.cs" /><Compile Include="../../src/Scenes/ConveyorPlantModel.cs" />
+    <Compile Include="../../src/Challenges/*.cs" />
+  </ItemGroup>
+</Project>
+
+
+
+
+
+

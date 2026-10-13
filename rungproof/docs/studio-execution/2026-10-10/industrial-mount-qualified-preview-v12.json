@@ -1,0 +1,227 @@
+{
+  "status": "BOUNDED_COMPLETE_PASS_WITH_LIMITS",
+  "assemblySha256": "D6D35153A2116A0F7CD323B8C2CB6D627610AD0E1C3A167C9F8F669471EB158E",
+  "nativeGates": 6,
+  "all77NativeMountChecks": 2205,
+  "renderedScenes": 16,
+  "qualifiedFrames": 52,
+  "dotApproval": "bounded mounting and covered repeat/typed visuals only",
+  "checkpoint": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-current-checkpoint-v12.md",
+  "sourceFreeze": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-source-freeze-v12.json",
+  "artifactIdentity": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-artifact-identity-v12.json",
+  "dotReport": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-dot-render-review-v12.md",
+  "nativeReport": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-native-review-v12.md",
+  "materialRollout75": "HELD",
+  "humanMaterialApproval": false,
+  "handleDiagnosis": "OPEN",
+  "wholeProductComplete": false,
+  "inputVerification": "not performed; primary monitor and input reserved",
+  "selectedImages": [
+    {
+      "file": "lab-4-09-chain-drive-lift-operator.png",
+      "scene": "lab-4-09-chain-drive-lift",
+      "view": "scene",
+      "stationView": "operator",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "4547DB86B32201A72AFDD35598239F98FB5990CA140C5DA8875EAB41B3B7FE15",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\lab-4-09-chain-drive-lift-operator.png"
+    },
+    {
+      "file": "lab-4-09-chain-drive-lift-teaching.png",
+      "scene": "lab-4-09-chain-drive-lift",
+      "view": "scene",
+      "stationView": "teaching",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "CB7432082E2D0D6911A1DA9F43A79119049EB0128DB4AB413F307B22CF14EF6A",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\lab-4-09-chain-drive-lift-teaching.png"
+    },
+    {
+      "file": "gallery-bench-detail.png",
+      "scene": "equipment-gallery",
+      "view": "scene",
+      "stationView": "mount-detail",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "6C52378D377EDA9888DFB1C8526172951E5F62EB036612B2E536EDE3D7C38BAD",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\gallery-bench-detail.png"
+    },
+    {
+      "file": "equipment-gallery-teaching.png",
+      "scene": "equipment-gallery",
+      "view": "scene",
+      "stationView": "teaching",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "1F3C75E9D1FB8C8FB4C071C2A36F54CADAC66E89F7D5DE4EDB2BAABB95410118",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\equipment-gallery-teaching.png"
+    },
+    {
+      "file": "chicken-machine-support.png",
+      "scene": "lab-10-02-chicken-label-print",
+      "view": "scene",
+      "stationView": "machine-support",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "C1BEC23EB90F0E0F337A84A9BCF0F4413796D430F80A0C592CA9172EE08E07F1",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\chicken-machine-support.png"
+    },
+    {
+      "file": "four-tier-mount-detail.png",
+      "scene": "lab-4-04-sequence-light-tower",
+      "view": "scene",
+      "stationView": "mount-detail",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "52E25D368F0EDBC3FCCFC97FE8A5CF246F74698DC3A3D10AD9BB25F7C23F2791",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\four-tier-mount-detail.png"
+    },
+    {
+      "file": "ev-mount-detail.png",
+      "scene": "lab-9-12-ev-charging-manager",
+      "view": "scene",
+      "stationView": "mount-detail",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "664C1E0A828FD0BC788D964136F1FF3F708A29F0BB2EB421988501C05F3E04B6",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\ev-mount-detail.png"
+    },
+    {
+      "file": "ev-readouts.png",
+      "scene": "lab-9-12-ev-charging-manager",
+      "view": "scene",
+      "stationView": "ev-readouts",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "205C1DA5F6E32BC51272F82FFB52DE684433A9E637FDF59F33247F14B8829F29",
+      "identityPass": true,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\ev-readouts.png"
+    },
+    {
+      "file": "repeat-intended-scene.png",
+      "scene": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "stationView": "teaching",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "8E246C86039CA49BD2364FD017613C0485061CE8145AAC55E4D7A2B03CE5137A",
+      "identityPass": true,
+      "mode": "intended",
+      "assessmentStatus": "Observed",
+      "physicalReturnsAtCapture": 3,
+      "frozenAssessmentReturns": 3,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\repeat-intended-scene.png"
+    },
+    {
+      "file": "repeat-request-operator.png",
+      "scene": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "stationView": "operator",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "356E8A1176FF4CDBD8FFC2060539786BA5F937AC185A3392A1BC5C74B051315A",
+      "identityPass": true,
+      "mode": "request-count",
+      "assessmentStatus": "NeedsAttention",
+      "physicalReturnsAtCapture": 7,
+      "frozenAssessmentReturns": 0,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\repeat-request-operator.png"
+    },
+    {
+      "file": "repeat-preset-operator.png",
+      "scene": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "stationView": "operator",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "1922FFB65FE2A84F9D3D4BCBA68867B0A453E5A4A4E5AE82740DFA8551B2F9B4",
+      "identityPass": true,
+      "mode": "preset-two",
+      "assessmentStatus": "NeedsAttention",
+      "physicalReturnsAtCapture": 2,
+      "frozenAssessmentReturns": 2,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\repeat-preset-operator.png"
+    },
+    {
+      "file": "repeat-held-scene.png",
+      "scene": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "stationView": "teaching",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "FB0E442EC14856ABA079D6242EC96CBF8F7A82211BFDA38FB3651B83619C0EE2",
+      "identityPass": true,
+      "mode": "held-active",
+      "assessmentStatus": "Incomplete",
+      "physicalReturnsAtCapture": 1,
+      "frozenAssessmentReturns": 1,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\repeat-held-scene.png"
+    },
+    {
+      "file": "repeat-invalid-scene.png",
+      "scene": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "stationView": "teaching",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "F20B3DE420EF831A495030B308E3357BE885AA8DAC8D86922D3525EFDDD87985",
+      "identityPass": true,
+      "mode": "invalid",
+      "assessmentStatus": "Unavailable",
+      "physicalReturnsAtCapture": 3,
+      "frozenAssessmentReturns": 3,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\repeat-invalid-scene.png"
+    },
+    {
+      "file": "repeat-history-small-scene.png",
+      "scene": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "stationView": "teaching",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "83624C7A5DA9E81EA596A955015638E3D00CD75679F399C072F8EEC7D657D506",
+      "identityPass": true,
+      "mode": "history",
+      "assessmentStatus": "Observed",
+      "physicalReturnsAtCapture": 3,
+      "frozenAssessmentReturns": 3,
+      "absolutePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\industrial-mount-renders-v12\\repeat-history-small-scene.png"
+    }
+  ]
+}

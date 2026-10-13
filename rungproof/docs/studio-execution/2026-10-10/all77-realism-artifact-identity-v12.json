@@ -1,0 +1,934 @@
+{
+  "status": "PASS_IDENTITY_ONLY",
+  "assemblySha256": "D6D35153A2116A0F7CD323B8C2CB6D627610AD0E1C3A167C9F8F669471EB158E",
+  "sourceInputs": 423,
+  "inventoryInputs": 2,
+  "scenes": 77,
+  "frames": [
+    {
+      "sceneId": "conveyor-cell",
+      "view": "scene",
+      "file": "01-conveyor-cell.scene.png",
+      "sha256": "09112F2C7188292E0713F3431F4D0188FB71738999EE47456F5C7497661BF94D"
+    },
+    {
+      "sceneId": "conveyor-cell",
+      "view": "split",
+      "file": "01-conveyor-cell.split.png",
+      "sha256": "5A114DE38964DEC1E331204C425F5CC6B7E26BA9CCC5B3642B5E5A591A883AC9"
+    },
+    {
+      "sceneId": "equipment-gallery",
+      "view": "scene",
+      "file": "02-equipment-gallery.scene.png",
+      "sha256": "B2772A86E6E0C1085B1E1C28C8968FD6DCA035B032BE8AC19D0C1904B3E8F945"
+    },
+    {
+      "sceneId": "equipment-gallery",
+      "view": "split",
+      "file": "02-equipment-gallery.split.png",
+      "sha256": "F59D3BC8C6DCF834D40031DE1C71FFB41D536E9E6F1E48ED023ED84C1D6CE66C"
+    },
+    {
+      "sceneId": "lab-10-01-drive-alarm-code-string",
+      "view": "scene",
+      "file": "03-lab-10-01-drive-alarm-code-string.scene.png",
+      "sha256": "48BAB30BB679A4E3B84C2DDA7FCEE6327F1A0316DF77FFA06A1432283597074F"
+    },
+    {
+      "sceneId": "lab-10-01-drive-alarm-code-string",
+      "view": "split",
+      "file": "03-lab-10-01-drive-alarm-code-string.split.png",
+      "sha256": "6F7DD0DC68662C2690A4D651555EDC221BE91C84302BC8B9EAFAE9B3B84AD4E3"
+    },
+    {
+      "sceneId": "lab-10-02-chicken-label-print",
+      "view": "scene",
+      "file": "04-lab-10-02-chicken-label-print.scene.png",
+      "sha256": "B96E33985933E5560F11F6475D885275855702BDF4364E08CEE60FB5F011962C"
+    },
+    {
+      "sceneId": "lab-10-02-chicken-label-print",
+      "view": "split",
+      "file": "04-lab-10-02-chicken-label-print.split.png",
+      "sha256": "AA84596A0DD8E4BE58C2CED7228C277DB5991BE02FF45DC12032C11ADB666AE7"
+    },
+    {
+      "sceneId": "lab-10-03-vision-package-sorter",
+      "view": "scene",
+      "file": "05-lab-10-03-vision-package-sorter.scene.png",
+      "sha256": "819711C6BAF3DC29CC28D0AB2C9673E6B57F1832FA2718CC8A813BE34A90DF66"
+    },
+    {
+      "sceneId": "lab-10-03-vision-package-sorter",
+      "view": "split",
+      "file": "05-lab-10-03-vision-package-sorter.split.png",
+      "sha256": "9FA75E0249F6A7C9B4DB310479FD9D708242D498C7D4B2F9D8D21237210E6852"
+    },
+    {
+      "sceneId": "lab-10-04-motor-enum-state",
+      "view": "scene",
+      "file": "06-lab-10-04-motor-enum-state.scene.png",
+      "sha256": "D7BDEA2FE660BD388B83687FAD99B383CE2E4EE52AA5D1A020F9197DA3C270A5"
+    },
+    {
+      "sceneId": "lab-10-04-motor-enum-state",
+      "view": "split",
+      "file": "06-lab-10-04-motor-enum-state.split.png",
+      "sha256": "97FFE63B05E613A6790489F4BEAA8BBBCC1D7577334C53109D616C5669FF5A57"
+    },
+    {
+      "sceneId": "lab-10-05-motor-struct-data",
+      "view": "scene",
+      "file": "07-lab-10-05-motor-struct-data.scene.png",
+      "sha256": "6F212CF679FE2B8315A98CC22357AA1C5E42DA08EAA8DDABF59E98F0EB9010B3"
+    },
+    {
+      "sceneId": "lab-10-05-motor-struct-data",
+      "view": "split",
+      "file": "07-lab-10-05-motor-struct-data.split.png",
+      "sha256": "911A4C831EC0B0FD6E66EFC4AC97DDF3A9519EE175F3C9AD67EA791EEAE996CE"
+    },
+    {
+      "sceneId": "lab-10-06-ten-motor-array-startup",
+      "view": "scene",
+      "file": "08-lab-10-06-ten-motor-array-startup.scene.png",
+      "sha256": "A22EB50E93D518D045A7DEE0EF8506DA5095A7B24B36752C4DC35566C26A63A9"
+    },
+    {
+      "sceneId": "lab-10-06-ten-motor-array-startup",
+      "view": "split",
+      "file": "08-lab-10-06-ten-motor-array-startup.split.png",
+      "sha256": "8926C8CF40211092B0DC1C3509A06F6B33D1C0C673B8676186250D7509D4F994"
+    },
+    {
+      "sceneId": "lab-11-06-wastewater-collection",
+      "view": "scene",
+      "file": "09-lab-11-06-wastewater-collection.scene.png",
+      "sha256": "29042C35E05E1F447E22B9EEB30C93146ACE9CA1E67B0343C3063A91FC7AAC35"
+    },
+    {
+      "sceneId": "lab-11-06-wastewater-collection",
+      "view": "split",
+      "file": "09-lab-11-06-wastewater-collection.split.png",
+      "sha256": "5DF1DCB77CB2581FBEAC87D9DE08DCE74728025AAF3DE972D578AEB832755528"
+    },
+    {
+      "sceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "view": "scene",
+      "file": "10-lab-11-07-multi-conveyor-pallet-route.scene.png",
+      "sha256": "94B1CCDF5D8D556D925B8B904B5F33B566DB3A22956141DFEA22D35F310B360C"
+    },
+    {
+      "sceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "view": "split",
+      "file": "10-lab-11-07-multi-conveyor-pallet-route.split.png",
+      "sha256": "79B93C92A203085AB91490655CAEE02010D71789E42291A6C6093BFAF5394EF3"
+    },
+    {
+      "sceneId": "lab-11-11-service-elevator",
+      "view": "scene",
+      "file": "11-lab-11-11-service-elevator.scene.png",
+      "sha256": "EE02472435B199B20C7E5F9EC762108B462D39837D3E945A957B16DDEBE9976F"
+    },
+    {
+      "sceneId": "lab-11-11-service-elevator",
+      "view": "split",
+      "file": "11-lab-11-11-service-elevator.split.png",
+      "sha256": "BFC67BA5DB30AA066B3DD50E55782251343F842FEC6C60A721EE7692B3A93A0D"
+    },
+    {
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "scene",
+      "file": "12-lab-11-12-mobile-traffic-lights.scene.png",
+      "sha256": "537B46736D3802A57E71AB863F3C30BF472C1F4B0A197C1AB5F7125E30B4CFFC"
+    },
+    {
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "split",
+      "file": "12-lab-11-12-mobile-traffic-lights.split.png",
+      "sha256": "556FA567FA7253548E469076E414E6FCEDC7CFB49A865B9242C3981ECD0514B1"
+    },
+    {
+      "sceneId": "lab-11-13-xy-palletizing",
+      "view": "scene",
+      "file": "13-lab-11-13-xy-palletizing.scene.png",
+      "sha256": "3463A2A770FDDF4392D728CEEAB7816A5983B03FF04886A9494942F974D19CC2"
+    },
+    {
+      "sceneId": "lab-11-13-xy-palletizing",
+      "view": "split",
+      "file": "13-lab-11-13-xy-palletizing.split.png",
+      "sha256": "901017B7315DBE2144EBCF65835C441649166B149B38407D8D8E61575A32C853"
+    },
+    {
+      "sceneId": "lab-11-19-powder-batch-mixer",
+      "view": "scene",
+      "file": "14-lab-11-19-powder-batch-mixer.scene.png",
+      "sha256": "33948303BE8E3CCA5878C6497D07D774F109E9E39438C8F919B5F4B1CDC4D103"
+    },
+    {
+      "sceneId": "lab-11-19-powder-batch-mixer",
+      "view": "split",
+      "file": "14-lab-11-19-powder-batch-mixer.split.png",
+      "sha256": "09FB675EB02B421E4D9B20230FA35CF982AA67A0375C6BBD850046205334FA3B"
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "scene",
+      "file": "15-lab-2-01-workstation-call.scene.png",
+      "sha256": "D52F07387D528AD1865D8238153FCEC1BBD3F0AA898B6D14F36F2782D91FCEB2"
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "split",
+      "file": "15-lab-2-01-workstation-call.split.png",
+      "sha256": "D579C78F98E72A1301F956BB841A0D5B38FB8963DAB7C797C86FA15C974AB24D"
+    },
+    {
+      "sceneId": "lab-2-02-dual-confirmation",
+      "view": "scene",
+      "file": "16-lab-2-02-dual-confirmation.scene.png",
+      "sha256": "869712850F1027B7110644BB0966FAC892E8BC182966D1A56A373A4846E8CCA3"
+    },
+    {
+      "sceneId": "lab-2-02-dual-confirmation",
+      "view": "split",
+      "file": "16-lab-2-02-dual-confirmation.split.png",
+      "sha256": "B9C90DFA875A7B0CE8F4D1AE093DDA834513B1D30C1451A58BF78C46681D7DAA"
+    },
+    {
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "view": "scene",
+      "file": "17-lab-2-03-service-marker-inhibit.scene.png",
+      "sha256": "0C79CBE32351881A041DF98E977AE2152E469658D51552CA65444602A824BFE0"
+    },
+    {
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "view": "split",
+      "file": "17-lab-2-03-service-marker-inhibit.split.png",
+      "sha256": "C9F472F052DDABB52A575F9D564A508C2CD89AE548294D870062D79356C55AFD"
+    },
+    {
+      "sceneId": "lab-2-04-two-station-call",
+      "view": "scene",
+      "file": "18-lab-2-04-two-station-call.scene.png",
+      "sha256": "D49DFBB252CEAB91F43DEA31F650BC619E183D896424B5396F19B0E14F25A629"
+    },
+    {
+      "sceneId": "lab-2-04-two-station-call",
+      "view": "split",
+      "file": "18-lab-2-04-two-station-call.split.png",
+      "sha256": "3A412770D375279F4DE3FB1BB441377BA265665666CF0F46267AAEB583D02756"
+    },
+    {
+      "sceneId": "lab-2-05-bay-light-selector",
+      "view": "scene",
+      "file": "19-lab-2-05-bay-light-selector.scene.png",
+      "sha256": "F39922A8E87221A0E130F808933528B164E1E742109176B9483A89CCC772B82C"
+    },
+    {
+      "sceneId": "lab-2-05-bay-light-selector",
+      "view": "split",
+      "file": "19-lab-2-05-bay-light-selector.split.png",
+      "sha256": "E7D90CC3DE736A93BD7B3A3DB56E57772207FE7EAE63407E4FAE2A21AE5F4B39"
+    },
+    {
+      "sceneId": "lab-2-06-ready-attention",
+      "view": "scene",
+      "file": "20-lab-2-06-ready-attention.scene.png",
+      "sha256": "6E3F649EC7D19F97B2DE382D2D3651004A3A3976FE8A06BF44A00BC56BE072ED"
+    },
+    {
+      "sceneId": "lab-2-06-ready-attention",
+      "view": "split",
+      "file": "20-lab-2-06-ready-attention.split.png",
+      "sha256": "65C07C04DAA13231F990A1CDE415B430B9736C9A42E15A08D4899F9537CCBA37"
+    },
+    {
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "view": "scene",
+      "file": "21-lab-2-07-dual-contact-permissive.scene.png",
+      "sha256": "1D0AB5232B2CF6757D40F29F8278DA41099EEB58FDC4DB40F38A514C633291DD"
+    },
+    {
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "view": "split",
+      "file": "21-lab-2-07-dual-contact-permissive.split.png",
+      "sha256": "289458ECDE9EFC52C1EE83A2E5A19F73C0ADCF85AC62CE5620B7B5835F626C0E"
+    },
+    {
+      "sceneId": "lab-2-08-inspection-vote",
+      "view": "scene",
+      "file": "22-lab-2-08-inspection-vote.scene.png",
+      "sha256": "0F98AFE0F670A6DD0F4639857CDC383A294E7575A5F488617F033F812E23B392"
+    },
+    {
+      "sceneId": "lab-2-08-inspection-vote",
+      "view": "split",
+      "file": "22-lab-2-08-inspection-vote.split.png",
+      "sha256": "B8A2591667DF55717F0940E0118171E376FA8A32137F5AE7C65EB2F230E344C8"
+    },
+    {
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "view": "scene",
+      "file": "23-lab-2-09-maintenance-beacon.scene.png",
+      "sha256": "D4318CEA3E8C8599D24CF0D9ED2D1C677201DD4E9ED1AD1A157A059C4358FB10"
+    },
+    {
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "view": "split",
+      "file": "23-lab-2-09-maintenance-beacon.split.png",
+      "sha256": "BD540A83B74D6C1B10DB060CCA6C339752C9DF4D31F316FA8CB2A4A6B6D5C018"
+    },
+    {
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "view": "scene",
+      "file": "24-lab-2-10-dust-collector-seal-in.scene.png",
+      "sha256": "AFD937D81A8E8EAE4AC50B74F2DE8CA18CECE91FAD8288C468CFE543FC55E16C"
+    },
+    {
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "view": "split",
+      "file": "24-lab-2-10-dust-collector-seal-in.split.png",
+      "sha256": "87B17F9A06C1A8853DC165AFCB2C96D7F3D95899C5258D78509ED664686D1276"
+    },
+    {
+      "sceneId": "lab-2-11-inbound-tote-stop",
+      "view": "scene",
+      "file": "25-lab-2-11-inbound-tote-stop.scene.png",
+      "sha256": "F621516399F71BE32C82BA17B00A0C4180BDE6A43ECF8C8897C4604A3624AC63"
+    },
+    {
+      "sceneId": "lab-2-11-inbound-tote-stop",
+      "view": "split",
+      "file": "25-lab-2-11-inbound-tote-stop.split.png",
+      "sha256": "943FD18517247AE8054A5BC189513A916887812C798ADA45D21C553E22900B86"
+    },
+    {
+      "sceneId": "lab-2-12-assembly-lift",
+      "view": "scene",
+      "file": "26-lab-2-12-assembly-lift.scene.png",
+      "sha256": "E0D39D8DA313D014BBE14901E54EBEDA4E78C5D25123A4B263E376F3B5141284"
+    },
+    {
+      "sceneId": "lab-2-12-assembly-lift",
+      "view": "split",
+      "file": "26-lab-2-12-assembly-lift.split.png",
+      "sha256": "5F272CAB38868234D442009B8EA679BF90EC45BDCA317F71360983157F6D60C8"
+    },
+    {
+      "sceneId": "lab-2-13-coolant-jug-fill",
+      "view": "scene",
+      "file": "27-lab-2-13-coolant-jug-fill.scene.png",
+      "sha256": "0DD7A3B9F07658EFDA36613AC12D94E3D6311D0ADE476CEC2DB8B003CE8E0648"
+    },
+    {
+      "sceneId": "lab-2-13-coolant-jug-fill",
+      "view": "split",
+      "file": "27-lab-2-13-coolant-jug-fill.split.png",
+      "sha256": "A149E5B30D892513F2B190396E35DEEB1C157E5986CD5149AF507F50FFA094A8"
+    },
+    {
+      "sceneId": "lab-2-14-sump-pump",
+      "view": "scene",
+      "file": "28-lab-2-14-sump-pump.scene.png",
+      "sha256": "7B5200FB218C030EE31ED469FC8ED40EE8B1BC50666CCD3846CF338C8AF4E9AC"
+    },
+    {
+      "sceneId": "lab-2-14-sump-pump",
+      "view": "split",
+      "file": "28-lab-2-14-sump-pump.split.png",
+      "sha256": "2A7D142FE6539DD4536412A0C756D7EEA93D33D1A307F8190ACA32517D8B842A"
+    },
+    {
+      "sceneId": "lab-2-15-fume-extractor",
+      "view": "scene",
+      "file": "29-lab-2-15-fume-extractor.scene.png",
+      "sha256": "CB045C3B69EF5FFCD192D631D2016BE8D9D62A1F0856BBB30E659A6CF253D040"
+    },
+    {
+      "sceneId": "lab-2-15-fume-extractor",
+      "view": "split",
+      "file": "29-lab-2-15-fume-extractor.split.png",
+      "sha256": "10E53F459DB5ACC4A52A4D728671EA683F04DE79F87306F2B24BECB865E81BA9"
+    },
+    {
+      "sceneId": "lab-2-16-safe-drill",
+      "view": "scene",
+      "file": "30-lab-2-16-safe-drill.scene.png",
+      "sha256": "55A6BCBD6521BC0F75198EB5CADA679CDB376874B8FC2AF708E2978DE0F28663"
+    },
+    {
+      "sceneId": "lab-2-16-safe-drill",
+      "view": "split",
+      "file": "30-lab-2-16-safe-drill.split.png",
+      "sha256": "180240FF22162556BF26CA5AAAB226050803F2CC86E5FAC5F9F9408884FB7006"
+    },
+    {
+      "sceneId": "lab-2-17-pallet-robot",
+      "view": "scene",
+      "file": "31-lab-2-17-pallet-robot.scene.png",
+      "sha256": "20462BC41E76371CFBD734FEEDD38C3ED459B34E8FCB9E045500BB76D86B8FD1"
+    },
+    {
+      "sceneId": "lab-2-17-pallet-robot",
+      "view": "split",
+      "file": "31-lab-2-17-pallet-robot.split.png",
+      "sha256": "1C4E861B06CC5BADE572941158C74EE16BCEC299DF1631B8AF6659064A87A3AF"
+    },
+    {
+      "sceneId": "lab-2-18-pallet-pickup",
+      "view": "scene",
+      "file": "32-lab-2-18-pallet-pickup.scene.png",
+      "sha256": "744C64AE52ADE5039BAF65772D965AE3861D49B4032BF1377002903CB7C36D5F"
+    },
+    {
+      "sceneId": "lab-2-18-pallet-pickup",
+      "view": "split",
+      "file": "32-lab-2-18-pallet-pickup.split.png",
+      "sha256": "8FA7AA3A3C0540684847FB408D89E0006868D7DCD4FD115E996C8B243109544C"
+    },
+    {
+      "sceneId": "lab-2-19-service-door",
+      "view": "scene",
+      "file": "33-lab-2-19-service-door.scene.png",
+      "sha256": "E0B02C88BF8FD956EDD9624304880F769BDC4445CBE0D4957A2D01EEF996455E"
+    },
+    {
+      "sceneId": "lab-2-19-service-door",
+      "view": "split",
+      "file": "33-lab-2-19-service-door.split.png",
+      "sha256": "07893DFFBAF92C017D23B7717457E6E3AD7368F6F0BEE06F4B1E3426F88B90A7"
+    },
+    {
+      "sceneId": "lab-2-20-bottle-shuttle",
+      "view": "scene",
+      "file": "34-lab-2-20-bottle-shuttle.scene.png",
+      "sha256": "AA0DCE93611F7DCCCA8A5C49691B3628D855C1D819E3D382FC0FC0D3F0763BD3"
+    },
+    {
+      "sceneId": "lab-2-20-bottle-shuttle",
+      "view": "split",
+      "file": "34-lab-2-20-bottle-shuttle.split.png",
+      "sha256": "CB433279B5A784EC9532C4AE7268F80C2917A6A1A2093D6E4A8054EBE2F3B888"
+    },
+    {
+      "sceneId": "lab-2-21-tote-finishing",
+      "view": "scene",
+      "file": "35-lab-2-21-tote-finishing.scene.png",
+      "sha256": "315FAD768F8C24FAE2F0F768F78348E3BD45610C172A4E1E483832C395F54045"
+    },
+    {
+      "sceneId": "lab-2-21-tote-finishing",
+      "view": "split",
+      "file": "35-lab-2-21-tote-finishing.split.png",
+      "sha256": "2EE0CD4299D8FFEEE9A38BA6DF608A748D80C1DD88E75AD0FECD59F2B178C7EA"
+    },
+    {
+      "sceneId": "lab-2-22-dual-spindle",
+      "view": "scene",
+      "file": "36-lab-2-22-dual-spindle.scene.png",
+      "sha256": "9F78A8DD8EEB9AB6DDF0A6416297AAA0D3D7D74D7E5E3CAEAC576DF2F9136A31"
+    },
+    {
+      "sceneId": "lab-2-22-dual-spindle",
+      "view": "split",
+      "file": "36-lab-2-22-dual-spindle.split.png",
+      "sha256": "20FD695D1455C426858B1B02E9DD19CC54366B0372620E1DF380711B41333410"
+    },
+    {
+      "sceneId": "lab-2-23-parcel-sorter",
+      "view": "scene",
+      "file": "37-lab-2-23-parcel-sorter.scene.png",
+      "sha256": "78455996413FBD35E41E125F44070AF8D83FDB0089ECD5A48301A9D799A1E20B"
+    },
+    {
+      "sceneId": "lab-2-23-parcel-sorter",
+      "view": "split",
+      "file": "37-lab-2-23-parcel-sorter.split.png",
+      "sha256": "661261AF8ACC4337EA3B8933EB524BE143B781D5A4D105D04A653FD577C7CC20"
+    },
+    {
+      "sceneId": "lab-2-24-robot-cnc",
+      "view": "scene",
+      "file": "38-lab-2-24-robot-cnc.scene.png",
+      "sha256": "CAFE26332BBEBDB1539AB39C7F944C1E0A28ECFC09970B6338C71AF2AA9C8D1C"
+    },
+    {
+      "sceneId": "lab-2-24-robot-cnc",
+      "view": "split",
+      "file": "38-lab-2-24-robot-cnc.split.png",
+      "sha256": "934CB324DB0E010A22A3A18C8CDC2AEB31EF801C68AE8854C53416E3B1B4EB57"
+    },
+    {
+      "sceneId": "lab-2-25-inspection-toggle",
+      "view": "scene",
+      "file": "39-lab-2-25-inspection-toggle.scene.png",
+      "sha256": "D17071FCEB7ABF003ECE370F672A6C6D73799E75C5AACCC5DAD901697C20DC44"
+    },
+    {
+      "sceneId": "lab-2-25-inspection-toggle",
+      "view": "split",
+      "file": "39-lab-2-25-inspection-toggle.split.png",
+      "sha256": "A38588A19DC305710A1187EB477DE2D1D54243ABD941149B6EC5250326B10E3A"
+    },
+    {
+      "sceneId": "lab-3-01-guarded-pallet-transfer",
+      "view": "scene",
+      "file": "40-lab-3-01-guarded-pallet-transfer.scene.png",
+      "sha256": "3EB4290420DC880C13F18CA596F5C99A08314AF8E0E523CAD51F0FCDB5D3CC48"
+    },
+    {
+      "sceneId": "lab-3-01-guarded-pallet-transfer",
+      "view": "split",
+      "file": "40-lab-3-01-guarded-pallet-transfer.split.png",
+      "sha256": "DF0842ABFAA15646EC13351D95B6D0AF7D44D55AA0AC2768640F1D40FDDC3351"
+    },
+    {
+      "sceneId": "lab-3-02-robot-cell-safe-restart",
+      "view": "scene",
+      "file": "41-lab-3-02-robot-cell-safe-restart.scene.png",
+      "sha256": "7639147EE13B5C2B484D926AB30467E9B0ABFB83D60B3E67B414577F4E0A63FD"
+    },
+    {
+      "sceneId": "lab-3-02-robot-cell-safe-restart",
+      "view": "split",
+      "file": "41-lab-3-02-robot-cell-safe-restart.split.png",
+      "sha256": "A5BB8B9C6CD16D118208A7389EC756E897AB9634BF3360C0AF8A1B97295B1B84"
+    },
+    {
+      "sceneId": "lab-4-01-press-count-lamp",
+      "view": "scene",
+      "file": "42-lab-4-01-press-count-lamp.scene.png",
+      "sha256": "A1F22E2BD9175F79E164C3D43903F3DE9E761B8DE90086A3A157F96102B66807"
+    },
+    {
+      "sceneId": "lab-4-01-press-count-lamp",
+      "view": "split",
+      "file": "42-lab-4-01-press-count-lamp.split.png",
+      "sha256": "FF0ADF8A7DE30E1F2E2B489704D444397480029FD8C5D3BB1912969B89B7D7FD"
+    },
+    {
+      "sceneId": "lab-4-02-counter-reset-lamp",
+      "view": "scene",
+      "file": "43-lab-4-02-counter-reset-lamp.scene.png",
+      "sha256": "7BFE1048181B45AAC999DE94E6CECBC1732EDF78A9412DE60A67672D11FB9827"
+    },
+    {
+      "sceneId": "lab-4-02-counter-reset-lamp",
+      "view": "split",
+      "file": "43-lab-4-02-counter-reset-lamp.split.png",
+      "sha256": "797A260EBF6330CEDCAF31ABEBC5D1A6C902CA3AB7A90B8A674FBAAE09B06A68"
+    },
+    {
+      "sceneId": "lab-4-03-repeat-cycle-counter",
+      "view": "scene",
+      "file": "44-lab-4-03-repeat-cycle-counter.scene.png",
+      "sha256": "92D20D386AEBB1E03EF60655CCC5789563EDA9FCF0FB3BF744EABEB369DBCCF0"
+    },
+    {
+      "sceneId": "lab-4-03-repeat-cycle-counter",
+      "view": "split",
+      "file": "44-lab-4-03-repeat-cycle-counter.split.png",
+      "sha256": "1E6FEFCB40CA63F0D882FDA68AEE7E2A6015657729FB460E46BD9D32C485E68C"
+    },
+    {
+      "sceneId": "lab-4-04-sequence-light-tower",
+      "view": "scene",
+      "file": "45-lab-4-04-sequence-light-tower.scene.png",
+      "sha256": "5D6828128428B5C3D05FACC2297B476D88CC1289ABEEE74775990FD6C7F57275"
+    },
+    {
+      "sceneId": "lab-4-04-sequence-light-tower",
+      "view": "split",
+      "file": "45-lab-4-04-sequence-light-tower.split.png",
+      "sha256": "E537BF49DB10A17DA2F77C18C4DC1AF3F8724B1BDF205035E2EE74191856A4A6"
+    },
+    {
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "view": "scene",
+      "file": "46-lab-4-05-dual-input-count-window.scene.png",
+      "sha256": "7E40879A71BDC9E28E40B80493E8DC6528927113DA0168F1B29D704424E86097"
+    },
+    {
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "view": "split",
+      "file": "46-lab-4-05-dual-input-count-window.split.png",
+      "sha256": "5F2DA7637067D3DA88DE2AC9924D36C664D5B25FFD5E75C7F28AE84635AE2922"
+    },
+    {
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "view": "scene",
+      "file": "47-lab-4-06-multi-press-confirmation.scene.png",
+      "sha256": "74CE135B37EC934B86AB0D8B6ADDDB15B08B58272FC25D29E5EA44BE41200545"
+    },
+    {
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "view": "split",
+      "file": "47-lab-4-06-multi-press-confirmation.split.png",
+      "sha256": "3E9FB7781ED6D7C427C8A8883CC90539E7E9AC52382FAD57E71B54F4CB4345D0"
+    },
+    {
+      "sceneId": "lab-4-07-parking-garage-entry",
+      "view": "scene",
+      "file": "48-lab-4-07-parking-garage-entry.scene.png",
+      "sha256": "930C7B1485D947BBF38C597FEC692ABA7E9B3C3A4CEA0BF313E98E8CE5FB86CE"
+    },
+    {
+      "sceneId": "lab-4-07-parking-garage-entry",
+      "view": "split",
+      "file": "48-lab-4-07-parking-garage-entry.split.png",
+      "sha256": "FBB2526939BE252A9201ECA4597208C4DA088FCEF1A7DB9CA1F4D32972487C2E"
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "scene",
+      "file": "49-lab-4-08-package-grouping.scene.png",
+      "sha256": "F2F62295F7D9974FE449266D3F10C1DCD7D3DEFAABD21AE8F4B505DE982E9427"
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "split",
+      "file": "49-lab-4-08-package-grouping.split.png",
+      "sha256": "849985A772BD8640B16BEA57604FE74DA054FDF6950E6F3914DDE2C9DA331010"
+    },
+    {
+      "sceneId": "lab-4-09-chain-drive-lift",
+      "view": "scene",
+      "file": "50-lab-4-09-chain-drive-lift.scene.png",
+      "sha256": "1DDC5317E464F97CE76DD78E0AE131E135E820BB3553F66DBAF4EA3E8C683DD3"
+    },
+    {
+      "sceneId": "lab-4-09-chain-drive-lift",
+      "view": "split",
+      "file": "50-lab-4-09-chain-drive-lift.split.png",
+      "sha256": "A14C08EC8E3B2D0A6C38232EE86E58AC405399712A20592D46136281B8DED5FE"
+    },
+    {
+      "sceneId": "lab-4-10-cookie-packaging",
+      "view": "scene",
+      "file": "51-lab-4-10-cookie-packaging.scene.png",
+      "sha256": "BD553A8D61D97B6D6FB54DE2FB07C66B956B2076605680E7E96C303E65241EC1"
+    },
+    {
+      "sceneId": "lab-4-10-cookie-packaging",
+      "view": "split",
+      "file": "51-lab-4-10-cookie-packaging.split.png",
+      "sha256": "4AF7F08A4D29B69F5B193F34F7AC58C95B479CD3C7F964C082FD75C8924D7139"
+    },
+    {
+      "sceneId": "lab-4-11-barrel-fill-station",
+      "view": "scene",
+      "file": "52-lab-4-11-barrel-fill-station.scene.png",
+      "sha256": "4D8BEF148734A23DC88C10ECDFBC37DA9FDAB6821F4A54564DC671B1F94C8F67"
+    },
+    {
+      "sceneId": "lab-4-11-barrel-fill-station",
+      "view": "split",
+      "file": "52-lab-4-11-barrel-fill-station.split.png",
+      "sha256": "B457056CCBD071BFD6C0ED89BA22F592D0CA0CB0DA251D5BF3136207785D4648"
+    },
+    {
+      "sceneId": "lab-4-12-cable-cut-length",
+      "view": "scene",
+      "file": "53-lab-4-12-cable-cut-length.scene.png",
+      "sha256": "9152A2955900B4315E8F4420A4045726B6539A0B68841B65B25B27ABEB93087B"
+    },
+    {
+      "sceneId": "lab-4-12-cable-cut-length",
+      "view": "split",
+      "file": "53-lab-4-12-cable-cut-length.split.png",
+      "sha256": "AB91C5A7865B8226C01151A6E6324A18406A55135965BF81D7BF00870D31D1D4"
+    },
+    {
+      "sceneId": "lab-5-01-delayed-lamp",
+      "view": "scene",
+      "file": "54-lab-5-01-delayed-lamp.scene.png",
+      "sha256": "590975CB28DF97451330BB4E04C018C2EFA09AF971FC51CED897B250A64C5E72"
+    },
+    {
+      "sceneId": "lab-5-01-delayed-lamp",
+      "view": "split",
+      "file": "54-lab-5-01-delayed-lamp.split.png",
+      "sha256": "7163DB1121431195D410A2FE829A661C5A79C53B43621EE04368AC885ED88C0B"
+    },
+    {
+      "sceneId": "lab-5-02-timed-lamp-off",
+      "view": "scene",
+      "file": "55-lab-5-02-timed-lamp-off.scene.png",
+      "sha256": "631654E0FFD8D53A9B8BA32C0481C65AA734BBE81660A4697A2F07EB257DC338"
+    },
+    {
+      "sceneId": "lab-5-02-timed-lamp-off",
+      "view": "split",
+      "file": "55-lab-5-02-timed-lamp-off.split.png",
+      "sha256": "DB8EB1EA42C900C70B250D9E3DB68AEEFE27BEBC08791E012585A4E7C9DC392B"
+    },
+    {
+      "sceneId": "lab-5-03-rotary-flasher",
+      "view": "scene",
+      "file": "56-lab-5-03-rotary-flasher.scene.png",
+      "sha256": "12F158F2ACEECBA0A71E4AC8818FBB57F8115717131150547439BD9D67625E64"
+    },
+    {
+      "sceneId": "lab-5-03-rotary-flasher",
+      "view": "split",
+      "file": "56-lab-5-03-rotary-flasher.split.png",
+      "sha256": "DB24D891044FD0EB21AD96CBD0EB79A2638EDFF4EB6EE713000EFC0A70F61C8D"
+    },
+    {
+      "sceneId": "lab-5-04-alternating-lamps",
+      "view": "scene",
+      "file": "57-lab-5-04-alternating-lamps.scene.png",
+      "sha256": "1FC388D4C5AEEDEF1A8AC6B3C341B0D1089E136D5316953CEC235D03F4757124"
+    },
+    {
+      "sceneId": "lab-5-04-alternating-lamps",
+      "view": "split",
+      "file": "57-lab-5-04-alternating-lamps.split.png",
+      "sha256": "2440CEF6DD4E257D4B32FB7D92987FA5BA4D6397EE41DD7C62B7326430C14603"
+    },
+    {
+      "sceneId": "lab-5-05-variable-flash-rate",
+      "view": "scene",
+      "file": "58-lab-5-05-variable-flash-rate.scene.png",
+      "sha256": "86CE05B77CC6CB89E2B4AD2BC2EEAF4AF0C9DBE72AB9AF551609B2B1BB4C96AC"
+    },
+    {
+      "sceneId": "lab-5-05-variable-flash-rate",
+      "view": "split",
+      "file": "58-lab-5-05-variable-flash-rate.split.png",
+      "sha256": "EB1C8FB7CD5883ED91DC925F3290747A1C44200845C995F2381D4AF373747A39"
+    },
+    {
+      "sceneId": "lab-5-06-running-light-tower",
+      "view": "scene",
+      "file": "59-lab-5-06-running-light-tower.scene.png",
+      "sha256": "9F478006BE6EDAE3F7C867F08541DFF36910701D9837E7E5525401CE98A4D45C"
+    },
+    {
+      "sceneId": "lab-5-06-running-light-tower",
+      "view": "split",
+      "file": "59-lab-5-06-running-light-tower.split.png",
+      "sha256": "082A5DD27D38B00B1908AB8440AC344A472CDBA133F05BAEBD4D1C1AB96B7730"
+    },
+    {
+      "sceneId": "lab-5-07-pedestrian-crossing",
+      "view": "scene",
+      "file": "60-lab-5-07-pedestrian-crossing.scene.png",
+      "sha256": "E7CE1101F0649B5BF1866FCE359901747F7A673788E123A4B03664FCD44EB1C2"
+    },
+    {
+      "sceneId": "lab-5-07-pedestrian-crossing",
+      "view": "split",
+      "file": "60-lab-5-07-pedestrian-crossing.split.png",
+      "sha256": "8F0675233A6856D0647C4B7D296C316794E336B9620FC4A486E5393303D1A371"
+    },
+    {
+      "sceneId": "lab-5-08-drawbridge-control",
+      "view": "scene",
+      "file": "61-lab-5-08-drawbridge-control.scene.png",
+      "sha256": "EFF7DB508F99210ACC963C23E64B26E6FCA3F80014857733DEF3408280F383AE"
+    },
+    {
+      "sceneId": "lab-5-08-drawbridge-control",
+      "view": "split",
+      "file": "61-lab-5-08-drawbridge-control.split.png",
+      "sha256": "6797154206CFBD27B7535C2CFCC91717074C40D725DEC2BE01A92C0C0956EB3D"
+    },
+    {
+      "sceneId": "lab-5-09-bag-indexing-conveyor",
+      "view": "scene",
+      "file": "62-lab-5-09-bag-indexing-conveyor.scene.png",
+      "sha256": "2ABEBB4BEFC22A383F9F07EBF6E7A76C1B77EACF618818773036C6F357B25EFA"
+    },
+    {
+      "sceneId": "lab-5-09-bag-indexing-conveyor",
+      "view": "split",
+      "file": "62-lab-5-09-bag-indexing-conveyor.split.png",
+      "sha256": "1C67E7C3ED411F35633D49CB56B64CB18A34120230C1FFE446648D60497C8C35"
+    },
+    {
+      "sceneId": "lab-5-10-coating-line",
+      "view": "scene",
+      "file": "63-lab-5-10-coating-line.scene.png",
+      "sha256": "8EDEF7E39F1E92D69521CA6424C45B52852D03C85A326B6C852DE529CEA0B4F9"
+    },
+    {
+      "sceneId": "lab-5-10-coating-line",
+      "view": "split",
+      "file": "63-lab-5-10-coating-line.split.png",
+      "sha256": "7FFD32A641F4FA0A8D60382BA75F1448B68B6FBE5AEC5224D194125DADF4A118"
+    },
+    {
+      "sceneId": "lab-6-07-luggage-weight-sort",
+      "view": "scene",
+      "file": "64-lab-6-07-luggage-weight-sort.scene.png",
+      "sha256": "7C85EFD49070ABC2FE178EC25E7EE5BD2F458B1F5C9877090DB533775E791393"
+    },
+    {
+      "sceneId": "lab-6-07-luggage-weight-sort",
+      "view": "split",
+      "file": "64-lab-6-07-luggage-weight-sort.split.png",
+      "sha256": "E662CBD867D16C4143357DA604A9F9A79725E5539A99BF6F6359135CDAA48492"
+    },
+    {
+      "sceneId": "lab-6-08-hand-dryer",
+      "view": "scene",
+      "file": "65-lab-6-08-hand-dryer.scene.png",
+      "sha256": "0BDD5F17E6ED9DDE6993015064587CA005D373677AC3811F8CC171F385E2A5EA"
+    },
+    {
+      "sceneId": "lab-6-08-hand-dryer",
+      "view": "split",
+      "file": "65-lab-6-08-hand-dryer.split.png",
+      "sha256": "5292926F9440E91464C299A4346D99BECB14D26936FDCE63C4AA9553921FDB89"
+    },
+    {
+      "sceneId": "lab-9-01-sum-function",
+      "view": "scene",
+      "file": "66-lab-9-01-sum-function.scene.png",
+      "sha256": "91C0ADF8171D842B49A03239B75B3E1D4188A40D080FAC2BF7D31B8BAB3FD0E8"
+    },
+    {
+      "sceneId": "lab-9-01-sum-function",
+      "view": "split",
+      "file": "66-lab-9-01-sum-function.split.png",
+      "sha256": "B1AF0471B6E120FEA6595DE7F58330F9693733A61CBB913858C2A3D02D029F25"
+    },
+    {
+      "sceneId": "lab-9-02-product-function",
+      "view": "scene",
+      "file": "67-lab-9-02-product-function.scene.png",
+      "sha256": "8646D29727B0DC807D7A82DDCF828C20CA7DDB14288CEFBBB4E1BD2BEB30B57E"
+    },
+    {
+      "sceneId": "lab-9-02-product-function",
+      "view": "split",
+      "file": "67-lab-9-02-product-function.split.png",
+      "sha256": "E9C0588AB43E7E8591676D5EB4B9453B948188A680E0F655E4A7097DE446C516"
+    },
+    {
+      "sceneId": "lab-9-03-sum-and-counter-function",
+      "view": "scene",
+      "file": "68-lab-9-03-sum-and-counter-function.scene.png",
+      "sha256": "11C086B74F24E1DA4DDA45458244AF8C49CC009959C4E25703139BB9358B81FB"
+    },
+    {
+      "sceneId": "lab-9-03-sum-and-counter-function",
+      "view": "split",
+      "file": "68-lab-9-03-sum-and-counter-function.split.png",
+      "sha256": "2D3B330859BDFD1108242C679DF1C33EC7FD131830A327CD60A2352CD3D1B8DB"
+    },
+    {
+      "sceneId": "lab-9-04-function-selector",
+      "view": "scene",
+      "file": "69-lab-9-04-function-selector.scene.png",
+      "sha256": "3B540CA950CFA03B844C88024F4312ED75A2931C8B9D7C497A7DC41DD8FAF10D"
+    },
+    {
+      "sceneId": "lab-9-04-function-selector",
+      "view": "split",
+      "file": "69-lab-9-04-function-selector.split.png",
+      "sha256": "9DFDBCA82F59772C5F656BE905A9EB5B122AD388496B1577E90F3B71A6DFF005"
+    },
+    {
+      "sceneId": "lab-9-10-box-volume",
+      "view": "scene",
+      "file": "70-lab-9-10-box-volume.scene.png",
+      "sha256": "2BFE3E74C24BF1D457F8DCDD9E9666BACA2926B893D6BBE039503CA2F07F8A16"
+    },
+    {
+      "sceneId": "lab-9-10-box-volume",
+      "view": "split",
+      "file": "70-lab-9-10-box-volume.split.png",
+      "sha256": "78F3339CB2248EE67CD04542EACDE1A06B0CFD00E6792E22DA997A52081684AA"
+    },
+    {
+      "sceneId": "lab-9-11-pallet-counting",
+      "view": "scene",
+      "file": "71-lab-9-11-pallet-counting.scene.png",
+      "sha256": "C560ACFE885B95830BAC6D3E5BDFF89DD77EB563E121385C361EE9C194B9A82E"
+    },
+    {
+      "sceneId": "lab-9-11-pallet-counting",
+      "view": "split",
+      "file": "71-lab-9-11-pallet-counting.split.png",
+      "sha256": "5272042BCBE9281D7E0D2463B149286ECB63273A36B8866D9E5A6890FD552A33"
+    },
+    {
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "scene",
+      "file": "72-lab-9-12-ev-charging-manager.scene.png",
+      "sha256": "A870FB3E131DA1106EB19D3489A0B3405ECE82E01A886046F29D98E6B059D00B"
+    },
+    {
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "split",
+      "file": "72-lab-9-12-ev-charging-manager.split.png",
+      "sha256": "8296CE633A7F54A6D0A1BF219E6377A9B1E63E0E4F040D83788A05DF48943A55"
+    },
+    {
+      "sceneId": "scene-1-conveyor-stop",
+      "view": "scene",
+      "file": "73-scene-1-conveyor-stop.scene.png",
+      "sha256": "CD7090286C1BCF6372983BEB45DB538C2346A85A307D6C67BC83A5DD1DA62E91"
+    },
+    {
+      "sceneId": "scene-1-conveyor-stop",
+      "view": "split",
+      "file": "73-scene-1-conveyor-stop.split.png",
+      "sha256": "36E43507941F506F33AA0B834666FFF4B22F4FCD4D1AFA9A898A91797C658D07"
+    },
+    {
+      "sceneId": "scene-2-conveyor-pusher",
+      "view": "scene",
+      "file": "74-scene-2-conveyor-pusher.scene.png",
+      "sha256": "A93A5F71CE4603F90DD053A12E1F8684956B9B3FB8980B56290779D112670E56"
+    },
+    {
+      "sceneId": "scene-2-conveyor-pusher",
+      "view": "split",
+      "file": "74-scene-2-conveyor-pusher.split.png",
+      "sha256": "C8ED6F7222E44F7D0B573BB15220192F0DA436DC021F6C8BF0271A4EC01F8981"
+    },
+    {
+      "sceneId": "tank-high-low",
+      "view": "scene",
+      "file": "75-tank-high-low.scene.png",
+      "sha256": "3A5858733AE4BCCFFDCF01840179785A4ECF88EBF2790E6B24042A7BFF4829CF"
+    },
+    {
+      "sceneId": "tank-high-low",
+      "view": "split",
+      "file": "75-tank-high-low.split.png",
+      "sha256": "A7A02ED45BF0A774427FE5154A033D69D52D1A17D50AD9ECDA6AC938A6497061"
+    },
+    {
+      "sceneId": "tank-level",
+      "view": "scene",
+      "file": "76-tank-level.scene.png",
+      "sha256": "839B4C14642772DB478AD5951C1F32B9E1D27D5538B1203DF591CF4E5726FFCC"
+    },
+    {
+      "sceneId": "tank-level",
+      "view": "split",
+      "file": "76-tank-level.split.png",
+      "sha256": "8850927F1BCF98DBCE4F9E598FB5F4E1B13A5E310ED3FA38A108B6FFAC1B550B"
+    },
+    {
+      "sceneId": "tank-radar",
+      "view": "scene",
+      "file": "77-tank-radar.scene.png",
+      "sha256": "3C76B54FAA1C58D270794F4068870EA9BBD3E59FD6EB54F1BD04A41890F7AAEF"
+    },
+    {
+      "sceneId": "tank-radar",
+      "view": "split",
+      "file": "77-tank-radar.split.png",
+      "sha256": "B78DFB9D517BF1B04DFAB341FF4B69302A1B5218C9EB685BF4885A97AAA373A0"
+    }
+  ],
+  "limitation": "Source/binary/image identity and capture completion only; individual visual review is separate."
+}

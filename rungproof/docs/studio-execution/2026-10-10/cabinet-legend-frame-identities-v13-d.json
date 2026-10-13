@@ -1,0 +1,67 @@
+[
+  {
+    "scene": "lab-10-03-vision-package-sorter",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-10-03-vision-package-sorter.operator.png",
+    "sha256": "34EBDBE0CFC4CC42A0FF5D14D162BB5E378C9D6720E3BACB3A409E6223CA229A"
+  },
+  {
+    "scene": "lab-11-07-multi-conveyor-pallet-route",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-11-07-multi-conveyor-pallet-route.operator.png",
+    "sha256": "236264B3BC4463DCF9B91D2E6FF09A6EC3A12875500BD402C93B93A229F0992A"
+  },
+  {
+    "scene": "lab-11-11-service-elevator",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-11-11-service-elevator.operator.png",
+    "sha256": "A846A116B78DA9B4B5D10E10864D7F252EBD5B75AAC68E843EA31D3EBD57EA65"
+  },
+  {
+    "scene": "lab-11-19-powder-batch-mixer",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-11-19-powder-batch-mixer.operator.png",
+    "sha256": "CC649C97DAB56BA80EC832D3AE02BA56312234E751FC346DBE5CB0E381149428"
+  },
+  {
+    "scene": "lab-2-18-pallet-pickup",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-2-18-pallet-pickup.operator.png",
+    "sha256": "4887FE43A1E778B81CDB231D58135E32A1F71CFF6C4A0D4EA692677D3E27429B"
+  },
+  {
+    "scene": "lab-3-01-guarded-pallet-transfer",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-3-01-guarded-pallet-transfer.operator.png",
+    "sha256": "C2BB5560199162DD2C43E8126D15A7784FE40B003C01236C58FA38CD4B7703EA"
+  },
+  {
+    "scene": "lab-6-07-luggage-weight-sort",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-6-07-luggage-weight-sort.operator.png",
+    "sha256": "94A8F04FC7D8BD4B1621A86FFB2B72267DC5584C4B50FEA64A0EB1C386ACC0CA"
+  },
+  {
+    "scene": "lab-6-08-hand-dryer",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-6-08-hand-dryer.operator.png",
+    "sha256": "0EDADFFD598A6059544F5A1C0B62D536A46D520CD29EF89D8B4A43E190FF7B3E"
+  },
+  {
+    "scene": "lab-9-11-pallet-counting",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-9-11-pallet-counting.operator.png",
+    "sha256": "1D618A685EE24376701CF06C4D5F03D581F741983B0675BC29D9F308E682E078"
+  },
+  {
+    "scene": "lab-9-12-ev-charging-manager",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-lab-9-12-ev-charging-manager.operator.png",
+    "sha256": "528A5981B711E31DDA95AD0FF56812D9A0A3E9F9EA17A126BFEBE3EF379F6B12"
+  },
+  {
+    "scene": "tank-high-low",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-tank-high-low.operator.png",
+    "sha256": "E1BB7E429C73011784611B5788495298C392D15AC1B9898D2331CDE7BEEE9923"
+  },
+  {
+    "scene": "tank-level",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-tank-level.operator.png",
+    "sha256": "851ABB82F316466278F6A87E239986F6966574C2DD2746608439780B3E147C6E"
+  },
+  {
+    "scene": "tank-radar",
+    "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v13-d-tank-radar.operator.png",
+    "sha256": "AC1259C248B20A64FC818222FB8F795D70DB468AEB1B37FAFC622CF1B5DF5EAF"
+  }
+]

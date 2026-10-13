@@ -1,5 +1,22 @@
 # Supported configuration
 
+## Current Godot demo preparation
+
+The table below applies to the historical Qt pilot. The current Godot/C#
+application now has an internal unsigned offline Windows x64 candidate with
+exported policy, shell, conveyor and sampled palletizer checks. External
+distribution and minimum Windows/GPU/VM/DPI qualification remain open.
+Do not inherit the Qt software-renderer claims.
+See [demo release review](DEMO_RELEASE_REVIEW_2026-10-10.md) for the current
+evidence, proposed offline preview scope and remaining qualification gates.
+The current repaired package and exact acceptance status are recorded in
+[qualification continuation](DEMO_QUALIFICATION_CONTINUATION_2026-10-10.md).
+The proposed Windows 11/16 GB/Forward+ pilot target in
+[release operations](DEMO_RELEASE_OPERATIONS_2026-10-10.md) is a qualification
+proposal, not a tested minimum-hardware claim.
+
+## Historical Qt pilot configuration
+
 This is the release support matrix. `TBD` means the configuration is not yet
 approved and blocks the corresponding pilot capability.
 

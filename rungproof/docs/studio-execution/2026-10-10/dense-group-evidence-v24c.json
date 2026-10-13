@@ -1,0 +1,82 @@
+[
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-manual.scene.png",
+    "sha256": "91FED679881E4166213ED012289643E467A4C53D9C09FBB59157DF4E2EB77906",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 18.670288,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-manual.split.png",
+    "sha256": "6F978EF4000803486BA8C8BC01647DD66F0F8C81332F542F0828DE9DF0A51301",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 18.670288,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-numeric.scene.png",
+    "sha256": "F05F814B7CE63163FB5B59B937E06DE779FC2DA64B17614671D0BA613EE114CD",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 19.89264,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-numeric.split.png",
+    "sha256": "9176BC401C072D8191722C99456DE62DE92448D8B20DE09E71D26DE62003F023",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 19.89264,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-results.scene.png",
+    "sha256": "EDA78830B33284934D15713D7CDF690A3F655AE7EDF2421F99B5A017140B7EF6",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 19.21878,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-results.split.png",
+    "sha256": "2ED255BABC2E2358BEFEB2D7AEAA916D44AAA11AA5FF728E638E30B92AA99C54",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 19.21878,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-status.scene.png",
+    "sha256": "79FD1B2AA73513651D0BCFE9610DA74993585D332BC3F8B18F9EF4B0248753AA",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 18.670288,
+    "rootVisual": "individually inspected"
+  },
+  {
+    "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v24c-dense-status.split.png",
+    "sha256": "E2B0DA32AAD98B0812F35F8071A82CD450EDB7F870EDD2DE569C9232FB2D7160",
+    "candidate": "4203E51F94E1A761FEDD1CA8EF45577C3627BA37AF50F83163B502BF40E166E4",
+    "hashMatches": true,
+    "nativePassed": true,
+    "errors": 0,
+    "minimumLineBox": 18.670288,
+    "rootVisual": "individually inspected"
+  }
+]

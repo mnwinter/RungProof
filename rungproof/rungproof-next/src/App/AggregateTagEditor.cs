@@ -22,6 +22,8 @@ public partial class AggregateTagEditor : VBoxContainer
     private readonly Button _add = new() { Text = "+ STRUCT FIELD" };
     private PlcVariableType _kind;
     private bool _loading;
+    public event Action? PendingChanged;
+    private AggregateArrayDraft? _arrayDraft;
 
     public AggregateTagEditor()
     {
@@ -35,7 +37,7 @@ public partial class AggregateTagEditor : VBoxContainer
         ArrayControl("TYPE", _element); ArrayControl("FROM", _lower); ArrayControl("COUNT", _length); AddChild(_arrayControls);
         var scroll = new ScrollContainer { CustomMinimumSize = new Vector2(0, 140), HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         _rows.SizeFlagsHorizontal = SizeFlags.ExpandFill; scroll.AddChild(_rows); AddChild(scroll); AddChild(_add);
-        _add.Pressed += () => AddField("field_" + (_fields.Count + 1), PlcVariableType.Bool, "FALSE", true);
+        _add.Pressed += () => { AddField("field_" + (_fields.Count + 1), PlcVariableType.Bool, "FALSE", true); PendingChanged?.Invoke(); };
         _length.ValueChanged += _ => { if (!_loading && _kind == PlcVariableType.Array) RebuildArray(); };
         _lower.ValueChanged += _ => { if (!_loading && _kind == PlcVariableType.Array) RebuildArray(); };
         _element.ItemSelected += _ => { if (!_loading && _kind == PlcVariableType.Array) RebuildArray(); };
@@ -68,18 +70,31 @@ public partial class AggregateTagEditor : VBoxContainer
         var selector = ScalarSelector(); selector.Name = "FieldType"; selector.Select(Math.Max(0, Array.IndexOf(Scalars, type))); selector.Disabled = !editable;
         var initial = new LineEdit { Name = "FieldInitial", Text = value, PlaceholderText = "Typed initial", CustomMinimumSize = new Vector2(95, 30), SizeFlagsHorizontal = SizeFlags.ExpandFill };
         row.AddChild(fieldName); row.AddChild(selector); row.AddChild(initial);
+        fieldName.TextChanged += _ => { if (!_loading) PendingChanged?.Invoke(); };
+        initial.TextChanged += _ => { if (!_loading) PendingChanged?.Invoke(); };
+        selector.ItemSelected += _ => { if (!_loading) PendingChanged?.Invoke(); };
         var field = new FieldRow(row, fieldName, selector, initial); _fields.Add(field); _rows.AddChild(row);
         if (editable)
         {
             var remove = new Button { Text = "−", TooltipText = "Remove field; Verify reports affected operands" };
-            row.AddChild(remove); remove.Pressed += () => { _fields.Remove(field); _rows.RemoveChild(row); row.QueueFree(); };
+            row.AddChild(remove); remove.Pressed += () => { _fields.Remove(field); _rows.RemoveChild(row); row.QueueFree(); PendingChanged?.Invoke(); };
         }
     }
     private void RebuildArray()
     {
-        var prior = _fields.Select(f => f.Initial.Text).ToArray(); ClearRows();
-        var scalar = Scalars[_element.Selected];
-        for (var i = 0; i < (int)_length.Value; i++) AddField($"[{(long)_lower.Value + i}]", scalar, i < prior.Length ? prior[i] : scalar == PlcVariableType.Bool ? "FALSE" : "0", false);
+        if (_arrayDraft is null) return;
+        PendingChanged?.Invoke();
+        for (var i = 0; i < _fields.Count; i++) _arrayDraft.Values[i] = _fields[i].Initial.Text;
+        _arrayDraft.TryChangeType(Scalars[_element.Selected], true);
+        try { _arrayDraft.Resize((int)_lower.Value, (int)_length.Value); RenderArray(); }
+        catch (ArgumentException error) { _lower.TooltipText = error.Message; _length.TooltipText = error.Message; }
+    }
+    private void RenderArray()
+    {
+        if (_arrayDraft is null) return;
+        ClearRows();
+        for (var i = 0; i < _arrayDraft.Values.Length; i++)
+            AddField($"[{(long)_arrayDraft.LowerBound + i}]", _arrayDraft.Type, _arrayDraft.Values[i], false);
     }
     public void Load(PlcVariableType type, PlcAggregateSchema? schema = null, object? initial = null)
     {
@@ -98,12 +113,28 @@ public partial class AggregateTagEditor : VBoxContainer
             _lower.Value = schema?.LowerBound ?? 0; _length.Value = schema?.Length ?? 10;
             for (var i = 0; i < (int)_length.Value; i++) AddField($"[{(long)_lower.Value + i}]", Scalars[_element.Selected], json.ValueKind == JsonValueKind.Array && i < json.GetArrayLength() ? Format(json[i]) : Scalars[_element.Selected] == PlcVariableType.Bool ? "FALSE" : "0", false);
         }
+        _arrayDraft = type == PlcVariableType.Array
+            ? new AggregateArrayDraft(Scalars[_element.Selected], (int)_lower.Value, _fields.Select(f => f.Initial.Text).ToArray()) : null;
         _loading = false;
     }
     private static string Format(JsonElement value) => value.ValueKind is JsonValueKind.True or JsonValueKind.False ? value.GetBoolean() ? "TRUE" : "FALSE" : value.GetRawText();
+    public bool RevealMember(string symbol, string root)
+    {
+        var member = symbol.StartsWith(root + ".", StringComparison.Ordinal) ? symbol[(root.Length + 1)..]
+            : symbol.StartsWith(root + "[", StringComparison.Ordinal) ? symbol[root.Length..] : string.Empty;
+        var row = _fields.Find(field => field.Name.Text == member);
+        if (row is null) return false;
+        if (_rows.GetParent() is ScrollContainer scroll) scroll.EnsureControlVisible(row.Container);
+        row.Initial.GrabFocus();
+        row.Initial.SelectAll();
+        return true;
+    }
     public bool TryRead(PlcVariableType type, out PlcAggregateSchema schema, out object initial, out string error)
     {
         schema = new(); initial = false; error = "";
+        if (type == PlcVariableType.Array && (_arrayDraft is null || Scalars[_element.Selected] != _arrayDraft.Type
+            || (int)_lower.Value != _arrayDraft.LowerBound || (int)_length.Value != _arrayDraft.Values.Length))
+        { error = "Resolve the pending type change or correct the array range before applying."; return false; }
         var values = new List<object>();
         var fields = new List<PlcAggregateField>();
         foreach (var field in _fields)

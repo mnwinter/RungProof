@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "scene-1-conveyor-stop",
+  "camera": { "focusEquipment": ["scene1_conveyor", "scene1_photoeye", "scene1_station"], "direction": [10.5, 5.6, 9.5], "fov": 43 },
+  "anchors": [
+    { "id": "operator", "equipmentId": "scene1_station", "offset": [0, 2.15, 0] },
+    { "id": "feedback", "equipmentId": "scene1_photoeye", "offset": [0, 2.55, -1.1] },
+    { "id": "process", "equipmentId": "scene1_conveyor", "offset": [2, 2.9, 0] }
+  ]
+}

@@ -19,6 +19,10 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `destination_clear` | `BOOL` | **PC** | `False` |
 | `sort_conveyor_run` | `BOOL` | **PLC** | `False` |
 | `diverter_enable` | `BOOL` | **PLC** | `False` |
+| `vision_class` | `INT` | **PC** | `1` |
+| `sort_complete` | `BOOL` | **PC** | `False` |
+| `sort_latched_class` | `INT` | **SIM** | `0` |
+| `sort_phase` | `STRING` | **SIM** | `Awaiting` |
 
 ## Operator actions
 

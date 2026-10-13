@@ -1,0 +1,112 @@
+[
+  {
+    "image": "v14-lab-11-12-mobile-traffic-lights.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-13-coolant-jug-fill.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-14-sump-pump.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-16-safe-drill.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-17-pallet-robot.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-18-pallet-pickup.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-19-service-door.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-20-bottle-shuttle.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-21-tote-finishing.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-21-tote-finishing.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-22-dual-spindle.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-23-parcel-sorter.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-2-24-robot-cnc.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-4-11-barrel-fill-station.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-5-09-bag-indexing-conveyor.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-lab-6-08-hand-dryer.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-scene-1-conveyor-stop.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-scene-2-conveyor-pusher.operator.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-tank-high-low.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-tank-level.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-tank-radar.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  },
+  {
+    "image": "v14-traffic-b.field.png",
+    "errors": 0,
+    "warnings": "WARNING: TAA is only available when using the Forward+ renderer."
+  }
+]

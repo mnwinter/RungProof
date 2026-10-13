@@ -1,0 +1,44 @@
+{
+  "dll": "9ACEE34190C59281ED6E41646B6001BBE213C7917D7D32DB9781CF411F9A964E",
+  "frames": [
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\three-starter-current-v1\\invalid-current.split.png.identity.json",
+      "scene": "lab-10-06-ten-motor-array-startup",
+      "imageSha256": "64FFE34DEDD9FD09150D4F4052C1D384F4974CDFFA4BA5AD9DC47124311EAAB4",
+      "dll": "9ACEE34190C59281ED6E41646B6001BBE213C7917D7D32DB9781CF411F9A964E",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\three-starter-current-v1\\lab-2-01-workstation-call.workspace.png.identity.json",
+      "scene": "lab-2-01-workstation-call",
+      "imageSha256": "DD8FBA7BCD202C049113F4666879F40780A3F4B5E29C10AA5FA6C7DA1B7F601E",
+      "dll": "9ACEE34190C59281ED6E41646B6001BBE213C7917D7D32DB9781CF411F9A964E",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\three-starter-current-v1\\lab-4-01-press-count-lamp.workspace.png.identity.json",
+      "scene": "lab-4-01-press-count-lamp",
+      "imageSha256": "122071A57C8C92D155AAE014F9142AD42B3D859693EA0ACEA80328598EC3DFF2",
+      "dll": "9ACEE34190C59281ED6E41646B6001BBE213C7917D7D32DB9781CF411F9A964E",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\three-starter-current-v1\\lab-5-01-delayed-lamp.workspace.png.identity.json",
+      "scene": "lab-5-01-delayed-lamp",
+      "imageSha256": "9A088E19ABFBB23A791E61754FE285C7D4C70FBB93E345098BE87C5179D55AAC",
+      "dll": "9ACEE34190C59281ED6E41646B6001BBE213C7917D7D32DB9781CF411F9A964E",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\device-trace-v4\\accepted-scan.scene.png.identity.json",
+      "scene": "lab-4-01-press-count-lamp",
+      "imageSha256": "0EED3234DE18B382A6C85A1F7A6B4F17EE2103B29518F1706FCE114FBEACA600",
+      "dll": "9ACEE34190C59281ED6E41646B6001BBE213C7917D7D32DB9781CF411F9A964E",
+      "unchanged": true
+    }
+  ],
+  "frameCount": 5,
+  "review": "Dot personally qualified all5 currentbinary technicalframes",
+  "humanApproval": false,
+  "scope": "3templateinspectors+invaliddetail+scalartrace; noall77visual"
+}

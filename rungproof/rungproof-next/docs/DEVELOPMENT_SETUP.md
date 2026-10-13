@@ -28,8 +28,10 @@ Use the matching pinned .NET Godot bundle from the
 [Microsoft .NET SDK downloads](https://dotnet.microsoft.com/download/dotnet/10.0).
 Do not mix a non-.NET Godot bundle with this C# project.
 
-This is a source-run entry point. No Windows export preset or standalone
-installer is currently supplied. The guarded external-PLC path additionally
+This is a source-run entry point. A separate unsigned Windows offline candidate
+preset and checked build lane are documented in
+[OFFLINE_DEMO_CANDIDATE.md](OFFLINE_DEMO_CANDIDATE.md); no installer or approved
+external release is supplied. The guarded external-PLC path additionally
 requires the parent `rungproof` Python tools and configured profiles; copying
 only `rungproof-next` provides offline operation.
 

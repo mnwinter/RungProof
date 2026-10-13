@@ -27,17 +27,17 @@ Editable loaded ENUM state machine with Stopped, Running and Fault states, Stop/
 - Stop clears motor_running and sets output motor_state to the first declared member Stopped; held Start does not restart.
 - Reset clears controller memory, named state, fault latch and scene inputs.
 
-## Symbolic I/O
+## Expected I/O to operate this scene
 
-| Point | Type | Owner | Initial |
+| Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
-| `start_request` | BOOL | PC | `False` |
-| `stop_request` | BOOL | PC | `False` |
-| `fault_active` | BOOL | PC | `False` |
-| `motor_running` | BOOL | PLC | `False` |
-| `state_valid` | BOOL | PLC | `False` |
-| `reset_request` | BOOL | PC | `False` |
-| `motor_state` | ENUM | PLC | `Stopped` |
+| `start_request` | `BOOL` | **PC** | `False` |
+| `stop_request` | `BOOL` | **PC** | `False` |
+| `fault_active` | `BOOL` | **PC** | `False` |
+| `motor_running` | `BOOL` | **PLC** | `False` |
+| `state_valid` | `BOOL` | **PLC** | `False` |
+| `reset_request` | `BOOL` | **PC** | `False` |
+| `motor_state` | `ENUM` | **PLC** | `Stopped` |
 
 ## Editor exercise
 

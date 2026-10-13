@@ -52,7 +52,15 @@ public static partial class SceneComposer
         else if (installation == "barrelValve")
         {
             Pipe("VALVE_bore", new(0, 2.45f, -.2f), new(0, 2.45f, .2f), .075f);
+            // Thick, through-bored sockets bridge the retained unequal pipe
+            // annuli. A 1mm enlarged inner step avoids coincident inner faces;
+            // this changes presentation only, never plant flow or valve state.
+            foreach(var (name, z) in new[]{("VALVE_inlet_reducing_socket",-.2f),("VALVE_outlet_reducing_socket",.2f)})
+                AddSumpRoute(root,name,new[]{new Vector3(0,2.45f,z-.04f),new Vector3(0,2.45f,z+.04f)},.083f,steel,.083f-.039f);
             Box("VALVE_actuator", new(.22f, .14f, .22f), new(0, 2.62f, 0), blue);
+            // Seat on the curved outer wall above the .068m fluid lumen;
+            // retain actuator and pointer poses while connecting both bearings.
+            AddCylinder(root,"VALVE_actuator_stem",new(0,2.620f,0),.018f,.200f,steel);
             var pointer = new Node3D { Name = "KIN_valve_pointer", Position = new(0, 2.72f, 0) }; root.AddChild(pointer);
             AddBox(pointer, new(.04f, .03f, .30f), Vector3.Zero, Material(new Color("e8bc39"), .1f, .4f)).Name = "VALVE_pointer";
             // Offset the ground support from the fill photoeye's X=0 ray.
@@ -65,6 +73,8 @@ public static partial class SceneComposer
             Pipe("METER_inlet", new(0, 2.45f, -.4f), new(0, 2.45f, -.15f));
             Pipe("METER_bore", new(0, 2.45f, -.15f), new(0, 2.45f, .15f), .08f);
             Pipe("METER_outlet", new(0, 2.45f, .15f), new(0, 2.45f, .3f));
+            foreach(var (name, z) in new[]{("METER_inlet_reducing_socket",-.15f),("METER_outlet_reducing_socket",.15f)})
+                AddSumpRoute(root,name,new[]{new Vector3(0,2.45f,z-.04f),new Vector3(0,2.45f,z+.04f)},.088f,steel,.088f-.039f);
             Box("METER_display", new(.55f, .32f, .09f), new(0, 2.7f, 0), blue);
             AddCylinder(root, "METER_stem", new(0, 2.54f, 0), .025f, .18f, steel);
             Label("NumericReadout", "LITRES\n0", new(0, 2.7f, .05f));

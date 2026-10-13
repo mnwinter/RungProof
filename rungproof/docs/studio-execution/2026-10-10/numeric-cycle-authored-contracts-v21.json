@@ -1,0 +1,268 @@
+[
+  {
+    "scene": "lab-9-01-sum-function",
+    "equipment": "numeric_display_0",
+    "action": "cycle-operand_a",
+    "point": "operand_a",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "operand_a",
+      "equipmentId": "numeric_display_0",
+      "mode": "numericDisplay",
+      "label": "A NEXT"
+    },
+    "sourceSha256": "7A2C3FC05AB0F4B5D964F4E63C229AAD51DCA62E498B1A245F4772A827322E21"
+  },
+  {
+    "scene": "lab-9-01-sum-function",
+    "equipment": "numeric_display_1",
+    "action": "cycle-operand_b",
+    "point": "operand_b",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "operand_b",
+      "equipmentId": "numeric_display_1",
+      "mode": "numericDisplay",
+      "label": "B NEXT"
+    },
+    "sourceSha256": "7A2C3FC05AB0F4B5D964F4E63C229AAD51DCA62E498B1A245F4772A827322E21"
+  },
+  {
+    "scene": "lab-9-02-product-function",
+    "equipment": "numeric_display_0",
+    "action": "cycle-factor_a",
+    "point": "factor_a",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "factor_a",
+      "equipmentId": "numeric_display_0",
+      "mode": "numericDisplay",
+      "label": "A NEXT"
+    },
+    "sourceSha256": "09A99CC379A60843133B7F5AF4BA2D45A2F769452D3CD87ACF29D9D3DEA4C0FC"
+  },
+  {
+    "scene": "lab-9-02-product-function",
+    "equipment": "numeric_display_1",
+    "action": "cycle-factor_b",
+    "point": "factor_b",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "factor_b",
+      "equipmentId": "numeric_display_1",
+      "mode": "numericDisplay",
+      "label": "B NEXT"
+    },
+    "sourceSha256": "09A99CC379A60843133B7F5AF4BA2D45A2F769452D3CD87ACF29D9D3DEA4C0FC"
+  },
+  {
+    "scene": "lab-9-03-sum-and-counter-function",
+    "equipment": "numeric_display_0",
+    "action": "cycle-operand_a",
+    "point": "operand_a",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "operand_a",
+      "equipmentId": "numeric_display_0",
+      "mode": "numericDisplay",
+      "label": "A NEXT"
+    },
+    "sourceSha256": "45900A1A80F0CA0BF3DB2205ED818A581609B088242311D8BEA48FA33D552D1C"
+  },
+  {
+    "scene": "lab-9-03-sum-and-counter-function",
+    "equipment": "numeric_display_1",
+    "action": "cycle-operand_b",
+    "point": "operand_b",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "operand_b",
+      "equipmentId": "numeric_display_1",
+      "mode": "numericDisplay",
+      "label": "B NEXT"
+    },
+    "sourceSha256": "45900A1A80F0CA0BF3DB2205ED818A581609B088242311D8BEA48FA33D552D1C"
+  },
+  {
+    "scene": "lab-9-04-function-selector",
+    "equipment": "numeric_display_0",
+    "action": "cycle-operand_a",
+    "point": "operand_a",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "operand_a",
+      "equipmentId": "numeric_display_0",
+      "mode": "numericDisplay",
+      "label": "A NEXT"
+    },
+    "sourceSha256": "683AAEC2B1BACFEFD26C2734D5AA0ACBA3AC878303210E5166240072C215DF8C"
+  },
+  {
+    "scene": "lab-9-04-function-selector",
+    "equipment": "numeric_display_1",
+    "action": "cycle-operand_b",
+    "point": "operand_b",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      5,
+      10
+    ],
+    "binding": {
+      "point": "operand_b",
+      "equipmentId": "numeric_display_1",
+      "mode": "numericDisplay",
+      "label": "B NEXT"
+    },
+    "sourceSha256": "683AAEC2B1BACFEFD26C2734D5AA0ACBA3AC878303210E5166240072C215DF8C"
+  },
+  {
+    "scene": "lab-9-04-function-selector",
+    "equipment": "numeric_display_2",
+    "action": "cycle-function_choice",
+    "point": "function_choice",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      1,
+      2,
+      99
+    ],
+    "binding": {
+      "point": "function_choice",
+      "equipmentId": "numeric_display_2",
+      "mode": "numericDisplay",
+      "label": "FUNC NEXT"
+    },
+    "sourceSha256": "683AAEC2B1BACFEFD26C2734D5AA0ACBA3AC878303210E5166240072C215DF8C"
+  },
+  {
+    "scene": "lab-9-10-box-volume",
+    "equipment": "numeric_display_0",
+    "action": "cycle-length_mm",
+    "point": "length_mm",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      250,
+      500,
+      720,
+      850,
+      1000
+    ],
+    "binding": {
+      "point": "length_mm",
+      "equipmentId": "numeric_display_0",
+      "mode": "numericDisplay",
+      "label": "L mm NEXT"
+    },
+    "sourceSha256": "F851B5A1B9F71B4CE4234008BC7C3BB9EE6629AA03F68934308FCFE4A74298D0"
+  },
+  {
+    "scene": "lab-9-10-box-volume",
+    "equipment": "numeric_display_1",
+    "action": "cycle-width_mm",
+    "point": "width_mm",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      250,
+      500,
+      720,
+      850,
+      1000
+    ],
+    "binding": {
+      "point": "width_mm",
+      "equipmentId": "numeric_display_1",
+      "mode": "numericDisplay",
+      "label": "W mm NEXT"
+    },
+    "sourceSha256": "F851B5A1B9F71B4CE4234008BC7C3BB9EE6629AA03F68934308FCFE4A74298D0"
+  },
+  {
+    "scene": "lab-9-10-box-volume",
+    "equipment": "numeric_display_2",
+    "action": "cycle-height_mm",
+    "point": "height_mm",
+    "owner": "PC",
+    "initial": 0,
+    "values": [
+      0,
+      250,
+      500,
+      720,
+      850,
+      1000
+    ],
+    "binding": {
+      "point": "height_mm",
+      "equipmentId": "numeric_display_2",
+      "mode": "numericDisplay",
+      "label": "H mm NEXT"
+    },
+    "sourceSha256": "F851B5A1B9F71B4CE4234008BC7C3BB9EE6629AA03F68934308FCFE4A74298D0"
+  }
+]

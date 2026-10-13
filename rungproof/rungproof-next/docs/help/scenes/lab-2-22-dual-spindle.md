@@ -41,6 +41,17 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `cycle_complete` | `BOOL` | **SIM** | `False` |
 | `drill_a_position` | `REAL` | **SIM** | `0` |
 | `drill_b_position` | `REAL` | **SIM** | `0` |
+| `drill_a_feed` | `BOOL` | **PLC** | `False` |
+| `drill_a_retract` | `BOOL` | **PLC** | `False` |
+| `drill_b_feed` | `BOOL` | **PLC** | `False` |
+| `drill_b_retract` | `BOOL` | **PLC** | `False` |
+| `transfer_retract` | `BOOL` | **PLC** | `False` |
+| `drill_a_at_depth` | `BOOL` | **PC** | `False` |
+| `drill_b_at_depth` | `BOOL` | **PC** | `False` |
+| `transfer_home` | `BOOL` | **PC** | `True` |
+| `transfer_at_end` | `BOOL` | **PC** | `False` |
+| `transfer_inhibited` | `BOOL` | **PC** | `False` |
+| `transfer_position` | `REAL` | **SIM** | `0` |
 
 ## Operator actions
 

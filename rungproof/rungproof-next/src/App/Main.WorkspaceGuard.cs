@@ -11,6 +11,8 @@ public partial class Main
     // replacement operation is waiting for Save, Discard, or Cancel.
     private bool GuardWorkspaceReplacement(Action action)
     {
+        if (!GuardChallengeSceneReplacement(action)) return false;
+        RefreshWorkspaceDirty(); // Includes the actual integrated ladder draft.
         if (_workspaceReplacementAuthorized || _simulatorShell?.IsWorkspaceDirty != true) return true;
         if (_pendingWorkspaceAction is not null) return false;
         _pendingWorkspaceAction = action;

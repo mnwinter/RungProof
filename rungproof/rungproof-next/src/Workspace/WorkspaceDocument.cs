@@ -18,8 +18,17 @@ public sealed record WorkspaceDocument(
     IReadOnlyList<WorkspacePlacement> Placements,
     IReadOnlyList<WorkspaceConnectorLink>? ConnectorLinks = null,
     IReadOnlyList<WorkspaceSignalLink>? SignalLinks = null,
-    IReadOnlyList<WorkspaceGroup>? Groups = null
+    IReadOnlyList<WorkspaceGroup>? Groups = null,
+    WorkspaceTemplateOverride? TemplateOverride = null,
+    WorkspaceFiniteBeltPreset? FiniteBeltPreset = null,
+    WorkspaceFiniteRollerPreset? FiniteRollerPreset = null,
+    WorkspaceDriveConnection? DriveConnection = null
 );
+
+// First editable-template slice moves a grounded operator assembly atomically.
+// Individual heads and process equipment are intentionally outside this schema.
+public sealed record WorkspaceTemplateOverride(int Version,string TargetId,
+    string SourceFingerprint,double[] Position,double YawDegrees);
 
 public sealed record WorkspacePlacement(
     string InstanceId,

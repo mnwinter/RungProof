@@ -14,7 +14,7 @@ public sealed record LadderProgramLoadResult(
     public bool IsValid => Program is not null && Issues.Count == 0;
 }
 
-public static class LadderProgramJson
+public static partial class LadderProgramJson
 {
     public static string Save(LadderProgram program)
     {
@@ -44,7 +44,7 @@ public static class LadderProgramJson
             }
             return result;
         }
-        static Dictionary<string, object?> Network(LadderNetwork network)
+        Dictionary<string, object?> Network(LadderNetwork network)
         {
             var result = new Dictionary<string, object?>
             {
@@ -124,6 +124,9 @@ public static class LadderProgramJson
                 {
                     ["id"] = network.Call.Id,
                     ["targetBlock"] = network.Call.TargetBlock,
+                    ["semanticMode"] = network.Call.SemanticMode.ToString(),
+                    ["bindings"] = network.Call.Bindings,
+                    ["instanceId"] = network.Call.InstanceId,
                 };
             }
             if (network.Return is not null)
@@ -168,9 +171,11 @@ public static class LadderProgramJson
                 ["binding"] = variable.Binding,
                 ["aggregate"] = variable.Aggregate,
                 ["enumMembers"] = variable.EnumMembers,
+                ["symbolId"] = variable.Id,
             }).ToArray(),
             ["watchVariables"] = (program.WatchVariables ?? []).ToArray(),
             ["networks"] = program.Networks.Select(Network).ToArray(),
+            ["instances"] = program.Instances,
         };
         if (program.Blocks is { Count: > 0 })
         {
@@ -179,6 +184,9 @@ public static class LadderProgramJson
             {
                 ["id"] = block.Id,
                 ["name"] = block.Name,
+                ["blockType"] = block.BlockType.ToString(),
+                ["semanticMode"] = block.SemanticMode.ToString(),
+                ["interface"] = block.Interface,
                 ["networks"] = block.Networks.Select(Network).ToArray(),
             }).ToArray();
         }
@@ -194,7 +202,8 @@ public static class LadderProgramJson
                 ["entryBlock"] = task.EntryBlock,
             }).ToArray();
         }
-        return JsonSerializer.Serialize(document, new JsonSerializerOptions { WriteIndented = true });
+        if (program.SchemaVersion == 1) RemoveVersionTwoMetadata(document);
+        return JsonSerializer.Serialize(document, new JsonSerializerOptions { WriteIndented = true, MaxDepth = 256 });
     }
 
     public static LadderProgramLoadResult Load(string json)
@@ -202,7 +211,7 @@ public static class LadderProgramJson
         var issues = new List<LadderValidationIssue>();
         try
         {
-            using var document = JsonDocument.Parse(json);
+            using var document = JsonDocument.Parse(json, new JsonDocumentOptions { MaxDepth = 256 });
             var root = document.RootElement;
             if (root.ValueKind != JsonValueKind.Object)
                 return Invalid("VC100", "$", "Program document must be a JSON object.");
@@ -240,7 +249,7 @@ public static class LadderProgramJson
                             enumMembers = members.EnumerateArray().Select(member => member.GetString()!).ToArray();
                     }
                     variables.Add(new PlcVariable(name, type, role, initial, Text(variable, "binding"), variable.TryGetProperty("aggregate", out var schema) && schema.ValueKind == JsonValueKind.Object ? PlcAggregates.ParseSchema(schema) : null,
-                        enumMembers));
+                        enumMembers, Text(variable, "symbolId")));
                 }
             }
 
@@ -277,7 +286,10 @@ public static class LadderProgramJson
                         foreach (var network in blockNetworkArray.EnumerateArray())
                             blockNetworks.Add(ParseNetwork(network, $"{path}.networks[{networkIndex++}]", issues));
                     }
-                    blocks.Add(new LadderBlock(Text(block, "id"), Text(block, "name"), blockNetworks));
+                    blocks.Add(new LadderBlock(Text(block, "id"), Text(block, "name"), blockNetworks,
+                        ReadEnum(block, "blockType", LadderBlockType.Function, path, issues),
+                        ReadParameters(block, path, issues),
+                        ReadEnum(block, "semanticMode", LadderSemanticMode.Legacy, path, issues)));
                 }
             }
             var tasks = new List<LadderTask>();
@@ -334,7 +346,8 @@ public static class LadderProgramJson
                 blocks,
                 Text(root, "entryBlock"),
                 tasks,
-                watchVariables);
+                watchVariables, ReadRecords<LadderInstance>(root, "instances", "$", issues));
+            if (issues.Count > 0) return new(null, issues);
             var validation = LadderCompiler.Validate(program);
             return validation.Count == 0 ? new(program, []) : new(null, validation);
         }
@@ -431,7 +444,9 @@ public static class LadderProgramJson
                 Text(numericElement, "sourceB"), Text(numericElement, "destination"), sourceC);
         }
         if (network.TryGetProperty("call", out var callElement) && callElement.ValueKind == JsonValueKind.Object)
-            call = new LadderCall(Text(callElement, "id"), Text(callElement, "targetBlock"));
+            call = new LadderCall(Text(callElement, "id"), Text(callElement, "targetBlock"),
+                ReadEnum(callElement, "semanticMode", LadderSemanticMode.Legacy, path + ".call", issues),
+                ReadBindings(callElement, path + ".call", issues), Text(callElement, "instanceId"));
         if (network.TryGetProperty("return", out var returnElement) && returnElement.ValueKind == JsonValueKind.Object)
             returnInstruction = new LadderReturn(Text(returnElement, "id"));
         if (network.TryGetProperty("jump", out var jumpElement) && jumpElement.ValueKind == JsonValueKind.Object)
@@ -573,3 +588,4 @@ public static class LadderProgramJson
         _ => value.GetRawText(),
     };
 }
+

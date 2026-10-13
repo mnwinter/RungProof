@@ -31,7 +31,8 @@ public sealed record PlcVariable(
     object InitialValue,
     string Binding = "",
     PlcAggregateSchema? Aggregate = null,
-    IReadOnlyList<string>? EnumMembers = null
+    IReadOnlyList<string>? EnumMembers = null,
+    string Id = ""
 );
 
 public enum LadderNodeKind
@@ -178,7 +179,15 @@ public sealed record LadderNumericOperation(
     string Destination,
     string SourceC = "0");
 
-public sealed record LadderCall(string Id, string TargetBlock);
+public enum LadderSemanticMode { Legacy, Parameterized }
+public enum LadderActualKind { Symbol, Literal, Discard }
+public sealed record LadderCallBinding(string ParameterId, LadderActualKind Kind,
+    string Symbol = "", object? Literal = null, PlcVariableType? LiteralType = null,
+    IReadOnlyList<string>? EnumMembers = null);
+public sealed record LadderInstance(string Id, string Name, string BlockId);
+public sealed record LadderCall(string Id, string TargetBlock,
+    LadderSemanticMode SemanticMode = LadderSemanticMode.Legacy,
+    IReadOnlyList<LadderCallBinding>? Bindings = null, string InstanceId = "");
 public sealed record LadderReturn(string Id);
 public sealed record LadderJump(string Id, string TargetLabel);
 public sealed record LadderLabel(string Id, string Name);
@@ -205,7 +214,7 @@ public sealed record LadderInterfaceParameter(
     PlcVariableType Type,
     LadderInterfaceSection Section,
     object InitialValue,
-    string DataType = "");
+    string DataType = "", string Id = "", IReadOnlyList<string>? EnumMembers = null);
 
 public sealed record LadderNetwork(
     string Id,
@@ -229,7 +238,8 @@ public sealed record LadderBlock(
     string Name,
     IReadOnlyList<LadderNetwork> Networks,
     LadderBlockType BlockType = LadderBlockType.Function,
-    IReadOnlyList<LadderInterfaceParameter>? Interface = null);
+    IReadOnlyList<LadderInterfaceParameter>? Interface = null,
+    LadderSemanticMode SemanticMode = LadderSemanticMode.Legacy);
 
 public enum LadderTaskKind
 {
@@ -256,7 +266,8 @@ public sealed record LadderProgram(
     IReadOnlyList<LadderBlock>? Blocks = null,
     string EntryBlock = "",
     IReadOnlyList<LadderTask>? Tasks = null,
-    IReadOnlyList<string>? WatchVariables = null
+    IReadOnlyList<string>? WatchVariables = null,
+    IReadOnlyList<LadderInstance>? Instances = null
 );
 
 public sealed record LadderValidationIssue(string Code, string Path, string Message);

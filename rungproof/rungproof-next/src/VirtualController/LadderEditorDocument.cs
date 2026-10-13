@@ -16,9 +16,41 @@ public sealed record EditableContact(
 public sealed class EditableBranch
 {
     public string Id { get; }
-    public List<EditableContact> Contacts { get; } = [];
-
-    public EditableBranch(string id) => Id = id;
+    private EditableLadderNode _standalone;
+    private Func<EditableLadderNode>? _read;
+    private Action<EditableLadderNode>? _write;
+    internal EditableLadderNode Node => _read?.Invoke() ?? _standalone;
+    public EditorTreeList<EditableContact> Contacts { get; }
+    public EditableBranch(string id)
+    {
+        Id = id; _standalone = new(id, LadderNodeKind.Series, Children: Array.Empty<EditableLadderNode>());
+        Contacts = new(() => Node.IsLeaf ? [EditableLadderTree.ToContact(Node)]
+            : (Node.Children ?? []).Where(n => n.IsLeaf).Select(EditableLadderTree.ToContact).ToList(), CommitContacts);
+    }
+    internal EditableBranch(string id, Func<EditableLadderNode> read, Action<EditableLadderNode> write) : this(id)
+    { _read = read; _write = write; }
+    internal void Attach(Func<EditableLadderNode> read, Action<EditableLadderNode> write) { _read = read; _write = write; }
+    private void CommitContacts(List<EditableContact> contacts)
+    {
+        var current = Node;
+        EditableLadderNode replacement;
+        if (current.IsLeaf)
+        {
+            if (contacts.Count == 1 && contacts[0].Id == current.Id) replacement = EditableLadderTree.FromContact(contacts[0]);
+            else throw new InvalidOperationException("A leaf-root edit requires a recursive subtree command.");
+        }
+        else if ((current.Children ?? []).Any(n => !n.IsLeaf))
+        {
+            var originalIds = (current.Children ?? []).Where(n => n.IsLeaf).Select(n => n.Id).ToArray();
+            if (!contacts.Select(c => c.Id).SequenceEqual(originalIds))
+                throw new InvalidOperationException("Nested structural edits require an exact subtree command.");
+            var byId = contacts.ToDictionary(c => c.Id, EditableLadderTree.FromContact);
+            replacement = current with { Children = Array.AsReadOnly((current.Children ?? []).Select(n => n.IsLeaf ? byId[n.Id] : n).ToArray()) };
+        }
+        else replacement = current with { Children = Array.AsReadOnly(contacts.Select(EditableLadderTree.FromContact).ToArray()) };
+        if (_write is null) { EditableLadderTree.Validate(replacement); _standalone = replacement; }
+        else _write(replacement);
+    }
 }
 
 public sealed class EditableRung
@@ -46,17 +78,54 @@ public sealed class EditableRung
     public string NumericDestination { get; set; } = string.Empty;
     public bool IsCall { get; set; }
     public string CallTarget { get; set; } = string.Empty;
+    public LadderSemanticMode CallSemanticMode { get; set; }
+    public IReadOnlyList<LadderCallBinding> CallBindings { get; set; } = [];
+    public string CallInstanceId { get; set; } = string.Empty;
     public bool IsReturn { get; set; }
     public bool IsJump { get; set; }
     public bool IsLabel { get; set; }
     public string ProgramControlLabel { get; set; } = string.Empty;
-    public List<EditableBranch> Branches { get; } = [];
+    public EditableLadderNode Root { get; private set; }
+    public string TerminalActionId { get; set; } = string.Empty;
+    public bool HasTerminalAction { get; set; } = true;
+    public bool LegacyEmptyBranchSemantics { get; set; }
+    public EditorTreeList<EditableBranch> Branches { get; }
+    public bool IsFlat => Root.Kind == LadderNodeKind.Series && (Root.Children ?? []).All(n => n.IsLeaf)
+        || Root.Kind == LadderNodeKind.Parallel && (Root.Children ?? []).All(n => n.Kind == LadderNodeKind.Series && (n.Children ?? []).All(c => c.IsLeaf));
 
     public EditableRung(string id, string label, string coilVariable)
     {
         Id = id;
         Label = label;
         CoilVariable = coilVariable;
+        Root = new(id + "-logic", LadderNodeKind.Parallel, Children: Array.Empty<EditableLadderNode>());
+        Branches = new(ReadBranches, CommitBranches);
+    }
+    public void SetRoot(EditableLadderNode root)
+    {
+        EditableLadderTree.Validate(root);
+        // Detach caller-owned child lists; an accepted tree cannot change behind history/layout.
+        Root = EditableLadderTree.Import(EditableLadderTree.Export(root));
+    }
+    private List<EditableBranch> ReadBranches()
+    {
+        IEnumerable<EditableLadderNode> nodes = IsFlat
+            ? Root.Kind == LadderNodeKind.Series ? [Root] : Root.Children ?? []
+            : EditableLadderTree.Visit(Root).Where(n => n.IsLeaf && !EditableLadderTree.Visit(Root).Any(p => p.Kind == LadderNodeKind.Series && p.Children?.Any(c => c.Id == n.Id) == true)
+                || n.Kind == LadderNodeKind.Series);
+        return nodes.Select(n => new EditableBranch(n.Id,
+            () => EditableLadderTree.Find(Root, n.Id) ?? throw new InvalidOperationException("Branch target was removed."),
+            replacement => SetRoot(EditableLadderTree.Replace(Root, n.Id, replacement)))).ToList();
+    }
+    private void CommitBranches(List<EditableBranch> branches)
+    {
+        if (!IsFlat) throw new InvalidOperationException("Nested branch edits require an exact subtree command.");
+        var nodes = branches.Select(b => b.Node).ToArray();
+        SetRoot(nodes.Length == 1 ? nodes[0] : new(Root.Kind == LadderNodeKind.Parallel ? Root.Id : Id + "-parallel",
+            LadderNodeKind.Parallel, Children: Array.AsReadOnly(nodes)));
+        foreach (var branch in branches) branch.Attach(
+            () => EditableLadderTree.Find(Root, branch.Id) ?? throw new InvalidOperationException("Branch target was removed."),
+            replacement => SetRoot(EditableLadderTree.Replace(Root, branch.Id, replacement)));
     }
 }
 
@@ -65,6 +134,7 @@ public sealed class EditableBlock
     public string Id { get; }
     public string Name { get; set; }
     public LadderBlockType BlockType { get; set; }
+    public LadderSemanticMode SemanticMode { get; set; }
     public List<LadderInterfaceParameter> Interface { get; } = [];
     public List<EditableRung> Rungs { get; } = [];
 
@@ -109,6 +179,7 @@ public sealed partial class LadderEditorDocument
     public string SourceSceneId { get; set; } = string.Empty;
     public TimeSpan ScanPeriod { get; set; } = TimeSpan.FromMilliseconds(20);
     public List<PlcVariable> Tags { get; } = [];
+    public List<LadderInstance> Instances { get; } = [];
     public List<EditableBlock> Blocks { get; } = [];
     public List<EditableTask> Tasks { get; } = [];
     public List<string> WatchVariables { get; } = [];
@@ -130,6 +201,7 @@ public sealed partial class LadderEditorDocument
         SourceSceneId = string.Empty;
         ScanPeriod = scanPeriod;
         Tags.Clear();
+        Instances.Clear();
         Blocks.Clear();
         Tasks.Clear();
         WatchVariables.Clear();
@@ -137,6 +209,7 @@ public sealed partial class LadderEditorDocument
         EntryBlockId = string.Empty;
         _nextId = 1;
         AddBlock(Name);
+        InvalidateCommandTargets();
     }
 
     public EditableBlock AddBlock(string name, LadderBlockType? blockType = null)
@@ -303,6 +376,7 @@ public sealed partial class LadderEditorDocument
     public void SelectBlock(int index)
     {
         if (index < 0 || index >= Blocks.Count) throw new ArgumentOutOfRangeException(nameof(index));
+        if (ActiveBlockIndex != index) InvalidateCommandTargets(contentChanged: false);
         ActiveBlockIndex = index;
     }
 
@@ -364,7 +438,7 @@ public sealed partial class LadderEditorDocument
         else ValidateInitialValue(type, normalizedInitialValue);
         var members = type == PlcVariableType.Enum ? enumMembers ?? (current.Type == type ? current.EnumMembers : PlcTextValues.MotorStates) : null;
         if (members is not null) members = Array.AsReadOnly(members.ToArray());
-        var updated = new PlcVariable(normalizedName, type, role, normalizedInitialValue, binding.Trim(), updatedSchema, members);
+        var updated = new PlcVariable(normalizedName, type, role, normalizedInitialValue, binding.Trim(), updatedSchema, members, current.Id);
         if (PlcTextValues.IsText(type) && !PlcTextValues.IsValid(updated, normalizedInitialValue))
             throw new InvalidOperationException("Invalid STRING value or ENUM domain/member.");
         if (PlcAggregates.IsAggregate(type) || Tags.Any(tag => PlcAggregates.IsAggregate(tag.Type)))
@@ -793,29 +867,17 @@ public sealed partial class LadderEditorDocument
             NumericDestination = source.NumericDestination,
             IsCall = source.IsCall,
             CallTarget = source.CallTarget,
+            CallSemanticMode = source.CallSemanticMode, CallBindings = source.CallBindings.ToArray(), CallInstanceId = source.CallInstanceId,
             IsReturn = source.IsReturn,
             IsJump = source.IsJump,
             IsLabel = source.IsLabel,
             ProgramControlLabel = source.ProgramControlLabel,
         };
-        foreach (var sourceBranch in source.Branches)
-        {
-            var branch = new EditableBranch(preserveIds ? sourceBranch.Id : NewId("branch"));
-            foreach (var sourceContact in sourceBranch.Contacts)
-            {
-                var prefix = sourceContact.IsComparison
-                    ? "compare"
-                    : sourceContact.EdgeMode == LadderEdgeMode.None ? "contact" : "edge";
-                branch.Contacts.Add(preserveIds
-                    ? sourceContact with { }
-                    : sourceContact with { Id = NewId(prefix) });
-            }
-            rung.Branches.Add(branch);
-        }
-        // Older or hand-built templates must still produce a structurally
-        // editable rung even if they contain no explicit branch objects.
-        if (rung.Branches.Count == 0)
-            rung.Branches.Add(new EditableBranch(preserveIds ? source.Id + "-clipboard-branch" : NewId("branch")));
+        rung.TerminalActionId = preserveIds ? source.TerminalActionId : NewId("action");
+        rung.HasTerminalAction = source.HasTerminalAction;
+        rung.LegacyEmptyBranchSemantics = source.LegacyEmptyBranchSemantics;
+        rung.SetRoot(preserveIds ? EditableLadderTree.Import(EditableLadderTree.Export(source.Root))
+            : EditableLadderTree.CloneWithFreshIds(source.Root, () => NewId("node")));
         return rung;
     }
 
@@ -827,8 +889,13 @@ public sealed partial class LadderEditorDocument
         branches.RemoveAt(branchIndex);
     }
 
-    public void RemoveContact(int rungIndex, int branchIndex, int contactIndex) =>
-        Rungs[rungIndex].Branches[branchIndex].Contacts.RemoveAt(contactIndex);
+    public void RemoveContact(int rungIndex, int branchIndex, int contactIndex)
+    {
+        var rung = Rungs[rungIndex]; var branch = rung.Branches[branchIndex];
+        if (branch.Node.IsLeaf || (branch.Node.Children ?? []).Any(n => !n.IsLeaf))
+            RemoveSubtree(rungIndex, branch.Contacts[contactIndex].Id);
+        else branch.Contacts.RemoveAt(contactIndex);
+    }
 
     public void ReplaceContact(int rungIndex, int branchIndex, int contactIndex, EditableContact replacement)
     {
@@ -841,6 +908,8 @@ public sealed partial class LadderEditorDocument
     public int MoveContact(int rungIndex, int branchIndex, int contactIndex, int offset)
     {
         var contacts = Rungs[rungIndex].Branches[branchIndex].Contacts;
+        if (!Rungs[rungIndex].IsFlat)
+            throw new InvalidOperationException("Nested movement requires an exact subtree command.");
         if (contactIndex < 0 || contactIndex >= contacts.Count)
             throw new ArgumentOutOfRangeException(nameof(contactIndex));
         var destination = Math.Clamp(contactIndex + offset, 0, contacts.Count - 1);
@@ -853,58 +922,118 @@ public sealed partial class LadderEditorDocument
 
     public void RemoveRung(int rungIndex) => Rungs.RemoveAt(rungIndex);
 
+    public EditableLadderNode CaptureSubtree(int rungIndex, string nodeId) =>
+        EditableLadderTree.Find(Rungs[rungIndex].Root, nodeId)
+        ?? throw new ArgumentException($"logic: node '{nodeId}' does not exist.");
+
+    public void InsertSubtree(int rungIndex, string targetId, EditableLadderNode template, bool after, bool freshIds = true) =>
+        ApplyTreeMutation(rungIndex, root => EditableLadderTree.Insert(root, targetId,
+            freshIds ? EditableLadderTree.CloneWithFreshIds(template, () => NewId("node")) : template,
+            after, () => NewId("node")));
+
+    public void InsertSubtreeAt(int rungIndex, string parentId, int slot, EditableLadderNode template, bool freshIds = true) =>
+        ApplyTreeMutation(rungIndex, root => EditableLadderTree.InsertChild(root, parentId, slot,
+            freshIds ? EditableLadderTree.CloneWithFreshIds(template, () => NewId("node")) : template));
+
+    public void WrapParallel(int rungIndex, string nodeId) =>
+        ApplyTreeMutation(rungIndex, root => EditableLadderTree.WrapParallel(root, nodeId, () => NewId("node")));
+
+    public void RemoveSubtree(int rungIndex, string nodeId) =>
+        ApplyTreeMutation(rungIndex, root => EditableLadderTree.RemoveSubtree(root, nodeId, () => NewId("node")));
+
+    public void MoveSubtree(int rungIndex, string nodeId, string parentId, int slot) =>
+        ApplyTreeMutation(rungIndex, root => EditableLadderTree.MoveSubtree(root, nodeId, parentId, slot, () => NewId("node")));
+
+    public void ReplaceSubtree(int rungIndex, string nodeId, EditableLadderNode replacement) =>
+        ApplyTreeMutation(rungIndex, root => EditableLadderTree.Replace(root, nodeId, replacement));
+
+    /// <summary>Explicit, history-owned conversion: empty Series paths become TRUE wires.</summary>
+    public void ConvertToRecursiveSemantics(int rungIndex) => Rungs[rungIndex].LegacyEmptyBranchSemantics = false;
+
+    private void ApplyTreeMutation(int rungIndex, Func<EditableLadderNode, EditableLadderNode> mutation)
+    {
+        var rung = Rungs[rungIndex];
+        if (rung.LegacyEmptyBranchSemantics)
+            throw new InvalidOperationException("Convert this legacy network to recursive semantics explicitly before structural editing; empty Series paths become TRUE wires.");
+        var oldNextId = _nextId;
+        try
+        {
+            var replacement = mutation(rung.Root);
+            ValidateTreeReplacement(rungIndex, replacement);
+            rung.SetRoot(replacement);
+        }
+        catch { _nextId = oldNextId; throw; }
+    }
+
+    internal void ValidateTreeReplacement(int rungIndex, EditableLadderNode replacement)
+    {
+            var rung = Rungs[rungIndex];
+            var occupied = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var existing in Blocks.SelectMany(b => b.Rungs))
+            {
+                if (!occupied.Add(existing.Id)) throw new ArgumentException($"Duplicate network ID '{existing.Id}'.");
+                foreach (var id in TerminalIdsForRung(existing))
+                    if (!occupied.Add(id)) throw new ArgumentException($"Duplicate terminal ID '{id}'.");
+                if (!ReferenceEquals(existing, rung)) EditableLadderTree.Validate(existing.Root, "logic", occupied);
+            }
+            EditableLadderTree.Validate(replacement, "logic", occupied);
+    }
+
+    private static IEnumerable<string> TerminalIdsForRung(EditableRung rung)
+    {
+        if (!rung.HasTerminalAction) yield break;
+        if (!string.IsNullOrEmpty(rung.TerminalActionId)) { yield return rung.TerminalActionId; yield break; }
+        var suffix = rung.IsTimer ? "timer" : rung.IsTimerReset ? "timer-reset" : rung.IsCounter ? "counter"
+            : rung.IsCounterReset ? "counter-reset" : rung.IsCounterLoad ? "counter-load" : rung.IsNumericOperation ? "numeric"
+            : rung.IsCall ? "call" : rung.IsReturn ? "return" : rung.IsJump ? "jump" : rung.IsLabel ? "label" : "coil";
+        yield return NewStableId(rung.Id, suffix);
+    }
+
     public LadderProgram BuildProgram()
     {
         EnsureActiveBlock();
         LadderNetwork BuildNetwork(EditableRung rung)
         {
-            var branchNodes = rung.Branches
-                .Where(branch => branch.Contacts.Count > 0)
-                .Select(branch => new LadderNode(
-                    branch.Id,
-                    LadderNodeKind.Series,
-                    Children: branch.Contacts.Select(contact => new LadderNode(
-                        contact.Id,
-                        contact.IsComparison ? LadderNodeKind.Compare : LadderNodeKind.Contact,
-                        contact.Variable,
-                        contact.NormallyClosed,
-                        CompareOperator: contact.CompareOperator,
-                        RightOperand: contact.RightOperand,
-                        EdgeMode: contact.EdgeMode)).ToArray()))
-                .ToArray();
-            LadderNode logic = branchNodes.Length == 1
-                ? branchNodes[0]
-                : new LadderNode(NewStableId(rung.Id, "parallel"), LadderNodeKind.Parallel, Children: branchNodes);
-            var usesCoil = !rung.IsTimer && !rung.IsTimerReset && !rung.IsCounter && !rung.IsCounterReset && !rung.IsCounterLoad
+            var logic = EditableLadderTree.Export(rung.Root);
+            if (rung.LegacyEmptyBranchSemantics)
+            {
+                if (!rung.IsFlat) throw new InvalidOperationException("Legacy empty-branch semantics requires a flat network.");
+                var surviving = rung.Branches.Where(b => b.Contacts.Count > 0).Select(b => EditableLadderTree.Export(b.Node)).ToArray();
+                logic = surviving.Length == 1 ? surviving[0]
+                    : new LadderNode(rung.Root.Kind == LadderNodeKind.Parallel ? rung.Root.Id : NewStableId(rung.Id, "parallel"),
+                        LadderNodeKind.Parallel, Children: surviving);
+            }
+            string ActionId(string suffix) => string.IsNullOrWhiteSpace(rung.TerminalActionId) ? NewStableId(rung.Id, suffix) : rung.TerminalActionId;
+            var usesCoil = rung.HasTerminalAction && !rung.IsTimer && !rung.IsTimerReset && !rung.IsCounter && !rung.IsCounterReset && !rung.IsCounterLoad
                 && !rung.IsNumericOperation && !rung.IsCall && !rung.IsReturn && !rung.IsJump && !rung.IsLabel;
             return new LadderNetwork(
                 rung.Id,
                 rung.Label,
                 logic,
-                usesCoil ? new LadderCoil(NewStableId(rung.Id, "coil"), rung.CoilVariable, rung.CoilMode) : null,
-                rung.IsTimer ? new LadderTimer(NewStableId(rung.Id, "timer"), rung.TimerVariable, rung.TimerPreset, rung.TimerKind) : null,
-                rung.IsCounter ? new LadderCounter(NewStableId(rung.Id, "counter"), rung.CounterVariable, rung.CounterPreset, rung.CounterKind) : null,
-                rung.IsCounterReset ? new LadderCounterReset(NewStableId(rung.Id, "counter-reset"), rung.CounterVariable) : null,
-                rung.IsNumericOperation ? new LadderNumericOperation(
-                    NewStableId(rung.Id, "numeric"),
+                usesCoil ? new LadderCoil(ActionId("coil"), rung.CoilVariable, rung.CoilMode) : null,
+                rung.HasTerminalAction && rung.IsTimer ? new LadderTimer(ActionId("timer"), rung.TimerVariable, rung.TimerPreset, rung.TimerKind) : null,
+                rung.HasTerminalAction && rung.IsCounter ? new LadderCounter(ActionId("counter"), rung.CounterVariable, rung.CounterPreset, rung.CounterKind) : null,
+                rung.HasTerminalAction && rung.IsCounterReset ? new LadderCounterReset(ActionId("counter-reset"), rung.CounterVariable) : null,
+                rung.HasTerminalAction && rung.IsNumericOperation ? new LadderNumericOperation(
+                    ActionId("numeric"),
                     rung.NumericOperationKind,
                     rung.NumericSourceA,
                     rung.NumericSourceB,
                     rung.NumericDestination,
                     rung.NumericSourceC) : null,
-                rung.IsCall ? new LadderCall(NewStableId(rung.Id, "call"), rung.CallTarget) : null,
-                rung.IsReturn ? new LadderReturn(NewStableId(rung.Id, "return")) : null,
-                rung.IsCounterLoad ? new LadderCounterLoad(NewStableId(rung.Id, "counter-load"), rung.CounterVariable, rung.CounterPreset) : null,
-                rung.IsTimerReset ? new LadderTimerReset(NewStableId(rung.Id, "timer-reset"), rung.TimerVariable) : null,
-                rung.IsJump ? new LadderJump(NewStableId(rung.Id, "jump"), rung.ProgramControlLabel) : null,
-                rung.IsLabel ? new LadderLabel(NewStableId(rung.Id, "label"), rung.ProgramControlLabel) : null);
+                rung.HasTerminalAction && rung.IsCall ? new LadderCall(ActionId("call"), rung.CallTarget, rung.CallSemanticMode, rung.CallBindings.ToArray(), rung.CallInstanceId) : null,
+                rung.HasTerminalAction && rung.IsReturn ? new LadderReturn(ActionId("return")) : null,
+                rung.HasTerminalAction && rung.IsCounterLoad ? new LadderCounterLoad(ActionId("counter-load"), rung.CounterVariable, rung.CounterPreset) : null,
+                rung.HasTerminalAction && rung.IsTimerReset ? new LadderTimerReset(ActionId("timer-reset"), rung.TimerVariable) : null,
+                rung.HasTerminalAction && rung.IsJump ? new LadderJump(ActionId("jump"), rung.ProgramControlLabel) : null,
+                rung.HasTerminalAction && rung.IsLabel ? new LadderLabel(ActionId("label"), rung.ProgramControlLabel) : null);
         }
         var blocks = Blocks.Select(block => new LadderBlock(
             block.Id,
             block.Name,
             block.Rungs.Select(BuildNetwork).ToArray(),
             block.BlockType,
-            block.Interface.ToArray())).ToArray();
+            block.Interface.ToArray(), block.SemanticMode)).ToArray();
         var tasks = Tasks.Select(task => new LadderTask(
             task.Id,
             task.Name,
@@ -913,7 +1042,7 @@ public sealed partial class LadderEditorDocument
             task.Priority,
             task.EntryBlock)).ToArray();
         return new LadderProgram(
-            1,
+            2,
             Id,
             Name,
             "LD",
@@ -923,89 +1052,89 @@ public sealed partial class LadderEditorDocument
             blocks,
             string.IsNullOrWhiteSpace(EntryBlockId) ? blocks[0].Id : EntryBlockId,
             tasks,
-            WatchVariables.ToArray());
+            WatchVariables.ToArray(), Instances.ToArray());
     }
 
     public void ReplaceFromProgram(LadderProgram program)
     {
-        Id = program.Id;
-        Name = program.Name;
-        ScanPeriod = program.ScanPeriod;
-        Tags.Clear();
-        Tags.AddRange(program.Variables);
-        WatchVariables.Clear();
-        WatchVariables.AddRange(program.WatchVariables ?? []);
-        Blocks.Clear();
-        Tasks.Clear();
-        _nextId = 1;
+        ArgumentNullException.ThrowIfNull(program);
         var sourceBlocks = program.Blocks is { Count: > 0 }
-            ? program.Blocks
-            : [new LadderBlock("main", program.Name, program.Networks)];
-        foreach (var sourceBlock in sourceBlocks)
+            ? program.Blocks : [new LadderBlock("main", program.Name, program.Networks)];
+        // Validate the entire import before touching the current draft.
+        var occupied = new HashSet<string>(StringComparer.Ordinal);
+        var prepared = new Dictionary<string, EditableLadderNode>(StringComparer.Ordinal);
+        foreach (var block in sourceBlocks)
+        for (var index = 0; index < block.Networks.Count; index++)
         {
-            var editableBlock = new EditableBlock(sourceBlock.Id, sourceBlock.Name, sourceBlock.BlockType);
-            editableBlock.Interface.AddRange(sourceBlock.Interface ?? []);
-            Blocks.Add(editableBlock);
-            ActiveBlockIndex = Blocks.Count - 1;
-            foreach (var network in sourceBlock.Networks)
-            {
-                var rung = network.Timer is not null
-                    ? AddTimerRung(network.Label, network.Timer.Variable, network.Timer.Preset, network.Timer.Kind)
-                    : network.TimerReset is not null
-                        ? AddTimerResetRung(network.Label, network.TimerReset.Variable)
-                    : network.Counter is not null
-                        ? AddCounterRung(network.Label, network.Counter.Variable, network.Counter.Preset)
-                        : network.CounterReset is not null
-                            ? AddCounterRung(network.Label, network.CounterReset.Variable, 1, reset: true)
-                            : network.CounterLoad is not null
-                                ? AddCounterRung(network.Label, network.CounterLoad.Variable,
-                                    network.CounterLoad.Preset, load: true)
-                            : network.NumericOperation is not null
-                                ? AddNumericOperationRung(
-                                    network.Label,
-                                    network.NumericOperation.Kind,
-                                    network.NumericOperation.SourceA,
-                                    network.NumericOperation.SourceB,
-                                    network.NumericOperation.Destination,
-                                    network.NumericOperation.SourceC)
-                                : network.Call is not null
-                                    ? AddCallRung(network.Label, network.Call.TargetBlock)
-                                    : network.Return is not null
-                                        ? AddReturnRung(network.Label)
-                                        : network.Jump is not null
-                                            ? AddJumpRung(network.Label, network.Jump.TargetLabel)
-                                            : network.LabelInstruction is not null
-                                                ? AddLabelRung(network.Label, network.LabelInstruction.Name)
-                                        : AddRung(network.Label, network.Coil?.Variable ?? string.Empty);
-                if (network.Counter is not null) rung.CounterKind = network.Counter.Kind;
-                if (network.Coil is not null) rung.CoilMode = network.Coil.Mode;
-                rung.Branches.Clear();
-                foreach (var path in ExpandPaths(network.Logic))
-                {
-                    var branch = AddParallelBranch(Rungs.Count - 1);
-                    foreach (var contact in path)
-                        branch.Contacts.Add(new EditableContact(
-                            contact.Id,
-                            contact.Variable,
-                            contact.NormallyClosed,
-                            contact.Kind == LadderNodeKind.Compare,
-                            contact.CompareOperator,
-                            contact.RightOperand,
-                            contact.EdgeMode));
-                }
-            }
+            var n = block.Networks[index];
+            var path = $"blocks[{block.Id}].networks[{index}]";
+            if (string.IsNullOrWhiteSpace(n.Id) || !occupied.Add(n.Id))
+                throw new ArgumentException($"{path}.id: missing or duplicate network ID '{n.Id}'.");
+            var actions = TerminalIds(n).ToArray();
+            if (actions.Length > 1) throw new ArgumentException($"{path}: a network permits at most one terminal action.");
+            foreach (var id in actions)
+                if (string.IsNullOrWhiteSpace(id) || !occupied.Add(id))
+                    throw new ArgumentException($"{path}.action.id: missing or duplicate terminal ID '{id}'.");
+            var root = EditableLadderTree.Import(n.Logic, path + ".logic");
+            EditableLadderTree.Validate(root, path + ".logic", occupied);
+            prepared.Add(n.Id, root);
         }
+        var newBlocks = new List<EditableBlock>();
+        foreach (var source in sourceBlocks)
+        {
+            var block = new EditableBlock(source.Id, source.Name, source.BlockType) { SemanticMode = source.SemanticMode };
+            block.Interface.AddRange(source.Interface ?? []);
+            foreach (var n in source.Networks)
+            {
+                var rung = new EditableRung(n.Id, n.Label, n.Coil?.Variable ?? string.Empty)
+                {
+                    TerminalActionId = TerminalIds(n).FirstOrDefault() ?? string.Empty,
+                    HasTerminalAction = TerminalIds(n).Any(),
+                    CoilMode = n.Coil?.Mode ?? LadderCoilMode.Assign,
+                    IsTimer = n.Timer is not null, TimerVariable = n.Timer?.Variable ?? n.TimerReset?.Variable ?? string.Empty,
+                    TimerPreset = n.Timer?.Preset ?? TimeSpan.FromSeconds(1), TimerKind = n.Timer?.Kind ?? LadderTimerKind.OnDelay,
+                    IsTimerReset = n.TimerReset is not null,
+                    IsCounter = n.Counter is not null, IsCounterReset = n.CounterReset is not null,
+                    IsCounterLoad = n.CounterLoad is not null, CounterVariable = n.Counter?.Variable ?? n.CounterReset?.Variable ?? n.CounterLoad?.Variable ?? string.Empty,
+                    CounterPreset = n.Counter?.Preset ?? n.CounterLoad?.Preset ?? 10, CounterKind = n.Counter?.Kind ?? LadderCounterKind.CountUp,
+                    IsNumericOperation = n.NumericOperation is not null, NumericOperationKind = n.NumericOperation?.Kind ?? LadderNumericOperationKind.Move,
+                    NumericSourceA = n.NumericOperation?.SourceA ?? "0", NumericSourceB = n.NumericOperation?.SourceB ?? "0",
+                    NumericSourceC = n.NumericOperation?.SourceC ?? "0", NumericDestination = n.NumericOperation?.Destination ?? string.Empty,
+                    IsCall = n.Call is not null, CallTarget = n.Call?.TargetBlock ?? string.Empty,
+                    CallSemanticMode = n.Call?.SemanticMode ?? LadderSemanticMode.Legacy, CallBindings = n.Call?.Bindings?.ToArray() ?? [], CallInstanceId = n.Call?.InstanceId ?? string.Empty,
+                    IsReturn = n.Return is not null, IsJump = n.Jump is not null, IsLabel = n.LabelInstruction is not null,
+                    ProgramControlLabel = n.Jump?.TargetLabel ?? n.LabelInstruction?.Name ?? string.Empty,
+                };
+                rung.SetRoot(prepared[n.Id]); block.Rungs.Add(rung);
+            }
+            newBlocks.Add(block);
+        }
+        Id = program.Id; Name = program.Name; ScanPeriod = program.ScanPeriod;
+        Tags.Clear(); Tags.AddRange(program.Variables);
+        Instances.Clear(); Instances.AddRange(program.Instances ?? []);
+        WatchVariables.Clear(); WatchVariables.AddRange(program.WatchVariables ?? []);
+        Blocks.Clear(); Blocks.AddRange(newBlocks); Tasks.Clear(); _nextId = 1;
         EntryBlockId = string.IsNullOrWhiteSpace(program.EntryBlock) ? Blocks[0].Id : program.EntryBlock;
         if (program.Tasks is { Count: > 0 })
-        {
-            foreach (var task in program.Tasks)
-                Tasks.Add(new EditableTask(task.Id, task.Name, task.Kind, task.Period, task.Priority, task.EntryBlock));
-        }
-        else
-        {
-            Tasks.Add(new EditableTask(NewId("task"), "MainTask", LadderTaskKind.Continuous, ScanPeriod, 10, EntryBlockId));
-        }
-        ActiveBlockIndex = Math.Max(0, Blocks.FindIndex(block => block.Id == EntryBlockId));
+            Tasks.AddRange(program.Tasks.Select(t => new EditableTask(t.Id, t.Name, t.Kind, t.Period, t.Priority, t.EntryBlock)));
+        else Tasks.Add(new EditableTask(NewId("task"), "MainTask", LadderTaskKind.Continuous, ScanPeriod, 10, EntryBlockId));
+        ActiveBlockIndex = Math.Max(0, Blocks.FindIndex(b => b.Id == EntryBlockId));
+        InvalidateCommandTargets();
+    }
+
+    private static IEnumerable<string> TerminalIds(LadderNetwork n)
+    {
+        if (n.Coil is not null) yield return n.Coil.Id;
+        if (n.Timer is not null) yield return n.Timer.Id;
+        if (n.TimerReset is not null) yield return n.TimerReset.Id;
+        if (n.Counter is not null) yield return n.Counter.Id;
+        if (n.CounterReset is not null) yield return n.CounterReset.Id;
+        if (n.CounterLoad is not null) yield return n.CounterLoad.Id;
+        if (n.NumericOperation is not null) yield return n.NumericOperation.Id;
+        if (n.Call is not null) yield return n.Call.Id;
+        if (n.Return is not null) yield return n.Return.Id;
+        if (n.Jump is not null) yield return n.Jump.Id;
+        if (n.LabelInstruction is not null) yield return n.LabelInstruction.Id;
     }
 
     public static LadderEditorDocument CreateConveyorExample()
@@ -1033,7 +1162,20 @@ public sealed partial class LadderEditorDocument
         return document;
     }
 
-    private string NewId(string prefix) => $"{prefix}-{_nextId++}";
+    private string NewId(string prefix)
+    {
+        var occupied = new HashSet<string>(Blocks.Select(b => b.Id).Concat(Tasks.Select(t => t.Id)), StringComparer.Ordinal);
+        foreach (var rung in Blocks.SelectMany(b => b.Rungs))
+        {
+            occupied.Add(rung.Id);
+            foreach (var node in EditableLadderTree.Visit(rung.Root)) occupied.Add(node.Id);
+            occupied.Add(rung.TerminalActionId);
+            foreach (var actionId in TerminalIdsForRung(rung)) occupied.Add(actionId);
+        }
+        string candidate;
+        do { candidate = $"{prefix}-{_nextId++}"; } while (occupied.Contains(candidate));
+        return candidate;
+    }
     private static string NewStableId(string owner, string suffix) => $"{owner}-{suffix}";
 
     private static string ValidateUniqueName(string name, IEnumerable<string> existingNames, string objectKind)
@@ -1052,19 +1194,5 @@ public sealed partial class LadderEditorDocument
         return Blocks[ActiveBlockIndex];
     }
 
-    private static IReadOnlyList<IReadOnlyList<LadderNode>> ExpandPaths(LadderNode node)
-    {
-        if (node.Kind is LadderNodeKind.Contact or LadderNodeKind.Compare) return [[node]];
-        var children = node.Children ?? [];
-        if (node.Kind == LadderNodeKind.Parallel)
-            return children.SelectMany(ExpandPaths).ToArray();
-        IReadOnlyList<IReadOnlyList<LadderNode>> paths = [Array.Empty<LadderNode>()];
-        foreach (var child in children)
-        {
-            var childPaths = ExpandPaths(child);
-            paths = paths.SelectMany(left => childPaths.Select(right =>
-                (IReadOnlyList<LadderNode>)left.Concat(right).ToArray())).ToArray();
-        }
-        return paths;
-    }
 }
+

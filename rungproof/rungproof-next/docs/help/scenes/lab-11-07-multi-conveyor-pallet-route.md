@@ -14,6 +14,13 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `infeed_blocked` | `BOOL` | **PC** | `False` |
+| `handoff_1_blocked` | `BOOL` | **PC** | `False` |
+| `zone_2_blocked` | `BOOL` | **PC** | `False` |
+| `receiver_entry_blocked` | `BOOL` | **PC** | `False` |
+| `route_position` | `REAL` | **SIM** | `-9.3` |
+| `route_complete` | `BOOL` | **SIM** | `False` |
+| `common_stop_request` | `BOOL` | **PC** | `False` |
 | `zone_1_clear` | `BOOL` | **PC** | `False` |
 | `zone_2_clear` | `BOOL` | **PC** | `False` |
 | `zone_3_clear` | `BOOL` | **PC** | `False` |

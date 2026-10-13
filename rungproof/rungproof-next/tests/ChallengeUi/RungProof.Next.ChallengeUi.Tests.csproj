@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>disable</ImplicitUsings><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+  <ItemGroup><Compile Include="../../src/Challenges/ChallengeContracts.cs" Link="ChallengeContracts.cs" /><Compile Include="../../src/App/ChallengePresenterModel.cs" Link="ChallengePresenterModel.cs" /></ItemGroup>
+</Project>

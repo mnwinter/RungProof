@@ -17,9 +17,11 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `pallet_ready` | `BOOL` | **PC** | `True` |
 | `robot_run` | `BOOL` | **PLC** | `False` |
 | `conveyor_run` | `BOOL` | **PLC** | `False` |
-| `placed_count` | `DINT` | **SIM** | `0` |
+| `placed_count` | `DINT` | **PC** | `0` |
 | `cell_color` | `STRING` | **SIM** | `amber` |
-| `cycle_complete` | `BOOL` | **SIM** | `False` |
+| `cycle_complete` | `BOOL` | **PC** | `False` |
+| `robot_at_park` | `BOOL` | **PC** | `True` |
+| `operator.start` | `BOOL` | **PC** | `False` |
 
 ## Operator actions
 

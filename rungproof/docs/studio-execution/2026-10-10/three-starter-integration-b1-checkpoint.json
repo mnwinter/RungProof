@@ -1,0 +1,21 @@
+{
+  "dll": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+  "build": "template-diagnostics-build-v6.log",
+  "native": "template-diagnostics-native-v4.log",
+  "nativeFailures": 0,
+  "support": [
+    "lab-2-01-workstation-call",
+    "lab-4-01-press-count-lamp",
+    "lab-5-01-delayed-lamp"
+  ],
+  "limits": [
+    "whole grounded assembly translation/yaw only",
+    "individual heads and process equipment locked",
+    "scalar device selector navigation tested; indexed binding mapping tested, indexed selector navigation not tested",
+    "current accepted snapshot only; mismatch disables evaluation/navigation",
+    "new render blockers: selected error detail contrast/height; template load dialog and demo title mismatch",
+    "two-room classroom finish needs local brightness refinement",
+    "other74 editability and current77 integrated evidence unqualified"
+  ],
+  "humanFinalApproval": false
+}

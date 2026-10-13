@@ -1,0 +1,282 @@
+{
+  "status": "REVIEWED_WITH_REMAINING_QUALITY_LIMITS",
+  "humanFinalApproved": false,
+  "scenesReviewed": 15,
+  "individualImagesReviewed": 30,
+  "qualificationIssues": [],
+  "assemblies": [
+    "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B"
+  ],
+  "images": [
+    {
+      "sceneId": "conveyor-cell",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\01-conveyor-cell.scene.png",
+      "sha256": "BEAE9579337106FFB963ACC4E1DD15A92F6722525004AE6B8DD008570AA011B1",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "conveyor-cell",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\01-conveyor-cell.split.png",
+      "sha256": "7AC70C83BD792AA91EE129FEE31C5F0E1D0D59E0EA3A9B573656E5FC2ACB0656",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "equipment-gallery",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\02-equipment-gallery.scene.png",
+      "sha256": "A956834989185B785F2D9F70CB9559380503532527CEAA656CC0517777B79404",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "equipment-gallery",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\02-equipment-gallery.split.png",
+      "sha256": "0C1AA8BC5A8E009BB76A2CCF8E640EFB198210BDC56D632CFF9A377F09880B05",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-02-chicken-label-print",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\03-lab-10-02-chicken-label-print.scene.png",
+      "sha256": "609C616BBC5CC834204B04E0A4D51381D711FB98398AC34E976510C1CF67B2AE",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-02-chicken-label-print",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\03-lab-10-02-chicken-label-print.split.png",
+      "sha256": "A0043EC23363AAFF51B50482563AB17916CAF5A130BEE2551AFD4320EC43CF28",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-03-vision-package-sorter",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\04-lab-10-03-vision-package-sorter.scene.png",
+      "sha256": "ACFBE1258F33E4BC9603F93AA2F81607507B726B60933F60D23493327A23373D",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-03-vision-package-sorter",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\04-lab-10-03-vision-package-sorter.split.png",
+      "sha256": "749B33762640D26C86150B7359D6FFB80E423AF39F192A281BD3666E1AF68DA3",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-04-motor-enum-state",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\05-lab-10-04-motor-enum-state.scene.png",
+      "sha256": "A0D2BB89057205D8EB8F945DE8E09ECE069206DCC69FD77AEDB194FFD939127D",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-04-motor-enum-state",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\05-lab-10-04-motor-enum-state.split.png",
+      "sha256": "B1ACB2ED2E65D726B9E39B49E692278217DD28B9847FDD8E5D5BED7AA60144CA",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-05-motor-struct-data",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\06-lab-10-05-motor-struct-data.scene.png",
+      "sha256": "C98BBA804B0F83F07A158FFAC1C966FEE7D10930555CE79CEC744FC1CA9F461F",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-05-motor-struct-data",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\06-lab-10-05-motor-struct-data.split.png",
+      "sha256": "79DE677E5563186A0E5BD6CDF8DE905D1DAAC5D65EDC89FC0FA580AC37E2F25C",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-06-ten-motor-array-startup",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\07-lab-10-06-ten-motor-array-startup.scene.png",
+      "sha256": "0DA2452829B1B51698DAD7C57A524C0932AB7AA3BCE715224DB6E6F0A0B4D272",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-10-06-ten-motor-array-startup",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\07-lab-10-06-ten-motor-array-startup.split.png",
+      "sha256": "B43DA6C1B903AEA4CF2D05D51C603894293BC5A279230F5C49F5AA55CD87BABB",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\08-lab-11-07-multi-conveyor-pallet-route.scene.png",
+      "sha256": "624EADD09874A99A590CBC51ECFA9FF5540C6DADB2D5A31BB280336077100227",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\08-lab-11-07-multi-conveyor-pallet-route.split.png",
+      "sha256": "C0789FA066A10B0C0394A44BF22C8B712538E5BA680D5B0DC32AF8810739DEF5",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\09-lab-11-12-mobile-traffic-lights.scene.png",
+      "sha256": "A3DEC021B3FC01993C7B95B5628D8FA7E3F5AD32219E46FBD691EA922AF4B992",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\09-lab-11-12-mobile-traffic-lights.split.png",
+      "sha256": "5D1E12090F5E409AA092AA0EC8C17C1760AE1B29D90B9EDEB800A520FCE84358",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-11-19-powder-batch-mixer",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\10-lab-11-19-powder-batch-mixer.scene.png",
+      "sha256": "D52113613E9F0F142D26863EE5A8645C58458185D1BCFF7B9C9D60AC3D312A83",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-11-19-powder-batch-mixer",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\10-lab-11-19-powder-batch-mixer.split.png",
+      "sha256": "45050066288383644FD5FF4739A8D8EA9DA76A2A8F1909EC09161F037A3AD7F2",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\11-lab-2-10-dust-collector-seal-in.scene.png",
+      "sha256": "A8C4A3CD9E237B2FA758B933226C6B1D8BACC56B256C2FACFA27092E68AB2800",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\11-lab-2-10-dust-collector-seal-in.split.png",
+      "sha256": "21B0D8245E230CC75D73D9F46A315D02190896466D7547377E2849920F231408",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-2-11-inbound-tote-stop",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\12-lab-2-11-inbound-tote-stop.scene.png",
+      "sha256": "14F9970EB72771DC1A5C016C413367FC4AD5DF98642959B97547BE0F86B422D2",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-2-11-inbound-tote-stop",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\12-lab-2-11-inbound-tote-stop.split.png",
+      "sha256": "D58FC1BDBF2F9F698327B241E984CC8AB4A078E1172F266055F013BD815DCE44",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-2-13-coolant-jug-fill",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\13-lab-2-13-coolant-jug-fill.scene.png",
+      "sha256": "D8F8DBAAC55806F42E4F25A9B302F822C86C9F90DAB85F3EFB130D2DC96718CC",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-2-13-coolant-jug-fill",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\13-lab-2-13-coolant-jug-fill.split.png",
+      "sha256": "311A896AB930955ACA9FD574C3E4BCDC2B3BC32F6B8E868196C5F9EF89E858F6",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-5-07-pedestrian-crossing",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\14-lab-5-07-pedestrian-crossing.scene.png",
+      "sha256": "827598ACE799A3C91FD1321334F46A71CEBEDC655D25EB01920789848F629446",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-5-07-pedestrian-crossing",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\14-lab-5-07-pedestrian-crossing.split.png",
+      "sha256": "94F7E70EDAD7FB867E6D7339ADD14AAAE3FA6434CB2CA760F0197573370F37B4",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-5-10-coating-line",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\15-lab-5-10-coating-line.scene.png",
+      "sha256": "5A31126A66BC01B4F6B24C207B16EB7FACFFCA633302DCE265438F1DDF9F94FE",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    },
+    {
+      "sceneId": "lab-5-10-coating-line",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\affected-refinement-v5\\15-lab-5-10-coating-line.split.png",
+      "sha256": "C85B07446B5F2B83268D60E87CD23658185FCB71835BB8C54CD2AB3C538E9068",
+      "assemblySha256": "E3AD0D3F6AF42A7ED38E49D514A049E3CF429EECE35232A508DC550646E0DC5B",
+      "personallyInspected": true,
+      "qualified": true
+    }
+  ]
+}

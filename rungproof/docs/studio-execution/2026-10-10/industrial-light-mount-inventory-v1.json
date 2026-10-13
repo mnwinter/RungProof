@@ -1,0 +1,4395 @@
+{
+  "scope": "read-only source inventory, runtime metadata derived not executed",
+  "summary": {
+    "scenes": 77,
+    "lightDevices": 123,
+    "classifications": [
+      {
+        "classification": "cabinet-panel-mounted",
+        "count": 14
+      },
+      {
+        "classification": "cabinet-status-tower",
+        "count": 61
+      },
+      {
+        "classification": "optical-sensor-not-indicator",
+        "count": 1
+      },
+      {
+        "classification": "relay-not-beacon-name-mismatch",
+        "count": 1
+      },
+      {
+        "classification": "roadway-signal-street-mount",
+        "count": 8
+      },
+      {
+        "classification": "training-bench-mounted",
+        "count": 28
+      },
+      {
+        "classification": "unmounted-industrial-needs-fix",
+        "count": 10
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "sceneId": "conveyor-cell",
+      "sourcePath": "scenes/migrated/conveyor-cell.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "cell_stacklight",
+          "type": "indicator",
+          "label": "Cell stack light",
+          "sourcePosition": [
+            3.25,
+            0,
+            -1.75
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_cell_stacklight",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": []
+        }
+      ]
+    },
+    {
+      "sceneId": "equipment-gallery",
+      "sourcePath": "scenes/migrated/equipment-gallery.scene.json",
+      "equipmentCount": 21,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "gallery_indicator",
+          "type": "indicator",
+          "label": "Three-color stack light",
+          "sourcePosition": [
+            1.2,
+            0,
+            -0.3
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": []
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-10-01-drive-alarm-code-string",
+      "sourcePath": "scenes/migrated/lab-10-01-drive-alarm-code-string.scene.json",
+      "equipmentCount": 10,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Drive alarm output",
+          "sourcePosition": [
+            2.4,
+            0,
+            -1
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_2",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "drive_alarm_active",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "red"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_9",
+          "type": "indicator",
+          "label": "Alarm code match output",
+          "sourcePosition": [
+            0.5,
+            0,
+            4.4
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_9",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "alarm_match_valid",
+              "equipmentId": "indicator_9",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-10-02-chicken-label-print",
+      "sourcePath": "scenes/migrated/lab-10-02-chicken-label-print.scene.json",
+      "equipmentCount": 11,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Print request output",
+          "sourcePosition": [
+            2.5,
+            0,
+            1.1
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "print_request",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "Label-applied output",
+          "sourcePosition": [
+            5,
+            0,
+            1.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_11",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "label_applied",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-10-03-vision-package-sorter",
+      "sourcePath": "scenes/migrated/lab-10-03-vision-package-sorter.scene.json",
+      "equipmentCount": 20,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_4",
+          "type": "indicator",
+          "label": "Vision Package Sorter indicator",
+          "sourcePosition": [
+            -2.85,
+            0,
+            2.35
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_4",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "sort_conveyor_run",
+              "equipmentId": "indicator_4",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_12",
+          "type": "indicator",
+          "label": "Vision Package Sorter output indication",
+          "sourcePosition": [
+            -1.9500000000000002,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_12",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "diverter_enable",
+              "equipmentId": "indicator_12",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-10-04-motor-enum-state",
+      "sourcePath": "scenes/migrated/lab-10-04-motor-enum-state.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Motor running indication",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_2",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "motor_running",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_5",
+          "type": "indicator",
+          "label": "State-valid indication",
+          "sourcePosition": [
+            -0.6500000000000001,
+            0,
+            2.35
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_5",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "state_valid",
+              "equipmentId": "indicator_5",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-10-05-motor-struct-data",
+      "sourcePath": "scenes/migrated/lab-10-05-motor-struct-data.scene.json",
+      "equipmentCount": 10,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Motor STRUCT Data indicator",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_2",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "motor_effective_enable",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_9",
+          "type": "indicator",
+          "label": "Motor STRUCT Data output indication",
+          "sourcePosition": [
+            -0.20000000000000007,
+            0,
+            4.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_9",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "motor_effective_ready",
+              "equipmentId": "indicator_9",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-10-06-ten-motor-array-startup",
+      "sourcePath": "scenes/migrated/lab-10-06-ten-motor-array-startup.scene.json",
+      "equipmentCount": 27,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_5",
+          "type": "indicator",
+          "label": "Ten-Motor Array Startup indicator",
+          "sourcePosition": [
+            -5.2,
+            0,
+            5.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_5",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "motor_array_run",
+              "equipmentId": "indicator_5",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_12",
+          "type": "indicator",
+          "label": "Ten-Motor Array Startup output indication",
+          "sourcePosition": [
+            7.3,
+            0,
+            5.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_12",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "startup_sequence_active",
+              "equipmentId": "indicator_12",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-11-06-wastewater-collection",
+      "sourcePath": "scenes/migrated/lab-11-06-wastewater-collection.scene.json",
+      "equipmentCount": 14,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_5",
+          "type": "indicator",
+          "label": "Wastewater Collection indicator",
+          "sourcePosition": [
+            8,
+            0,
+            4
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_5",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "transfer_pump_run",
+              "equipmentId": "indicator_5",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "training_accessory_9",
+          "type": "trainingAccessory",
+          "label": "Wastewater Collection - alarm beacon",
+          "sourcePosition": [
+            -2,
+            0,
+            7
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.alarm_beacon.v1",
+          "assetName": "alarm beacon",
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": []
+        },
+        {
+          "equipmentId": "indicator_13",
+          "type": "indicator",
+          "label": "Wastewater Collection output indication",
+          "sourcePosition": [
+            7.6,
+            0,
+            7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_13",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "outlet_valve_open",
+              "equipmentId": "indicator_13",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "sourcePath": "scenes/migrated/lab-11-07-multi-conveyor-pallet-route.scene.json",
+      "equipmentCount": 17,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_12",
+          "type": "indicator",
+          "label": "Multi-Conveyor Pallet Route output indication",
+          "sourcePosition": [
+            -1.9500000000000002,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_12",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "zone_1_run",
+              "equipmentId": "indicator_12",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_13",
+          "type": "indicator",
+          "label": "Multi-Conveyor Pallet Route output indication",
+          "sourcePosition": [
+            0.25,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_13",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "zone_2_run",
+              "equipmentId": "indicator_13",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_14",
+          "type": "indicator",
+          "label": "Multi-Conveyor Pallet Route output indication",
+          "sourcePosition": [
+            2.45,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_14",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "zone_3_run",
+              "equipmentId": "indicator_14",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-11-11-service-elevator",
+      "sourcePath": "scenes/migrated/lab-11-11-service-elevator.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Service Elevator indicator",
+          "sourcePosition": [
+            6.4,
+            0,
+            4.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "lift_up_cmd",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_10",
+          "type": "indicator",
+          "label": "Service Elevator output indication",
+          "sourcePosition": [
+            3.2,
+            0,
+            4.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_10",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "lift_down_cmd",
+              "equipmentId": "indicator_10",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "sourcePath": "scenes/migrated/lab-11-12-mobile-traffic-lights.scene.json",
+      "equipmentCount": 10,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_0",
+          "type": "trainingAccessory",
+          "label": "Road A red / amber / green signal head",
+          "sourcePosition": [
+            -3.3,
+            0.15,
+            3.8
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.traffic_signal_head.v1",
+          "assetName": "Opposing traffic signal head",
+          "sourceInstallation": "mobileTrafficSignal",
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "road_a_green",
+              "equipmentId": "indicator_0",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            },
+            {
+              "point": "road_a_red",
+              "equipmentId": "indicator_0",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "road_a_amber",
+              "equipmentId": "indicator_0",
+              "mode": "indicatorChannel",
+              "activeColor": "amber"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_1",
+          "type": "trainingAccessory",
+          "label": "Road B red / amber / green signal head",
+          "sourcePosition": [
+            3.3,
+            0.15,
+            -3.8
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.traffic_signal_head.v1",
+          "assetName": "Opposing traffic signal head",
+          "sourceInstallation": "mobileTrafficSignal",
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "road_b_green",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            },
+            {
+              "point": "road_b_red",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "road_b_amber",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-11-13-xy-palletizing",
+      "sourcePath": "scenes/migrated/lab-11-13-xy-palletizing.scene.json",
+      "equipmentCount": 14,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "XY Palletizing Cell indicator",
+          "sourcePosition": [
+            3.3000000000000003,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "vacuum_pick",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_12",
+          "type": "indicator",
+          "label": "XY Palletizing Cell output indication",
+          "sourcePosition": [
+            -1.9500000000000002,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_12",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "gantry_cycle",
+              "equipmentId": "indicator_12",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_13",
+          "type": "indicator",
+          "label": "XY Palletizing Cell output indication",
+          "sourcePosition": [
+            0.25,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_13",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "layer_complete",
+              "equipmentId": "indicator_13",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-11-19-powder-batch-mixer",
+      "sourcePath": "scenes/migrated/lab-11-19-powder-batch-mixer.scene.json",
+      "equipmentCount": 16,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_5",
+          "type": "indicator",
+          "label": "Powder Batch Mixer indicator",
+          "sourcePosition": [
+            -0.6500000000000001,
+            0,
+            2.35
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_5",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "dose_run",
+              "equipmentId": "indicator_5",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_14",
+          "type": "indicator",
+          "label": "Powder Batch Mixer output indication",
+          "sourcePosition": [
+            2.45,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_14",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "mixer_run",
+              "equipmentId": "indicator_14",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_15",
+          "type": "indicator",
+          "label": "Powder Batch Mixer output indication",
+          "sourcePosition": [
+            4.65,
+            0,
+            7.050000000000001
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_15",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "discharge_valve_open",
+              "equipmentId": "indicator_15",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "sourcePath": "scenes/migrated/lab-2-01-workstation-call.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "material_call_lamp",
+          "type": "indicator",
+          "label": "Material request lamp",
+          "sourcePosition": [
+            0.8,
+            0,
+            0
+          ],
+          "colors": [
+            "blue"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "material_call_on",
+              "equipmentId": "material_call_lamp",
+              "mode": "indicator",
+              "activeColor": "blue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-02-dual-confirmation",
+      "sourcePath": "scenes/migrated/lab-2-02-dual-confirmation.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "handoff_ready_lamp",
+          "type": "indicator",
+          "label": "Handoff ready lamp",
+          "sourcePosition": [
+            0.8,
+            0,
+            0
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "handoff_ready",
+              "equipmentId": "handoff_ready_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "sourcePath": "scenes/migrated/lab-2-03-service-marker-inhibit.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "service_marker_lamp",
+          "type": "indicator",
+          "label": "Service marker lamp",
+          "sourcePosition": [
+            0.8,
+            0,
+            0
+          ],
+          "colors": [
+            "white"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "service_marker_on",
+              "equipmentId": "service_marker_lamp",
+              "mode": "indicator",
+              "activeColor": "white"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-04-two-station-call",
+      "sourcePath": "scenes/migrated/lab-2-04-two-station-call.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "assistance_beacon",
+          "type": "indicator",
+          "label": "Assistance call beacon",
+          "sourcePosition": [
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "assistance_call_on",
+              "equipmentId": "assistance_beacon",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-05-bay-light-selector",
+      "sourcePath": "scenes/migrated/lab-2-05-bay-light-selector.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "bay_light_a",
+          "type": "indicator",
+          "label": "Bay A LED light",
+          "sourcePosition": [
+            -0.4,
+            0,
+            0
+          ],
+          "colors": [
+            "white"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "bay_a_command",
+              "equipmentId": "bay_light_a",
+              "mode": "indicator",
+              "activeColor": "white"
+            }
+          ]
+        },
+        {
+          "equipmentId": "bay_light_b",
+          "type": "indicator",
+          "label": "Bay B LED light",
+          "sourcePosition": [
+            1.2,
+            0,
+            0
+          ],
+          "colors": [
+            "white"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "bay_b_command",
+              "equipmentId": "bay_light_b",
+              "mode": "indicator",
+              "activeColor": "white"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-06-ready-attention",
+      "sourcePath": "scenes/migrated/lab-2-06-ready-attention.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "ready_lamp",
+          "type": "indicator",
+          "label": "Ready lamp",
+          "sourcePosition": [
+            0.1,
+            0,
+            0
+          ],
+          "colors": [
+            "white"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "ready_light",
+              "equipmentId": "ready_lamp",
+              "mode": "indicator",
+              "activeColor": "white"
+            }
+          ]
+        },
+        {
+          "equipmentId": "attention_lamp",
+          "type": "indicator",
+          "label": "Attention lamp",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "attention_light",
+              "equipmentId": "attention_lamp",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "sourcePath": "scenes/migrated/lab-2-07-dual-contact-permissive.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "permit_lamp",
+          "type": "indicator",
+          "label": "Permit lamp",
+          "sourcePosition": [
+            0.6,
+            0,
+            0
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "permit_output",
+              "equipmentId": "permit_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-08-inspection-vote",
+      "sourcePath": "scenes/migrated/lab-2-08-inspection-vote.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "vote_stacklight",
+          "type": "indicator",
+          "label": "Inspection result stacklight",
+          "sourcePosition": [
+            0.8,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "pass_indication",
+              "equipmentId": "vote_stacklight",
+              "mode": "indicator",
+              "activeColor": "green"
+            },
+            {
+              "point": "hold_indication",
+              "equipmentId": "vote_stacklight",
+              "mode": "indicator",
+              "activeColor": "amber"
+            },
+            {
+              "point": "conflict_indication",
+              "equipmentId": "vote_stacklight",
+              "mode": "indicator",
+              "activeColor": "red"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "sourcePath": "scenes/migrated/lab-2-09-maintenance-beacon.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "maintenance_beacon",
+          "type": "indicator",
+          "label": "Maintenance beacon",
+          "sourcePosition": [
+            0.8,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "red_beacon",
+              "equipmentId": "maintenance_beacon",
+              "mode": "indicator",
+              "activeColor": "red"
+            },
+            {
+              "point": "amber_beacon",
+              "equipmentId": "maintenance_beacon",
+              "mode": "indicator",
+              "activeColor": "amber"
+            },
+            {
+              "point": "green_beacon",
+              "equipmentId": "maintenance_beacon",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "sourcePath": "scenes/migrated/lab-2-10-dust-collector-seal-in.scene.json",
+      "equipmentCount": 4,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "collector_run_lamp",
+          "type": "indicator",
+          "label": "Collector running lamp",
+          "sourcePosition": [
+            2.6,
+            0,
+            0
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "collector_run",
+              "equipmentId": "collector_run_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-11-inbound-tote-stop",
+      "sourcePath": "scenes/migrated/lab-2-11-inbound-tote-stop.scene.json",
+      "equipmentCount": 5,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "inbound_status",
+          "type": "indicator",
+          "label": "Inbound status",
+          "sourcePosition": [
+            3.2,
+            0,
+            -1.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_inbound_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "cell_color",
+              "equipmentId": "inbound_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-12-assembly-lift",
+      "sourcePath": "scenes/migrated/lab-2-12-assembly-lift.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "top_limit_lamp",
+          "type": "indicator",
+          "label": "Top limit",
+          "sourcePosition": [
+            1.7,
+            0,
+            0
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "top_limit",
+              "equipmentId": "top_limit_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "bottom_limit_lamp",
+          "type": "indicator",
+          "label": "Bottom limit",
+          "sourcePosition": [
+            2.9,
+            0,
+            0
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "bottom_limit",
+              "equipmentId": "bottom_limit_lamp",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-13-coolant-jug-fill",
+      "sourcePath": "scenes/migrated/lab-2-13-coolant-jug-fill.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "fill_status",
+          "type": "indicator",
+          "label": "Fill cell status",
+          "sourcePosition": [
+            3.2,
+            0,
+            -1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_fill_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "cell_color",
+              "equipmentId": "fill_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-14-sump-pump",
+      "sourcePath": "scenes/migrated/lab-2-14-sump-pump.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "sump_status",
+          "type": "indicator",
+          "label": "Sump status",
+          "sourcePosition": [
+            3.3,
+            0,
+            -1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_sump_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "sump_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-15-fume-extractor",
+      "sourcePath": "scenes/migrated/lab-2-15-fume-extractor.scene.json",
+      "equipmentCount": 5,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "hood_light",
+          "type": "indicator",
+          "label": "Inspection light",
+          "sourcePosition": [
+            0,
+            0,
+            -1.8
+          ],
+          "colors": [
+            "white"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "hood_light_on",
+              "equipmentId": "hood_light",
+              "mode": "indicator",
+              "activeColor": "white"
+            }
+          ]
+        },
+        {
+          "equipmentId": "speed_display",
+          "type": "indicator",
+          "label": "Speed indication",
+          "sourcePosition": [
+            3.2,
+            0,
+            -1.2
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_speed_display",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "low_speed",
+              "equipmentId": "speed_display",
+              "mode": "indicator",
+              "activeColor": "green"
+            },
+            {
+              "point": "medium_speed",
+              "equipmentId": "speed_display",
+              "mode": "indicator",
+              "activeColor": "amber"
+            },
+            {
+              "point": "high_speed",
+              "equipmentId": "speed_display",
+              "mode": "indicator",
+              "activeColor": "red"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-16-safe-drill",
+      "sourcePath": "scenes/migrated/lab-2-16-safe-drill.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "drill_status",
+          "type": "indicator",
+          "label": "Drill status",
+          "sourcePosition": [
+            3.2,
+            0,
+            -1.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_drill_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "cycle_color",
+              "equipmentId": "drill_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-17-pallet-robot",
+      "sourcePath": "scenes/migrated/lab-2-17-pallet-robot.scene.json",
+      "equipmentCount": 11,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "robot_cell_status",
+          "type": "indicator",
+          "label": "Robot cell status",
+          "sourcePosition": [
+            4.4,
+            0,
+            -1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_robot_cell_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "cell_color",
+              "equipmentId": "robot_cell_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-18-pallet-pickup",
+      "sourcePath": "scenes/migrated/lab-2-18-pallet-pickup.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "pickup_status",
+          "type": "indicator",
+          "label": "Pickup conveyor status",
+          "sourcePosition": [
+            4,
+            0,
+            -1.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_pickup_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "pickup_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-19-service-door",
+      "sourcePath": "scenes/migrated/lab-2-19-service-door.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "door_open_lamp",
+          "type": "indicator",
+          "label": "Open limit NC signal",
+          "sourcePosition": [
+            4.7,
+            0,
+            1
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "open_limit_nc",
+              "equipmentId": "door_open_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "door_closed_lamp",
+          "type": "indicator",
+          "label": "Closed limit NC signal",
+          "sourcePosition": [
+            5.5,
+            0,
+            1
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "closed_limit_nc",
+              "equipmentId": "door_closed_lamp",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-20-bottle-shuttle",
+      "sourcePath": "scenes/migrated/lab-2-20-bottle-shuttle.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "shuttle_status",
+          "type": "indicator",
+          "label": "Shuttle status",
+          "sourcePosition": [
+            3.4,
+            0,
+            -1.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_shuttle_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "shuttle_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-21-tote-finishing",
+      "sourcePath": "scenes/migrated/lab-2-21-tote-finishing.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "line_status",
+          "type": "indicator",
+          "label": "Finishing line status",
+          "sourcePosition": [
+            5.6,
+            0,
+            -1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_line_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "line_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-22-dual-spindle",
+      "sourcePath": "scenes/migrated/lab-2-22-dual-spindle.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "dual_drill_status",
+          "type": "indicator",
+          "label": "Dual-spindle status",
+          "sourcePosition": [
+            4.2,
+            0,
+            -1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_dual_drill_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "dual_drill_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-23-parcel-sorter",
+      "sourcePath": "scenes/migrated/lab-2-23-parcel-sorter.scene.json",
+      "equipmentCount": 13,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "sorter_status",
+          "type": "indicator",
+          "label": "Sorter status",
+          "sourcePosition": [
+            7.4,
+            0,
+            2.6
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_sorter_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "sorter_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-24-robot-cnc",
+      "sourcePath": "scenes/migrated/lab-2-24-robot-cnc.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "cnc_cell_status",
+          "type": "indicator",
+          "label": "CNC cell status",
+          "sourcePosition": [
+            5.4,
+            0,
+            -2.2
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_cnc_cell_status",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "status_color",
+              "equipmentId": "cnc_cell_status",
+              "mode": "indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-2-25-inspection-toggle",
+      "sourcePath": "scenes/migrated/lab-2-25-inspection-toggle.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "inspection_light",
+          "type": "indicator",
+          "label": "Machine inspection light",
+          "sourcePosition": [
+            0.8,
+            0,
+            0
+          ],
+          "colors": [
+            "white"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "inspection_light_on",
+              "equipmentId": "inspection_light",
+              "mode": "indicator",
+              "activeColor": "white"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-3-01-guarded-pallet-transfer",
+      "sourcePath": "scenes/migrated/lab-3-01-guarded-pallet-transfer.scene.json",
+      "equipmentCount": 12,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_5",
+          "type": "indicator",
+          "label": "Guarded Pallet Transfer indicator",
+          "sourcePosition": [
+            -0.6500000000000001,
+            0,
+            2.35
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_5",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "transfer_run",
+              "equipmentId": "indicator_5",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "training_accessory_6",
+          "type": "trainingAccessory",
+          "label": "Guarded Pallet Transfer - safety light-curtain pair",
+          "sourcePosition": [
+            -5.5,
+            0,
+            0
+          ],
+          "colors": null,
+          "catalogAssetId": "safety.light-curtain.1800mm.v1",
+          "assetName": "safety light-curtain pair",
+          "sourceInstallation": null,
+          "classification": "optical-sensor-not-indicator",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": []
+        },
+        {
+          "equipmentId": "training_accessory_8",
+          "type": "trainingAccessory",
+          "label": "Guarded Pallet Transfer - safety relay/status beacon",
+          "sourcePosition": [
+            -3.3000000000000003,
+            0,
+            3.6
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.safety_relay_status_beacon.v1",
+          "assetName": "safety relay/status beacon",
+          "sourceInstallation": null,
+          "classification": "relay-not-beacon-name-mismatch",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": []
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "Guarded Pallet Transfer output indication",
+          "sourcePosition": [
+            4.2,
+            0,
+            4.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_11",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "transfer_permissive",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-3-02-robot-cell-safe-restart",
+      "sourcePath": "scenes/migrated/lab-3-02-robot-cell-safe-restart.scene.json",
+      "equipmentCount": 12,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Robot enable command",
+          "sourcePosition": [
+            1.5,
+            0,
+            4.3
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "robot_enable",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_10",
+          "type": "indicator",
+          "label": "Cell ready command",
+          "sourcePosition": [
+            3.6,
+            0,
+            4.3
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_10",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "cell_ready",
+              "equipmentId": "indicator_10",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-01-press-count-lamp",
+      "sourcePath": "scenes/migrated/lab-4-01-press-count-lamp.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "Press-Count Lamp indicator",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "threshold_lamp",
+              "equipmentId": "indicator_1",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-02-counter-reset-lamp",
+      "sourcePath": "scenes/migrated/lab-4-02-counter-reset-lamp.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "Counter Reset Lamp indicator",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "counter_lamp",
+              "equipmentId": "indicator_1",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-03-repeat-cycle-counter",
+      "sourcePath": "scenes/migrated/lab-4-03-repeat-cycle-counter.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "PLC cycle command indication",
+          "sourcePosition": [
+            1.1,
+            0,
+            2.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "cycle_active",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_4",
+          "type": "indicator",
+          "label": "PLC batch complete indication",
+          "sourcePosition": [
+            3.3,
+            0,
+            2.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "cycle_complete",
+              "equipmentId": "indicator_4",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-04-sequence-light-tower",
+      "sourcePath": "scenes/migrated/lab-4-04-sequence-light-tower.scene.json",
+      "equipmentCount": 5,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Four-color sequence tower",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green",
+            "blue"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": "fourColorSequenceTower",
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "tower_red",
+              "equipmentId": "indicator_2",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "tower_amber",
+              "equipmentId": "indicator_2",
+              "mode": "indicatorChannel",
+              "activeColor": "amber"
+            },
+            {
+              "point": "tower_green",
+              "equipmentId": "indicator_2",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            },
+            {
+              "point": "tower_blue",
+              "equipmentId": "indicator_2",
+              "mode": "indicatorChannel",
+              "activeColor": "blue"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_4",
+          "type": "indicator",
+          "label": "Sequence complete status",
+          "sourcePosition": [
+            -2.85,
+            0,
+            2.35
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "sequence_complete",
+              "equipmentId": "indicator_4",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "sourcePath": "scenes/migrated/lab-4-05-dual-input-count-window.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "PLC count comparison indication",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "window_ready",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "sourcePath": "scenes/migrated/lab-4-06-multi-press-confirmation.scene.json",
+      "equipmentCount": 6,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "PLC count comparison indication",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "confirmation_valid",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-07-parking-garage-entry",
+      "sourcePath": "scenes/migrated/lab-4-07-parking-garage-entry.scene.json",
+      "equipmentCount": 13,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "available_lamp",
+          "type": "indicator",
+          "label": "PLC space available",
+          "sourcePosition": [
+            8.3,
+            0,
+            -4.3
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "garage_available",
+              "equipmentId": "available_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "sourcePath": "scenes/migrated/lab-4-08-package-grouping.scene.json",
+      "equipmentCount": 12,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "group_ready_lamp",
+          "type": "indicator",
+          "label": "PLC target group count reached",
+          "sourcePosition": [
+            2.7,
+            0,
+            3.6
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "group_ready",
+              "equipmentId": "group_ready_lamp",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-09-chain-drive-lift",
+      "sourcePath": "scenes/migrated/lab-4-09-chain-drive-lift.scene.json",
+      "equipmentCount": 16,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Chain run status",
+          "sourcePosition": [
+            -3.7,
+            0,
+            2.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "chain_run",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "switch_8",
+          "type": "indicator",
+          "label": "Infeed carton feedback",
+          "sourcePosition": [
+            -1.5,
+            0,
+            2.8
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "box_present",
+              "equipmentId": "switch_8",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "switch_9",
+          "type": "indicator",
+          "label": "Lift HOME feedback",
+          "sourcePosition": [
+            0,
+            0,
+            2.8
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "lift_home",
+              "equipmentId": "switch_9",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "switch_10",
+          "type": "indicator",
+          "label": "Destination CLEAR feedback",
+          "sourcePosition": [
+            1.5,
+            0,
+            2.8
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "unmounted-industrial-needs-fix",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "destination_clear",
+              "equipmentId": "switch_10",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "Lift enable status",
+          "sourcePosition": [
+            3.7,
+            0,
+            2.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_11",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "lift_enable",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-10-cookie-packaging",
+      "sourcePath": "scenes/migrated/lab-4-10-cookie-packaging.scene.json",
+      "equipmentCount": 14,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Feed command",
+          "sourcePosition": [
+            3,
+            0,
+            2.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "infeed_run",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "Sealer command",
+          "sourcePosition": [
+            4.5,
+            0,
+            2.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_11",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "packaging_enable",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-11-barrel-fill-station",
+      "sourcePath": "scenes/migrated/lab-4-11-barrel-fill-station.scene.json",
+      "equipmentCount": 11,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_4",
+          "type": "indicator",
+          "label": "Feed command",
+          "sourcePosition": [
+            0.5,
+            0,
+            2.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_4",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "infeed_run",
+              "equipmentId": "indicator_4",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "Fill valve command",
+          "sourcePosition": [
+            2.5,
+            0,
+            2.5
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_11",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "fill_valve_open",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-4-12-cable-cut-length",
+      "sourcePath": "scenes/migrated/lab-4-12-cable-cut-length.scene.json",
+      "equipmentCount": 11,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Feed command",
+          "sourcePosition": [
+            1.0,
+            0,
+            1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "feed_run",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_12",
+          "type": "indicator",
+          "label": "Cutter command",
+          "sourcePosition": [
+            2.7,
+            0,
+            1.8
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_12",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "cutter_fire",
+              "equipmentId": "indicator_12",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-01-delayed-lamp",
+      "sourcePath": "scenes/migrated/lab-5-01-delayed-lamp.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "PLC timed lamp",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "delayed_lamp",
+              "equipmentId": "indicator_1",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-02-timed-lamp-off",
+      "sourcePath": "scenes/migrated/lab-5-02-timed-lamp-off.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "PLC timed lamp",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "timed_lamp",
+              "equipmentId": "indicator_1",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-03-rotary-flasher",
+      "sourcePath": "scenes/migrated/lab-5-03-rotary-flasher.scene.json",
+      "equipmentCount": 2,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "PLC flashing lamp",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "flash_lamp",
+              "equipmentId": "indicator_1",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-04-alternating-lamps",
+      "sourcePath": "scenes/migrated/lab-5-04-alternating-lamps.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "Lamp A - amber",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "lamp_a",
+              "equipmentId": "indicator_1",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Lamp B - green",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "lamp_b",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-05-variable-flash-rate",
+      "sourcePath": "scenes/migrated/lab-5-05-variable-flash-rate.scene.json",
+      "equipmentCount": 4,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "PLC rate lamp - green",
+          "sourcePosition": [
+            3.3,
+            0,
+            0
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "rate_lamp",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-06-running-light-tower",
+      "sourcePath": "scenes/migrated/lab-5-06-running-light-tower.scene.json",
+      "equipmentCount": 3,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "indicator",
+          "label": "PLC three-color running-light tower",
+          "sourcePosition": [
+            -1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "tower_red",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "tower_amber",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "amber"
+            },
+            {
+              "point": "tower_green",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-07-pedestrian-crossing",
+      "sourcePath": "scenes/migrated/lab-5-07-pedestrian-crossing.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "training_accessory_3",
+          "type": "trainingAccessory",
+          "label": "Eastbound red / amber / green signal",
+          "sourcePosition": [
+            -2.7,
+            0.15,
+            3.8
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.traffic_signal_head.v1",
+          "assetName": "Eastbound red / amber / green signal",
+          "sourceInstallation": null,
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "vehicle_stop",
+              "equipmentId": "training_accessory_3",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "vehicle_amber",
+              "equipmentId": "training_accessory_3",
+              "mode": "indicatorChannel",
+              "activeColor": "amber"
+            },
+            {
+              "point": "vehicle_ready",
+              "equipmentId": "training_accessory_3",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "traffic_west",
+          "type": "trainingAccessory",
+          "label": "Westbound red / amber / green signal",
+          "sourcePosition": [
+            2.7,
+            0.15,
+            -3.8
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.traffic_signal_head.v1",
+          "assetName": "Westbound red / amber / green signal",
+          "sourceInstallation": null,
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "vehicle_stop",
+              "equipmentId": "traffic_west",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "vehicle_amber",
+              "equipmentId": "traffic_west",
+              "mode": "indicatorChannel",
+              "activeColor": "amber"
+            },
+            {
+              "point": "vehicle_ready",
+              "equipmentId": "traffic_west",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "training_accessory_4",
+          "type": "trainingAccessory",
+          "label": "Far-side hand / walking person",
+          "sourcePosition": [
+            1.65,
+            0.15,
+            -3.8
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.pedestrian_signal_head.v1",
+          "assetName": "Far-side hand / walking person",
+          "sourceInstallation": null,
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "pedestrian_stop",
+              "equipmentId": "training_accessory_4",
+              "mode": "indicatorChannel",
+              "activeColor": "orange"
+            },
+            {
+              "point": "pedestrian_walk",
+              "equipmentId": "training_accessory_4",
+              "mode": "indicatorChannel",
+              "activeColor": "white"
+            }
+          ]
+        },
+        {
+          "equipmentId": "pedestrian_south",
+          "type": "trainingAccessory",
+          "label": "Opposite hand / walking person",
+          "sourcePosition": [
+            -1.65,
+            0.15,
+            3.8
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.pedestrian_signal_head.v1",
+          "assetName": "Opposite hand / walking person",
+          "sourceInstallation": null,
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "pedestrian_stop",
+              "equipmentId": "pedestrian_south",
+              "mode": "indicatorChannel",
+              "activeColor": "orange"
+            },
+            {
+              "point": "pedestrian_walk",
+              "equipmentId": "pedestrian_south",
+              "mode": "indicatorChannel",
+              "activeColor": "white"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-08-drawbridge-control",
+      "sourcePath": "scenes/migrated/lab-5-08-drawbridge-control.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_1",
+          "type": "trainingAccessory",
+          "label": "West approach red / green traffic signal",
+          "sourcePosition": [
+            -4.9,
+            0,
+            -2.7
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.traffic_signal_head.v1",
+          "assetName": "West approach red / green traffic signal",
+          "sourceInstallation": "drawbridgeSignal",
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "traffic_stop",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "traffic_release",
+              "equipmentId": "indicator_1",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_8",
+          "type": "trainingAccessory",
+          "label": "East approach red / green traffic signal",
+          "sourcePosition": [
+            4.9,
+            0,
+            2.7
+          ],
+          "colors": null,
+          "catalogAssetId": "training.accessory.traffic_signal_head.v1",
+          "assetName": "East approach red / green traffic signal",
+          "sourceInstallation": "drawbridgeSignal",
+          "classification": "roadway-signal-street-mount",
+          "derivedRuntimeMountMetadata": null,
+          "pointBindings": [
+            {
+              "point": "traffic_stop",
+              "equipmentId": "indicator_8",
+              "mode": "indicatorChannel",
+              "activeColor": "red"
+            },
+            {
+              "point": "traffic_release",
+              "equipmentId": "indicator_8",
+              "mode": "indicatorChannel",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-09-bag-indexing-conveyor",
+      "sourcePath": "scenes/migrated/lab-5-09-bag-indexing-conveyor.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_10",
+          "type": "indicator",
+          "label": "PLC run-enable command",
+          "sourcePosition": [
+            1.2,
+            0,
+            2.2
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "conveyor_run",
+              "equipmentId": "indicator_10",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "PLC reverse-direction command",
+          "sourcePosition": [
+            2.2,
+            0,
+            2.2
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "conveyor_reverse",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-5-10-coating-line",
+      "sourcePath": "scenes/migrated/lab-5-10-coating-line.scene.json",
+      "equipmentCount": 14,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_4",
+          "type": "indicator",
+          "label": "PLC index command",
+          "sourcePosition": [
+            1.2,
+            0,
+            2.5
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "index_run",
+              "equipmentId": "indicator_4",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_12",
+          "type": "indicator",
+          "label": "PLC spray command",
+          "sourcePosition": [
+            2.1,
+            0,
+            2.5
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "spray_enable",
+              "equipmentId": "indicator_12",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_13",
+          "type": "indicator",
+          "label": "PLC ventilation command",
+          "sourcePosition": [
+            3,
+            0,
+            2.5
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "vent_run",
+              "equipmentId": "indicator_13",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-6-07-luggage-weight-sort",
+      "sourcePath": "scenes/migrated/lab-6-07-luggage-weight-sort.scene.json",
+      "equipmentCount": 16,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Luggage Weight Sort indicator",
+          "sourcePosition": [
+            -1.3,
+            0,
+            1.6
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "weigh_cycle",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_11",
+          "type": "indicator",
+          "label": "Category result available lamp",
+          "sourcePosition": [
+            3.7,
+            0,
+            1.0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_11",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "class_result",
+              "equipmentId": "indicator_11",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-6-08-hand-dryer",
+      "sourcePath": "scenes/migrated/lab-6-08-hand-dryer.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "BLOWER command",
+          "sourcePosition": [
+            -1.35,
+            0,
+            -0.6
+          ],
+          "colors": [
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "blower_run",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_9",
+          "type": "indicator",
+          "label": "HEATER command",
+          "sourcePosition": [
+            1.45,
+            0,
+            -0.7
+          ],
+          "colors": [
+            "amber"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-panel-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "operatorPanel"
+          },
+          "pointBindings": [
+            {
+              "point": "heater_enable",
+              "equipmentId": "indicator_9",
+              "mode": "indicator",
+              "activeColor": "amber"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-01-sum-function",
+      "sourcePath": "scenes/migrated/lab-9-01-sum-function.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Sum Function Block indicator",
+          "sourcePosition": [
+            3.8,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "sum_result_valid",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-02-product-function",
+      "sourcePath": "scenes/migrated/lab-9-02-product-function.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Product Function Block indicator",
+          "sourcePosition": [
+            3.8,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "product_result_valid",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-03-sum-and-counter-function",
+      "sourcePath": "scenes/migrated/lab-9-03-sum-and-counter-function.scene.json",
+      "equipmentCount": 9,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "PLC result valid indication",
+          "sourcePosition": [
+            3.3,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "result_valid",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_5",
+          "type": "indicator",
+          "label": "PLC event counted indication",
+          "sourcePosition": [
+            5.5,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "event_counted",
+              "equipmentId": "indicator_5",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-04-function-selector",
+      "sourcePath": "scenes/migrated/lab-9-04-function-selector.scene.json",
+      "equipmentCount": 8,
+      "installationPlanExists": true,
+      "benchPlan": true,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Function Selector indicator",
+          "sourcePosition": [
+            3.3,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "training-bench-mounted",
+          "derivedRuntimeMountMetadata": {
+            "installationKind": "studentBench"
+          },
+          "pointBindings": [
+            {
+              "point": "selected_result_valid",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-10-box-volume",
+      "sourcePath": "scenes/migrated/lab-9-10-box-volume.scene.json",
+      "equipmentCount": 10,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "Box Volume Calculation indicator",
+          "sourcePosition": [
+            1.1,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_2",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "volume_result_valid",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-11-pallet-counting",
+      "sourcePath": "scenes/migrated/lab-9-11-pallet-counting.scene.json",
+      "equipmentCount": 10,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_3",
+          "type": "indicator",
+          "label": "Pallet Count Function indicator",
+          "sourcePosition": [
+            3.3000000000000003,
+            0,
+            0
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_3",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "pallet_count_valid",
+              "equipmentId": "indicator_3",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "sourcePath": "scenes/migrated/lab-9-12-ev-charging-manager.scene.json",
+      "equipmentCount": 20,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "indicator_2",
+          "type": "indicator",
+          "label": "EV Charging Manager indicator",
+          "sourcePosition": [
+            -0.45,
+            0,
+            2.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_2",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "charge_enable",
+              "equipmentId": "indicator_2",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        },
+        {
+          "equipmentId": "indicator_10",
+          "type": "indicator",
+          "label": "EV Charging Manager output indication",
+          "sourcePosition": [
+            0.45,
+            0,
+            2.7
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_indicator_10",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": [
+            {
+              "point": "energy_session_active",
+              "equipmentId": "indicator_10",
+              "mode": "indicator",
+              "activeColor": "green"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "scene-1-conveyor-stop",
+      "sourcePath": "scenes/migrated/scene-1-conveyor-stop.scene.json",
+      "equipmentCount": 5,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "scene1_stacklight",
+          "type": "indicator",
+          "label": "Scene 1 status light",
+          "sourcePosition": [
+            3.15,
+            0,
+            -1.75
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_scene1_stacklight",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": []
+        }
+      ]
+    },
+    {
+      "sceneId": "scene-2-conveyor-pusher",
+      "sourcePath": "scenes/migrated/scene-2-conveyor-pusher.scene.json",
+      "equipmentCount": 7,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "scene2_stacklight",
+          "type": "indicator",
+          "label": "Scene 2 status light",
+          "sourcePosition": [
+            3.15,
+            0,
+            -1.75
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_scene2_stacklight",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": []
+        }
+      ]
+    },
+    {
+      "sceneId": "tank-high-low",
+      "sourcePath": "scenes/migrated/tank-high-low.scene.json",
+      "equipmentCount": 10,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "hl_stacklight",
+          "type": "indicator",
+          "label": "Tank status light",
+          "sourcePosition": [
+            3.15,
+            0,
+            -2.05
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_hl_stacklight",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": []
+        }
+      ]
+    },
+    {
+      "sceneId": "tank-level",
+      "sourcePath": "scenes/migrated/tank-level.scene.json",
+      "equipmentCount": 11,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "tank_stacklight",
+          "type": "indicator",
+          "label": "Tank status light",
+          "sourcePosition": [
+            3.15,
+            0,
+            -2.05
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_tank_stacklight",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": []
+        }
+      ]
+    },
+    {
+      "sceneId": "tank-radar",
+      "sourcePath": "scenes/migrated/tank-radar.scene.json",
+      "equipmentCount": 9,
+      "installationPlanExists": true,
+      "benchPlan": false,
+      "lights": [
+        {
+          "equipmentId": "radar_stacklight",
+          "type": "indicator",
+          "label": "Tank status light",
+          "sourcePosition": [
+            3.15,
+            0,
+            -2.05
+          ],
+          "colors": [
+            "red",
+            "amber",
+            "green"
+          ],
+          "catalogAssetId": null,
+          "assetName": null,
+          "sourceInstallation": null,
+          "classification": "cabinet-status-tower",
+          "derivedRuntimeMountMetadata": {
+            "support": "StatusTowerCoupler_radar_stacklight",
+            "installationKind": "cabinetStatusTower"
+          },
+          "pointBindings": []
+        }
+      ]
+    }
+  ]
+}

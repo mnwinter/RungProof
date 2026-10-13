@@ -14,6 +14,8 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `start_sump` | `BOOL` | **PC** | `False` |
+| `cycle_enable` | `BOOL` | **PLC** | `False` |
 | `sump_level` | `REAL` | **SIM** | `22` |
 | `high_float_active` | `BOOL` | **PC** | `False` |
 | `low_float_active` | `BOOL` | **PC** | `False` |

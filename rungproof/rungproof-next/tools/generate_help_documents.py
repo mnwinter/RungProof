@@ -6,7 +6,9 @@ symbolic points and are the authority for PC/PLC/SIM ownership.
 """
 from __future__ import annotations
 
+import argparse
 import json
+import re
 from pathlib import Path
 
 
@@ -170,7 +172,110 @@ def scene_help(scene: dict, catalog_entry: dict) -> str:
     return "\n".join(lines)
 
 
+def scene_io_table(scene: dict) -> str:
+    """Render the current symbolic point contract without operation guidance."""
+    points = scene.get("simulation", {}).get("points", [])
+    if not points:
+        return "This migrated scene declares no symbolic I/O points.\n"
+    lines = ["| Point | Type | Owner | Initial value |", "| --- | --- | --- | --- |"]
+    for point in points:
+        lines.append("| `{}` | `{}` | **{}** | `{}` |".format(
+            cell(point["name"]), cell(point["type"]), cell(point["owner"]), cell(point.get("initial"))))
+    return "\n".join(lines) + "\n"
+
+
+def sync_scene_io(document: str, scene: dict) -> str:
+    """Replace only the I/O table, its heading, and Scene ID; fail on ambiguity.
+
+    A missing section is appended. Authored notes inside an existing section are
+    preserved, as are all operation, sequence, action, and safety sections.
+    """
+    newline = "\r\n" if "\r\n" in document else "\n"
+    document = document.replace("\r\n", "\n")
+    ids = list(re.finditer(r"^Scene ID:.*$", document, re.MULTILINE))
+    if len(ids) > 1:
+        raise ValueError("Duplicate Scene ID lines")
+    identifier = f"Scene ID: `{scene['id']}`"
+    if ids:
+        match = ids[0]
+        spacing = re.search(r"[ \t]*$", match.group()).group()
+        document = document[:match.start()] + identifier + spacing + document[match.end():]
+    else:
+        title = re.match(r"#[^\n]*\n", document)
+        position = title.end() if title else 0
+        document = document[:position] + "\n" + identifier + "\n" + document[position:]
+    sections = list(re.finditer(r"^## (?:Expected I/O to operate this scene|Symbolic I/O)[ \t]*$", document, re.MULTILINE))
+    if len(sections) > 1:
+        raise ValueError("Duplicate I/O sections")
+    heading = "## Expected I/O to operate this scene"
+    table = scene_io_table(scene)
+    if not sections:
+        return (document + ("" if document.endswith("\n\n") else "\n") + heading + "\n\n" + table).replace("\n", newline)
+    match = sections[0]
+    following = re.search(r"^## ", document[match.end():], re.MULTILINE)
+    end = match.end() + following.start() if following else len(document)
+    body = document[match.end():end]
+    tables = list(re.finditer(r"(?:^\|[^\n]*\n?)+", body, re.MULTILINE))
+    empty = "This migrated scene declares no symbolic I/O points."
+    if len(tables) > 1:
+        raise ValueError("Multiple tables in I/O section")
+    if tables:
+        block = tables[0]
+        rows = block.group().splitlines()
+        if len(rows) < 2 or not re.fullmatch(r"\|(?:\s*:?-+:?\s*\|){4,}", rows[1]):
+            raise ValueError("Malformed I/O table")
+        columns = [re.split(r"(?<!\\)\|", row)[1:-1] for row in rows]
+        headers = [value.strip() for value in columns[0][:4]]
+        if headers[:3] != ["Point", "Type", "Owner"] or headers[3] not in ("Initial", "Initial value"):
+            raise ValueError("Unrecognized I/O table header")
+        if any(len(row) != len(columns[0]) for row in columns):
+            raise ValueError("Malformed I/O table columns")
+        # Keep authored explanations as notes outside the canonical table. Even
+        # removed-point notes survive; this mode does not rewrite their meaning.
+        notes = []
+        for row in columns[2:]:
+            for label, value in zip(columns[0][4:], row[4:]):
+                if value.strip():
+                    notes.append(f"- {row[0].strip()} — {label.strip()}: {value.strip()}")
+        if notes:
+            table += "\nAuthored I/O notes (retained from the prior table):\n\n" + "\n".join(notes) + "\n"
+        body = body[:block.start()] + table + body[block.end():]
+    elif empty in body:
+        body = body.replace(empty, table.rstrip("\n"), 1)
+    else:
+        raise ValueError("I/O section has no recognizable contract table")
+    return (document[:match.start()] + heading + body + document[end:]).replace("\n", newline)
+
+
+def sync_scene_documents() -> int:
+    # Validate every document before writing any, so malformed input causes no
+    # partial catalog update. This path never generates asset help or the index.
+    updates = []
+    for item in load(ROOT / "scenes/catalog/original-scenes.catalog.json")["scenes"]:
+        scene = load(ROOT / item["path"].removeprefix("res://"))
+        path = SCENE_DOCS / f"{scene['id']}.md"
+        with path.open(encoding="utf-8", newline="") as source:
+            original = source.read()
+        try:
+            revised = sync_scene_io(original, scene)
+        except ValueError as error:
+            raise ValueError(f"{path}: {error}") from error
+        if revised != original:
+            updates.append((path, revised))
+    for path, revised in updates:
+        with path.open("w", encoding="utf-8", newline="") as destination:
+            destination.write(revised)
+    print(f"HELP_SCENE_IO_SYNCED changed={len(updates)}")
+    return 0
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--sync-scene-io", action="store_true",
+                        help="Sync only scene IDs and I/O tables, retaining authored prose")
+    args = parser.parse_args()
+    if args.sync_scene_io:
+        return sync_scene_documents()
     references = {entry["assetId"]: entry for entry in load(REFERENCE_REGISTER)["entries"]}
     catalogs = (("production", load(ROOT / "assets" / "catalog" / "production.catalog.json")),
                 ("candidate", load(ROOT / "assets" / "catalog" / "candidates.catalog.json")))

@@ -1,0 +1,32 @@
+[
+  {
+    "sceneId": "lab-10-01-drive-alarm-code-string",
+    "originalWorldMin": [
+      -7.644,
+      0.92499995,
+      -2.0774999
+    ],
+    "originalWorldMax": [
+      -7.444,
+      1.6749999500000001,
+      -1.5274997999999997
+    ],
+    "detailMeshes": 4,
+    "outside": []
+  },
+  {
+    "sceneId": "lab-10-02-chicken-label-print",
+    "originalWorldMin": [
+      -8.156,
+      0,
+      -3.551236
+    ],
+    "originalWorldMax": [
+      -7.856000000000001,
+      1.4,
+      -2.9512361
+    ],
+    "detailMeshes": 4,
+    "outside": []
+  }
+]

@@ -8,6 +8,7 @@ namespace RungProof.Next.Workspace;
 public enum SignalMappingRuntimeState
 {
     LiveInput,
+    LiveFeedback,
     AuthoredOnly,
 }
 

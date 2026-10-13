@@ -1,0 +1,33 @@
+# Dot V12 remaining operator review — catalogue 1–26
+
+Individually inspected 21 new exact-scene operator PNGs from all77-remaining-operator-v12. Five other exact IDs (gallery, drive, Chicken, vision, wastewater) are covered by previously inspected industrial-mount V12 operators/details; no enum/elevator/XY substitution remains. Independently verified all21 actual hashes against manifest and identity, exact sceneId, operator stationView and unchanged D6 V12 assembly: all PASS. Visual findings below are separate from native bindings/tests.
+
+## Actionable findings
+
+Function legends are incomplete despite readable sidebar controls. Three manual-feedback panels misleadingly repeat START. Bench labs2.1–2.9 use tiny imported legends that remain illegible in actual operator frames; readable exact-function plates should be added while preserving targets/actions. Dust and assembly input labels pass but output pilots need exact function IDs. Material75 HELD; these are bounded station readability defects, not art rollout approval. Traffic signal front-face evidence remains missing. Upper tower crops are capture limits supplemented by full overview; not new missing geometry.
+
+| Scene | Actual operator finding | SHA256 |
+|---|---|
+| conveyor-cell | START readable; roof tower cap/red tier partly HUD-cropped. Overview proves full head separately. | 90E414D59F38A3B88B83B5C5A05150B1C2E63B0AE3EF6B30B8FD30CE97927F50 |
+| lab-10-04-motor-enum-state | MOTOR STATE Stopped readable; START REQUEST, STOP REQUEST, FAULT ACTIVE, FAULT RESET readable. Roof upper tiers cropped. | 81D221B1FCEBDCECF249009B76237B04D9A8E804624D1C6A8A205B7606FF4FA4 |
+| lab-10-05-motor-struct-data | RECORD FIXTURE INVALID, TEMP SIM VALUE — and POWER SIM VALUE — readable; TEMP VALID, ALARM CLEAR, RECORD VALID readable. Honest fixture semantics retained. | D806F9727EFE144C69C64622346D9237399AA18919037D467AFA16A3FD3865ED |
+| lab-10-06-ten-motor-array-startup | COMMANDS ON 0/10, SEQUENCE CMD OFF, GROUP START, ALL READY, ALARM CLEAR readable; zone line mostly behind cabinet, overview supplements. | 18F6BEA3B9FBABE196A188373850C0E21162715AFDB3EAAF169FE68642B375B1 |
+| lab-11-07-multi-conveyor-pallet-route | DEFECT: three identical START labels do not distinguish common_stop_request, zone-clear feedback. Exact bindings need function legends. | A2D5A499F9DAC7CF329F3B80E1680383A0743E19BBD14A9C8625DA8FED3D2CA2 |
+| lab-11-11-service-elevator | DEFECT: three identical START labels do not distinguish CALL VALID, DOORS CLOSED, LANDING CLEAR. Shaft mostly outside operator; overview supplements. | CF8AE74E787F6F14CEAA87DA58995961E85A256BCFED19B3D22CFE25AD56FB34 |
+| lab-11-12-mobile-traffic-lights | READY, A CLEAR, B CLEAR, QUEUE A, QUEUE B readable. LIMIT: side/rear heads still do not show six front lamp faces; exact targeted face view remains needed. | 39D9213698ED8B3F6A5A2EC6DDB84BE45AAD06429F44F9C471B556390B5AB8DD |
+| lab-11-13-xy-palletizing | START, LOAD, PALLET readable. Selected Lab11.13 sidebar exact; header Demo5 alias persists. Overview supplements full robot/gantry. | 7F4088F1A7ED2771205CB0AAEDD2501791FB9E68DD7546018285D0250A950C1E |
+| lab-11-19-powder-batch-mixer | DEFECT: three identical START labels conflict with RECIPE VALID, DOSE COMPLETE, MIXER READY feedback functions. Operator excludes loose load-cell exhibit; prior exact-scene overview/source defect retained. | 127DDBF3CD0266BF71AC0BBB389BDB73D41924CC3B3906B07F9EC1889605D3DF |
+| lab-2-01-workstation-call | Bench button microlegend illegible; single MATERIAL CALL action and blue lamp clear via sidebar. Add readable exact-function plate if physical station must self-identify. | 73C1913BD97073C2B1C724AE983D43ABD7B94DAA24FA8B2BDB7A017020B1FB57 |
+| lab-2-02-dual-confirmation | Bench two button microlegends illegible; operator/quality association ambiguous without sidebar. Exact-function plates required for independently understandable station. | 146D32461FECA6D22EC2E6BEEB052D750E915899784B8E3B2CA133188F28748B |
+| lab-2-03-service-marker-inhibit | Bench inhibit microlegend illegible; one red button/white marker clear via sidebar. Readable MARKER INHIBIT plate needed. | 0B563F7E1DCFAD0A6C7396F1E23CE54017406582AF1ADD7A9D0BE882EDCA2C61 |
+| lab-2-04-two-station-call | Two same yellow buttons have illegible microlegends; NORTH/SOUTH wall plaques partly obscured by divider. Exact north/south button plates required. | 9EA3309B4204A61FE5F81A9590346B8B6D4E1B944322C60FEF57E6DDE332D6D4 |
+| lab-2-05-bay-light-selector | Selector position markings and two identical dark bay heads lack readable BayA/B labels; sidebar semantics alone. Functional station labeling needed. | 81107252E2FFD0E3B7C4808A6239A6B74294C974526DF10CE737C5315FB43B9A |
+| lab-2-06-ready-attention | Request button microlegend illegible; white/amber lamp distinction clear, wall REQUEST HELD readable. Exact REQUEST/READY/ATTENTION identification needed. | 30E2964287E7EF95F9D777A6517164F38E9F1797B8A87D07F5C896753294ACDC |
+| lab-2-07-dual-contact-permissive | Two contact microlegends illegible; sidebar identifies NO reset/NC contact but station alone ambiguous. Exact NO RESET/NC CONTACT/PERMIT identification needed. | 36E7ECBE804AC24A373BBF7D8D4D6C22F2F7A04D1FBED1F81354AB4EAE87BEA3 |
+| lab-2-08-inspection-vote | Inspector A/B microlegends illegible; stacklight full and supported. Exact inspector input plates needed; output-tier semantics remain sidebar. | 27189F0968DDDB19B6F9B0C167E73D48E8A96A6D5855949217DF484D3795131B |
+| lab-2-09-maintenance-beacon | Selector 0/1/2/3 ticks marginal but visible; no readable semantic OFF/RED/AMBER/GREEN station plate (wall hidden by divider). Add semantic legend if requiring independent use. | E5237EEC11EB0317F258E25DA34BC57F4FECE164D06B6A773573965B7B414B30 |
+| lab-2-10-dust-collector-seal-in | START/STOP readable, supported green output pilot unlabeled. Add RUNNING identification for pilot. | 0F108809F8DE4AF34E8AEA342611F224D4E6DAFB25177066ACBF22D574B9FAF3 |
+| lab-2-11-inbound-tote-stop | START readable and matches start-cycle action; mounted tower roof cap partly HUD-hidden; full overview supplements. | CBC66B743F769BF9CCF8717B7662B175106794BA03BCD7281F3262D56BB00C97 |
+| lab-2-12-assembly-lift | RAISE/LOWER readable; two limit pilots unlabeled. Add TOP LIMIT/BOTTOM LIMIT exact identity without changing point mapping. | 7150BD9A0DD99766BC6216C2D932477AA9F2DF57867A6644FC2D04F908D27E92 |
+
+No source, UI, engine or build changes performed. Preserve all21 as historical V12 evidence if subsequent repairs require a new binary. Gallery route intersection and DIN relay/load-cell placement findings are tracked separately; this focused operator report does not override them.

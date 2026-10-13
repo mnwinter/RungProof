@@ -32,18 +32,25 @@ public static class LadderCompiler
     public static IReadOnlyList<LadderValidationIssue> Validate(LadderProgram program)
     {
         var issues = new List<LadderValidationIssue>();
+        try
+        {
+            issues.AddRange(LadderCallBindings.Validate(program));
+            if (issues.Count > 0) return issues;
+            program = LadderCallBindings.LowerForValidation(program);
+        }
+        catch (ArgumentException exception) { return [new("VC002", "$.variables", exception.Message)]; }
         try { program = program with { Variables = PlcAggregates.Expand(program.Variables), WatchVariables = program.WatchVariables?.Where(name => !program.Variables.Any(v => v.Name == name && PlcAggregates.IsAggregate(v.Type))).ToArray() }; }
         catch (ArgumentException exception) { return [new("VC002", "$.variables", exception.Message)]; }
-        if (program.SchemaVersion != 1)
-            issues.Add(new("VC100", "$.schemaVersion", "Only schemaVersion 1 is supported."));
+        if (program.SchemaVersion is not (1 or 2))
+            issues.Add(new("VC100", "$.schemaVersion", "Only schemaVersion 1 and 2 are supported."));
         if (string.IsNullOrWhiteSpace(program.Id))
             issues.Add(new("VC100", "$.id", "Program ID is required."));
         if (string.IsNullOrWhiteSpace(program.Name))
             issues.Add(new("VC100", "$.name", "Program name is required."));
         if (!program.Language.Equals("LD", StringComparison.OrdinalIgnoreCase))
             issues.Add(new("VC100", "$.language", "Phase 1 supports Ladder Diagram (LD) only."));
-        if (program.ScanPeriod <= TimeSpan.Zero)
-            issues.Add(new("VC100", "$.scanPeriodMs", "scanPeriodMs must be greater than zero."));
+        if (program.ScanPeriod < TimeSpan.FromMilliseconds(1))
+            issues.Add(new("VC100", "$.scanPeriodMs", "scanPeriodMs must be at least 1 ms for the offline simulator."));
 
         var variables = new Dictionary<string, PlcVariable>(StringComparer.Ordinal);
         for (var index = 0; index < program.Variables.Count; index++)
@@ -139,7 +146,7 @@ public static class LadderCompiler
                 var network = block.Networks[index];
                 var path = $"{blockPath}.networks[{index}]";
                 AddId(network.Id, $"{path}.id", ids, issues);
-                ValidateNode(network.Logic, $"{path}.logic", variables, ids, issues);
+                ValidateNode(network.Logic, $"{path}.logic", variables, ids, issues, program.SchemaVersion);
                 var outputCount = (network.Coil is null ? 0 : 1)
                     + (network.Timer is null ? 0 : 1)
                     + (network.Counter is null ? 0 : 1)
@@ -327,25 +334,48 @@ public static class LadderCompiler
             block => block.Networks.Where(network => network.Call is not null)
                 .Select(network => network.Call!.TargetBlock).ToArray(),
             StringComparer.Ordinal);
+        // Imported projects encode CALL depth through a flat array of IDs.
+        // JSON nesting limits cannot protect a recursive graph walk. Keep
+        // traversal frames on the heap, preserving gray/black cycle detection.
         var visiting = new HashSet<string>(StringComparer.Ordinal);
         var visited = new HashSet<string>(StringComparer.Ordinal);
-        bool Visit(string id)
-        {
-            if (visiting.Contains(id)) return false;
-            if (!visited.Add(id)) return true;
-            visiting.Add(id);
-            if (edges.TryGetValue(id, out var targets))
-                foreach (var target in targets)
-                    if (edges.ContainsKey(target) && !Visit(target)) return false;
-            visiting.Remove(id);
-            return true;
-        }
+        var depths = new Dictionary<string, int>(StringComparer.Ordinal);
+        var typedDepths = new Dictionary<string, int>(StringComparer.Ordinal);
+        var blockModes = blocks.ToDictionary(b => b.Id, b => b.SemanticMode, StringComparer.Ordinal);
         foreach (var block in blocks)
         {
-            visiting.Clear();
-            if (Visit(block.Id)) continue;
-            issues.Add(new("VC011", "$.blocks", $"Recursive block call cycle includes '{block.Name}'."));
-            return;
+            if (visited.Contains(block.Id)) continue;
+            var stack = new Stack<(string Id, int NextTarget)>();
+            visiting.Add(block.Id);
+            stack.Push((block.Id, 0));
+            while (stack.Count > 0)
+            {
+                var frame = stack.Pop();
+                var targets = edges[frame.Id];
+                if (frame.NextTarget == targets.Length)
+                {
+                    depths[frame.Id] = 1 + targets.Where(depths.ContainsKey).Select(t => depths[t]).DefaultIfEmpty(0).Max();
+                    typedDepths[frame.Id] = blockModes[frame.Id] == LadderSemanticMode.Parameterized
+                        ? depths[frame.Id]
+                        : targets.Where(t => typedDepths.GetValueOrDefault(t) > 0).Select(t => typedDepths[t] + 1).DefaultIfEmpty(0).Max();
+                    if (typedDepths[frame.Id] > 32)
+                        issues.Add(new("VC_CALL_DEPTH", "$.blocks", $"Call depth exceeds the maximum of 32 at '{frame.Id}'."));
+                    visiting.Remove(frame.Id);
+                    visited.Add(frame.Id);
+                    continue;
+                }
+                stack.Push((frame.Id, frame.NextTarget + 1));
+                var target = targets[frame.NextTarget];
+                if (!edges.ContainsKey(target)) continue; // Already diagnosed by CALL validation.
+                if (visiting.Contains(target))
+                {
+                    issues.Add(new("VC011", "$.blocks", $"Recursive block call cycle includes '{block.Name}'."));
+                    return;
+                }
+                if (visited.Contains(target)) continue;
+                visiting.Add(target);
+                stack.Push((target, 0));
+            }
         }
     }
 
@@ -394,8 +424,13 @@ public static class LadderCompiler
         string path,
         IReadOnlyDictionary<string, PlcVariable> variables,
         ISet<string> ids,
-        ICollection<LadderValidationIssue> issues)
+        ICollection<LadderValidationIssue> issues, int schemaVersion = 1, int depth = 1)
     {
+        if (depth > 32)
+        {
+            issues.Add(new("VC003", path, "Logic nesting exceeds the supported depth of 32."));
+            return;
+        }
         AddId(node.Id, $"{path}.id", ids, issues);
         if (node.Kind == LadderNodeKind.Contact)
         {
@@ -426,12 +461,12 @@ public static class LadderCompiler
         }
 
         var children = node.Children ?? [];
-        if (children.Count == 0)
+        if (schemaVersion == 1 && children.Count == 0)
             issues.Add(new("VC003", $"{path}.children", $"{node.Kind} requires at least one child."));
-        if (node.Kind == LadderNodeKind.Parallel && children.Count < 2)
+        if (schemaVersion == 1 && node.Kind == LadderNodeKind.Parallel && children.Count < 2)
             issues.Add(new("VC003", $"{path}.children", "Parallel logic requires at least two branches."));
         for (var index = 0; index < children.Count; index++)
-            ValidateNode(children[index], $"{path}.children[{index}]", variables, ids, issues);
+            ValidateNode(children[index], $"{path}.children[{index}]", variables, ids, issues, schemaVersion, depth + 1);
     }
 
     private static bool TryResolveTimerMember(string name, IReadOnlyDictionary<string, PlcVariable> variables)
@@ -504,3 +539,5 @@ public static class LadderCompiler
             issues.Add(new("VC004", path, $"Duplicate element ID '{id}'."));
     }
 }
+
+

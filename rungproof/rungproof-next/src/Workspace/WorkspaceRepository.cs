@@ -27,6 +27,8 @@ public static class WorkspaceRepository
     )
     {
         ValidateShape(document);
+        WorkspaceFiniteBeltPolicy.Validate(document);
+        WorkspaceFiniteRollerPolicy.Validate(document);
         var json = JsonSerializer.Serialize(document, JsonOptions);
         var path = System.IO.Path.GetFullPath(ProjectSettings.GlobalizePath(resourcePath));
         var directory = System.IO.Path.GetDirectoryName(path);
@@ -54,14 +56,26 @@ public static class WorkspaceRepository
         string resourcePath = LastWorkspacePath
     )
     {
+        // Repository callers that need only the layout can still read a new
+        // integrated file. Main separately restores its actual ladder draft.
+        var integrated=WorkspaceProjectBundleRepository.LoadIfBundle(resourcePath,assets,scenes);
+        if(integrated is not null)return integrated.Workspace;
         var json = System.IO.Path.IsPathRooted(resourcePath)
             ? System.IO.File.ReadAllText(resourcePath)
             : ReadGodotFile(resourcePath);
         var document = JsonSerializer.Deserialize<WorkspaceDocument>(json, JsonOptions)
             ?? throw new InvalidOperationException("Workspace JSON produced no document.");
+        return ValidateDocument(document,assets,scenes);
+    }
+
+    public static WorkspaceDocument ValidateDocument(WorkspaceDocument document,
+        AssetCatalogDocument assets,SceneCatalogDocument scenes)
+    {
         ValidateShape(document);
         if (!scenes.Scenes.Any(scene => scene.Id == document.SourceSceneId))
             throw new InvalidOperationException($"Workspace scene '{document.SourceSceneId}' is unavailable.");
+        if(document.TemplateOverride is not null)
+            WorkspaceTemplatePolicy.Validate(SceneCatalogLoader.LoadScene(scenes.Scenes.First(s=>s.Id==document.SourceSceneId)),document.TemplateOverride);
         var assetIds = assets.Assets.Select(asset => asset.Id).ToHashSet(StringComparer.Ordinal);
         var missing = document.Placements.FirstOrDefault(item => !assetIds.Contains(item.AssetId));
         if (missing is not null)
@@ -83,7 +97,17 @@ public static class WorkspaceRepository
 
     private static void ValidateShape(WorkspaceDocument document)
     {
-        if (document.Version is not (1 or 2 or 3 or 4 or 5)) throw new InvalidOperationException($"Unsupported workspace version {document.Version}.");
+        if (document.Version is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9)) throw new InvalidOperationException($"Unsupported workspace version {document.Version}.");
+        WorkspaceDriveConnectionPolicy.ValidateShape(document);
+        if(new[]{document.TemplateOverride is not null,document.FiniteBeltPreset is not null,document.FiniteRollerPreset is not null,document.DriveConnection is not null}.Count(v=>v)>1)
+            throw new InvalidOperationException("Workspace preset relations are mutually exclusive.");
+        if(document.Version==8&&document.FiniteRollerPreset is null)throw new InvalidOperationException("Workspace version 8 requires its finite roller relation.");
+        WorkspaceFiniteRollerPolicy.Validate(document);
+        if(document.TemplateOverride is not null)
+        {
+            if(document.Version!=6)throw new InvalidOperationException("Template overrides require workspace version 6.");
+            WorkspaceTemplatePolicy.ValidateShape(document.SourceSceneId,document.TemplateOverride);
+        }
         if (string.IsNullOrWhiteSpace(document.SourceSceneId)) throw new InvalidOperationException("Workspace source scene is blank.");
         foreach (var placement in document.Placements)
         {
@@ -181,6 +205,9 @@ public static class WorkspaceRepository
 
         var sceneEntry = scenes.Scenes.First(item => item.Id == document.SourceSceneId);
         var scene = SceneCatalogLoader.LoadScene(sceneEntry);
+        if(document.FiniteBeltPreset is not null)scene=WorkspaceFiniteBeltPolicy.ReplaceSource(scene,document);
+        if(document.FiniteRollerPreset is not null)scene=WorkspaceFiniteRollerPolicy.ReplaceSource(scene,document);
+        if(document.DriveConnection is not null)scene=WorkspaceDriveConnectionPolicy.AugmentSource(scene,document,assets);
         var pointTypes = ScenePointTypes(scene.Simulation);
         foreach (var link in signalLinks)
         {

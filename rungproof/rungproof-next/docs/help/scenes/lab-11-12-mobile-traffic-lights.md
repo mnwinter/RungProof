@@ -19,6 +19,16 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `road_b_clear` | `BOOL` | **PC** | `False` |
 | `road_a_green` | `BOOL` | **PLC** | `False` |
 | `road_b_green` | `BOOL` | **PLC** | `False` |
+| `road_a_red` | `BOOL` | **PLC** | `False` |
+| `road_a_amber` | `BOOL` | **PLC** | `False` |
+| `road_b_red` | `BOOL` | **PLC** | `False` |
+| `road_b_amber` | `BOOL` | **PLC** | `False` |
+| `road_a_occupied` | `BOOL` | **PC** | `False` |
+| `road_b_occupied` | `BOOL` | **PC** | `False` |
+| `crossing_clear` | `BOOL` | **PC** | `True` |
+| `signal_conflict` | `BOOL` | **PC** | `False` |
+| `road_a_position_m` | `REAL` | **PC** | `-3.6` |
+| `road_b_position_m` | `REAL` | **PC** | `3.6` |
 
 ## Operator actions
 

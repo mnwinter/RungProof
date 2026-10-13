@@ -37,9 +37,11 @@ throwaway demo.
 
 `rungproof-next/` is the Godot/C# successor with the integrated ladder editor,
 scene browser, split view, virtual controller, authored demos, and training
-assets. Its current architecture is symbolic/offline and deliberately does not
-own direct PLC transport. See `docs/AI_HANDOFF.md` before attempting to restore
-the live-PLC bridge in that shell.
+assets. Its built-in controller is symbolic/offline. The shell also delegates
+explicit external-PLC sessions to the existing guarded Python bridge; Godot
+does not own the S7 socket. See `docs/AI_HANDOFF.md` and the current
+`docs/DEMO_RELEASE_REVIEW_2026-10-10.md` before changing either execution source.
+The proposed offline demo must be qualified separately from a live bench build.
 
 ## Verification
 

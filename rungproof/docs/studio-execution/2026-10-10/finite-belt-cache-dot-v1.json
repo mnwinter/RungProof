@@ -1,0 +1,37 @@
+{
+  "reviewer": "Dot",
+  "verdict": "BOUNDED_CACHE_FIX_AND_VISUAL_PASS_WITH_LIMITS",
+  "source": "SimulatorShell.IsFiniteBeltWorkspace authoritative simulation.type string",
+  "frames": [
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-cache-capture-v1\\finite.intended.default.png",
+      "personallyViewed": true,
+      "imageHash": "F32A91A33E060E9C2764CD899F1894EC3D291642BE96C3AFC61541FC1168352C",
+      "assemblyHash": "9E49EA5C3A80F437BCD2E8737106A9C8516EE99458428796321EE52FFA7B1689",
+      "hashMatches": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-cache-capture-v1\\finite.wrong.objective.png",
+      "personallyViewed": true,
+      "imageHash": "B940A375483192828BD8F39C7ECABCD6F1CB2E4C102BAAAF7AF5D385F02550E4",
+      "assemblyHash": "9E49EA5C3A80F437BCD2E8737106A9C8516EE99458428796321EE52FFA7B1689",
+      "hashMatches": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-cache-capture-v1\\source.demo.split.png",
+      "personallyViewed": true,
+      "imageHash": "B4225D0E7BA71369DB8BE9A58680BC26A60DA394DB7A0220182FC0413681B0E4",
+      "assemblyHash": "9E49EA5C3A80F437BCD2E8737106A9C8516EE99458428796321EE52FFA7B1689",
+      "hashMatches": true
+    }
+  ],
+  "nativeEvidence": "finite-belt-cache-native-v2.log failures=0 read existing evidence",
+  "humanStyleApproval": false,
+  "wholeCatalogApproval": false,
+  "limitations": [
+    "Authored reference rung lower branch clipped with Scene I/O expanded; no full-rung proof.",
+    "Native checks separate from static visual evidence.",
+    "Historical AE capture evidence not promoted to current DLL.",
+    "Retained cream material gate open."
+  ]
+}

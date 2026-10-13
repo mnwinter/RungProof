@@ -1,0 +1,106 @@
+{
+  "dll": "B0ED980FDE51A58397B3D446208055C69FCE03469C656496E30F4B93280AC609",
+  "runtimeConnectionImplemented": false,
+  "humanMaterialApproved": false,
+  "logs": [
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-app-shell-v1.log",
+      "sha256": "86BC2A8F8CFBCE4A89767977C891B6D1EEFFADE56B47FF11D1A2E54191412AD2"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-controller-regression-v1.log",
+      "sha256": "72AF3915E585FECEBFA231B584030F54528F222DA24D7658623127127AB906EE"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-plant-root-v1.log",
+      "sha256": "A2B2011F4D67DFF8CA7C3D7AC1D952D31C40ADF2F003C2C4CCDA2D5DC183CB9A"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-policy-root-v1.log",
+      "sha256": "521BACA56DFC1C6C095851B95511A689D95F6329791DBA366DC9A8EB1BB5E947"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-prerequisite-final-app-shell.log",
+      "sha256": "32E5F7FA9B0F4B42715B678677DA6C1B361C243DF9997255474F70100FFFF4D6"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-prerequisite-final-build.log",
+      "sha256": "61E8482D38A65C64E7205794C06257A29BDC59D4E64B9BF67B6A56B01166431A"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-prerequisite-final-native.log",
+      "sha256": "560645671CFC73E67C3D7D1C3B0CFD76EC2F951E300213A79194956D536FEA31"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-build-v1.log",
+      "sha256": "21F7D17D9E4385863B379C3C108F753A0DCC13D453585B3C85811AA7949A858D"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-build-v2.log",
+      "sha256": "C0CDF8047E67AEDA3232ADC773E0A402FD46E0423C9EB8E869C63FE9E1F906D5"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-build-v3.log",
+      "sha256": "160D04196899034E4E589CF932547CFB2E6E4427CEA4A92E25D335C5D199FE85"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-green-v1.log",
+      "sha256": "9A35F063C093A0E063E7DFCAA17CB66764ADD88BB1138B805D276CB33889012B"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-green-v2.log",
+      "sha256": "B0A4A2625AE61F75809D4713CD21603DF2AE0F14D539EE83ED4B5C88ECC601B9"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-green-v3.log",
+      "sha256": "8A84E074C405E3CEC37B8CCA976849912506FE5BCADA562E92B0CEE9B17D5F40"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-red-build-v1.log",
+      "sha256": "59B3B89EFD52CC232BE6EBB7FDF25308783331AAAB50725628B390A065F2DDD1"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-repository-red-v1.log",
+      "sha256": "C6536683821ABB439DD787E990D0BA1EE8D593DFF1C846EE57C2EDA1F61A7687"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-runtime-gate-red-build.log",
+      "sha256": "75EE56BC6A3B60A6DC3C4C9E1FBD6B83ACB7B9C838E1F0A1F879F88A4BECF89C"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\workspace-drive-runtime-gate-red.log",
+      "sha256": "AB5A7C3B8573C17AFB754B810277421F2E3186C8E1E3A9EF0F806D0A0312E3DB"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src/Workspace/WorkspaceDriveConnection.cs",
+      "sha256": "A67D60423DC62664CB6CD1D7153D39EA3A8779CCC046D6F8161E7091AB19B9C4"
+    },
+    {
+      "path": "src/Workspace/WorkspaceDriveConnectionPolicy.cs",
+      "sha256": "94F4861415BD93C674A80992747087DA9AE0C28C2666A95EE54363C3EA4856F2"
+    },
+    {
+      "path": "src/Workspace/WorkspaceDrivePlant.cs",
+      "sha256": "6E9C921B89F19AE5D560BDF3192333BFE42C6EBEEDC974CFEB81F1342000AD8C"
+    },
+    {
+      "path": "src/Workspace/WorkspaceDocument.cs",
+      "sha256": "9F73D325013E4CE02BDC3EEB69D369486D8DEF7700E1A5ACB4B06560E014A70C"
+    },
+    {
+      "path": "src/Workspace/WorkspaceRepository.cs",
+      "sha256": "B19C44E9349E59526672F5C383337A4AD76806C2DFC0ED442DE78655CFB52E18"
+    },
+    {
+      "path": "src/App/Main.cs",
+      "sha256": "85916E72AA7C6D9A6C53332BE6C5159D3B6265AD8CA5D1D341BB47AA15E6E441"
+    },
+    {
+      "path": "src/App/Main.WorkspaceDriveRepositoryReview.cs",
+      "sha256": "CEE672721EF81FB13021792A6B58A17629BB6793298D655CCD32AAF92C206F3F"
+    }
+  ],
+  "status": "PREREQUISITES_PASS_WITH_LIMITS_RUNTIME_PENDING"
+}

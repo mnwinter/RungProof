@@ -1,0 +1,91 @@
+{
+  "rows": [
+    {
+      "sha256": "C0B935D0D9185E7EE5FDC3AD0A507B33E86C6B2DAB024C0EB38EEB8A84E3E4EC",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\01-conveyor-cell.scene.png",
+      "view": "scene",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "CFA707C7B30562C03F94208B9BE015ADCF540F5859A00DDE489A0116AF6E797F",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\01-conveyor-cell.split.png",
+      "view": "split",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "19304F931695B683FB5C2663073C986466DFC4F71FD5C46ED7E6578EA91B1A09",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\04-lab-10-02-chicken-label-print.scene.png",
+      "view": "scene",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "346D0FD2298D7725D0C34D47723FA78D7763D02950C2344B517E9A10EB2DD14A",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\04-lab-10-02-chicken-label-print.split.png",
+      "view": "split",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "62124FE5EFC1EC1EACE1F9026A3AFAC01B8B195535377F1FADFBB2915E2DDA29",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\05-lab-10-03-vision-package-sorter.scene.png",
+      "view": "scene",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "387BB67AD6C2DCA5EF143D7E142BBDCDE9E61D99939FCC5A4FF4F7908E2A76E1",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\05-lab-10-03-vision-package-sorter.split.png",
+      "view": "split",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "CA43B5EE6A75ACA3A849D356F0022AAEB34912162D2362FA2AD346E9DC0C23A8",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\10-lab-11-07-multi-conveyor-pallet-route.scene.png",
+      "view": "scene",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "3E46D71E3E7DB5A802189C73B40370FC66B7A09C8F2130D2731A7607CA4A7F51",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\10-lab-11-07-multi-conveyor-pallet-route.split.png",
+      "view": "split",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "EEC46A60274619D96E5303C987C6BA24EB6D7F9AF742AC67F46E2CC62EAC27F1",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\14-lab-11-19-powder-batch-mixer.scene.png",
+      "view": "scene",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "A6DC5B0AA87DEBE6AA2E875D4CA9468999B5339E9692A94F7C6ADBB2C489C27C",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\14-lab-11-19-powder-batch-mixer.split.png",
+      "view": "split",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "76F646DF9ADA80ED677AD3D7301CAB8C68F3050F4BE045319E66BA81187DD066",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\24-lab-2-10-dust-collector-seal-in.scene.png",
+      "view": "scene",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    },
+    {
+      "sha256": "119A4DBC0601F19CD8FBDCEF2A9E528E232B389693C4115881F00FD17946006E",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\all77-material-coherent-v3\\24-lab-2-10-dust-collector-seal-in.split.png",
+      "view": "split",
+      "actuallyViewed": true,
+      "acceptance": "SCOPED_REFINEMENT_REQUIRED; no hard equipment obstruction diagnosed"
+    }
+  ],
+  "captureSet": "all77-material-coherent-v3",
+  "scope": "six current pairs actually viewed; coating pending",
+  "qualification": "Root owns terminal capture qualification; review is not controller scan or release acceptance"
+}

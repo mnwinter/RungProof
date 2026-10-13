@@ -12,6 +12,21 @@
     <Compile Include="MotorAggregateTests.cs" />
     <Compile Include="TypedDataTests.cs" />
     <Compile Include="TypedLessonProgramTests.cs" />
+    <Compile Include="EditorCommandTests.cs" />
+    <Compile Include="InstructionObservationTests.cs" />
+    <Compile Include="CompactObservationRegressionTests.cs" />
+    <Compile Include="ObservationLifecycleTests.cs" />
+    <Compile Include="RecursiveEditorTests.cs" />
+    <Compile Include="EditorMigrationTests.cs" />
+    <Compile Include="ParameterizedCallTests.cs" />
+    <Compile Include="ParameterizedCallAcceptanceTests.cs" />
+    <Compile Include="ParameterizedCallContractRegressionTests.cs" />
+    <Compile Include="EditorTransactionTests.cs" />
+    <Compile Include="CallEditorTests.cs" />
+    <Compile Include="InstructionPresentationTests.cs" />
+    <Compile Include="../src/App/LadderInstructionPresentation.cs" />
     <Compile Include="..\src\VirtualController\*.cs" />
   </ItemGroup>
 </Project>
+
+

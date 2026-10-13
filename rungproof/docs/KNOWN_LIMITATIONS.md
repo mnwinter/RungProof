@@ -1,5 +1,16 @@
 # Known limitations
 
+## Current Godot application
+
+The current application is `rungproof-next/`: an offline ladder editor/runtime
+with five authored demos, 77 scenes, and a separate guarded external-PLC bridge.
+No standalone Next release artifact has been qualified. Current release gaps
+and verification limits are recorded in [demo release review](DEMO_RELEASE_REVIEW_2026-10-10.md).
+TIA/Logix-style editing does not establish vendor project compatibility or CPU
+equivalence. Local simulator tests do not establish live PLC commissioning.
+
+## Historical Qt pilot limitations
+
 These limits must remain visible in pilot documentation and support responses.
 
 - The native application supports one production scene: Scene 2 - Conveyor

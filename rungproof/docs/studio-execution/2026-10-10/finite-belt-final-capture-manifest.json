@@ -1,0 +1,45 @@
+{
+  "assembly": "1FCBA145B09B5882203486F2C8175A9D444166A6A5F110468F2CA37DFC3D3884",
+  "frames": [
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\intended.detail.png",
+      "imageSha256": "B15C0E93A227454D0043F14B1B9DDD60B6AD7CA522506E4575DF082CC6551169",
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\intended.detail.png.identity.json",
+      "statePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\intended.detail.png.workspace-belt.json",
+      "rootPersonallyViewed": true,
+      "dotPersonallyViewed": true
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\wrong-terminal.detail.png",
+      "imageSha256": "433A4BE8103B62E752AF6DCE87605D88E729629B543221E269ADDA3EA63E6B9A",
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\wrong-terminal.detail.png.identity.json",
+      "statePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\wrong-terminal.detail.png.workspace-belt.json",
+      "rootPersonallyViewed": true,
+      "dotPersonallyViewed": true
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\invalid-current.detail.png",
+      "imageSha256": "D68F19C7A89694BC7BE06F0327D668A2D7E867F53026B011DCA5D810CA43D32A",
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\invalid-current.detail.png.identity.json",
+      "statePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\invalid-current.detail.png.workspace-belt.json",
+      "rootPersonallyViewed": true,
+      "dotPersonallyViewed": true
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\wrong-terminal.scene.png",
+      "imageSha256": "D63CE1BD6E75653DB62D2117570406F0FE801CAE788F7158A7A4891B8FA70F72",
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\wrong-terminal.scene.png.identity.json",
+      "statePath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\finite-belt-capture-v2\\wrong-terminal.scene.png.workspace-belt.json",
+      "rootPersonallyViewed": true,
+      "dotPersonallyViewed": true
+    }
+  ],
+  "boundedResult": "PASS_WITH_LIMITS",
+  "dotReport": "finite-belt-dot-review-v2.md",
+  "limitations": [
+    "One finite carton, fixed speed, fixed scale0.65, whole cell grounded translation only",
+    "Wrong-program terminal clamp is a model bound, not controller success or physical discharge",
+    "No livePLC, safety, vendor parity, release or wholecatalog visual acceptance",
+    "Material propagation pending human review"
+  ]
+}

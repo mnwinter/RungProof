@@ -1,0 +1,86 @@
+[
+  {
+    "scene": "lab-9-01-sum-function",
+    "equipment": "numeric_display_0",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-01-sum-function",
+    "equipment": "numeric_display_1",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-02-product-function",
+    "equipment": "numeric_display_0",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-02-product-function",
+    "equipment": "numeric_display_1",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-03-sum-and-counter-function",
+    "equipment": "numeric_display_0",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-03-sum-and-counter-function",
+    "equipment": "numeric_display_1",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-04-function-selector",
+    "equipment": "numeric_display_0",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-04-function-selector",
+    "equipment": "numeric_display_1",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-04-function-selector",
+    "equipment": "numeric_display_2",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-10-box-volume",
+    "equipment": "numeric_display_0",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-10-box-volume",
+    "equipment": "numeric_display_1",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  },
+  {
+    "scene": "lab-9-10-box-volume",
+    "equipment": "numeric_display_2",
+    "sourceUnchanged": true,
+    "uniqueBinding": true,
+    "pcOwner": true
+  }
+]

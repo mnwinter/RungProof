@@ -53,6 +53,17 @@ public partial class SceneSimulationRuntime : Node
 
     public string RuntimeType => Text(_definition, "type", "none");
     public IReadOnlyDictionary<string, object?> Points => _points;
+    /// <summary>Main-thread native observation; presence cannot be inferred from the zero discharge projection.</summary>
+    public RungProof.Next.Challenges.ChallengePlantState CaptureConveyorChallengeState()
+    {
+        if (_conveyorPlant is null)
+            throw new InvalidOperationException("Conveyor challenge state is unavailable for this non-conveyor scene.");
+        return new(
+            new Dictionary<string, bool> { ["simulated_photoeye"] = AsBool(_points.GetValueOrDefault("simulated_photoeye")) },
+            new Dictionary<string, double> { ["object_position"] = Convert.ToDouble(_points.GetValueOrDefault("object_position") ?? 0, CultureInfo.InvariantCulture) },
+            new Dictionary<string, string> { ["component_state"] = Convert.ToString(_points.GetValueOrDefault("component_state"), CultureInfo.InvariantCulture) ?? string.Empty },
+            _conveyorPlant.ObjectPresent, _conveyorPlant.Completed);
+    }
     public bool IsRunning => _bottleShuttleReferenceActive || _shippingPalletReferenceActive || _tankSimulationRunning || _activeStepIndex >= 0 || Controllers().Any(IsControllerRunning);
     private bool _usesExternalClock;
     public bool UsesExternalClock
@@ -72,6 +83,7 @@ public partial class SceneSimulationRuntime : Node
 
     public void SetExternalPlayback(bool selected, bool running)
     {
+        if(selected && running) _motorZonesPaused=false;
         if (_externalPlaybackSelected == selected && _externalPlaybackRunning == running) return;
         _externalPlaybackSelected = selected;
         _externalPlaybackRunning = running;
@@ -92,6 +104,7 @@ public partial class SceneSimulationRuntime : Node
         if (selected && !running) PauseLuggagePlant();
         if(selected && !running && HasEvPlant) PauseEvPlant();
         if (selected && !running) PauseWastewaterPlant();
+        if (selected && !running) StopWorkspaceRollerPreset();
         if (selected && running) ApplyBindings();
     }
 
@@ -107,6 +120,7 @@ public partial class SceneSimulationRuntime : Node
 
     public void SetControllerPlaybackRunning(bool running)
     {
+        if(running) _motorZonesPaused=false;
         if (_controllerClockInitialized && _controllerPlaybackRunning == running) return;
         _controllerClockInitialized = true;
         _controllerPlaybackRunning = running;
@@ -125,6 +139,7 @@ public partial class SceneSimulationRuntime : Node
         if (!running) PauseLuggagePlant();
         if(!running && HasEvPlant) PauseEvPlant();
         if (!running) PauseWastewaterPlant();
+        if (!running) StopWorkspaceRollerPreset();
         if (RuntimeType == "tank") ProjectTankState();
     }
 
@@ -150,6 +165,9 @@ public partial class SceneSimulationRuntime : Node
         FreezeToteTransferAdapter();
         FreezeLuggageAdapters();
         FreezeVisionSorterAdapters();
+        FreezeMotorConveyorAdapters();
+        FreezeWorkspaceBeltAdapter();
+        FreezeWorkspaceRollerAdapter();
     }
 
     public void ConsumeExternalInputPulses(IReadOnlyDictionary<string, object?> sampledPoints)
@@ -194,6 +212,8 @@ public partial class SceneSimulationRuntime : Node
         && MobileTrafficActionAvailable(Text(action, "type", ""));
     public bool IsPlcOwnedPoint(string point) =>
         string.Equals(_pointOwners.GetValueOrDefault(point), "PLC", StringComparison.OrdinalIgnoreCase);
+    public bool IsPcOwnedPoint(string point) =>
+        string.Equals(_pointOwners.GetValueOrDefault(point), "PC", StringComparison.OrdinalIgnoreCase);
 
     // A scene-local permissive belongs only to the offline simulator. External
     // PLC safety and reset logic remain in that PLC and are never synthesized here.
@@ -231,12 +251,15 @@ public partial class SceneSimulationRuntime : Node
 
     public override void _PhysicsProcess(double delta)
     {
-        if (!UsesExternalClock) AdvanceSimulation(delta);
+        if (!UsesExternalClock&&!HasWorkspaceRollerPreset) AdvanceSimulation(delta);
     }
 
     public void AdvanceSimulation(double delta)
     {
         if (_externalPlaybackSelected && !_externalPlaybackRunning) return;
+        // A stopped controller has not accepted a plant tick. Preserve its
+        // pending scene inputs as well as geometry until an accepted scan.
+        if (UsesExternalClock && !PlantPlaybackRunning) return;
         if (!_externalPlaybackSelected && _pulsePoints.Count > 0)
         {
             foreach (var point in _pulsePoints)
@@ -246,8 +269,6 @@ public partial class SceneSimulationRuntime : Node
             _pulsePoints.Clear();
             EvaluateRules();
         }
-
-        if (UsesExternalClock && !PlantPlaybackRunning) return;
 
         // An explicitly configured PLC enable starts this plant routine once
         // per Reset. Scene step output presets never replace that PLC image.
@@ -265,7 +286,10 @@ public partial class SceneSimulationRuntime : Node
                 && StartSequence(sequence)) _commandSequenceStarted = true;
         }
 
+        if (HasWorkspaceBeltPreset) { AdvanceWorkspaceBeltPreset(delta); return; }
+        if (HasWorkspaceRollerPreset) { AdvanceWorkspaceRollerPreset(delta); return; }
         if (HasChickenLabelPlant) { AdvanceChickenLabelPlant(delta); return; }
+        if (HasMotorConveyorZones) { AdvanceMotorConveyorZones(delta); return; }
         if (HasVisionSorter) { AdvanceVisionSorter(delta); return; }
         if (HasChainLiftPlant) { AdvanceChainLiftPlant(delta); return; }
         if (HasCookiePackagingPlant) { AdvanceCookiePackagingPlant(delta); return; }
@@ -431,6 +455,7 @@ public partial class SceneSimulationRuntime : Node
 
     public bool RunDefault()
     {
+        _motorZonesPaused=false;
         // Run quantities without supplying PLC commands or starting adapters.
         if (HasWastewaterPlant)
         {
@@ -482,6 +507,7 @@ public partial class SceneSimulationRuntime : Node
 
     public void StopSimulation()
     {
+        _motorZonesPaused=true;
         DiscardPendingLocalInputPulses();
         _bottleShuttleReferenceActive = false;
         _bottleShuttleConveyor?.ApplyPlantTravel(0, 0);
@@ -506,6 +532,8 @@ public partial class SceneSimulationRuntime : Node
             ProjectTankState();
         }
         StopControllers();
+        StopWorkspaceBeltPreset();
+        StopWorkspaceRollerPreset();
         if (_definition.ValueKind == JsonValueKind.Object
             && _definition.TryGetProperty("safeState", out var safeState)
             && safeState.ValueKind == JsonValueKind.Object)
@@ -575,6 +603,9 @@ public partial class SceneSimulationRuntime : Node
         }
         ApplyInitialTankLevels();
         ResetShippingPalletReference();
+        ResetMotorConveyorZones();
+        ResetWorkspaceBeltPreset();
+        ResetWorkspaceRollerPreset();
         ResetMultiConveyorRoute();
         ResetBottleShuttleReference();
         ResetChainLiftPlant();
@@ -736,6 +767,7 @@ public partial class SceneSimulationRuntime : Node
             _points[name] = value;
         }
         ApplyBindings();
+        ProjectWorkspaceBeltCommittedCommand();
         StateChanged?.Invoke();
     }
 
@@ -1355,6 +1387,10 @@ public partial class SceneSimulationRuntime : Node
             }
             switch (Text(binding, "mode", string.Empty))
             {
+                case "workspaceMomentary":
+                    if(HasWorkspaceRollerPreset)ProjectWorkspaceRollerMomentary(equipment,AsBool(value));
+                    else ProjectWorkspaceMomentary(equipment,AsBool(value));
+                    break;
                 case "running":
                     if (combineRunning)
                         runningStates[equipment] = runningStates.GetValueOrDefault(equipment) || AsBool(value);
@@ -1709,3 +1745,4 @@ public partial class SceneSimulationRuntime : Node
         return Equals(left, right);
     }
 }
+

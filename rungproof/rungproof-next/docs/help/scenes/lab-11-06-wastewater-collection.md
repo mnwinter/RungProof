@@ -19,6 +19,16 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `outlet_clear` | `BOOL` | **PC** | `False` |
 | `transfer_pump_run` | `BOOL` | **PLC** | `False` |
 | `outlet_valve_open` | `BOOL` | **PLC** | `False` |
+| `inflow_enabled` | `BOOL` | **PC** | `False` |
+| `source_level_percent` | `REAL` | **PC** | `35.0` |
+| `source_level_ma` | `REAL` | **PC** | `9.6` |
+| `source_empty` | `BOOL` | **PC** | `False` |
+| `source_full` | `BOOL` | **PC** | `False` |
+| `actual_inflow_percent_per_second` | `REAL` | **PC** | `0.0` |
+| `actual_transfer_percent_per_second` | `REAL` | **PC** | `0.0` |
+| `overflow_percent_per_second` | `REAL` | **PC** | `0.0` |
+| `transfer_inhibited` | `BOOL` | **PC** | `False` |
+| `outlet_valve_position_percent` | `REAL` | **PC** | `0.0` |
 
 ## Operator actions
 

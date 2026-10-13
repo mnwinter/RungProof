@@ -16,17 +16,29 @@ empty ladder editor. Author or explicitly open a compatible controller.
 
 All points are symbolic; no physical addresses are declared here.
 
-| Point | Type | Owner | Initial | Meaning |
-| --- | --- | --- | --- | --- |
-| `cycle_request` | `BOOL` | **PC** | `False` | One accepted-scan START request |
-| `machine_enabled` | `BOOL` | **PC** | `False` | Held manual process enable |
-| `machine_home` | `BOOL` | **PC** | `True` | Z head at its raised home endpoint |
-| `machine_busy` | `BOOL` | **PC** | `False` | Feed/dwell/return in progress, including a held partial stroke |
-| `cycle_done` | `BOOL` | **PC** | `False` | Actual full feed/dwell/return complete; cleared by sampled low command |
-| `head_position` | `REAL` | **PC** | `100.0` | Head lift percent: home 100, work endpoint 0 |
-| `cycle_active` | `BOOL` | **PLC** | `False` | Dry-cycle command; low holds a partial stroke |
-| `cycle_complete` | `BOOL` | **PLC** | `False` | PLC batch counter done indication |
-| `batch_count` | `DINT` | **PLC** | `0` | PLC accumulated count published to COUNT display |
+| Point | Type | Owner | Initial value |
+| --- | --- | --- | --- |
+| `cycle_request` | `BOOL` | **PC** | `False` |
+| `machine_enabled` | `BOOL` | **PC** | `False` |
+| `machine_home` | `BOOL` | **PC** | `True` |
+| `machine_busy` | `BOOL` | **PC** | `False` |
+| `cycle_done` | `BOOL` | **PC** | `False` |
+| `head_position` | `REAL` | **PC** | `100.0` |
+| `cycle_active` | `BOOL` | **PLC** | `False` |
+| `cycle_complete` | `BOOL` | **PLC** | `False` |
+| `batch_count` | `DINT` | **PLC** | `0` |
+
+Authored I/O notes (retained from the prior table):
+
+- `cycle_request` — Meaning: One accepted-scan START request
+- `machine_enabled` — Meaning: Held manual process enable
+- `machine_home` — Meaning: Z head at its raised home endpoint
+- `machine_busy` — Meaning: Feed/dwell/return in progress, including a held partial stroke
+- `cycle_done` — Meaning: Actual full feed/dwell/return complete; cleared by sampled low command
+- `head_position` — Meaning: Head lift percent: home 100, work endpoint 0
+- `cycle_active` — Meaning: Dry-cycle command; low holds a partial stroke
+- `cycle_complete` — Meaning: PLC batch counter done indication
+- `batch_count` — Meaning: PLC accumulated count published to COUNT display
 
 ## Operator actions
 

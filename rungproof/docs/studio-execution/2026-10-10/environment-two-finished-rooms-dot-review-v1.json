@@ -1,0 +1,57 @@
+{
+  "reviewer": "Dot",
+  "status": "READY_FOR_MATT_PREVIEW",
+  "reviewedScenes": 2,
+  "reviewedFrames": 4,
+  "scope": "No hard new floating geometry, architectural separation, occlusion or visible approach barrier found in these stopped frames. Two-room purpose/material contrast demonstrated. This is not human approval, acceptance of remaining75, motion/physical/electrical safety, minimum GPU, accessibility or release qualification.",
+  "frames": [
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\01-lab-2-01-workstation-call.scene.png",
+      "sha256": "5F0BE41904B42534B7A3C2ED4CBADA16C9AEEBC53DA29A898F9CBA338C556CBE",
+      "assemblySha256": "2F0A7594F30EF00D0999E5164594A4C661467A8E515146B215C5A9F0E8529DAD",
+      "identity": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\01-lab-2-01-workstation-call.scene.png.identity.json",
+      "log": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\01-lab-2-01-workstation-call.scene.png.log",
+      "individuallyViewed": true,
+      "verdict": "READY_FOR_HUMAN_PREVIEW",
+      "finding": "Connected painted training room corner, continuous floor and actual side entry; supported station controls and approach visible. Blank noticeboard/opaque illustrative window and split window crop remain cosmetic limitations."
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\01-lab-2-01-workstation-call.split.png",
+      "sha256": "C3B96206869D29DF7FE1C6A1B20A235A128167A9D16E88A8E17A23022E459BFC",
+      "assemblySha256": "2F0A7594F30EF00D0999E5164594A4C661467A8E515146B215C5A9F0E8529DAD",
+      "identity": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\01-lab-2-01-workstation-call.split.png.identity.json",
+      "log": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\01-lab-2-01-workstation-call.split.png.log",
+      "individuallyViewed": true,
+      "verdict": "READY_FOR_HUMAN_PREVIEW",
+      "finding": "Connected painted training room corner, continuous floor and actual side entry; supported station controls and approach visible. Blank noticeboard/opaque illustrative window and split window crop remain cosmetic limitations."
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\02-lab-4-08-package-grouping.scene.png",
+      "sha256": "418ECE33BAF10797661FC439C74EBBF512CF1E164EA2B13532C8D33D9304165D",
+      "assemblySha256": "2F0A7594F30EF00D0999E5164594A4C661467A8E515146B215C5A9F0E8529DAD",
+      "identity": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\02-lab-4-08-package-grouping.scene.png.identity.json",
+      "log": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\02-lab-4-08-package-grouping.scene.png.log",
+      "individuallyViewed": true,
+      "verdict": "READY_FOR_HUMAN_PREVIEW",
+      "finding": "Connected cool steel logistics envelope, grounded columns/header and actual loading recess depth/floor; conveyor, cabinet and approach visible. Dark wall/header low contrast and dim loading recess remain quality limitations."
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\02-lab-4-08-package-grouping.split.png",
+      "sha256": "D41A5320CB2CF7DA8996F890A6BF37C80903E99C92718D81868EEBA636C16706",
+      "assemblySha256": "2F0A7594F30EF00D0999E5164594A4C661467A8E515146B215C5A9F0E8529DAD",
+      "identity": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\02-lab-4-08-package-grouping.split.png.identity.json",
+      "log": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-v1\\02-lab-4-08-package-grouping.split.png.log",
+      "individuallyViewed": true,
+      "verdict": "READY_FOR_HUMAN_PREVIEW",
+      "finding": "Connected cool steel logistics envelope, grounded columns/header and actual loading recess depth/floor; conveyor, cabinet and approach visible. Dark wall/header low contrast and dim loading recess remain quality limitations."
+    }
+  ]
+}

@@ -3,7 +3,7 @@
   "catalogId": "rungproof-original-scenes-migrated",
   "sourceRoot": "prototype/scenes",
   "sceneCount": 77,
-  "equipmentInstanceCount": 631,
+  "equipmentInstanceCount": 633,
   "equipmentTypeCounts": {
     "box": 30,
     "containerReceiver": 3,
@@ -28,13 +28,13 @@
     "rotaryTable": 4,
     "sceneInstallation": 6,
     "sizeSensorBank": 1,
-    "switch": 150,
+    "switch": 151,
     "tank": 12,
     "toteCapper": 1,
     "toteFiller": 2,
     "toteLabeler": 1,
     "toteVision": 1,
-    "trainingAccessory": 134,
+    "trainingAccessory": 135,
     "valve": 8
   },
   "scenes": [
@@ -145,11 +145,12 @@
       "name": "Lab 10.4 - Motor Operating-State Enum",
       "path": "res://scenes/migrated/lab-10-04-motor-enum-state.scene.json",
       "sourceFile": "prototype/scenes/lab-10-04-motor-enum-state.plcscene",
-      "equipmentCount": 6,
+      "equipmentCount": 8,
       "equipmentTypes": [
         "indicator",
         "motor",
-        "switch"
+        "switch",
+        "trainingAccessory"
       ],
       "unresolvedAssetTypes": [],
       "visualStatus": "mapped"

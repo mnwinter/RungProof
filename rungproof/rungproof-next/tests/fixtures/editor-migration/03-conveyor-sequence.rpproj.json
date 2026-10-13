@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "demo-3-conveyor-sequence",
+  "name": "Conveyor_Sequence_Main",
+  "sourceSceneId": "scene-1-conveyor-stop",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 16,
+  "tags": [
+    {
+      "name": "start_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.start"
+    },
+    {
+      "name": "stop_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.stop"
+    },
+    {
+      "name": "simulated_photoeye",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "simulated_photoeye"
+    },
+    {
+      "name": "seal_in",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "conveyor_running",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "conveyor_running"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Conveyor_Sequence_Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-3",
+          "label": "Start/stop conveyor sequence",
+          "coilVariable": "seal_in",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-4",
+              "contacts": [
+                {
+                  "id": "contact-5",
+                  "variable": "start_command",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-6",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-7",
+                  "variable": "simulated_photoeye",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-8",
+              "contacts": [
+                {
+                  "id": "contact-9",
+                  "variable": "seal_in",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-10",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-11",
+                  "variable": "simulated_photoeye",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-12",
+          "label": "Conveyor output command",
+          "coilVariable": "conveyor_running",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-13",
+              "contacts": [
+                {
+                  "id": "contact-14",
+                  "variable": "seal_in",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-15",
+                  "variable": "simulated_photoeye",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "start_command",
+    "stop_command",
+    "simulated_photoeye",
+    "seal_in",
+    "conveyor_running"
+  ]
+}

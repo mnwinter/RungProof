@@ -1,0 +1,85 @@
+{
+  "reviewer": "Dot",
+  "version": "v1",
+  "status": "CHANGES_REQUIRED_CLOUDY_PAINT_ARTIFACT",
+  "humanFinalApproval": false,
+  "rollout": "HELD_HUMAN_REVISION",
+  "actualViews": [
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\01-lab-11-12-mobile-traffic-lights.scene.png",
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "scene",
+      "imageSha256": "47272B71A8BCE423E06C6528E67969889D9F144EEFB0C4DB7326EFB8D5B7C14E",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\01-lab-11-12-mobile-traffic-lights.split.png",
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "split",
+      "imageSha256": "86A7FC8ADCCCA7C7B807CEEF16B47F032EDF4CA613B563B08291403EDB32B56D",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\02-lab-2-01-workstation-call.scene.png",
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "scene",
+      "imageSha256": "80BFC88C12E8D34485F666726A297F8B372F23CA7E51DBAD4B4D09BFB362E81C",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\02-lab-2-01-workstation-call.split.png",
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "split",
+      "imageSha256": "559B945798385652EA10D486CE3F316C038529BB3019E57F5DBFE9C53035A26E",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\03-lab-4-08-package-grouping.scene.png",
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "scene",
+      "imageSha256": "0DE280CD0B783208EEE17B106FC0BCC0661148726663B03B50F5FD47177EC82A",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\03-lab-4-08-package-grouping.split.png",
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "split",
+      "imageSha256": "07DAECF8E3564EE9EFE77F1683AE265EFC83D07B98725835390EF26ED573F310",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\04-lab-9-12-ev-charging-manager.scene.png",
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "scene",
+      "imageSha256": "BF0A0AA5D77C51060D3C384BDB45CCDB72E58AD589B4F43F23B0628008271861",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\material-candidate-four-v1\\04-lab-9-12-ev-charging-manager.split.png",
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "split",
+      "imageSha256": "C3589DE2A097FA733847C12C410F729F0DCEDB648708BF860EF13FAB54DC2B8F",
+      "assemblySha256": "44A8041B632D8DBC1CD99645D7BA7DA4732F508EBF5EE9D35AD1A9B5EB770185",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    }
+  ],
+  "findings": [
+    "Cloudy painted walls and canopy roof read as grime; rejected.",
+    "Timber improves material identity; controls remain visible."
+  ]
+}

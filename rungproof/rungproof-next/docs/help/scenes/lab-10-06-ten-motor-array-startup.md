@@ -19,8 +19,17 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `group_alarm_clear` | `BOOL` | **PC** | `False` |
 | `motor_array_run` | `BOOL` | **PLC** | `False` |
 | `startup_sequence_active` | `BOOL` | **PLC** | `False` |
-| `motor_0_run` through `motor_9_run` | `BOOL` each | **PLC** | `False` each |
-| `motor_commands` | `ARRAY [0..9] OF BOOL` | **PLC** | Ten False elements |
+| `motor_0_run` | `BOOL` | **PLC** | `False` |
+| `motor_1_run` | `BOOL` | **PLC** | `False` |
+| `motor_2_run` | `BOOL` | **PLC** | `False` |
+| `motor_3_run` | `BOOL` | **PLC** | `False` |
+| `motor_4_run` | `BOOL` | **PLC** | `False` |
+| `motor_5_run` | `BOOL` | **PLC** | `False` |
+| `motor_6_run` | `BOOL` | **PLC** | `False` |
+| `motor_7_run` | `BOOL` | **PLC** | `False` |
+| `motor_8_run` | `BOOL` | **PLC** | `False` |
+| `motor_9_run` | `BOOL` | **PLC** | `False` |
+| `motor_commands` | `ARRAY` | **PLC** | `[False, False, False, False, False, False, False, False, False, False]` |
 
 ## Operator actions
 

@@ -8,6 +8,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>RungProof.Next</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(RungProofOfflineDemo)' == 'true'">
+    <DefineConstants>$(DefineConstants);RUNGPROOF_OFFLINE_DEMO</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="tests\**\*.cs" />
     <Compile Remove="tools\demo-projects\**\*.cs" />
@@ -15,4 +18,11 @@
          assembly, even if a tester accidentally stages one under the root. -->
     <Compile Remove="_agent*\**\*.cs" />
   </ItemGroup>
+  <!-- Every Windows development/export compilation binds Test to the complete
+       current source closure. A stale manifest must never enable proof awards. -->
+  <PropertyGroup><RungProofPowerShell Condition="'$(RungProofPowerShell)' == ''">pwsh.exe</RungProofPowerShell></PropertyGroup>
+  <Target Name="GenerateChallengeSemanticManifest" BeforeTargets="CoreCompile" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="&quot;$(RungProofPowerShell)&quot; -NoProfile -File &quot;$(MSBuildProjectDirectory)\tools\verify_godot_source_utf8.ps1&quot; -SourceRoot &quot;$(MSBuildProjectDirectory)&quot;" />
+    <Exec Command="&quot;$(RungProofPowerShell)&quot; -NoProfile -File &quot;$(MSBuildProjectDirectory)\tools\build_challenge_semantic_manifest.ps1&quot; -SourceRoot &quot;$(MSBuildProjectDirectory)&quot; -OutputPath &quot;$(MSBuildProjectDirectory)\challenges\semantic-manifest.json&quot;" />
+  </Target>
 </Project>

@@ -1,0 +1,40 @@
+# Task 3 independent code review
+
+Scope: recursive expression model, document/history, measured layout, canvas and shell integration against the approved semantics contract. Read-only review; no builds, tests or native interaction were run by this reviewer. Findings below are source-traced, not claims of reproduced native behavior. Existing reported test passes do not cover these routes.
+
+Verdict: changes required.
+
+## Findings
+
+1. **P1 — Toolbar Delete interprets selected subtree as whole network.** `src/App/SimulatorShell.cs:7883-7892,7958` captures only output/contact/insertion/network roles, and `remove.Pressed` always uses the legacy dispatcher. Selecting a nested Series/Parallel via `LadderEditorCanvas.SelectTreeNode` leaves a node ID but no contact; `RungSelected` resets the shell selection (`SimulatorShell.cs:6997`). Consequently the toolbar captures Network and `LadderEditorCommands.cs:157` removes the entire network. Keyboard Delete uses the tree dispatcher, so identical visible selection has materially different behavior. Route toolbar/menu mutation through the exact subtree target when selected; reserve network deletion for an explicitly selected header. Test nested container toolbar Delete retains sibling expressions and terminal action; undo restores exact IDs.
+
+2. **P1 — Nested leaf context-menu structural commands still enter flat adapters and throw after history recording.** `LadderEditorCanvas.cs:413-423` tests leaves first and raises the legacy context menu even in recursive networks. For `Series(Contact A, Parallel(...))`, right-click A → Delete invokes `RemoveContact`, and `EditableBranch.CommitContacts` (`LadderEditorDocument.cs:44-48`) rejects the changed leaf IDs because the parent includes a nested child. Legacy command Execute does not catch this, and `LadderEditorHistory.Execute:49-50` records history before mutation. Paste and left/right movement have the same adapter boundary. Make mouse/context commands use the same exact recursive dispatch as keyboard commands (including leaf-root cases); reject unsupported operations before history mutation. Test all mouse and keyboard routes against the same tree fixture and assert no exception or spurious undo entry.
+
+3. **P1 — Deleting an output does not suppress non-coil runtime actions, and reinsertion does not restore the presence flag.** Delete sets only `HasTerminalAction=false` (`LadderEditorCommands.cs:158`). `LadderEditorDocument.BuildProgram:1000-1028` gates only the coil on that flag; timers, counters, math, CALL, RETURN and other action fields still emit their action when their old discriminator remains true. Canvas displays DRAFT / NO TERMINAL while a deleted CTU or CALL remains executable. Conversely, shell palette insertion routines (for example SelectTimer at `SimulatorShell.cs:7310-7337`) never set HasTerminalAction=true, so re-adding a coil after deletion leaves a missing action and other families keep the contradictory display. Gate every terminal export consistently; explicitly restore presence on all insert/replace paths. Test delete and re-add for every action family, confirming compiler rejection of actionless drafts and no executable hidden action.
+
+4. **P2 — The newly authored empty branches cannot pass Verify + Load yet.** `EditableLadderTree.WrapParallel:111-119` creates an empty Series branch per the approved contract, but `LadderCompiler.cs:442-446` rejects zero-child containers and one-child Parallel, while BuildProgram still writes schema 1 (`LadderEditorDocument.cs:1037`). This prevents the core new branch feature from running as specified. This is a known cross-phase integration gap, not a request to relax legacy schema 1 indiscriminately. Ownership: runtime/compiler + runtime JSON/schema migration owner must implement v2 structural rules and editor BuildProgram must produce that representation; Task 3 owns integration regression fixtures. Test TRUE empty Series, FALSE empty Parallel, one-child Parallel and legacy fixture parity through save/reopen/compile/scan.
+
+5. **P2 — Legacy ignored empty paths are rendered as live TRUE wires.** `LadderEditorCanvas.DrawRecursiveConditions:174-175` labels every empty Series `EMPTY SERIES · TRUE` and layout draws it as a connected wire. But `LadderEditorDocument.BuildProgram:991-997` deliberately omits empty legacy branches while LegacyEmptyBranchSemantics is true. An imported legacy parallel rung with one real contact path and one empty draft path therefore visually promises a bypass which the runtime omits. Render a clearly inactive/ignored legacy draft path until explicit conversion, or accurately annotate the legacy semantics without drawing a misleading bypass. Verify a v1 empty-path fixture before and after conversion, including undo.
+
+6. **P2 — Recursive keyboard traversal never reaches the terminal action.** `LadderEditorCanvas.NavigateKeyboard:513-519` handles every ordinary navigation key in a recursive rung by clamping to `TreeLayout(rung).Nodes`, which contains only expression nodes, then returns. End selects the last expression node and further Right/Down cannot select the output. The flat path supports terminal selection, so nested authoring loses keyboard-only action editing/deletion. Include terminal action (and insertion slots as required by the approved navigation contract) in the measured navigation model; test keyboard traversal and reveal on a wide nested rung.
+
+## Positive checks and remaining evidence
+
+Tree import/replace/clone preserve structure without distributing edge contacts; model mutation validates depth and IDs before setting the new root. The tree command path prepares and validates replacement before recording history, and fresh subtree/network paste IDs are allocated recursively. No concrete clone-ID collision was found during this read-only review.
+
+Native readability, slot hit accuracy, overlap, scrolling/reveal, DPI/zoom and both vendor styles remain unverified here. Review of source coordinates alone is not visual acceptance. Task 3 must not be accepted on model tests alone.
+
+## Scoped follow-up review
+
+Re-read all six finding paths after the corrections (source-only; no builds or native UI run by this reviewer). **All six original findings are addressed in the inspected source.**
+
+- Shell dispatch now recognizes a selected recursive node before capturing a legacy Network target; toolbar Delete/Copy/Paste/Move route through tree commands.
+- Nested leaf right-click opens the tree popup. The legacy Contact command entry point also defensively redirects nested Delete/Move/Paste to the validated tree command path before history recording.
+- Every terminal export is gated by HasTerminalAction. Palette insertion handlers for coil, timer/reset, counter/reset/load, numeric, CALL, RETURN, JMP and LABEL restore presence.
+- BuildProgram emits runtime schema 2; compiler empty-container/minimum-parallel restrictions are scoped to schema 1. The approved v2 empty shapes can proceed through compilation.
+- Layout marks ignored legacy empty paths and omits their internal wire; canvas labels them as ignored legacy drafts. The layout cache includes the legacy mode so conversion/undo changes presentation.
+- Recursive keyboard traversal now consumes measured Navigation entries including insertion slots and terminal action, allowing End/output selection.
+
+Relevant regression sources include DeletedTerminalNeverExportsHiddenAction, NestedLegacyContactCommandsUseAtomicTreePath, LegacyIgnoredEmptyPathsHaveExplicitLayoutDisposition, and navigation coverage in RecursiveEditorTests, plus the actual-canvas Main.RecursiveEditorReview fixture. Parent reports integration-15 tree tests passing and app-build-09 passing; this reviewer did not rerun those commands or independently inspect their logs.
+
+No additional blocker found in this bounded rereview. This closes the six source findings, **not** whole-editor acceptance, native interaction/visual qualification, or concurrent transaction/call implementation review. Parent's image inspection remains the authority for rendered evidence.

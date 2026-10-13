@@ -1,0 +1,116 @@
+{
+  "reviewer": "Dot",
+  "status": "REJECTED_CHECKPOINT",
+  "reviewedFrames": 12,
+  "scope": "Stopped native full/split visual only; no motion/input/safety qualification",
+  "frames": [
+    {
+      "sceneId": "lab-11-06-wastewater-collection",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\01-lab-11-06-wastewater-collection.scene.png",
+      "sha256": "2B87A881F2361EC2BE809661A0469A0224753C9D7EDC107AC69161AC4004192D",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD: unsupported long rear canopy above low boundary; outdoor distinction present but structure implausible."
+    },
+    {
+      "sceneId": "lab-11-06-wastewater-collection",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\01-lab-11-06-wastewater-collection.split.png",
+      "sha256": "6F6B08FC09C106E638778B23D7C84E49671C8C5E6757B8C769924FE11AF7F7AC",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD: unsupported long rear canopy above low boundary; outdoor distinction present but structure implausible."
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\02-lab-2-01-workstation-call.scene.png",
+      "sha256": "691CC2C8DD54F3FE19C0DEE1FE28099A99100B0BEEB2F600BAFA96DCB3942562",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD diversity: supported clear bench, but remains two-wall white alcove; purposeful sibling difference weak and high architecture cropped."
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\02-lab-2-01-workstation-call.split.png",
+      "sha256": "40F566E4C77B348A1FD0F0A146F8BE0EE8E423DFD523492ADA86AAB56F285C1B",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD diversity: supported clear bench, but remains two-wall white alcove; purposeful sibling difference weak and high architecture cropped."
+    },
+    {
+      "sceneId": "lab-2-08-inspection-vote",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\03-lab-2-08-inspection-vote.scene.png",
+      "sha256": "9040363A6D7C375117D480AF25F56275C342CEA7246EAC8FFABD382E3BF6DBD1",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD diversity: compared with02, panes and trim mainly differentiate same bench/room silhouette; top details cropped."
+    },
+    {
+      "sceneId": "lab-2-08-inspection-vote",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\03-lab-2-08-inspection-vote.split.png",
+      "sha256": "A98C53DA2D22C0CAC81BE255AECA6164546E6952336EDABF9A458943AF3E3DED",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD diversity: compared with02, panes and trim mainly differentiate same bench/room silhouette; top details cropped."
+    },
+    {
+      "sceneId": "lab-2-15-fume-extractor",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\04-lab-2-15-fume-extractor.scene.png",
+      "sha256": "54337145FB42F015BEE0B645834E3C42C2B01FD8238115A36F9560F09E27E43E",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD: floating orange side soffit; darker maintenance finish and service hood context improve distinction, but support continuity fails."
+    },
+    {
+      "sceneId": "lab-2-15-fume-extractor",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\04-lab-2-15-fume-extractor.split.png",
+      "sha256": "8960FB6E7539FD3BAC8EC667A3ABB370ED7A80AF28BF81C4E6586A144CB17F6D",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD: floating orange side soffit; darker maintenance finish and service hood context improve distinction, but support continuity fails."
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\05-lab-4-08-package-grouping.scene.png",
+      "sha256": "72132F07DEBB665FE98D808BAE7A429AA8AC27BADC5F6D18AB46B6ABEAE2A8A3",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD: floating rear canopy; gold/beige walls remain weak steel dispatch-hall identity despite actual loading openings."
+    },
+    {
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\05-lab-4-08-package-grouping.split.png",
+      "sha256": "CED579DA0AB464A5A06FAC146255348620BB626399431E13268C6DE00D3C0FD4",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "HOLD: floating rear canopy; gold/beige walls remain weak steel dispatch-hall identity despite actual loading openings."
+    },
+    {
+      "sceneId": "lab-6-08-hand-dryer",
+      "view": "scene",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\06-lab-6-08-hand-dryer.scene.png",
+      "sha256": "388E30B8BA0B4FDE2BAB578BC7A4D83F4C990E881AED30D8976148B2927B4247",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "CHANGES_REQUIRED: recognizably public washroom fixtures, but white wall/cabinet brightness flattens depth and oversized panel dominates dryer."
+    },
+    {
+      "sceneId": "lab-6-08-hand-dryer",
+      "view": "split",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-representatives-v1\\06-lab-6-08-hand-dryer.split.png",
+      "sha256": "77B1CC59E988C72B218012BA85FA5954C509BCB7BFBD9507DCA7251B03CCCCAF",
+      "assemblySha256": "8E8F6689045136637E1F8298F292B45611A2BE146F766D8967457AD57EE32943",
+      "individuallyViewed": true,
+      "finding": "CHANGES_REQUIRED: recognizably public washroom fixtures, but white wall/cabinet brightness flattens depth and oversized panel dominates dryer."
+    }
+  ]
+}

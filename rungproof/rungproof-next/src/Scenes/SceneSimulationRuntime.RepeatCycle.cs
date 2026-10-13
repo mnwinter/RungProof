@@ -8,6 +8,14 @@ namespace RungProof.Next.Scenes;
 
 public partial class SceneSimulationRuntime
 {
+    /// <summary>Copied actual state for passive accepted-scan observers; independent of history recording.</summary>
+    public RungProof.Next.Lessons.RepeatCyclePlantImage? CaptureRepeatCyclePlantState()
+    {
+        if (_repeatCycle is null) return null;
+        return new(_repeatCycle.Phase, _repeatCycle.HomeFraction, _repeatCycle.SpindleRadians,
+            _repeatCycle.Home, _repeatCycle.Busy, _repeatCycle.Done);
+    }
+
     private bool HasRepeatCyclePlant => _definition.TryGetProperty("repeatCyclePlant", out _);
     private RepeatCyclePlantModel? _repeatCycle;
     private EquipmentMotionController? _repeatHeadMotion;

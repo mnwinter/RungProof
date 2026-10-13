@@ -14,6 +14,8 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `auto_start_request` | `BOOL` | **PC** | `False` |
+| `manual_jog_request` | `BOOL` | **PC** | `False` |
 | `auto_mode` | `BOOL` | **PC** | `True` |
 | `conveyor_run` | `BOOL` | **PLC** | `False` |
 | `pickup_sensor` | `BOOL` | **PC** | `False` |

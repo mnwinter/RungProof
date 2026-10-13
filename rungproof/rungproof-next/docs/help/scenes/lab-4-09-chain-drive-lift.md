@@ -29,7 +29,7 @@ photoeye shows `box_present`; an upper entry photoeye shows
 `receiver_occupied` describes the occupied receiver zone and stays true while
 the completed carton remains there; it is distinct from an entry photoeye.
 
-| Point | Type | Owner | Initial |
+| Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
 | `box_present` | `BOOL` | **PC** | `True` |
 | `lift_home` | `BOOL` | **PC** | `True` |

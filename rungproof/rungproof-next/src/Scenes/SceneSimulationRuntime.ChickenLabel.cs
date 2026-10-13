@@ -11,6 +11,7 @@ public partial class SceneSimulationRuntime
     private MeshInstance3D? _chickenPaper;
     private Label3D? _chickenText, _chickenWeight, _chickenInk;
     private double _chickenLoadElapsed;
+    private Vector2 _chickenWeightScreenSize;
     private Vector3 _chickenPaperStart, _chickenPaperPrinted;
     private void ResetChickenLabelPlant()
     {
@@ -65,11 +66,30 @@ public partial class SceneSimulationRuntime
         _chickenWeight = weigh.GetNodeOrNull<Label3D>("MeasuredWeight");
         if (_chickenWeight is null)
         {
-            _chickenWeight = new Label3D { Name = "MeasuredWeight", FontSize = 36, PixelSize = .003f, Billboard = BaseMaterial3D.BillboardModeEnum.Enabled };
+            _chickenWeight = new Label3D { Name = "MeasuredWeight" };
             weigh.AddChild(_chickenWeight);
         }
-        var wb = DeliveredEquipmentBounds(weigh);
-        _chickenWeight.GlobalPosition = new Vector3(wb.GetCenter().X, wb.End.Y + .35f, wb.GetCenter().Z);
+        var screen = weigh.FindChild("WEIGH_readout_screen", true, false) as MeshInstance3D
+            ?? throw new InvalidOperationException("Chicken measurement requires the retained scale screen");
+        if (!screen.Visible || screen.Mesh is null)
+            throw new InvalidOperationException("Chicken measurement requires a visible scale screen");
+        var screenBounds = screen.GetAabb();
+        _chickenWeightScreenSize = new Vector2(screenBounds.Size.X, screenBounds.Size.Y);
+        var screenPose = screen.Transform;
+        for (var parent = screen.GetParent(); parent != weigh; parent = parent.GetParent())
+            if (parent is Node3D spatial) screenPose = spatial.Transform * screenPose;
+        // Keep the existing child path. The screen's delivered outward face
+        // is +Z; use its full relative transform so template poses still follow.
+        _chickenWeight.Transform = screenPose * new Transform3D(Basis.Identity,
+            new Vector3(screenBounds.GetCenter().X, screenBounds.GetCenter().Y, screenBounds.End.Z + .0015f));
+        _chickenWeight.Billboard = BaseMaterial3D.BillboardModeEnum.Disabled;
+        _chickenWeight.FontSize = 36;
+        _chickenWeight.OutlineSize = 0;
+        _chickenWeight.Modulate = Colors.White;
+        _chickenWeight.HorizontalAlignment = HorizontalAlignment.Center;
+        _chickenWeight.VerticalAlignment = VerticalAlignment.Center;
+        _chickenWeight.SetMeta("sourcePoint", "weight_kg");
+        _chickenWeight.SetMeta("readoutScreen", "WEIGH_readout_screen");
         PublishChickenLabelPlant();
     }
     private bool LoadChickenProduct()
@@ -113,6 +133,32 @@ public partial class SceneSimulationRuntime
             trayBounds = trayBounds.Merge(mesh.GlobalTransform * mesh.GetAabb());
         var applied = new Vector3(trayBounds.GetCenter().X, trayBounds.End.Y + .004f, trayBounds.GetCenter().Z);
         _chickenPaper.GlobalPosition = m.Applying || m.ApplicationComplete ? _chickenPaperPrinted.Lerp(applied, (float)m.ApplyFraction) : _chickenPaperStart.Lerp(_chickenPaperPrinted, (float)m.PrintFraction);
+        // Keep the readable exact-text caption beside the weighing station.
+        // Its anchor belongs to the settled tray geometry, rather than the
+        // moving sheet, so it cannot cover the real printed ink at application.
+        // Preserve the child path used by the native checks and saved scene;
+        // only the visual caption placement changes, never plant/job state.
+        _chickenText.GlobalPosition = applied + new Vector3(-1f, .45f, 0);
         _chickenWeight!.Text = m.WeighStable ? FormattableString.Invariant($"MEASURED {m.MeasuredKg:F3} kg") : m.ProductPresent ? "WEIGHING..." : "LOAD PRODUCT";
+        FitChickenWeightReadout();
+    }
+
+    private void FitChickenWeightReadout()
+    {
+        // Fit every existing state at one scale, including the actual measured
+        // value. No text shortening, invented numeric binding or duplicate value.
+        var label = _chickenWeight!;
+        var font = label.Font ?? ThemeDB.FallbackFont;
+        var texts = new[] { "LOAD PRODUCT", "WEIGHING...", "MEASURED 1.237 kg", label.Text };
+        var sizes = texts.Select(text => font.GetStringSize(text, HorizontalAlignment.Left, -1, label.FontSize)).ToArray();
+        var width = sizes.Max(size => size.X);
+        var height = MathF.Max(sizes.Max(size => size.Y),
+            font.GetStringSize("Mg", HorizontalAlignment.Left, -1, label.FontSize).Y);
+        var available = _chickenWeightScreenSize - new Vector2(.02f, .02f);
+        if (available.X <= 0 || available.Y <= 0 || width <= 0 || height <= 0)
+            throw new InvalidOperationException("Chicken measurement screen has no usable text area");
+        label.PixelSize = MathF.Min(.0018f, MathF.Min(available.X / width, available.Y / height));
+        label.SetMeta("measuredInkWidth", width * label.PixelSize);
+        label.SetMeta("measuredInkHeight", height * label.PixelSize);
     }
 }

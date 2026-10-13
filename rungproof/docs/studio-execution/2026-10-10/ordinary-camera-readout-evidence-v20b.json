@@ -1,0 +1,61 @@
+{
+  "version": "V20b",
+  "dllSha256": "90AAD09621BC00123C5088CCAA8270DDA61818C1D8C56C4545942A619A2563ED",
+  "scope": "Two scenes, ordinary scripted in-app camera navigation, scene and split,1600x900",
+  "results": [
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-chicken-navigation.scene.png.user-readout.json",
+      "sha256": "EDFA5B561B1354AA799C30ECCC2A35F891C2ECCC844DD655B18C6BA12C3B229E",
+      "passed": true,
+      "events": 54,
+      "minimumLineBoxPixels": 20.305908
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-chicken-navigation.split.png.user-readout.json",
+      "sha256": "F1F33DD754C8362053498F71374BC7B0279064B1F92F9626617078A2BE064C61",
+      "passed": true,
+      "events": 55,
+      "minimumLineBoxPixels": 19.918427
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-ev-navigation.scene.png.user-readout.json",
+      "sha256": "4BD7FD4248B46D0251D9E3A785EC18F02350EAFD9DB5F69CB658A2A4D75BFE02",
+      "passed": true,
+      "events": 60,
+      "minimumLineBoxPixels": 18.189087
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-ev-navigation.split.png.user-readout.json",
+      "sha256": "375724B2DEC4E5F991AC3A009A2BB8BB64B64FB853D21CA99A370058CE8C0442",
+      "passed": true,
+      "events": 63,
+      "minimumLineBoxPixels": 18.93155
+    }
+  ],
+  "rootViewedAllFour": true,
+  "physicalInputVerified": false,
+  "material75Approved": false,
+  "handleRootCause": "OPEN",
+  "images": [
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-chicken-navigation.scene.png",
+      "sha256": "84055E21D6EBF5F44CA05CEBE5D543A0525CE1673EB39953D0F9427F814C68E2",
+      "logSha256": "011D19BAC9AAB2849768A950008836A79EF8AEB3F69407E33CA6A8B64E8AE50D"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-chicken-navigation.split.png",
+      "sha256": "FD4788CD29749F4C80C48C772AC9CA2FE861DCFF6534E085F2E3C90A8B7726D1",
+      "logSha256": "225C01B2D85B8D87AD67963D3EB64BE5E7CD5D6A96AE545479A339301018428A"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-ev-navigation.scene.png",
+      "sha256": "B80C6857BBB494BA25A049948888FCCD590CA59E64AE174BA564D907D4A30854",
+      "logSha256": "9CEF59B1B718E1E2BE49202E9F2873BF84B443BAAC675AE661A29F31037F7477"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\v20b-ev-navigation.split.png",
+      "sha256": "FA2920A6083867F636CCFD49862C544C192964EA377CDE8B6036F305E007F0DC",
+      "logSha256": "9087DF07A65A4B3B2C0746995803A64AA30C322CD0E85F491ED0738EF9351298"
+    }
+  ]
+}

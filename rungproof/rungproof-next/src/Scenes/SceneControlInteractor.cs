@@ -47,6 +47,9 @@ public sealed class SceneControlInteractor
     /// </summary>
     public void PlayAcceptedFeedback(Binding binding)
     {
+        // A declared zero travel delegates the pose to its point-driven
+        // momentary adapter, avoiding competing animation clocks.
+        if(binding.FeedbackTravelM<=0)return;
         var target = binding.Node.FindChild("KIN_pushbutton", true, false) as Node3D
             ?? binding.Node.FindChild("KIN_estop", true, false) as Node3D;
         // A numeric input/display is clickable, but its stand is fixed. Only

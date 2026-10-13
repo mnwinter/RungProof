@@ -1,0 +1,1270 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "demo-5-integrated-palletizer",
+  "name": "Palletizing_Cell_Main",
+  "sourceSceneId": "lab-11-13-xy-palletizing",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 80,
+  "tags": [
+    {
+      "name": "carton_at_pick",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "carton_at_pick"
+    },
+    {
+      "name": "gantry_home",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "gantry_home"
+    },
+    {
+      "name": "pallet_position_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "pallet_position_valid"
+    },
+    {
+      "name": "vacuum_pick",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "vacuum_pick"
+    },
+    {
+      "name": "gantry_cycle",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "gantry_cycle"
+    },
+    {
+      "name": "layer_complete",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "layer_complete"
+    },
+    {
+      "name": "start_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "start_command"
+    },
+    {
+      "name": "at_pickup",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "at_pickup"
+    },
+    {
+      "name": "at_place",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "at_place"
+    },
+    {
+      "name": "carton_attached",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "carton_attached"
+    },
+    {
+      "name": "pick_complete",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "pick_complete"
+    },
+    {
+      "name": "cycle_in_progress",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "cycle_in_progress"
+    },
+    {
+      "name": "palletizer_fault",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "palletizer_fault"
+    },
+    {
+      "name": "placed_cartons",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "placed_cartons"
+    },
+    {
+      "name": "cell_permissive",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "pick_permissive",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "sequence_ready",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "cell_active",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "always_scan",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": true,
+      "binding": ""
+    },
+    {
+      "name": "layer_count",
+      "type": "DInt",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    },
+    {
+      "name": "position_sum",
+      "type": "DInt",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    },
+    {
+      "name": "pick_timer",
+      "type": "Timer",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    },
+    {
+      "name": "cycle_count",
+      "type": "Counter",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Palletizing_Cell_Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-31",
+          "label": "Permissive block call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "block-3",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-32",
+              "contacts": [
+                {
+                  "id": "contact-33",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-34",
+          "label": "Pick and place block call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "block-4",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-35",
+              "contacts": [
+                {
+                  "id": "contact-36",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-37",
+          "label": "Sequence supervisor function call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "block-5",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-38",
+              "contacts": [
+                {
+                  "id": "contact-39",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-40",
+          "label": "Inspection math function call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "block-6",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-41",
+              "contacts": [
+                {
+                  "id": "contact-42",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-43",
+          "label": "Count placement and home-return feedback",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": true,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "cycle_count",
+          "counterPreset": 4,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-44",
+              "contacts": [
+                {
+                  "id": "contact-45",
+                  "variable": "pick_complete",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-46",
+          "label": "Layer completion output",
+          "coilVariable": "layer_complete",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-47",
+              "contacts": [
+                {
+                  "id": "compare-48",
+                  "variable": "cycle_count.ACC",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterOrEqual",
+                  "rightOperand": "4",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-49",
+          "label": "Gantry cycle latch; Stop clears this output",
+          "coilVariable": "gantry_cycle",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-50",
+              "contacts": [
+                {
+                  "id": "contact-51",
+                  "variable": "pick_permissive",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-52",
+                  "variable": "cell_permissive",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-53",
+                  "variable": "layer_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-54",
+              "contacts": [
+                {
+                  "id": "contact-55",
+                  "variable": "gantry_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-56",
+                  "variable": "cell_permissive",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-57",
+                  "variable": "pick_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-58",
+                  "variable": "layer_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-59",
+          "label": "Vacuum pickup dwell",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "pick_timer",
+          "timerPresetMs": 750,
+          "timerKind": "OnDelay",
+          "isTimer": true,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-60",
+              "contacts": [
+                {
+                  "id": "contact-61",
+                  "variable": "gantry_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-62",
+                  "variable": "at_pickup",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-63",
+          "label": "Vacuum after dwell; release only at supported place",
+          "coilVariable": "vacuum_pick",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-64",
+              "contacts": [
+                {
+                  "id": "contact-65",
+                  "variable": "pick_timer.Q",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-66",
+                  "variable": "gantry_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-67",
+                  "variable": "at_place",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-68",
+              "contacts": [
+                {
+                  "id": "contact-69",
+                  "variable": "carton_attached",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-70",
+                  "variable": "gantry_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-71",
+                  "variable": "at_place",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-72",
+          "label": "Advance layer count",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Add",
+          "numericSourceA": "layer_count",
+          "numericSourceB": "1",
+          "numericSourceC": "0",
+          "numericDestination": "layer_count",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-73",
+              "contacts": [
+                {
+                  "id": "edge-74",
+                  "variable": "layer_complete",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "Rising"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-75",
+          "label": "Cell active status: either commanded actuator",
+          "coilVariable": "cell_active",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-76",
+              "contacts": [
+                {
+                  "id": "contact-77",
+                  "variable": "vacuum_pick",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-78",
+              "contacts": [
+                {
+                  "id": "contact-79",
+                  "variable": "gantry_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "block-3",
+      "name": "FB_CellPermissive",
+      "blockType": "FunctionBlock",
+      "interface": [
+        {
+          "name": "PlantFault",
+          "type": "Bool",
+          "section": "Input",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "PalletValid",
+          "type": "Bool",
+          "section": "Input",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "Permissive",
+          "type": "Bool",
+          "section": "Output",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "TripLatched",
+          "type": "Bool",
+          "section": "Static",
+          "initial": false,
+          "dataType": ""
+        }
+      ],
+      "rungs": [
+        {
+          "id": "rung-9",
+          "label": "Pallet and plant permissive",
+          "coilVariable": "cell_permissive",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-10",
+              "contacts": [
+                {
+                  "id": "contact-11",
+                  "variable": "pallet_position_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-12",
+                  "variable": "palletizer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "block-4",
+      "name": "FB_PickAndPlace",
+      "blockType": "FunctionBlock",
+      "interface": [
+        {
+          "name": "Enable",
+          "type": "Bool",
+          "section": "Input",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "CartonPresent",
+          "type": "Bool",
+          "section": "Input",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "VacuumCommand",
+          "type": "Bool",
+          "section": "Output",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "CycleActive",
+          "type": "Bool",
+          "section": "Output",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "PickTimer",
+          "type": "Timer",
+          "section": "Static",
+          "initial": 0,
+          "dataType": ""
+        }
+      ],
+      "rungs": [
+        {
+          "id": "rung-13",
+          "label": "Accept fresh Start at home or resume held carton",
+          "coilVariable": "pick_permissive",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-14",
+              "contacts": [
+                {
+                  "id": "edge-15",
+                  "variable": "start_command",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "Rising"
+                },
+                {
+                  "id": "contact-16",
+                  "variable": "gantry_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-17",
+                  "variable": "carton_at_pick",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-18",
+                  "variable": "cell_permissive",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "compare-19",
+                  "variable": "cycle_count.ACC",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessThan",
+                  "rightOperand": "4",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-20",
+              "contacts": [
+                {
+                  "id": "edge-21",
+                  "variable": "start_command",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "Rising"
+                },
+                {
+                  "id": "contact-22",
+                  "variable": "cycle_in_progress",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-23",
+                  "variable": "cell_permissive",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "compare-24",
+                  "variable": "cycle_count.ACC",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessThan",
+                  "rightOperand": "4",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "block-5",
+      "name": "FC_SequenceSupervisor",
+      "blockType": "Function",
+      "interface": [
+        {
+          "name": "Permissive",
+          "type": "Bool",
+          "section": "Input",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "Ready",
+          "type": "Bool",
+          "section": "Output",
+          "initial": false,
+          "dataType": ""
+        }
+      ],
+      "rungs": [
+        {
+          "id": "rung-25",
+          "label": "Sequence ready",
+          "coilVariable": "sequence_ready",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-26",
+              "contacts": [
+                {
+                  "id": "contact-27",
+                  "variable": "cell_permissive",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "block-6",
+      "name": "FC_InspectionMath",
+      "blockType": "Function",
+      "interface": [
+        {
+          "name": "LayerCount",
+          "type": "DInt",
+          "section": "Input",
+          "initial": 0,
+          "dataType": ""
+        },
+        {
+          "name": "PositionSum",
+          "type": "DInt",
+          "section": "Output",
+          "initial": 0,
+          "dataType": ""
+        }
+      ],
+      "rungs": [
+        {
+          "id": "rung-28",
+          "label": "Add layer position",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Add",
+          "numericSourceA": "layer_count",
+          "numericSourceB": "1",
+          "numericSourceC": "0",
+          "numericDestination": "position_sum",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-29",
+              "contacts": [
+                {
+                  "id": "contact-30",
+                  "variable": "sequence_ready",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "block-7",
+      "name": "DB_CellData",
+      "blockType": "DataBlock",
+      "interface": [
+        {
+          "name": "layer_count",
+          "type": "DInt",
+          "section": "Static",
+          "initial": 0,
+          "dataType": ""
+        },
+        {
+          "name": "position_sum",
+          "type": "DInt",
+          "section": "Static",
+          "initial": 0,
+          "dataType": ""
+        }
+      ],
+      "rungs": []
+    },
+    {
+      "id": "block-8",
+      "name": "DB_CellStatus",
+      "blockType": "DataBlock",
+      "interface": [
+        {
+          "name": "cell_active",
+          "type": "Bool",
+          "section": "Static",
+          "initial": false,
+          "dataType": ""
+        },
+        {
+          "name": "layer_complete",
+          "type": "Bool",
+          "section": "Static",
+          "initial": false,
+          "dataType": ""
+        }
+      ],
+      "rungs": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "carton_at_pick",
+    "gantry_home",
+    "pallet_position_valid",
+    "vacuum_pick",
+    "gantry_cycle",
+    "layer_complete",
+    "layer_count",
+    "cycle_count",
+    "cell_active",
+    "position_sum"
+  ]
+}

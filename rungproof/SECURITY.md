@@ -1,5 +1,14 @@
 # RungProof security policy
 
+## Current application boundary
+
+The Godot/C# successor has an offline controller and a separate guarded Python
+bridge for explicitly authorized external PLC sessions. The supported-surface
+statements below describe the historical Qt pilot. A distributable Next demo
+has not been security-qualified; the [demo release review](docs/DEMO_RELEASE_REVIEW_2026-10-10.md)
+records the proposed offline scope, bounded source assessment and open gates.
+All PLC authorization, ownership and fail-closed invariants below still apply.
+
 ## Supported security scope
 
 Only the version named in `VERSION` is being prepared for the controlled pilot.

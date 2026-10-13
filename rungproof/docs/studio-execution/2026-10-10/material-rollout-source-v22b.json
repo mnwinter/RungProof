@@ -1,0 +1,86 @@
+{
+  "assemblySha256": "7D1F6FC463D885BF6076EB5C4E32ABAFC74B9FDDDC2EBFA950A76B53A41E7813",
+  "source": [
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.ArtDirections.cs",
+      "sha256": "90F0CBEB901FBEBF9F7A899A1E6722FCB6EF2C573565781B6A8B3D210FAE8923"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.Catalog.cs",
+      "sha256": "29817328813891823D86E4CC6929AA797B2D3CACE4283CFBF10B92076E1FEB53"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.cs",
+      "sha256": "5E3A5581DE2045DD95B78C7566C57AEAC51EDA0E031E20C93FD18D36E486B746"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.Dispatch.cs",
+      "sha256": "DCAFC508D4DE694D02CF64BD52318A85AD6F6B6F615554CDC0A4FAB345C4EA44"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.IndustrialSix.cs",
+      "sha256": "1BD76F2F7661B4F9621D924E321BD617BF7C52E3F6F613AD04891FFCA52E60C3"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.NextProcessRooms.cs",
+      "sha256": "74F96F536E08EFB1BC00598B1805394424CECED86594F360A6015590D18C26DD"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.NextProcessRooms2.cs",
+      "sha256": "818D9D7BD1E533FFC1A1491DE2918857FD096DC28CF247E8270595149A05441B"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.ProcessLocations.cs",
+      "sha256": "303A4F5C91FD9A96B0A452407F2C2B1849E84D83925247D8682EEF5E1FC03D09"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.ProductionLocations3.cs",
+      "sha256": "B12D86667AA998BFA8F40B360B99A09A087F7F7C82471A9C5965A45A18822318"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.ProductionRooms.cs",
+      "sha256": "9B67D4BC28C7C161AE73700E364E1D3F4A31768A63FA12EA87FE83879D563600"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.ReferenceMaterials.cs",
+      "sha256": "A23C11E5BA6E1812744974D37C3B4073120F0691CF4C5F2ACFEBA7F9D19A498E"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.RemainingProductionNine.cs",
+      "sha256": "914BAFA20C6CCF4500A6312DED77D3CF752F427DC1207EA224B22DE3ED80D34E"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.ServiceTeachingSites.cs",
+      "sha256": "9BBE536DD9064F60DBBD390E393480181BA51B252BFA04FD21E15558D4356F61"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.TeachingCounterSuites.cs",
+      "sha256": "699C0C8D4B9494311CDC2CC4D7B1832E1D89A35390D43C7C37E849E5F60F8F4C"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.TeachingSuites.cs",
+      "sha256": "19254DDD25530CA4790FF17BAA84389360FF60327F093BD8DBCCAB027CC66C2C"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.TeachingTimingSuites.cs",
+      "sha256": "5C9BD2E780F60D38F22958DC8F554178B076D4AF1D98F6A0B79E3A60DC0A79F3"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.UtilityTeachingSites.cs",
+      "sha256": "3102D7501E4718918B95AF2E89C545AC626A4E2C7CCB645D6236FD531F6705D5"
+    },
+    {
+      "path": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\src\\App\\DemoEnvironmentPresentation.WastewaterSite.cs",
+      "sha256": "497AC6DD6D30A3AE444EA5C7A6418061A32B8AABD22571F35E6A79AEADBB2EE5"
+    }
+  ],
+  "approval": "material-rollout-human-approval-v22.md",
+  "colorCompatibility": "V22b preserves old catalog linear-calibrated palette; exact-two reference default sRGB recipes unchanged",
+  "samples": [
+    "lab-9-03-sum-and-counter-function",
+    "lab-10-02-chicken-label-print",
+    "lab-5-07-pedestrian-crossing"
+  ],
+  "rootViewed": true,
+  "all77RenderReview": "PENDING"
+}

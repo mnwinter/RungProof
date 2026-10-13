@@ -1,0 +1,59 @@
+{
+  "status": "HUMAN_PREVIEW_ONLY",
+  "frames": [
+    {
+      "file": "01-classroom.scene.png",
+      "sha256": "38D4A48366EBA4E6B1480DD8E400B27CB5DFC61EF087F7B0DB31B3CA129F395F",
+      "hashMatches": true,
+      "dll": "C5A34B001A8EB882DAEE7C17C3C7D89F2FB42680717A816B96701877FBDF032C",
+      "unchanged": true,
+      "scene": "lab-2-01-workstation-call",
+      "view": "scene",
+      "clean": true,
+      "personallyViewed": true
+    },
+    {
+      "file": "01-classroom.split.png",
+      "sha256": "D579C78F98E72A1301F956BB841A0D5B38FB8963DAB7C797C86FA15C974AB24D",
+      "hashMatches": true,
+      "dll": "C5A34B001A8EB882DAEE7C17C3C7D89F2FB42680717A816B96701877FBDF032C",
+      "unchanged": true,
+      "scene": "lab-2-01-workstation-call",
+      "view": "split",
+      "clean": true,
+      "personallyViewed": true
+    },
+    {
+      "file": "02-dispatch.scene.png",
+      "sha256": "7AA94BF1248B67FC5E8123DF02FCC6ED60DB0AA13B97D701109714C872D27E1B",
+      "hashMatches": true,
+      "dll": "C5A34B001A8EB882DAEE7C17C3C7D89F2FB42680717A816B96701877FBDF032C",
+      "unchanged": true,
+      "scene": "lab-4-08-package-grouping",
+      "view": "scene",
+      "clean": true,
+      "personallyViewed": true
+    },
+    {
+      "file": "02-dispatch.split.png",
+      "sha256": "713EBD6D67B862FF91DCD8ECD0A6B2E77EC1F43F4792FB5131DB0AB2C740A900",
+      "hashMatches": true,
+      "dll": "C5A34B001A8EB882DAEE7C17C3C7D89F2FB42680717A816B96701877FBDF032C",
+      "unchanged": true,
+      "scene": "lab-4-08-package-grouping",
+      "view": "split",
+      "clean": true,
+      "personallyViewed": true
+    }
+  ],
+  "humanApproved": false,
+  "wider75Held": true,
+  "findings": [
+    "Stronger teal/ivory and navy/cool-steel large-face contrast visible in bothviews",
+    "No nearblack navy, clipped ivory, cloudy mottling or blocking controls observed",
+    "Floor relief quieter; material microtexture subtle at overview",
+    "Hard-edged shadows, sparse hall, muted rather than vivid game treatment remain"
+  ],
+  "environmentVerification": "two-room-material-v10-environment.log PASS77 restoration/structure",
+  "controlVerification": "two-room-material-v10-controls.log PASS77 scripted mounted scope"
+}

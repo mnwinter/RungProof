@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-3-conveyor-sequence",
+  "name": "Conveyor_Sequence_Main",
+  "language": "LD",
+  "scanPeriodMs": 20,
+  "variables": [
+    {
+      "name": "start_command",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "operator.start",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "stop_command",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "operator.stop",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "simulated_photoeye",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "simulated_photoeye",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "seal_in",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "conveyor_running",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "conveyor_running",
+      "aggregate": null,
+      "enumMembers": null
+    }
+  ],
+  "watchVariables": [
+    "start_command",
+    "stop_command",
+    "simulated_photoeye",
+    "seal_in",
+    "conveyor_running"
+  ],
+  "networks": [
+    {
+      "id": "rung-3",
+      "label": "Start/stop conveyor sequence",
+      "logic": {
+        "id": "rung-3-parallel",
+        "kind": "parallel",
+        "children": [
+          {
+            "id": "branch-4",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-5",
+                "kind": "contact",
+                "variable": "start_command",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-6",
+                "kind": "contact",
+                "variable": "stop_command",
+                "contact": "normallyClosed"
+              },
+              {
+                "id": "contact-7",
+                "kind": "contact",
+                "variable": "simulated_photoeye",
+                "contact": "normallyClosed"
+              }
+            ]
+          },
+          {
+            "id": "branch-8",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-9",
+                "kind": "contact",
+                "variable": "seal_in",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-10",
+                "kind": "contact",
+                "variable": "stop_command",
+                "contact": "normallyClosed"
+              },
+              {
+                "id": "contact-11",
+                "kind": "contact",
+                "variable": "simulated_photoeye",
+                "contact": "normallyClosed"
+              }
+            ]
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-3-coil",
+        "variable": "seal_in",
+        "mode": "assign"
+      }
+    },
+    {
+      "id": "rung-12",
+      "label": "Conveyor output command",
+      "logic": {
+        "id": "branch-13",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-14",
+            "kind": "contact",
+            "variable": "seal_in",
+            "contact": "normallyOpen"
+          },
+          {
+            "id": "contact-15",
+            "kind": "contact",
+            "variable": "simulated_photoeye",
+            "contact": "normallyClosed"
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-12-coil",
+        "variable": "conveyor_running",
+        "mode": "assign"
+      }
+    }
+  ],
+  "entryBlock": "block-1",
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Conveyor_Sequence_Main",
+      "networks": [
+        {
+          "id": "rung-3",
+          "label": "Start/stop conveyor sequence",
+          "logic": {
+            "id": "rung-3-parallel",
+            "kind": "parallel",
+            "children": [
+              {
+                "id": "branch-4",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-5",
+                    "kind": "contact",
+                    "variable": "start_command",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-6",
+                    "kind": "contact",
+                    "variable": "stop_command",
+                    "contact": "normallyClosed"
+                  },
+                  {
+                    "id": "contact-7",
+                    "kind": "contact",
+                    "variable": "simulated_photoeye",
+                    "contact": "normallyClosed"
+                  }
+                ]
+              },
+              {
+                "id": "branch-8",
+                "kind": "series",
+                "children": [
+                  {
+                    "id": "contact-9",
+                    "kind": "contact",
+                    "variable": "seal_in",
+                    "contact": "normallyOpen"
+                  },
+                  {
+                    "id": "contact-10",
+                    "kind": "contact",
+                    "variable": "stop_command",
+                    "contact": "normallyClosed"
+                  },
+                  {
+                    "id": "contact-11",
+                    "kind": "contact",
+                    "variable": "simulated_photoeye",
+                    "contact": "normallyClosed"
+                  }
+                ]
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-3-coil",
+            "variable": "seal_in",
+            "mode": "assign"
+          }
+        },
+        {
+          "id": "rung-12",
+          "label": "Conveyor output command",
+          "logic": {
+            "id": "branch-13",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-14",
+                "kind": "contact",
+                "variable": "seal_in",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-15",
+                "kind": "contact",
+                "variable": "simulated_photoeye",
+                "contact": "normallyClosed"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-12-coil",
+            "variable": "conveyor_running",
+            "mode": "assign"
+          }
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ]
+}

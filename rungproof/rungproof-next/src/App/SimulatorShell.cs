@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using Godot;
 using RungProof.Next.Catalog;
+using RungProof.Next.Challenges;
 using RungProof.Next.Connections;
 using RungProof.Next.Diagnostics;
 using RungProof.Next.Scenes;
@@ -84,6 +85,7 @@ public partial class SimulatorShell : CanvasLayer
     private PanelContainer _transportDock = null!;
     private bool _diagnosticsExpanded;
     private bool _pointsCollapsed;
+    private bool _pointsCollapsedBeforeEditor;
     private bool _compactDockDefaultsApplied;
     private string _activeSceneName = "Loading project…";
     private ItemList _diagnosticList = null!;
@@ -187,6 +189,7 @@ public partial class SimulatorShell : CanvasLayer
     private readonly List<LadderEditorCanvas> _ladderCanvases = [];
     private EditableRung? _ladderRungClipboard;
     private EditableContact? _ladderContactClipboard;
+    private EditorClipboard? _ladderCommandClipboard;
     private bool _ladderMonitorMatchesLoadedProgram;
     private readonly List<Action> _ladderEditorRefreshers = [];
     private readonly List<Action> _ladderSceneDiagnosticResetters = [];
@@ -228,6 +231,8 @@ public partial class SimulatorShell : CanvasLayer
     public event Action? AssetPreviewClosed;
     public event Action? SaveWorkspaceRequested;
     public event Action? LoadWorkspaceRequested;
+    public event Action? CreateFiniteBeltWorkspaceRequested;
+    public event Action? CreateFiniteRollerWorkspaceRequested;
     public event Action<string>? SaveWorkspaceToPathRequested;
     public event Action<string>? LoadWorkspaceFromPathRequested;
     public Func<Action, bool>? WorkspaceReplacementGuard { get; set; }
@@ -246,6 +251,7 @@ public partial class SimulatorShell : CanvasLayer
     public event Action<string, string>? RenameGroupRequested;
     public event Action<string, double[]?>? GroupPivotRequested;
     public event Action<string>? FocusPlacementRequested;
+    public event Action<bool>? FrameSceneRequested;
     public event Action<string>? ResetPlacementTransformRequested;
     public event Action<bool, double, double>? SnapSettingsChanged;
     public event Action<WorkspaceTransformMode>? TransformModeRequested;
@@ -375,14 +381,15 @@ public partial class SimulatorShell : CanvasLayer
     )
     {
         InvalidateExternalApproval();
-        var changingScene = !string.Equals(_activeScene?.Id, scene.Id, StringComparison.Ordinal);
+        var changingScene = _activeScene is null||SceneDraftCacheKey(_activeScene)!=SceneDraftCacheKey(scene);
         if (changingScene && _activeScene is not null)
-            _sceneLadderDrafts[_activeScene.Id] = CaptureSceneLadderDraft();
+            _sceneLadderDrafts[SceneDraftCacheKey(_activeScene)] = CaptureSceneLadderDraft();
         if (_runtime is not null)
         {
             _runtime.StateChanged -= RefreshRuntimeState;
         }
         _activeScene = scene;
+        _deviceTraceScene=string.Empty; // Same source ID can attach a different explicit workspace preset.
         SelectActiveScenarioRow();
         _activeSceneName = ScenarioDisplayName(scene);
         _runtime = runtime;
@@ -404,6 +411,13 @@ public partial class SimulatorShell : CanvasLayer
         foreach (var refresh in _ladderEditorRefreshers) refresh();
     }
 
+    private static bool IsFiniteBeltWorkspace(SceneDefinition scene)=>scene.Simulation.ValueKind==JsonValueKind.Object
+        &&scene.Simulation.TryGetProperty("type",out var runtimeType)
+        &&runtimeType.ValueKind==JsonValueKind.String&&runtimeType.GetString()=="workspaceFiniteBelt";
+    private static bool IsFiniteRollerWorkspace(SceneDefinition scene)=>scene.Simulation.ValueKind==JsonValueKind.Object
+        &&scene.Simulation.TryGetProperty("type",out var runtimeType)
+        &&runtimeType.ValueKind==JsonValueKind.String&&runtimeType.GetString()=="workspaceFiniteRoller";
+    private static string SceneDraftCacheKey(SceneDefinition scene)=>scene.Id+(IsFiniteBeltWorkspace(scene)?":workspaceFiniteBelt":IsFiniteRollerWorkspace(scene)?":workspaceFiniteRoller":"");
     private SceneLadderDraft CaptureSceneLadderDraft() => new(
         _ladderDocument.CaptureSnapshot(), _ladderSavedProjectJson, _ladderProjectPath, _ladderHistory);
 
@@ -412,7 +426,7 @@ public partial class SimulatorShell : CanvasLayer
         // Verification belongs to the previous scene's controller, not the
         // restored or fresh draft. Both editor modes must show this boundary.
         foreach (var reset in _ladderSceneDiagnosticResetters) reset();
-        if (_sceneLadderDrafts.TryGetValue(scene.Id, out var draft))
+        if (_sceneLadderDrafts.TryGetValue(SceneDraftCacheKey(scene), out var draft))
         {
             _ladderDocument.RestoreSnapshot(draft.Document);
             _ladderSavedProjectJson = draft.SavedJson;
@@ -424,8 +438,9 @@ public partial class SimulatorShell : CanvasLayer
             return;
         }
 
-        var authored = AuthoredDemoLadderPrograms.TryCreate(scene.Id, out var starter)
-            || AuthoredLessonLadderPrograms.TryCreate(scene.Id, out starter);
+        LadderEditorDocument starter=null!;
+        var authored = !IsFiniteBeltWorkspace(scene)&&!IsFiniteRollerWorkspace(scene)&&(AuthoredDemoLadderPrograms.TryCreate(scene.Id, out starter)
+            || AuthoredLessonLadderPrograms.TryCreate(scene.Id, out starter));
         IReadOnlyList<SceneIoPoint> unsupported = [];
         if (!authored)
             starter = scene.Id == "conveyor-cell" ? LadderEditorDocument.CreateConveyorExample()
@@ -440,7 +455,7 @@ public partial class SimulatorShell : CanvasLayer
         _ladderProjectPath = null;
         _ladderHistory = new LadderEditorHistory(150);
         _ladderRungClipboard = null;
-        _ladderContactClipboard = null;
+        _ladderContactClipboard = null; _ladderCommandClipboard = null;
         if (_ladderWorkspaceStatus is not null)
         {
             var blockSummary = string.Join(", ", _ladderDocument.Blocks
@@ -765,6 +780,13 @@ public partial class SimulatorShell : CanvasLayer
     {
         var toolbar = GetNode<Control>("Workspace/Toolbar").GetGlobalRect();
         if (_productView == "ladder") return new Rect2();
+        if (IsChallengeDraftActive && _challengePresenter is { Visible: true })
+        {
+            var viewport = GetViewport().GetVisibleRect();
+            var top = _challengePresenter.GetGlobalRect().End.Y + 8;
+            var width = _productView == "split" ? _ladderWorkspace.GetGlobalRect().Position.X - viewport.Position.X - 8 : viewport.Size.X;
+            return new Rect2(new Vector2(viewport.Position.X, top), new Vector2(Math.Max(0, width), Math.Max(0, viewport.End.Y - 58 - top)));
+        }
         if (_productView == "floor")
         {
             var floorViewport = GetViewport().GetVisibleRect();
@@ -819,6 +841,10 @@ public partial class SimulatorShell : CanvasLayer
         }
         switch (view.ToLowerInvariant())
         {
+            case "scene":
+            case "operator":
+                SetProductView("operator");
+                break;
             case "split":
                 ShowClassicTool("split");
                 break;
@@ -1499,6 +1525,8 @@ public partial class SimulatorShell : CanvasLayer
         file.GetPopup().AddSeparator();
         file.GetPopup().AddItem("Open Ladder Agent Project…", 2);
         file.GetPopup().AddItem("Open RungProof Workspace…", 3);
+        file.GetPopup().AddItem("New Finite Belt Workspace", 4);
+        file.GetPopup().AddItem("New finite pallet roller workspace", 5);
         file.GetPopup().IdPressed += id =>
         {
             if (id == 0) SaveWorkspaceRequested?.Invoke();
@@ -1509,6 +1537,8 @@ public partial class SimulatorShell : CanvasLayer
                 CallDeferred(nameof(ShowLadderLoadDialog));
             }
             if (id == 3) CallDeferred(nameof(ShowWorkspaceLoadDialog));
+            if (id == 4) CreateFiniteBeltWorkspaceRequested?.Invoke();
+            if (id == 5) CreateFiniteRollerWorkspaceRequested?.Invoke();
         };
         toolbarRow.AddChild(file);
 
@@ -1522,9 +1552,13 @@ public partial class SimulatorShell : CanvasLayer
             ("Scenario + Ladder Split", "split"),
         };
         for (var index = 0; index < viewItems.Length; index++) view.GetPopup().AddItem(viewItems[index].Label, index);
+        view.GetPopup().AddSeparator();
+        view.GetPopup().AddItem("Frame Process", 10);
+        view.GetPopup().AddItem("Frame Whole Scene", 11);
         view.GetPopup().IdPressed += id =>
         {
             if (id >= 0 && id < viewItems.Length) ShowClassicTool(viewItems[id].View);
+            if (id is 10 or 11) FrameSceneRequested?.Invoke(id == 11);
         };
         toolbarRow.AddChild(view);
 
@@ -1559,9 +1593,9 @@ public partial class SimulatorShell : CanvasLayer
         sceneMenu.GetPopup().AddSeparator();
         const int scenarioMenuBase = 1000;
         var menuScenes = new List<SceneCatalogEntry>();
-        for (var group = 0; group <= 2; group++)
+        foreach (var group in new[] { 2, 0, 1 })
         {
-            if (group > 0) sceneMenu.GetPopup().AddSeparator();
+            if (menuScenes.Count > 0) sceneMenu.GetPopup().AddSeparator();
             sceneMenu.GetPopup().AddItem(ScenarioGroupLabel(group), 900 + group);
             sceneMenu.GetPopup().SetItemDisabled(sceneMenu.GetPopup().GetItemIndex(900 + group), true);
             foreach (var scenario in _orderedScenes.Where(scene => ScenarioSortGroup(scene) == group))
@@ -1638,6 +1672,11 @@ public partial class SimulatorShell : CanvasLayer
         plc.GetPopup().AddCheckItem("External PLC", 11);
         plc.GetPopup().AddItem("External PLC Settings / Tests…", 12);
         plc.GetPopup().SetItemChecked(plc.GetPopup().GetItemIndex(10), true);
+        if (RuntimeBuildPolicy.IsOfflineDemo)
+        {
+            plc.GetPopup().SetItemDisabled(plc.GetPopup().GetItemIndex(11), true);
+            plc.GetPopup().SetItemDisabled(plc.GetPopup().GetItemIndex(12), true);
+        }
         plc.GetPopup().IdPressed += id =>
         {
             if (id == 0) ShowClassicTool("connection");
@@ -1676,6 +1715,7 @@ public partial class SimulatorShell : CanvasLayer
         toolbarRow.AddChild(statuses);
 
         BuildApplicationSettingsDialog();
+        BuildChallengeInterface();
         BuildExternalPlcDialog();
 
         _workspaceStatus = new Label
@@ -1723,7 +1763,7 @@ public partial class SimulatorShell : CanvasLayer
         var linkInspector = BuildConnectionEditor();
         _connectionInspector = Inspector("PLC");
         _inspectorTabs.AddChild(_inspector);
-        _inspectorTabs.AddChild(_ioInspector);
+        _inspectorTabs.AddChild(BuildDeviceSignalsInspector());
         _inspectorTabs.AddChild(linkInspector);
         _inspectorTabs.AddChild(_connectionInspector);
         _inspectorTabs.AddChild(BuildVirtualControllerPanel());
@@ -1830,6 +1870,7 @@ public partial class SimulatorShell : CanvasLayer
         transportRow.AddChild(run);
         transportRow.AddChild(stop);
         transportRow.AddChild(reset);
+        AppendScanInspectionControls(transportRow);
         var save = ToolbarButton("SaveButton", "SAVE", new Color("3d5868"), 60);
         var load = ToolbarButton("LoadButton", "LOAD", new Color("3d5868"), 60);
         save.Pressed += () =>
@@ -1992,14 +2033,24 @@ public partial class SimulatorShell : CanvasLayer
         {
             Name = "SimulatorModeDialog",
             Title = "Simulator mode",
-            DialogText = "RungProof Next starts in local simulation mode.\n\n" +
-                         "Run requires a loaded ladder program. Exercises may start with an empty project: open Logic Editor, add networks, then use Online > Verify + load offline before Run.\n\n" +
-                         "Stop removes output commands; Reset restores the scene. The physical PLC stays disconnected until you configure a connection.",
+            DialogText = "RungProof starts in local simulation mode.\n\n" +
+                         "Start Demo 1, select Run, then press its count button three times: the lamp turns on. Stop removes outputs; Reset restores the initial scene.\n\n" +
+                         "The five demos include authored logic. Other exercises may start empty: open Logic Editor, add networks, then use Online > Verify + load offline before Run.\n\n" +
+                         (RuntimeBuildPolicy.IsOfflineDemo
+                             ? "This offline demo build cannot connect to a physical PLC. Other catalog scenes remain experimental."
+                             : "The physical PLC stays disconnected until you configure a guarded connection."),
             Exclusive = true,
             DialogAutowrap = true,
             MinSize = new Vector2I(500, 210),
         };
         _simulatorModeDialog.OkButtonText = "CONTINUE";
+        _simulatorModeDialog.AddButton("START DEMO 1", true, "demo-1");
+        _simulatorModeDialog.CustomAction += action =>
+        {
+            if (action != "demo-1") return;
+            _simulatorModeDialog.Hide();
+            RequestSceneChange(AuthoredDemos[0].SceneId);
+        };
         AddChild(_simulatorModeDialog);
 
         _workspaceFeedbackDialog = new AcceptDialog
@@ -2140,7 +2191,7 @@ public partial class SimulatorShell : CanvasLayer
     public void ShowSimulatorModeNotice()
     {
         var viewport = GetViewport().GetVisibleRect().Size;
-        _simulatorModeDialog.PopupCentered(new Vector2I((int)Math.Min(620, viewport.X - 48), (int)Math.Min(300, viewport.Y - 48)));
+        _simulatorModeDialog.PopupCentered(new Vector2I((int)Math.Min(620, viewport.X - 48), (int)Math.Min(360, viewport.Y - 48)));
     }
 
     public void ShowWorkspaceFeedback(string message, bool isError = false)
@@ -2156,8 +2207,8 @@ public partial class SimulatorShell : CanvasLayer
     {
         _workspaceSaveDialog.Hide();
         _unsavedWorkspaceDialog.DialogText = error +
-            "This scene has unsaved workspace edits.\n\n" +
-            "Save the placements, links, and groups before continuing, discard these edits, or cancel.";
+            "This integrated project has unsaved scene or ladder draft edits.\n\n" +
+            "Save the scene layout, links, groups and actual ladder draft together before continuing, discard these edits, or cancel.";
         _unsavedWorkspaceDialog.PopupCentered(new Vector2I(650, 250));
         _unsavedWorkspaceDialog.GetCancelButton().GrabFocus();
     }
@@ -2212,6 +2263,9 @@ public partial class SimulatorShell : CanvasLayer
         _operatorSceneSummary.FitContent = true;
         _operatorSceneSummary.ScrollActive = false;
         body.AddChild(_operatorSceneSummary);
+        body.AddChild(BuildRepeatCycleObservedTrialCard());
+        body.AddChild(BuildWorkspaceObservedTrialCard());
+        body.AddChild(BuildWorkspaceRollerObservedTrialCard());
         body.AddChild(SectionLabel("DECLARED MACHINE ACTIONS"));
         _operatorActions = new VBoxContainer { Name = "OperatorActions" };
         body.AddChild(_operatorActions);
@@ -2296,6 +2350,14 @@ public partial class SimulatorShell : CanvasLayer
 
     private void SetProductView(string view)
     {
+        var enteringEditor = view is "ladder" or "split" && _productView is not ("ladder" or "split");
+        var leavingEditor = _productView is "ladder" or "split" && view is not ("ladder" or "split");
+        if (enteringEditor)
+        {
+            _pointsCollapsedBeforeEditor = _pointsCollapsed;
+            _pointsCollapsed = true; // Give the working ladder room; I/O remains one click away.
+        }
+        else if (leavingEditor) _pointsCollapsed = _pointsCollapsedBeforeEditor;
         _productView = view;
         var engineering = view == "engineering";
         var floor = view == "floor";
@@ -2404,6 +2466,7 @@ public partial class SimulatorShell : CanvasLayer
         _workspaceStatus.AddThemeColorOverride("font_color", new Color("7fa7ba"));
         ProductViewChanged?.Invoke(view);
         ApplyDiagnosticsLayout();
+        ApplyChallengeLayout();
         CallDeferred(nameof(ApplyToolbarClearance));
     }
 
@@ -2428,12 +2491,14 @@ public partial class SimulatorShell : CanvasLayer
         _rightDock.OffsetTop = top;
         _ladderWorkspace.OffsetTop = top;
         _splitDivider.OffsetTop = top;
+        ApplyChallengeLayout();
     }
 
     private void RefreshViewportLayout()
     {
         ApplySplitLayout();
         ApplyDiagnosticsLayout();
+        ApplyChallengeLayout();
         CallDeferred(nameof(ApplyToolbarClearance));
     }
 
@@ -2494,7 +2559,9 @@ public partial class SimulatorShell : CanvasLayer
             if (GetNodeOrNull<Control>($"{programRoot}/InstructionToolbarChrome") is { } palette)
             {
                 palette.Visible = !narrowHeight;
-                palette.CustomMinimumSize = new Vector2(0, compactPalette ? 104 : 140);
+                // The category selector plus two wrapped command rows must
+                // fit together; shorter palettes clipped the second row.
+                palette.CustomMinimumSize = new Vector2(0, compactPalette ? 144 : 180);
             }
             if (GetNodeOrNull<Control>($"{programRoot}/InstructionToolbarChrome/InstructionToolbar/Selection") is { } selection)
                 selection.Visible = !compactPalette;
@@ -2635,7 +2702,7 @@ public partial class SimulatorShell : CanvasLayer
     private void RefreshOperatorPanels()
     {
         if (_runtime is null || _activeScene is null || _operatorActions is null) return;
-        _transportScene.Text = $"{Escape(_activeSceneName)} · {(ActiveRuntimeRunning ? "RUNNING" : "STOPPED")}";
+        _transportScene.Text = $"{Escape(IsChallengeDraftActive ? ChallengeDisplayName : _activeSceneName)} · {ScanInspectionRuntimeLabel}";
         _operatorSceneSummary.Text =
             $"[font_size=18][b]{Escape(_activeScene.Name)}[/b][/font_size]\n" +
             $"[color=#9db4c0]{Escape(_activeScene.Description)}[/color]\n\n" +
@@ -2643,7 +2710,7 @@ public partial class SimulatorShell : CanvasLayer
         var external = _externalMode;
         _operatorRuntimeSummary.Text =
             $"[b]Player[/b]  {(external ? "EXTERNAL PLC" : "BUILT-IN SIMULATOR")}\n" +
-            $"[b]State[/b]  {(ActiveRuntimeRunning ? "RUNNING" : "STOPPED")}\n" +
+            $"[b]State[/b]  {ScanInspectionRuntimeLabel}\n" +
             $"[b]Scene[/b]  {Escape(_activeScene.Id)}\n" +
             $"[b]Points[/b]  {_runtime.Points.Count}\n" +
             $"[b]PLC exchange[/b]  {(external ? _connection.State.ToString().ToUpperInvariant() : "LOCAL MODEL")}";
@@ -3067,6 +3134,7 @@ public partial class SimulatorShell : CanvasLayer
         body.AddChild(deleteConnector);
 
         body.AddChild(SectionLabel("SYMBOLIC SIGNAL MAPPING"));
+        AddWorkspaceDriveConnectionButton(body);
         _signalInstance = ConnectionOption("SignalInstance");
         _signal = ConnectionOption("AssetSignal");
         _scenePoint = ConnectionOption("ScenePoint");
@@ -3247,7 +3315,7 @@ public partial class SimulatorShell : CanvasLayer
         }
         _undo.Disabled = !canUndo;
         _redo.Disabled = !canRedo;
-        _deletePlacement.Disabled = _selectedPlacementIds.Count == 0;
+        _deletePlacement.Disabled = _selectedPlacementIds.Count == 0 || _selectedPlacementIds.Any(id=>id==WorkspaceTemplatePolicy.SelectionId);
         _arrangeMenu.Disabled = _selectedPlacementIds.Count < 2;
         _connectorLinks = connectorLinks;
         _signalLinks = signalLinks;
@@ -3324,6 +3392,12 @@ public partial class SimulatorShell : CanvasLayer
                 _scaleInputs[index].Value = placement.Scale[index];
             }
         }
+        if(placement?.InstanceId==WorkspaceTemplatePolicy.SelectionId)
+        {
+            _positionInputs[1].Editable=false;
+            _rotationInputs[0].Editable=false;_rotationInputs[2].Editable=false;
+            foreach(var input in _scaleInputs)input.Editable=false;
+        }
         _updatingTransformInputs = false;
     }
 
@@ -3340,6 +3414,13 @@ public partial class SimulatorShell : CanvasLayer
 
     private void RefreshPlacementInspector(WorkspacePlacement placement)
     {
+        if(placement.InstanceId==WorkspaceTemplatePolicy.SelectionId)
+        {
+            _inspector.Text="[font_size=20][b]EDITABLE TEMPLATE ASSEMBLY[/b][/font_size]\n\n"+
+                "Operator bench and its original mounted controls move together.\nEdit X/Z position and yaw in the Workspace tab. Height, tilt and scale are locked.\n\n"+
+                "Editing rebuilds and stops the symbolic simulation. Original device IDs and I/O bindings remain.\nIndividual heads and process equipment are locked in this first slice.";
+            return;
+        }
         var asset = _assets.Assets.FirstOrDefault(item => item.Id == placement.AssetId);
         var name = asset?.DisplayName ?? placement.AssetId;
         _inspector.Text =
@@ -3368,8 +3449,8 @@ public partial class SimulatorShell : CanvasLayer
             option.Clear();
             foreach (var placement in _workspacePlacements)
             {
-                var asset = _assets.Assets.First(item => item.Id == placement.AssetId);
-                option.AddItem(asset.DisplayName);
+                var asset = _assets.Assets.FirstOrDefault(item => item.Id == placement.AssetId);
+                option.AddItem(asset?.DisplayName??"Template assembly (no new connections)");
             }
             if (option.ItemCount > 0) option.Select(Math.Clamp(previous, 0, option.ItemCount - 1));
         }
@@ -3392,8 +3473,11 @@ public partial class SimulatorShell : CanvasLayer
                 status?.Detail ?? "Mapping is persisted but no verified runtime adapter is active.");
         }
         var live = _signalStatuses.Values.Count(status => status.State == SignalMappingRuntimeState.LiveInput);
-        var authoredOnly = _signalLinks.Count - live;
-        _signalMappingSummary.Text = $"{live} LIVE INPUT · {authoredOnly} AUTHORED ONLY";
+        var feedback = _signalStatuses.Values.Count(status => status.State == SignalMappingRuntimeState.LiveFeedback);
+        var authoredOnly = _signalLinks.Count - live - feedback;
+        _signalMappingSummary.Text = feedback > 0
+            ? $"{live} LIVE INPUT · {feedback} LIVE FEEDBACK · {authoredOnly} AUTHORED ONLY"
+            : $"{live} LIVE INPUT · {authoredOnly} AUTHORED ONLY";
         _signalMappingSummary.AddThemeColorOverride("font_color",
             authoredOnly > 0 ? new Color("f1aa5b") : new Color("65d49a"));
         if (_connectorLinks.Count > 0)
@@ -3473,7 +3557,7 @@ public partial class SimulatorShell : CanvasLayer
         var placement = _workspacePlacements.FirstOrDefault(item => item.InstanceId == instance);
         return placement is null
             ? []
-            : _assets.Assets.First(item => item.Id == placement.AssetId).Connectors;
+            : _assets.Assets.FirstOrDefault(item => item.Id == placement.AssetId)?.Connectors??[];
     }
 
     private AssetConnector? SelectedConnector(OptionButton instanceOption, OptionButton connectorOption)
@@ -3490,7 +3574,7 @@ public partial class SimulatorShell : CanvasLayer
         var placement = _workspacePlacements.FirstOrDefault(item => item.InstanceId == instance);
         return placement is null
             ? []
-            : _assets.Assets.First(item => item.Id == placement.AssetId).Signals;
+            : _assets.Assets.FirstOrDefault(item => item.Id == placement.AssetId)?.Signals??[];
     }
 
     private IReadOnlyList<SceneIoPoint> ScenePoints()
@@ -3590,7 +3674,22 @@ public partial class SimulatorShell : CanvasLayer
         return demo.SceneId is null ? scene.Name : demo.Label;
     }
 
-    private static int ScenarioDemoIndex(SceneCatalogEntry scene)
+    private static string ScenarioBrowserDemoLabel(SceneCatalogEntry scene)
+    {
+        var alias=AuthoredDemos[ScenarioDemoIndex(scene)].Label.Split(" - ",2,StringSplitOptions.None);
+        var canonical=scene.Name.Split(" - ",2,StringSplitOptions.None)[0];
+        return alias[0]+" / "+canonical+(alias.Length>1?" · "+alias[1]:"");
+    }
+    public bool VerifyActiveScenarioIdentity()
+    {
+        var selected=_sceneList.GetSelectedItems();
+        if(selected.Length!=1||_activeScene is null)return false;
+        var row=selected[0];
+        var entry=_scenarioBrowserRows[row];
+        if(entry is null||_sceneList.GetItemMetadata(row).AsString()!=_activeScene.Id)return false;
+        var expected=IsAuthoredDemo(entry)?ScenarioBrowserDemoLabel(entry):entry.Name;
+        return _sceneList.GetItemText(row)==expected;
+    }    private static int ScenarioDemoIndex(SceneCatalogEntry scene)
     {
         var index = Array.FindIndex(AuthoredDemos, demo => demo.SceneId.Equals(scene.Id, StringComparison.Ordinal));
         return index >= 0 ? index : int.MaxValue;
@@ -3620,7 +3719,7 @@ public partial class SimulatorShell : CanvasLayer
         _sceneList.Clear();
         _operatorSceneList.Clear();
         _scenarioBrowserRows.Clear();
-        for (var group = 0; group <= 2; group++)
+        foreach (var group in new[] { 2, 0, 1 })
         {
             _sceneList.AddItem(ScenarioGroupLabel(group));
             _sceneList.SetItemDisabled(_sceneList.ItemCount - 1, true);
@@ -3628,9 +3727,10 @@ public partial class SimulatorShell : CanvasLayer
             foreach (var scene in _orderedScenes.Where(candidate => ScenarioSortGroup(candidate) == group))
             {
                 var label = group == 2
-                    ? AuthoredDemos[ScenarioDemoIndex(scene)].Label
+                    ? ScenarioBrowserDemoLabel(scene)
                     : scene.Name;
                 _sceneList.AddItem(label);
+                _sceneList.SetItemMetadata(_sceneList.ItemCount - 1,scene.Id);
                 _sceneList.SetItemTooltip(_sceneList.ItemCount - 1, $"{scene.Name}\n{scene.Id}");
                 _scenarioBrowserRows.Add(scene);
             }
@@ -3870,6 +3970,7 @@ public partial class SimulatorShell : CanvasLayer
                 text.AppendLine($"• {Escape(Text(binding, "point"))} → {Escape(Text(binding, "equipmentId"))}  [color=#7fa7ba]{Escape(Text(binding, "mode"))}[/color]");
             }
         }
+        AppendDeviceTrace(text);
         _ioInspector.Text = text.ToString();
     }
 
@@ -3889,7 +3990,7 @@ public partial class SimulatorShell : CanvasLayer
         _runtimeStatus.Text = _externalMode
             ? $"EXTERNAL PLC  •  {_connection.State.ToString().ToUpperInvariant()}  •  {(ActiveRuntimeRunning ? "PLAYING" : "PAUSED")}"
             : ActiveRuntimeRunning
-            ? "LOCAL RUNTIME  •  RUNNING"
+            ? (_scanInspectionPaused ? "LOCAL RUNTIME  •  PAUSED" : "LOCAL RUNTIME  •  RUNNING")
             : "LOCAL RUNTIME  •  STOPPED";
         _runtimeStatus.AddThemeColorOverride("font_color",
             ActiveRuntimeRunning ? new Color("65d49a") : new Color("8aa5b4"));
@@ -4044,11 +4145,16 @@ public partial class SimulatorShell : CanvasLayer
     public void RequestWindowClose()
     {
         Action close = () => RequestLadderAction(() => GetTree().Quit(), allScenes: true);
+        if (ChallengeCleanupGuard?.Invoke(close) == false) return;
         if (WorkspaceReplacementGuard?.Invoke(close) != false) close();
     }
 
     private void RequestLadderAction(Action action, bool allScenes = false)
+        => ResolvePendingEditorForms(() => RequestResolvedLadderAction(action, allScenes));
+
+    private void RequestResolvedLadderAction(Action action, bool allScenes)
     {
+        if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
         if (_pendingLadderAction is not null) return;
         var currentId = _activeScene?.Id ?? string.Empty;
         var current = CaptureSceneLadderDraft();
@@ -4164,19 +4270,20 @@ public partial class SimulatorShell : CanvasLayer
 
     private static void WriteLadderProjectFile(string path, string json)
     {
-        // Write completely before replacing an existing project. An I/O
-        // failure during serialization/write must not truncate the old file.
         var fullPath = System.IO.Path.GetFullPath(path);
-        var temporary = fullPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
-        try
+        var preserveOriginal = false;
+        if (System.IO.File.Exists(fullPath))
         {
-            System.IO.File.WriteAllText(temporary, json, new UTF8Encoding(false));
-            System.IO.File.Move(temporary, fullPath, overwrite: true);
+            var existing = LadderEditorProjectJson.Load(System.IO.File.ReadAllText(fullPath));
+            if (!existing.IsReadable)
+                throw new System.IO.InvalidDataException("Existing project cannot be safely read; choose a new Save As path.");
+            preserveOriginal = existing.SourceSchemaVersion < LadderEditorProjectJson.SchemaVersion;
         }
-        finally
+        LadderProjectFileStore.SaveValidated(fullPath, json, content =>
         {
-            if (System.IO.File.Exists(temporary)) System.IO.File.Delete(temporary);
-        }
+            if (!LadderEditorProjectJson.Load(content).IsReadable)
+                throw new System.IO.InvalidDataException("Project validation failed; original file was preserved.");
+        }, preserveOriginal);
     }
 
     public bool VerifyUnsavedWorkGuard(out string result)
@@ -4246,6 +4353,7 @@ public partial class SimulatorShell : CanvasLayer
 
     private bool TryOpenLadderProject(string path, out string message)
     {
+        if (ChallengeMutationLocked) { message = "TEST CLEANUP PENDING · document replacement locked"; return false; }
         LadderEditorProjectLoadResult loaded;
         try
         {
@@ -4280,12 +4388,13 @@ public partial class SimulatorShell : CanvasLayer
             }
             SceneRequested?.Invoke(loaded.Document.SourceSceneId);
         }
+        ChallengeDraftChanged?.Invoke();
         _ladderDocument.RestoreSnapshot(loaded.Document.CaptureSnapshot());
         _ladderProjectPath = System.IO.Path.GetFullPath(path);
         _ladderSavedProjectJson = LadderEditorProjectJson.Save(_ladderDocument);
         _ladderHistory.Clear();
         _ladderRungClipboard = null;
-        _ladderContactClipboard = null;
+        _ladderContactClipboard = null; _ladderCommandClipboard = null;
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         RefreshLadderMonitorMatch();
         if (!TryBuildCurrentLadderProgram(out var program, out var issues))
@@ -4425,7 +4534,8 @@ public partial class SimulatorShell : CanvasLayer
             siemens ? new Color("263943") : new Color("f4f5f6")));
         var projectMenu = VendorMenu("LadderProjectMenu", siemens ? "Project" : "File");
         projectMenu.GetPopup().AddItem("New offline project", 0);
-        projectMenu.GetPopup().AddItem("Save project…", 1);
+        projectMenu.GetPopup().AddItem("Save project", 1);
+        projectMenu.GetPopup().AddItem("Save As…", 3);
         projectMenu.GetPopup().AddItem("Open project…", 2);
         chromeRow.AddChild(projectMenu);
         var editMenu = VendorMenu("LadderEditMenu", "Edit");
@@ -4436,6 +4546,8 @@ public partial class SimulatorShell : CanvasLayer
         editMenu.GetPopup().AddItem(
             siemens ? "Copy selected instruction / network" : "Copy selected instruction / rung", 4);
         editMenu.GetPopup().AddItem("Paste after selection", 5);
+        editMenu.GetPopup().AddItem("Cut", 7);
+        editMenu.GetPopup().AddItem(siemens ? "Copy network" : "Copy rung", 6);
         editMenu.GetPopup().AddSeparator();
         editMenu.GetPopup().AddItem("Undo", 2);
         editMenu.GetPopup().AddItem("Redo", 3);
@@ -4575,7 +4687,7 @@ public partial class SimulatorShell : CanvasLayer
             plcItem.SetText(0, "PLC_1 [S7-1500]");
             plcItem.SetMetadata(0, "controller");
             var deviceItem = organization.CreateItem(plcItem);
-            deviceItem.SetText(0, "Device configuration");
+            deviceItem.SetText(0, "Symbolic I/O");
             deviceItem.SetMetadata(0, "device");
             diagnosticsItem = organization.CreateItem(plcItem);
             diagnosticsItem.SetText(0, "Online & diagnostics");
@@ -4662,6 +4774,8 @@ public partial class SimulatorShell : CanvasLayer
         center.AddChild(editorTab);
 
         var canvas = new LadderEditorCanvas(siemens ? LadderVendorStyle.SiemensTia : LadderVendorStyle.RockwellLogix, document);
+        var blockViewMemory = new LadderEditorViewMemory();
+        canvas.SetMonitorPaused(_scanInspectionPaused);
         _ladderCanvases.Add(canvas);
         var selectedRung = 0;
         var selectedBranch = 0;
@@ -4775,7 +4889,7 @@ public partial class SimulatorShell : CanvasLayer
             CustomMinimumSize = new Vector2(135, 30),
         };
         var interfaceType = new OptionButton { Name = "InterfaceType", CustomMinimumSize = new Vector2(115, 30) };
-        foreach (var type in new[] { PlcVariableType.Bool, PlcVariableType.Int, PlcVariableType.DInt, PlcVariableType.Real, PlcVariableType.Timer })
+        foreach (var type in new[] { PlcVariableType.Bool, PlcVariableType.Int, PlcVariableType.DInt, PlcVariableType.Real, PlcVariableType.Timer, PlcVariableType.Counter, PlcVariableType.String, PlcVariableType.Enum })
             interfaceType.AddItem(type.ToString().ToUpperInvariant());
         var interfaceSection = new OptionButton { Name = "InterfaceSection", CustomMinimumSize = new Vector2(100, 30) };
         foreach (var section in Enum.GetValues<LadderInterfaceSection>()) interfaceSection.AddItem(section.ToString().ToUpperInvariant());
@@ -4787,6 +4901,7 @@ public partial class SimulatorShell : CanvasLayer
             PlaceholderText = "initial",
             CustomMinimumSize = new Vector2(100, 30),
         };
+        var interfaceEnumMembers = new LineEdit { Name = "InterfaceEnumMembers", PlaceholderText = "ENUM members, comma separated", CustomMinimumSize = new Vector2(180, 30) };
         var addInterface = ToolbarButton("AddInterface", "+ PARAMETER", new Color("4d6674"), 120);
         var removeInterface = ToolbarButton("RemoveInterface", "REMOVE", new Color("8a4d55"), 90);
         var interfaceTable = new Tree
@@ -5041,22 +5156,25 @@ public partial class SimulatorShell : CanvasLayer
                      callPropertyRow, returnPropertyRow, jumpLabelPropertyRow,
                  })
             instructionPropertiesBody.AddChild(row);
-        closeInstructionProperties.Pressed += instructionPropertiesPopup.Hide;
+        closeInstructionProperties.Pressed += () => { instructionPropertiesPopup.Hide(); canvas.GrabFocus(); };
         instructionPropertiesBackdrop.GuiInput += input =>
         {
-            if (input is InputEventMouseButton { Pressed: true }) instructionPropertiesPopup.Hide();
+            if (input is InputEventMouseButton { Pressed: true }) instructionPropertiesBackdrop.AcceptEvent();
         };
         instructionPropertiesLayer.AddChild(instructionPropertiesPopup);
         root.AddChild(instructionPropertiesLayer);
 
+        EditorTarget? popupTarget = null;
         var instructionContextMenu = new PopupMenu { Name = "InstructionContextMenu" };
         instructionContextMenu.AddItem(siemens ? "Properties…" : "Instruction Properties…", 0);
         instructionContextMenu.AddSeparator();
         instructionContextMenu.AddItem("Copy", 3);
+        instructionContextMenu.AddItem("Cut", 7);
         instructionContextMenu.AddItem("Paste after selection", 4);
         instructionContextMenu.AddSeparator();
         instructionContextMenu.AddItem(siemens ? "Delete instruction / network" : "Delete instruction / rung", 1);
         instructionContextMenu.AddItem("Instruction help", 2);
+        instructionContextMenu.AddItem(siemens ? "Copy network" : "Copy rung", 6);
         root.AddChild(instructionContextMenu);
 
         void UpdateInstructionPropertyVisibility()
@@ -5137,13 +5255,91 @@ public partial class SimulatorShell : CanvasLayer
             rungPropertyRow.Visible = true;
         }
 
+        LadderEditTransaction? propertyEdit = null;
+        bool propertyDirty = false;
+        bool tagFormDirty = false, blockFormDirty = false, taskFormDirty = false, interfaceFormDirty = false, loadingFormControls = false;
+        long tagFormRevision = 0, blockFormRevision = 0, taskFormRevision = 0, interfaceFormRevision = 0;
+        bool CurrentForm(long revision) { if (revision == document.Revision) return true; output.Text = "[color=#d17a00]This form is stale.[/color] Discard it and reopen the target before applying."; return false; }
+        string propertyNetworkId = "", propertyNodeId = "";
+        bool propertyOutput = false;
+        var propertyActions = new HBoxContainer { Name = "InstructionPropertyActions" };
+        var applyProperties = new Button { Name = "ApplyInstructionProperties", Text = "Apply" };
+        var cancelProperties = new Button { Name = "CancelInstructionProperties", Text = "Cancel" };
+        var propertyStatus = new Label { Name = "InstructionPropertyStatus", AutowrapMode = TextServer.AutowrapMode.WordSmart };
+        propertyActions.AddChild(applyProperties); propertyActions.AddChild(cancelProperties);
+        instructionPropertiesBody.AddChild(propertyStatus); instructionPropertiesBody.AddChild(propertyActions);
+        void CancelProperties()
+        {
+            propertyEdit?.Cancel(); propertyEdit = null; propertyDirty = false;
+            instructionPropertiesPopup.Hide(); RefreshEditor(); canvas.GrabFocus();
+        }
+        string SelectedText(OptionButton selector) => selector.Selected >= 0 ? selector.GetItemText(selector.Selected) : "";
+        bool ApplyProperties()
+        {
+            if (propertyEdit is null) return true;
+            if (!propertyDirty) { CancelProperties(); return true; }
+            try
+            {
+                var draft = propertyEdit.Draft;
+                var rungIndex = draft.Rungs.FindIndex(r => r.Id == propertyNetworkId);
+                if (rungIndex < 0) throw new InvalidOperationException("Instruction target is unavailable.");
+                var rung = draft.Rungs[rungIndex];
+                if (propertyNodeId.Length > 0 && !propertyOutput)
+                {
+                    var node = EditableLadderTree.Find(rung.Root, propertyNodeId) ?? throw new InvalidOperationException("Operand target is unavailable.");
+                    node = node.Kind == LadderNodeKind.Compare
+                        ? node with { Variable = SelectedText(compareLeft), CompareOperator = (LadderCompareOperator)compareOperator.Selected, RightOperand = compareRight.Text.Trim() }
+                        : node with { Variable = SelectedText(tagSelector), NormallyClosed = contactTypeSelector.Selected is 1 or 3,
+                            EdgeMode = contactTypeSelector.Selected == 2 ? LadderEdgeMode.Rising : contactTypeSelector.Selected == 3 ? LadderEdgeMode.Falling : LadderEdgeMode.None };
+                    rung.SetRoot(EditableLadderTree.Replace(rung.Root, propertyNodeId, node));
+                }
+                else if (!propertyOutput) rung.Label = rungLabel.Text.Trim();
+                else if (rung.IsTimer || rung.IsTimerReset)
+                { rung.TimerVariable = SelectedText(timerSelector); if (!rung.IsTimerReset) rung.TimerPreset = TimeSpan.FromMilliseconds(timerPreset.Value); }
+                else if (rung.IsCounter || rung.IsCounterLoad || rung.IsCounterReset)
+                { rung.CounterVariable = SelectedText(counterSelector); if (!rung.IsCounterReset) rung.CounterPreset = (long)counterPreset.Value; }
+                else if (rung.IsNumericOperation)
+                { rung.NumericSourceA = numericSourceA.Text.Trim(); rung.NumericSourceB = numericSourceB.Text.Trim(); rung.NumericSourceC = numericSourceC.Text.Trim(); rung.NumericDestination = SelectedText(numericDestination); }
+                else if (rung.IsCall) rung.CallTarget = callTarget.Selected >= 0 ? callTarget.GetItemMetadata(callTarget.Selected).AsString() : "";
+                else if (rung.IsJump || rung.IsLabel) rung.ProgramControlLabel = programControlLabel.Text.Trim();
+                else if (!rung.IsReturn) { rung.CoilVariable = SelectedText(coilSelector); rung.CoilMode = (LadderCoilMode)coilModeSelector.Selected; }
+                var targetNodeId = propertyOutput ? rung.TerminalActionId : propertyNodeId;
+                var issue = targetNodeId.Length == 0 ? null : LadderCompiler.Validate(draft.BuildProgram()).FirstOrDefault(i =>
+                    EditorDiagnosticTarget.Capture(draft, i.Path)?.Target is { } target && target.NetworkId == rung.Id && target.NodeId == targetNodeId);
+                if (issue is not null) { propertyStatus.Text = issue.Message; return false; }
+                if (!propertyEdit.TryCommit(_ladderHistory, ChallengeMutationLocked, out var error)) { propertyStatus.Text = error; return false; }
+                propertyEdit = null; propertyDirty = false;
+                BeginEdit("Apply instruction properties", recordHistory: false);
+                instructionPropertiesPopup.Hide(); RefreshEditor(); canvas.GrabFocus(); return true;
+            }
+            catch (Exception error) when (error is ArgumentException or InvalidOperationException or OverflowException)
+            { propertyStatus.Text = error.Message; return false; }
+        }
+        void StageProperty()
+        {
+            if (refreshingEditor || propertyEdit is null) return;
+            propertyDirty = true; propertyStatus.Text = "Pending edit · Apply commits all fields; Cancel discards";
+        }
         void OpenInstructionProperties()
         {
-            RefreshEditor();
-            UpdateInstructionPropertyVisibility();
-            instructionPropertiesPopup.Show();
+            ResolvePendingEditorForms(() =>
+            {
+                RefreshEditor(); UpdateInstructionPropertyVisibility();
+                if (document.Rungs.Count == 0) return;
+                if (selectedOutput && document.Rungs[selectedRung].IsCall)
+                {
+                    OpenCallAuthoring(document, document.Blocks[document.ActiveBlockIndex].Id, document.Rungs[selectedRung].Id,
+                        () => { BeginEdit("Apply CALL", recordHistory: false); RefreshEditor(); canvas.GrabFocus(); });
+                    return;
+                }
+                propertyEdit = new LadderEditTransaction(document, "Edit instruction properties"); propertyDirty = false;
+                propertyNetworkId = document.Rungs[selectedRung].Id; propertyOutput = selectedOutput;
+                propertyNodeId = selectedOutput ? "" : canvas.SelectedNodeId;
+                if (propertyNodeId.Length == 0 && HasSelectedContact()) propertyNodeId = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact].Id;
+                propertyStatus.Text = "Changes stay pending until Apply";
+                instructionPropertiesPopup.Show(); FocusFirstChallengeEditorControl(instructionPropertiesPopup);
+            });
         }
-
         PlcVariableType SelectedTagType() => tagType.Selected switch
         {
             1 => PlcVariableType.Timer,
@@ -5286,7 +5482,7 @@ public partial class SimulatorShell : CanvasLayer
             }
         }
 
-        bool BeginEdit(string description)
+        bool BeginEdit(string description, bool recordHistory = true)
         {
             if (refreshingEditor)
             {
@@ -5294,6 +5490,11 @@ public partial class SimulatorShell : CanvasLayer
                 // Ignore it silently; no user operation was attempted here.
                 return false;
             }
+            var request = new EditorCommandRequest(EditorCommandId.BeginMutation, EditorTarget.CaptureProject(document), Description: description);
+            if (!LadderEditorCommands.CanExecute(document, request, ChallengeMutationLocked, out _))
+            { ShowChallengeLocked(); return false; }
+            if (recordHistory && !LadderEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked).Applied) return false;
+            ChallengeDraftChanged?.Invoke();
             _ladderMonitorMatchesLoadedProgram = false;
             foreach (var ladderCanvas in _ladderCanvases) ladderCanvas.SetMonitorSnapshot(null);
             _ladderWorkspaceStatus.Text = "OFFLINE EDIT CHANGED · VERIFY + LOAD TO MONITOR";
@@ -5304,27 +5505,31 @@ public partial class SimulatorShell : CanvasLayer
                 validationSummary.Text = "NOT VERIFIED · run Verify + Load Offline";
                 validationSummary.AddThemeColorOverride("font_color", new Color("b36c16"));
             }
-            _ladderHistory.Record(document, description);
             return true;
         }
 
         bool BeginProjectMetadataEdit(string description)
         {
-            if (refreshingEditor) return false;
-            _ladderHistory.Record(document, description);
+            if (refreshingEditor || ChallengeMutationLocked) return false;
+            var request = new EditorCommandRequest(EditorCommandId.BeginMutation, EditorTarget.CaptureProject(document), Description: description);
+            if (!LadderEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked).Applied) return false;
+            ChallengeDraftChanged?.Invoke();
             return true;
         }
 
         Label? interfaceHeading = null;
         RichTextLabel? blockInterfaceSummary = null;
 
+        Action? refreshTreeActions = null;
         void RefreshEditor()
         {
+            if (propertyDirty || tagFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty) return;
             refreshingEditor = true;
             var activeBlockName = document.Blocks.Count > 0
                 ? document.Blocks[Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1)].Name
                 : "<no block>";
             var projectDirty = LadderEditorProjectJson.HasUnsavedChanges(document, _ladderSavedProjectJson);
+            IntegratedDraftChanged?.Invoke();
             var projectFileName = _ladderProjectPath is null
                 ? "Untitled.rpproj.json"
                 : System.IO.Path.GetFileName(_ladderProjectPath);
@@ -5427,6 +5632,25 @@ public partial class SimulatorShell : CanvasLayer
             counterSelector.Clear();
             compareLeft.Clear();
             numericDestination.Clear();
+            if (document.Blocks[document.ActiveBlockIndex].SemanticMode == LadderSemanticMode.Parameterized)
+            {
+                foreach (var selector in new[] { tagSelector, coilSelector, timerSelector, counterSelector, compareLeft, numericDestination }) selector.Clear();
+                var activeRung = document.Rungs.Count > 0 ? document.Rungs[Math.Clamp(selectedRung, 0, document.Rungs.Count - 1)] : null;
+                foreach (var symbol in LadderOperandSymbols.ForDocument(document))
+                {
+                    void Add(OptionButton selector) { selector.AddItem(symbol.Name); selector.SetItemTooltip(selector.ItemCount - 1, symbol.DisplayName + " · " + symbol.Type); }
+                    if (symbol.Type == PlcVariableType.Bool) { Add(tagSelector); if (symbol.Writable) Add(coilSelector); }
+                    else if (symbol.Type == PlcVariableType.Timer && symbol.Writable) Add(timerSelector);
+                    else if (symbol.Type == PlcVariableType.Counter && symbol.Writable) Add(counterSelector);
+                    else if (symbol.Type is PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real or PlcVariableType.String or PlcVariableType.Enum)
+                    {
+                        Add(compareLeft);
+                        if (symbol.Writable && (symbol.Type is PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real
+                            || activeRung?.NumericOperationKind == LadderNumericOperationKind.Move
+                            || activeRung?.NumericOperationKind == LadderNumericOperationKind.FormatText && symbol.Type == PlcVariableType.String)) Add(numericDestination);
+                    }
+                }
+            }
             callTarget.Clear();
             taskTarget.Clear();
             tagList.Clear();
@@ -5514,9 +5738,11 @@ public partial class SimulatorShell : CanvasLayer
             {
                 var rung = document.Rungs[selectedRung];
                 for (var i = 0; i < rung.Branches.Count; i++) branchSelector.AddItem($"Branch {i + 1}");
-                selectedBranch = Math.Clamp(selectedBranch, 0, Math.Max(0, rung.Branches.Count - 1));
+                selectedBranch = ChallengePresenterModel.ClampSelection(rung.Branches.Count, selectedBranch);
                 branchSelector.Select(selectedBranch);
-                var branchContacts = rung.Branches[selectedBranch].Contacts;
+                IReadOnlyList<EditableContact> branchContacts = selectedBranch >= 0
+                    ? rung.Branches[selectedBranch].Contacts : Array.Empty<EditableContact>();
+                if (selectedBranch < 0) selectedInsertionIndex = -1;
                 if (selectedContact >= branchContacts.Count) selectedContact = -1;
                 if (selectedInsertionIndex > branchContacts.Count)
                     selectedInsertionIndex = branchContacts.Count;
@@ -5550,6 +5776,14 @@ public partial class SimulatorShell : CanvasLayer
                 rungLabel.Text = rung.Label;
                 var coilIndex = Enumerable.Range(0, coilSelector.ItemCount).FirstOrDefault(index => coilSelector.GetItemText(index) == rung.CoilVariable, -1);
                 if (coilIndex >= 0) coilSelector.Select(coilIndex);
+                else
+                {
+                    // Keep an unassigned/unknown model operand visibly unassigned.
+                    // Append the placeholder so real operand indices stay unchanged;
+                    // selecting even the sole real operand now emits ItemSelected.
+                    coilSelector.AddItem("Select output…", int.MaxValue);
+                    coilSelector.Select(coilSelector.ItemCount - 1);
+                }
                 coilModeSelector.Select((int)rung.CoilMode);
                 var timerIndex = document.Tags.Where(tag => tag.Type == PlcVariableType.Timer).ToList()
                     .FindIndex(tag => tag.Name == rung.TimerVariable);
@@ -5560,12 +5794,12 @@ public partial class SimulatorShell : CanvasLayer
                 if (counterIndex >= 0) counterSelector.Select(counterIndex);
                 counterPreset.Value = Math.Max(1, rung.CounterPreset);
                 numericSourceA.Text = rung.NumericSourceA;
-                if (rung.IsNumericOperation && rung.NumericOperationKind is LadderNumericOperationKind.Move or LadderNumericOperationKind.FormatText)
+                if (document.Blocks[document.ActiveBlockIndex].SemanticMode == LadderSemanticMode.Legacy && rung.IsNumericOperation && rung.NumericOperationKind is LadderNumericOperationKind.Move or LadderNumericOperationKind.FormatText)
                     foreach (var textTag in document.Tags.Where(tag => tag.Role != PlcVariableRole.Input
                         && (rung.NumericOperationKind == LadderNumericOperationKind.FormatText
                             ? tag.Type == PlcVariableType.String : tag.Type is PlcVariableType.String or PlcVariableType.Enum)))
                         numericDestination.AddItem(textTag.Name);
-                if (rung.IsNumericOperation && rung.NumericOperationKind == LadderNumericOperationKind.FormatText)
+                if (document.Blocks[document.ActiveBlockIndex].SemanticMode == LadderSemanticMode.Legacy && rung.IsNumericOperation && rung.NumericOperationKind == LadderNumericOperationKind.FormatText)
                     for (var item = numericDestination.ItemCount - 1; item >= 0; item--)
                         if (!document.Tags.Any(tag => tag.Name == numericDestination.GetItemText(item) && tag.Type == PlcVariableType.String))
                             numericDestination.RemoveItem(item);
@@ -5578,6 +5812,19 @@ public partial class SimulatorShell : CanvasLayer
                         .FirstOrDefault(index => callTarget.GetItemMetadata(index).AsString() == rung.CallTarget, -1);
                     if (callTargetIndex >= 0) callTarget.Select(callTargetIndex);
                 }
+                void PreserveOperand(OptionButton selector, string operand)
+                {
+                    var index = Enumerable.Range(0, selector.ItemCount).FirstOrDefault(i => selector.GetItemText(i) == operand, -1);
+                    if (index < 0) { selector.AddItem(operand); index = selector.ItemCount - 1; selector.SetItemTooltip(index, "Configured operand; verify its declaration/type before applying."); }
+                    selector.Select(index);
+                }
+                if (selectedContact >= 0)
+                {
+                    var contact = branchContacts[selectedContact];
+                    PreserveOperand(contact.IsComparison ? compareLeft : tagSelector, contact.Variable);
+                }
+                PreserveOperand(timerSelector, rung.TimerVariable); PreserveOperand(counterSelector, rung.CounterVariable);
+                PreserveOperand(numericDestination, rung.NumericDestination);
                 programControlLabel.Text = rung.ProgramControlLabel;
                 if (!string.IsNullOrWhiteSpace(rung.NumericSourceB)) numericSourceB.Text = rung.NumericSourceB;
                 if (!string.IsNullOrWhiteSpace(rung.NumericSourceC)) numericSourceC.Text = rung.NumericSourceC;
@@ -5613,20 +5860,25 @@ public partial class SimulatorShell : CanvasLayer
             refreshingEditor = false;
             if (instructionPropertiesPopup.Visible) UpdateInstructionPropertyVisibility();
             RefreshWatchTable(_virtualSnapshot);
+            refreshTreeActions?.Invoke();
         }
 
         var instructionChrome = new ScrollContainer
         {
             Name = "InstructionToolbarChrome",
-            VerticalScrollMode = ScrollContainer.ScrollMode.Disabled,
-            HorizontalScrollMode = ScrollContainer.ScrollMode.Auto,
+            VerticalScrollMode = ScrollContainer.ScrollMode.Auto,
+            HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
             CustomMinimumSize = new Vector2(0, 140),
         };
         instructionChrome.AddThemeStyleboxOverride("panel", BoxStyle(new Color("eef1f3"), new Color("aeb8bd")));
-        var instructions = new VBoxContainer { Name = "InstructionToolbar" };
+        var instructions = new VBoxContainer
+        {
+            Name = "InstructionToolbar",
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+        };
         instructions.AddThemeConstantOverride("separation", 4);
         instructionChrome.AddChild(instructions);
-        var selectionRow = new HBoxContainer { Name = "Selection" };
+        var selectionRow = new HFlowContainer { Name = "Selection" };
         selectionRow.AddThemeConstantOverride("separation", 4);
         selectionRow.AddChild(Heading(siemens ? "Instruction palette" : "Language elements", 11, new Color("344851")));
         selectionRow.AddChild(branchSelector);
@@ -5641,7 +5893,22 @@ public partial class SimulatorShell : CanvasLayer
         var openInstructionHelp = ToolbarButton("OpenInstructionHelp", "HELP (F1)", new Color("4d6674"), 92);
         selectionRow.AddChild(openInstructionHelp);
         instructions.AddChild(selectionRow);
-        var instructionPalette = new TabContainer { Name = "InstructionPalette", CustomMinimumSize = new Vector2(0, 72) };
+        // Category tabs and fixed-width command rows forced the split editor
+        // beyond its aperture. Keep the existing command paths, but select
+        // categories through a compact control and wrap their buttons.
+        var instructionCategory = new OptionButton
+        {
+            Name = "InstructionCategory",
+            CustomMinimumSize = new Vector2(160, 28),
+            TooltipText = "Choose an instruction category; buttons wrap to the available editor width",
+        };
+        instructions.AddChild(instructionCategory);
+        var instructionPalette = new TabContainer
+        {
+            Name = "InstructionPalette",
+            TabsVisible = false,
+            CustomMinimumSize = new Vector2(0, 72),
+        };
         instructionPalette.AddThemeFontSizeOverride("font_size", 11);
         instructionPalette.AddThemeColorOverride("font_selected_color", new Color("263943"));
         instructionPalette.AddThemeColorOverride("font_unselected_color", new Color("4f6874"));
@@ -5664,6 +5931,8 @@ public partial class SimulatorShell : CanvasLayer
         var addTp = Command("AddPulseTimer", "TP");
         var addRto = Command("AddRetentiveTimer", siemens ? "TONR" : "RTO");
         var addTimerReset = Command("AddTimerReset", siemens ? "RT" : "RES TIMER");
+        var addAssign = Command("AddAssignCoil", "ASSIGN");
+        addAssign.Visible = false;
         var addSet = Command("AddSetLatch", siemens ? "SET" : "OTL");
         var addReset = Command("AddResetUnlatch", siemens ? "RESET" : "OTU");
         var addCounter = Command("AddCountUp", "CTU");
@@ -5685,10 +5954,11 @@ public partial class SimulatorShell : CanvasLayer
         addFallingEdge.TooltipText = "Insert a one-scan TRUE-to-FALSE edge contact with stable per-instruction simulator memory";
         addCompare.TooltipText = "Insert a comparison at the selected wire position";
 
-        var bitCommands = new HBoxContainer { Name = "Bit Logic" };
+        var bitCommands = new HFlowContainer { Name = "Bit Logic" };
         bitCommands.AddThemeConstantOverride("separation", 4);
         bitCommands.AddChild(addNo);
         bitCommands.AddChild(addNc);
+        bitCommands.AddChild(addAssign);
         bitCommands.AddChild(addRisingEdge);
         bitCommands.AddChild(addFallingEdge);
         bitCommands.AddChild(addSet);
@@ -5699,7 +5969,7 @@ public partial class SimulatorShell : CanvasLayer
         bitCommands.AddChild(remove);
         instructionPalette.AddChild(bitCommands);
 
-        var timerCommands = new HBoxContainer { Name = "Timers" };
+        var timerCommands = new HFlowContainer { Name = "Timers" };
         timerCommands.AddThemeConstantOverride("separation", 4);
         timerCommands.AddChild(addTon);
         timerCommands.AddChild(addTof);
@@ -5708,7 +5978,7 @@ public partial class SimulatorShell : CanvasLayer
         timerCommands.AddChild(addTimerReset);
         instructionPalette.AddChild(timerCommands);
 
-        var counterCommands = new HBoxContainer { Name = "Counters" };
+        var counterCommands = new HFlowContainer { Name = "Counters" };
         counterCommands.AddThemeConstantOverride("separation", 4);
         counterCommands.AddChild(addCounter);
         counterCommands.AddChild(addCounterDown);
@@ -5716,12 +5986,12 @@ public partial class SimulatorShell : CanvasLayer
         counterCommands.AddChild(addCounterReset);
         instructionPalette.AddChild(counterCommands);
 
-        var compareCommands = new HBoxContainer { Name = "Compare" };
+        var compareCommands = new HFlowContainer { Name = "Compare" };
         compareCommands.AddThemeConstantOverride("separation", 4);
         compareCommands.AddChild(addCompare);
         instructionPalette.AddChild(compareCommands);
 
-        var numericCommands = new HBoxContainer { Name = "Math and Move" };
+        var numericCommands = new HFlowContainer { Name = "Math and Move" };
         numericCommands.AddThemeConstantOverride("separation", 4);
         var addMove = Command("AddMove", "MOV");
         var addFormatText = Command("AddFormatText", "FORMAT_TEXT");
@@ -5746,7 +6016,7 @@ public partial class SimulatorShell : CanvasLayer
         numericCommands.AddChild(addSquareRoot);
         instructionPalette.AddChild(numericCommands);
 
-        var scientificCommands = new HBoxContainer { Name = "Scientific Math" };
+        var scientificCommands = new HFlowContainer { Name = "Scientific Math" };
         scientificCommands.AddThemeConstantOverride("separation", 4);
         var addExponentiate = Command("AddExponentiate", "EXPT");
         var addNaturalLog = Command("AddNaturalLog", "LN");
@@ -5766,7 +6036,7 @@ public partial class SimulatorShell : CanvasLayer
         scientificCommands.AddChild(addArcTangent);
         instructionPalette.AddChild(scientificCommands);
 
-        var conversionCommands = new HBoxContainer { Name = "Conversion" };
+        var conversionCommands = new HFlowContainer { Name = "Conversion" };
         conversionCommands.AddThemeConstantOverride("separation", 4);
         var addTruncate = Command("AddTruncate", "TRUNC");
         var addNormalize = Command("AddNormalize", siemens ? "NORM_X" : "CPT NORM");
@@ -5784,7 +6054,7 @@ public partial class SimulatorShell : CanvasLayer
         conversionCommands.AddChild(addScale);
         instructionPalette.AddChild(conversionCommands);
 
-        var programCommands = new HBoxContainer { Name = "Program Control" };
+        var programCommands = new HFlowContainer { Name = "Program Control" };
         programCommands.AddThemeConstantOverride("separation", 4);
         var addCall = Command("AddCall", siemens ? "CALL" : "JSR");
         var addReturn = Command("AddReturn", siemens ? "RETURN" : "RET");
@@ -5796,6 +6066,11 @@ public partial class SimulatorShell : CanvasLayer
         programCommands.AddChild(addJump);
         programCommands.AddChild(addLabel);
         instructionPalette.AddChild(programCommands);
+
+        for (var category = 0; category < instructionPalette.GetTabCount(); category++)
+            instructionCategory.AddItem(instructionPalette.GetTabTitle(category));
+        instructionCategory.ItemSelected += category => instructionPalette.CurrentTab = (int)category;
+        instructionPalette.TabChanged += category => instructionCategory.Select((int)category);
 
         var addTask = Command("AddTask", siemens ? "+ OB" : "+ TASK");
         var applyBlock = Command("ApplyBlock", siemens ? "RENAME BLOCK" : "RENAME ROUTINE");
@@ -5814,7 +6089,7 @@ public partial class SimulatorShell : CanvasLayer
             FitContent = false,
             CustomMinimumSize = new Vector2(0, 64),
             ScrollActive = true,
-            TooltipText = "Scroll to inspect interface declarations. Offline calls currently use shared project tags; parameter passing and per-instance FB storage are not implemented.",
+            TooltipText = "Inspect interface declarations. Legacy calls use shared project tags; Parameterized FC/FB calls use explicit bindings and FB instance storage.",
         };
         blockInterfaceSummary.AddThemeColorOverride("default_color", new Color("263943"));
         blockInterfaceSummary.AddThemeStyleboxOverride("normal", BoxStyle(new Color("e8eef1"), new Color("9aa7ad")));
@@ -5826,6 +6101,7 @@ public partial class SimulatorShell : CanvasLayer
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
             CustomMinimumSize = new Vector2(0, 88),
         };
+        center.AddChild(LadderEditorZoom.CreateControls(canvas, scroll));
         scroll.AddChild(canvas);
         center.AddChild(scroll);
 
@@ -5908,7 +6184,15 @@ public partial class SimulatorShell : CanvasLayer
         ConfigureSelectableList(validationIssueList);
         validationIssueList.AddThemeStyleboxOverride("panel", BoxStyle(new Color("fffafa"), new Color("c9a2a2")));
         errorPage.AddChild(validationIssueList);
-        validationIssueList.CustomMinimumSize = new Vector2(0, 66);
+        var validationDetail=new Label { Name="SelectedIssueDetail", AutowrapMode=TextServer.AutowrapMode.WordSmart, SizeFlagsHorizontal=Control.SizeFlags.ExpandFill };
+        validationDetail.AddThemeColorOverride("font_color",new Color("8c2f2f"));
+        validationDetail.AddThemeFontSizeOverride("font_size",12);
+        var validationDetailScroll=new ScrollContainer { Name="SelectedIssueDetailScroll", SizeFlagsVertical=Control.SizeFlags.ExpandFill, HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled, CustomMinimumSize=new Vector2(0,48) };
+        validationDetailScroll.AddChild(validationDetail);
+        errorPage.AddChild(validationDetailScroll);
+        validationIssueList.ItemSelected += i => validationDetail.Text=validationIssueList.GetItemTooltip((int)i);
+        validationIssueList.CustomMinimumSize = new Vector2(0, 28);
+        validationIssueList.SizeFlagsVertical=Control.SizeFlags.Fill;
         AddInspectorPage(errorPage);
 
         var outputPage = new VBoxContainer { Name = "Output" };
@@ -6417,13 +6701,14 @@ public partial class SimulatorShell : CanvasLayer
         blockCommands.AddChild(applyBlock);
         blockCommands.AddChild(removeBlock);
         projectPage.AddChild(blockCommands);
+        projectPage.AddChild(CreateBlockSemanticControls(document, () => { BeginEdit("Convert block", recordHistory: false); RefreshEditor(); }));
         interfaceHeading = Heading(siemens ? "FB / FC INTERFACE" : "ROUTINE PARAMETERS", 11, new Color("344851"));
         interfaceHeading.Name = "BlockInterfaceHeading";
         projectPage.AddChild(interfaceHeading);
-        var interfaceExecutionNote = Heading("Declarations only; shared project tags.", 11, new Color("344851"));
+        var interfaceExecutionNote = Heading("Supported scalar parameters; FB Static also TIMER/COUNTER.", 11, new Color("344851"));
         interfaceExecutionNote.Name = "InterfaceExecutionNote";
         interfaceExecutionNote.ClipText = true;
-        interfaceExecutionNote.TooltipText = "Interface declarations are saved. Offline block calls do not yet pass parameters or allocate per-instance FB storage. Declare executable variables in PLC tags.";
+        interfaceExecutionNote.TooltipText = "Legacy mode keeps descriptive declarations. Explicit parameterized mode executes typed Input/Output/InOut bindings; FB Static storage belongs to the chosen instance.";
         projectPage.AddChild(interfaceExecutionNote);
         var interfaceFields = new HFlowContainer { Name = "InterfaceFields" };
         interfaceFields.AddThemeConstantOverride("h_separation", 3);
@@ -6432,6 +6717,8 @@ public partial class SimulatorShell : CanvasLayer
         interfaceFields.AddChild(interfaceSection);
         interfaceFields.AddChild(interfaceType);
         interfaceFields.AddChild(interfaceInitial);
+        interfaceFields.AddChild(interfaceEnumMembers);
+
         projectPage.AddChild(interfaceFields);
         var interfaceCommands = new HBoxContainer { Name = "InterfaceCommands" };
         interfaceCommands.AddThemeConstantOverride("separation", 4);
@@ -6554,10 +6841,21 @@ public partial class SimulatorShell : CanvasLayer
         void NavigateSearchResult(int resultIndex)
         {
             if (resultIndex < 0 || resultIndex >= visibleSearchResults.Count) return;
-            var reference = visibleSearchResults[resultIndex];
+            NavigateReference(visibleSearchResults[resultIndex]);
+        }
+
+        void NavigateReference(LadderProjectReference reference)
+        {
+            var declaration = document.Tags.FirstOrDefault(tag => tag.Name.Equals(reference.RootSymbol, StringComparison.Ordinal));
+            var declarationId = declaration is null ? "" : LadderCallBindings.GlobalId(declaration);
+            ResolvePendingEditorForms(() => NavigateResolvedReference(reference, declarationId));
+        }
+
+        void NavigateResolvedReference(LadderProjectReference reference, string declarationId)
+        {
             if (reference.Kind == LadderReferenceKind.Declaration)
             {
-                var tagIndex = document.Tags.FindIndex(tag => tag.Name.Equals(reference.RootSymbol, StringComparison.Ordinal));
+                var tagIndex = document.Tags.FindIndex(tag => LadderCallBindings.GlobalId(tag) == declarationId);
                 if (tagIndex >= 0)
                 {
                     projectTabs.CurrentTab = 1;
@@ -6569,33 +6867,38 @@ public partial class SimulatorShell : CanvasLayer
             }
             var blockIndex = document.Blocks.FindIndex(block => block.Id == reference.BlockId);
             if (blockIndex < 0) return;
-            document.SelectBlock(blockIndex);
+            var referenceNetwork = reference.HasNetwork ? document.Blocks[blockIndex].Rungs.FindIndex(rung => rung.Id == reference.NetworkId) : 0;
+            if (reference.HasNetwork && referenceNetwork < 0) { output.Text = "Reference target no longer exists. Refresh the search."; return; }
+            SwitchEditorBlock(blockIndex, restoreView: false);
             blockItems[blockIndex].Select(0);
             organization.ScrollToItem(blockItems[blockIndex]);
             if (reference.HasNetwork)
             {
-                selectedRung = Math.Clamp(reference.NetworkIndex, 0, Math.Max(0, document.Rungs.Count - 1));
+                selectedRung = referenceNetwork;
                 selectedBranch = 0;
                 selectedContact = -1;
                 selectedInsertionIndex = -1;
                 selectedOutput = false;
             }
             RefreshEditor();
-            canvas.SelectRung(selectedRung);
-            scroll.ScrollVertical = Math.Max(0, (int)canvas.GetRungBounds(selectedRung).Position.Y - 10);
+            if (document.Rungs.Count > 0) canvas.SelectRung(selectedRung);
+            _deviceNavigatedBlock=document.Blocks[document.ActiveBlockIndex].Id;
+            _deviceNavigatedNetwork=selectedRung;
+            if (document.Rungs.Count > 0) scroll.ScrollVertical = Math.Max(0, (int)canvas.GetRungBounds(selectedRung).Position.Y - 10);
             output.Text = reference.HasNetwork
                 ? $"[color=#18864b]Opened {Escape(reference.BlockName)} · {(siemens ? "Network" : "Rung")} {reference.NetworkIndex + 1}.[/color] {Escape(reference.Detail)}"
                 : $"[color=#18864b]Opened {Escape(reference.BlockName)}.[/color] {Escape(reference.Detail)}";
         }
 
+        _navigateDeviceReference = NavigateReference;
         findAll.Pressed += () => RunProjectSearch(false);
         crossReference.Pressed += () => RunProjectSearch(true);
         searchQuery.TextSubmitted += _ => RunProjectSearch(false);
         searchResults.ItemActivated += index => NavigateSearchResult((int)index);
-        tagList.ItemSelected += () =>
+        void LoadTagControls()
         {
-            selectedTagIndex = SelectedTreeRowIndex(tagList);
             if (selectedTagIndex < 0 || selectedTagIndex >= document.Tags.Count) return;
+            loadingFormControls = true;
             var tag = document.Tags[selectedTagIndex];
             tagName.Text = tag.Name;
             tagType.Select(tag.Type switch
@@ -6623,7 +6926,22 @@ public partial class SimulatorShell : CanvasLayer
             applyTagEdit!.Disabled = false;
             deleteTag!.Disabled = false;
             output.Text = $"[color=#18864b]{Escape(tag.Name)} selected.[/color] Edit its definition or inspect references before deletion.";
+            loadingFormControls = false; tagFormDirty = false;
+        }
+        bool restoringTagSelection = false;
+        void RestoreTagSelection()
+        {
+            restoringTagSelection = true;
+            try { if (selectedTagIndex >= 0) SelectIndexedTreeRow(tagList, selectedTagIndex); else tagList.DeselectAll(); }
+            finally { restoringTagSelection = false; }
+        }
+        tagList.ItemSelected += () =>
+        {
+            if (restoringTagSelection) return;
+            var targetTagIndex = SelectedTreeRowIndex(tagList);
+            ResolvePendingEditorForms(() => { selectedTagIndex = targetTagIndex; RestoreTagSelection(); LoadTagControls(); }, RestoreTagSelection);
         };
+
         xrefSelectedTag.Pressed += () =>
         {
             var selected = SelectedTreeRowIndex(tagList);
@@ -6640,6 +6958,7 @@ public partial class SimulatorShell : CanvasLayer
         };
         applyTagEdit!.Pressed += () =>
         {
+            if (tagFormDirty && !CurrentForm(tagFormRevision)) return;
             if (selectedTagIndex < 0 || selectedTagIndex >= document.Tags.Count || string.IsNullOrWhiteSpace(tagName.Text)) return;
             var current = document.Tags[selectedTagIndex];
             var normalizedName = tagName.Text.Trim();
@@ -6657,6 +6976,7 @@ public partial class SimulatorShell : CanvasLayer
             if (!PreflightTagEdit(preview => preview.UpdateTag(current.Name, normalizedName, type, role, binding, initialValue, schema, enumMembers: SelectedEnumMembers(type)))) return;
             if (!BeginEdit("Update tag definition")) return;
             var updated = document.UpdateTag(current.Name, normalizedName, type, role, binding, initialValue, schema, enumMembers: SelectedEnumMembers(type));
+            tagFormDirty = false;
             RefreshEditor();
             output.Text = $"[color=#18864b]Tag updated.[/color] {Escape(updated.Name)} · {updated.Type} · {updated.Role}. All symbolic references were renamed atomically.";
         };
@@ -6672,12 +6992,12 @@ public partial class SimulatorShell : CanvasLayer
             }
             if (!BeginEdit("Delete unused tag")) return;
             if (!document.TryRemoveTag(tag.Name, out _)) return;
-            selectedTagIndex = -1;
+            selectedTagIndex = -1; loadingFormControls = true;
             tagName.Clear();
             tagInitialValue.Text = "FALSE";
             tagBinding.Clear();
             RefreshTagBindingOptions(SelectedTagType(), SelectedTagRole(SelectedTagType()), string.Empty);
-            RefreshEditor();
+            loadingFormControls = false; tagFormDirty = false; RefreshEditor();
             output.Text = $"[color=#18864b]Unused tag deleted.[/color] {Escape(tag.Name)} had no executable references.";
         };
         toolTabs.AddChild(searchPage);
@@ -6725,11 +7045,12 @@ public partial class SimulatorShell : CanvasLayer
                 $"[b]Parameters[/b]\n{Escape(entry.Parameters)}\n\n" +
                 $"[b]Scan execution[/b]\n{Escape(entry.Execution)}\n\n" +
                 $"[color=#ef7777][b]Restrictions / boundary[/b][/color]\n{Escape(entry.Restrictions)}\n\n" +
-                $"[b]Example[/b]\n[font_size=13]{Escape(entry.Example)}[/font_size]\n\n" +
+                $"[b]Example[/b]\n[font_size={(IsChallengeDraftActive ? 16 : 13)}]{Escape(entry.Example)}[/font_size]\n\n" +
                 "[color=#f1aa5b]RungProof offline semantics only. No vendor project file, online help database, or physical PLC connection.[/color]";
             if (openPage) ShowToolDock(2);
         }
 
+        _ladderEditorRefreshers.Add(() => RenderInstructionHelp(currentHelpKey, false));
         helpSelector.ItemSelected += index =>
             RenderInstructionHelp(helpSelector.GetItemMetadata((int)index).AsString(), false);
         openInstructionHelp.Pressed += () => RenderInstructionHelp(currentHelpKey, true);
@@ -6790,6 +7111,19 @@ public partial class SimulatorShell : CanvasLayer
             toolTabs.CurrentTab = tab;
             editorAndTasks.SplitOffsets = [Math.Max(0, (int)editorAndTasks.Size.X - 320)];
         }
+        void ShowProjectDock()
+        {
+            projectDockHost.Show(); projectPanel.Show(); reopenProjectDock.Hide();
+        }
+        void ShowBottomDock()
+        {
+            bottomDockHost.Show(); bottomPanel.Show(); reopenBottomDock.Hide();
+        }
+        string OfflineDiagnosticStatus() => _virtualProgram is null
+            ? "[b]Offline diagnostics[/b] · no controller loaded · Verify + Load required"
+            : !_ladderMonitorMatchesLoadedProgram
+                ? "[b]Offline diagnostics[/b] · draft differs from loaded controller · previous controller retained"
+                : $"[b]Offline diagnostics[/b] · draft matches loaded controller · {_virtualSnapshot?.State.ToString() ?? "snapshot unavailable"}";
 
         collapseToolDock.Pressed += () =>
         {
@@ -6806,7 +7140,16 @@ public partial class SimulatorShell : CanvasLayer
             editorAndTasks.SplitOffsets = [toolDockSplitOffset];
         };
 
-        canvas.RungSelected += index =>
+        void RestoreEditorSelection()
+        {
+            if (document.Rungs.Count == 0) return;
+            if (propertyEdit is not null && propertyNodeId.Length > 0) canvas.SelectTreeNode(selectedRung, propertyNodeId, notify: false);
+            else if (selectedOutput) canvas.SelectElement(selectedRung, -1, -1, true, notify: false);
+            else if (HasSelectedContact()) canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
+            else if (selectedInsertionIndex >= 0) canvas.SelectInsertionPoint(selectedRung, selectedBranch, selectedInsertionIndex, notify: false);
+            else canvas.SelectRung(selectedRung);
+        }
+        canvas.RungSelected += index => ResolvePendingEditorForms(() =>
         {
             selectedRung = index;
             selectedBranch = 0;
@@ -6814,14 +7157,15 @@ public partial class SimulatorShell : CanvasLayer
             selectedInsertionIndex = -1;
             selectedOutput = false;
             RefreshEditor();
-        };
-        canvas.ElementSelected += (rungIndex, branchIndex, contactIndex, outputSelected) =>
+        }, () => RestoreEditorSelection());
+        canvas.ElementSelected += (rungIndex, branchIndex, contactIndex, outputSelected) => ResolvePendingEditorForms(() =>
         {
             selectedRung = rungIndex;
             selectedBranch = branchIndex >= 0 ? branchIndex : 0;
             selectedContact = contactIndex;
             selectedInsertionIndex = -1;
             selectedOutput = outputSelected;
+            canvas.SelectElement(rungIndex, branchIndex, contactIndex, outputSelected, notify: false);
             RefreshEditor();
             if (outputSelected)
             {
@@ -6832,7 +7176,7 @@ public partial class SimulatorShell : CanvasLayer
                 var contact = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
                 output.Text = $"[color=#18864b]Instruction selected.[/color] {Escape(contact.Variable)} · double-click or right-click → Properties; use Move or Delete for structure.";
             }
-        };
+        }, () => RestoreEditorSelection());
         string SelectedInstructionHelpKey()
         {
             if (document.Rungs.Count == 0) return "rung";
@@ -6912,21 +7256,91 @@ public partial class SimulatorShell : CanvasLayer
             else if (kind == "set") addSet.EmitSignal(BaseButton.SignalName.Pressed);
             else if (kind == "reset") addReset.EmitSignal(BaseButton.SignalName.Pressed);
             else if (kind == "rung") addRung.EmitSignal(BaseButton.SignalName.Pressed);
-            else if (kind == "coil") coilSelector.GrabFocus();
+            else if (kind == "coil") SelectCoilMode(LadderCoilMode.Assign);
         }
+        canvas.SaveDraftRequested += ShowLadderSaveDialog;
+        canvas.SaveAsRequested += ShowLadderSaveAsDialog;
+        canvas.UndoEditRequested += () => TryUndoLadderEdit(out _);
+        canvas.RedoEditRequested += () => TryRedoLadderEdit(out _);
+        // The operand form lives outside the scrolling canvas so its list and actions cannot be clipped.
+        var operandLayer = new CanvasLayer { Name = "OperandEditorLayer", Layer = 101 }; root.AddChild(operandLayer);
+        var operandEditor = new LadderOperandEditor(); operandLayer.AddChild(operandEditor);
+        LadderEditTransaction? operandEdit = null;
+        void CancelOperand() { operandEdit?.Cancel(); operandEdit = null; canvas.GrabFocus(); }
+        _pendingEditorForms.Add(new(() => operandEditor.Visible, () => operandEditor.TryApply(false), () => operandEditor.CancelEdit()));
+        canvas.InlineOperandRequested += () => ResolvePendingEditorForms(() =>
+        {
+            if (document.Rungs.Count == 0 || ChallengeMutationLocked) return;
+            var networkId = document.Rungs[canvas.SelectedRung].Id;
+            var nodeId = canvas.SelectedNodeId;
+            var isOutput = canvas.OutputSelected;
+            var original = document.Rungs[canvas.SelectedRung];
+            var leaf = !isOutput && nodeId.Length > 0 ? EditableLadderTree.Find(original.Root, nodeId) : null;
+            if (!isOutput && leaf?.IsLeaf != true || isOutput && (original.IsCall || original.IsJump || original.IsLabel || original.IsReturn))
+            { OpenInstructionProperties(); return; }
+            var symbols = LadderOperandSymbols.ForDocument(document);
+            var current = isOutput ? original.IsTimer || original.IsTimerReset ? original.TimerVariable
+                : original.IsCounter || original.IsCounterLoad || original.IsCounterReset ? original.CounterVariable
+                : original.IsNumericOperation ? original.NumericDestination : original.CoilVariable : leaf!.Variable;
+            var type = isOutput ? original.IsTimer || original.IsTimerReset ? PlcVariableType.Timer
+                : original.IsCounter || original.IsCounterLoad || original.IsCounterReset ? PlcVariableType.Counter
+                : original.IsNumericOperation ? symbols.FirstOrDefault(item => item.Name == current)?.Type ?? PlcVariableType.DInt : PlcVariableType.Bool
+                : leaf!.Kind == LadderNodeKind.Contact ? PlcVariableType.Bool : symbols.FirstOrDefault(item => item.Name == current)?.Type ?? PlcVariableType.DInt;
+            operandEdit = new LadderEditTransaction(document, "Edit operand");
+            var operandAnchor = canvas.GetGlobalTransformWithCanvas() * canvas.GetSelectionPosition();
+            operandEditor.Begin(current, symbols.Where(item => item.Type == type && (!isOutput || item.Writable)), (value, create) =>
+            {
+                if (operandEdit is null) return "No active edit.";
+                var draft = operandEdit.Draft;
+                try
+                {
+                    if (create)
+                    {
+                        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[A-Za-z_][A-Za-z0-9_]*$")) return "New tag names must be identifiers; aggregate members must already be declared.";
+                        if (draft.Tags.Any(tag => tag.Name == value)) return "Tag already exists. Use Apply to assign it.";
+                        var created = draft.AddTag(value, PlcVariableRole.Memory, type: type);
+                        if (draft.Blocks[draft.ActiveBlockIndex].SemanticMode == LadderSemanticMode.Parameterized) value = "global:" + LadderCallBindings.GlobalId(created);
+                    }
+                    var error = LadderOperandSymbols.Validate(LadderOperandSymbols.ForDocument(draft), value, type, isOutput, !isOutput && leaf!.Kind == LadderNodeKind.Compare);
+                    if (error is not null) return error;
+                    var rung = draft.Rungs.First(item => item.Id == networkId);
+                    if (!isOutput) rung.SetRoot(EditableLadderTree.Replace(rung.Root, nodeId, leaf! with { Variable = value }));
+                    else if (rung.IsTimer || rung.IsTimerReset) rung.TimerVariable = value;
+                    else if (rung.IsCounter || rung.IsCounterLoad || rung.IsCounterReset) rung.CounterVariable = value;
+                    else if (rung.IsNumericOperation) rung.NumericDestination = value;
+                    else rung.CoilVariable = value;
+                    var editedId = isOutput ? rung.TerminalActionId : nodeId;
+                    var issue = LadderCompiler.Validate(draft.BuildProgram()).FirstOrDefault(i =>
+                        EditorDiagnosticTarget.Capture(draft, i.Path)?.Target is { } target && target.NetworkId == networkId && target.NodeId == editedId);
+                    if (issue is not null) return issue.Message;
+                    if (!operandEdit.TryCommit(_ladderHistory, ChallengeMutationLocked, out error)) return error;
+                    operandEdit = null; BeginEdit("Edit operand", recordHistory: false); RefreshEditor(); canvas.GrabFocus(); return "";
+                }
+                catch (Exception error) when (error is ArgumentException or InvalidOperationException) { return error.Message; }
+            }, CancelOperand);
+            operandEditor.PlaceNear(operandAnchor);
+        });
+        canvas.KeyboardInstructionRequested += InsertInstructionKind;
+        canvas.KeyboardSelectionChanged += () =>
+        {
+            if (document.Rungs.Count == 0) return;
+            LadderEditorZoom.RevealSelection(canvas, scroll);
+        };
         canvas.PropertiesRequested += (_, _, _, _) => OpenInstructionProperties();
         canvas.ContextMenuRequested += (_, _, _, _) =>
         {
-            instructionContextMenu.SetItemDisabled(2, document.Rungs.Count == 0);
-            instructionContextMenu.SetItemDisabled(3,
-                _ladderRungClipboard is null && _ladderContactClipboard is null);
-            instructionContextMenu.SetItemDisabled(5, selectedContact < 0 || selectedOutput);
-            instructionContextMenu.SetItemDisabled(6, document.Rungs.Count == 0);
+            popupTarget = CaptureSelectionTarget();
+            foreach (var pair in new[] { (1, EditorCommandId.Delete), (7, EditorCommandId.Delete), (3, EditorCommandId.Copy), (4, EditorCommandId.Paste), (6, EditorCommandId.CopyNetwork) })
+            {
+                var permitted = popupTarget is not null && LadderEditorCommands.CanExecute(document,
+                    new(pair.Item2, popupTarget, _ladderCommandClipboard), ChallengeMutationLocked, out _);
+                instructionContextMenu.SetItemDisabled(instructionContextMenu.GetItemIndex(pair.Item1), !permitted);
+            }
             var mouse = canvas.GetGlobalMousePosition();
             instructionContextMenu.Position = new Vector2I((int)mouse.X, (int)mouse.Y);
             instructionContextMenu.Popup();
         };
-        canvas.InsertionPointSelected += (rungIndex, branchIndex, insertionIndex) =>
+        canvas.InsertionPointSelected += (rungIndex, branchIndex, insertionIndex) => ResolvePendingEditorForms(() =>
         {
             selectedRung = rungIndex;
             selectedBranch = branchIndex;
@@ -6936,7 +7350,7 @@ public partial class SimulatorShell : CanvasLayer
             RefreshEditor();
             canvas.SelectInsertionPoint(selectedRung, selectedBranch, selectedInsertionIndex, notify: false);
             output.Text = $"[color=#18864b]Insertion point selected.[/color] Branch {selectedBranch + 1}, position {selectedInsertionIndex + 1}. Choose a contact or comparison instruction.";
-        };
+        }, () => RestoreEditorSelection());
         canvas.InstructionDropRequested += (kind, _, _, _) =>
         {
             // A dragged coil is an output instruction. Commit the default
@@ -6954,9 +7368,21 @@ public partial class SimulatorShell : CanvasLayer
             canvas.ClearElementSelection();
             RefreshEditor();
         };
+        bool HasSelectedBranch() => selectedRung >= 0 && selectedRung < document.Rungs.Count
+            && selectedBranch >= 0 && selectedBranch < document.Rungs[selectedRung].Branches.Count;
+        bool HasSelectedContact() => HasSelectedBranch() && selectedContact >= 0
+            && selectedContact < document.Rungs[selectedRung].Branches[selectedBranch].Contacts.Count;
         void InsertOrChangeContact(bool normallyClosed)
         {
-            if (document.Rungs.Count == 0 || tagSelector.ItemCount == 0) return;
+            if (selectedRung >= 0 && selectedRung < document.Rungs.Count && !document.Rungs[selectedRung].IsFlat && selectedContact < 0)
+            {
+                if (tagSelector.ItemCount == 0 || tagSelector.Selected < 0) return;
+                var target = canvas.CaptureTreeTarget();
+                DispatchTreeCommand(new(target.Slot >= 0 ? LadderTreeCommandId.InsertAt : LadderTreeCommandId.InsertAfter,
+                    target, new("pending-contact", LadderNodeKind.Contact, tagSelector.GetItemText(tagSelector.Selected), normallyClosed)));
+                return;
+            }
+            if (!HasSelectedBranch() || tagSelector.ItemCount == 0 || tagSelector.Selected < 0) return;
             if (selectedContact >= 0)
             {
                 var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
@@ -6989,7 +7415,15 @@ public partial class SimulatorShell : CanvasLayer
             InsertOrChangeContact(true);
         void InsertOrChangeEdge(LadderEdgeMode edgeMode)
         {
-            if (document.Rungs.Count == 0 || tagSelector.ItemCount == 0) return;
+            if (selectedRung >= 0 && selectedRung < document.Rungs.Count && !document.Rungs[selectedRung].IsFlat && selectedContact < 0)
+            {
+                if (tagSelector.ItemCount == 0 || tagSelector.Selected < 0) return;
+                var target = canvas.CaptureTreeTarget();
+                DispatchTreeCommand(new(target.Slot >= 0 ? LadderTreeCommandId.InsertAt : LadderTreeCommandId.InsertAfter,
+                    target, new("pending-edge", LadderNodeKind.Contact, tagSelector.GetItemText(tagSelector.Selected), EdgeMode: edgeMode)));
+                return;
+            }
+            if (!HasSelectedBranch() || tagSelector.ItemCount == 0 || tagSelector.Selected < 0) return;
             if (selectedContact >= 0)
             {
                 var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
@@ -7019,6 +7453,8 @@ public partial class SimulatorShell : CanvasLayer
         addBranch.Pressed += () =>
         {
             if (document.Rungs.Count == 0) return;
+            if (!document.Rungs[selectedRung].IsFlat)
+            { DispatchTreeCommand(new(LadderTreeCommandId.WrapParallel, canvas.CaptureTreeTarget())); return; }
             if (!BeginEdit("Add parallel branch")) return;
             document.AddParallelBranch(selectedRung);
             selectedBranch = document.Rungs[selectedRung].Branches.Count - 1;
@@ -7031,6 +7467,15 @@ public partial class SimulatorShell : CanvasLayer
         removeBranch.Pressed += () =>
         {
             if (document.Rungs.Count == 0) return;
+            if (!document.Rungs[selectedRung].IsFlat)
+            {
+                var target = canvas.CaptureTreeTarget();
+                var parent = EditableLadderTree.Visit(document.Rungs[selectedRung].Root)
+                    .FirstOrDefault(n => n.Kind == LadderNodeKind.Parallel && n.Children?.Any(c => c.Id == target.NodeId) == true);
+                if (parent is null)
+                { output.Text = "[color=#d17a00]Select an exact parallel path boundary before removing a path.[/color]"; return; }
+                DispatchTreeCommand(new(LadderTreeCommandId.Delete, target)); return;
+            }
             var branches = document.Rungs[selectedRung].Branches;
             if (branches.Count <= 1)
             {
@@ -7067,6 +7512,7 @@ public partial class SimulatorShell : CanvasLayer
                 timerTag = document.AddTag(name, PlcVariableRole.Memory, type: PlcVariableType.Timer);
             }
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = true;
             rung.IsTimerReset = false;
             rung.IsCounter = false;
@@ -7102,6 +7548,7 @@ public partial class SimulatorShell : CanvasLayer
                 timerTag = document.AddTag(name, PlcVariableRole.Memory, type: PlcVariableType.Timer);
             }
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = true;
             rung.IsCounter = false;
@@ -7126,6 +7573,7 @@ public partial class SimulatorShell : CanvasLayer
                     _ => siemens ? "Insert assignment coil" : "Insert OTE",
                 })) return;
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = false;
             rung.IsCounter = false;
@@ -7136,7 +7584,8 @@ public partial class SimulatorShell : CanvasLayer
             rung.IsReturn = false;
             rung.IsJump = false;
             rung.IsLabel = false;
-            rung.CoilVariable = coilSelector.GetItemText(coilSelector.Selected);
+            if (coilSelector.Selected >= 0 && coilSelector.GetItemId(coilSelector.Selected) != int.MaxValue)
+                rung.CoilVariable = coilSelector.GetItemText(coilSelector.Selected);
             rung.CoilMode = mode;
             RefreshEditor();
             var name = mode switch
@@ -7147,6 +7596,7 @@ public partial class SimulatorShell : CanvasLayer
             };
             output.Text = $"[color=#18864b]{name} selected.[/color] The instruction writes {Escape(rung.CoilVariable)} using scan-state semantics.";
         }
+        addAssign.Pressed += () => SelectCoilMode(LadderCoilMode.Assign);
         addSet.Pressed += () => SelectCoilMode(LadderCoilMode.Set);
         addReset.Pressed += () => SelectCoilMode(LadderCoilMode.Reset);
         void SelectCounter(LadderCounterKind kind = LadderCounterKind.CountUp, bool reset = false, bool load = false)
@@ -7163,6 +7613,7 @@ public partial class SimulatorShell : CanvasLayer
                 counterTag = document.AddTag(name, PlcVariableRole.Memory, type: PlcVariableType.Counter);
             }
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = false;
             rung.IsCounter = !reset && !load;
@@ -7203,6 +7654,15 @@ public partial class SimulatorShell : CanvasLayer
                         if (compareLeft.GetItemText(item) == source.Name) { compareLeft.Select(item); break; }
                 if (compareRight.Text == "0") compareRight.Text = "\"F003\"";
             }
+            if (!document.Rungs[selectedRung].IsFlat)
+            {
+                var target = canvas.CaptureTreeTarget();
+                DispatchTreeCommand(new(target.Slot >= 0 ? LadderTreeCommandId.InsertAt : LadderTreeCommandId.InsertAfter,
+                    target, new("pending-comparison", LadderNodeKind.Compare, compareLeft.GetItemText(compareLeft.Selected),
+                        CompareOperator: (LadderCompareOperator)compareOperator.Selected, RightOperand: compareRight.Text)));
+                return;
+            }
+            if (!HasSelectedBranch()) return;
             if (!BeginEdit("Add comparison")) return;
             var contacts = document.Rungs[selectedRung].Branches[selectedBranch].Contacts;
             var insertionIndex = selectedInsertionIndex >= 0 ? selectedInsertionIndex : contacts.Count;
@@ -7252,6 +7712,7 @@ public partial class SimulatorShell : CanvasLayer
                 document.AddTag(name, PlcVariableRole.Memory, type: PlcVariableType.String, initialValue: "");
             }
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = false;
             rung.IsCounter = false;
@@ -7269,8 +7730,15 @@ public partial class SimulatorShell : CanvasLayer
                 : string.IsNullOrWhiteSpace(numericSourceB.Text) ? "0" : numericSourceB.Text.Trim();
             rung.NumericSourceC = string.IsNullOrWhiteSpace(numericSourceC.Text) ? "0" : numericSourceC.Text.Trim();
             RefreshEditor();
-            if (numericDestination.ItemCount == 0) return;
-            rung.NumericDestination = numericDestination.GetItemText(Math.Max(0, numericDestination.Selected));
+            // Property selectors retain invalid configured references so an existing draft is
+            // never silently rewritten. Palette insertion must choose a real writable declaration.
+            var destinations = LadderOperandSymbols.ForDocument(document).Where(symbol => symbol.Writable
+                && (kind == LadderNumericOperationKind.FormatText ? symbol.Type == PlcVariableType.String
+                    : (symbol.Type is PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real)
+                        || kind == LadderNumericOperationKind.Move && (symbol.Type is PlcVariableType.String or PlcVariableType.Enum))).ToArray();
+            var preferred = numericDestination.ItemCount == 0 ? "" : numericDestination.GetItemText(Math.Max(0, numericDestination.Selected));
+            rung.NumericDestination = destinations.FirstOrDefault(symbol => symbol.Name == preferred)?.Name
+                ?? destinations.FirstOrDefault()?.Name ?? "";
             RefreshEditor();
             output.Text = $"[color=#18864b]{kind} inserted.[/color] Typed write executes only while the rung is true.";
         }
@@ -7299,40 +7767,63 @@ public partial class SimulatorShell : CanvasLayer
         addRound.Pressed += () => SelectNumericOperation(LadderNumericOperationKind.Round);
         addCeiling.Pressed += () => SelectNumericOperation(LadderNumericOperationKind.Ceiling);
         addFloor.Pressed += () => SelectNumericOperation(LadderNumericOperationKind.Floor);
+        ConfirmationDialog NamedCreationDialog(string nodeName, string title, Func<string, string> create, out LineEdit nameField, out Label errorField)
+        {
+            var dialog = new ConfirmationDialog { Name = nodeName, Title = title, DialogHideOnOk = false, MinSize = new Vector2I(430, 190), Exclusive = true };
+            var body = new VBoxContainer { OffsetLeft = 16, OffsetTop = 12, OffsetRight = -16, OffsetBottom = -48 };
+            body.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+            var name = new LineEdit { Name = "CreationName", PlaceholderText = "Enter a unique name" };
+            var error = new Label { Name = "CreationError", AutowrapMode = TextServer.AutowrapMode.WordSmart };
+            error.AddThemeColorOverride("font_color", new Color("b3261e"));
+            body.AddChild(name); body.AddChild(error); dialog.AddChild(body); root.AddChild(dialog);
+            void Commit()
+            {
+                error.Text = create(name.Text);
+                if (error.Text.Length == 0) dialog.Hide(); else name.GrabFocus();
+            }
+            dialog.Confirmed += Commit;
+            name.TextSubmitted += _ => Commit();
+            nameField = name; errorField = error;
+            return dialog;
+        }
+        string UniqueDefault(string prefix, System.Collections.Generic.IEnumerable<string> existing)
+        {
+            var names = existing.ToHashSet(StringComparer.Ordinal); var number = 1;
+            while (names.Contains(prefix + number)) number++;
+            return prefix + number;
+        }
+        EditorTarget? blockCreationTarget = null;
+        LadderBlockType pendingBlockType = LadderBlockType.Function;
+        var blockCreation = NamedCreationDialog("CreateBlockDialog", siemens ? "Create program block" : "Create routine", name =>
+        {
+            if (blockCreationTarget is null) return "Creation target expired. Open the form again.";
+            var request = new EditorCommandRequest(EditorCommandId.CreateBlock, blockCreationTarget, Creation: new(name, pendingBlockType));
+            if (!LadderEditorCommands.CanExecute(document, request, ChallengeMutationLocked, out var reason)) return reason;
+            if (!BeginEdit("Create program block", recordHistory: false)) return "Editing unavailable.";
+            blockViewMemory.Remember(document.Id, document.Blocks[document.ActiveBlockIndex].Id,
+                canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical));
+            var result = LadderEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked);
+            if (!result.Applied) return result.Reason;
+            selectedRung = 0; selectedBranch = -1; selectedContact = -1; selectedInsertionIndex = -1; selectedOutput = false;
+            RefreshEditor(); blockItems[^1].Select(0); organization.ScrollToItem(blockItems[^1]);
+            output.Text = $"[color=#18864b]Block created.[/color] {Escape(document.Blocks[^1].Name)} · {pendingBlockType}";
+            return string.Empty;
+        }, out var blockCreationName, out var blockCreationError);
         addBlock.Pressed += () =>
         {
-            if (!BeginEdit(siemens ? "Add function block" : "Add routine")) return;
-            var number = document.Blocks.Count;
-            var selectedType = siemens ? blockTypeSelector.Selected switch
-            {
-                0 => LadderBlockType.OrganizationBlock,
-                1 => LadderBlockType.FunctionBlock,
-                2 => LadderBlockType.Function,
-                3 => LadderBlockType.DataBlock,
-                _ => LadderBlockType.Function,
-            } : LadderBlockType.Function;
-            var typeName = selectedType switch
-            {
-                LadderBlockType.OrganizationBlock => $"OB{number + 1}",
-                LadderBlockType.FunctionBlock => $"FB{number + 1}",
-                LadderBlockType.DataBlock => $"DB{number + 1}",
-                _ => siemens ? $"FC{number + 1}" : $"Routine_{number}",
-            };
-            var block = document.AddBlock(typeName, selectedType);
-            document.SelectBlock(document.Blocks.Count - 1);
-            selectedRung = 0;
-            selectedBranch = 0;
-            selectedContact = -1;
-            selectedInsertionIndex = -1;
-            selectedOutput = false;
-            RefreshEditor();
-            blockItems[^1].Select(0);
-            organization.ScrollToItem(blockItems[^1]);
-            output.Text = $"[color=#18864b]{(siemens ? "Block" : "Routine")} created.[/color] {Escape(block.Name)} is offline and empty.";
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            pendingBlockType = siemens ? blockTypeSelector.Selected switch
+            { 0 => LadderBlockType.OrganizationBlock, 1 => LadderBlockType.FunctionBlock, 2 => LadderBlockType.Function, 3 => LadderBlockType.DataBlock, _ => LadderBlockType.Function } : LadderBlockType.Function;
+            var prefix = pendingBlockType switch { LadderBlockType.OrganizationBlock => "OB", LadderBlockType.FunctionBlock => "FB", LadderBlockType.DataBlock => "DB", _ => siemens ? "FC" : "Routine_" };
+            blockCreationTarget = EditorTarget.CaptureProject(document);
+            blockCreationName.Text = UniqueDefault(prefix, document.Blocks.Select(item => item.Name));
+            blockCreationError.Text = string.Empty;
+            blockCreation.PopupCentered(); blockCreationName.GrabFocus(); blockCreationName.SelectAll();
         };
         addBlockFromTree.Pressed += () => addBlock.EmitSignal(BaseButton.SignalName.Pressed);
         applyBlock.Pressed += () =>
         {
+            if (blockFormDirty && !CurrentForm(blockFormRevision)) return;
             if (document.Blocks.Count == 0) return;
             var normalizedName = blockName.Text.Trim();
             if (normalizedName.Length == 0
@@ -7355,7 +7846,7 @@ public partial class SimulatorShell : CanvasLayer
                     _ => block.BlockType,
                 };
             }
-            RefreshEditor();
+            blockFormDirty = false; RefreshEditor();
             blockItems[document.ActiveBlockIndex].Select(0);
             output.Text = $"[color=#18864b]{(siemens ? "Block" : "Routine")} renamed.[/color] Stable calls and task references still target {Escape(block.Name)}.";
         };
@@ -7381,6 +7872,7 @@ public partial class SimulatorShell : CanvasLayer
         };
         addInterface.Pressed += () =>
         {
+            if (interfaceFormDirty && !CurrentForm(interfaceFormRevision)) return;
             if (!siemens || document.Blocks.Count == 0 || string.IsNullOrWhiteSpace(interfaceName.Text)) return;
             var activeBlock = document.Blocks[document.ActiveBlockIndex];
             var parameterName = interfaceName.Text.Trim();
@@ -7395,23 +7887,31 @@ public partial class SimulatorShell : CanvasLayer
                 2 => PlcVariableType.DInt,
                 3 => PlcVariableType.Real,
                 4 => PlcVariableType.Timer,
+                5 => PlcVariableType.Counter,
+                6 => PlcVariableType.String,
+                7 => PlcVariableType.Enum,
                 _ => PlcVariableType.Bool,
             };
-            if (!LadderEditorDocument.TryParseInitialValue(type, interfaceInitial.Text.Trim(), out var initial, out var error))
+            if (!LadderEditorDocument.TryParseInitialValue(type, type == PlcVariableType.String ? interfaceInitial.Text : interfaceInitial.Text.Trim(), out var initial, out var error))
             {
                 output.Text = $"[color=#d64545]Interface parameter rejected.[/color] {Escape(error)}";
                 return;
             }
+            var section = (LadderInterfaceSection)Math.Clamp(interfaceSection.Selected, 0, 4);
+            var domain = type == PlcVariableType.Enum ? interfaceEnumMembers.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) : null;
+            var stagedFormal = new LadderInterfaceParameter(parameterName, type, section, initial, Id: "formal-" + Guid.NewGuid().ToString("N"), EnumMembers: domain);
+            if (activeBlock.SemanticMode == LadderSemanticMode.Parameterized && LadderCallAuthoring.ValidateFormal(activeBlock.BlockType, stagedFormal) is { } invalidFormal)
+            { output.Text = "[color=#d64545]Interface parameter rejected.[/color] " + Escape(invalidFormal); return; }
             // Reject form errors before history/monitor state changes.
             if (!BeginEdit("Add block interface parameter")) return;
             try
             {
-                document.AddInterfaceParameter(activeBlock.Id, parameterName, type,
-                    (LadderInterfaceSection)Math.Clamp(interfaceSection.Selected, 0, 4), initial);
-                interfaceName.Clear();
-                interfaceInitial.Text = "0";
+                activeBlock.Interface.Add(stagedFormal);
+                interfaceFormDirty = false;
+                loadingFormControls = true; interfaceName.Clear();
+                interfaceInitial.Text = "0"; loadingFormControls = false; interfaceFormDirty = false;
                 RefreshEditor();
-                output.Text = $"[color=#18864b]Declaration added.[/color] {Escape(parameterName)} · {type}. Shared project tags remain the offline execution scope.";
+                output.Text = $"[color=#18864b]Declaration added.[/color] {Escape(parameterName)} · {type}. {activeBlock.SemanticMode} scope.";
             }
             catch (InvalidOperationException exception)
             {
@@ -7433,6 +7933,7 @@ public partial class SimulatorShell : CanvasLayer
             if (document.Rungs.Count == 0 || callTarget.ItemCount == 0) return;
             if (!BeginEdit(siemens ? "Insert CALL" : "Insert JSR")) return;
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = false;
             rung.IsCounter = false;
@@ -7453,6 +7954,7 @@ public partial class SimulatorShell : CanvasLayer
             if (document.Rungs.Count == 0) return;
             if (!BeginEdit(siemens ? "Insert RETURN" : "Insert RET")) return;
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = false;
             rung.IsCounter = false;
@@ -7488,6 +7990,7 @@ public partial class SimulatorShell : CanvasLayer
                     ? (siemens ? "Insert LABEL" : "Insert LBL")
                     : "Insert JMP")) return;
             var rung = document.Rungs[selectedRung];
+            rung.HasTerminalAction = true;
             rung.IsTimer = false;
             rung.IsTimerReset = false;
             rung.IsCounter = false;
@@ -7515,6 +8018,7 @@ public partial class SimulatorShell : CanvasLayer
             if (index < 0 || index >= document.Tasks.Count) return;
             selectedTaskIndex = index;
             var task = document.Tasks[index];
+            loadingFormControls = true;
             taskName.Text = task.Name;
             taskKind.Select((int)task.Kind);
             taskPeriod.Value = Math.Max(1, task.Period.TotalMilliseconds);
@@ -7522,30 +8026,38 @@ public partial class SimulatorShell : CanvasLayer
             taskPriority.Value = task.Priority;
             var targetIndex = document.Blocks.FindIndex(block => block.Id == task.EntryBlock);
             if (targetIndex >= 0) taskTarget.Select(targetIndex);
+            loadingFormControls = false; taskFormDirty = false;
         }
+        EditorTarget? taskCreationTarget = null;
+        EditorNamedCreation? pendingTaskCreation = null;
+        var taskCreation = NamedCreationDialog("CreateTaskDialog", siemens ? "Create OB schedule" : "Create task", name =>
+        {
+            if (taskCreationTarget is null || pendingTaskCreation is null) return "Creation target expired. Open the form again.";
+            var request = new EditorCommandRequest(EditorCommandId.CreateTask, taskCreationTarget, Creation: pendingTaskCreation with { Name = name });
+            if (!LadderEditorCommands.CanExecute(document, request, ChallengeMutationLocked, out var reason)) return reason;
+            if (!BeginEdit("Create task", recordHistory: false)) return "Editing unavailable.";
+            var result = LadderEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked);
+            if (!result.Applied) return result.Reason;
+            selectedTaskIndex = document.Tasks.Count - 1; RefreshEditor();
+            taskItems[selectedTaskIndex].Select(0); organization.ScrollToItem(taskItems[selectedTaskIndex]);
+            output.Text = $"[color=#18864b]Schedule created.[/color] {Escape(document.Tasks[selectedTaskIndex].Name)}";
+            return string.Empty;
+        }, out var taskCreationName, out var taskCreationError);
         addTask.Pressed += () =>
         {
-            if (taskTarget.ItemCount == 0) return;
-            if (!BeginEdit(siemens ? "Add OB schedule" : "Add task")) return;
-            var number = document.Tasks.Count + 1;
-            var kind = (LadderTaskKind)taskKind.Selected;
-            var period = kind == LadderTaskKind.Continuous
-                ? document.ScanPeriod
-                : TimeSpan.FromMilliseconds(taskPeriod.Value);
-            var task = document.AddTask(
-                siemens ? $"CyclicOB_{number}" : $"Task_{number}",
-                kind,
-                period,
-                (int)taskPriority.Value,
-                taskTarget.GetItemMetadata(taskTarget.Selected).AsString());
-            selectedTaskIndex = document.Tasks.Count - 1;
-            RefreshEditor();
-            taskItems[selectedTaskIndex].Select(0);
-            organization.ScrollToItem(taskItems[selectedTaskIndex]);
-            output.Text = $"[color=#18864b]{(siemens ? "OB" : "Task")} created.[/color] {Escape(task.Name)} is scheduled offline.";
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            if (taskTarget.ItemCount == 0) { output.Text = "Create an entry block before a task."; return; }
+            taskCreationTarget = EditorTarget.CaptureProject(document);
+            pendingTaskCreation = new(string.Empty, TaskKind: (LadderTaskKind)taskKind.Selected,
+                Period: taskKind.Selected == (int)LadderTaskKind.Continuous ? document.ScanPeriod : TimeSpan.FromMilliseconds(taskPeriod.Value),
+                Priority: (int)taskPriority.Value, EntryBlock: taskTarget.GetItemMetadata(taskTarget.Selected).AsString());
+            taskCreationName.Text = UniqueDefault(siemens ? "CyclicOB_" : "Task_", document.Tasks.Select(item => item.Name));
+            taskCreationError.Text = string.Empty;
+            taskCreation.PopupCentered(); taskCreationName.GrabFocus(); taskCreationName.SelectAll();
         };
         applyTask.Pressed += () =>
         {
+            if (taskFormDirty && !CurrentForm(taskFormRevision)) return;
             if (selectedTaskIndex < 0 || selectedTaskIndex >= document.Tasks.Count || taskTarget.ItemCount == 0) return;
             var normalizedName = taskName.Text.Trim();
             if (normalizedName.Length == 0
@@ -7564,7 +8076,7 @@ public partial class SimulatorShell : CanvasLayer
                 : TimeSpan.FromMilliseconds(taskPeriod.Value);
             task.Priority = (int)taskPriority.Value;
             task.EntryBlock = taskTarget.GetItemMetadata(taskTarget.Selected).AsString();
-            RefreshEditor();
+            taskFormDirty = false; RefreshEditor();
             output.Text = $"[color=#18864b]Schedule updated.[/color] {Escape(task.Name)} will be compiler-validated before load.";
         };
         removeTask.Pressed += () =>
@@ -7587,10 +8099,13 @@ public partial class SimulatorShell : CanvasLayer
         taskKind.ItemSelected += index => taskPeriod.Editable = index == (long)LadderTaskKind.Periodic;
         addRung.Pressed += () =>
         {
+            var insertionIndex = selectedRung >= 0 && selectedRung < document.Rungs.Count ? selectedRung + 1 : document.Rungs.Count;
             if (!BeginEdit(siemens ? "Add network" : "Add rung")) return;
             var coil = document.Tags.FirstOrDefault(tag => tag.Type == PlcVariableType.Bool && tag.Role != PlcVariableRole.Input)?.Name ?? string.Empty;
-            document.AddRung(siemens ? "New network" : "New rung comment", coil);
-            selectedRung = document.Rungs.Count - 1;
+            var added = document.AddRung(siemens ? "New network" : "New rung comment", coil);
+            document.Rungs.RemoveAt(document.Rungs.Count - 1);
+            document.Rungs.Insert(insertionIndex, added);
+            selectedRung = insertionIndex;
             selectedBranch = 0;
             selectedContact = -1;
             selectedInsertionIndex = 0;
@@ -7598,334 +8113,158 @@ public partial class SimulatorShell : CanvasLayer
             RefreshEditor();
             canvas.SelectInsertionPoint(selectedRung, selectedBranch, selectedInsertionIndex, notify: false);
         };
-        void MoveSelectedContact(int offset)
+        EditorTarget? CaptureSelectionTarget()
         {
-            if (selectedContact < 0 || selectedRung < 0 || selectedRung >= document.Rungs.Count) return;
-            if (!BeginEdit(offset < 0 ? "Move instruction left" : "Move instruction right")) return;
-            selectedContact = document.MoveContact(selectedRung, selectedBranch, selectedContact, offset);
+            if (selectedRung < 0 || selectedRung >= document.Rungs.Count) return null;
+            var role = selectedOutput ? EditorOperandRole.Output
+                : HasSelectedContact() ? EditorOperandRole.Contact
+                : selectedInsertionIndex >= 0 && HasSelectedBranch() ? EditorOperandRole.Insertion
+                : EditorOperandRole.Network;
+            return EditorTarget.Capture(document, selectedRung,
+                role is EditorOperandRole.Contact or EditorOperandRole.Insertion ? selectedBranch : -1,
+                role == EditorOperandRole.Insertion ? selectedInsertionIndex : selectedContact, role);
+        }
+        bool DispatchEditorCommand(EditorCommandId command, EditorTarget? exactTarget = null)
+        {
+            if (exactTarget is null && selectedRung >= 0 && selectedRung < document.Rungs.Count
+                && !canvas.OutputSelected && !string.IsNullOrEmpty(canvas.SelectedNodeId)
+                && (!document.Rungs[selectedRung].IsFlat || selectedContact < 0 && selectedInsertionIndex < 0))
+            {
+                var treeCommand = command == EditorCommandId.Delete ? LadderTreeCommandId.Delete
+                    : command == EditorCommandId.Copy ? LadderTreeCommandId.Copy
+                    : command == EditorCommandId.Paste ? canvas.CaptureTreeTarget().Slot >= 0 ? LadderTreeCommandId.PasteAt : LadderTreeCommandId.PasteAfter
+                    : command == EditorCommandId.MoveLeft ? LadderTreeCommandId.MoveLeft : LadderTreeCommandId.MoveRight;
+                if (command is EditorCommandId.Delete or EditorCommandId.Copy or EditorCommandId.Paste or EditorCommandId.MoveLeft or EditorCommandId.MoveRight)
+                    return DispatchTreeCommand(new(treeCommand, canvas.CaptureTreeTarget(),
+                        command == EditorCommandId.Paste ? canvas.TreeClipboard
+                            ?? (_ladderCommandClipboard is EditorContactClipboard contactClipboard ? EditableLadderTree.FromContact(contactClipboard.Contact) : null) : null));
+            }
+            var target = exactTarget ?? CaptureSelectionTarget();
+            if (target is null) return false;
+            var request = new EditorCommandRequest(command, target, _ladderCommandClipboard);
+            if (!LadderEditorCommands.CanExecute(document, request, ChallengeMutationLocked || refreshingEditor, out var reason))
+            {
+                output.Text = $"[color=#d17a00]Command rejected.[/color] {Escape(reason)}";
+                return false;
+            }
+            var result = LadderEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked);
+            if (!result.Applied) { output.Text = $"[color=#d17a00]Command rejected.[/color] {Escape(result.Reason)}"; return false; }
+            if (command is not (EditorCommandId.Copy or EditorCommandId.CopyNetwork)) BeginEdit(command.ToString(), recordHistory: false);
+            if (result.Clipboard is not null)
+            {
+                _ladderCommandClipboard = result.Clipboard;
+                // Keep legacy verifier fields synchronized during command migration.
+                _ladderContactClipboard = (result.Clipboard as EditorContactClipboard)?.Contact;
+                _ladderRungClipboard = (result.Clipboard as EditorNetworkClipboard)?.Network;
+                output.Text = result.Clipboard is EditorOutputClipboard
+                    ? "[color=#18864b]Output copied.[/color] Paste onto an output to replace only its action."
+                    : result.Clipboard is EditorContactClipboard ? "[color=#18864b]Instruction copied.[/color] Paste into a series slot."
+                    : "[color=#18864b]Network copied.[/color] Paste onto a network header to insert after it.";
+                return true;
+            }
+            if (result.Selection is not null && LadderEditorCommands.TryResolve(document, result.Selection, out var rung, out var branch, out var node, out _))
+            {
+                selectedRung = rung; selectedBranch = branch; selectedContact = result.Selection.Role == EditorOperandRole.Contact ? node : -1;
+                selectedInsertionIndex = -1; selectedOutput = result.Selection.Role == EditorOperandRole.Output;
+            }
+            else { selectedRung = 0; selectedBranch = -1; selectedContact = -1; selectedInsertionIndex = -1; selectedOutput = false; }
             RefreshEditor();
-            canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-            output.Text = $"[color=#18864b]Instruction moved.[/color] Position {selectedContact + 1} in Branch {selectedBranch + 1}.";
+            if (selectedOutput) canvas.SelectElement(selectedRung, -1, -1, true, notify: false);
+            else if (selectedContact >= 0) canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
+            else canvas.SelectRung(selectedRung);
+            output.Text = $"[color=#18864b]{Escape(command.ToString())} applied.[/color]";
+            return true;
         }
-        moveContactLeft.Pressed += () => MoveSelectedContact(-1);
-        moveContactRight.Pressed += () => MoveSelectedContact(1);
-        remove.Pressed += () =>
+        void DispatchMove(int direction)
         {
-            if (document.Rungs.Count == 0) return;
-            if (selectedOutput)
-            {
-                output.Text = "[color=#d17a00]Output retained.[/color] Replace its instruction type or delete the entire network/rung from an empty branch.";
-                return;
-            }
-            var branch = document.Rungs[selectedRung].Branches[selectedBranch];
-            if (branch.Contacts.Count == 0 && document.Rungs[selectedRung].Branches.Count <= 1 && document.Rungs.Count <= 1) return;
-            var deleteDescription = branch.Contacts.Count > 0
-                ? "Delete instruction"
-                : document.Rungs[selectedRung].Branches.Count > 1
-                    ? "Delete parallel branch"
-                    : siemens ? "Delete network" : "Delete rung";
-            if (!BeginEdit(deleteDescription)) return;
-            if (branch.Contacts.Count > 0)
-            {
-                var removeIndex = selectedContact >= 0 ? selectedContact : branch.Contacts.Count - 1;
-                document.RemoveContact(selectedRung, selectedBranch, removeIndex);
-                selectedContact = -1;
-                selectedInsertionIndex = Math.Clamp(removeIndex, 0, document.Rungs[selectedRung].Branches[selectedBranch].Contacts.Count);
-                canvas.ClearElementSelection();
-            }
-            else if (document.Rungs[selectedRung].Branches.Count > 1)
-            {
-                document.RemoveParallelBranch(selectedRung, selectedBranch);
-                selectedBranch = Math.Clamp(selectedBranch, 0, document.Rungs[selectedRung].Branches.Count - 1);
-                selectedInsertionIndex = -1;
-            }
-            else if (document.Rungs.Count > 1)
-            {
-                document.RemoveRung(selectedRung);
-                selectedInsertionIndex = -1;
-            }
-            RefreshEditor();
-            if (selectedInsertionIndex >= 0 && document.Rungs.Count > 0)
-                canvas.SelectInsertionPoint(selectedRung, selectedBranch, selectedInsertionIndex, notify: false);
+            if (selectedRung >= 0 && selectedRung < document.Rungs.Count && !document.Rungs[selectedRung].IsFlat)
+                DispatchTreeCommand(new(direction < 0 ? LadderTreeCommandId.MoveLeft : LadderTreeCommandId.MoveRight, canvas.CaptureTreeTarget()));
+            else DispatchEditorCommand(direction < 0 ? EditorCommandId.MoveLeft : EditorCommandId.MoveRight);
+        }
+        refreshTreeActions = () =>
+        {
+            if (selectedRung < 0 || selectedRung >= document.Rungs.Count) { removeBranch.Disabled = true; return; }
+            var rung = document.Rungs[selectedRung];
+            if (rung.IsFlat) { removeBranch.Disabled = ChallengeMutationLocked || rung.Branches.Count <= 1; return; }
+            var nodeId = canvas.SelectedNodeId;
+            var parent = EditableLadderTree.Visit(rung.Root).FirstOrDefault(n => n.Children?.Any(c => c.Id == nodeId) == true);
+            var index = parent?.Children?.ToList().FindIndex(n => n.Id == nodeId) ?? -1;
+            moveContactLeft.Disabled = ChallengeMutationLocked || index <= 0;
+            moveContactRight.Disabled = ChallengeMutationLocked || parent?.Children is null || index < 0 || index >= parent.Children.Count - 1;
+            removeBranch.Disabled = ChallengeMutationLocked || parent?.Kind != LadderNodeKind.Parallel;
         };
-
-        // Keep editing reachable from the ladder surface itself. This is the
-        // same command path as the toolbar and context menu, so keyboard edits
-        // cannot bypass history, validation state, or selection updates.
-        canvas.DeleteRequested += () => remove.EmitSignal(BaseButton.SignalName.Pressed);
-        canvas.MoveRequested += offset =>
+        moveContactLeft.Pressed += () => DispatchMove(-1);
+        moveContactRight.Pressed += () => DispatchMove(1);
+        remove.Pressed += () => DispatchEditorCommand(EditorCommandId.Delete);
+        canvas.DeleteRequested += () => DispatchEditorCommand(EditorCommandId.Delete);
+        canvas.MoveRequested += DispatchMove;
+        void CutLadderSelection(EditorTarget? exactTarget = null)
         {
-            if (offset < 0 && !moveContactLeft.Disabled)
-                moveContactLeft.EmitSignal(BaseButton.SignalName.Pressed);
-            else if (offset > 0 && !moveContactRight.Disabled)
-                moveContactRight.EmitSignal(BaseButton.SignalName.Pressed);
-        };
-
-        void CopyLadderSelection()
-        {
-            if (document.Rungs.Count == 0) return;
-            var rung = document.Rungs[Math.Clamp(selectedRung, 0, document.Rungs.Count - 1)];
-            if (selectedContact >= 0 && selectedBranch >= 0
-                && selectedBranch < rung.Branches.Count
-                && selectedContact < rung.Branches[selectedBranch].Contacts.Count)
-            {
-                _ladderContactClipboard = rung.Branches[selectedBranch].Contacts[selectedContact] with { };
-                _ladderRungClipboard = null;
-                output.Text = $"[color=#18864b]Instruction copied.[/color] {Escape(_ladderContactClipboard.Variable)} is ready to paste into a series slot.";
-                return;
-            }
-            _ladderRungClipboard = document.CaptureRung(selectedRung);
-            _ladderContactClipboard = null;
-            output.Text = $"[color=#18864b]{(siemens ? "Network" : "Rung")} copied.[/color] Stable IDs will be regenerated when pasted.";
+            if (ChallengeMutationLocked || refreshingEditor) return;
+            if (exactTarget is null && !canvas.OutputSelected && canvas.SelectedNodeId.Length > 0 && !document.Rungs[canvas.SelectedRung].IsFlat)
+            { DispatchTreeCommand(new(LadderTreeCommandId.Cut, canvas.CaptureTreeTarget())); return; }
+            var target = exactTarget ?? CaptureSelectionTarget(); if (target is null) return;
+            var deletion = new EditorCommandRequest(EditorCommandId.Delete, target);
+            if (!LadderEditorCommands.CanExecute(document, deletion, ChallengeMutationLocked, out _)) return;
+            var copied = LadderEditorCommands.Execute(document, _ladderHistory, new(EditorCommandId.Copy, target), ChallengeMutationLocked);
+            if (!copied.Applied) return;
+            if (!DispatchEditorCommand(EditorCommandId.Delete, target)) return;
+            _ladderCommandClipboard = copied.Clipboard;
+            _ladderContactClipboard = (copied.Clipboard as EditorContactClipboard)?.Contact;
+            _ladderRungClipboard = (copied.Clipboard as EditorNetworkClipboard)?.Network;
         }
-
-        void PasteLadderClipboard()
-        {
-            if (_ladderContactClipboard is not null)
-            {
-                if (document.Rungs.Count == 0) return;
-                selectedRung = Math.Clamp(selectedRung, 0, document.Rungs.Count - 1);
-                var rung = document.Rungs[selectedRung];
-                selectedBranch = Math.Clamp(selectedBranch, 0, Math.Max(0, rung.Branches.Count - 1));
-                var contacts = rung.Branches[selectedBranch].Contacts;
-                var insertionIndex = selectedInsertionIndex >= 0
-                    ? Math.Clamp(selectedInsertionIndex, 0, contacts.Count)
-                    : selectedContact >= 0 ? Math.Min(selectedContact + 1, contacts.Count) : contacts.Count;
-                if (!BeginEdit("Paste instruction")) return;
-                document.PasteContact(_ladderContactClipboard, selectedRung, selectedBranch, insertionIndex);
-                selectedContact = insertionIndex;
-                selectedInsertionIndex = -1;
-                selectedOutput = false;
-                RefreshEditor();
-                canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-                output.Text = "[color=#18864b]Instruction pasted.[/color] A new stable instruction ID was assigned.";
-                return;
-            }
-            if (_ladderRungClipboard is not null)
-            {
-                var insertionIndex = document.Rungs.Count == 0
-                    ? 0
-                    : Math.Clamp(selectedRung + 1, 0, document.Rungs.Count);
-                if (!BeginEdit(siemens ? "Paste network" : "Paste rung")) return;
-                document.PasteRung(_ladderRungClipboard, insertionIndex);
-                selectedRung = insertionIndex;
-                selectedBranch = 0;
-                selectedContact = -1;
-                selectedInsertionIndex = -1;
-                selectedOutput = false;
-                RefreshEditor();
-                canvas.SelectRung(selectedRung);
-                output.Text = $"[color=#18864b]{(siemens ? "Network" : "Rung")} pasted.[/color] All rung, branch, and instruction IDs were regenerated.";
-                return;
-            }
-            output.Text = "[color=#d17a00]Clipboard empty.[/color] Select an instruction or rung, then Copy.";
-        }
-
+        canvas.CutRequested += () => CutLadderSelection();
+        void CopyLadderSelection() => DispatchEditorCommand(EditorCommandId.Copy);
+        void PasteLadderClipboard() => DispatchEditorCommand(EditorCommandId.Paste);
         canvas.CopyRequested += CopyLadderSelection;
         canvas.PasteRequested += PasteLadderClipboard;
+        bool DispatchTreeCommand(LadderTreeEditorRequest request)
+        {
+            var result = LadderTreeEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked || refreshingEditor);
+            if (!result.Applied)
+            { output.Text = $"[color=#d17a00]Tree command rejected.[/color] {Escape(result.Reason)}"; return false; }
+            if (result.Clipboard is not null) canvas.TreeClipboard = result.Clipboard;
+            if (request.Command != LadderTreeCommandId.Copy) BeginEdit(request.Command.ToString(), recordHistory: false);
+            RefreshEditor();
+            var rungIndex = document.Rungs.FindIndex(item => item.Id == request.Target.NetworkId);
+            if (rungIndex >= 0) canvas.SelectTreeNode(rungIndex, result.SelectionId);
+            output.Text = $"[color=#18864b]{Escape(request.Command.ToString())} applied.[/color]";
+            return true;
+        }
+        canvas.TreeCommandRequested += request => DispatchTreeCommand(request);
         instructionContextMenu.IdPressed += id =>
         {
+            // Even read-only popup actions reject obsolete targets. Never use the
+            // currently selected instruction as a fallback after undo or block switch.
+            if (popupTarget is null || !LadderEditorCommands.TryResolve(document, popupTarget, out var targetRung, out var targetBranch, out var targetNode, out _))
+            { output.Text = "[color=#d17a00]Context target expired.[/color] Open its menu again."; return; }
+            selectedRung = targetRung; selectedBranch = targetBranch;
+            selectedContact = popupTarget.Role == EditorOperandRole.Contact ? targetNode : -1;
+            selectedInsertionIndex = popupTarget.Role == EditorOperandRole.Insertion ? targetNode : -1;
+            selectedOutput = popupTarget.Role == EditorOperandRole.Output;
+            RefreshEditor();
             if (id == 0) OpenInstructionProperties();
-            else if (id == 1) remove.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 1) DispatchEditorCommand(EditorCommandId.Delete, popupTarget);
             else if (id == 2) RenderInstructionHelp(SelectedInstructionHelpKey(), true);
-            else if (id == 3) CopyLadderSelection();
-            else if (id == 4) PasteLadderClipboard();
+            else if (id == 3) DispatchEditorCommand(EditorCommandId.Copy, popupTarget);
+            else if (id == 4) DispatchEditorCommand(EditorCommandId.Paste, popupTarget);
+            else if (id == 6) DispatchEditorCommand(EditorCommandId.CopyNetwork, popupTarget);
+            else if (id == 7) CutLadderSelection(popupTarget);
         };
-        rungLabel.TextSubmitted += value =>
+        foreach (var textField in new[] { rungLabel, compareRight, programControlLabel, numericSourceA, numericSourceB, numericSourceC })
         {
-            if (document.Rungs.Count == 0) return;
-            if (!BeginEdit(siemens ? "Edit network title" : "Edit rung comment")) return;
-            document.Rungs[selectedRung].Label = value.Trim();
-            RefreshEditor();
-        };
-        contactTypeSelector.ItemSelected += index =>
-        {
-            if (selectedContact < 0 || document.Rungs.Count == 0) return;
-            var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
-            if (current.IsComparison) return;
-            var normallyClosed = index is 1 or 3;
-            var edgeMode = index switch
+            textField.TextChanged += _ => StageProperty();
+            textField.TextSubmitted += _ => ApplyProperties();
+            textField.FocusExited += () => propertyEdit?.FocusLost();
+            textField.GuiInput += input =>
             {
-                2 => LadderEdgeMode.Rising,
-                3 => LadderEdgeMode.Falling,
-                _ => LadderEdgeMode.None,
+                if (input is InputEventKey { Pressed: true, Keycode: Key.Escape }) { CancelProperties(); textField.AcceptEvent(); }
             };
-            if (current.NormallyClosed == normallyClosed && current.EdgeMode == edgeMode) return;
-            if (!BeginEdit("Change contact instruction type")) return;
-            document.ReplaceContact(selectedRung, selectedBranch, selectedContact,
-                current with { NormallyClosed = normallyClosed, EdgeMode = edgeMode });
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-        };
-        tagSelector.ItemSelected += index =>
-        {
-            if (selectedContact < 0 || document.Rungs.Count == 0) return;
-            var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
-            if (current.IsComparison) return;
-            var variable = tagSelector.GetItemText((int)index);
-            if (current.Variable == variable || !BeginEdit("Change contact operand")) return;
-            document.ReplaceContact(selectedRung, selectedBranch, selectedContact, current with { Variable = variable });
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-        };
-        compareLeft.ItemSelected += index =>
-        {
-            if (selectedContact < 0 || document.Rungs.Count == 0) return;
-            var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
-            if (!current.IsComparison) return;
-            var operand = compareLeft.GetItemText((int)index);
-            if (current.Variable == operand || !BeginEdit("Change comparison operand")) return;
-            document.ReplaceContact(selectedRung, selectedBranch, selectedContact, current with { Variable = operand });
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-        };
-        compareOperator.ItemSelected += index =>
-        {
-            if (selectedContact < 0 || document.Rungs.Count == 0) return;
-            var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
-            if (!current.IsComparison) return;
-            var comparison = (LadderCompareOperator)index;
-            if (current.CompareOperator == comparison || !BeginEdit("Change comparison operator")) return;
-            document.ReplaceContact(selectedRung, selectedBranch, selectedContact, current with { CompareOperator = comparison });
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-        };
-        compareRight.TextSubmitted += value =>
-        {
-            if (selectedContact < 0 || document.Rungs.Count == 0 || string.IsNullOrWhiteSpace(value)) return;
-            var current = document.Rungs[selectedRung].Branches[selectedBranch].Contacts[selectedContact];
-            if (!current.IsComparison) return;
-            var operand = value.Trim();
-            if (current.RightOperand == operand || !BeginEdit("Change comparison operand")) return;
-            document.ReplaceContact(selectedRung, selectedBranch, selectedContact, current with { RightOperand = operand });
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, selectedBranch, selectedContact, notify: false);
-        };
-        coilSelector.ItemSelected += index =>
-        {
-            if (document.Rungs.Count == 0) return;
-            if (!BeginEdit("Change output tag")) return;
-            var rung = document.Rungs[selectedRung];
-            rung.IsTimer = false;
-            rung.IsTimerReset = false;
-            rung.IsCounter = false;
-            rung.IsCounterReset = false;
-            rung.IsCounterLoad = false;
-            rung.IsNumericOperation = false;
-            rung.IsCall = false;
-            rung.IsReturn = false;
-            rung.IsJump = false;
-            rung.IsLabel = false;
-            rung.CoilVariable = coilSelector.GetItemText((int)index);
-            RefreshEditor();
-        };
-        coilModeSelector.ItemSelected += index => SelectCoilMode((LadderCoilMode)index);
-        timerSelector.ItemSelected += index =>
-        {
-            if (document.Rungs.Count == 0) return;
-            if (!BeginEdit("Change TON instance")) return;
-            var rung = document.Rungs[selectedRung];
-            if (!rung.IsTimer && !rung.IsTimerReset) rung.IsTimer = true;
-            rung.IsCounter = false;
-            rung.IsCounterReset = false;
-            rung.IsCounterLoad = false;
-            rung.IsNumericOperation = false;
-            rung.IsCall = false;
-            rung.IsReturn = false;
-            rung.IsJump = false;
-            rung.IsLabel = false;
-            rung.TimerVariable = timerSelector.GetItemText((int)index);
-            RefreshEditor();
-        };
-        timerPreset.ValueChanged += value =>
-        {
-            if (document.Rungs.Count == 0) return;
-            if (!BeginEdit("Change TON preset")) return;
-            document.Rungs[selectedRung].TimerPreset = TimeSpan.FromMilliseconds(value);
-            foreach (var ladderCanvas in _ladderCanvases) ladderCanvas.RefreshDocument();
-        };
-        counterSelector.ItemSelected += index =>
-        {
-            if (document.Rungs.Count == 0) return;
-            if (!BeginEdit("Change counter instance")) return;
-            var rung = document.Rungs[selectedRung];
-            rung.IsTimer = false;
-            rung.IsTimerReset = false;
-            if (!rung.IsCounter && !rung.IsCounterReset && !rung.IsCounterLoad)
-            {
-                rung.IsCounter = true;
-                rung.CounterKind = LadderCounterKind.CountUp;
-            }
-            rung.IsNumericOperation = false;
-            rung.IsCall = false;
-            rung.IsReturn = false;
-            rung.IsJump = false;
-            rung.IsLabel = false;
-            rung.CounterVariable = counterSelector.GetItemText((int)index);
-            RefreshEditor();
-        };
-        counterPreset.ValueChanged += value =>
-        {
-            if (document.Rungs.Count == 0) return;
-            if (!BeginEdit("Change counter preset")) return;
-            document.Rungs[selectedRung].CounterPreset = (long)value;
-            foreach (var ladderCanvas in _ladderCanvases) ladderCanvas.RefreshDocument();
-        };
-        callTarget.ItemSelected += index =>
-        {
-            if (document.Rungs.Count == 0 || !selectedOutput || !document.Rungs[selectedRung].IsCall) return;
-            var target = callTarget.GetItemMetadata((int)index).AsString();
-            if (document.Rungs[selectedRung].CallTarget == target || !BeginEdit("Change CALL/JSR target")) return;
-            document.Rungs[selectedRung].CallTarget = target;
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, -1, -1, output: true, notify: false);
-        };
-        void ApplyProgramControlLabel()
-        {
-            if (document.Rungs.Count == 0 || !selectedOutput) return;
-            var rung = document.Rungs[selectedRung];
-            if (!rung.IsJump && !rung.IsLabel) return;
-            var value = programControlLabel.Text.Trim();
-            if (value.Length == 0 || value == rung.ProgramControlLabel) return;
-            if (!BeginEdit(rung.IsJump ? "Change JMP target" : "Rename LBL/LABEL")) return;
-            rung.ProgramControlLabel = value;
-            RefreshEditor();
-            canvas.SelectElement(selectedRung, -1, -1, output: true, notify: false);
         }
-        programControlLabel.TextSubmitted += _ => ApplyProgramControlLabel();
-        programControlLabel.FocusExited += ApplyProgramControlLabel;
-        void ApplyNumericSourceA()
-        {
-            if (document.Rungs.Count == 0 || !document.Rungs[selectedRung].IsNumericOperation) return;
-            var source = string.IsNullOrWhiteSpace(numericSourceA.Text) ? "0" : numericSourceA.Text.Trim();
-            if (document.Rungs[selectedRung].NumericSourceA == source) return;
-            if (!BeginEdit("Change numeric source")) return;
-            document.Rungs[selectedRung].NumericSourceA = source;
-            RefreshEditor();
-        }
-        numericSourceA.TextSubmitted += _ => ApplyNumericSourceA();
-        numericSourceA.FocusExited += ApplyNumericSourceA;
-        numericDestination.ItemSelected += index =>
-        {
-            if (document.Rungs.Count == 0 || !document.Rungs[selectedRung].IsNumericOperation) return;
-            if (!BeginEdit("Change numeric destination")) return;
-            document.Rungs[selectedRung].NumericDestination = numericDestination.GetItemText((int)index);
-            RefreshEditor();
-        };
-        numericSourceB.TextSubmitted += text =>
-        {
-            if (document.Rungs.Count == 0 || !document.Rungs[selectedRung].IsNumericOperation) return;
-            if (!BeginEdit("Change numeric operand")) return;
-            document.Rungs[selectedRung].NumericSourceB = text.Trim();
-            RefreshEditor();
-        };
-        numericSourceC.TextSubmitted += text =>
-        {
-            if (document.Rungs.Count == 0 || !document.Rungs[selectedRung].IsNumericOperation) return;
-            if (!BeginEdit("Change numeric operand")) return;
-            document.Rungs[selectedRung].NumericSourceC = text.Trim();
-            RefreshEditor();
-        };
+        foreach (var selector in new[] { contactTypeSelector, tagSelector, compareLeft, compareOperator, coilSelector,
+            coilModeSelector, timerSelector, counterSelector, callTarget, numericDestination })
+            selector.ItemSelected += _ => StageProperty();
+        timerPreset.ValueChanged += _ => StageProperty(); counterPreset.ValueChanged += _ => StageProperty();
         tagType.ItemSelected += index =>
         {
             var isInstance = index is 1 or 2;
@@ -7980,7 +8319,8 @@ public partial class SimulatorShell : CanvasLayer
         };
         addTag.Pressed += () =>
         {
-            if (string.IsNullOrWhiteSpace(tagName.Text)) return;
+            if (string.IsNullOrWhiteSpace(tagName.Text))
+            { output.Text = "[color=#d64545]Tag definition rejected.[/color] Enter a non-empty tag name."; tagName.GrabFocus(); return; }
             var type = SelectedTagType();
             var role = SelectedTagRole(type);
             if (!TryReadTagInitialValue(type, out var initialValue)) return;
@@ -7994,18 +8334,92 @@ public partial class SimulatorShell : CanvasLayer
             if (!PreflightTagEdit(AddDefinition)) return;
             if (!BeginEdit("Add tag")) return;
             AddDefinition(document);
+            tagFormDirty = false;
+            loadingFormControls = true;
             tagName.Clear();
             tagInitialValue.Text = type switch
                 { PlcVariableType.Bool => "FALSE", PlcVariableType.String => "", PlcVariableType.Enum => "Stopped", _ => "0" };
             RefreshTagBindingOptions(type, role, string.Empty);
-            RefreshEditor();
+            loadingFormControls = false; tagFormDirty = false; RefreshEditor();
         };
-        var visibleValidationIssues = new List<LadderValidationIssue>();
-
-        void ShowValidationIssues(IReadOnlyList<LadderValidationIssue> issues, bool openDock)
+        applyProperties.Pressed += () => ApplyProperties(); cancelProperties.Pressed += () => CancelProperties();
+        closeInstructionProperties.Pressed += () => CancelProperties();
+        _pendingEditorForms.Add(new(() => propertyDirty, () => ApplyProperties(), () => CancelProperties()));
+        instructionPropertiesPopup.GuiInput += input =>
         {
+            if (input is InputEventKey { Pressed: true, Keycode: Key.Escape })
+            { CancelProperties(); instructionPropertiesPopup.AcceptEvent(); }
+        };
+
+        void WatchPending(Control control, Action mark)
+        {
+            void Changed() { if (!refreshingEditor && !loadingFormControls) mark(); }
+            if (control is LineEdit text) text.TextChanged += _ => Changed();
+            else if (control is OptionButton option) option.ItemSelected += _ => Changed();
+            else if (control is SpinBox number) number.ValueChanged += _ => Changed();
+        }
+        foreach (var field in new Control[] { tagName, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding }) WatchPending(field, () => { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; });
+        aggregateTagEditor.PendingChanged += () => { if (!refreshingEditor && !loadingFormControls) { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; } };
+        foreach (var field in new Control[] { blockName, blockTypeSelector }) WatchPending(field, () => { if (!blockFormDirty) blockFormRevision = document.Revision; blockFormDirty = true; });
+        foreach (var field in new Control[] { taskName, taskKind, taskPeriod, taskPriority, taskTarget }) WatchPending(field, () => { if (!taskFormDirty) taskFormRevision = document.Revision; taskFormDirty = true; });
+        foreach (var field in new Control[] { interfaceName, interfaceType, interfaceSection, interfaceInitial, interfaceEnumMembers }) WatchPending(field, () => { if (!interfaceFormDirty) interfaceFormRevision = document.Revision; interfaceFormDirty = true; });
+        void DiscardTag() { tagFormDirty = false; if (selectedTagIndex >= 0) LoadTagControls(); else { loadingFormControls = true; tagName.Clear(); tagInitialValue.Text = "FALSE"; aggregateTagEditor.Load(SelectedTagType()); loadingFormControls = false; } }
+        void DiscardBlock()
+        {
+            // Restore this form independently: a sibling draft may legitimately suppress
+            // RefreshEditor. Clearing the flag alone would leave discarded values applicable.
+            blockFormDirty = false;
+            var wasLoading = loadingFormControls; loadingFormControls = true;
+            try
+            {
+                var block = document.Blocks.Count > 0 ? document.Blocks[document.ActiveBlockIndex] : null;
+                blockName.Text = block?.Name ?? string.Empty;
+                if (block is not null)
+                    blockTypeSelector.Select(siemens ? block.BlockType switch
+                    {
+                        LadderBlockType.OrganizationBlock => 0,
+                        LadderBlockType.FunctionBlock => 1,
+                        LadderBlockType.Function => 2,
+                        LadderBlockType.DataBlock => 3,
+                        _ => 2
+                    } : 0);
+            }
+            finally { loadingFormControls = wasLoading; }
+            RefreshEditor();
+        }
+        void DiscardTask() { taskFormDirty = false; LoadTaskControls(selectedTaskIndex); }
+        void DiscardInterface() { interfaceFormDirty = false; loadingFormControls = true; interfaceName.Clear(); interfaceInitial.Text = "0"; interfaceEnumMembers.Clear(); loadingFormControls = false; }
+        _pendingEditorForms.Add(new(() => tagFormDirty, () => { (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed); return !tagFormDirty; }, DiscardTag));
+        _pendingEditorForms.Add(new(() => blockFormDirty, () => { applyBlock.EmitSignal(BaseButton.SignalName.Pressed); return !blockFormDirty; }, DiscardBlock));
+        _pendingEditorForms.Add(new(() => taskFormDirty, () => { applyTask.EmitSignal(BaseButton.SignalName.Pressed); return !taskFormDirty; }, DiscardTask));
+        _pendingEditorForms.Add(new(() => interfaceFormDirty, () => { addInterface.EmitSignal(BaseButton.SignalName.Pressed); return !interfaceFormDirty; }, DiscardInterface));
+        foreach (var field in new[] { tagName, tagInitialValue, tagEnumMembers })
+            field.TextSubmitted += _ => (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed);
+        blockName.TextSubmitted += _ => applyBlock.EmitSignal(BaseButton.SignalName.Pressed);
+        taskName.TextSubmitted += _ => applyTask.EmitSignal(BaseButton.SignalName.Pressed);
+        taskPeriod.GetLineEdit().TextSubmitted += _ => applyTask.EmitSignal(BaseButton.SignalName.Pressed);
+        taskPriority.GetLineEdit().TextSubmitted += _ => applyTask.EmitSignal(BaseButton.SignalName.Pressed);
+        interfaceName.TextSubmitted += _ => addInterface.EmitSignal(BaseButton.SignalName.Pressed);
+        interfaceInitial.TextSubmitted += _ => addInterface.EmitSignal(BaseButton.SignalName.Pressed);
+        void EscapeForm(Control field, Action discard)
+        {
+            field.GuiInput += input => { if (input is InputEventKey { Pressed: true, Keycode: Key.Escape }) { discard(); field.AcceptEvent(); } };
+        }
+        foreach (var field in new Control[] { tagName, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding, aggregateTagEditor }) EscapeForm(field, DiscardTag);
+        foreach (var field in new Control[] { blockName, blockTypeSelector }) EscapeForm(field, DiscardBlock);
+        foreach (var field in new Control[] { taskName, taskKind, taskPeriod, taskPriority, taskTarget }) EscapeForm(field, DiscardTask);
+        foreach (var field in new Control[] { interfaceName, interfaceType, interfaceSection, interfaceInitial, interfaceEnumMembers }) EscapeForm(field, DiscardInterface);
+        var visibleValidationIssues = new List<LadderValidationIssue>();
+        var visibleDiagnosticTargets = new List<EditorDiagnosticTarget?>();
+        long validationRevision = -1;
+
+        void ShowValidationIssues(IReadOnlyList<LadderValidationIssue> issues, bool openDock, bool verified = true)
+        {
+            validationRevision = document.ContentRevision;
             visibleValidationIssues.Clear();
             visibleValidationIssues.AddRange(issues);
+            visibleDiagnosticTargets.Clear();
+            visibleDiagnosticTargets.AddRange(issues.Select(issue => EditorDiagnosticTarget.Capture(document, issue.Path)));
             validationIssueList.Clear();
             foreach (var issue in issues)
             {
@@ -8015,13 +8429,15 @@ public partial class SimulatorShell : CanvasLayer
                 validationIssueList.SetItemTooltip(index,
                     $"{issue.Code}\n{issue.Message}\nDocument path: {issue.Path}\nDouble-click to navigate.");
             }
+            validationDetail.Text=issues.Count==0 ? "" : $"{issues[0].Code}: {issues[0].Message}";
             validationSummary.Text = issues.Count == 0
-                ? "0 ERRORS · verification passed"
+                ? verified ? "0 ERRORS · verification passed" : "NOT VERIFIED · run Verify + Load Offline"
                 : $"{issues.Count} ERROR{(issues.Count == 1 ? string.Empty : "S")} · edit not loaded · double-click to navigate";
             validationSummary.AddThemeColorOverride("font_color",
                 issues.Count == 0 ? new Color("18864b") : new Color("b3261e"));
             if (openDock)
             {
+                ShowBottomDock();
                 bottomPanel.Visible = true;
                 reopenBottomDock.Visible = false;
                 bottomTabs.CurrentTab = issues.Count == 0 ? 1 : 0;
@@ -8041,19 +8457,36 @@ public partial class SimulatorShell : CanvasLayer
         void NavigateValidationIssue(int issueIndex)
         {
             if (issueIndex < 0 || issueIndex >= visibleValidationIssues.Count) return;
+            if (validationRevision != document.ContentRevision)
+            {
+                output.Text = "[color=#d17a00]Diagnostic is stale.[/color] Run Verify + Load again before navigating.";
+                return;
+            }
             var issue = visibleValidationIssues[issueIndex];
             var blockIndex = ValidationPathIndex(issue.Path, "blocks");
             var networkIndex = ValidationPathIndex(issue.Path, "networks");
             var variableIndex = ValidationPathIndex(issue.Path, "variables");
             var taskIndex = ValidationPathIndex(issue.Path, "tasks");
+            // Capture stable destinations before the resolver can apply edits or rebuild controls.
+            var targetBlockId = blockIndex >= 0 && blockIndex < document.Blocks.Count ? document.Blocks[blockIndex].Id : "";
+            var targetTagId = variableIndex >= 0 && variableIndex < document.Tags.Count ? LadderCallBindings.GlobalId(document.Tags[variableIndex]) : "";
+            var targetTaskId = taskIndex >= 0 && taskIndex < document.Tasks.Count ? document.Tasks[taskIndex].Id : "";
+            var diagnosticTarget = visibleDiagnosticTargets[issueIndex];
+            ResolvePendingEditorForms(() =>
+            {
+            blockIndex = document.Blocks.FindIndex(block => block.Id == targetBlockId);
+            variableIndex = document.Tags.FindIndex(tag => LadderCallBindings.GlobalId(tag) == targetTagId);
+            taskIndex = document.Tasks.FindIndex(task => task.Id == targetTaskId);
             if (blockIndex >= 0 && blockIndex < document.Blocks.Count)
             {
-                document.SelectBlock(blockIndex);
+                ShowProjectDock();
+                if (networkIndex >= 0 && diagnosticTarget is null)
+                { output.Text = "Diagnostic target is unavailable. Run Verify + Load again."; return; }
+                SwitchEditorBlock(blockIndex, restoreView: false);
                 blockItems[blockIndex].Select(0);
                 organization.ScrollToItem(blockItems[blockIndex]);
-                selectedRung = networkIndex >= 0
-                    ? Math.Clamp(networkIndex, 0, Math.Max(0, document.Rungs.Count - 1))
-                    : 0;
+                if (networkIndex >= document.Rungs.Count) return;
+                selectedRung = networkIndex >= 0 ? networkIndex : 0;
                 selectedBranch = 0;
                 selectedContact = -1;
                 selectedInsertionIndex = -1;
@@ -8061,28 +8494,56 @@ public partial class SimulatorShell : CanvasLayer
                 RefreshEditor();
                 if (document.Rungs.Count > 0)
                 {
-                    canvas.SelectRung(selectedRung);
+                    if (diagnosticTarget is not null)
+                    {
+                        // Selecting another block invalidates context popups but
+                        // this already-validated diagnostic keeps its captured IDs.
+                        var exactTarget = diagnosticTarget.Target with { Revision = document.Revision };
+                        if (!LadderEditorCommands.TryResolve(document, exactTarget, out var exactRung, out var exactBranch, out var exactNode, out _))
+                        { output.Text = "Diagnostic target is unavailable. Revalidate the draft."; return; }
+                        selectedRung = exactRung;
+                        if (exactTarget.Role is EditorOperandRole.Contact or EditorOperandRole.Output)
+                        {
+                            canvas.SelectElement(exactRung, exactBranch, exactNode, exactTarget.Role == EditorOperandRole.Output);
+                            OpenInstructionProperties();
+                            Control? field = diagnosticTarget.OperandRole switch
+                            {
+                                "rightOperand" => compareRight,
+                                "sourceA" => numericSourceA, "sourceB" => numericSourceB, "sourceC" => numericSourceC,
+                                "destination" => numericDestination, "targetBlock" => callTarget,
+                                "preset" => document.Rungs[exactRung].IsTimer ? timerPreset : counterPreset,
+                                "variable" => exactTarget.Role == EditorOperandRole.Contact ? tagSelector : coilSelector,
+                                _ => null
+                            };
+                            field?.GrabFocus();
+                        }
+                        else canvas.SelectRung(exactRung);
+                    }
+                    else canvas.SelectRung(selectedRung);
                     scroll.ScrollVertical = Math.Max(0, (int)canvas.GetRungBounds(selectedRung).Position.Y - 10);
                 }
             }
             else if (variableIndex >= 0 && variableIndex < document.Tags.Count)
             {
+                ShowProjectDock();
                 projectTabs.CurrentTab = 1;
                 SelectIndexedTreeRow(tagList, variableIndex);
                 tagList.ScrollToItem(tagList.GetSelected());
             }
             else if (taskIndex >= 0 && taskIndex < document.Tasks.Count)
             {
+                ShowProjectDock();
                 LoadTaskControls(taskIndex);
                 taskItems[taskIndex].Select(0);
                 organization.ScrollToItem(taskItems[taskIndex]);
                 projectTabs.CurrentTab = 2;
             }
             output.Text = $"[color=#d64545]{Escape(issue.Code)}[/color] {Escape(issue.Message)}  [color=#657b86]{Escape(issue.Path)}[/color]";
+            });
         }
 
         validationIssueList.ItemActivated += index => NavigateValidationIssue((int)index);
-        apply.Pressed += () =>
+        apply.Pressed += () => ResolvePendingEditorForms(() =>
         {
             var valid = TryBuildCurrentLadderProgram(out var program, out var issues);
             ShowValidationIssues(issues, openDock: true);
@@ -8100,7 +8561,7 @@ public partial class SimulatorShell : CanvasLayer
             _ladderWorkspaceStatus.Text = $"VALID · {tabName.ToUpperInvariant()} WORKFLOW · OFFLINE RUNTIME";
             _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
             VirtualControllerProgramRequested?.Invoke(program);
-        };
+        });
         instructionTree.ItemSelected += () =>
         {
             var kind = instructionTree.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
@@ -8175,22 +8636,77 @@ public partial class SimulatorShell : CanvasLayer
             else if (kind == "set") addSet.EmitSignal(BaseButton.SignalName.Pressed);
             else if (kind == "reset") addReset.EmitSignal(BaseButton.SignalName.Pressed);
             else if (kind == "rung") addRung.EmitSignal(BaseButton.SignalName.Pressed);
-            else if (kind == "coil") coilSelector.GrabFocus();
+            else if (kind == "coil") SelectCoilMode(LadderCoilMode.Assign);
         };
+        void SwitchEditorBlock(int blockIndex, bool restoreView)
+        {
+            if (blockIndex == document.ActiveBlockIndex) return;
+            _blockViewRememberCount++;
+            var leavingView = canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical);
+            var traceView = OS.GetCmdlineUserArgs().Contains("--verify-editor-view-state", StringComparer.Ordinal);
+            if (traceView) GD.Print($"BLOCK_VIEW_NAV remember={document.Blocks[document.ActiveBlockIndex].Id} state={leavingView} size={canvas.Size} page={scroll.Size}");
+            blockViewMemory.Remember(document.Id, document.Blocks[document.ActiveBlockIndex].Id, leavingView);
+            document.SelectBlock(blockIndex);
+            selectedRung = selectedBranch = 0; selectedContact = selectedInsertionIndex = -1; selectedOutput = false;
+            canvas.SelectRung(0); RefreshEditor();
+            LadderEditorViewState? state = null;
+            var restored = restoreView && blockViewMemory.TryRestore(document.Id, document.Blocks[blockIndex].Id, out state)
+                && state is not null && canvas.RestoreViewState(state);
+            if (restored)
+            {
+                selectedRung = canvas.SelectedRung; selectedBranch = canvas.SelectedBranch; selectedContact = canvas.SelectedContact;
+                selectedInsertionIndex = canvas.SelectedInsertionIndex; selectedOutput = canvas.OutputSelected;
+                RefreshEditor();
+            }
+            var blockId = document.Blocks[blockIndex].Id;
+            var restoreRevision = document.Revision;
+            var restoreSelection = canvas.CaptureViewState(0, 0);
+            if (traceView) GD.Print($"BLOCK_VIEW_NAV restore={blockId} restored={restored} expected={state} actual={canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical)} size={canvas.Size} maxH={scroll.GetHScrollBar().MaxValue} maxV={scroll.GetVScrollBar().MaxValue}");
+            Callable.From((Action)(async () =>
+            {
+                // Container sorting updates scrollbar ranges after the zoomed minimum size.
+                // Restoring before that clamps valid saved offsets to the old range.
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+                if (!GodotObject.IsInstanceValid(canvas) || !canvas.IsInsideTree() || document.Revision != restoreRevision
+                    || document.Blocks[document.ActiveBlockIndex].Id != blockId || canvas.CaptureViewState(0, 0) != restoreSelection) return;
+                scroll.ScrollHorizontal = restored ? state!.HorizontalScroll : 0;
+                scroll.ScrollVertical = restored ? state!.VerticalScroll : 0;
+                if (traceView) GD.Print($"BLOCK_VIEW_NAV deferred={blockId} actual={canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical)} size={canvas.Size} maxH={scroll.GetHScrollBar().MaxValue} maxV={scroll.GetVScrollBar().MaxValue}");
+                canvas.QueueRedraw();
+            })).CallDeferred();
+        }
+        var restoringOrganizationSelection = false;
+        void RestoreActiveOrganizationRow()
+        {
+            var expected = "program:" + document.ActiveBlockIndex;
+            TreeItem? FindActive(TreeItem? item)
+            {
+                for (var current = item; current is not null; current = current.GetNext())
+                {
+                    if (current.GetMetadata(0).AsString() == expected) return current;
+                    var nested = FindActive(current.GetFirstChild());
+                    if (nested is not null) return nested;
+                }
+                return null;
+            }
+            var row = FindActive(organization.GetRoot());
+            if (row is null) return;
+            restoringOrganizationSelection = true;
+            try { row.Select(0); }
+            finally { restoringOrganizationSelection = false; }
+        }
         organization.ItemSelected += () =>
         {
-            var selected = organization.GetSelected();
-            var kind = selected?.GetMetadata(0).AsString() ?? string.Empty;
+            if (restoringOrganizationSelection) return;
+            var kind = organization.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
+            ResolvePendingEditorForms(() =>
+            {
             if (kind.StartsWith("program:", StringComparison.Ordinal)
                 && int.TryParse(kind.AsSpan("program:".Length), out var blockIndex)
                 && blockIndex >= 0 && blockIndex < document.Blocks.Count)
             {
-                document.SelectBlock(blockIndex);
-                selectedRung = 0;
-                selectedBranch = 0;
-                selectedContact = -1;
-                selectedOutput = false;
-                RefreshEditor();
+                SwitchEditorBlock(blockIndex, restoreView: true);
                 output.Text = $"[color=#18864b]{Escape(document.Blocks[blockIndex].Name)} active.[/color] Select a rung and use the instruction toolbar.";
                 canvas.GrabFocus();
                 return;
@@ -8208,20 +8724,26 @@ public partial class SimulatorShell : CanvasLayer
             switch (kind)
             {
                 case "tags":
+                    ShowProjectDock();
                     output.Text = "PLC tag table active. Create BOOL operands or TIMER instruction instances in the left project dock.";
                     projectTabs.CurrentTab = 1;
                     tagName.GrabFocus();
                     break;
                 case "diagnostics":
-                    output.Text = "[b]Offline diagnostics[/b] · compiler ready · transport disconnected · no physical PLC.";
+                    output.Text = OfflineDiagnosticStatus();
+                    ShowBottomDock();
                     bottomPanel.Visible = true;
                     reopenBottomDock.Visible = false;
                     bottomTabs.CurrentTab = 1;
                     break;
                 case "device":
+                    ShowProjectDock();
+                    projectTabs.CurrentTab = 1;
+                    tagBinding.GrabFocus();
                     output.Text = "[b]Simulator I/O configuration[/b] · symbolic scene bindings only; no hardware rack or physical addresses.";
                     break;
                 case "watch":
+                    ShowBottomDock();
                     output.Text = "[b]Watch table active.[/b] Add symbols, Verify + Load, then Run to monitor typed simulator values by scan.";
                     bottomPanel.Visible = true;
                     reopenBottomDock.Visible = false;
@@ -8240,6 +8762,7 @@ public partial class SimulatorShell : CanvasLayer
                     output.Text = "Offline controller project selected.";
                     break;
             }
+            }, RestoreActiveOrganizationRow);
         };
         void UndoLadderEdit()
         {
@@ -8259,6 +8782,8 @@ public partial class SimulatorShell : CanvasLayer
             {
                 RequestLadderAction(() =>
                 {
+                if (ChallengeMutationLocked) return;
+                ChallengeDraftChanged?.Invoke();
                 document.ResetProject(
                     "offline-controller",
                     siemens ? "Main" : "MainRoutine",
@@ -8270,7 +8795,7 @@ public partial class SimulatorShell : CanvasLayer
                 _ladderSavedProjectJson = null;
                 _ladderHistory.Clear();
                 _ladderRungClipboard = null;
-                _ladderContactClipboard = null;
+                _ladderContactClipboard = null; _ladderCommandClipboard = null;
                 selectedRung = 0;
                 selectedBranch = 0;
                 selectedContact = -1;
@@ -8283,7 +8808,8 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = "[color=#18864b]New offline Ladder project created.[/color] Add logic, then Verify + Load.";
                 });
             }
-            else if (id == 1) _ladderSaveDialog.PopupCenteredRatio(0.72f);
+            else if (id == 1) ShowLadderSaveDialog();
+            else if (id == 3) ShowLadderSaveAsDialog();
             else if (id == 2) RequestLadderAction(() => _ladderLoadDialog.PopupCenteredRatio(0.72f));
         };
         editMenu.GetPopup().IdPressed += id =>
@@ -8294,6 +8820,8 @@ public partial class SimulatorShell : CanvasLayer
             else if (id == 3) RedoLadderEdit();
             else if (id == 4) CopyLadderSelection();
             else if (id == 5) PasteLadderClipboard();
+            else if (id == 6) DispatchEditorCommand(EditorCommandId.CopyNetwork);
+            else if (id == 7) CutLadderSelection();
         };
         onlineMenu.GetPopup().IdPressed += id =>
         {
@@ -8304,6 +8832,8 @@ public partial class SimulatorShell : CanvasLayer
         };
         viewMenu.GetPopup().IdPressed += id =>
         {
+            if (id is 0 or 1) ShowProjectDock();
+            if (id is 2 or 5) ShowBottomDock();
             if (id == 0)
             {
                 mainItem.Select(0);
@@ -8325,7 +8855,7 @@ public partial class SimulatorShell : CanvasLayer
                 bottomPanel.Visible = true;
                 reopenBottomDock.Visible = false;
                 bottomTabs.CurrentTab = 1;
-                output.Text = "[b]Offline diagnostics[/b] · compiler ready · transport disconnected · no physical PLC.";
+                output.Text = OfflineDiagnosticStatus();
             }
             else if (id == 3)
             {
@@ -8345,7 +8875,7 @@ public partial class SimulatorShell : CanvasLayer
                 bottomTabs.CurrentTab = 2;
                 RefreshWatchTable(_virtualSnapshot);
                 watchSymbol.GrabFocus();
-                output.Text = "[b]Watch table active.[/b] Typed values are read from the loaded offline runtime snapshot.";
+                output.Text = $"[b]Watch table active.[/b] {OfflineDiagnosticStatus()}";
             }
             else if (id == 6) ShowToolDock(0);
         };
@@ -8353,7 +8883,12 @@ public partial class SimulatorShell : CanvasLayer
         {
             if (id == 0)
             {
+                ShowProjectDock();
                 projectTabs.CurrentTab = 1;
+                tagType.Select(0);
+                tagType.EmitSignal(OptionButton.SignalName.ItemSelected, 0L);
+                tagName.Clear();
+                tagInitialValue.Text = "FALSE";
                 tagName.GrabFocus();
             }
             else if (id == 1)
@@ -8373,17 +8908,20 @@ public partial class SimulatorShell : CanvasLayer
         watchTable.ItemActivated += () =>
         {
             var name = watchTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
-            var index = document.Tags.FindIndex(tag => tag.Name == name);
+            var index = document.Tags.FindIndex(tag => name == tag.Name || name.StartsWith(tag.Name + ".", StringComparison.Ordinal) || name.StartsWith(tag.Name + "[", StringComparison.Ordinal));
             if (index < 0) return;
+            ShowProjectDock();
             projectTabs.CurrentTab = 1;
             SelectIndexedTreeRow(tagList, index);
             tagList.EmitSignal(Tree.SignalName.ItemSelected);
+            tagList.ScrollToItem(tagList.GetSelected());
+            aggregateTagEditor.RevealMember(name, document.Tags[index].Name);
         };
         RefreshTagBindingOptions(SelectedTagType(), SelectedTagRole(SelectedTagType()), string.Empty);
         _ladderEditorRefreshers.Add(RefreshEditor);
         _ladderSceneDiagnosticResetters.Add(() =>
         {
-            ShowValidationIssues([], openDock: false);
+            ShowValidationIssues([], openDock: false, verified: false);
             output.Text = "Scene ready. Run loads its supplied ladder; verify and load after editing.";
         });
         _ladderWatchRefreshers.Add(RefreshWatchTable);
@@ -8458,6 +8996,7 @@ public partial class SimulatorShell : CanvasLayer
         _applicationSettingsDialog.Confirmed += SaveApplicationSettings;
         AddChild(_applicationSettingsDialog);
         SetMcpUiEnabled(_mcpUiEnabled.ButtonPressed, persist: false);
+        AddReducedMotionSetting(body, settings.ReducedMotion);
     }
 
     public bool IsExternalMode => _externalMode;
@@ -8540,6 +9079,12 @@ public partial class SimulatorShell : CanvasLayer
 
     public void ShowExternalPlcDialog()
     {
+        if (RejectChallengeExternalOperation()) return;
+        if (RuntimeBuildPolicy.IsOfflineDemo)
+        {
+            SetWorkspaceStatus("Offline demo · external PLC transport is disabled");
+            return;
+        }
         SetExternalMode(true);
         RefreshExternalProfileDetails();
         var viewport = GetViewport().GetVisibleRect().Size;
@@ -8549,6 +9094,14 @@ public partial class SimulatorShell : CanvasLayer
 
     private void SetExternalMode(bool enabled)
     {
+        // Choosing the already-active local source must not retire a challenge or disconnect it.
+        if (IsChallengeDraftActive && !enabled && !_externalMode) return;
+        if (RejectChallengeExternalOperation()) return;
+        if (enabled && RuntimeBuildPolicy.IsOfflineDemo)
+        {
+            SetWorkspaceStatus("Offline demo · built-in simulator remains selected");
+            return;
+        }
         if (!enabled && _connection is ExternalPlcRuntimeClient external
             && external.State != ConnectionState.Disconnected)
         {
@@ -8574,6 +9127,7 @@ public partial class SimulatorShell : CanvasLayer
 
     private void RefreshExternalProfileDetails()
     {
+        if (RejectChallengeExternalOperation()) return;
         if (_externalProfileDetails is null) return;
         var profile = _externalProfileSelector.GetItemText(_externalProfileSelector.Selected);
         if (_activeScene is null)
@@ -8601,7 +9155,7 @@ public partial class SimulatorShell : CanvasLayer
         _externalProfileDetails.Text = "Validating the local profile…";
         external.DescribeProfile(profile, descriptor =>
         {
-            if (generation != _externalSelectionGeneration) return;
+            if (!CanCompleteExternalRequest(generation)) return;
             ExternalSceneContract.Validate(scene.Simulation, descriptor);
             if (_verifiedExternalDescriptor is JsonElement previous && previous.GetRawText() != descriptor.GetRawText())
                 _externalAuthorization.ButtonPressed = false;
@@ -8609,6 +9163,7 @@ public partial class SimulatorShell : CanvasLayer
             _externalProfileDetails.Text = ExternalProfilePresentation.Format(descriptor);
         }, exception =>
         {
+            if (!CanCompleteExternalRequest(generation)) return;
             _verifiedExternalDescriptor = null;
             _externalAuthorization.ButtonPressed = false;
             _externalProfileDetails.Text = $"[color=#ef7777]PROFILE TEST FAILED[/color]\n{Escape(exception.Message)}";
@@ -8631,6 +9186,7 @@ public partial class SimulatorShell : CanvasLayer
 
     private void RunExternalDiagnostic()
     {
+        if (RejectChallengeExternalOperation()) return;
         if (_connection is not ExternalPlcRuntimeClient external)
         {
             _externalProfileDetails.Text = "[color=#ef7777]External runtime bridge is unavailable in this build.[/color]";
@@ -8647,7 +9203,7 @@ public partial class SimulatorShell : CanvasLayer
         _externalProfileDetails.Text = "Read-only PLC test in progress…";
         external.RunReadOnlyDiagnostic(profile, result =>
         {
-            if (generation != _externalSelectionGeneration) return;
+            if (!CanCompleteExternalRequest(generation)) return;
             var lines = result.GetProperty("items").EnumerateArray().Select(item =>
             {
                 var status = item.GetProperty("status").GetString()?.ToUpperInvariant() ?? "INFO";
@@ -8660,12 +9216,14 @@ public partial class SimulatorShell : CanvasLayer
                 string.Join("\n", lines);
         }, exception =>
         {
+            if (!CanCompleteExternalRequest(generation)) return;
             _externalProfileDetails.Text = $"[color=#ef7777]READ-ONLY PLC TEST FAILED[/color]\n{Escape(exception.Message)}";
         });
     }
 
     private void ConnectExternalPlc()
     {
+        if (RejectChallengeExternalOperation()) return;
         if (_activeScene is null || _connection is not ExternalPlcRuntimeClient external)
         {
             SetWorkspaceStatus("External PLC connection unavailable · no matching scene/runtime", isError: true);
@@ -8688,7 +9246,7 @@ public partial class SimulatorShell : CanvasLayer
         // approval just as a scene/profile selection change does.
         external.DescribeProfile(profile, descriptor =>
         {
-            if (generation != _externalSelectionGeneration || !_externalAuthorization.ButtonPressed) return;
+            if (!CanCompleteExternalRequest(generation) || !_externalAuthorization.ButtonPressed) return;
             ExternalSceneContract.Validate(_activeScene!.Simulation, descriptor);
             if (verified.GetRawText() != descriptor.GetRawText())
             {
@@ -8699,13 +9257,65 @@ public partial class SimulatorShell : CanvasLayer
             var scope = descriptor.GetProperty("writeScope").EnumerateArray()
                 .Select(item => item.Clone())
                 .ToArray();
+            if (RejectChallengeExternalOperation()) return;
             SetExternalMode(true);
+            var connectionGeneration = _externalSelectionGeneration;
             external.Connect(profile, _activeScene.Id, scope, _ =>
             {
+                if (!CanCompleteExternalRequest(connectionGeneration)) return;
                 SetWorkspaceStatus("EXTERNAL PLC CONNECTED · waiting for guarded readiness");
                 _externalPlcDialog.Hide();
-            }, ReportExternalConnectionFailure, descriptor.GetProperty("connectTimeoutMs").GetInt32(), descriptor);
-        }, ReportExternalConnectionFailure);
+            }, exception => { if (CanCompleteExternalRequest(connectionGeneration)) ReportExternalConnectionFailure(exception); }, descriptor.GetProperty("connectTimeoutMs").GetInt32(), descriptor);
+        }, exception => { if (CanCompleteExternalRequest(generation)) ReportExternalConnectionFailure(exception); });
+    }
+
+    private bool RejectChallengeExternalOperation()
+    {
+        if (!IsChallengeDraftActive) return false;
+        // Invalidate descriptors even if a dialog/request began before challenge entry.
+        // No transport operation is invoked by this rejection path.
+        _externalSelectionGeneration++;
+        _verifiedExternalDescriptor = null;
+        if (_externalAuthorization is not null) _externalAuthorization.ButtonPressed = false;
+        _externalPlcDialog?.Hide();
+        const string guidance = "Leave the offline challenge before selecting external PLC mode, settings, diagnostics or connection.";
+        if (_externalProfileDetails is not null) _externalProfileDetails.Text = guidance;
+        SetWorkspaceStatus(guidance);
+        return true;
+    }
+
+    private bool CanCompleteExternalRequest(int generation)
+        => !RejectChallengeExternalOperation() && generation == _externalSelectionGeneration;
+
+    /// <summary>Opt-in native source-boundary probe: every path rejects before a bridge call.</summary>
+    public bool VerifyChallengeExternalGuards(out string diagnostic)
+    {
+        if (!IsChallengeDraftActive || _externalMode || _connection.State != ConnectionState.Disconnected)
+        { diagnostic = "requires active local challenge with disconnected transport"; return false; }
+        var modeEvents = 0;
+        void CountMode(bool _) => modeEvents++;
+        ControllerModeChanged += CountMode;
+        try
+        {
+            var generation = _externalSelectionGeneration;
+            SetExternalMode(false);
+            var sameLocalNoOp = _externalSelectionGeneration == generation && modeEvents == 0;
+            _verifiedExternalDescriptor = JsonSerializer.SerializeToElement(new { verified = true });
+            _externalAuthorization.ButtonPressed = true;
+            SetExternalMode(true);
+            ShowExternalPlcDialog();
+            RefreshExternalProfileDetails();
+            RunExternalDiagnostic();
+            ConnectExternalPlc();
+            var callbackRejected = !CanCompleteExternalRequest(generation);
+            var blocked = !_externalMode && modeEvents == 0 && !_externalPlcDialog.Visible
+                && _verifiedExternalDescriptor is null && !_externalAuthorization.ButtonPressed
+                && _connection.State == ConnectionState.Disconnected
+                && (_connection is not ExternalPlcRuntimeClient external || !external.IsBusy);
+            diagnostic = $"sameLocalNoOp={sameLocalNoOp} externalPathsBlocked={blocked} staleCallbackRejected={callbackRejected} modeEvents={modeEvents}; no bridge operation requested";
+            return sameLocalNoOp && blocked && callbackRejected;
+        }
+        finally { ControllerModeChanged -= CountMode; }
     }
 
     private void ReportExternalConnectionFailure(Exception exception)
@@ -8716,6 +9326,7 @@ public partial class SimulatorShell : CanvasLayer
 
     private bool CanUseExternalProfile(string profile)
     {
+        if (RejectChallengeExternalOperation()) return false;
         if (_activeScene is null || !string.Equals(_activeScene.PlcTestProfile, profile, StringComparison.OrdinalIgnoreCase))
         {
             _externalProfileDetails.Text = "[color=#ef7777]PROFILE MISMATCH · select the profile declared by the active scene.[/color]";
@@ -8743,6 +9354,21 @@ public partial class SimulatorShell : CanvasLayer
 
     public bool VerifyExternalProfileGuards(out string result)
     {
+        if (RuntimeBuildPolicy.IsOfflineDemo)
+        {
+            var popup = GetNode<MenuButton>("Workspace/Toolbar/ToolbarMargin/ToolbarRow/PlcMenu").GetPopup();
+            // Deliberately emit the disabled actions too: presentation alone
+            // must not be the policy boundary or stop local simulation.
+            popup.EmitSignal(PopupMenu.SignalName.IdPressed, 11);
+            popup.EmitSignal(PopupMenu.SignalName.IdPressed, 12);
+            ConnectExternalPlc();
+            RunExternalDiagnostic();
+            var blocked = _connection is DisconnectedRuntimeClient && !_externalMode
+                && !_externalPlcDialog.Visible && _connection.State == ConnectionState.Disconnected
+                && popup.IsItemDisabled(popup.GetItemIndex(11)) && popup.IsItemDisabled(popup.GetItemIndex(12));
+            result = $"offlineBuildBlocked={blocked} sourceRemainsLocal={!_externalMode}";
+            return blocked;
+        }
         if (_activeScene is null || _connection is not ExternalPlcRuntimeClient external || external.IsBusy)
         {
             result = "guard verification requires an idle offline scene";
@@ -8783,26 +9409,28 @@ public partial class SimulatorShell : CanvasLayer
             ["schemaVersion"] = 1,
             ["mcpUiEnabled"] = _mcpUiEnabled.ButtonPressed,
             ["showSafetyNotices"] = _showSafetyNotices.ButtonPressed,
+            ["reducedMotion"] = ReducedMotion,
         };
         using var file = FileAccess.Open(SettingsPath, FileAccess.ModeFlags.Write);
         file?.StoreString(Json.Stringify(payload, "  "));
         SetMcpUiEnabled(_mcpUiEnabled.ButtonPressed, persist: false);
     }
 
-    private static (bool McpUiEnabled, bool ShowSafetyNotices) LoadApplicationSettings()
+    private static (bool McpUiEnabled, bool ShowSafetyNotices, bool ReducedMotion) LoadApplicationSettings()
     {
-        if (!FileAccess.FileExists(SettingsPath)) return (true, true);
+        if (!FileAccess.FileExists(SettingsPath)) return (true, true, true);
         try
         {
             using var file = FileAccess.Open(SettingsPath, FileAccess.ModeFlags.Read);
             var parsed = Json.ParseString(file?.GetAsText() ?? string.Empty).AsGodotDictionary();
             return (
                 parsed.ContainsKey("mcpUiEnabled") ? parsed["mcpUiEnabled"].AsBool() : true,
-                parsed.ContainsKey("showSafetyNotices") ? parsed["showSafetyNotices"].AsBool() : true);
+                parsed.ContainsKey("showSafetyNotices") ? parsed["showSafetyNotices"].AsBool() : true,
+                parsed.ContainsKey("reducedMotion") ? parsed["reducedMotion"].AsBool() : true);
         }
         catch
         {
-            return (true, true);
+            return (true, true, true);
         }
     }
 
@@ -8898,12 +9526,21 @@ public partial class SimulatorShell : CanvasLayer
         return verified == AuthoredDemos.Length;
     }
 
-    public void ShowLadderSaveDialog() => _ladderSaveDialog.PopupCenteredRatio(0.72f);
+    public void ShowLadderSaveDialog() => ResolvePendingEditorForms(() =>
+    {
+        if (_ladderProjectPath is null) _ladderSaveDialog.PopupCenteredRatio(0.72f);
+        else { TrySaveLadderProject(_ladderProjectPath, out var message); _ladderWorkspaceStatus.Text = message; }
+    });
 
-    public void ShowLadderLoadDialog() => RequestLadderAction(() => _ladderLoadDialog.PopupCenteredRatio(0.72f));
+    public void ShowLadderSaveAsDialog() => ResolvePendingEditorForms(() => _ladderSaveDialog.PopupCenteredRatio(0.72f));
+
+    public void ShowLadderLoadDialog() => ResolvePendingEditorForms(() => RequestLadderAction(() => _ladderLoadDialog.PopupCenteredRatio(0.72f)));
 
     public bool TryUndoLadderEdit(out string description)
     {
+        description = string.Empty;
+        if (ChallengeMutationLocked || !_ladderHistory.CanUndo) return false;
+        ChallengeDraftChanged?.Invoke();
         if (!_ladderHistory.Undo(_ladderDocument, out description)) return false;
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         RefreshLadderMonitorMatch();
@@ -8914,6 +9551,9 @@ public partial class SimulatorShell : CanvasLayer
 
     public bool TryRedoLadderEdit(out string description)
     {
+        description = string.Empty;
+        if (ChallengeMutationLocked || !_ladderHistory.CanRedo) return false;
+        ChallengeDraftChanged?.Invoke();
         if (!_ladderHistory.Redo(_ladderDocument, out description)) return false;
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         RefreshLadderMonitorMatch();
@@ -9041,6 +9681,7 @@ public partial class SimulatorShell : CanvasLayer
 
     public void AttachVirtualController(LadderProgram program, VirtualControllerSnapshot snapshot)
     {
+        _instructionPublication = null; // New attachment must not inherit another session/load envelope.
         _virtualProgram = program;
         _virtualSnapshot = snapshot;
         RefreshLadderMonitorMatch();
@@ -9078,9 +9719,9 @@ public partial class SimulatorShell : CanvasLayer
         _virtualSnapshot = snapshot;
         var virtualProgram = _virtualProgram;
         if (virtualProgram is null) return;
+        RefreshChallengeIdentity();
         foreach (var refresh in _ladderWatchRefreshers) refresh(snapshot);
-        foreach (var ladderCanvas in _ladderCanvases)
-            ladderCanvas.SetMonitorSnapshot(_ladderMonitorMatchesLoadedProgram ? snapshot : null);
+        foreach (var ladderCanvas in _ladderCanvases) ApplyInstructionMonitoring(ladderCanvas, snapshot);
         if (_ladderMonitorMatchesLoadedProgram)
         {
             _ladderWorkspaceStatus.Text = snapshot.State == VirtualControllerState.Running
@@ -9307,8 +9948,7 @@ public partial class SimulatorShell : CanvasLayer
             }
         }
         _ladderMonitorMatchesLoadedProgram = matches;
-        foreach (var ladderCanvas in _ladderCanvases)
-            ladderCanvas.SetMonitorSnapshot(matches ? _virtualSnapshot : null);
+        RefreshInstructionMonitorEligibility();
     }
 
     public bool VerifyVirtualControllerUi(out string result)
@@ -9695,6 +10335,7 @@ public partial class SimulatorShell : CanvasLayer
             && !BindingChoiceExists(simulatorInputPoint.Name)
             && editorTagBindingStatus.Text.Contains("PLC", StringComparison.Ordinal);
         var bindingBrowserWorked = inputBindingBrowserWorked && outputBindingBrowserWorked;
+        foreach (var form in _pendingEditorForms) if (form.HasPending()) form.Discard();
         var originalValidationCoil = _ladderDocument.Rungs[0].CoilVariable;
         _ladderDocument.Rungs[0].CoilVariable = "start_command";
         verifyAndLoad.EmitSignal(BaseButton.SignalName.Pressed);
@@ -9824,9 +10465,9 @@ public partial class SimulatorShell : CanvasLayer
         var focusedDispatchAccepted = shortcutRequests == 2;
         var arrowMoveRequests = 0;
         shortcutProbe.MoveRequested += direction => arrowMoveRequests += direction;
-        GetViewport().PushInput(new InputEventKey { Keycode = Key.Right, Pressed = true });
-        var focusedArrowMovesInsteadOfNavigating = arrowMoveRequests == 1 && shortcutProbe.HasFocus();
-        shortcutProbe._GuiInput(new InputEventKey { Keycode = Key.Right, Pressed = true });
+        GetViewport().PushInput(new InputEventKey { Keycode = Key.Right, AltPressed = true, Pressed = true });
+        var focusedAltArrowMovesInsteadOfNavigating = arrowMoveRequests == 1 && shortcutProbe.HasFocus();
+        shortcutProbe._GuiInput(new InputEventKey { Keycode = Key.Right, AltPressed = true, Pressed = true });
         var guiArrowConsumedBeforeFocusNavigation = arrowMoveRequests == 2 && shortcutProbe.HasFocus();
         shortcutProbe.Hide();
         otherShortcutFocus.GrabFocus();
@@ -9834,10 +10475,10 @@ public partial class SimulatorShell : CanvasLayer
         var hiddenDispatchIgnored = shortcutRequests == 2;
         otherShortcutFocus.Free();
         shortcutProbe.Free();
-        GD.Print($"LADDER_SHORTCUT_FOCUS_VERIFY unfocusedIgnored={unfocusedShortcutIgnored} focusedAccepted={focusedShortcutAccepted} hiddenIgnored={hiddenShortcutIgnored} dispatch={unrelatedFocusDispatchIgnored}/{focusedDispatchAccepted}/{hiddenDispatchIgnored} arrowMoves={focusedArrowMovesInsteadOfNavigating}");
+        GD.Print($"LADDER_SHORTCUT_FOCUS_VERIFY unfocusedIgnored={unfocusedShortcutIgnored} focusedAccepted={focusedShortcutAccepted} hiddenIgnored={hiddenShortcutIgnored} dispatch={unrelatedFocusDispatchIgnored}/{focusedDispatchAccepted}/{hiddenDispatchIgnored} altArrowMoves={focusedAltArrowMovesInsteadOfNavigating}");
         if (!unfocusedShortcutIgnored || !focusedShortcutAccepted || !hiddenShortcutIgnored
             || !unrelatedFocusDispatchIgnored || !focusedDispatchAccepted || !hiddenDispatchIgnored
-            || !focusedArrowMovesInsteadOfNavigating || !guiArrowConsumedBeforeFocusNavigation)
+            || !focusedAltArrowMovesInsteadOfNavigating || !guiArrowConsumedBeforeFocusNavigation)
         {
             result = "shortcut focus/visibility ownership failed";
             return false;
@@ -9858,8 +10499,9 @@ public partial class SimulatorShell : CanvasLayer
         var clipboardRung = _ladderDocument.Rungs[0];
         var clipboardRungIds = clipboardRung.Branches.SelectMany(branch => branch.Contacts)
             .Select(contact => contact.Id).ToHashSet(StringComparer.Ordinal);
-        editorCanvas.SelectElement(0, -1, -1, output: true);
-        instructionContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 3L);
+        editorCanvas._GuiInput(new InputEventMouseButton { Pressed = true, ButtonIndex = MouseButton.Right,
+            Position = editorCanvas.GetRungBounds(0).Position + new Vector2(20, 15) });
+        instructionContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 6L);
         instructionContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 4L);
         var pastedRung = _ladderDocument.Rungs.Count == clipboardRungCount + 1
             ? _ladderDocument.Rungs[1]
@@ -9880,7 +10522,9 @@ public partial class SimulatorShell : CanvasLayer
         var branchDeleteUndone = _ladderDocument.Rungs[0].Branches.Count == startingBranches;
         _ladderHistory.Clear();
         foreach (var refresh in _ladderEditorRefreshers) refresh();
+        foreach (var form in _pendingEditorForms) if (form.HasPending()) form.Discard();
         editorTagName.Text = "verify_unused";
+        editorTagName.EmitSignal(LineEdit.SignalName.TextChanged, "verify_unused");
         addTagButton.EmitSignal(BaseButton.SignalName.Pressed);
         var unusedTagIndex = _ladderDocument.Tags.FindIndex(tag => tag.Name == "verify_unused");
         if (unusedTagIndex >= 0)
@@ -9895,14 +10539,15 @@ public partial class SimulatorShell : CanvasLayer
         {
             SelectIndexedTreeRow(editorTagList, startTagIndex);
             editorTagList.EmitSignal(Tree.SignalName.ItemSelected);
-            editorTagName.Text = "verify_start";
-            editorTagInitialValue.Text = "TRUE";
+            editorTagName.Text = "verify_start"; editorTagName.EmitSignal(LineEdit.SignalName.TextChanged, "verify_start");
+            editorTagInitialValue.Text = "TRUE"; editorTagInitialValue.EmitSignal(LineEdit.SignalName.TextChanged, "TRUE");
             applyTagButton.EmitSignal(BaseButton.SignalName.Pressed);
         }
+        GD.Print($"TAG_FORM_REVIEW pending={string.Join(",", _pendingEditorForms.ConvertAll(f => f.HasPending()))} status={output.Text}");
         var tagRenameWorked = _ladderDocument.Tags.Any(tag => tag.Name == "verify_start")
             && _ladderDocument.CountTagReferences("verify_start") > 0
             && _ladderDocument.CountTagReferences("start_command") == 0;
-        var tagInitialValueWorked = _ladderDocument.Tags.Single(tag => tag.Name == "verify_start").InitialValue is true;
+        var tagInitialValueWorked = _ladderDocument.Tags.FirstOrDefault(tag => tag.Name == "verify_start")?.InitialValue is true;
         undo.EmitSignal(BaseButton.SignalName.Pressed);
         var tagRenameUndone = _ladderDocument.Tags.Any(tag => tag.Name == "start_command")
             && _ladderDocument.CountTagReferences("start_command") > 0
@@ -10130,7 +10775,13 @@ public partial class SimulatorShell : CanvasLayer
         }
         GD.Print($"NUMERIC_DESTINATION_GUARD_VERIFY rejectedAtomic={numericInputOnlyRejected} textMove={textMoveDestinationWorked} formatCreatesString={formatTextDestinationCreated}");
         var startingBlocks = _ladderDocument.Blocks.Count;
+        void ConfirmNamedCreation(string dialogName)
+        {
+            var form = GetNode<ConfirmationDialog>($"Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/{dialogName}");
+            form.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+        }
         addBlock.EmitSignal(BaseButton.SignalName.Pressed);
+        ConfirmNamedCreation("CreateBlockDialog");
         var blockAdded = _ladderDocument.Blocks.Count == startingBlocks + 1;
         blockName.Text = "VerifierRoutine";
         applyBlock.EmitSignal(BaseButton.SignalName.Pressed);
@@ -10138,6 +10789,7 @@ public partial class SimulatorShell : CanvasLayer
         removeBlock.EmitSignal(BaseButton.SignalName.Pressed);
         var blockDeleted = _ladderDocument.Blocks.Count == startingBlocks;
         addBlock.EmitSignal(BaseButton.SignalName.Pressed);
+        ConfirmNamedCreation("CreateBlockDialog");
         _ladderDocument.SelectBlock(0);
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         addCall.EmitSignal(BaseButton.SignalName.Pressed);
@@ -10148,6 +10800,7 @@ public partial class SimulatorShell : CanvasLayer
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         var startingTasks = _ladderDocument.Tasks.Count;
         addTask.EmitSignal(BaseButton.SignalName.Pressed);
+        ConfirmNamedCreation("CreateTaskDialog");
         var taskAdded = _ladderDocument.Tasks.Count == startingTasks + 1;
         taskName.Text = "VerifierTask";
         applyTask.EmitSignal(BaseButton.SignalName.Pressed);
@@ -10164,9 +10817,14 @@ public partial class SimulatorShell : CanvasLayer
         var labelInserted = _ladderDocument.Rungs.Any(rung => rung.IsLabel
             && rung.ProgramControlLabel == "label_1");
         editorCanvas.SelectElement(0, -1, -1, output: true);
+        editorCanvas._GuiInput(new InputEventMouseButton { ButtonIndex = MouseButton.Left, DoubleClick = true, Pressed = true,
+            Position = editorCanvas.GetElementPosition(0, -1, -1, output: true) });
+        var labelBeforePendingEdit = _ladderDocument.Rungs[0].ProgramControlLabel;
         programControlLabel.Text = "finish";
+        programControlLabel.EmitSignal(LineEdit.SignalName.TextChanged, "finish");
+        var labelTypingIsStaged = _ladderDocument.Rungs[0].ProgramControlLabel == labelBeforePendingEdit;
         programControlLabel.EmitSignal(LineEdit.SignalName.TextSubmitted, "finish");
-        var labelPropertyEdited = _ladderDocument.Rungs[0].IsLabel
+        var labelPropertyEdited = labelTypingIsStaged && _ladderDocument.Rungs[0].IsLabel
             && _ladderDocument.Rungs[0].ProgramControlLabel == "finish";
         editorCanvas._GuiInput(new InputEventMouseButton
         {
@@ -10320,6 +10978,7 @@ public partial class SimulatorShell : CanvasLayer
                 && editorCanvas.MonitorActive && logixCanvas.MonitorActive
                 && !tiaEditorTabTitle.Text.StartsWith("* ", StringComparison.Ordinal)
                 && !logixEditorTabTitle.Text.StartsWith("* ", StringComparison.Ordinal);
+            GD.Print($"WATCH_UNDO_DETAIL count={_ladderDocument.WatchVariables.Count}/{originalWatchCount} monitor={editorCanvas.MonitorActive}/{logixCanvas.MonitorActive} dirty={LadderEditorProjectJson.HasUnsavedChanges(_ladderDocument, _ladderSavedProjectJson)} nextId={_ladderDocument.CaptureSnapshot().NextId}/{LadderEditorProjectJson.Load(_ladderSavedProjectJson!).Document?.CaptureSnapshot().NextId}");
             _ladderSavedProjectJson = baselineBeforeWatch;
             foreach (var refresh in _ladderEditorRefreshers) refresh();
             var interfaceNameField = GetNode<LineEdit>($"{projectObjectsRoot}/InterfaceFields/InterfaceName");
@@ -10502,7 +11161,8 @@ public partial class SimulatorShell : CanvasLayer
     public void SetWorkspaceDirty(bool dirty)
     {
         IsWorkspaceDirty = dirty;
-        _sceneTitle.Text = dirty ? $"{_activeSceneName}  •  UNSAVED" : _activeSceneName;
+        var title = IsChallengeDraftActive ? ChallengeDisplayName : _activeSceneName;
+        _sceneTitle.Text = dirty ? $"{title}  •  UNSAVED" : title;
         _sceneTitle.AddThemeColorOverride("font_color",
             dirty ? new Color("f1aa5b") : new Color("bcd3df"));
     }
@@ -10652,3 +11312,8 @@ public partial class SimulatorShell : CanvasLayer
         '[' => "[lb]", ']' => "[rb]", _ => character.ToString(),
     }));
 }
+
+
+
+
+

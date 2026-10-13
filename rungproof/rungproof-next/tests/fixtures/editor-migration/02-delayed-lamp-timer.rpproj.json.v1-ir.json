@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-2-delayed-lamp",
+  "name": "Delayed_Lamp_Main",
+  "language": "LD",
+  "scanPeriodMs": 20,
+  "variables": [
+    {
+      "name": "timer_request",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "timer_request",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "delayed_lamp",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "delayed_lamp",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "delay_timer",
+      "type": "TIMER",
+      "role": "memory",
+      "initial": "00:00:00",
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    }
+  ],
+  "watchVariables": [
+    "timer_request",
+    "delay_timer",
+    "delayed_lamp"
+  ],
+  "networks": [
+    {
+      "id": "rung-3",
+      "label": "Delay lamp request",
+      "logic": {
+        "id": "branch-4",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-5",
+            "kind": "contact",
+            "variable": "timer_request",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "timer": {
+        "id": "rung-3-timer",
+        "variable": "delay_timer",
+        "presetMs": 2000,
+        "kind": "OnDelay"
+      }
+    },
+    {
+      "id": "rung-6",
+      "label": "Delayed lamp output",
+      "logic": {
+        "id": "branch-7",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-8",
+            "kind": "contact",
+            "variable": "delay_timer.Q",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "coil": {
+        "id": "rung-6-coil",
+        "variable": "delayed_lamp",
+        "mode": "assign"
+      }
+    }
+  ],
+  "entryBlock": "block-1",
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Delayed_Lamp_Main",
+      "networks": [
+        {
+          "id": "rung-3",
+          "label": "Delay lamp request",
+          "logic": {
+            "id": "branch-4",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-5",
+                "kind": "contact",
+                "variable": "timer_request",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "timer": {
+            "id": "rung-3-timer",
+            "variable": "delay_timer",
+            "presetMs": 2000,
+            "kind": "OnDelay"
+          }
+        },
+        {
+          "id": "rung-6",
+          "label": "Delayed lamp output",
+          "logic": {
+            "id": "branch-7",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-8",
+                "kind": "contact",
+                "variable": "delay_timer.Q",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-6-coil",
+            "variable": "delayed_lamp",
+            "mode": "assign"
+          }
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ]
+}

@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-4-batch-process",
+  "name": "Batch_Process_Main",
+  "language": "LD",
+  "scanPeriodMs": 20,
+  "variables": [
+    {
+      "name": "pallet_detected",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "pallet_detected",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pallet_type_valid",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "pallet_type_valid",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "count_request",
+      "type": "BOOL",
+      "role": "input",
+      "initial": false,
+      "binding": "count_request",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pallet_count_valid",
+      "type": "BOOL",
+      "role": "output",
+      "initial": false,
+      "binding": "pallet_count_valid",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "pallet_count",
+      "type": "DINT",
+      "role": "output",
+      "initial": 0,
+      "binding": "pallet_count",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "batch_count",
+      "type": "COUNTER",
+      "role": "memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "batch_ready",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    },
+    {
+      "name": "always_scan",
+      "type": "BOOL",
+      "role": "memory",
+      "initial": true,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null
+    }
+  ],
+  "watchVariables": [
+    "pallet_detected",
+    "pallet_type_valid",
+    "count_request",
+    "batch_count",
+    "pallet_count",
+    "pallet_count_valid"
+  ],
+  "networks": [
+    {
+      "id": "rung-18",
+      "label": "Count valid pallet events",
+      "logic": {
+        "id": "branch-19",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-20",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "call": {
+        "id": "rung-18-call",
+        "targetBlock": "block-3"
+      }
+    },
+    {
+      "id": "rung-21",
+      "label": "Validate batch completion",
+      "logic": {
+        "id": "branch-22",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-23",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "call": {
+        "id": "rung-21-call",
+        "targetBlock": "block-4"
+      }
+    },
+    {
+      "id": "rung-24",
+      "label": "Publish current pallet count",
+      "logic": {
+        "id": "branch-25",
+        "kind": "series",
+        "children": [
+          {
+            "id": "contact-26",
+            "kind": "contact",
+            "variable": "always_scan",
+            "contact": "normallyOpen"
+          }
+        ]
+      },
+      "numericOperation": {
+        "id": "rung-24-numeric",
+        "operation": "Move",
+        "sourceA": "batch_count.ACC",
+        "sourceB": "",
+        "sourceC": "0",
+        "destination": "pallet_count"
+      }
+    }
+  ],
+  "entryBlock": "block-1",
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Batch_Process_Main",
+      "networks": [
+        {
+          "id": "rung-18",
+          "label": "Count valid pallet events",
+          "logic": {
+            "id": "branch-19",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-20",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "call": {
+            "id": "rung-18-call",
+            "targetBlock": "block-3"
+          }
+        },
+        {
+          "id": "rung-21",
+          "label": "Validate batch completion",
+          "logic": {
+            "id": "branch-22",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-23",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "call": {
+            "id": "rung-21-call",
+            "targetBlock": "block-4"
+          }
+        },
+        {
+          "id": "rung-24",
+          "label": "Publish current pallet count",
+          "logic": {
+            "id": "branch-25",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-26",
+                "kind": "contact",
+                "variable": "always_scan",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "numericOperation": {
+            "id": "rung-24-numeric",
+            "operation": "Move",
+            "sourceA": "batch_count.ACC",
+            "sourceB": "",
+            "sourceC": "0",
+            "destination": "pallet_count"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-3",
+      "name": "FB_ValidPalletCounter",
+      "networks": [
+        {
+          "id": "rung-5",
+          "label": "Count valid pallets",
+          "logic": {
+            "id": "branch-6",
+            "kind": "series",
+            "children": [
+              {
+                "id": "edge-7",
+                "kind": "contact",
+                "variable": "pallet_detected",
+                "contact": "normallyOpen",
+                "edge": "rising"
+              },
+              {
+                "id": "contact-8",
+                "kind": "contact",
+                "variable": "pallet_type_valid",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-9",
+                "kind": "contact",
+                "variable": "count_request",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "counter": {
+            "id": "rung-5-counter",
+            "variable": "batch_count",
+            "preset": 5,
+            "kind": "CountUp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block-4",
+      "name": "FC_BatchValidation",
+      "networks": [
+        {
+          "id": "rung-10",
+          "label": "Batch ready permissive",
+          "logic": {
+            "id": "branch-11",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-12",
+                "kind": "contact",
+                "variable": "pallet_type_valid",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-13",
+                "kind": "contact",
+                "variable": "count_request",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-10-coil",
+            "variable": "batch_ready",
+            "mode": "assign"
+          }
+        },
+        {
+          "id": "rung-14",
+          "label": "Validate pallet count",
+          "logic": {
+            "id": "branch-15",
+            "kind": "series",
+            "children": [
+              {
+                "id": "contact-16",
+                "kind": "contact",
+                "variable": "batch_count.DN",
+                "contact": "normallyOpen"
+              },
+              {
+                "id": "contact-17",
+                "kind": "contact",
+                "variable": "batch_ready",
+                "contact": "normallyOpen"
+              }
+            ]
+          },
+          "coil": {
+            "id": "rung-14-coil",
+            "variable": "pallet_count_valid",
+            "mode": "assign"
+          }
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ]
+}

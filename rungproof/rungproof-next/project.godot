@@ -11,6 +11,8 @@ config_version=5
 [application]
 
 config/name="RungProof"
+config/use_custom_user_dir.offline_demo=true
+config/custom_user_dir_name.offline_demo="RungProof Offline Demo"
 config/description="PLC Visual Simulator — Build the logic. Prove the machine."
 config/icon="res://assets/brand/rungproof-icon.svg"
 run/main_scene="res://scenes/app/main.tscn"

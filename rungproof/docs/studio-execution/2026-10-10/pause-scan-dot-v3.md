@@ -1,0 +1,19 @@
+# Dot — Pause / accepted Scan / History V3
+
+Disposition: **VISUAL PASS WITH LIMITS; final native and regressions pending.** Human material approval remains false. This review does not approve all 77 lessons, external PLC use, or product release.
+
+Dot personally inspected all nine individual V3 PNGs at 1600×900 and 1280×720. The adjacent JSON records exact image hashes, capture identities, logs, scenes and accepted scans. All captures identify DLL `5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652`.
+
+The unsolicited history overlay is absent. Actual matching ladder monitors and runtime say PAUSED; Resume and Scan are visible. History opens intentionally with readable contrast and separately labelled sampled inputs, effective inputs, applied commands and post-plant PC inputs. Selected historical scan 1 is distinguished from live accepted scan 31 without claiming replay. Invalid current code shows the corrective EDIT001 detail, disables Scan and labels Run honestly while retained plant state remains held.
+
+The roller card now visibly says CLOCK HELD before retained trial phase Running. STEP or RESUME explicitly continues observation. This resolves the prior implication that coast advances while paused; no observer state or timing correction was introduced.
+
+Limits: at 1280, menu and ladder content require horizontal scrolling; these frames do not show an entire rung/program. The longer held observer card places drive/current-beam measurements below the operator rail fold; scrolling remains necessary, while command OFF is visible in Scene I/O. The error-list row truncates but its corrective detail wraps readably. Existing muted materials, crisp shadows and sparse environment context remain separate from this workflow acceptance and do not satisfy pending human artistic approval.
+
+Final native results will be appended after their terminal logs are independently checked. No native execution, engine launch, or source change was performed during this review.
+
+Native amendment: independently read pause-scan-native-v3.log terminal failures=0, exactly 768 SCAN_INSPECTION_CHECK rows True and zero False. Final identity manifest matches all 314 source files and the rendered DLL. Pure V2 reports 54 checks at 20/40/100 ms; controller V2 reports 164 pass / 0 fail with no real PLC transport. These earlier pure execution scopes remain distinct from the final native binary. Five final regressions are still pending.
+
+Final disposition: **PASS WITH LIMITS** for Pause / one accepted Scan / read-only History in the exact five authored demos and two finite workspaces. Independently checked all five final regression logs: five-demo learner, belt, roller and mapping-detach terminal failures=0; app shell PASS scenes=77/groups=3/demos=5. No diagnostic ERROR/FATAL or named failed assertions found. Final 314-source manifest still has zero hash mismatches. This closes the bounded code/native/visual gate, not human material approval, broader 69 tag-only lesson assessment, external transport, accessibility, physical commissioning or release qualification. Prior pending statements above are historical and superseded by this amendment.
+
+Consolidation review: current checkpoint/support matrix and 77-row support JSON accurately separate current 506738 bounded workflow from original E504/B931 row evidence and FA9A material previews. Counts remain eight authored factories, five qualified demo workflows, three typed lessons awaiting equivalent learner qualification, 69 tag-only defaults, and wider 75 material propagation held. Scope wording requested: native directly exercises unsupported gallery and existing external profile guards without transport; active external Step and stale-callback scenarios are not directly qualified. No broader product completion or human style approval follows from this milestone.

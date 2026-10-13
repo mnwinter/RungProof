@@ -1,0 +1,16 @@
+# Typed authored lesson qualification checkpoint — PASS_WITH_LIMITS
+
+Final closure: exact B892 binary repeat passed 456 checks with no engine ERROR; scan inspection passed 768 checks and all five-demo, belt, roller, mapping-detach and app-shell regression processes exited zero. Root and Dot personally inspected all 18 final native images. Source/image/log hashes are frozen in typed-learner-v3-identity-ledger.json. Original failing engine log remains preserved: the clean repeat does not resolve the intermittent Handle finding.
+
+Visual limits remain: Chicken's floating captured-text caption overlaps the physical paper ink in the close view; physical ink legibility is not qualified. Split views show cropped programs and small overview readouts. Typed history is present but its unavailable Pause/Step header is ambiguous. Capture clocks were held by an explicitly labeled QA mechanism, not product Pause. This is bounded offline workflow qualification, not all-77, human visual approval, accessibility, release or physical PLC acceptance.
+
+Existing Motor ENUM10.4, Chicken Label Print10.2 and Drive Alarm String10.1 use the actual editable disk Open/current Run and exact saved joint reopen at20/40/100ms. Native v1 passed408 assertions; v2 and finalv3 passed456. Added QA partials and capture hooks do not extend product Pause eligibility or change lesson factories/plant models.
+
+Final-v3 DLL: B89256EE1BDA61D8FD61FAEBC846E0F6C6096C560ED9C4E574430FF407F47469. Build zero warnings/errors. Original final-v3 typed log contains one Godot managed/native GCHandle resource-load error during a repeated Chicken joint reopen; later behavioral assertions succeed. The same error signature appears in historical catalog logs. It is unresolved, not proven harmless; see typed-engine-handle-diagnosis.md. Exact-binary repeat, regression batch and final visual review are complete with the limits above.
+
+Behavioral scope: Motor fresh edge/fault priority, actual mounted shaft motion/hold/reset and ENUM readout; Chicken generated stableweight and print/application acknowledgement N→N+1, actual paper/capturedink, readiness loss, midprint/midapply Stop, captured text immutability across valid changed Run; Drive supplied whole-token diagnostic fixture matching, custom selectedcode and reset. Wrong programs produce actual wrong consequences; invalid current/reopened drafts retain exact saved content and reject stale execution.
+
+All three typed IDs remain outside supported product Pause/Step. Rejection without snapshot/pose mutation and immutable accepted history are tested. This does not qualify paused physical Step for typed lessons. Motor shaft is command projection on normal engine physics, not measured speed feedback or exact accepted-angle integration.
+
+Final overview and close views establish current editor/PLC point differences, readable invalid errors, readable motor state and received alarm message. Chicken captured text is readable, but physical ink overlaps its caption. Remaining69 tag-only exercises and broader77 whole-product acceptance are unfinished. Wider75 material propagation remains held independently. Constrained generic one-belt signal connection design is ratified with technical prerequisites; no new runtime connection implemented.
+

@@ -1,0 +1,23 @@
+{
+  "reviewer": "Dot",
+  "priorEvidence": "realism-visual-dot-01-26.json retained unchanged",
+  "scope": "Camera clipping correction only; new location diversity remains unaccepted, no motion/input/physical claim",
+  "frames": [
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\01-lab-11-13-xy-palletizing.scene.png",
+      "view": "scene",
+      "sha256": "82C41B7EA29765FEAD850E40C26BE5029D3FC57FB2833E1E75F5A26453D275EF",
+      "assemblySha256": "4CF91D12373DE429D519C236D50971608773D9A0296DE9268A6CA66533F27D8C",
+      "verdict": "CLIPPING_HOLD_RESOLVED",
+      "finding": "Cabinet is entirely visible within teaching aperture, all three mounted action heads visible; small legends at split distance remain limited."
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\01-lab-11-13-xy-palletizing.split.png",
+      "view": "split",
+      "sha256": "2833137C6A80DBFB44CD75B61E5659FB269DB7CDE01B15EDA14C41F070D04734",
+      "assemblySha256": "4CF91D12373DE429D519C236D50971608773D9A0296DE9268A6CA66533F27D8C",
+      "verdict": "CLIPPING_HOLD_RESOLVED",
+      "finding": "Cabinet is entirely visible within teaching aperture, all three mounted action heads visible; small legends at split distance remain limited."
+    }
+  ]
+}

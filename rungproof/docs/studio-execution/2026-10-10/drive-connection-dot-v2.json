@@ -1,0 +1,46 @@
+{
+  "status": "PASS_WITH_LIMITS_PENDING_V3_METADATA_RECAPTURE_AND_BROAD_REGRESSIONS",
+  "frames": [
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\drive-connection-final-v2\\connected.png",
+      "sha256": "351D8ADA86A74D0F0053ADFD40A26E56098CD06C5D72689525FC2FD4E76C7A23",
+      "personallyViewed": true,
+      "dll": "E8C1179779127C9289C7A19858B9FF598DC7ECB5C90E9BB94841D25CAB5F2B58"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\drive-connection-final-v2\\eligible.png",
+      "sha256": "F55C5272CE3B44B61F0FE91857FE9686070948A8353EE618705AF1DA06BDEC7D",
+      "personallyViewed": true,
+      "dll": "E8C1179779127C9289C7A19858B9FF598DC7ECB5C90E9BB94841D25CAB5F2B58"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\drive-connection-final-v2\\history.png",
+      "sha256": "ACB45588D92A198D04606FD64DC751FB74BC9ED767F9204D598E550E99C391B0",
+      "personallyViewed": true,
+      "dll": "E8C1179779127C9289C7A19858B9FF598DC7ECB5C90E9BB94841D25CAB5F2B58"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\drive-connection-final-v2\\intended.png",
+      "sha256": "76534BA3893708A16849F5A227985222A0005DDEBA26115E28FB5D142F859025",
+      "personallyViewed": true,
+      "dll": "E8C1179779127C9289C7A19858B9FF598DC7ECB5C90E9BB94841D25CAB5F2B58"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\drive-connection-final-v2\\invalid.png",
+      "sha256": "3ED12C764BFB0B008C845EADBC2566AFB632B96CB80C8BAA045410B4DD6E526F",
+      "personallyViewed": true,
+      "dll": "E8C1179779127C9289C7A19858B9FF598DC7ECB5C90E9BB94841D25CAB5F2B58"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\drive-connection-final-v2\\wrong.png",
+      "sha256": "859468380E5702187F4E79AB6AB5A9E6503ABAC860815AAD205D67A5D9A06DFD",
+      "personallyViewed": true,
+      "dll": "E8C1179779127C9289C7A19858B9FF598DC7ECB5C90E9BB94841D25CAB5F2B58"
+    }
+  ],
+  "humanMaterialApproved": false,
+  "whole77Approved": false,
+  "motionInferredFromStill": false,
+  "intermittentHandleFinding": "OPEN",
+  "genericV2ClockMetadataIncorrect": true
+}

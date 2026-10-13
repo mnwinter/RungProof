@@ -23,6 +23,8 @@ public static partial class SceneComposer
         bool runCommands
     )
     {
+        if(Text(scene.Simulation,"type","")=="workspaceFiniteBelt")return ComposeWorkspaceBeltPreset(scene,candidates);
+        if(Text(scene.Simulation,"type","")=="workspaceFiniteRoller")return ComposeWorkspaceRollerPreset(scene,candidates);
         var root = new Node3D { Name = $"Scene_{SafeNodeName(scene.Id)}" };
         var rendered = new List<string>();
         var deferred = new List<string>();
@@ -62,7 +64,7 @@ public static partial class SceneComposer
                 "containerReceiver" => CreateContainerReceiver(equipment, candidates),
                 "photoeye" => CreatePhotoeyeAsset(equipment, candidates),
                 "sizeSensorBank" => CreateSizeSensorBank(equipment, candidates),
-                "switch" => CreateSwitchAsset(equipment, candidates),
+                "switch" => CreateSwitchAsset(scene.Id, equipment, candidates),
                 "indicator" => CreateIndicatorAsset(equipment, candidates),
                 "pusher" => CreatePusherAsset(equipment, candidates, runCommands,
                     (float)Number(scene.Simulation, "pusherStrokeTimeS", 0.8)),
@@ -174,6 +176,14 @@ public static partial class SceneComposer
         if (scene.Id == "lab-5-10-coating-line") ConfigureCoatingInstallation(root);
         if (scene.Id == "lab-6-08-hand-dryer") ConfigureHandDryerInstallation(root);
         if (scene.Id == "lab-6-07-luggage-weight-sort") ConfigureLuggageInstallation(root);
+        // Establish supported operator installations before Ready, runtime
+        // initial-pose capture, and ray-pick/feedback bindings are constructed.
+        ConfigureContextInstallation(root, scene);
+        ConfigureMotorTestFixtures(root, scene);
+        ConfigureMotorConveyorZones(root, scene);
+        ConfigureControlInstallation(root, scene);
+        ConfigureAccessorySupports(root, scene);
+        ApplyTemplateOverride(root,scene,scene.TemplateOverride);
         return new SceneComposition(root, rendered, deferred);
     }
 
@@ -650,7 +660,7 @@ public static partial class SceneComposer
         return model;
     }
 
-    private static Node3D CreateSwitchAsset(SceneEquipment equipment, AssetCatalogDocument candidates)
+    private static Node3D CreateSwitchAsset(string sceneId, SceneEquipment equipment, AssetCatalogDocument candidates)
     {
         var emergency = Text(equipment.Config, "style", "pushbutton") == "emergency";
         var model = CreateMappedAsset(equipment, candidates, emergency
@@ -663,7 +673,7 @@ public static partial class SceneComposer
         }
         // Retain the authored default plate unless the scene supplies its own
         // operator function. A validity/reset input must not say START.
-        var faceLabel = Text(equipment.Config, "faceLabel", string.Empty);
+        var faceLabel = ResolveOperatorFaceLabel(sceneId, equipment);
         if (!emergency && faceLabel.Length > 0
             && model.FindChild("BUTTON_start_label", true, false) is MeshInstance3D plateText)
         {

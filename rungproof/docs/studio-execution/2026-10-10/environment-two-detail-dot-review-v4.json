@@ -1,0 +1,56 @@
+{
+  "status": "READY_FOR_BOUNDED_PREVIEW_WITH_LIMITATIONS",
+  "individuallyViewed": 4,
+  "findings": [
+    "Larger staging and visible local lighting improve dispatch purpose and material distinction.",
+    "Classroom notice fits; passive split text remains small.",
+    "No obvious new functional occlusion or access obstruction in these static views.",
+    "Remaining75 unseen; source/native checks do not establish final visual or physical clearance acceptance."
+  ],
+  "frames": [
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-detail-v4\\01-lab-2-01-workstation-call.scene.png",
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "scene",
+      "hash": "17A474659AAD8DD9F549952DFD4FF18543162967C65B1C1826D75C1DCD149F10",
+      "matched": true,
+      "assembly": "AE2E630C8DE65B2D641809DC40F0C0DB25EAF339423C394F1BF821620A71B3ED",
+      "unchanged": true,
+      "clean": true,
+      "captureMarker": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-detail-v4\\01-lab-2-01-workstation-call.split.png",
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "split",
+      "hash": "F37E0671357991BEB1C20983A129F9CE021C50456B040CF92271ECE8E019AFE4",
+      "matched": true,
+      "assembly": "AE2E630C8DE65B2D641809DC40F0C0DB25EAF339423C394F1BF821620A71B3ED",
+      "unchanged": true,
+      "clean": true,
+      "captureMarker": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-detail-v4\\02-lab-4-08-package-grouping.scene.png",
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "scene",
+      "hash": "1D7BF64EA2B436067A51CDC1B1A84D3A5BBB441BB639A17222D8E7B4831B9C74",
+      "matched": true,
+      "assembly": "AE2E630C8DE65B2D641809DC40F0C0DB25EAF339423C394F1BF821620A71B3ED",
+      "unchanged": true,
+      "clean": true,
+      "captureMarker": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\diversity-finished-two-detail-v4\\02-lab-4-08-package-grouping.split.png",
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "split",
+      "hash": "5270B9E8A91885000C378BEBF5C18668CBA2E9A688E1B54E25C5C0572575EF07",
+      "matched": true,
+      "assembly": "AE2E630C8DE65B2D641809DC40F0C0DB25EAF339423C394F1BF821620A71B3ED",
+      "unchanged": true,
+      "clean": true,
+      "captureMarker": true
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "all77VisualApproved": false,
+  "scope": "five actual demo learner workflows20ms, generic mapping lifecycle, bounded regressions",
+  "dllSha256": "E504D9B25C27DD5F90816993207C867A165F607A9DA88BC5D8897CA71C627554",
+  "finalRegressions": [
+    {
+      "sha256": "204E3C49DDDE8066D3E146DB8EA4D26D68FD022DD12FED7343FAD0234F98E72C",
+      "terminal": "APP_SHELL_VERIFY PASS scenes=77 groups=3 demos=5 assets=295 diagnostics=1 connection=DISCONNECTED workspaceMenu=File -> Load Last Workspace invoked and displayed feedback plcMenu=PLC menu exposes Built-in Simulator, External PLC, and External PLC Settings / Tests scenarioMenu=demoSelections=5/5 scene/editor/title/program/interface match crossSceneProject=preserved=True changedScene=True PROJECT SAVED · cross-scene-review-679dcce8efdd4e3abbd0e8dfa9972699.rpproj.json · WORK IN PROGRESS PRESERVED PROJECT OPENED · cross-scene-review-679dcce8efdd4e3abbd0e8dfa9972699.rpproj.json · VERIFIED + LOADED OFFLINE",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-final-app-shell-v1.log"
+    },
+    {
+      "sha256": "273F04F2C34FE6B15482C0BCDBA8ED3458050E3E88FF7BB6AAA6C37558E512C1",
+      "terminal": "CONTROL_INSTALLATIONS_VERIFY PASS scenes=77 authoredCaseScenes=71 functionalPicks=163 acceptedPresses=138 selectors=17 prerequisiteBlockedActions=8 knownNonHeadBindings=12 retainedFieldBindings=7 projectedIndicators=35 complexIndicatorBindings=3 nonOutputIndicators=4 benchLensShelfChecks=21 scope=scripted-native-mounted-controls-not-keyboard-not-clearance",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-final-control-installations-v1.log"
+    },
+    {
+      "sha256": "2971DE207E3150FDDBB6BB2B18C65EA49B1F09C2C8B80089E3803491C41FF656",
+      "terminal": "CATALOG_ENVIRONMENTS_VERIFY PASS scenes=77 ledger=exact hierarchy=sibling axes=world restore=pass runtime=unchanged",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-final-scene-environments-v1.log"
+    },
+    {
+      "sha256": "1FE86DAA3F215286E2FCCC697971293DA1C018E4202B840280ECDDD44E8652A6",
+      "terminal": "WORKSPACE_BELT_AUDIT_RESULT failures=0",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-final-workspace-belt-v1.log"
+    },
+    {
+      "sha256": "65329F01BBF3613E6DC0F8FC1D7F561DFB25DA9E093AA67E56F5D30D304C1F25",
+      "terminal": "WORKSPACE_MAPPING_DETACH_DONE failures=0",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-final-workspace-mapping-detach-v1.log"
+    },
+    {
+      "sha256": "FA9FD11641A919B353FA313E5D69CF14715FF49FD17E34D5CC8FF68A2FFBC724",
+      "terminal": "WORKSPACE_ROLLER_RESULT failures=0",
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-final-workspace-roller-v1.log"
+    }
+  ],
+  "frames": [
+    {
+      "personallyViewed": true,
+      "imageSha256": "0BC928AB955F1F70139E49C9992356B85312D062CD76C8EA2DFF9777435C4545",
+      "qualified": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-demo5-capture-v1\\carry.scene.png"
+    },
+    {
+      "personallyViewed": true,
+      "imageSha256": "860F4FCD94F90DE2BB8F6ED47C8D86A2CCD0C152940EF72530D191F7CCD13B84",
+      "qualified": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-demo5-capture-v1\\completed.scene.png"
+    },
+    {
+      "personallyViewed": true,
+      "imageSha256": "3D393FE37FFBE0F1F6CEDB7537120F2C0A9B75F5A5FD8D6CA0768FC05F829103",
+      "qualified": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-demo5-capture-v1\\completed.split.png"
+    },
+    {
+      "personallyViewed": true,
+      "imageSha256": "4C04759F35CD4844023DDF9B34D33AD5C581A97F8B2E2373BCC5A702EDEEBA22",
+      "qualified": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-demo5-capture-v1\\initial.scene.png"
+    },
+    {
+      "personallyViewed": true,
+      "imageSha256": "D23920C8EC2BA420DC01D9B646109A4A952A2A2D47915762E3363989A869171D",
+      "qualified": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-demo5-capture-v1\\invalid-current.scene.png"
+    },
+    {
+      "personallyViewed": true,
+      "imageSha256": "DAE4C96A354C6394BA6298876C64937C4C0E471A174EF7C511E95ECA9B50875C",
+      "qualified": true,
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\whole-product-demo5-capture-v1\\wrong-carry.scene.png"
+    }
+  ],
+  "humanMaterialApproved": false,
+  "status": "PASS_WITH_LIMITS_EXISTING_WORKFLOW_AND_MAPPING_MILESTONE"
+}

@@ -11,6 +11,7 @@ public sealed record LadderEditorProjectLoadResult(
     IReadOnlyList<LadderValidationIssue> Issues)
 {
     public bool IsReadable => Document is not null && Issues.Count == 0;
+    public int SourceSchemaVersion { get; init; }
 }
 
 /// <summary>
@@ -21,7 +22,7 @@ public sealed record LadderEditorProjectLoadResult(
 /// </summary>
 public static class LadderEditorProjectJson
 {
-    public const int SchemaVersion = 1;
+    public const int SchemaVersion = 2;
     public const string Kind = "rungproof-ladder-project";
 
     private static readonly JsonSerializerOptions Options = new()
@@ -29,6 +30,7 @@ public static class LadderEditorProjectJson
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
         WriteIndented = true,
+        MaxDepth = 256,
     };
 
     public static string Save(LadderEditorDocument document) => Save(document, contentOnly: false);
@@ -38,12 +40,11 @@ public static class LadderEditorProjectJson
         if (savedJson is null) return true;
         try
         {
-            var saved = JsonSerializer.Deserialize<ProjectDto>(savedJson, Options);
-            if (saved is null) return true;
+            var loaded = Load(savedJson);
+            if (!loaded.IsReadable) return true;
             // Selecting a block is navigation. Preserve it in saved files,
             // but do not confuse it with an edit to the project contents.
-            saved.ActiveBlockIndex = 0;
-            return !string.Equals(JsonSerializer.Serialize(saved, Options),
+            return !string.Equals(Save(loaded.Document!, contentOnly: true),
                 Save(document, contentOnly: true), StringComparison.Ordinal);
         }
         catch (JsonException) { return true; }
@@ -63,11 +64,14 @@ public static class LadderEditorProjectJson
             ScanPeriodMs = snapshot.ScanPeriod.TotalMilliseconds,
             ActiveBlockIndex = contentOnly ? 0 : snapshot.ActiveBlockIndex,
             EntryBlockId = snapshot.EntryBlockId,
-            NextId = snapshot.NextId,
+            // Loading repairs the allocation cursor against imported stable IDs.
+            // That bookkeeping does not change authored project content.
+            NextId = contentOnly ? 0 : snapshot.NextId,
             Tags = snapshot.Tags.Select(Tag).ToList(),
             Blocks = snapshot.Blocks.Select(Block).ToList(),
             Tasks = snapshot.Tasks.Select(Task).ToList(),
             WatchVariables = snapshot.WatchVariables.ToList(),
+            Instances = (snapshot.Instances ?? []).ToList(),
         };
         return JsonSerializer.Serialize(dto, Options);
     }
@@ -79,27 +83,45 @@ public static class LadderEditorProjectJson
             var dto = JsonSerializer.Deserialize<ProjectDto>(json, Options);
             if (dto is null)
                 return Invalid("Project document must be a JSON object.");
-            if (dto.SchemaVersion != SchemaVersion)
+            if (dto.SchemaVersion is not (1 or SchemaVersion))
                 return Invalid($"Unsupported editor project schemaVersion '{dto.SchemaVersion}'.");
             if (!string.Equals(dto.Kind, Kind, StringComparison.Ordinal))
                 return Invalid($"Unsupported project kind '{dto.Kind}'.");
-            if (dto.Tags is null || dto.Blocks is null || dto.Tasks is null || dto.WatchVariables is null)
+            if (dto.Tags is null || dto.Blocks is null || dto.Tasks is null || dto.WatchVariables is null || dto.Instances is null)
                 return Invalid("Editor project collections must not be null.");
             if (dto.Blocks.Count == 0)
                 return Invalid("Editor project must contain at least one block/routine.");
-            if (dto.Blocks.Any(block => block.Rungs is null)
-                || dto.Blocks.SelectMany(block => block.Rungs).Any(rung => rung.Branches is null)
+            // JSON arrays can contain null despite nonnullable DTO annotations.
+            // Validate from the outside in before dereferencing nested entries.
+            if (dto.Tags.Any(tag => tag is null) || dto.Tasks.Any(task => task is null)
+                || dto.Blocks.Any(block => block is null) || dto.WatchVariables.Any(name => name is null)
+                || dto.Instances.Any(instance => instance is null || instance.Id is null || instance.Name is null || instance.BlockId is null))
+                return Invalid("Editor project collections must not contain null entries.");
+            if (dto.Blocks.Any(block => block.Rungs is null || block.Interface is null
+                    || block.Rungs.Any(rung => rung is null) || block.Interface.Any(parameter => parameter is null))
+                || dto.Blocks.SelectMany(block => block.Rungs).Any(rung => rung.Branches is null
+                    || rung.Branches.Any(branch => branch is null))
                 || dto.Blocks.SelectMany(block => block.Rungs).SelectMany(rung => rung.Branches)
-                    .Any(branch => branch.Contacts is null))
+                    .Any(branch => branch.Contacts is null || branch.Contacts.Any(contact => contact is null)))
                 return Invalid("Editor project block, rung, branch, and contact collections must not be null.");
-            if (dto.Blocks.Any(block => block.Rungs.Any(rung => rung.Branches.Count == 0)))
+            if (dto.SchemaVersion == 1 && dto.Blocks.Any(block => block.Rungs.Any(rung => rung.Branches.Count == 0)))
                 return Invalid("Every network/rung must retain at least one branch path.");
+            if (dto.SchemaVersion == 2 && dto.Blocks.Any(block => block.Rungs.Any(rung => rung.Root is null)))
+                return Invalid("Schema 2 requires a recursive root for every network.");
+            if (dto.Blocks.SelectMany(b => b.Rungs).Any(r => r.CallBindings?.Any(b => b is null || b.ParameterId is null || b.Symbol is null
+                || b.EnumMembers?.Any(m => m is null) == true) == true))
+                return Invalid("CALL bindings must not contain null entries.");
 
             var issues = new List<LadderValidationIssue>();
             var tags = dto.Tags.Select((tag, index) => ParseTag(tag, index, issues)).ToArray();
-            var blocks = dto.Blocks.Select((block, index) => ParseBlock(block, index, issues)).ToArray();
+            var blocks = dto.Blocks.Select((block, index) => ParseBlock(block, index, issues, dto.SchemaVersion)).ToArray();
             var tasks = dto.Tasks.Select((task, index) => ParseTask(task, index, issues)).ToArray();
             if (issues.Count > 0) return new(null, issues);
+            ValidateIdentities(blocks, tasks);
+            static void UniqueNonempty(IEnumerable<string> ids)
+            { if (ids.Where(id => id.Length > 0).GroupBy(id => id, StringComparer.Ordinal).Any(g => g.Count() > 1)) throw new ArgumentException("Duplicate stable symbol or instance identity."); }
+            UniqueNonempty(tags.Select(t => t.Id)); UniqueNonempty(dto.Instances.Select(i => i.Id));
+            foreach (var block in blocks) UniqueNonempty(block.Interface.Select(p => p.Id));
 
             var activeBlockIndex = Math.Clamp(dto.ActiveBlockIndex, 0, blocks.Length - 1);
             var nextId = Math.Max(Math.Max(1, dto.NextId), NextAvailableStableId(blocks, tasks));
@@ -114,20 +136,50 @@ public static class LadderEditorProjectJson
                 dto.WatchVariables.ToArray(),
                 activeBlockIndex,
                 dto.EntryBlockId ?? string.Empty,
-                nextId);
+                nextId, dto.SchemaVersion == 1 ? [] : dto.Instances);
             var document = new LadderEditorDocument();
             document.RestoreSnapshot(snapshot);
-            return new(document, []);
+            return new(document, []) { SourceSchemaVersion = dto.SchemaVersion };
         }
         catch (JsonException exception)
         {
             return Invalid($"Malformed editor project JSON: {exception.Message}");
         }
-        catch (Exception exception) when (exception is InvalidOperationException or OverflowException)
+        catch (Exception exception) when (exception is InvalidOperationException or OverflowException or ArgumentException)
         {
             return Invalid($"Unreadable editor project: {exception.Message}");
         }
     }
+
+    private static void ValidateIdentities(EditableBlock[] blocks, EditableTask[] tasks)
+    {
+        var blockIds = new HashSet<string>(StringComparer.Ordinal);
+        var taskIds = new HashSet<string>(StringComparer.Ordinal);
+        var elementIds = new HashSet<string>(StringComparer.Ordinal);
+        static void Add(ISet<string> ids, string id, string path)
+        {
+            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(path + ": ID is required.");
+            if (!ids.Add(id)) throw new ArgumentException(path + ": duplicate ID '" + id + "'.");
+        }
+        foreach (var block in blocks)
+        {
+            Add(blockIds, block.Id, "blocks.id");
+            foreach (var rung in block.Rungs)
+            {
+                Add(elementIds, rung.Id, "networks.id");
+                EditableLadderTree.Validate(rung.Root, "networks[" + rung.Id + "].root", elementIds);
+                if (rung.HasTerminalAction)
+                    Add(elementIds, EffectiveActionId(rung), "networks[" + rung.Id + "].actionId");
+            }
+        }
+        foreach (var task in tasks) Add(taskIds, task.Id, "tasks.id");
+    }
+
+    private static string EffectiveActionId(EditableRung rung) => !string.IsNullOrWhiteSpace(rung.TerminalActionId)
+        ? rung.TerminalActionId : rung.Id + "-" + (rung.IsTimer ? "timer" : rung.IsTimerReset ? "timer-reset"
+        : rung.IsCounter ? "counter" : rung.IsCounterReset ? "counter-reset" : rung.IsCounterLoad ? "counter-load"
+        : rung.IsNumericOperation ? "numeric" : rung.IsCall ? "call" : rung.IsReturn ? "return"
+        : rung.IsJump ? "jump" : rung.IsLabel ? "label" : "coil");
 
     private static int NextAvailableStableId(IEnumerable<EditableBlock> blocks, IEnumerable<EditableTask> tasks)
     {
@@ -146,11 +198,8 @@ public static class LadderEditorProjectJson
             foreach (var rung in block.Rungs)
             {
                 Include(rung.Id);
-                foreach (var branch in rung.Branches)
-                {
-                    Include(branch.Id);
-                    foreach (var contact in branch.Contacts) Include(contact.Id);
-                }
+                Include(EffectiveActionId(rung));
+                foreach (var node in EditableLadderTree.Visit(rung.Root)) Include(node.Id);
             }
         }
         foreach (var task in tasks) Include(task.Id);
@@ -159,6 +208,7 @@ public static class LadderEditorProjectJson
 
     private static TagDto Tag(PlcVariable source) => new()
     {
+        SymbolId = source.Id,
         Name = source.Name,
         Type = source.Type.ToString(),
         Role = source.Role.ToString(),
@@ -175,6 +225,7 @@ public static class LadderEditorProjectJson
         Id = source.Id,
         Name = source.Name,
         BlockType = source.BlockType.ToString(),
+        SemanticMode = source.SemanticMode.ToString(),
         Interface = source.Interface.Select(parameter => new InterfaceDto
         {
             Name = parameter.Name,
@@ -182,6 +233,7 @@ public static class LadderEditorProjectJson
             Section = parameter.Section.ToString(),
             Initial = parameter.InitialValue is TimeSpan time ? time.TotalMilliseconds : parameter.InitialValue,
             DataType = parameter.DataType,
+            Id = parameter.Id, EnumMembers = parameter.EnumMembers?.ToList(),
         }).ToList(),
         Rungs = source.Rungs.Select(Rung).ToList(),
     };
@@ -211,24 +263,17 @@ public static class LadderEditorProjectJson
         NumericDestination = source.NumericDestination,
         IsCall = source.IsCall,
         CallTarget = source.CallTarget,
+        CallSemanticMode = source.CallSemanticMode.ToString(),
+        CallBindings = source.CallBindings.ToList(), CallInstanceId = source.CallInstanceId,
         IsReturn = source.IsReturn,
         IsJump = source.IsJump,
         IsLabel = source.IsLabel,
         ProgramControlLabel = source.ProgramControlLabel,
-        Branches = source.Branches.Select(branch => new BranchDto
-        {
-            Id = branch.Id,
-            Contacts = branch.Contacts.Select(contact => new ContactDto
-            {
-                Id = contact.Id,
-                Variable = contact.Variable,
-                NormallyClosed = contact.NormallyClosed,
-                IsComparison = contact.IsComparison,
-                CompareOperator = contact.CompareOperator.ToString(),
-                RightOperand = contact.RightOperand,
-                EdgeMode = contact.EdgeMode.ToString(),
-            }).ToList(),
-        }).ToList(),
+        Root = source.Root,
+        TerminalActionId = EffectiveActionId(source),
+        HasTerminalAction = source.HasTerminalAction,
+        LegacyEmptyBranchSemantics = source.LegacyEmptyBranchSemantics,
+        Branches = [],
     };
 
     private static TaskDto Task(EditableTask source) => new()
@@ -246,16 +291,18 @@ public static class LadderEditorProjectJson
         var type = ParseEnum(dto.Type, PlcVariableType.Bool, $"$.tags[{index}].type", issues);
         var role = ParseEnum(dto.Role, PlcVariableRole.Memory, $"$.tags[{index}].role", issues);
         var initial = ParseInitial(dto.Initial, type, $"$.tags[{index}].initial", issues);
-        return new PlcVariable(dto.Name ?? string.Empty, type, role, initial, dto.Binding ?? string.Empty, dto.Aggregate, dto.EnumMembers);
+        return new PlcVariable(dto.Name ?? string.Empty, type, role, initial, dto.Binding ?? string.Empty, dto.Aggregate, dto.EnumMembers, dto.SymbolId ?? string.Empty);
     }
 
-    private static EditableBlock ParseBlock(BlockDto dto, int blockIndex, ICollection<LadderValidationIssue> issues)
+    private static EditableBlock ParseBlock(BlockDto dto, int blockIndex, ICollection<LadderValidationIssue> issues, int version)
     {
         var defaultType = blockIndex == 0 ? LadderBlockType.OrganizationBlock : LadderBlockType.Function;
         var blockType = string.IsNullOrWhiteSpace(dto.BlockType)
             ? defaultType
             : ParseEnum(dto.BlockType, defaultType, $"$.blocks[{blockIndex}].blockType", issues);
         var block = new EditableBlock(dto.Id ?? string.Empty, dto.Name ?? string.Empty, blockType);
+        block.SemanticMode = version == 1 || string.IsNullOrEmpty(dto.SemanticMode) ? LadderSemanticMode.Legacy
+            : ParseEnum(dto.SemanticMode, LadderSemanticMode.Legacy, $"$.blocks[{blockIndex}].semanticMode", issues);
         for (var parameterIndex = 0; parameterIndex < dto.Interface.Count; parameterIndex++)
         {
             var source = dto.Interface[parameterIndex];
@@ -263,10 +310,11 @@ public static class LadderEditorProjectJson
             var type = ParseEnum(source.Type, PlcVariableType.Bool, $"{path}.type", issues);
             var section = ParseEnum(source.Section, LadderInterfaceSection.Input, $"{path}.section", issues);
             var initial = ParseInitial(source.Initial, type, $"{path}.initial", issues);
-            block.Interface.Add(new LadderInterfaceParameter(source.Name ?? string.Empty, type, section, initial, source.DataType ?? string.Empty));
+            block.Interface.Add(new LadderInterfaceParameter(source.Name ?? string.Empty, type, section, initial, source.DataType ?? string.Empty,
+                source.Id ?? string.Empty, source.EnumMembers));
         }
         for (var rungIndex = 0; rungIndex < dto.Rungs.Count; rungIndex++)
-            block.Rungs.Add(ParseRung(dto.Rungs[rungIndex], blockIndex, rungIndex, issues));
+            block.Rungs.Add(ParseRung(dto.Rungs[rungIndex], blockIndex, rungIndex, issues, version));
         return block;
     }
 
@@ -274,7 +322,7 @@ public static class LadderEditorProjectJson
         RungDto dto,
         int blockIndex,
         int rungIndex,
-        ICollection<LadderValidationIssue> issues)
+        ICollection<LadderValidationIssue> issues, int version)
     {
         var path = $"$.blocks[{blockIndex}].rungs[{rungIndex}]";
         var rung = new EditableRung(dto.Id ?? string.Empty, dto.Label ?? string.Empty, dto.CoilVariable ?? string.Empty)
@@ -300,11 +348,25 @@ public static class LadderEditorProjectJson
             NumericDestination = dto.NumericDestination ?? string.Empty,
             IsCall = dto.IsCall,
             CallTarget = dto.CallTarget ?? string.Empty,
+            CallSemanticMode = version == 1 || string.IsNullOrEmpty(dto.CallSemanticMode) ? LadderSemanticMode.Legacy
+                : ParseEnum(dto.CallSemanticMode, LadderSemanticMode.Legacy, path + ".callSemanticMode", issues),
+            CallInstanceId = version == 1 ? string.Empty : dto.CallInstanceId ?? string.Empty,
+            CallBindings = version == 1 ? [] : (dto.CallBindings ?? []).Select(binding => binding with
+            { Literal = binding.Literal is JsonElement json ? ParseInitial(json, binding.LiteralType ?? PlcVariableType.Bool, path + ".callBindings.literal", issues) : binding.Literal }).ToArray(),
             IsReturn = dto.IsReturn,
             IsJump = dto.IsJump,
             IsLabel = dto.IsLabel,
             ProgramControlLabel = dto.ProgramControlLabel ?? string.Empty,
+            TerminalActionId = dto.TerminalActionId ?? string.Empty,
+            HasTerminalAction = version == 1 || dto.HasTerminalAction,
+            LegacyEmptyBranchSemantics = version == 1 || dto.LegacyEmptyBranchSemantics,
         };
+        if (version == 2)
+        {
+            if (dto.Root is null) throw new ArgumentException(path + ".root is required.");
+            rung.SetRoot(dto.Root);
+            return rung;
+        }
         for (var branchIndex = 0; branchIndex < dto.Branches.Count; branchIndex++)
         {
             var branchDto = dto.Branches[branchIndex];
@@ -325,6 +387,10 @@ public static class LadderEditorProjectJson
             }
             rung.Branches.Add(branch);
         }
+        // v1 generated this container ID during BuildProgram. Preserve it when
+        // making the tree explicit so references and observations remain stable.
+        if (rung.Root.Kind == LadderNodeKind.Parallel)
+            rung.SetRoot(rung.Root with { Id = rung.Id + "-parallel" });
         return rung;
     }
 
@@ -339,7 +405,7 @@ public static class LadderEditorProjectJson
     private static T ParseEnum<T>(string? value, T fallback, string path, ICollection<LadderValidationIssue> issues)
         where T : struct, Enum
     {
-        if (Enum.TryParse<T>(value, true, out var parsed)) return parsed;
+        if (Enum.TryParse<T>(value, true, out var parsed) && Enum.IsDefined(parsed)) return parsed;
         issues.Add(new("EPJ001", path, $"Unknown {typeof(T).Name} value '{value}'."));
         return fallback;
     }
@@ -397,10 +463,12 @@ public static class LadderEditorProjectJson
         public List<BlockDto> Blocks { get; set; } = [];
         public List<TaskDto> Tasks { get; set; } = [];
         public List<string> WatchVariables { get; set; } = [];
+        public List<LadderInstance> Instances { get; set; } = [];
     }
 
     private sealed class TagDto
     {
+        public string? SymbolId { get; set; }
         public string? Name { get; set; }
         public string? Type { get; set; }
         public string? Role { get; set; }
@@ -415,12 +483,15 @@ public static class LadderEditorProjectJson
         public string? Id { get; set; }
         public string? Name { get; set; }
         public string? BlockType { get; set; }
+        public string? SemanticMode { get; set; }
         public List<InterfaceDto> Interface { get; set; } = [];
         public List<RungDto> Rungs { get; set; } = [];
     }
 
     private sealed class InterfaceDto
     {
+        public string? Id { get; set; }
+        public List<string>? EnumMembers { get; set; }
         public string? Name { get; set; }
         public string? Type { get; set; }
         public string? Section { get; set; }
@@ -453,10 +524,17 @@ public static class LadderEditorProjectJson
         public string? NumericDestination { get; set; }
         public bool IsCall { get; set; }
         public string? CallTarget { get; set; }
+        public string? CallSemanticMode { get; set; }
+        public string? CallInstanceId { get; set; }
+        public List<LadderCallBinding>? CallBindings { get; set; }
         public bool IsReturn { get; set; }
         public bool IsJump { get; set; }
         public bool IsLabel { get; set; }
         public string? ProgramControlLabel { get; set; }
+        public EditableLadderNode? Root { get; set; }
+        public string? TerminalActionId { get; set; }
+        public bool HasTerminalAction { get; set; } = true;
+        public bool LegacyEmptyBranchSemantics { get; set; }
         public List<BranchDto> Branches { get; set; } = [];
     }
 

@@ -1,5 +1,15 @@
 # Release checklist
 
+## Current Godot demo
+
+The checklist below qualifies the historical Qt pilot and its package scripts.
+It does not qualify the current Godot/C# application. Use the current
+[demo release review](DEMO_RELEASE_REVIEW_2026-10-10.md) to establish the Next
+offline artifact, build lane, supported configuration and acceptance record.
+Until those gates pass, no external Next demo release is approved.
+
+## Historical Qt pilot checklist
+
 Use this checklist for every externally delivered RungProof artifact. A checked
 item requires retained evidence; memory or a prior internal ZIP is insufficient.
 

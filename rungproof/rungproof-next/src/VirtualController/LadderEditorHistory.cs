@@ -20,7 +20,7 @@ public sealed record LadderEditorSnapshot(
     IReadOnlyList<string> WatchVariables,
     int ActiveBlockIndex,
     string EntryBlockId,
-    int NextId);
+    int NextId, IReadOnlyList<LadderInstance>? Instances = null);
 
 public sealed class LadderEditorHistory
 {
@@ -57,6 +57,7 @@ public sealed class LadderEditorHistory
         _undo.Add(new Entry(description.Trim(), document.CaptureSnapshot()));
         if (_undo.Count > _capacity) _undo.RemoveAt(0);
         _redo.Clear();
+        document.InvalidateCommandTargets();
     }
 
     public bool Undo(LadderEditorDocument document, out string description)
@@ -93,7 +94,13 @@ public sealed class LadderEditorHistory
         return true;
     }
 
-    public void Clear()
+    public LadderEditorHistory Copy()
+    {
+        // Entries contain detached document snapshots recorded before edits.
+        var copy=new LadderEditorHistory(_capacity);
+        copy._undo.AddRange(_undo);copy._redo.AddRange(_redo);
+        return copy;
+    }    public void Clear()
     {
         _undo.Clear();
         _redo.Clear();
@@ -113,17 +120,19 @@ public sealed partial class LadderEditorDocument
         WatchVariables.ToArray(),
         ActiveBlockIndex,
         EntryBlockId,
-        _nextId);
+        _nextId, Instances.ToArray());
 
     public void RestoreSnapshot(LadderEditorSnapshot snapshot)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
+        InvalidateCommandTargets();
         Id = snapshot.Id;
         Name = snapshot.Name;
         SourceSceneId = snapshot.SourceSceneId;
         ScanPeriod = snapshot.ScanPeriod;
         Tags.Clear();
         Tags.AddRange(snapshot.Tags);
+        Instances.Clear(); Instances.AddRange(snapshot.Instances ?? []);
         Blocks.Clear();
         Blocks.AddRange(snapshot.Blocks.Select(CloneBlock));
         Tasks.Clear();
@@ -137,7 +146,7 @@ public sealed partial class LadderEditorDocument
 
     private static EditableBlock CloneBlock(EditableBlock source)
     {
-        var block = new EditableBlock(source.Id, source.Name, source.BlockType);
+        var block = new EditableBlock(source.Id, source.Name, source.BlockType) { SemanticMode = source.SemanticMode };
         block.Interface.AddRange(source.Interface);
         foreach (var sourceRung in source.Rungs)
         {
@@ -163,17 +172,16 @@ public sealed partial class LadderEditorDocument
                 NumericDestination = sourceRung.NumericDestination,
                 IsCall = sourceRung.IsCall,
                 CallTarget = sourceRung.CallTarget,
+                CallSemanticMode = sourceRung.CallSemanticMode, CallBindings = sourceRung.CallBindings.ToArray(), CallInstanceId = sourceRung.CallInstanceId,
                 IsReturn = sourceRung.IsReturn,
                 IsJump = sourceRung.IsJump,
                 IsLabel = sourceRung.IsLabel,
                 ProgramControlLabel = sourceRung.ProgramControlLabel,
             };
-            foreach (var sourceBranch in sourceRung.Branches)
-            {
-                var branch = new EditableBranch(sourceBranch.Id);
-                branch.Contacts.AddRange(sourceBranch.Contacts);
-                rung.Branches.Add(branch);
-            }
+            rung.TerminalActionId = sourceRung.TerminalActionId;
+            rung.HasTerminalAction = sourceRung.HasTerminalAction;
+            rung.LegacyEmptyBranchSemantics = sourceRung.LegacyEmptyBranchSemantics;
+            rung.SetRoot(EditableLadderTree.Import(EditableLadderTree.Export(sourceRung.Root)));
             block.Rungs.Add(rung);
         }
         return block;
@@ -187,3 +195,4 @@ public sealed partial class LadderEditorDocument
         source.Priority,
         source.EntryBlock);
 }
+

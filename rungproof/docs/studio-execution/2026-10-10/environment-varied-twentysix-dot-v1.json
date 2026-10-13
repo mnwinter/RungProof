@@ -1,0 +1,512 @@
+{
+  "reviewer": "Dot",
+  "status": "REVIEWED_WITH_SPECIFIC_QUALITY_LIMITATIONS",
+  "implementedReviewedLocations": 26,
+  "remainingDraftUnaccepted": 51,
+  "humanFinalApproval": false,
+  "actualIndividualViews": [
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\01-equipment-gallery.scene.png",
+      "sceneId": "equipment-gallery",
+      "view": "scene",
+      "sha256": "6088B224F13353D9D39FE6DDF0A1FAB979C89A2BB4D0B5FD33211148C80B9E4E",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\01-equipment-gallery.split.png",
+      "sceneId": "equipment-gallery",
+      "view": "split",
+      "sha256": "C992C3B5769E18ED68F0BB299405E39014845A55F6166379F60BCA5802501975",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\02-lab-10-01-drive-alarm-code-string.scene.png",
+      "sceneId": "lab-10-01-drive-alarm-code-string",
+      "view": "scene",
+      "sha256": "43AE1A9F2FDA061A4D4F2C508A182F047386C8D1B8D80A864B7720DD4D5EAB45",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\02-lab-10-01-drive-alarm-code-string.split.png",
+      "sceneId": "lab-10-01-drive-alarm-code-string",
+      "view": "split",
+      "sha256": "571981055E49B0753A36C0BA1D3103FFCB88068362EBB0D10EF40DF8A5BC3BB2",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\03-lab-11-06-wastewater-collection.scene.png",
+      "sceneId": "lab-11-06-wastewater-collection",
+      "view": "scene",
+      "sha256": "496B1A946253798783BCED9916F35C012CFEABE641BC07D95606D65B22E4833E",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\03-lab-11-06-wastewater-collection.split.png",
+      "sceneId": "lab-11-06-wastewater-collection",
+      "view": "split",
+      "sha256": "648B2DDE4959D16DC93AF0CCFBFACF05F543649729B397BEBCEFF9AF7B6D5DCF",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\04-lab-11-11-service-elevator.scene.png",
+      "sceneId": "lab-11-11-service-elevator",
+      "view": "scene",
+      "sha256": "82712E5190367F0EAA05630C61465B152746DC08B97CD2D3079FE5F896405D5D",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\04-lab-11-11-service-elevator.split.png",
+      "sceneId": "lab-11-11-service-elevator",
+      "view": "split",
+      "sha256": "4C4E1B8E8A296D2CD18F1C007F7A7E5F8B8F9F3BEC9E21EB70AFB7C3656C21DA",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\05-lab-11-12-mobile-traffic-lights.scene.png",
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "scene",
+      "sha256": "55804D1E3926445840833A088669AA80F558403B0524C033973EDB0174044143",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\05-lab-11-12-mobile-traffic-lights.split.png",
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "view": "split",
+      "sha256": "1372B2C9AA5C05BC3BD82F9F4B27E147B6AA1C339C4E3A450325AD4CF2C1DD98",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\06-lab-2-01-workstation-call.scene.png",
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "scene",
+      "sha256": "E2B65AAEAFB0969C833DC461F3396C683AD71F0DF3D7C1C1D9D3CA0545C5E4BD",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\06-lab-2-01-workstation-call.split.png",
+      "sceneId": "lab-2-01-workstation-call",
+      "view": "split",
+      "sha256": "09F1A0ACE47CDDC682C71A2F64BF08BF4C94E2720B3329448DE861157A7AC260",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\07-lab-2-02-dual-confirmation.scene.png",
+      "sceneId": "lab-2-02-dual-confirmation",
+      "view": "scene",
+      "sha256": "D34FAD4296D747EF8D4C730F839B132056A33FB3944642C239727A279BD53B4B",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\07-lab-2-02-dual-confirmation.split.png",
+      "sceneId": "lab-2-02-dual-confirmation",
+      "view": "split",
+      "sha256": "E0AA27A808F2C755A1B52106017B8783E6B2B472B299AA580A851989A1AFE002",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\08-lab-2-03-service-marker-inhibit.scene.png",
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "view": "scene",
+      "sha256": "69648C49DEB0A614AC20D52DF379E15CE79A923066DFF000FEEDA80618F382A5",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\08-lab-2-03-service-marker-inhibit.split.png",
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "view": "split",
+      "sha256": "E7667EB428E4F5A86FCC31F7D7D053C248DD65413947894948B0AEC07619E1DD",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\09-lab-2-04-two-station-call.scene.png",
+      "sceneId": "lab-2-04-two-station-call",
+      "view": "scene",
+      "sha256": "4B5BAA8E1FF9F7804D604DA328C17E12C54ABBABB90FF3A7B98BA56C5D358A12",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\09-lab-2-04-two-station-call.split.png",
+      "sceneId": "lab-2-04-two-station-call",
+      "view": "split",
+      "sha256": "EF305E558A93C0EF43A4739B4FC033109E0DA5F82CB073C63549867A91319F94",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\10-lab-2-05-bay-light-selector.scene.png",
+      "sceneId": "lab-2-05-bay-light-selector",
+      "view": "scene",
+      "sha256": "EB519E82BF7197B32DBC14313BF513D4D32E521010DD8AB8722F786CC517C1B8",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\10-lab-2-05-bay-light-selector.split.png",
+      "sceneId": "lab-2-05-bay-light-selector",
+      "view": "split",
+      "sha256": "32107C235D1C0A674D4123827BCAFBD11169F92484394678BC9EE6C11B208E20",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\11-lab-2-06-ready-attention.scene.png",
+      "sceneId": "lab-2-06-ready-attention",
+      "view": "scene",
+      "sha256": "72D2C9A499674CF092A12FA5EC3825DD03E79D14D51B1B0543077A2CF779DBB2",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\11-lab-2-06-ready-attention.split.png",
+      "sceneId": "lab-2-06-ready-attention",
+      "view": "split",
+      "sha256": "B19AEF3B4BA068B3350C6AEA0FA25044DAB76DA87ACA00FBF1732198687A9601",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\12-lab-2-07-dual-contact-permissive.scene.png",
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "view": "scene",
+      "sha256": "9C1B4C84A76CA2B085162A3BF5713A87B091429E926B3B2D0EDB0F25CA343384",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\12-lab-2-07-dual-contact-permissive.split.png",
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "view": "split",
+      "sha256": "AD8D5403F7357A6DBBA30C459C8E9C6A1A910FE11C313A8EEFCD6C468E75595C",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\13-lab-2-08-inspection-vote.scene.png",
+      "sceneId": "lab-2-08-inspection-vote",
+      "view": "scene",
+      "sha256": "6C4EEEAD30215F0653E5BA9A734A7D4C3348278008CBE963E221EDC966FE6B80",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\13-lab-2-08-inspection-vote.split.png",
+      "sceneId": "lab-2-08-inspection-vote",
+      "view": "split",
+      "sha256": "4A3ABD5009E056A7867F4EC4C0C78C1817DBE198FF49B39DC8A6E21BF3180F02",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\14-lab-2-09-maintenance-beacon.scene.png",
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "view": "scene",
+      "sha256": "B30DAC2B72A6E5ADE80E95A141FC28157D575A6B303A7063A87611C830EBB1C5",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\14-lab-2-09-maintenance-beacon.split.png",
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "view": "split",
+      "sha256": "D6EC3867EC2846A411E8C9354FDD8519BDB7B3D0D6418001BF2E4B830197F96D",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\15-lab-2-14-sump-pump.scene.png",
+      "sceneId": "lab-2-14-sump-pump",
+      "view": "scene",
+      "sha256": "23B492D8E948BFFBBBA3FAE4A217C0361F60B55F1E28C579AF8A3F18BCF6EDB9",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\15-lab-2-14-sump-pump.split.png",
+      "sceneId": "lab-2-14-sump-pump",
+      "view": "split",
+      "sha256": "B1F1E0B17D4B18FE05E1077158AF7434E8BE10A29D9F571BA51CDDC258318BCB",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\16-lab-2-16-safe-drill.scene.png",
+      "sceneId": "lab-2-16-safe-drill",
+      "view": "scene",
+      "sha256": "CCD4A58FA5635D80E1856CC7257145002CFE3DEF8BB04D8E82BA0DC5D9365973",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\16-lab-2-16-safe-drill.split.png",
+      "sceneId": "lab-2-16-safe-drill",
+      "view": "split",
+      "sha256": "504F46B1E19FA77F6764BE507C8DBDE4E78A6AB2A946E5788F1AB2214B65DBFC",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\17-lab-2-17-pallet-robot.scene.png",
+      "sceneId": "lab-2-17-pallet-robot",
+      "view": "scene",
+      "sha256": "FE2215C227B38A4D9C045D6BB387C77100C9EB6E2B4111F0221319129C099523",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\17-lab-2-17-pallet-robot.split.png",
+      "sceneId": "lab-2-17-pallet-robot",
+      "view": "split",
+      "sha256": "140316666B15003C8EF741949AE3A7C709CB62D544E4C2422E43E976A97E49C7",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\18-lab-4-07-parking-garage-entry.scene.png",
+      "sceneId": "lab-4-07-parking-garage-entry",
+      "view": "scene",
+      "sha256": "80268BDB8D65FB1E60BDCB6CD732CA1161A14F5E54F35B9A8C41691593146D2F",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\18-lab-4-07-parking-garage-entry.split.png",
+      "sceneId": "lab-4-07-parking-garage-entry",
+      "view": "split",
+      "sha256": "B0D91C49015C169E59FDFF7FC26238B86AF641EFB886976DFB4A47951394F72B",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\19-lab-4-08-package-grouping.scene.png",
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "scene",
+      "sha256": "A3ECA98F480A21F089AC96595EF707424A3B8A7FD11D7CE4880D0E27DB9493F4",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\19-lab-4-08-package-grouping.split.png",
+      "sceneId": "lab-4-08-package-grouping",
+      "view": "split",
+      "sha256": "6BE897C3A0D53B336D235F72323587AE0A1CE859E57AEB82A879E7E9B8E62538",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\20-lab-4-10-cookie-packaging.scene.png",
+      "sceneId": "lab-4-10-cookie-packaging",
+      "view": "scene",
+      "sha256": "6AC7C8A94EB29B54642A1575894DF46EAD6541F5E6D98914AC58B8C84E79CEF8",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\20-lab-4-10-cookie-packaging.split.png",
+      "sceneId": "lab-4-10-cookie-packaging",
+      "view": "split",
+      "sha256": "3FA63C35308F179DF642C3CB4486D07EB5BFA51DEEFA4F2A467DC33FDF50BA33",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\21-lab-4-12-cable-cut-length.scene.png",
+      "sceneId": "lab-4-12-cable-cut-length",
+      "view": "scene",
+      "sha256": "211E9C65A7BC3063A4C4A7E450534759A78523BF7A52930EF5E48A4E50372768",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\21-lab-4-12-cable-cut-length.split.png",
+      "sceneId": "lab-4-12-cable-cut-length",
+      "view": "split",
+      "sha256": "15B52E872758491AAD62997BCA16DF89E2136AF010EBC98FC0B15F7556CF9AA8",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\22-lab-6-07-luggage-weight-sort.scene.png",
+      "sceneId": "lab-6-07-luggage-weight-sort",
+      "view": "scene",
+      "sha256": "AF43B1797D76A043DAEBD36058FFEA09F6408C383F55473B1524AAE3DEE4FC78",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\22-lab-6-07-luggage-weight-sort.split.png",
+      "sceneId": "lab-6-07-luggage-weight-sort",
+      "view": "split",
+      "sha256": "AEEADA3A26A5C268EF3CAAAC3D30CAC5A7D808F9CE977E8866873996A183CE1C",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\23-lab-6-08-hand-dryer.scene.png",
+      "sceneId": "lab-6-08-hand-dryer",
+      "view": "scene",
+      "sha256": "685B7841D09BF9F585064B4A299C63B1520FF2DDCFE11E784929C962A057F457",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\23-lab-6-08-hand-dryer.split.png",
+      "sceneId": "lab-6-08-hand-dryer",
+      "view": "split",
+      "sha256": "EA988540AA0CB2507B34B715F37A19357F9D320B1E32F9860C6797BF36C5E2CA",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\24-lab-9-01-sum-function.scene.png",
+      "sceneId": "lab-9-01-sum-function",
+      "view": "scene",
+      "sha256": "CEFA003A4D3CFDAFDF8AE2F68C2BDE1C26A53A0D4CB2C91A58FEA125101B1F62",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\24-lab-9-01-sum-function.split.png",
+      "sceneId": "lab-9-01-sum-function",
+      "view": "split",
+      "sha256": "13D0BEA858A7A2C02020905142BD9BB8A64DD1BA850474C35396C8700379ED6F",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\25-lab-9-02-product-function.scene.png",
+      "sceneId": "lab-9-02-product-function",
+      "view": "scene",
+      "sha256": "03895374420A4832DDD12C4E3EBB6B2C5A038F3723B721E7F3F44421564280A4",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\25-lab-9-02-product-function.split.png",
+      "sceneId": "lab-9-02-product-function",
+      "view": "split",
+      "sha256": "A5BF92E9D2932A35374563EF349BF32758D60B44E40BDB6A94897B7D7545018E",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\26-lab-9-12-ev-charging-manager.scene.png",
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "scene",
+      "sha256": "3FEC791E9045E418B52D10DF442F7BDB1E444AC296E4FB50877BA973524FB30C",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-coherent-v1\\26-lab-9-12-ev-charging-manager.split.png",
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "split",
+      "sha256": "3CDB86BD6D70CE8ED8FA679BFE5D2B45828C8F20C189416E3EC674FD6AEA0546",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-ev-occupied-v1.scene.png",
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "scene",
+      "sha256": "0A6D51BDE32C3CA084AB97BCE92391C31FD6D996FF8BC342A0200B39571BA291",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    },
+    {
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\varied-twentysix-ev-occupied-v1.split.png",
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "view": "split",
+      "sha256": "08B6BD1DA853E108183DF07F024FA2BFD19E34222632EFC2FAAD1BA353F81579",
+      "assemblySha256": "C943C1702B5FB01F95B54DF0E3D1D4F3DF2C72720521B9241620D351DE927EF8",
+      "personallyViewed": true,
+      "cleanSavedLog": true
+    }
+  ],
+  "findings": [
+    "No new hard environment occlusion of functional heads observed in the 52 catalog frames.",
+    "EV occupied supplemental pair shows two actual occupied-bay vehicles; charging outputs remain false, not a charging behavior claim.",
+    "Classroom wood and gray concrete/road material revisions remain resolved.",
+    "New teaching vestibule/sample bay/hatch/commissioning corner/lightwell have visible differences, but same retained bench focus reduces architecture visibility.",
+    "2.6 and 2.9 both read as rear contrasted recess; height distinction is weak from current camera.",
+    "Parking4.7 working controls are very small in split, with broad empty apron dominating.",
+    "Sump service house partly cropped in split; dryer basin largely hidden behind preserved teaching cutaway.",
+    "Robot2.17 high rear beam end bearing visually unclear; source review requested before finished shed claim.",
+    "Gallery, elevator and production rooms retain sparse upper context; no blanket finished realism approval.",
+    "Passive tiny wall prose and several numeric readouts are not reliably legible in split.",
+    "Cookie cream/yellow floor and wall finish separation remains weak; cable rust wall clearly distinguishes its workshop."
+  ],
+  "scopeLimits": [
+    "Stopped saved frames plus occupied EV fixture; not complete motion, physical circulation, minGPU or accessibility qualification.",
+    "No full77 acceptance. Continue authorized work and resolve specific defects without an invented permission gate."
+  ]
+}

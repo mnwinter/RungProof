@@ -16,6 +16,8 @@ public partial class Main : Node3D
 {
     private string? _capturePath;
     private int _captureFramesRemaining;
+    private bool _captureWithoutEnvironment;
+    private bool _captureRunAuthoredDemo;
     private string _captureState = "running";
     private string? _candidateId;
     private Node3D? _candidatePreviewRoot;
@@ -63,6 +65,7 @@ public partial class Main : Node3D
     private SceneControlInteractor? _sceneControlInteractor;
     private Camera3D? _sceneCamera;
     private Node3D? _sceneCompositionRoot;
+    private DemoEnvironmentPresentation? _demoEnvironment;
     private Node3D? _assetPreviewRoot;
     private Vector3 _sceneCameraDirection;
     private SimulatorShell? _simulatorShell;
@@ -72,6 +75,7 @@ public partial class Main : Node3D
     private int _externalCadenceGeneration = -1;
     private int _placedAssetCount;
     private string? _currentSceneId;
+    private bool _frameWholeScene;
     private AssetCatalogDocument? _candidateCatalog;
     private SceneCatalogDocument? _sceneCatalog;
     private Camera3D? _mainCamera;
@@ -112,6 +116,12 @@ public partial class Main : Node3D
         // Keep editor dialogs and context property panels inside the application
         // viewport so they scale with the workbench and remain part of captures.
         GetTree().Root.GuiEmbedSubwindows = true;
+        if (OS.HasFeature("offline_demo") && !RuntimeBuildPolicy.IsOfflineDemo)
+        {
+            GD.PushError("Offline demo export lacks the required compiled policy. Build with tools/build_offline_demo.ps1.");
+            GetTree().Quit(1);
+            return;
+        }
         var camera = GetNode<Camera3D>("Camera");
         camera.Fov = 42.0f;
         // glTF converts Blender Z-up coordinates to Godot Y-up:
@@ -120,9 +130,61 @@ public partial class Main : Node3D
         camera.LookAt(new Vector3(0.0f, 0.72f, 0.0f), Vector3.Up);
 
         var userArguments = OS.GetCmdlineUserArgs();
+        if (userArguments.Contains("--verify-offline-build-policy", StringComparer.Ordinal))
+        {
+            var factoryCalls = 0;
+            var rejected = false;
+            try
+            {
+                using var client = new ExternalPlcRuntimeClient(() =>
+                {
+                    factoryCalls++;
+                    throw new InvalidOperationException("Policy check must not create a bridge channel");
+                });
+            }
+            catch (NotSupportedException) { rejected = true; }
+            var passed = RuntimeBuildPolicy.IsOfflineDemo && rejected && factoryCalls == 0;
+            GD.Print($"OFFLINE_BUILD_POLICY {(passed ? "PASS" : "FAIL")} constructorRejected={rejected} bridgeFactoryCalls={factoryCalls}");
+            GetTree().Quit(passed ? 0 : 1);
+            return;
+        }
         _capturePath = userArguments
             .FirstOrDefault(argument => argument.StartsWith("--capture=", StringComparison.Ordinal))?
             .Substring("--capture=".Length);
+        if(userArguments.Contains("--editor-zoom-review", StringComparer.Ordinal))
+        {
+            SetPhysicsProcess(false); SetProcess(false);
+            CaptureEditorZoomReview(userArguments);
+            return;
+        }
+        if(userArguments.Contains("--recursive-editor-review", StringComparer.Ordinal))
+        {
+            SetPhysicsProcess(false); SetProcess(false);
+            CaptureRecursiveEditorReview(userArguments);
+            return;
+        }
+        if(userArguments.Contains("--capture-editor-monitoring", StringComparer.Ordinal))
+        {
+            SetPhysicsProcess(false); SetProcess(false);
+            CaptureEditorMonitoringReview(userArguments);
+            return;
+        }
+        _captureWithoutEnvironment = _capturePath is not null && userArguments.Contains("--capture-no-environment", StringComparer.Ordinal);
+        _captureRunAuthoredDemo = _capturePath is not null && userArguments.Contains("--capture-run-demo", StringComparer.Ordinal);
+        InitializeTenZoneCaptureOptions(userArguments);
+        _templateCapturePending=userArguments.Contains("--template-edit-capture",StringComparer.Ordinal);
+        _indexedTraceCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-indexed-device-trace=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _indexedTraceCapturePending=_indexedTraceCaptureState is not null;
+        _deviceTraceCapturePending=userArguments.Contains("--device-trace-capture",StringComparer.Ordinal);
+        _workspaceBeltCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-workspace-belt-state=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _workspaceBeltCapturePending=_workspaceBeltCaptureState is not null;
+        _workspaceRollerCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-workspace-roller-state=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _workspaceRollerCapturePending=_workspaceRollerCaptureState is not null;
+        _demo5LearnerCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-demo5-learner-state=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _demo5LearnerCapturePending=_demo5LearnerCaptureState is not null;
+        _verifyChallengeUi = userArguments.Contains("--verify-challenge-ui", StringComparer.Ordinal);
+        _verifyConveyorChallenge = userArguments.Contains("--verify-conveyor-challenge", StringComparer.Ordinal) || userArguments.Contains("--verify-challenge-conveyor", StringComparer.Ordinal);
+        _captureEnterChallenge = _capturePath is not null && userArguments.Contains("--capture-challenge", StringComparer.Ordinal);
         _captureState = userArguments
             .FirstOrDefault(argument => argument.StartsWith("--capture-state=", StringComparison.Ordinal))?
             .Substring("--capture-state=".Length)
@@ -154,6 +216,10 @@ public partial class Main : Node3D
         _auditSequenceTower = userArguments.Contains("--audit-sequence-tower", StringComparer.Ordinal);
         _auditPalletizer = userArguments.Contains("--audit-palletizer", StringComparer.Ordinal);
         _auditCableCut = userArguments.Contains("--audit-cable-cut", StringComparer.Ordinal);
+        _verifyRepeatCycleLearner = userArguments.Contains("--verify-repeat-cycle-learner", StringComparer.Ordinal);
+        _repeatLearnerCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-repeat-learner-state=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _repeatLearnerCapturePending=_repeatLearnerCaptureState is not null;
+        _verifyRepeatCycleLifecycle = userArguments.Contains("--verify-repeat-cycle-lifecycle", StringComparer.Ordinal);
         _auditRepeatCycle = userArguments.Contains("--audit-repeat-cycle", StringComparer.Ordinal);
         _auditButtonCounters = userArguments.Contains("--audit-button-counters", StringComparer.Ordinal);
         _auditParkingEntry = userArguments.Contains("--audit-parking-entry", StringComparer.Ordinal);
@@ -165,6 +231,25 @@ public partial class Main : Node3D
         _auditWastewaterProcess = userArguments.Contains("--verify-wastewater-process", StringComparer.Ordinal);
         _auditMobileTraffic = userArguments.Contains("--verify-mobile-traffic", StringComparer.Ordinal);
         _auditMotorAggregates = userArguments.Contains("--verify-motor-aggregates", StringComparer.Ordinal);
+        _verifyMotorConveyorZones = userArguments.Contains("--verify-motor-conveyor-zones", StringComparer.Ordinal);
+        _verifyWorkspaceBelt = userArguments.Contains("--verify-workspace-belt",StringComparer.Ordinal);
+        _verifyWorkspaceRoller = userArguments.Contains("--verify-workspace-roller", StringComparer.Ordinal);
+        _verifyWorkspaceMappingDetach = userArguments.Contains("--verify-workspace-mapping-detach", StringComparer.Ordinal);
+        _verifyFiveDemoLearner = userArguments.Contains("--verify-five-demo-learner", StringComparer.Ordinal);
+        _verifyScanInspection = userArguments.Contains("--verify-scan-inspection", StringComparer.Ordinal);
+        _verifyScanInspectionDemo5 = userArguments.Contains("--verify-scan-inspection-demo5-equivalence", StringComparer.Ordinal);
+        _scanInspectionCaptureState = userArguments.FirstOrDefault(a => a.StartsWith("--capture-scan-inspection-state=", StringComparison.Ordinal))?.Split('=', 2)[1];
+        _scanInspectionCapturePending = _scanInspectionCaptureState is not null;
+        _verifyWorkspaceRollerGeometry = userArguments.Contains("--verify-workspace-roller-geometry", StringComparer.Ordinal);
+        _verifyWorkspaceRollerExternalGeometry = userArguments.Contains("--verify-workspace-roller-external-geometry", StringComparer.Ordinal);
+        _workspaceRollerGeometryCapture = userArguments.FirstOrDefault(argument => argument.StartsWith("--workspace-roller-geometry-capture=", StringComparison.Ordinal))?.Substring("--workspace-roller-geometry-capture=".Length);
+        _workspaceRollerGeometryCapturePending = _workspaceRollerGeometryCapture is not null;
+        if (_workspaceRollerGeometryCapturePending && !_verifyWorkspaceRollerGeometry && !_verifyWorkspaceRollerExternalGeometry)
+        {
+            GD.PushError("Roller geometry capture requires a roller geometry verification mode.");
+            GetTree().Quit(1);
+            return;
+        }
         _auditServiceElevatorAccess = userArguments.Contains("--verify-service-elevator-access", StringComparer.Ordinal);
         _auditToteFinishingProcess = userArguments.Contains("--verify-tote-finishing-process", StringComparer.Ordinal);
         _auditLuggageLayout = userArguments.Contains("--audit-luggage-layout", StringComparer.Ordinal);
@@ -183,12 +268,22 @@ public partial class Main : Node3D
         _reportSceneGeometry = userArguments.Contains("--report-scene-geometry", StringComparer.Ordinal);
         _visualPlantReview = userArguments.Contains("--visual-plant-review", StringComparer.Ordinal);
         _visualSceneReview = _visualPlantReview || userArguments.Contains("--visual-scene-review", StringComparer.Ordinal);
-        _verifyWorkspace = userArguments.Contains("--verify-workspace", StringComparer.Ordinal);
+        _verifyWorkspaceDriveRepositoryOnly = userArguments.Contains("--verify-workspace-drive-repository", StringComparer.Ordinal);
+        _verifyWorkspaceDriveRetirement = userArguments.Contains("--verify-workspace-drive-retirement", StringComparer.Ordinal);
+        _verifyWorkspaceDriveAuthoring = userArguments.Contains("--verify-workspace-drive-authoring", StringComparer.Ordinal);
+        _verifyWorkspaceDrive = userArguments.Contains("--verify-workspace-drive", StringComparer.Ordinal);
+        _verifyWorkspace = _verifyWorkspaceDriveRepositoryOnly || userArguments.Contains("--verify-workspace", StringComparer.Ordinal);
         _verifyHud = userArguments.Contains("--verify-hud", StringComparer.Ordinal);
         _verifyCameraInput = userArguments.Contains("--verify-camera-input", StringComparer.Ordinal);
         _verifySceneControls = userArguments.Contains("--verify-scene-controls", StringComparer.Ordinal);
         _verifyGalleryClock = userArguments.Contains("--verify-gallery-clock", StringComparer.Ordinal);
         _verifyTypedLessons = userArguments.Contains("--verify-typed-lessons", StringComparer.Ordinal);
+        _verifyTypedLearnerWorkflow = userArguments.Contains("--verify-typed-learner-workflow", StringComparer.Ordinal);
+        _verifyTypedHistoryPresentation = userArguments.Contains("--verify-typed-history-presentation", StringComparer.Ordinal);
+        _typedLearnerCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-typed-learner-state=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _typedLearnerCapturePending=_typedLearnerCaptureState is not null;
+        _workspaceDriveCaptureState=userArguments.FirstOrDefault(a=>a.StartsWith("--capture-workspace-drive-state=",StringComparison.Ordinal))?.Split('=',2)[1];
+        _workspaceDriveCapturePending=_workspaceDriveCaptureState is not null;
         _verifyVirtualController = userArguments.Contains("--verify-virtual-controller", StringComparer.Ordinal);
         _verifyNumericSceneIo = userArguments.Contains("--verify-numeric-scene-io", StringComparer.Ordinal);
         _verifyLadderEditor = userArguments.Contains("--verify-ladder-editor", StringComparer.Ordinal);
@@ -201,9 +296,14 @@ public partial class Main : Node3D
         _mcpSceneId = userArguments
             .FirstOrDefault(argument => argument.StartsWith("--mcp-scene=", StringComparison.Ordinal))?
             .Substring("--mcp-scene=".Length);
-        _appShellRequested = _verifyDemoSequence || _auditToteFinishingProcess || _auditServiceElevatorAccess || _auditMotorAggregates || _auditMobileTraffic || _auditWastewaterProcess || _reportSceneGeometry || _verifySceneGeometry || _verifyToteFinishing || _auditDualSpindle || _auditRobotCnc || _auditRobotRestart || _auditSequenceTower || _auditChainLiftInstallation || _auditCookiePackaging || _auditBarrelFill || _auditCableCut || _auditPalletizer || _auditRepeatCycle || _auditButtonCounters || _auditParkingEntry || _auditPackageGrouping || _auditTimerLessons || _auditRotaryFlasher || _auditFlashPair || _auditRunningTower || _auditPedestrianCrossing || _auditDrawbridge || _auditBagIndex || _auditCoating || _auditHandDryer || _auditLuggageLayout || _auditEvLayout || _auditRadarLayout || _auditGuardedLayout || _verifyCartonStaticRoutes || (_visualSceneReview && !_visualPlantReview) || _verifyAppShell || _verifyExternalDialog || _verifyExternalPlayback || _verifyPlantMotion || _verifyWorkspace || _verifyHud || _verifyCameraInput || _verifySceneControls
+        _appShellRequested = _verifyWorkspaceBelt || _verifyChallengeUi || _verifyConveyorChallenge || _verifyDemoSequence || _auditToteFinishingProcess || _auditServiceElevatorAccess || _auditMotorAggregates || _verifyMotorConveyorZones || _auditMobileTraffic || _auditWastewaterProcess || _reportSceneGeometry || _verifySceneGeometry || _verifyToteFinishing || _auditDualSpindle || _auditRobotCnc || _auditRobotRestart || _auditSequenceTower || _auditChainLiftInstallation || _auditCookiePackaging || _auditBarrelFill || _auditCableCut || _auditPalletizer || _auditRepeatCycle || _auditButtonCounters || _auditParkingEntry || _auditPackageGrouping || _auditTimerLessons || _auditRotaryFlasher || _auditFlashPair || _auditRunningTower || _auditPedestrianCrossing || _auditDrawbridge || _auditBagIndex || _auditCoating || _auditHandDryer || _auditLuggageLayout || _auditEvLayout || _auditRadarLayout || _auditGuardedLayout || _verifyCartonStaticRoutes || (_visualSceneReview && !_visualPlantReview) || _verifyAppShell || _verifyExternalDialog || _verifyExternalPlayback || _verifyPlantMotion || _verifyWorkspace || _verifyHud || _verifyCameraInput || _verifySceneControls
             || _verifyTypedLessons || _verifyGalleryClock || _verifyVirtualController || _verifyNumericSceneIo || _verifyLadderEditor || _verifySplitView || _verifyUiDensity || _virtualControllerDemo
             || userArguments.Contains("--app-shell", StringComparer.Ordinal);
+        _appShellRequested |= _verifyWorkspaceRoller || _verifyWorkspaceRollerGeometry || _verifyWorkspaceRollerExternalGeometry;
+        _appShellRequested |= _verifyWorkspaceMappingDetach || _verifyWorkspaceDrive || _verifyWorkspaceDriveAuthoring || _verifyWorkspaceDriveRetirement;
+        _appShellRequested |= _verifyFiveDemoLearner || _verifyTypedLearnerWorkflow || _verifyTypedHistoryPresentation;
+        _appShellRequested |= _verifyScanInspection;
+        _appShellRequested |= _verifyScanInspectionDemo5;
         if (_visualPlantReview && (_sceneId is null || _appShellRequested || _verifySceneContract))
         {
             GD.PushError("--visual-plant-review requires --scene-id and cannot be combined with app-shell or verification modes.");
@@ -306,6 +406,7 @@ public partial class Main : Node3D
         }
         _nativeMotionTrace?.Dispose();
         _nativeMotionTrace = null;
+        _challengeCoordinator?.Dispose();
         _externalConnection?.Dispose();
         if (_offlinePlaybackModeFile is not null) System.IO.File.Delete(_offlinePlaybackModeFile);
     }
@@ -425,26 +526,35 @@ public partial class Main : Node3D
         _mainCamera = camera;
         var scenes = sceneCatalog.Scenes.Select(SceneCatalogLoader.LoadScene).ToArray();
         var diagnostics = ProjectValidator.Validate(candidates, sceneCatalog, scenes);
-        if (_verifyExternalPlayback)
+        IGuardedRuntimeClient connection;
+        if (RuntimeBuildPolicy.IsOfflineDemo)
         {
-            _offlinePlaybackModeFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"rungproof-playback-{Guid.NewGuid():N}.txt");
-            System.IO.File.WriteAllText(_offlinePlaybackModeFile, "ready");
-            _externalConnection = new ExternalPlcRuntimeClient(() =>
-            {
-                var info = new System.Diagnostics.ProcessStartInfo(ProjectSettings.GlobalizePath("res://../build/.venv-rungproof/Scripts/python.exe"))
-                {
-                    UseShellExecute = false, CreateNoWindow = true,
-                    RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true,
-                };
-                info.ArgumentList.Add(ProjectSettings.GlobalizePath("res://tests/Connections/fake_bridge.py"));
-                info.ArgumentList.Add(_offlinePlaybackModeFile);
-                return new ProcessBridgeChannel(info);
-            });
+            connection = new DisconnectedRuntimeClient();
+            GD.Print("RUNGPROOF_BUILD_POLICY offline-demo external-transport-disabled");
         }
-        else _externalConnection = new ExternalPlcRuntimeClient(ProjectSettings.GlobalizePath("res://.."));
-        IGuardedRuntimeClient connection = _externalConnection;
+        else
+        {
+            if (_verifyExternalPlayback)
+            {
+                _offlinePlaybackModeFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"rungproof-playback-{Guid.NewGuid():N}.txt");
+                System.IO.File.WriteAllText(_offlinePlaybackModeFile, "ready");
+                _externalConnection = new ExternalPlcRuntimeClient(() =>
+                {
+                    var info = new System.Diagnostics.ProcessStartInfo(ProjectSettings.GlobalizePath("res://../build/.venv-rungproof/Scripts/python.exe"))
+                    {
+                        UseShellExecute = false, CreateNoWindow = true,
+                        RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true,
+                    };
+                    info.ArgumentList.Add(ProjectSettings.GlobalizePath("res://tests/Connections/fake_bridge.py"));
+                    info.ArgumentList.Add(_offlinePlaybackModeFile);
+                    return new ProcessBridgeChannel(info);
+                });
+            }
+            else _externalConnection = new ExternalPlcRuntimeClient(ProjectSettings.GlobalizePath("res://.."));
+            connection = _externalConnection;
+            _externalConnection.StateChanged += SynchronizeExternalPlayback;
+        }
         _simulatorShell = new SimulatorShell(candidates, sceneCatalog, diagnostics, connection);
-        _externalConnection.StateChanged += SynchronizeExternalPlayback;
         GetTree().AutoAcceptQuit = false;
         _simulatorShell.SceneRequested += sceneId =>
         {
@@ -466,7 +576,15 @@ public partial class Main : Node3D
         _simulatorShell.LoadWorkspaceRequested += LoadWorkspace;
         _simulatorShell.SaveWorkspaceToPathRequested += SaveWorkspaceToPath;
         _simulatorShell.LoadWorkspaceFromPathRequested += LoadWorkspaceFromPath;
+        _simulatorShell.WorkspaceDriveConnectionRequested += ConnectSelectedWorkspaceDrive;
+        _simulatorShell.CreateFiniteBeltWorkspaceRequested += CreateFiniteBeltWorkspace;
+        _simulatorShell.CreateFiniteRollerWorkspaceRequested += CreateFiniteRollerWorkspace;
         _simulatorShell.WorkspaceReplacementGuard = GuardWorkspaceReplacement;
+        _simulatorShell.IntegratedDraftChanged += RefreshWorkspaceDirty;
+        _simulatorShell.IntegratedDraftChanged += WorkspaceTrialDraftChanged;
+        _simulatorShell.IntegratedDraftChanged += RepeatCycleDraftChanged;
+        _simulatorShell.IntegratedDraftChanged += WorkspaceRollerTrialDraftChanged;
+        _simulatorShell.IntegratedDraftChanged += PublishScanInspectionState;
         _simulatorShell.WorkspaceDiscardRequested += CompletePendingWorkspaceAction;
         _simulatorShell.WorkspaceReplacementCancelled += CancelPendingWorkspaceAction;
         _simulatorShell.PlacementSelectionSetRequested += SetSelection;
@@ -482,6 +600,12 @@ public partial class Main : Node3D
         _simulatorShell.RenameGroupRequested += RenameGroup;
         _simulatorShell.GroupPivotRequested += SetGroupPivot;
         _simulatorShell.FocusPlacementRequested += FocusPlacement;
+        _simulatorShell.FrameSceneRequested += wholeScene =>
+        {
+            _frameWholeScene = wholeScene;
+            if (_mainCamera is not null && _sceneCompositionRoot is not null)
+                FrameComposition(_mainCamera, _sceneCompositionRoot, _sceneCameraDirection);
+        };
         _simulatorShell.ResetPlacementTransformRequested += ResetPlacementTransform;
         _simulatorShell.SnapSettingsChanged += SetSnapSettings;
         _simulatorShell.TransformModeRequested += SetTransformMode;
@@ -491,9 +615,11 @@ public partial class Main : Node3D
         _simulatorShell.SignalLinkRequested += CreateSignalLink;
         _simulatorShell.ConnectorLinkDeleteRequested += DeleteConnectorLink;
         _simulatorShell.SignalLinkDeleteRequested += DeleteSignalLink;
-        _simulatorShell.RunRequested += RunActiveController;
+        _simulatorShell.RunRequested += RunEditorDraftController;
         _simulatorShell.StopRequested += StopActiveController;
         _simulatorShell.ResetRequested += ResetActiveController;
+        _simulatorShell.PauseRequested += PauseActiveController;
+        _simulatorShell.StepScanRequested += StepActiveController;
         _simulatorShell.SceneActionRequested += action => ExecuteSelectedControllerAction(action);
         _simulatorShell.ControllerModeChanged += external =>
         {
@@ -509,6 +635,8 @@ public partial class Main : Node3D
                 if (!external) _sceneRuntime.ResetSimulation();
             }
             SynchronizeExternalPlayback();
+            ReconcileWorkspaceDriveMappings();
+            RefreshWorkspaceUi();
         };
         _simulatorShell.VirtualControllerDemoRequested += EnableVirtualControllerDemo;
         _simulatorShell.VirtualControllerProgramRequested += EnableVirtualControllerProgram;
@@ -519,6 +647,7 @@ public partial class Main : Node3D
         _simulatorShell.VirtualStartRequested += () => PulseVirtualInput("operator.start", "start_command");
         _simulatorShell.VirtualStopRequested += () => PulseVirtualInput("operator.stop", "stop_command");
         AddChild(_simulatorShell);
+        InitializeChallengeShell();
         _cameraController = new SceneCameraController(camera);
         _cameraController.ViewportRectProvider = () => _simulatorShell?.SceneViewportRect() ?? new Rect2();
         _simulatorShell.ProductViewChanged += _ => _cameraController.CancelPointerCapture();
@@ -596,6 +725,123 @@ public partial class Main : Node3D
         else if (_auditMobileTraffic)
         {
             CallDeferred(nameof(AuditMobileTraffic));
+        }
+        else if (_verifyScanInspectionDemo5)
+        {
+            CallDeferred(nameof(VerifyDemo5ScanInspectionEquivalence));
+        }
+        else if (_verifyScanInspection)
+        {
+            CallDeferred(nameof(VerifyScanInspection));
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-editor-view-state", StringComparer.Ordinal))
+        {
+            Callable.From((Action)(async () =>
+            {
+                try
+                {
+                    _simulatorShell!.SetReviewState("ladder", "");
+                    var passed = await _simulatorShell.VerifyLadderBlockViewStateAsync();
+                    GD.Print($"EDITOR_VIEW_STATE_VERIFY {(passed ? "PASS" : "FAIL")}"); GetTree().Quit(passed ? 0 : 1);
+                }
+                catch (Exception error) { GD.PushError("EDITOR_VIEW_STATE_VERIFY FAIL " + error); GetTree().Quit(1); }
+            })).CallDeferred();
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-operand-placement", StringComparer.Ordinal))
+        {
+            Callable.From((Action)(async () =>
+            {
+                try
+                {
+                    var result = await _simulatorShell!.VerifyOperandEditorPlacementAsync();
+                    GD.Print($"OPERAND_PLACEMENT_VERIFY {(result.Passed ? "PASS" : "FAIL")} {result.Detail}");
+                    GetTree().Quit(result.Passed ? 0 : 1);
+                }
+                catch (Exception error) { GD.PushError("OPERAND_PLACEMENT_VERIFY FAIL " + error); GetTree().Quit(1); }
+            })).CallDeferred();
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-editor-transactions", StringComparer.Ordinal))
+        {
+            Callable.From(() =>
+            {
+                var passed = _simulatorShell!.VerifyEditorTransactions(out var detail);
+                GD.Print($"EDITOR_TRANSACTIONS_VERIFY {(passed ? "PASS" : "FAIL")} {detail}");
+                GetTree().Quit(passed ? 0 : 1);
+            }).CallDeferred();
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--review-call-authoring", StringComparer.Ordinal))
+        {
+            Callable.From(() => _simulatorShell!.SetupCallAuthoringReview(
+                !OS.GetCmdlineUserArgs().Contains("--review-call-closed", StringComparer.Ordinal))).CallDeferred();
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-call-authoring", StringComparer.Ordinal))
+        {
+            Callable.From(() =>
+            {
+                try
+                {
+                    var passed = _simulatorShell!.VerifyCallAuthoring();
+                    GD.Print($"CALL_AUTHORING_VERIFY {(passed ? "PASS" : "FAIL")}");
+                    GetTree().Quit(passed ? 0 : 1);
+                }
+                catch (Exception error) { GD.PushError("CALL_AUTHORING_VERIFY FAIL " + error); GetTree().Quit(1); }
+            }).CallDeferred();
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-editor-monitoring", StringComparer.Ordinal))
+        {
+            CallDeferred(nameof(VerifyEditorMonitoring));
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-counter-monitor", StringComparer.Ordinal))
+        {
+            CallDeferred(nameof(VerifyCounterMonitor));
+        }
+        else if (_verifyFiveDemoLearner)
+        {
+            CallDeferred(nameof(VerifyFiveDemoLearner));
+        }
+        else if (_verifyWorkspaceMappingDetach)
+        {
+            CallDeferred(nameof(VerifyWorkspaceMappingDetach));
+        }
+        else if (_verifyRepeatCycleLearner)
+        {
+            CallDeferred(nameof(VerifyRepeatCycleLearner));
+        }
+        else if (_verifyRepeatCycleLifecycle)
+        {
+            CallDeferred(nameof(VerifyRepeatCycleLifecycle));
+        }
+        else if (_verifyWorkspaceRoller)
+        {
+            CallDeferred(nameof(VerifyWorkspaceRoller));
+        }
+        else if (_verifyWorkspaceRollerExternalGeometry)
+        {
+            CallDeferred(nameof(VerifyWorkspaceRollerExternalGeometry));
+        }
+        else if (_verifyWorkspaceRollerGeometry)
+        {
+            CallDeferred(nameof(VerifyWorkspaceRollerGeometry));
+        }
+        else if (_verifyWorkspaceDriveRetirement)
+        {
+            CallDeferred(nameof(VerifyWorkspaceDriveRetirement));
+        }
+        else if (_verifyWorkspaceDriveAuthoring)
+        {
+            CallDeferred(nameof(VerifyWorkspaceDriveAuthoring));
+        }
+        else if (_verifyWorkspaceDrive)
+        {
+            CallDeferred(nameof(VerifyWorkspaceDrive));
+        }
+        else if (_verifyWorkspaceBelt)
+        {
+            CallDeferred(nameof(VerifyWorkspaceBelt));
+        }
+        else if (_verifyMotorConveyorZones)
+        {
+            CallDeferred(nameof(VerifyMotorConveyorZones));
         }
         else if (_auditMotorAggregates)
         {
@@ -699,6 +945,18 @@ public partial class Main : Node3D
         {
             CallDeferred(nameof(VerifyWorkspace));
         }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-industrial-mounts", StringComparer.Ordinal))
+        {
+            CallDeferred(nameof(VerifyIndustrialMounts));
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-control-installations", StringComparer.Ordinal))
+        {
+            CallDeferred(nameof(VerifyControlInstallations));
+        }
+        else if (OS.GetCmdlineUserArgs().Contains("--verify-scene-environments", StringComparer.Ordinal))
+        {
+            CallDeferred(nameof(VerifyCatalogEnvironments));
+        }
         else if (_verifyAppShell)
         {
             CallDeferred(nameof(VerifyAppShell));
@@ -726,6 +984,14 @@ public partial class Main : Node3D
         else if (_verifyGalleryClock)
         {
             CallDeferred(nameof(VerifyGalleryClock));
+        }
+        else if (_verifyTypedHistoryPresentation)
+        {
+            CallDeferred(nameof(VerifyTypedHistoryPresentation));
+        }
+        else if (_verifyTypedLearnerWorkflow)
+        {
+            CallDeferred(nameof(VerifyTypedLearnerWorkflow));
         }
         else if (_verifyTypedLessons)
         {
@@ -798,9 +1064,48 @@ public partial class Main : Node3D
         {
             // Startup acknowledgement is interactive-only; it must not cover
             // deterministic verification or capture output.
-            if (_capturePath is null && !_nativeMotionMovie)
+            if (_capturePath is null && !_nativeMotionMovie && !_verifyChallengeUi && !_verifyConveyorChallenge)
                 _simulatorShell.CallDeferred(nameof(SimulatorShell.ShowSimulatorModeNotice));
         }
+        if (_verifyConveyorChallenge) CallDeferred(nameof(VerifyConveyorChallenge));
+        if (_verifyChallengeUi) CallDeferred(nameof(VerifyChallengeUi));
+        if (_captureEnterChallenge) EnterConveyorChallenge();
+        if (_captureRunAuthoredDemo)
+        {
+            RunActiveController();
+            PulseVirtualInput("operator.start", "start_command");
+        }
+        if (_capturePath is not null)
+        {
+            // Optional supplemental evidence uses the same declared runtime
+            // action as a user click. Never inject PLC outputs or persist this
+            // fixture state into the authored scene or ordinary startup.
+            foreach (var argument in OS.GetCmdlineUserArgs())
+            {
+                const string prefix = "--capture-action=";
+                if (!argument.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                var actionId = argument[prefix.Length..];
+                if (_sceneRuntime is null || !_sceneRuntime.ExecuteAction(actionId))
+                {
+                    GD.PushError("RUNTIME_CAPTURE_ACTION_REJECTED " + actionId);
+                    GetTree().Quit(2);
+                    return;
+                }
+                GD.Print("RUNTIME_CAPTURE_ACTION_APPLIED " + actionId);
+            }
+        }
+        if (_capturePath is not null && _shellView.Length > 0) _simulatorShell.SetReviewState(_shellView, _shellSearch);
+        if (_tenZoneCaptureState is not null) CallDeferred(nameof(PrepareTenZoneCaptureReview));
+        if (_templateCapturePending) CallDeferred(nameof(PrepareTemplateCaptureReview));
+        if (_indexedTraceCapturePending) CallDeferred(nameof(PrepareIndexedDeviceTraceCapture));
+        if (_deviceTraceCapturePending) CallDeferred(nameof(PrepareDeviceTraceCaptureReview));
+        if (_workspaceBeltCapturePending) CallDeferred(nameof(PrepareWorkspaceBeltCapture));
+        if (_workspaceRollerCapturePending) CallDeferred(nameof(PrepareWorkspaceRollerCapture));
+        if (_demo5LearnerCapturePending) CallDeferred(nameof(PrepareDemo5LearnerCapture));
+        if (_scanInspectionCapturePending) CallDeferred(nameof(PrepareScanInspectionCapture));
+        if (_repeatLearnerCapturePending) CallDeferred(nameof(PrepareRepeatLearnerCapture));
+        if (_typedLearnerCapturePending) CallDeferred(nameof(PrepareTypedLearnerCapture));
+        if (_workspaceDriveCapturePending) CallDeferred(nameof(PrepareWorkspaceDriveCapture));
     }
 
     private void CreateDemoConnections(AssetCatalogDocument candidates)
@@ -843,6 +1148,7 @@ public partial class Main : Node3D
             _simulatorShell.SetWorkspaceStatus("Select Built-in Simulator before loading a local controller.", isError: true);
             return;
         }
+        var repeatCycleResetHandoff = resetScene ? null : CaptureRepeatCycleResetHandoff(program);
         if (_virtualController is not null) DisableVirtualController();
         if (_sceneRuntime is null) return;
 
@@ -855,12 +1161,23 @@ public partial class Main : Node3D
 
         _virtualProgram = program;
         _virtualController = new VirtualControllerSession(new VirtualControllerRuntime(compiled.Program));
+        _scanInspectionEpoch++;
         _virtualController.SnapshotPublished += OnVirtualSnapshot;
+        _virtualController.PublicationPublished += OnInstructionPublication;
+        _virtualController.ScanCompleted += OnChallengeLiveScan;
+        AttachWorkspaceTrialObserver(_virtualController);
         _sceneRuntime.UsesExternalClock = true;
         if (resetScene) _sceneRuntime.ResetSimulation();
         _virtualSnapshot = _virtualController.Reset();
         CommitVirtualControllerSnapshot(_virtualSnapshot);
         _simulatorShell.AttachVirtualController(_virtualProgram, _virtualSnapshot);
+        _simulatorShell.UpdateInstructionPublication(_virtualController.Publication);
+        if (resetScene) ResetRepeatCycleTrial();
+        else { RestoreRepeatCycleResetHandoff(repeatCycleResetHandoff); BindRepeatCycleTrial(); }
+        if (resetScene) ResetWorkspaceObservedTrial("Controller load reset");
+        else BeginWorkspaceObservedTrial("Current draft loaded");
+        if (resetScene) ResetWorkspaceRollerObservedTrial("Controller load reset");
+        else BeginWorkspaceRollerObservedTrial("Current draft loaded");
         GD.Print($"VIRTUAL_CONTROLLER_ENABLED mode=offline scene={_currentSceneId} transport=none");
     }
 
@@ -869,8 +1186,16 @@ public partial class Main : Node3D
 
     private void DisableVirtualController()
     {
-        if (_virtualController is not null) _virtualController.SnapshotPublished -= OnVirtualSnapshot;
+        StopWorkspaceDrive();
+        ReleaseScanPauseModes();
+        RetireRepeatCycleTrial("Controller detached or replaced; Reset is required.");
+        DetachWorkspaceTrialObserver();
+        if (_workspaceObservedTrial is not null) _workspaceObservedTrial = _workspaceObservedTrial.Invalidate("Controller detached; observation is historical.");
+        if (_workspaceRollerObservedTrial is not null) _workspaceRollerObservedTrial = _workspaceRollerObservedTrial.Invalidate("Controller detached; observation is historical.");
+        if (_virtualController is not null) { _virtualController.SnapshotPublished -= OnVirtualSnapshot; _virtualController.PublicationPublished -= OnInstructionPublication; _virtualController.ScanCompleted -= OnChallengeLiveScan; }
+        _challengeLiveScan = null;
         _virtualController = null;
+        _simulatorShell?.UpdateInstructionPublication(null);
         _virtualProgram = null;
         _virtualSnapshot = null;
         if (_sceneRuntime is not null)
@@ -880,8 +1205,12 @@ public partial class Main : Node3D
             _sceneRuntime.StopSimulation();
         }
         _simulatorShell?.DetachVirtualController();
+        PublishScanInspectionState();
         GD.Print("VIRTUAL_CONTROLLER_DISABLED");
     }
+
+    private void OnInstructionPublication(ControllerPublication publication)
+        => _simulatorShell?.UpdateInstructionPublication(publication);
 
     private void OnVirtualSnapshot(VirtualControllerSnapshot snapshot)
     {
@@ -889,6 +1218,7 @@ public partial class Main : Node3D
         _sceneRuntime?.SetControllerPlaybackRunning(snapshot.State == VirtualControllerState.Running);
         _simulatorShell?.UpdateVirtualController(snapshot);
         UpdateGantryReviewClockLabel();
+        PublishScanInspectionState();
     }
 
     private void PulseVirtualInput(string binding, string fallbackName)
@@ -897,15 +1227,22 @@ public partial class Main : Node3D
         var variable = _virtualProgram?.Variables.FirstOrDefault(item =>
             item.Role == PlcVariableRole.Input
             && item.Binding.Equals(binding, StringComparison.Ordinal));
+        if (_virtualController.IsPaused && (!ScanInspectionCurrentDraftMatches() || variable?.Type != PlcVariableType.Bool))
+        {
+            _simulatorShell?.SetWorkspaceStatus("Input blocked · paused draft must match a declared BOOL input binding", true);
+            return;
+        }
         _virtualController.PulseInput(variable?.Name ?? fallbackName);
     }
 
     private void ApplyVirtualForce(string variableName, bool value)
     {
+        if (BlockPausedForceChange()) return;
         if (_virtualController is null || _simulatorShell is null) return;
         try
         {
             var snapshot = _virtualController.SetBoolForce(variableName, value);
+            RetireRepeatCycleTrial("Force used; Reset is required even after the force is cleared.");
             CommitVirtualControllerSnapshot(snapshot);
             GD.Print($"VIRTUAL_FORCE_SET variable={variableName} value={value} scope=offline-simulator transport=none");
         }
@@ -917,6 +1254,7 @@ public partial class Main : Node3D
 
     private void RemoveVirtualForce(string variableName)
     {
+        if (BlockPausedForceChange()) return;
         if (_virtualController is null) return;
         var snapshot = _virtualController.RemoveForce(variableName);
         CommitVirtualControllerSnapshot(snapshot);
@@ -925,6 +1263,7 @@ public partial class Main : Node3D
 
     private void ClearVirtualForces()
     {
+        if (BlockPausedForceChange()) return;
         if (_virtualController is null) return;
         var snapshot = _virtualController.ClearForces();
         CommitVirtualControllerSnapshot(snapshot);
@@ -1092,8 +1431,55 @@ public partial class Main : Node3D
         }
     }
 
+    // Human Run always executes the current editor draft. Diagnostic fixtures
+    // deliberately use RunActiveController after explicitly loading a program.
+    private void RunEditorDraftController()
+    {
+        if (!ValidateWorkspaceDriveRun()) return;
+        if (_simulatorShell is null || _simulatorShell.IsExternalMode)
+        {
+            RunActiveController();
+            return;
+        }
+        if (_simulatorShell.IsChallengeDraftActive)
+        {
+            RunActiveController(); // Challenge branch validates its own draft.
+            return;
+        }
+        if (!_simulatorShell.TryBuildCurrentLadderProgram(out var draft, out var issues))
+        {
+            StopActiveController();
+            _simulatorShell.SetVirtualControllerValidation(issues);
+            _simulatorShell.SetWorkspaceStatus("RUN BLOCKED · current ladder draft is invalid", isError: true);
+            return;
+        }
+        if (_sceneRuntime?.HasLatchedEmergencyStop == true)
+        {
+            RunActiveController(); // Retain the existing explicit reset gate.
+            return;
+        }
+        ReleaseScanPauseModes();
+        // Watch metadata does not alter execution. Match the monitor's existing
+        // execution identity so a watch-only edit cannot reset program memory.
+        if (_virtualProgram is null || LadderProgramJson.Save(_virtualProgram with { WatchVariables = null }) != LadderProgramJson.Save(draft with { WatchVariables = null }))
+            EnableVirtualControllerProgram(draft, resetScene: false);
+        RunActiveController();
+    }
+
     private void RunActiveController()
     {
+        if (!ValidateWorkspaceDriveRun()) return;
+        ReleaseScanPauseModes();
+        if (_simulatorShell?.IsChallengeDraftActive == true)
+        {
+            if (!_simulatorShell.TryBuildChallengeDraft(out var learnerProgram, out var challengeIssues))
+            { StopActiveController(); _simulatorShell.SetChallengeValidationIssues(challengeIssues); _simulatorShell.SetWorkspaceStatus("Invalid challenge draft: " + string.Join("; ", challengeIssues), true); return; }
+            _simulatorShell.SetChallengeValidationIssues(System.Array.Empty<string>());
+            if (_virtualProgram is null || LadderProgramJson.Save(_virtualProgram) != LadderProgramJson.Save(learnerProgram))
+                EnableVirtualControllerProgram(learnerProgram, resetScene: false);
+            _virtualController?.Run();
+            return;
+        }
         if (_simulatorShell?.IsExternalMode == true)
         {
             SynchronizeExternalPlayback();
@@ -1134,6 +1520,10 @@ public partial class Main : Node3D
 
     private void StopActiveController()
     {
+        StopWorkspaceDrive();
+        ReleaseScanPauseModes();
+        _challengeCoordinator?.Cancel();
+        _demoEnvironment?.SetAmbientMotionEnabled(false);
         if (_simulatorShell?.IsExternalMode == true)
         {
             _externalPlayback.Pause();
@@ -1142,10 +1532,15 @@ public partial class Main : Node3D
             return;
         }
         _sceneRuntime?.DiscardPendingLocalInputPulses();
+        StopRepeatCycleTrial();
+        StopWorkspaceObservedTrial();
+        StopWorkspaceRollerObservedTrial();
         if (_virtualController is not null && _sceneRuntime is not null)
         {
             var snapshot = _virtualController.Stop();
             CommitVirtualControllerSnapshot(snapshot);
+            PublishWorkspaceObservedTrial();
+            PublishWorkspaceRollerObservedTrial();
             return;
         }
         _sceneRuntime?.StopSimulation();
@@ -1153,6 +1548,11 @@ public partial class Main : Node3D
 
     private void ResetActiveController()
     {
+        ResetWorkspaceDrive();
+        ReleaseScanPauseModes();
+        _scanInspectionEpoch++;
+        if (_challengeCoordinator?.State.IsWorkerOutstanding == true) { _challengeCoordinator.RequestAction(RungProof.Next.Challenges.ChallengePendingAction.Reset); return; }
+        _demoEnvironment?.SetAmbientMotionEnabled(false);
         if (_simulatorShell?.IsExternalMode == true)
         {
             _externalPlayback.Pause();
@@ -1167,11 +1567,17 @@ public partial class Main : Node3D
             _sceneRuntime.ResetSimulation();
             var snapshot = _virtualController.Reset();
             CommitVirtualControllerSnapshot(snapshot);
+            ResetRepeatCycleTrial();
+            ResetWorkspaceObservedTrial("Reset");
+            ResetWorkspaceRollerObservedTrial("Reset");
             _simulatorShell?.SetWorkspaceStatus("Built-in controller reset · stopped · new machine Start required");
             ReframeResetReviewFocus();
             return;
         }
         _sceneRuntime?.ResetSimulation();
+        ResetRepeatCycleTrial();
+            ResetWorkspaceObservedTrial("Reset");
+        ResetWorkspaceRollerObservedTrial("Reset");
         ReframeResetReviewFocus();
     }
 
@@ -1197,7 +1603,7 @@ public partial class Main : Node3D
                 SampleVirtualControllerNumericInputs,
                 CommitVirtualControllerOutputs,
                 CommitVirtualControllerNumericOutputs,
-                _sceneRuntime.AdvanceSimulation, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
+                AdvanceAcceptedScenePlant, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
         }
         var photoeye = _sceneRuntime.Points.TryGetValue("simulated_photoeye", out var sensor) && sensor is true;
         var actionsStable = originalButtons.Length > 0
@@ -1213,7 +1619,8 @@ public partial class Main : Node3D
             SampleVirtualControllerNumericInputs,
             CommitVirtualControllerOutputs,
             CommitVirtualControllerNumericOutputs,
-            _sceneRuntime.AdvanceSimulation, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
+            AdvanceAcceptedScenePlant, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs,
+            CaptureScanInspectionPlantInputs);
         var restartBlocked = _virtualSnapshot is not null
             && !_virtualSnapshot.Outputs.GetValueOrDefault("conveyor_running");
         var forcedSnapshot = _virtualController.SetBoolForce("conveyor_running", true);
@@ -1306,7 +1713,7 @@ public partial class Main : Node3D
             SampleVirtualControllerNumericInputs,
             CommitVirtualControllerOutputs,
             CommitVirtualControllerNumericOutputs,
-            _sceneRuntime.AdvanceSimulation, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
+            AdvanceAcceptedScenePlant, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
         var sampled = _virtualSnapshot?.NumericVariables.GetValueOrDefault("selector") == 1.0;
         var published = _virtualSnapshot?.NumericOutputs.GetValueOrDefault("speed") == 1.0
             && Convert.ToDouble(_sceneRuntime.Points.GetValueOrDefault("fan_speed_percent") ?? -1.0) == 1.0;
@@ -1327,13 +1734,19 @@ public partial class Main : Node3D
             GetTree().Quit(1);
             return;
         }
-        if (_simulatorShell.VerifyLadderEditorInteractions(out var result))
+        try
         {
-            GD.Print($"LADDER_EDITOR_INTERACTION_VERIFY PASS {result}");
-            GetTree().Quit();
-            return;
+            if (_simulatorShell.VerifyLadderEditorInteractions(out var result))
+            {
+                GD.Print($"LADDER_EDITOR_INTERACTION_VERIFY PASS {result}");
+                var commandsPassed = _simulatorShell.VerifyEditorCommandRoutes(out var commandResult);
+                GD.Print($"EDITOR_COMMAND_ROUTES_VERIFY {(commandsPassed ? "PASS" : "FAIL")} {commandResult}");
+                GetTree().Quit(commandsPassed ? 0 : 1);
+                return;
+            }
+            GD.PushError($"LADDER_EDITOR_INTERACTION_VERIFY FAIL {result}");
         }
-        GD.PushError($"LADDER_EDITOR_INTERACTION_VERIFY FAIL {result}");
+        catch(Exception error) { GD.PushError("LADDER_EDITOR_INTERACTION_VERIFY FAIL " + error); }
         GetTree().Quit(1);
     }
 
@@ -1565,7 +1978,7 @@ public partial class Main : Node3D
         var result = "shell unavailable";
         if (_simulatorShell is not null && _simulatorShell.VerifySplitLayout(out result))
         {
-            var aperture = _simulatorShell.SceneViewportRect();
+            var aperture = ChallengeSceneAperture(_simulatorShell.SceneViewportRect());
             var targetCentered = _mainCamera is not null && _cameraController is not null
                 && _mainCamera.UnprojectPosition(_cameraController.ViewTarget).DistanceTo(aperture.GetCenter()) < 1.0f;
             const string routinePath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/EditorAndTasks/EditorAndInspector/ProgramEditor/RoutineView";
@@ -1713,7 +2126,7 @@ public partial class Main : Node3D
         void ScanOnce() => _virtualController?.Advance(0.020,
             SampleVirtualControllerInputs, SampleVirtualControllerNumericInputs,
             CommitVirtualControllerOutputs, CommitVirtualControllerNumericOutputs,
-            _sceneRuntime.AdvanceSimulation, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
+            AdvanceAcceptedScenePlant, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
         var reviewBarBlocked = true;
         var reviewPopupBlocked = true;
         var reviewClockBlocked = true;
@@ -2071,6 +2484,8 @@ public partial class Main : Node3D
         var path = ProjectSettings.GlobalizePath(WorkspaceRepository.VerificationWorkspacePath);
         try
         {
+            VerifyWorkspaceDriveRepository();
+            if (_verifyWorkspaceDriveRepositoryOnly) { GetTree().Quit(0); return; }
             VerifyWorkspaceDirtyUndo();
             VerifyWorkspaceReplacementGuards();
             var conveyor = _candidateCatalog.Assets.First(
@@ -2269,6 +2684,7 @@ public partial class Main : Node3D
         bool recordUndo = true
     )
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (_sceneCompositionRoot is null)
         {
             GD.PushWarning("Asset placement requires an active scene.");
@@ -2348,6 +2764,7 @@ public partial class Main : Node3D
 
     private void SelectPlacement(string? instanceId, bool additive)
     {
+        if(SelectTemplateAssembly(instanceId))return;
         if (!additive) _selectedPlacementIds.Clear();
         if (instanceId is not null && _workspaceNodes.ContainsKey(instanceId))
         {
@@ -2373,6 +2790,7 @@ public partial class Main : Node3D
 
     private void SetSelection(IReadOnlyList<string> instanceIds)
     {
+        if(instanceIds.Contains(WorkspaceTemplatePolicy.SelectionId)&&SelectTemplateAssembly(WorkspaceTemplatePolicy.SelectionId))return;
         _selectedPlacementIds.Clear();
         foreach (var id in instanceIds)
         {
@@ -2513,6 +2931,7 @@ public partial class Main : Node3D
 
     private void GroupSelection()
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         var members = _selectedPlacementIds.Where(_workspaceNodes.ContainsKey).ToArray();
         if (members.Length < 2)
         {
@@ -2541,6 +2960,7 @@ public partial class Main : Node3D
 
     private void UngroupSelection()
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         var groups = _workspaceGroups.Where(group => group.ParentGroupId is null &&
             group.MemberInstanceIds.Any(_selectedPlacementIds.Contains)).ToArray();
         if (groups.Length == 0)
@@ -2613,6 +3033,7 @@ public partial class Main : Node3D
 
     private void ArrangeSelection(WorkspaceArrangeOperation operation)
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         var units = SelectedArrangementUnits();
         var distribute = operation is WorkspaceArrangeOperation.DistributeX
             or WorkspaceArrangeOperation.DistributeY or WorkspaceArrangeOperation.DistributeZ;
@@ -2661,6 +3082,9 @@ public partial class Main : Node3D
 
     private void TransformPlacement(string instanceId, Vector3 position, Vector3 rotation, Vector3 scale)
     {
+        if(TryTransformFiniteBeltWorkspace(instanceId,position,rotation,scale))return;
+        if(TryTransformFiniteRollerWorkspace(instanceId,position,rotation,scale))return;
+        if(TransformTemplateAssembly(instanceId,position,rotation,scale))return;
         if (!_workspaceNodes.TryGetValue(instanceId, out var placement)) return;
         if (!IsFinite(position) || !IsFinite(rotation) || !IsFinite(scale))
         {
@@ -2715,6 +3139,7 @@ public partial class Main : Node3D
 
     private void DuplicateSelection()
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (_selectedPlacementIds.Count == 0) return;
         CopySelection();
         PasteSelection();
@@ -2741,6 +3166,7 @@ public partial class Main : Node3D
 
     private void PasteSelection()
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (_workspaceClipboard is null || _candidateCatalog is null || _currentSceneId is null)
         {
             _simulatorShell?.SetWorkspaceStatus("Paste skipped · clipboard is empty", isError: true);
@@ -2848,6 +3274,12 @@ public partial class Main : Node3D
 
     private void ResetPlacementTransform(string instanceId)
     {
+        if(instanceId==WorkspaceTemplatePolicy.SelectionId&&_sceneCompositionRoot?.GetNodeOrNull<Node3D>("ControlInstallation") is { } support)
+        {
+            var original=support.GetMeta("templateOriginalTransform").AsTransform3D();
+            TransformTemplateAssembly(instanceId,original.Origin,original.Basis.GetEuler()*180/Mathf.Pi,Vector3.One);
+            return;
+        }
         if (!_workspaceNodes.TryGetValue(instanceId, out var placement)) return;
         TransformPlacement(instanceId, placement.Node.Position, Vector3.Zero, Vector3.One);
     }
@@ -2881,6 +3313,7 @@ public partial class Main : Node3D
     private void UpdateTransformGizmo()
     {
         if (_transformGizmo is null) return;
+        if(_workspaceFiniteBeltDocument is not null || _workspaceFiniteRollerDocument is not null){_transformGizmo.Detach();return;}
         var selected = _selectedPlacementIds
             .Where(_workspaceNodes.ContainsKey)
             .Select(id => _workspaceNodes[id].Node.GlobalPosition)
@@ -3203,7 +3636,9 @@ public partial class Main : Node3D
     private void DeletePlacement(string instanceId)
     {
         if (!_workspaceNodes.TryGetValue(instanceId, out var placement)) return;
+        var retiringDrive = _workspaceDriveRelation?.InstanceId == instanceId;
         RecordUndo();
+        if (retiringDrive) StopActiveController();
         placement.Node.GetParent()?.RemoveChild(placement.Node);
         placement.Node.QueueFree();
         _workspaceNodes.Remove(instanceId);
@@ -3212,6 +3647,7 @@ public partial class Main : Node3D
         RemoveGroupMembers([instanceId]);
         _selectedPlacementIds.Remove(instanceId);
         _selectedPlacementId = _selectedPlacementIds.LastOrDefault();
+        if (retiringDrive) RebuildTemplateWorkspace(CreateWorkspaceDocument() with { Version = 5, DriveConnection = null });
         RefreshWorkspaceUi();
         _simulatorShell?.SetWorkspaceStatus($"Deleted placement · {_workspaceNodes.Count} remain");
         RefreshWorkspaceDirty();
@@ -3220,10 +3656,13 @@ public partial class Main : Node3D
 
     private void DeleteSelection()
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         var selected = _selectedPlacementIds.Where(_workspaceNodes.ContainsKey).ToArray();
         if (selected.Length == 0) return;
         RecordUndo();
         var selectedSet = selected.ToHashSet(StringComparer.Ordinal);
+        var retiringDrive = _workspaceDriveRelation is { } drive && selectedSet.Contains(drive.InstanceId);
+        if (retiringDrive) StopActiveController();
         foreach (var id in selected)
         {
             var placement = _workspaceNodes[id];
@@ -3237,6 +3676,7 @@ public partial class Main : Node3D
         RemoveGroupMembers(selectedSet);
         _selectedPlacementIds.Clear();
         _selectedPlacementId = null;
+        if (retiringDrive) RebuildTemplateWorkspace(CreateWorkspaceDocument() with { Version = 5, DriveConnection = null });
         UpdateTransformGizmo();
         RefreshWorkspaceUi();
         _simulatorShell?.SetWorkspaceStatus($"Deleted {selected.Length} selected placements · {_workspaceNodes.Count} remain");
@@ -3258,6 +3698,7 @@ public partial class Main : Node3D
 
     private void RecordUndo()
     {
+        RetirePausedWorkspaceForEdit();
         if (_currentSceneId is null) return;
         _undoHistory.Add(CreateWorkspaceDocument());
         if (_undoHistory.Count > 100) _undoHistory.RemoveAt(0);
@@ -3288,8 +3729,15 @@ public partial class Main : Node3D
 
     private void ApplyWorkspaceSnapshot(WorkspaceDocument snapshot)
     {
+        RetirePausedWorkspaceForEdit();
+        if(snapshot.FiniteBeltPreset is not null || _workspaceFiniteBeltDocument is not null
+            || snapshot.FiniteRollerPreset is not null || _workspaceFiniteRollerDocument is not null
+            || snapshot.DriveConnection is not null || _workspaceDriveRelation is not null)
+        { WorkspaceRepository.ValidateDocument(snapshot,_candidateCatalog!,_sceneCatalog!);RebuildTemplateWorkspace(snapshot);return; }
         if (snapshot.SourceSceneId != _currentSceneId)
             throw new InvalidOperationException("Undo snapshot belongs to another scene.");
+        if(JsonSerializer.Serialize(snapshot.TemplateOverride)!=JsonSerializer.Serialize(_templateOverride))
+        { RebuildTemplateWorkspace(snapshot);return; }
         foreach (var placement in _workspaceNodes.Values)
         {
             placement.Node.GetParent()?.RemoveChild(placement.Node);
@@ -3318,7 +3766,7 @@ public partial class Main : Node3D
     {
         if (_simulatorShell is null || _currentSceneId is null) return;
         _simulatorShell.UpdateWorkspace(
-            CreateWorkspaceDocument().Placements,
+            CreateWorkspaceDocument().Placements.Concat(TemplateWorkspaceRows()).ToArray(),
             _selectedPlacementId,
             _undoHistory.Count > 0,
             _redoHistory.Count > 0,
@@ -3328,6 +3776,7 @@ public partial class Main : Node3D
             _selectedPlacementIds,
             _workspaceGroups
         );
+        _simulatorShell.SetWorkspaceDriveConnectionAvailability(CanConnectWorkspaceDrive(_selectedPlacementId), _workspaceDriveRelation is not null);
         RefreshConnectionVisuals();
     }
 
@@ -3339,6 +3788,8 @@ public partial class Main : Node3D
     private IReadOnlyDictionary<string, SignalMappingRuntimeStatus> ApplySignalMappings()
     {
         var statuses = new Dictionary<string, SignalMappingRuntimeStatus>(StringComparer.Ordinal);
+        ReconcileWorkspaceDriveMappings();
+        ClearFormerGenericLiveInputs();
         if (_sceneRuntime is null || _candidateCatalog is null) return statuses;
 
         foreach (var link in _signalLinks)
@@ -3356,12 +3807,16 @@ public partial class Main : Node3D
                 continue;
             }
 
-            statuses[link.Id] = WorkspaceSignalRuntimeAdapter.Apply(
+            var boundedStatus = WorkspaceDriveMappingStatus(link.InstanceId,link.SignalId)
+                ?? FiniteBeltMappingStatus(link.InstanceId,link.SignalId)
+                ?? FiniteRollerMappingStatus(link.InstanceId,link.SignalId);
+            statuses[link.Id] = boundedStatus ?? WorkspaceSignalRuntimeAdapter.Apply(
                 asset,
                 placement.Node,
                 signal,
                 pointValue
             );
+            if (boundedStatus is null) OwnGenericLiveInput(placement.Node,link.SignalId,statuses[link.Id]);
         }
         return statuses;
     }
@@ -3453,6 +3908,7 @@ public partial class Main : Node3D
         string toConnectorId
     )
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (!TryResolveConnector(fromInstance, fromConnectorId, out var from)
             || !TryResolveConnector(toInstance, toConnectorId, out var to))
         {
@@ -3495,6 +3951,7 @@ public partial class Main : Node3D
 
     private void CreateSignalLink(string instanceId, string signalId, string pointName)
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (!_workspaceNodes.TryGetValue(instanceId, out var placement)
             || _candidateCatalog?.Assets.FirstOrDefault(item => item.Id == placement.AssetId) is not { } asset
             || asset.Signals.FirstOrDefault(item => item.Id == signalId) is not { } signal)
@@ -3528,6 +3985,7 @@ public partial class Main : Node3D
 
     private void DeleteConnectorLink(string id)
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (!_connectorLinks.Any(link => link.Id == id)) return;
         RecordUndo();
         _connectorLinks.RemoveAll(link => link.Id == id);
@@ -3538,7 +3996,11 @@ public partial class Main : Node3D
 
     private void DeleteSignalLink(string id)
     {
+        if(RejectBoundedWorkspaceGraphEdit())return;
         if (!_signalLinks.Any(link => link.Id == id)) return;
+        if (_workspaceDriveRelation is { } drive && _signalLinks.Any(link => link.Id == id && link.InstanceId == drive.InstanceId && link.SignalId == "run_command")
+            && !ScanInspectionCurrentDraftMatches())
+        { StopActiveController(); _virtualController?.ClearHistory(); _scanInspectionEpoch++; }
         RecordUndo();
         _signalLinks.RemoveAll(link => link.Id == id);
         RefreshWorkspaceUi();
@@ -3635,6 +4097,12 @@ public partial class Main : Node3D
 
     private void SaveWorkspaceToPath(string path)
     {
+        if (_simulatorShell is null) { SaveResolvedWorkspaceToPath(path); return; }
+        _simulatorShell.ResolveIntegratedProjectSave(() => SaveResolvedWorkspaceToPath(path), CancelPendingWorkspaceAction);
+    }
+
+    private void SaveResolvedWorkspaceToPath(string path)
+    {
         if (_currentSceneId is null)
         {
             const string message = "Save failed: no active scene is loaded.";
@@ -3644,8 +4112,11 @@ public partial class Main : Node3D
         }
         try
         {
-            var savedPath = WorkspaceRepository.Save(CreateWorkspaceDocument(), path);
-            _simulatorShell?.SetWorkspaceStatus($"Saved {_workspaceNodes.Count} placements · {savedPath}");
+            var bundle=new WorkspaceProjectBundle(1,WorkspaceProjectBundleRepository.Kind,
+                CreateWorkspaceDocument(),_simulatorShell!.CaptureIntegratedLadderDraft());
+            var savedPath = WorkspaceProjectBundleRepository.Save(bundle,path,_candidateCatalog!,_sceneCatalog!);
+            _simulatorShell.MarkIntegratedLadderDraftSaved();
+            _simulatorShell.SetWorkspaceStatus($"Saved integrated project · scene + {_workspaceNodes.Count} placements + actual ladder draft · {savedPath}");
             MarkWorkspaceSaved();
             GD.Print($"WORKSPACE_SAVED {savedPath} placements={_workspaceNodes.Count}");
         }
@@ -3665,6 +4136,8 @@ public partial class Main : Node3D
     private WorkspaceDocument CreateWorkspaceDocument()
     {
         if (_currentSceneId is null) throw new InvalidOperationException("No active scene.");
+        if(_workspaceFiniteBeltDocument is not null)return _workspaceFiniteBeltDocument;
+        if(_workspaceFiniteRollerDocument is not null)return _workspaceFiniteRollerDocument;
         var placements = _workspaceNodes.Select(item => new WorkspacePlacement(
             item.Key,
             item.Value.AssetId,
@@ -3672,20 +4145,23 @@ public partial class Main : Node3D
             Array(item.Value.Node.RotationDegrees),
             Array(item.Value.Node.Scale)
         )).ToArray();
-        return new WorkspaceDocument(5, _currentSceneId, placements,
-            _connectorLinks.ToArray(), _signalLinks.ToArray(), _workspaceGroups.ToArray());
+        return new WorkspaceDocument(_workspaceDriveRelation is not null?9:_templateOverride is null?5:6, _currentSceneId, placements,
+            _connectorLinks.ToArray(), _signalLinks.ToArray(), _workspaceGroups.ToArray(),_templateOverride,
+            DriveConnection:_workspaceDriveRelation);
     }
 
     private void RefreshWorkspaceDirty()
     {
         if (_currentSceneId is null) return;
         _simulatorShell?.SetWorkspaceDirty(!string.Equals(_workspaceSavedSnapshotJson,
-            JsonSerializer.Serialize(CreateWorkspaceDocument()), StringComparison.Ordinal));
+            JsonSerializer.Serialize(CreateWorkspaceDocument()), StringComparison.Ordinal)
+            ||_workspaceSavedLadderJson is not null && _workspaceSavedLadderJson!=_simulatorShell?.CaptureIntegratedLadderDraft());
     }
 
     private void MarkWorkspaceSaved()
     {
         _workspaceSavedSnapshotJson = JsonSerializer.Serialize(CreateWorkspaceDocument());
+        _workspaceSavedLadderJson=_simulatorShell?.CaptureIntegratedLadderDraft();
         RefreshWorkspaceDirty();
     }
 
@@ -3703,26 +4179,55 @@ public partial class Main : Node3D
         }
         try
         {
-            var document = WorkspaceRepository.Load(_candidateCatalog, _sceneCatalog, path);
+            // Validate both document graphs and source identity before any scene
+            // or editor replacement. Legacy standalone workspace files remain readable.
+            var bundle=WorkspaceProjectBundleRepository.LoadIfBundle(path,_candidateCatalog,_sceneCatalog);
+            var document = bundle?.Workspace??WorkspaceRepository.Load(_candidateCatalog, _sceneCatalog, path);
             if (!GuardWorkspaceReplacement(() => LoadWorkspaceFromPath(path))) return;
+            var rollback=CaptureWorkspaceReplacementRollback();
+            try
+            {
             AddMigratedScene(document.SourceSceneId, _candidateCatalog, _mainCamera,
-                showRuntimeControls: false, autoRun: false);
+                showRuntimeControls: false, autoRun: false,templateOverride:document.TemplateOverride,
+                finiteBeltWorkspace:document.FiniteBeltPreset is null?null:document,
+                finiteRollerWorkspace:document.FiniteRollerPreset is null?null:document,
+                driveWorkspace:document.DriveConnection is null?null:document);
+            if(_injectWorkspaceReplacementFailure=="after-compose")
+            { _injectWorkspaceReplacementFailure=null;throw new InvalidOperationException("Injected native replacement failure after actual scene compose."); }
             foreach (var placement in document.Placements)
             {
+                if(document.FiniteBeltPreset is not null || document.FiniteRollerPreset is not null)continue;
                 var asset = _candidateCatalog.Assets.First(item => item.Id == placement.AssetId);
                 PlaceAsset(asset, placement, recordUndo: false);
             }
             _connectorLinks.AddRange(document.ConnectorLinks ?? []);
-            _signalLinks.AddRange(document.SignalLinks ?? []);
+            if(document.FiniteBeltPreset is null && document.FiniteRollerPreset is null)_signalLinks.AddRange(document.SignalLinks ?? []);
             _workspaceGroups.AddRange(document.Groups ?? []);
+            if(document.DriveConnection is not null)RegisterWorkspaceDrive(document);
             _undoHistory.Clear();
             _redoHistory.Clear();
+            DisableVirtualController();
+            if(bundle is not null)_simulatorShell!.RestoreIntegratedLadderDraft(bundle.LadderProjectJson);
+            if(_injectWorkspaceReplacementFailure=="after-draft")
+            { _injectWorkspaceReplacementFailure=null;throw new InvalidOperationException("Injected native replacement failure after actual draft application."); }
+            _simulatorShell!.SetIntegratedSceneIdentity();
+            // Joint Open has composed a new measured-home scene and restored its exact
+            // authored layout/draft. Stage its epoch after the loader's final detach,
+            // which intentionally retires ordinary controller replacements.
+            ResetRepeatCycleTrial();
             RefreshWorkspaceUi();
-            var message = $"Loaded {document.Placements.Count} placements from {System.IO.Path.GetFileName(path)}.\n\nScene: {document.SourceSceneId}";
+            var message = $"Loaded {document.Placements.Count} placements from {System.IO.Path.GetFileName(path)}.\n\nScene: {document.SourceSceneId}\n"+
+                (bundle is null?"LEGACY WORKSPACE · no ladder draft contained":"INTEGRATED PROJECT · saved ladder draft restored · stopped");
             _simulatorShell?.SetWorkspaceStatus(message.Replace("\n\n", " · "), isError: false);
             MarkWorkspaceSaved();
             _simulatorShell?.ShowWorkspaceFeedback(message);
             GD.Print($"WORKSPACE_LOADED scene={document.SourceSceneId} placements={document.Placements.Count}");
+            }
+            catch
+            {
+                rollback();
+                throw;
+            }
         }
         catch (Exception exception)
         {
@@ -3738,9 +4243,15 @@ public partial class Main : Node3D
         AssetCatalogDocument candidates,
         Camera3D camera,
         bool showRuntimeControls = true,
-        bool autoRun = true
+        bool autoRun = true,
+        WorkspaceTemplateOverride? templateOverride = null,
+        WorkspaceDocument? finiteBeltWorkspace = null,
+        WorkspaceDocument? finiteRollerWorkspace = null,
+        WorkspaceDocument? driveWorkspace = null
     )
     {
+        if (!GuardChallengeSceneReplacement(() => AddMigratedScene(sceneId, candidates, camera, showRuntimeControls, autoRun,templateOverride,finiteBeltWorkspace,finiteRollerWorkspace,driveWorkspace))) return;
+        ClearChallengeLabels();
         ReleaseGantryReviewClock();
         if (_externalConnection is not null && (_externalConnection.State != ConnectionState.Disconnected || _externalConnection.IsBusy))
             _externalConnection.Disconnect();
@@ -3752,14 +4263,24 @@ public partial class Main : Node3D
         var entry = catalog.Scenes.FirstOrDefault(scene => scene.Id == sceneId)
             ?? throw new InvalidOperationException($"Unknown migrated scene '{sceneId}'.");
         var scene = SceneCatalogLoader.LoadScene(entry);
+        if(templateOverride is not null)WorkspaceTemplatePolicy.Validate(scene,templateOverride);
+        scene=scene with { TemplateOverride=templateOverride };
+        if(finiteBeltWorkspace is not null)scene=WorkspaceFiniteBeltPolicy.ReplaceSource(scene,finiteBeltWorkspace);
+        if(finiteRollerWorkspace is not null)scene=WorkspaceFiniteRollerPolicy.ReplaceSource(scene,finiteRollerWorkspace);
+        if(driveWorkspace is not null)scene=WorkspaceDriveConnectionPolicy.AugmentSource(scene,driveWorkspace,candidates);
+        _templateOverride=templateOverride;
         // Reject malformed typed scene contracts before composing Godot nodes.
         SceneAggregateContract.Validate(scene.Simulation);
         _activeSceneDefinition = scene;
+        ClearWorkspaceDriveRegistration();
+        _frameWholeScene = false;
         var composition = SceneComposer.Compose(
             scene,
             candidates,
             false
         );
+        _workspaceFiniteBeltDocument=null;
+        _workspaceFiniteRollerDocument=null;
         _workspaceNodes.Clear();
         _connectorLinks.Clear();
         _signalLinks.Clear();
@@ -3777,6 +4298,7 @@ public partial class Main : Node3D
             _sceneRuntime = null;
         }
         _sceneControlInteractor = null;
+        RemoveDemoEnvironment();
         if (_sceneCompositionRoot is not null)
         {
             RemoveChild(_sceneCompositionRoot);
@@ -3835,10 +4357,18 @@ public partial class Main : Node3D
         _sceneCamera = camera;
         _sceneCompositionRoot = composition.Root;
         _sceneCameraDirection = sourceCameraPosition - authoredTarget;
+        AttachDemoEnvironment(scene.Id, composition.Root, _sceneCameraDirection);
         _placedAssetCount = 0;
         _currentSceneId = scene.Id;
+        if(finiteBeltWorkspace is not null)RegisterFiniteBeltWorkspace(finiteBeltWorkspace);
+        if(finiteRollerWorkspace is not null)RegisterFiniteRollerWorkspace(finiteRollerWorkspace);
         if (_visualSceneReview) UpdateVisualReviewLabel();
         _simulatorShell?.AttachScene(scene, _sceneRuntime, composition);
+        _simulatorShell?.ResetWorkspaceTrialHint();
+        _simulatorShell?.ResetWorkspaceRollerTrialHint();
+        ResetRepeatCycleTrial();
+        ResetWorkspaceObservedTrial("Scene attached");
+        ResetWorkspaceRollerObservedTrial("Scene attached");
         MarkWorkspaceSaved();
         RefreshWorkspaceUi();
         GD.Print($"MIGRATED_SCENE_LOADED {scene.Id} rendered={composition.RenderedEquipmentIds.Count} deferred={composition.DeferredEquipmentIds.Count}");
@@ -3902,7 +4432,26 @@ public partial class Main : Node3D
     private void FrameComposition(Camera3D camera, Node3D root, Vector3 authoredDirection, Node3D? companion = null)
     {
         var points = new List<Vector3>();
-        foreach (var node in root.FindChildren("*", "MeshInstance3D", true, false)
+        IEnumerable<Node> frameMeshes = root.FindChildren("*", "MeshInstance3D", true, false);
+        if (_simulatorShell is not null && !_visualSceneReview && !_frameWholeScene
+            && companion is null && !ReferenceEquals(root, _assetPreviewRoot)
+            && _activeSceneDefinition?.Id == "lab-11-13-xy-palletizing")
+        {
+            // The demonstration teaches pickup/gantry/placement, not the
+            // separated reference robot and accessory samples. Fit the whole
+            // active process (including placed cartons), retaining the gantry
+            // structure as the travel envelope. Whole-scene framing remains
+            // explicit in View and the choice survives aperture resizes.
+            var processIds = new HashSet<string>(StringComparer.Ordinal)
+            { "training_accessory_4", "training_accessory_6", "training_accessory_8", "box_2" };
+            var processMeshes = root.GetChildren().OfType<Node3D>()
+                .Where(node => processIds.Contains(node.Name.ToString())
+                    || node.Name == "ControlInstallation" || node.HasMeta("installationKind")
+                    || node.Name.ToString().StartsWith("PlacedCarton_", StringComparison.Ordinal))
+                .SelectMany(node => node.FindChildren("*", "MeshInstance3D", true, false)).ToArray();
+            if (processMeshes.Length > 0) frameMeshes = processMeshes;
+        }
+        foreach (var node in frameMeshes
             .Concat(companion?.FindChildren("*", "MeshInstance3D", true, false) ?? new Godot.Collections.Array<Node>()))
         {
             if (node is not MeshInstance3D mesh || !mesh.IsVisibleInTree())
@@ -3964,7 +4513,11 @@ public partial class Main : Node3D
             maximum = new Vector3(MathF.Max(maximum.X, point.X), MathF.Max(maximum.Y, point.Y), MathF.Max(maximum.Z, point.Z));
         }
         var center = (minimum + maximum) * 0.5f;
-        var direction = authoredDirection.Normalized();
+        // The ten-zone line is a transport lesson: a higher view from the open
+        // room front keeps the belt tops visible behind their actual drives.
+        // Fit the real bounds below; do not move equipment to fake visibility.
+        var direction = (root.HasNode("MotorConveyorInstallation")
+            ? new Vector3(8, 14, 14) : authoredDirection).Normalized();
         var right = direction.Cross(Vector3.Up).Normalized();
         var viewUp = right.Cross(direction).Normalized();
         var halfWidth = 0.0f;
@@ -3979,7 +4532,7 @@ public partial class Main : Node3D
         }
         var verticalTangent = MathF.Tan(Mathf.DegToRad(camera.Fov * 0.5f));
         var viewport = camera.GetViewport().GetVisibleRect();
-        var aperture = _simulatorShell?.SceneViewportRect() ?? viewport;
+        var aperture = ChallengeSceneAperture(_simulatorShell?.SceneViewportRect() ?? viewport);
         if (aperture.Size.X <= 0 || aperture.Size.Y <= 0) aperture = viewport;
         aperture = WastewaterReadoutReviewAperture(root, aperture);
         camera.KeepAspect = Camera3D.KeepAspectEnum.Height;
@@ -3998,11 +4551,14 @@ public partial class Main : Node3D
 
     public override void _Process(double delta)
     {
+        UpdateTenZoneCaptureCaptionLayout();
+        PollChallenge();
+        UpdateChallengeLabels();
         FollowVisualReviewCarton();
         _externalConnection?.Poll();
         if (_simulatorShell is not null && _mainCamera is not null && _sceneCompositionRoot is not null)
         {
-            var aperture = _simulatorShell.SceneViewportRect();
+            var aperture = ChallengeSceneAperture(_simulatorShell.SceneViewportRect());
             if (aperture.Size.X > 0 && aperture.Size.Y > 0 && aperture != _lastFramedAperture)
             {
                 // Keep the wastewater diagnostic focus when its wrapped QA
@@ -4013,9 +4569,14 @@ public partial class Main : Node3D
                 else FrameComposition(_mainCamera, _assetPreviewRoot ?? _sceneCompositionRoot, _sceneCameraDirection);
             }
         }
-        _sceneControlInteractor?.AdvanceFeedback(delta);
-        if (_sceneControlInteractor is not null && _sceneRuntime is not null)
+        if (_virtualController?.IsPaused != true) _sceneControlInteractor?.AdvanceFeedback(delta);
+        if (_virtualController?.IsPaused != true && _sceneControlInteractor is not null && _sceneRuntime is not null)
             _sceneControlInteractor.SynchronizeFeedback(_sceneRuntime.Points);
+        // Decorative ventilation is independent of controller scans. Freeze it
+        // with playback and the explicit reduced-motion preference.
+        _demoEnvironment?.SetAmbientMotionEnabled(!_demoReducedMotion &&
+            (_simulatorShell?.IsExternalMode == true ? _externalPlayback.IsRunning :
+                _virtualController is not null ? !_virtualController.IsPaused && _virtualController.Snapshot.State == VirtualControllerState.Running : _sceneRuntime?.IsRunning == true));
         if (_captureWitness is not null && _previewSpeedReader is not null)
         {
             _captureWitness.Position += Vector3.Right
@@ -4027,10 +4588,30 @@ public partial class Main : Node3D
         {
             return;
         }
+        if (_userReadoutCapturePending || _repeatLearnerCapturePending || _workspaceDriveCapturePending || _typedLearnerCapturePending || _scanInspectionCapturePending || _tenZoneCapturePending || _templateCapturePending || _deviceTraceCapturePending || _workspaceBeltCapturePending || _workspaceRollerCapturePending || _demo5LearnerCapturePending || _indexedTraceCapturePending || _workspaceRollerGeometryCapturePending) return;
         _captureFramesRemaining--;
+        if (_captureFramesRemaining == 100 && _simulatorShell is not null && _shellView.Length > 0)
+        {
+            _simulatorShell.SetReviewState(_shellView, _shellSearch);
+            GD.Print("RUNTIME_CAPTURE_VIEW " + _shellView);
+        }
         if (_captureFramesRemaining == 1 && _sceneCamera is not null && _sceneCompositionRoot is not null)
         {
+            if (_workspaceRollerGeometryCapture is not null)
+            {
+                ApplyWorkspaceRollerGeometryCaptureView();
+                return;
+            }
             FrameComposition(_sceneCamera, _sceneCompositionRoot, _sceneCameraDirection);
+            PrepareReadoutPresentationCapture();
+            if (_capturePath is null) return;
+            if (OS.GetCmdlineUserArgs().Contains("--capture-user-readout-navigation", StringComparer.Ordinal))
+            {
+                PrepareUserReadoutCapture();
+                return;
+            }
+            ApplyControlInstallationCaptureView();
+            ApplyTypedLearnerDetailCaptureView();
             return;
         }
         if (_captureFramesRemaining > 0) return;
@@ -4054,11 +4635,20 @@ public partial class Main : Node3D
         }
 
         GD.Print($"RUNTIME_CAPTURE_SAVED {capturePath}");
+        GD.Print(FormattableString.Invariant($"RUNTIME_CAPTURE_PERFORMANCE fps={Performance.GetMonitor(Performance.Monitor.TimeFps):F1} processMs={Performance.GetMonitor(Performance.Monitor.TimeProcess) * 1000:F2} drawCalls={Performance.GetMonitor(Performance.Monitor.RenderTotalDrawCallsInFrame):F0} videoMemoryBytes={Performance.GetMonitor(Performance.Monitor.RenderVideoMemUsed):F0} scope=single-capped-capture-not-benchmark"));
+        // Capture-only probe: drain unreachable managed resource wrappers while
+        // Godot's native bindings still exist, before engine teardown begins.
+        // The saved image and the normal application's lifetime are unchanged.
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
+        System.GC.Collect();
+        GD.Print("RUNTIME_CAPTURE_MANAGED_FINALIZERS_DRAINED");
         GetTree().Quit();
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        if (_repeatLearnerCaptureHeld || _workspaceDriveCaptureHeld || _typedLearnerCaptureHeld || TenZoneCaptureClockHeld || _deviceTraceCaptureHeld || _workspaceBeltCaptureState is not null || _workspaceRollerCaptureState is not null || Demo5LearnerCaptureClockHeld) return;
         if (GantryReviewClockHeld && !_gantryReviewStepping) return;
         if (_simulatorShell?.IsExternalMode == true)
         {
@@ -4070,13 +4660,15 @@ public partial class Main : Node3D
             return;
         }
         if (_virtualController is null || _sceneRuntime is null) return;
+        if (!PrepareWorkspaceDriveAcceptedScan()) return;
         _virtualController.Advance(
             delta,
             SampleVirtualControllerInputs,
             SampleVirtualControllerNumericInputs,
             CommitVirtualControllerOutputs,
             CommitVirtualControllerNumericOutputs,
-            _sceneRuntime.AdvanceSimulation, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs);
+            AdvanceAcceptedScenePlant, SampleVirtualControllerTextInputs, CommitVirtualControllerTextOutputs,
+            CaptureScanInspectionPlantInputs);
     }
 
     private void AdvanceExternalPlc(double delta)
@@ -4387,7 +4979,13 @@ public partial class Main : Node3D
         }
         if (type == "reset") { ResetActiveController(); return true; }
         if (type == "stop") { StopActiveController(); return true; }
-        if (type == "run") { RunActiveController(); return true; }
+        if (type == "run") { RunEditorDraftController(); return true; }
+        if (_virtualController.IsPaused)
+        {
+            if (!ScanInspectionCurrentDraftMatches()) return Block("current draft changed; Run to load it before queuing input");
+            if (TryQueuePausedSceneAction(action, type, point)) return true;
+            return Block("plant changes are held while paused; Resume before loading or moving equipment");
+        }
         if (_sceneRuntime.IsPlcOwnedPoint(point) || type == "start")
         {
             if (_sceneRuntime.HasLatchedEmergencyStop) return Block("explicitly reset the simulated E-stop first");
@@ -4577,3 +5175,9 @@ public partial class Main : Node3D
     private static double[] Array(Vector3 value) =>
         [value.X, value.Y, value.Z];
 }
+
+
+
+
+
+

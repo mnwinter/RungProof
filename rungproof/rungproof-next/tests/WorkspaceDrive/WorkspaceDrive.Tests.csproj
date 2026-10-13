@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable><ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../../src/Catalog/AssetDefinition.cs" />
+    <Compile Include="../../src/Scenes/SceneDefinition.cs" />
+    <Compile Include="../../src/Workspace/WorkspaceDocument.cs" />
+    <Compile Include="../../src/Workspace/WorkspaceFiniteBeltPreset.cs" />
+    <Compile Include="../../src/Workspace/WorkspaceFiniteRollerPreset.cs" />
+    <Compile Include="../../src/Workspace/WorkspaceDriveConnection.cs" Condition="Exists('../../src/Workspace/WorkspaceDriveConnection.cs')" />
+    <Compile Include="../../src/Workspace/WorkspaceDriveConnectionPolicy.cs" Condition="Exists('../../src/Workspace/WorkspaceDriveConnectionPolicy.cs')" />
+  </ItemGroup>
+</Project>

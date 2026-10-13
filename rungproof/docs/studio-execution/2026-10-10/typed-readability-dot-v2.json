@@ -1,0 +1,59 @@
+{
+  "status": "PASS_WITH_LIMITS",
+  "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+  "frames": [
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\chicken.intended.detail.png",
+      "sha256": "C2D1CB9C363EC17848E16F6C82FB3CA884F46E1D7B45021B9441779D707209B4",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\chicken.intended.split.png",
+      "sha256": "114DFE32D06B89C1A5551C17F6C61A6C82F082B163FAAB47C46D9D34641B5C7F",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\chicken.wrong.detail.png",
+      "sha256": "6869810E4E05C1913C17FBAD94B399B35EFBAEBD1C10A816EE2D9BD42697CB98",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\chicken.wrong.split.png",
+      "sha256": "350325E39CF18BE3B1B0C26AA8B9A9566474C65CC248FE5BC36A11CB072FF055",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\lab-10-01-drive-alarm-code-string.history.png",
+      "sha256": "FA45C783B0BD832E671BD0BA25132B7EA1A5E57C5D4DEAB6DFE76237A5B6895F",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\lab-10-02-chicken-label-print.history.png",
+      "sha256": "FEE592055A80B247EEA71A3AA6E87BCFE5279629DADF62C4487DB1FDB046971F",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\typed-readability-final-v2\\lab-10-04-motor-enum-state.history.png",
+      "sha256": "A788A0F2C6AA8489B8C30EE55283B69EF61EEF6DA8344B62D14D75E2F46437B4",
+      "dll": "FA02BABD93959FD61FCB18E0D2E6F644553A87515E51FEB2216130A1CBC1669D",
+      "personallyViewed": true
+    }
+  ],
+  "typedNativeTrue": 456,
+  "typedNativeFalse": 0,
+  "typedCurrentLogErrors": 0,
+  "historyTerminalFailures": 0,
+  "physicalInkDetailReadable": true,
+  "historyScopeWordingCorrected": true,
+  "typedPauseStepQualified": false,
+  "intermittentOriginalHandleFinding": "OPEN",
+  "enumDisplayedAsGenericString": "presentation limitation",
+  "whole77Approved": false,
+  "humanMaterialApproved": false
+}

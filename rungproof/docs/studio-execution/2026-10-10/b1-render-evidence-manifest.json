@@ -1,0 +1,73 @@
+{
+  "compiledDll": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+  "frameCount": 8,
+  "frames": [
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\01-lab-2-01-workstation-call.scene.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\01-lab-2-01-workstation-call.scene.png",
+      "scene": "lab-2-01-workstation-call",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "C1260165BB881C5E14B1564CE99E5310E7A0B48BA7AAF842A12631A42539B5B6",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\01-lab-2-01-workstation-call.split.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\01-lab-2-01-workstation-call.split.png",
+      "scene": "lab-2-01-workstation-call",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "EACFC3FF77232A4000F12F82AAC4EEF458084E5FB9FA66159AA124AF6EE90FCD",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\02-lab-4-08-package-grouping.scene.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\02-lab-4-08-package-grouping.scene.png",
+      "scene": "lab-4-08-package-grouping",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "0B122FD2E4BCD009CDED8DAF11E718F4E9B00167BF2310759738B174BADF3F3C",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\02-lab-4-08-package-grouping.split.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v2\\02-lab-4-08-package-grouping.split.png",
+      "scene": "lab-4-08-package-grouping",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "464771198E64F2A9E7BA36A59693482B2E011E66EA8B73378F8C587EB7C01C3C",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\template-edits-v1\\lab-2-01-workstation-call.scene.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\template-edits-v1\\lab-2-01-workstation-call.scene.png",
+      "scene": "lab-2-01-workstation-call",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "1AA5861ED9B761FF18F09D7C636CE2D8EC336E7AD05C3F07CB8147F0505B6B71",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\template-edits-v1\\lab-4-01-press-count-lamp.scene.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\template-edits-v1\\lab-4-01-press-count-lamp.scene.png",
+      "scene": "lab-4-01-press-count-lamp",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "267C597F8DE12D377F9A7B09F7FE9A37F881CAC1C16A6FC640C2B6DAF19520A1",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\template-edits-v1\\lab-5-01-delayed-lamp.scene.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\template-edits-v1\\lab-5-01-delayed-lamp.scene.png",
+      "scene": "lab-5-01-delayed-lamp",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "DBEE894E992E04AF03068ADA0876AFF54FDE8524DDEDAD6A8B27ECEF310B47FD",
+      "unchanged": true
+    },
+    {
+      "sidecar": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\tenzone-editor-detail-v4\\invalid-current.split.png.identity.json",
+      "image": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\tenzone-editor-detail-v4\\invalid-current.split.png",
+      "scene": "lab-10-06-ten-motor-array-startup",
+      "assembly": "B1E00C9264ED19C8E090D11C54179E17405BC5C810C13606F98A02A6C1E08E1D",
+      "imageSha256": "5498B1E0390B7F9B27E0E95E4629080B6A0EC5003BC3972433E1FF05CE6F4744",
+      "unchanged": true
+    }
+  ],
+  "sourceToBuildFreeze": "Not asserted: subsequent fixes in progress",
+  "visualAcceptance": "Limited: two-room improvement with classroom refinement; template modal blocks assembly; error detail contrast fails",
+  "humanApproval": false
+}

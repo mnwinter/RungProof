@@ -826,9 +826,20 @@ public partial class Main
             var foot = (MeshInstance3D)display.FindChild("COUNT_DISPLAY_base", true, false);
             var mast = (MeshInstance3D)display.FindChild("COUNT_DISPLAY_mast", true, false);
             var housing = (MeshInstance3D)display.FindChild("COUNT_DISPLAY_housing", true, false);
-            check(MathF.Abs(ReviewBounds(foot).Position.Y) < .001f
-                && ReviewBounds(foot).Grow(.001f).Intersects(ReviewBounds(mast))
-                && ReviewBounds(mast).Grow(.001f).Intersects(ReviewBounds(housing)), $"motor_array_{id}_grounded_supported_display");
+            var installation = root.GetNode<Node3D>("ControlInstallation");
+            var fascia = (MeshInstance3D)installation.FindChild("OperatorCabinet_Door", true, false);
+            var cabinet = (MeshInstance3D)installation.FindChild("OperatorCabinet_Body", true, false);
+            var plinth = (MeshInstance3D)installation.FindChild("CabinetPlinth", true, false);
+            var headBounds = ReviewBounds(housing);
+            var faceBounds = ReviewBounds(fascia);
+            check(display.HasMeta("installationKind") && display.GetMeta("installationKind").AsString() == "operatorPanel"
+                && !foot.IsVisibleInTree() && !mast.IsVisibleInTree() && housing.IsVisibleInTree()
+                && headBounds.Position.X >= faceBounds.Position.X - .001f && headBounds.End.X <= faceBounds.End.X + .001f
+                && headBounds.Position.Y >= faceBounds.Position.Y - .001f && headBounds.End.Y <= faceBounds.End.Y + .001f
+                && MathF.Min(MathF.Abs(headBounds.Position.Z - faceBounds.End.Z), MathF.Abs(headBounds.End.Z - faceBounds.Position.Z)) < .002f
+                && MathF.Abs(ReviewBounds(plinth).Position.Y) < .001f
+                && MathF.Abs(ReviewBounds(plinth).End.Y - ReviewBounds(cabinet).Position.Y) < .001f,
+                $"motor_array_{id}_cabinet_supported_display_hidden_original_ground_stand");
         }
         var motions = motors.SelectMany(node => node.FindChildren("*", string.Empty, true, false).OfType<EquipmentMotionController>()).ToArray();
         // Preserve the existing group command alongside independent outputs.

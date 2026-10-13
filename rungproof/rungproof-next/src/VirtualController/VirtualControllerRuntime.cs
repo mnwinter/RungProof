@@ -50,6 +50,13 @@ public sealed record VirtualControllerSnapshot(
     public IReadOnlyDictionary<string, string> TextVariables { get; init; } = new Dictionary<string, string>();
     public IReadOnlyDictionary<string, string> TextOutputs { get; init; } = new Dictionary<string, string>();
     public IReadOnlyDictionary<string, object> Aggregates { get; init; } = new Dictionary<string, object>();
+    public InstructionObservationCapture? Observations { get; init; }
+    public ControllerCompletion Completion { get; init; }
+    public VirtualControllerSignalImage? ProgramEndValues { get; init; }
+    public int ExecutedNetworkCount { get; init; }
+    public string? LastFullyObservedInstructionId { get; init; }
+    public long LastFullyObservedOrdinal { get; init; }
+    public IReadOnlyList<LadderCallInvocation> CallInvocations { get; init; } = [];
 }
 
 /// <summary>
@@ -57,9 +64,10 @@ public sealed record VirtualControllerSnapshot(
 /// program memory only; plant physics and physical PLC transport are outside
 /// this module.
 /// </summary>
-public sealed class VirtualControllerRuntime
+public sealed partial class VirtualControllerRuntime
 {
-    private sealed record ExecutionItem(LadderNetwork? Network, string BlockId = "", int NetworkIndex = -1);
+    private sealed record ExecutionItem(LadderNetwork? Network, string BlockId = "", int NetworkIndex = -1,
+        string TaskId = "", long FrameId = 0, IReadOnlyList<ObservationCallSite>? Path = null);
 
     private readonly CompiledLadderProgram _program;
     private readonly IReadOnlyDictionary<string, LadderBlock> _blocks;
@@ -75,8 +83,8 @@ public sealed class VirtualControllerRuntime
     private readonly Dictionary<string, double> _numericValues = new(StringComparer.Ordinal);
     private readonly Dictionary<string, LadderTimerState> _timers = new(StringComparer.Ordinal);
     private readonly Dictionary<string, LadderCounterState> _counters = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, bool> _counterInputs = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, bool> _edgeInputs = new(StringComparer.Ordinal);
+    private readonly Dictionary<InstructionMemoryIdentity, bool> _counterInputs = [];
+    private readonly Dictionary<InstructionMemoryIdentity, bool> _edgeInputs = [];
     private readonly Dictionary<string, LadderElementState> _elements = new(StringComparer.Ordinal);
     private readonly List<string> _diagnostics = [];
     private readonly Dictionary<string, long> _taskExecutions = new(StringComparer.Ordinal);
@@ -131,7 +139,7 @@ public sealed class VirtualControllerRuntime
         void Visit(LadderNode node)
         {
             if (node.Kind == LadderNodeKind.Contact && node.EdgeMode != LadderEdgeMode.None && node.Variable == name)
-                _edgeInputs.TryAdd(node.Id, false);
+                _edgeInputs.TryAdd(new("", node.Id), false);
             foreach (var child in node.Children ?? []) Visit(child);
         }
         foreach (var network in _blocks.Values.SelectMany(block => block.Networks)) Visit(network.Logic);
@@ -201,6 +209,9 @@ public sealed class VirtualControllerRuntime
 
     public VirtualControllerSnapshot Reset()
     {
+        _observations = null; _collector = null; _activeObservation = null; _reusableCollector?.Reset(); _observedPaths.Clear();
+        _completion = ControllerCompletion.NoExecution; _programEndValues = null;
+        _completedNetworks=0;_lastFullyObservedId=null;_progressOrdinal=0;
         State = VirtualControllerState.Stopped;
         _scanNumber = 0;
         _simulatedTime = TimeSpan.Zero;
@@ -235,15 +246,17 @@ public sealed class VirtualControllerRuntime
             else if (variable.Type == PlcVariableType.Counter)
                 _counters[variable.Name] = new LadderCounterState(0, 0, false, false);
         }
-        foreach (var network in _blocks.Values.SelectMany(block => block.Networks).Where(item => item.Counter is not null))
+        foreach (var network in _blocks.Values.Where(block => block.SemanticMode == LadderSemanticMode.Legacy).SelectMany(block => block.Networks).Where(item => item.Counter is not null))
         {
             var counter = network.Counter!;
             _counters[counter.Variable] = new LadderCounterState(counter.Preset, 0, false, false);
-            _counterInputs[counter.Id] = false;
+            _counterInputs[new("", counter.Id)] = false;
         }
-        foreach (var load in _blocks.Values.SelectMany(block => block.Networks)
+        foreach (var load in _blocks.Values.Where(block => block.SemanticMode == LadderSemanticMode.Legacy).SelectMany(block => block.Networks)
                      .Where(item => item.CounterLoad is not null).Select(item => item.CounterLoad!))
             _counters[load.Variable] = new LadderCounterState(load.Preset, 0, false, false);
+        ResetCallStorage();
+        _counterEdgeStorage.Clear(); _instanceTimerQuantumUsed.Clear(); RegisterInstanceRetentiveTimers();
         return CreateSnapshot();
     }
 
@@ -303,6 +316,9 @@ public sealed class VirtualControllerRuntime
         _elements.Clear();
         _diagnostics.Clear();
         _dueTasks.Clear();
+        BeginObservationAttempt();
+        _callInvocations.Clear();
+        _instanceTimerQuantumUsed.Clear();
         var dueTasks = _tasks
             .Select((task, index) => (Task: task, Index: index))
             .Where(item => item.Task.Kind == LadderTaskKind.Continuous
@@ -315,12 +331,14 @@ public sealed class VirtualControllerRuntime
         var executionQueue = new LinkedList<ExecutionItem>();
         foreach (var task in dueTasks)
         {
+            var frame = ++_nextFrame;
+            IReadOnlyList<ObservationCallSite> path = Array.AsReadOnly(new[] { new ObservationCallSite(task.Id, task.EntryBlock, frame) });
             _dueTasks.Add(task.Id);
             _taskExecutions[task.Id]++;
             _elements[task.Id] = new LadderElementState(task.Id, true);
             var entryNetworks = _blocks[task.EntryBlock].Networks;
             for (var index = 0; index < entryNetworks.Count; index++)
-                executionQueue.AddLast(new ExecutionItem(entryNetworks[index], task.EntryBlock, index));
+                executionQueue.AddLast(new ExecutionItem(entryNetworks[index], task.EntryBlock, index, task.Id, frame, path));
             executionQueue.AddLast(new ExecutionItem(null));
         }
         var executedNetworkCount = 0;
@@ -330,7 +348,9 @@ public sealed class VirtualControllerRuntime
             var executionItem = executionQueue.First.Value;
             var network = executionItem.Network;
             executionQueue.RemoveFirst();
-            if (network is null) continue;
+            if (network is null) { FinishCall(executionItem.FrameId, true); continue; }
+            if (_callFrames.ContainsKey(executionItem.FrameId))
+                network = LadderCallBindings.MapNetwork(network, operand => ResolveCallStorage(operand, executionItem.FrameId));
             executedNetworkCount++;
             if (executedNetworkCount > 10000)
             {
@@ -340,7 +360,9 @@ public sealed class VirtualControllerRuntime
                 State = VirtualControllerState.Stopped;
                 break;
             }
+            _observationContext = executionItem;
             var energized = Evaluate(network.Logic);
+            var actionObservation = BeginActionObservation(network, energized);
             if (network.Coil is not null)
             {
                 switch (network.Coil.Mode)
@@ -382,7 +404,8 @@ public sealed class VirtualControllerRuntime
             {
                 var previous = _counters.GetValueOrDefault(network.Counter.Variable)
                     ?? new LadderCounterState(network.Counter.Preset, 0, false, false);
-                var priorInput = _counterInputs.GetValueOrDefault(network.Counter.Id);
+                var counterMemoryKey = CounterMemoryKey(network.Counter);
+                var priorInput = _counterInputs.GetValueOrDefault(counterMemoryKey);
                 var risingEdge = energized && !priorInput;
                 var accumulated = previous.Accumulated;
                 if (risingEdge)
@@ -399,7 +422,7 @@ public sealed class VirtualControllerRuntime
                         ? accumulated >= network.Counter.Preset
                         : accumulated <= 0
                     : previous.Done;
-                _counterInputs[network.Counter.Id] = energized;
+                _counterInputs[counterMemoryKey] = energized;
                 _counters[network.Counter.Variable] = new LadderCounterState(
                     network.Counter.Preset,
                     accumulated,
@@ -445,13 +468,21 @@ public sealed class VirtualControllerRuntime
                 var operation = network.NumericOperation;
                 if (energized)
                 {
-                    if (PlcTextValues.IsText(_program.Variables[operation.Destination].Type))
+                    if (PlcTextValues.IsText(_storageDeclarations[operation.Destination].Type))
                     {
                         if (operation.Kind == LadderNumericOperationKind.Move)
-                            _textValues[operation.Destination] = PlcTextValues.Resolve(operation.SourceA, _textValues);
+                        {
+                            var consumed = PlcTextValues.Resolve(operation.SourceA, _textValues);
+                            CaptureResolved(operation.SourceA, consumed);
+                            _textValues[operation.Destination] = consumed;
+                            if (actionObservation is not null) actionObservation.Calculated = consumed;
+                        }
                         else if (PlcTextValues.TryFormat(ResolveNumeric(operation.SourceA),
-                                     PlcTextValues.Resolve(operation.SourceB, _textValues), out var formatted))
+                                     ResolveObservedText(operation.SourceB), out var formatted))
+                        {
                             _textValues[operation.Destination] = formatted;
+                            if (actionObservation is not null) actionObservation.Calculated = formatted;
+                        }
                         else
                         {
                             _textValues[operation.Destination] = string.Empty;
@@ -505,6 +536,7 @@ public sealed class VirtualControllerRuntime
                             LadderNumericOperationKind.Floor => Math.Floor(sourceA),
                             _ => null,
                         };
+                        if (actionObservation is not null) actionObservation.Calculated = result;
                         if (numericFault is not null)
                             _diagnostics.Add($"{numericFault} {operation.Id}: '{operation.Destination}' was not written.");
                         else if (result is null)
@@ -528,9 +560,24 @@ public sealed class VirtualControllerRuntime
                 if (energized)
                 {
                     var targetNetworks = _blocks[network.Call.TargetBlock].Networks;
-                    executionQueue.AddFirst(new ExecutionItem(null));
+                    var frame = ++_nextFrame;
+                    if (actionObservation is not null && network.Call.SemanticMode == LadderSemanticMode.Parameterized) actionObservation.CalledFrameId = frame;
+                    if (!TryEnterCall(network.Call, executionItem, frame, out var callFailure))
+                    {
+                        _diagnostics.Add(callFailure); executionFault = true; State = VirtualControllerState.Stopped;
+                        if (network.Call.SemanticMode == LadderSemanticMode.Parameterized)
+                            _callInvocations.Add(new(frame, network.Call.Id, network.Call.TargetBlock, executionItem.TaskId,
+                                network.Call.InstanceId, LadderCallCompletion.Aborted, [], callFailure));
+                        executionQueue.Clear();
+                    }
+                    else
+                    {
+                    var path = Array.AsReadOnly((executionItem.Path ?? []).Append(new ObservationCallSite(network.Call.Id, network.Call.TargetBlock, frame,
+                        network.Call.SemanticMode == LadderSemanticMode.Parameterized && network.Call.InstanceId.Length > 0 ? network.Call.InstanceId : null)).ToArray());
+                    executionQueue.AddFirst(new ExecutionItem(null, FrameId: frame));
                     for (var index = targetNetworks.Count - 1; index >= 0; index--)
-                        executionQueue.AddFirst(new ExecutionItem(targetNetworks[index], network.Call.TargetBlock, index));
+                        executionQueue.AddFirst(new ExecutionItem(targetNetworks[index], network.Call.TargetBlock, index, executionItem.TaskId, frame, path));
+                    }
                 }
                 _elements[network.Call.Id] = new LadderElementState(network.Call.Id, energized);
             }
@@ -542,7 +589,7 @@ public sealed class VirtualControllerRuntime
                     {
                         var item = executionQueue.First.Value;
                         executionQueue.RemoveFirst();
-                        if (item.Network is null) break;
+                        if (item.Network is null) { FinishCall(item.FrameId, true); break; }
                     }
                 }
                 _elements[network.Return.Id] = new LadderElementState(network.Return.Id, energized);
@@ -556,7 +603,7 @@ public sealed class VirtualControllerRuntime
                     var targetIndex = _blockLabels[executionItem.BlockId][network.Jump.TargetLabel];
                     var targetNetworks = _blocks[executionItem.BlockId].Networks;
                     for (var index = targetNetworks.Count - 1; index >= targetIndex; index--)
-                        executionQueue.AddFirst(new ExecutionItem(targetNetworks[index], executionItem.BlockId, index));
+                        executionQueue.AddFirst(new ExecutionItem(targetNetworks[index], executionItem.BlockId, index, executionItem.TaskId, executionItem.FrameId, executionItem.Path));
                 }
                 _elements[network.Jump.Id] = new LadderElementState(network.Jump.Id, energized);
             }
@@ -566,7 +613,13 @@ public sealed class VirtualControllerRuntime
                     network.LabelInstruction.Id, energized);
             }
             _elements[network.Id] = new LadderElementState(network.Id, energized);
+            EndActionObservation(actionObservation, network, energized);
+            ObserveNetwork(network, energized);
+            _completedNetworks++;
         }
+        if (executionFault)
+            foreach (var frameId in _callFrames.Keys.ToArray()) FinishCall(frameId, false, _diagnostics.LastOrDefault() ?? "Scan aborted");
+        _programEndValues = new VirtualControllerSignalImage(_values, _numericValues, _textValues);
         if (executionFault)
         {
             foreach (var variable in _program.Variables.Values.Where(item =>
@@ -584,23 +637,27 @@ public sealed class VirtualControllerRuntime
         }
         _scanNumber++;
         _simulatedTime += ScanPeriod;
+        _completion = executionFault ? ControllerCompletion.Aborted : ControllerCompletion.Completed;
+        _observations = AttachCallObservations(_collector?.Freeze(executionFault));
+        _collector = null;
         return CreateSnapshot();
     }
 
     private void ClearCounterEdges(string variable)
     {
+        foreach (var key in _counterEdgeStorage.Where(p => p.Value == variable).Select(p => p.Key)) _counterInputs[key] = false;
         foreach (var instruction in _blocks.Values
                      .SelectMany(block => block.Networks)
                      .Where(network => network.Counter?.Variable == variable)
                      .Select(network => network.Counter!))
-            _counterInputs[instruction.Id] = false;
+            _counterInputs[new("", instruction.Id)] = false;
     }
 
     private LadderTimerState EvaluateTimer(LadderTimer instruction, LadderTimerState previous, bool input)
     {
         TimeSpan Advance(TimeSpan current)
         {
-            var next = current + ScanPeriod;
+            var next = current + TimerQuantum(instruction.Variable);
             return next > instruction.Preset ? instruction.Preset : next;
         }
 
@@ -660,8 +717,9 @@ public sealed class VirtualControllerRuntime
         }
     }
 
-    private bool Evaluate(LadderNode node)
+    private bool Evaluate(LadderNode node, bool incomingContinuity = true)
     {
+        var nodeObservation = BeginNodeObservation(node);
         bool energized;
         switch (node.Kind)
         {
@@ -671,11 +729,11 @@ public sealed class VirtualControllerRuntime
                 {
                     energized = node.NormallyClosed ? !value : value;
                 }
-                else if (!_edgeInputs.TryGetValue(node.Id, out var previous))
+                else if (!_edgeInputs.TryGetValue(InstructionMemoryKey(node.Id), out var previous))
                 {
                     // First observation after Reset/Stop establishes the baseline
                     // without creating a startup pulse.
-                    _edgeInputs[node.Id] = value;
+                    _edgeInputs[InstructionMemoryKey(node.Id)] = value;
                     energized = false;
                 }
                 else
@@ -683,14 +741,16 @@ public sealed class VirtualControllerRuntime
                     energized = node.EdgeMode == LadderEdgeMode.Rising
                         ? value && !previous
                         : !value && previous;
-                    _edgeInputs[node.Id] = value;
+                    _edgeInputs[InstructionMemoryKey(node.Id)] = value;
                 }
                 break;
             case LadderNodeKind.Compare:
-                if (PlcTextValues.IsOperand(node.Variable, _program.Variables) || PlcTextValues.IsOperand(node.RightOperand, _program.Variables))
+                if (PlcTextValues.IsOperand(node.Variable, _storageDeclarations) || PlcTextValues.IsOperand(node.RightOperand, _storageDeclarations))
                 {
                     var textLeft = PlcTextValues.Resolve(node.Variable, _textValues);
                     var textRight = PlcTextValues.Resolve(node.RightOperand, _textValues);
+                    CaptureResolved(node.Variable, textLeft);
+                    CaptureResolved(node.RightOperand, textRight);
                     if (node.CompareOperator == LadderCompareOperator.ContainsCode
                         && (textRight.Length == 0 || textRight.Any(character => !char.IsLetterOrDigit(character))))
                         _diagnostics.Add($"VC_RUNTIME_TEXT {node.Id}: CODE MATCH selector must be a nonempty alphanumeric code.");
@@ -720,7 +780,7 @@ public sealed class VirtualControllerRuntime
                 energized = true;
                 foreach (var child in node.Children ?? [])
                 {
-                    var childState = Evaluate(child);
+                    var childState = Evaluate(child, incomingContinuity && energized);
                     energized = energized && childState;
                 }
                 break;
@@ -728,7 +788,7 @@ public sealed class VirtualControllerRuntime
                 energized = false;
                 foreach (var child in node.Children ?? [])
                 {
-                    var childState = Evaluate(child);
+                    var childState = Evaluate(child, incomingContinuity);
                     energized = energized || childState;
                 }
                 break;
@@ -736,10 +796,15 @@ public sealed class VirtualControllerRuntime
                 throw new InvalidOperationException($"Unsupported node kind {node.Kind}.");
         }
         _elements[node.Id] = new LadderElementState(node.Id, energized);
+        EndNodeObservation(nodeObservation, node, energized, incomingContinuity);
         return energized;
     }
 
     private bool ResolveBool(string name)
+    {
+        var result = ResolveBoolRaw(name); CaptureResolved(name, result); return result;
+    }
+    private bool ResolveBoolRaw(string name)
     {
         if (_values.TryGetValue(name, out var value)) return value;
         var dot = name.LastIndexOf('.');
@@ -761,6 +826,10 @@ public sealed class VirtualControllerRuntime
     }
 
     private double ResolveNumeric(string operand)
+    {
+        var result = ResolveNumericRaw(operand); CaptureResolved(operand, result); return result;
+    }
+    private double ResolveNumericRaw(string operand)
     {
         if (double.TryParse(operand, NumberStyles.Float, CultureInfo.InvariantCulture, out var literal))
             return literal;
@@ -786,7 +855,7 @@ public sealed class VirtualControllerRuntime
 
     private void StoreNumeric(string destination, double value)
     {
-        var variable = _program.Variables[destination];
+        var variable = _storageDeclarations[destination];
         _numericValues[destination] = NormalizeNumeric(variable.Type, value);
     }
 
@@ -796,6 +865,17 @@ public sealed class VirtualControllerRuntime
         PlcVariableType.DInt => Math.Clamp(Math.Round(value, MidpointRounding.ToEven), int.MinValue, int.MaxValue),
         _ => value,
     };
+
+    // Compiled variables already contain expanded aggregate leaves. Select only
+    // Input-role primitives from the accepted snapshot, after force application.
+    internal VirtualControllerSignalImage CaptureEffectiveInputs(VirtualControllerSnapshot snapshot)
+    {
+        var inputs = _program.Variables.Values.Where(v => v.Role == PlcVariableRole.Input).ToArray();
+        return new(
+            inputs.Where(v => v.Type == PlcVariableType.Bool).ToDictionary(v => v.Name, v => snapshot.Variables[v.Name], StringComparer.Ordinal),
+            inputs.Where(v => v.Type is PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real).ToDictionary(v => v.Name, v => snapshot.NumericVariables[v.Name], StringComparer.Ordinal),
+            inputs.Where(v => PlcTextValues.IsText(v.Type)).ToDictionary(v => v.Name, v => snapshot.TextVariables[v.Name], StringComparer.Ordinal));
+    }
 
     private VirtualControllerSnapshot CreateSnapshot()
     {
@@ -825,6 +905,13 @@ public sealed class VirtualControllerRuntime
         return new VirtualControllerSnapshot(_scanNumber, _simulatedTime, State, values, numericValues, outputs, numericOutputs, timers, counters, taskStates, forces, _diagnostics.ToArray(), elements)
         {
             Aggregates = PlcAggregates.Reconstruct(_program.Source.Variables, values, numericValues),
+            Observations = _observations,
+            Completion = _completion,
+            ProgramEndValues = _programEndValues,
+            ExecutedNetworkCount = _completedNetworks,
+            LastFullyObservedInstructionId = _lastFullyObservedId,
+            LastFullyObservedOrdinal = _progressOrdinal,
+            CallInvocations = Array.AsReadOnly(_callInvocations.ToArray()),
             TextVariables = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>(_textValues, StringComparer.Ordinal)),
             TextOutputs = new ReadOnlyDictionary<string, string>(_program.Variables.Values
                 .Where(item => item.Role == PlcVariableRole.Output && PlcTextValues.IsText(item.Type))
@@ -832,3 +919,4 @@ public sealed class VirtualControllerRuntime
         };
     }
 }
+

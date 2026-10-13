@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "demo-2-delayed-lamp",
+  "name": "Delayed_Lamp_Main",
+  "sourceSceneId": "lab-5-01-delayed-lamp",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 9,
+  "tags": [
+    {
+      "name": "timer_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "timer_request"
+    },
+    {
+      "name": "delayed_lamp",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "delayed_lamp"
+    },
+    {
+      "name": "delay_timer",
+      "type": "Timer",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Delayed_Lamp_Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-3",
+          "label": "Delay lamp request",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "delay_timer",
+          "timerPresetMs": 2000,
+          "timerKind": "OnDelay",
+          "isTimer": true,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-4",
+              "contacts": [
+                {
+                  "id": "contact-5",
+                  "variable": "timer_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-6",
+          "label": "Delayed lamp output",
+          "coilVariable": "delayed_lamp",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-7",
+              "contacts": [
+                {
+                  "id": "contact-8",
+                  "variable": "delay_timer.Q",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "timer_request",
+    "delay_timer",
+    "delayed_lamp"
+  ]
+}

@@ -24,16 +24,16 @@ Editable loaded STRING ladder matches complete drive alarm codes in received tex
 
 - Stop removes BOOL commands and freezes equipment. Reset restores empty received text and the declared selected code.
 
-## Symbolic I/O
+## Expected I/O to operate this scene
 
-| Point | Type | Owner | Initial |
+| Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
-| `drive_alarm_string_valid` | BOOL | PC | `False` |
-| `alarm_code_found` | BOOL | PLC | `False` |
-| `alarm_reset` | BOOL | PC | `False` |
-| `drive_alarm_active` | BOOL | PLC | `False` |
-| `alarm_match_valid` | BOOL | PLC | `False` |
-| `drive_alarm_text` | STRING | PC | `(empty)` |
+| `drive_alarm_string_valid` | `BOOL` | **PC** | `False` |
+| `alarm_code_found` | `BOOL` | **PLC** | `False` |
+| `alarm_reset` | `BOOL` | **PC** | `False` |
+| `drive_alarm_active` | `BOOL` | **PLC** | `False` |
+| `alarm_match_valid` | `BOOL` | **PLC** | `False` |
+| `drive_alarm_text` | `STRING` | **PC** | `` |
 
 ## Editor exercise
 

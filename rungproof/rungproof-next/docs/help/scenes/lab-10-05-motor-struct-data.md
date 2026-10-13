@@ -19,9 +19,10 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `alarm_clear` | `BOOL` | **PC** | `False` |
 | `motor_enable` | `BOOL` | **PLC** | `False` |
 | `record_ready` | `BOOL` | **PLC** | `False` |
-| `motor_feedback` | `STRUCT` | **PC** | See fields below |
-| `motor_command` | `STRUCT` | **PLC** | Both fields False |
-| `motor_effective_enable`, `motor_effective_ready` | `BOOL` | **SIM** | False |
+| `motor_feedback` | `STRUCT` | **PC** | `{'record_valid': False, 'temperature': 0.0, 'power': 0.0, 'temperature_valid': False, 'alarm_clear': False, 'power_valid': False}` |
+| `motor_command` | `STRUCT` | **PLC** | `{'record_ready': False, 'enable': False}` |
+| `motor_effective_enable` | `BOOL` | **SIM** | `False` |
+| `motor_effective_ready` | `BOOL` | **SIM** | `False` |
 
 `motor_feedback` has BOOL fields `record_valid`, `temperature_valid`, `alarm_clear`, `power_valid`, and REAL fields `power`, `temperature`. All BOOLs start False; numeric values start zero and are hidden until their validity is true. The existing three operator switches mirror the first three fields. `motor_command` has BOOL fields `enable` and `record_ready`. Controller operands access declared fields, for example `motor_command.enable`; whole-record instructions and nested aggregates are unsupported.
 

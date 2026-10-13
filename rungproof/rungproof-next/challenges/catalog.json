@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "challenges": [
+    {
+      "resourceId": "res://challenges/conveyor-stop.challenge.json",
+      "id": "scene-1-conveyor-stop"
+    }
+  ]
+}

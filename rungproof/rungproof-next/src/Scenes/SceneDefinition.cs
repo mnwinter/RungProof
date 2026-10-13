@@ -35,7 +35,8 @@ public sealed record SceneDefinition(
     JsonElement Training,
     JsonElement Verification,
     SceneMigration Migration,
-    string? PlcTestProfile = null
+    string? PlcTestProfile = null,
+    RungProof.Next.Workspace.WorkspaceTemplateOverride? TemplateOverride = null
 );
 
 public sealed record SceneCamera(double[] Position, double[] Target, double Fov);

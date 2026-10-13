@@ -1,0 +1,1457 @@
+{
+  "version": 1,
+  "reviewUtc": "2026-10-11T22:32:12.2521672Z",
+  "scope": "Separate historical requirement reconciliation; original ledger preserved; not all77 completion signoff",
+  "sourceLedger": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-all77-authoritative-closure-ledger-v16b.json",
+  "sourceLedgerSha256": "9DAE2AD8155F8FE26CA386CCEC5D52D4DCF433D931B5EFB5053C39F912838152",
+  "finiteReview": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+  "rowCount": 77,
+  "globalGates": {
+    "overallGoal": "ACTIVE all77",
+    "humanFinalApproval": false,
+    "handsOn": "UNVERIFIED",
+    "Handle": "OPEN intermittent root cause",
+    "material75": "HELD"
+  },
+  "classifications": [
+    {
+      "classification": "ACTIVE",
+      "count": 5
+    },
+    {
+      "classification": "CLOSED_BOUNDED",
+      "count": 24
+    }
+  ],
+  "activeSceneIds": [
+    "lab-10-02-chicken-label-print",
+    "lab-4-11-barrel-fill-station",
+    "lab-9-12-ev-charging-manager",
+    "tank-level",
+    "tank-radar"
+  ],
+  "rows": [
+    {
+      "index": 1,
+      "sceneId": "conveyor-cell",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Connected annex/recess purpose largely hidden in baseline: require visible depth/task context; material rollout separately held.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Recognizable passive annex/cupboard/counter/storage purpose closed by exact V16/V16b geometry and individually reviewed renders; overview/occluded-support limits retained.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-render-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-detail-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-two-annex-actual-geometry-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v16b.md"
+          ],
+          "components": [
+            {
+              "scope": "other75 color/material rollout",
+              "classification": "HELDmaterial",
+              "evidence": "environment-dot-finite-remaining-requirements-v16b.md"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 2,
+      "sceneId": "equipment-gallery",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 3,
+      "sceneId": "lab-10-01-drive-alarm-code-string",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Connected annex/recess purpose largely hidden in baseline: require visible depth/task context; material rollout separately held.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Recognizable passive annex/cupboard/counter/storage purpose closed by exact V16/V16b geometry and individually reviewed renders; overview/occluded-support limits retained.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-render-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-detail-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-two-annex-actual-geometry-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v16b.md"
+          ],
+          "components": [
+            {
+              "scope": "other75 color/material rollout",
+              "classification": "HELDmaterial",
+              "evidence": "environment-dot-finite-remaining-requirements-v16b.md"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 4,
+      "sceneId": "lab-10-02-chicken-label-print",
+      "historicalOpenRequirementCount": 2,
+      "requirements": [
+        {
+          "historicalRequirement": "Connected annex/recess purpose largely hidden in baseline: require visible depth/task context; material rollout separately held.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Recognizable passive annex/cupboard/counter/storage purpose closed by exact V16/V16b geometry and individually reviewed renders; overview/occluded-support limits retained.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-render-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-detail-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-two-annex-actual-geometry-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v16b.md"
+          ],
+          "components": [
+            {
+              "scope": "other75 color/material rollout",
+              "classification": "HELDmaterial",
+              "evidence": "environment-dot-finite-remaining-requirements-v16b.md"
+            }
+          ]
+        },
+        {
+          "historicalRequirement": "Retain honest distinction between static scale artwork and floating observed/simulated caption.",
+          "classification": "ACTIVE",
+          "boundedReason": "Static imported text already hidden; actual blank screen/floating live measurement needs final current physical-screen native/font/render acceptance. V17 source handoff is not acceptance.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\ev-chicken-readout-semantic-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\chicken-screen-readout-handoff-v17.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "ACTIVE_FINITE_REQUIREMENT"
+    },
+    {
+      "index": 5,
+      "sceneId": "lab-10-03-vision-package-sorter",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Connected annex/recess purpose largely hidden in baseline: require visible depth/task context; material rollout separately held.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Recognizable passive annex/cupboard/counter/storage purpose closed by exact V16/V16b geometry and individually reviewed renders; overview/occluded-support limits retained.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-render-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-detail-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-two-annex-actual-geometry-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v16b.md"
+          ],
+          "components": [
+            {
+              "scope": "other75 color/material rollout",
+              "classification": "HELDmaterial",
+              "evidence": "environment-dot-finite-remaining-requirements-v16b.md"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 6,
+      "sceneId": "lab-10-04-motor-enum-state",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Connected annex/recess purpose largely hidden in baseline: require visible depth/task context; material rollout separately held.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Recognizable passive annex/cupboard/counter/storage purpose closed by exact V16/V16b geometry and individually reviewed renders; overview/occluded-support limits retained.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-render-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-detail-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-two-annex-actual-geometry-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v16b.md"
+          ],
+          "components": [
+            {
+              "scope": "other75 color/material rollout",
+              "classification": "HELDmaterial",
+              "evidence": "environment-dot-finite-remaining-requirements-v16b.md"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 7,
+      "sceneId": "lab-10-05-motor-struct-data",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 8,
+      "sceneId": "lab-10-06-ten-motor-array-startup",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 9,
+      "sceneId": "lab-11-06-wastewater-collection",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 10,
+      "sceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 11,
+      "sceneId": "lab-11-11-service-elevator",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 12,
+      "sceneId": "lab-11-12-mobile-traffic-lights",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Front-face detail must establish both supported heads and all six lamp faces.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact targeted field detail accepted: both three-lens heads, both LEFT/RIGHT hand stations, or MODELED CHECK WAITING support/ink, within report scope.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 13,
+      "sceneId": "lab-11-13-xy-palletizing",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 14,
+      "sceneId": "lab-11-19-powder-batch-mixer",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 15,
+      "sceneId": "lab-2-01-workstation-call",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 16,
+      "sceneId": "lab-2-02-dual-confirmation",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 17,
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 18,
+      "sceneId": "lab-2-04-two-station-call",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "North/south station associations need visibly distinct context if claiming two purposeful work areas.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Actual board text/identity now follows measured mounted control world-X order; purpose detail confirms correction. Combined ordinary-view readability still limited.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-purpose-render-review-v16.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\two-station-board-association-handoff-v15.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\passive-purpose-preservation-review-v16.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 19,
+      "sceneId": "lab-2-05-bay-light-selector",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 20,
+      "sceneId": "lab-2-06-ready-attention",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 21,
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 22,
+      "sceneId": "lab-2-08-inspection-vote",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 23,
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 24,
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 25,
+      "sceneId": "lab-2-11-inbound-tote-stop",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 26,
+      "sceneId": "lab-2-12-assembly-lift",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 27,
+      "sceneId": "lab-2-13-coolant-jug-fill",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 28,
+      "sceneId": "lab-2-14-sump-pump",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 29,
+      "sceneId": "lab-2-15-fume-extractor",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 30,
+      "sceneId": "lab-2-16-safe-drill",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Both field hand-control identities need actual detail evidence.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact targeted field detail accepted: both three-lens heads, both LEFT/RIGHT hand stations, or MODELED CHECK WAITING support/ink, within report scope.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 31,
+      "sceneId": "lab-2-17-pallet-robot",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 32,
+      "sceneId": "lab-2-18-pallet-pickup",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate. Pickup ring/plate gap accepted in both sampled selector poses.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-pickup-barrel-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 33,
+      "sceneId": "lab-2-19-service-door",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Six raw-input/output-command pilot labels planned; final geometry/native/operator evidence pending.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Six pilot captions accepted as raw-input or output-command identities; source/type/owner/color/binding and mounted-control native evidence preserved.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 34,
+      "sceneId": "lab-2-20-bottle-shuttle",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 35,
+      "sceneId": "lab-2-21-tote-finishing",
+      "historicalOpenRequirementCount": 2,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        },
+        {
+          "historicalRequirement": "Process inspection annotation readability needs field detail.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact targeted field detail accepted: both three-lens heads, both LEFT/RIGHT hand stations, or MODELED CHECK WAITING support/ink, within report scope.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 36,
+      "sceneId": "lab-2-22-dual-spindle",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 37,
+      "sceneId": "lab-2-23-parcel-sorter",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 38,
+      "sceneId": "lab-2-24-robot-cnc",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 39,
+      "sceneId": "lab-2-25-inspection-toggle",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 40,
+      "sceneId": "lab-3-01-guarded-pallet-transfer",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 41,
+      "sceneId": "lab-3-02-robot-cell-safe-restart",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 42,
+      "sceneId": "lab-4-01-press-count-lamp",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 43,
+      "sceneId": "lab-4-02-counter-reset-lamp",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 44,
+      "sceneId": "lab-4-03-repeat-cycle-counter",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 45,
+      "sceneId": "lab-4-04-sequence-light-tower",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 46,
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 47,
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 48,
+      "sceneId": "lab-4-07-parking-garage-entry",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 49,
+      "sceneId": "lab-4-08-package-grouping",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 50,
+      "sceneId": "lab-4-09-chain-drive-lift",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 51,
+      "sceneId": "lab-4-10-cookie-packaging",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 52,
+      "sceneId": "lab-4-11-barrel-fill-station",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Process meter/source/nozzle identity and projection need detail.",
+          "classification": "ACTIVE",
+          "boundedReason": "Source/meter ink identity bounded closed; actual pipe/valve/meter/nozzle interface chain remains an evidence gap, not proven collision.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-pickup-barrel-review-v14b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md"
+          ],
+          "components": [
+            {
+              "scope": "SOURCE200L/LITRES0.0 identity",
+              "classification": "CLOSED_BOUNDED",
+              "evidence": "environment-dot-pickup-barrel-review-v14b.md"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "ACTIVE_FINITE_REQUIREMENT"
+    },
+    {
+      "index": 53,
+      "sceneId": "lab-4-12-cable-cut-length",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 54,
+      "sceneId": "lab-5-01-delayed-lamp",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 55,
+      "sceneId": "lab-5-02-timed-lamp-off",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 56,
+      "sceneId": "lab-5-03-rotary-flasher",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 57,
+      "sceneId": "lab-5-04-alternating-lamps",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 58,
+      "sceneId": "lab-5-05-variable-flash-rate",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 59,
+      "sceneId": "lab-5-06-running-light-tower",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 60,
+      "sceneId": "lab-5-07-pedestrian-crossing",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 61,
+      "sceneId": "lab-5-08-drawbridge-control",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 62,
+      "sceneId": "lab-5-09-bag-indexing-conveyor",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Six raw-input/output-command pilot labels planned; final geometry/native/operator evidence pending.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Six pilot captions accepted as raw-input or output-command identities; source/type/owner/color/binding and mounted-control native evidence preserved.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 63,
+      "sceneId": "lab-5-10-coating-line",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 64,
+      "sceneId": "lab-6-07-luggage-weight-sort",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 65,
+      "sceneId": "lab-6-08-hand-dryer",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Six raw-input/output-command pilot labels planned; final geometry/native/operator evidence pending.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Six pilot captions accepted as raw-input or output-command identities; source/type/owner/color/binding and mounted-control native evidence preserved.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 66,
+      "sceneId": "lab-9-01-sum-function",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 67,
+      "sceneId": "lab-9-02-product-function",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 68,
+      "sceneId": "lab-9-03-sum-and-counter-function",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 69,
+      "sceneId": "lab-9-04-function-selector",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 70,
+      "sceneId": "lab-9-10-box-volume",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 71,
+      "sceneId": "lab-9-11-pallet-counting",
+      "historicalOpenRequirementCount": 0,
+      "requirements": [],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "NO_HISTORICAL_OPEN_STRING_NOT_AUTOMATIC_FINAL_PASS"
+    },
+    {
+      "index": 72,
+      "sceneId": "lab-9-12-ev-charging-manager",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Bay A/B energy-readout association must be understandable; historical detail proves digits only.",
+          "classification": "ACTIVE",
+          "boundedReason": "Independent PLC REAL/F3 values are correct; physical A/B identity repair requires unequal-value native and actual current readability evidence.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\ev-chicken-readout-semantic-review-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\ev-meter-identity-source-handoff-v17.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "ACTIVE_FINITE_REQUIREMENT"
+    },
+    {
+      "index": 73,
+      "sceneId": "scene-1-conveyor-stop",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 74,
+      "sceneId": "scene-2-conveyor-pusher",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "V13f approved identification plan pending implementation/native/operator acceptance; E does not close remaining station labels/mode/toggle role.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Exact station/mode/toggle identification implemented and actual operator texts accepted; existing native controls preserve actions/picks. Hands-on input is separate.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-operator-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\industrial-mount-evidence-identity-review-v14b.md"
+          ],
+          "components": []
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 75,
+      "sceneId": "tank-high-low",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Close roof/side instrument support/identity evidence required.",
+          "classification": "CLOSED_BOUNDED",
+          "boundedReason": "Actual switch support/elevations bounded qualified; exact passive LSL/LSH captions, if required, remain identification limits rather than a demonstrated geometry defect.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md"
+          ],
+          "components": [
+            {
+              "scope": "physical LSL/LSH function captions",
+              "classification": "RETAINED_LIMIT",
+              "evidence": "environment-dot-finite-remaining-requirements-v16b.md"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "HISTORICAL_REQUIREMENTS_RECONCILED_BOUNDED_LIMITS_RETAINED"
+    },
+    {
+      "index": 76,
+      "sceneId": "tank-level",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Close roof/side instrument support/identity evidence required.",
+          "classification": "ACTIVE",
+          "boundedReason": "Roof attachment already qualified; frontal face capture remains pending. Current GLB windows are intentionally blank/static; no fabricated local digits or stale LT201 requirement.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\tank-transmitter-face-source-review-v17.md"
+          ],
+          "components": [
+            {
+              "scope": "missing numeric digits alleged from old asset visual_review",
+              "classification": "RETAINED_LIMIT",
+              "evidence": "tank-transmitter-face-source-review-v17.md",
+              "meaning": "Not an established defect or authorized live-display requirement"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "ACTIVE_FINITE_REQUIREMENT"
+    },
+    {
+      "index": 77,
+      "sceneId": "tank-radar",
+      "historicalOpenRequirementCount": 1,
+      "requirements": [
+        {
+          "historicalRequirement": "Close roof/side instrument support/identity evidence required.",
+          "classification": "ACTIVE",
+          "boundedReason": "Roof attachment already qualified; frontal face capture remains pending. Current GLB windows are intentionally blank/static; no fabricated local digits or stale LT201 requirement.",
+          "evidence": [
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-dot-finite-remaining-requirements-v16b.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\environment-field-detail-review-v14.md",
+            "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\docs\\studio-execution\\2026-10-10\\tank-transmitter-face-source-review-v17.md"
+          ],
+          "components": [
+            {
+              "scope": "missing numeric digits alleged from old asset visual_review",
+              "classification": "RETAINED_LIMIT",
+              "evidence": "tank-transmitter-face-source-review-v17.md",
+              "meaning": "Not an established defect or authorized live-display requirement"
+            }
+          ]
+        }
+      ],
+      "all77CompletionApproved": false,
+      "retainedLimits": [
+        "ordinary-user camera reachability and hands-on readability/input unverified",
+        "no physical clearance/live PLC/release claim",
+        "other75 material rollout held"
+      ],
+      "rowDisposition": "ACTIVE_FINITE_REQUIREMENT"
+    }
+  ]
+}

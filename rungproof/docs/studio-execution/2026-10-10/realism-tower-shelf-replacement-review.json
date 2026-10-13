@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-10",
+  "scope": "Actual personally inspected four replacement full/split PNGs for historical shelf/tower overlap. Separate from newer environment diversity proposal.",
+  "reviewer": "other_four_scene_preparation",
+  "imageCount": 4,
+  "images": [
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\02-lab-4-05-dual-input-count-window.scene.png",
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "view": "scene",
+      "imageSha256": "500F01CFEEC733733DB5545C556067F26E9338C098DBA8D4FF010BB819FE7300",
+      "matchesIdentityHash": true,
+      "assemblySha256": "4CF91D12373DE429D519C236D50971608773D9A0296DE9268A6CA66533F27D8C",
+      "assemblyUnchangedDuringCapture": true,
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\02-lab-4-05-dual-input-count-window.scene.png.identity.json"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\02-lab-4-05-dual-input-count-window.split.png",
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "view": "split",
+      "imageSha256": "B4230725CE2204570DF213E86B5E0A78B943AFB6FCF2DE0A2761113DBFB37A6B",
+      "matchesIdentityHash": true,
+      "assemblySha256": "4CF91D12373DE429D519C236D50971608773D9A0296DE9268A6CA66533F27D8C",
+      "assemblyUnchangedDuringCapture": true,
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\02-lab-4-05-dual-input-count-window.split.png.identity.json"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\03-lab-4-06-multi-press-confirmation.scene.png",
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "view": "scene",
+      "imageSha256": "A6389DCEE54CEF121046E0713A42132F25389D6FE0F594802147C72A5FC8A730",
+      "matchesIdentityHash": true,
+      "assemblySha256": "4CF91D12373DE429D519C236D50971608773D9A0296DE9268A6CA66533F27D8C",
+      "assemblyUnchangedDuringCapture": true,
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\03-lab-4-06-multi-press-confirmation.scene.png.identity.json"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\03-lab-4-06-multi-press-confirmation.split.png",
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "view": "split",
+      "imageSha256": "FC7FF0E51F678D6F98E93E6AA2341B4AEDC9221092AF5EEC407526BE281CFC03",
+      "matchesIdentityHash": true,
+      "assemblySha256": "4CF91D12373DE429D519C236D50971608773D9A0296DE9268A6CA66533F27D8C",
+      "assemblyUnchangedDuringCapture": true,
+      "identityPath": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\realism-layout-fixes-v1\\03-lab-4-06-multi-press-confirmation.split.png.identity.json"
+    }
+  ],
+  "finding": "Both towers now sit on the upper instrument shelf with red/amber/green functional lens sections above the shelf. Previous visible shelf/lens overlap is removed in both full and split views. Both count readouts share lower worktop row; all six component heads remain visible.",
+  "decision": "Specific shelf/lens presentation issue cleared in these four images only.",
+  "limitations": [
+    "Static rendered observation, not continuous clearance or physical support certification.",
+    "Does not approve new environment diversity geometry, controller behavior or native keyboard interaction.",
+    "Later geometry changes require new source-matched images."
+  ]
+}
+

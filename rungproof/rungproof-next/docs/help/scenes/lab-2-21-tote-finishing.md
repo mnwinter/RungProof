@@ -33,6 +33,23 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `actual_fill_percent_per_second` | `REAL` | **PC** | `0` |
 | `fill_inhibited` | `BOOL` | **PC** | `False` |
 | `fill_complete` | `BOOL` | **PC** | `False` |
+| `cap_extension_percent` | `REAL` | **PC** | `0` |
+| `cap_applied` | `BOOL` | **PC** | `False` |
+| `cap_busy` | `BOOL` | **PC** | `False` |
+| `cap_inhibited` | `BOOL` | **PC** | `False` |
+| `cap_home` | `BOOL` | **PC** | `True` |
+| `tote_transfer_inhibited` | `BOOL` | **PC** | `False` |
+| `label_applied` | `BOOL` | **PC** | `False` |
+| `label_extension_percent` | `REAL` | **PC** | `0` |
+| `label_busy` | `BOOL` | **PC** | `False` |
+| `label_home` | `BOOL` | **PC** | `True` |
+| `label_inhibited` | `BOOL` | **PC** | `False` |
+| `inspection_busy` | `BOOL` | **PC** | `False` |
+| `inspection_done` | `BOOL` | **PC** | `False` |
+| `inspection_inhibited` | `BOOL` | **PC** | `False` |
+| `inspection_defect_code` | `DINT` | **PC** | `0` |
+| `inspection_view_clear` | `BOOL` | **PC** | `False` |
+| `tote_label_aligned` | `BOOL` | **PC** | `False` |
 
 ## Operator actions
 

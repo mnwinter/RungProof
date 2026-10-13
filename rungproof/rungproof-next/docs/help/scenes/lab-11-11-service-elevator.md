@@ -19,6 +19,10 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `landing_clear` | `BOOL` | **PC** | `False` |
 | `lift_up_cmd` | `BOOL` | **PLC** | `False` |
 | `lift_down_cmd` | `BOOL` | **PLC** | `False` |
+| `car_position_pct` | `REAL` | **PC** | `0` |
+| `at_lower_landing` | `BOOL` | **PC** | `True` |
+| `at_upper_landing` | `BOOL` | **PC** | `False` |
+| `direction_conflict` | `BOOL` | **PC** | `False` |
 
 ## Operator actions
 

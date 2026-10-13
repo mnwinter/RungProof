@@ -1,0 +1,96 @@
+{
+  "disposition": "PASS_WITH_LIMITS",
+  "images": [
+    {
+      "file": "01-timer-1600.png",
+      "sha256": "CA63877B995439DF08B044FBEC17A4E7F0A6F4580E8F4C7BE7C79CFEA2B5E5EF",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 50,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "02-carry-1600.png",
+      "sha256": "9DF1D74F63BCE5DBA45D941590E36D131CF543D70CB6E373C38122A72EC831AD",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 103,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "03-carry-split-1600.png",
+      "sha256": "E96DCBE8AF98ED586215913D736941A7A4CE32228FD7FC35BA45E5CFEF66D586",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 103,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "04-coast-1600.png",
+      "sha256": "7F574EEB991A775718B9C5B5EA016A508DF2E3BA2495DEE0BB5DD60FCB77BE27",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 226,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "05-history-1600.png",
+      "sha256": "F23FE4DA6818B340CF7804AFCCE7E59E6559EBE2B9EB2C773AFA75EEC3006B4D",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 31,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "06-invalid-1600.png",
+      "sha256": "09B5300B12E1D7B2ED65538B8277BABF6F68A06A47E727B67E8EDFD1990135E7",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": false,
+      "scan": 103,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "07-timer-1280.png",
+      "sha256": "00BA846AB90DA8BF036A99AE72F4A55DE244F1EF7F1665E41838A695E03CC609",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 50,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "08-history-1280.png",
+      "sha256": "C47A204E92F8D8A00306195EE2417C64220CAA6432EC739ABBF587D2E48138F2",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": true,
+      "scan": 31,
+      "disposition": "PASS_WITH_LIMITS"
+    },
+    {
+      "file": "09-invalid-1280.png",
+      "sha256": "2D3EE892F2C1B786E692C806065E428191B259C8EC6EA3A3FE9A41F2CDE28649",
+      "dll": "5067389C01C929C7FEFF1BCD18007C0846715641C080AC95D72A4B24F9B25652",
+      "personallyViewed": true,
+      "paused": true,
+      "currentDraftMatches": false,
+      "scan": 103,
+      "disposition": "PASS_WITH_LIMITS"
+    }
+  ],
+  "scope": "Actual9 visual frames only, no native behavior certification"
+}

@@ -1,0 +1,38 @@
+{
+  "dllSha256": "FA9A837D4E8F38F01D4398C68E54ACEFB47175CB00ABE6AB98E5BC6B74ED3772",
+  "wider75Approved": false,
+  "frames": [
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v9\\01-classroom.scene.png",
+      "personallyViewed": true,
+      "qualified": true,
+      "imageSha256": "228D25AC39F81EE0EEE247CE889C841566C17F2321067DFDE5AEEB96B1DF2CF2"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v9\\01-classroom.split.png",
+      "personallyViewed": true,
+      "qualified": true,
+      "imageSha256": "3E185B08AD831A76C4F40FA0C37297ADEE6F4376B741F2BA16D5BCE17C92DD42"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v9\\02-dispatch.scene.png",
+      "personallyViewed": true,
+      "qualified": true,
+      "imageSha256": "058DCDDECB8C1A4E82B26C021E37256B0557A0A4280784EA614793F15098B38F"
+    },
+    {
+      "file": "C:\\Users\\mattn\\Documents\\Codex\\Worktrees\\rungproof-studio-20261010\\rungproof\\rungproof-next\\.tools\\studio-verification\\two-room-material-revision-v9\\02-dispatch.split.png",
+      "personallyViewed": true,
+      "qualified": true,
+      "imageSha256": "61B708EE0D1C6ACA9F4CF8789B3F4327D821A2968131E406DCC504E102B560F1"
+    }
+  ],
+  "humanStyleApproved": false,
+  "limitations": [
+    "Crisp long directional shadows",
+    "Sandy broad mineral floor relief",
+    "Sparse dispatch composition",
+    "Muted industrial palette, not vivid isometric reference replication"
+  ],
+  "status": "PASS_WITH_LIMITS_TWO_ROOM_PREVIEW"
+}

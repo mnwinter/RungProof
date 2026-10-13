@@ -1,0 +1,361 @@
+{
+  "version": 1,
+  "review": "Read-only V13d identification semantics and final operator capture inventory",
+  "source": "src/Scenes/SceneComposer.InstallationLegends.cs",
+  "sourceSha256": "7B2463972F0F184B2384127A394C1052F2472913F3D5EE7DA7AA0E7FB66D11C6",
+  "benchScenes": 25,
+  "benchDevices": 91,
+  "v13cBenchOperatorFrames": 4,
+  "remainingWithoutV13cBenchOperator": 21,
+  "currentSemanticContradictions": [],
+  "semanticFindings": [
+    "All91 bench contracts retain exact source type/label/config-face/action plus point/mode bindings; action ID/type/point guarded. Current source descriptions support COUNT REACHED and COUNT COMPARE output wording.",
+    "Bench output lamps/readouts bind PLC-owned points; gallery standalone demonstration uses DEMO rather than PLC output wording. Interactive operand readouts carry NEXT rather than OUTPUT.",
+    "Selected RUNNING pilot binds collector_run (PLC); assembly TOP LIMIT/BOTTOM LIMIT bind generated PC-owned limits. Their passive captions intentionally omit PLC OUTPUT.",
+    "PULSE/PULSE and A NEXT/NEXT wording is redundant, not a functional contradiction. No behavioral changes proposed.",
+    "Future drift blind spots: action cycle values are not guarded (bay0/1,beacon0/1/2/3,selector displayed modes); point owner/type and activeColor/indicatorChannel details are not included in current point|mode signature. Current source checked; whole-source freeze/native hash governs candidate provenance. These narrow guards do not by themselves certify future semantic changes."
+  ],
+  "capturePolicy": "21 is correct (25 minus4), not22. V13c four frames are historical c-build captures; after final support build capture all25 if exact final-DLL visual coverage is required. Additional final scene/split evidence remains separate. Material75 HELD; Handle OPEN.",
+  "benchInventory": [
+    {
+      "sceneId": "equipment-gallery",
+      "equipmentIds": [
+        "gallery_indicator"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-01-workstation-call",
+      "equipmentIds": [
+        "material_call_button",
+        "material_call_lamp"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-02-dual-confirmation",
+      "equipmentIds": [
+        "operator_confirm_button",
+        "quality_confirm_button",
+        "handoff_ready_lamp"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-03-service-marker-inhibit",
+      "equipmentIds": [
+        "marker_inhibit_button",
+        "service_marker_lamp"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-04-two-station-call",
+      "equipmentIds": [
+        "north_call_button",
+        "south_call_button",
+        "assistance_beacon"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-05-bay-light-selector",
+      "equipmentIds": [
+        "mode_selector",
+        "bay_light_a",
+        "bay_light_b"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-06-ready-attention",
+      "equipmentIds": [
+        "request_button",
+        "ready_lamp",
+        "attention_lamp"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-07-dual-contact-permissive",
+      "equipmentIds": [
+        "reset_button",
+        "nc_button",
+        "permit_lamp"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-08-inspection-vote",
+      "equipmentIds": [
+        "left_vote",
+        "right_vote",
+        "vote_stacklight"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-09-maintenance-beacon",
+      "equipmentIds": [
+        "beacon_selector",
+        "maintenance_beacon"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-2-25-inspection-toggle",
+      "equipmentIds": [
+        "inspection_toggle_button",
+        "inspection_light"
+      ],
+      "hasV13cOperator": true,
+      "v13cOperator": ".tools/studio-verification/v13-c-lab-2-25-inspection-toggle.operator.png",
+      "needsNewBenchOperator": false
+    },
+    {
+      "sceneId": "lab-4-01-press-count-lamp",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-4-02-counter-reset-lamp",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1",
+        "switch_2"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-4-05-dual-input-count-window",
+      "equipmentIds": [
+        "switch_0",
+        "switch_1",
+        "indicator_2",
+        "reset_button",
+        "count_a_display",
+        "count_b_display"
+      ],
+      "hasV13cOperator": true,
+      "v13cOperator": ".tools/studio-verification/v13-c-lab-4-05-dual-input-count-window.operator.png",
+      "needsNewBenchOperator": false
+    },
+    {
+      "sceneId": "lab-4-06-multi-press-confirmation",
+      "equipmentIds": [
+        "switch_0",
+        "switch_1",
+        "indicator_2",
+        "reset_button",
+        "count_a_display",
+        "count_b_display"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-5-01-delayed-lamp",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-5-02-timed-lamp-off",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-5-03-rotary-flasher",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-5-04-alternating-lamps",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1",
+        "indicator_2"
+      ],
+      "hasV13cOperator": true,
+      "v13cOperator": ".tools/studio-verification/v13-c-lab-5-04-alternating-lamps.operator.png",
+      "needsNewBenchOperator": false
+    },
+    {
+      "sceneId": "lab-5-05-variable-flash-rate",
+      "equipmentIds": [
+        "switch_0",
+        "switch_1",
+        "indicator_2",
+        "switch_3"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-5-06-running-light-tower",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_1",
+        "switch_2"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-9-01-sum-function",
+      "equipmentIds": [
+        "switch_1",
+        "indicator_2",
+        "training_accessory_4",
+        "switch_5",
+        "switch_6",
+        "numeric_display_0",
+        "numeric_display_1"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-9-02-product-function",
+      "equipmentIds": [
+        "switch_1",
+        "indicator_2",
+        "training_accessory_4",
+        "switch_5",
+        "switch_6",
+        "numeric_display_0",
+        "numeric_display_1"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    },
+    {
+      "sceneId": "lab-9-03-sum-and-counter-function",
+      "equipmentIds": [
+        "switch_1",
+        "indicator_2",
+        "switch_3",
+        "switch_4",
+        "indicator_5",
+        "numeric_display_0",
+        "numeric_display_1",
+        "numeric_display_2",
+        "numeric_display_3"
+      ],
+      "hasV13cOperator": true,
+      "v13cOperator": ".tools/studio-verification/v13-c-lab-9-03-sum-and-counter-function.operator.png",
+      "needsNewBenchOperator": false
+    },
+    {
+      "sceneId": "lab-9-04-function-selector",
+      "equipmentIds": [
+        "switch_0",
+        "indicator_2",
+        "switch_5",
+        "switch_6",
+        "numeric_display_0",
+        "numeric_display_1",
+        "numeric_display_2",
+        "numeric_display_3"
+      ],
+      "hasV13cOperator": false,
+      "v13cOperator": null,
+      "needsNewBenchOperator": true
+    }
+  ],
+  "selectedPanelPilots": [
+    {
+      "sceneId": "lab-2-10-dust-collector-seal-in",
+      "equipmentId": "collector_run_lamp",
+      "point": "collector_run",
+      "owner": "PLC",
+      "mode": "indicator",
+      "text": "RUNNING"
+    },
+    {
+      "sceneId": "lab-2-12-assembly-lift",
+      "equipmentId": "top_limit_lamp",
+      "point": "top_limit",
+      "owner": "PC",
+      "mode": "indicator",
+      "text": "TOP LIMIT"
+    },
+    {
+      "sceneId": "lab-2-12-assembly-lift",
+      "equipmentId": "bottom_limit_lamp",
+      "point": "bottom_limit",
+      "owner": "PC",
+      "mode": "indicator",
+      "text": "BOTTOM LIMIT"
+    }
+  ],
+  "remainingBenchOperatorSceneIds": [
+    "equipment-gallery",
+    "lab-2-01-workstation-call",
+    "lab-2-02-dual-confirmation",
+    "lab-2-03-service-marker-inhibit",
+    "lab-2-04-two-station-call",
+    "lab-2-05-bay-light-selector",
+    "lab-2-06-ready-attention",
+    "lab-2-07-dual-contact-permissive",
+    "lab-2-08-inspection-vote",
+    "lab-2-09-maintenance-beacon",
+    "lab-4-01-press-count-lamp",
+    "lab-4-02-counter-reset-lamp",
+    "lab-4-06-multi-press-confirmation",
+    "lab-5-01-delayed-lamp",
+    "lab-5-02-timed-lamp-off",
+    "lab-5-03-rotary-flasher",
+    "lab-5-05-variable-flash-rate",
+    "lab-5-06-running-light-tower",
+    "lab-9-01-sum-function",
+    "lab-9-02-product-function",
+    "lab-9-04-function-selector"
+  ]
+}

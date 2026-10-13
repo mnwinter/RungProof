@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using RungProof.Next.Challenges;
+using RungProof.Next.VirtualController;
+namespace RungProof.Next.ChallengeTests;
+internal static class ChallengeIsolationTests
+{
+    private static void Check(bool ok,string message)=>ChallengeFixtures.Require(ok,message);
+    public static IEnumerable<(string,Action)> Tests()
+    {
+        yield return("CaseOrderAndRepeatedRunsHaveSameObservations",()=>{var p=ChallengeFixtures.OutputSealIn();var a=ChallengeBehaviorTests.Run(p);var b=ChallengeBehaviorTests.Run(p);Check(a.Trace.Select(Key).SequenceEqual(b.Trace.Select(Key)),"Repeated run drift");var d=ChallengeBehaviorTests.Definition;var reversed=new ChallengeDefinition(d.SchemaVersion,d.Id,d.Revision,d.SceneId,d.ProtocolRevision,d.ScanPeriodMs,d.Title,d.Objective,d.Hints,d.Plant,d.Cases.Reverse().ToArray(),d.Glossary,d.EligibilityPolicy,d.Starter);var c=ChallengeTestRunner.Run(reversed,p,ChallengeBehaviorTests.Identity(p,reversed),()=>new ConveyorChallengePlantAdapter(d.Plant),default);Check(a.Trace.OrderBy(Key).Select(Key).SequenceEqual(c.Trace.OrderBy(Key).Select(Key)),"Case order leakage");});
+        yield return("Case250Run1750Metadata32Trace2048Bounds",()=>{var r=ChallengeBehaviorTests.Run(ChallengeFixtures.OutputSealIn());Check(r.Trace.Count<=1750 && r.Events.Count<=32 && r.Trace.Count+r.Events.Count<=2048,"Global bounds exceeded");Check(r.Trace.GroupBy(o=>o.CaseId).All(g=>g.Count()<=250),"Case budget exceeded");Check(r.Events.Count==15 && 7*250+15<2048,"Fixed seven cases plus one reset cannot structurally reach metadata/combined overflow");Check(r.Trace.Where(o=>o.CaseId=="CV07").Count()<=250,"Both reset cycles must share one case budget");});
+        yield return("CancelAtEachBoundaryReturnsNoPass",()=>{var p=ChallengeFixtures.OutputSealIn();foreach(var at in new[]{0,1,25,80,150,300}){using var source=new CancellationTokenSource();if(at==0)source.Cancel();int advances=0;var r=ChallengeBehaviorTests.Run(p,()=>new InterceptPlant(()=>{if(++advances==at)source.Cancel();}),source.Token);Check(r.Outcome==ChallengeOutcome.Cancelled && r.Trace.Count<=at,"Cancellation boundary failed");}});
+        yield return("CancelOnVeryLastAcceptedAdvanceCannotPass",()=>{var p=ChallengeFixtures.OutputSealIn();var successful=ChallengeBehaviorTests.Run(p);Check(successful.Outcome==ChallengeOutcome.Passed,"Baseline must pass before deriving final advance");using var source=new CancellationTokenSource();int advances=0;var cancelled=ChallengeBehaviorTests.Run(p,()=>new InterceptPlant(()=>{if(++advances==successful.Trace.Count)source.Cancel();}),source.Token);Check(advances==successful.Trace.Count && cancelled.Outcome==ChallengeOutcome.Cancelled && cancelled.Code=="CH_CANCELLED" && cancelled.Trace.Count==successful.Trace.Count-1 && cancelled.Cases.Count==6,"Cancel on actual final plant Advance was awarded Pass or fabricated final case");});
+        yield return("DischargeCannotPassAtProjectedZero",()=>{var r=ChallengeBehaviorTests.Run(ChallengeFixtures.OutputSealIn(),()=>new InterceptPlant(()=>{},discharged:true));Check(r.Outcome!=ChallengeOutcome.Passed && r.Cases.Any(c=>c.Code=="CH_CARTON_LOST"),"Absent carton passed zero projection");});
+        yield return("AdapterFailureStopsUnrunRows",()=>{var r=ChallengeBehaviorTests.Run(ChallengeFixtures.OutputSealIn(),()=>throw new InvalidOperationException("injected"));Check(r.Outcome==ChallengeOutcome.InfrastructureError && r.Cases.Count==1 && r.Trace.Count==0,"Adapter fault continued or fabricated rows");});
+        yield return("MissingEventAndDiagnosticCannotPass",()=>{var p=ChallengeFixtures.OutputSealIn();var r=ChallengeBehaviorTests.Run(p);var first=r.Trace.First();var evaluator=new ChallengeEvaluator();var test=ChallengeBehaviorTests.Definition.Cases[0];evaluator.BeginCase(first.Identity,test);Check(evaluator.FinishCase().Outcome!=ChallengeOutcome.Passed,"No accepted observations passed");evaluator.BeginCase(first.Identity,test);Check(evaluator.Observe(new(first.Identity,first.CaseId,first.Cycle,2,2,TimeSpan.FromMilliseconds(40),first.EffectiveInputs,first.AppliedOutputs,first.PlantAfter,[]))?.Code=="CH_OBSERVATION_SEQUENCE","Missing event gap passed");evaluator.BeginCase(first.Identity,test);Check(evaluator.Observe(new(first.Identity,first.CaseId,first.Cycle,first.CaseSequence,first.ScanNumber,first.SimulatedTime,first.EffectiveInputs,first.AppliedOutputs,first.PlantAfter,["diagnostic"]))?.Code=="CH_RUNTIME_DIAGNOSTIC","Diagnostic passed");});
+        yield return("MutableCallerDraftAndManualExplorationCannotEnterTrial",()=>{var original=ChallengeFixtures.OutputSealIn();var mutable=original.Networks.ToList();var p=original with{Networks=mutable};var identity=ChallengeBehaviorTests.Identity(p);var definition=ChallengeBehaviorTests.Definition;bool changed=false;var result=ChallengeTestRunner.Run(definition,p,identity,()=>{if(!changed){mutable.Clear();changed=true;}return new ConveyorChallengePlantAdapter(definition.Plant);},default);Check(result.Outcome==ChallengeOutcome.Passed && mutable.Count==0,"Worker reused caller draft graph");var exploration=new VirtualControllerSession(new VirtualControllerRuntime(LadderCompiler.Compile(original).Program!));exploration.Run();exploration.SetBoolForce("Run",true);exploration.SetInput("Start",true);Check(ChallengeBehaviorTests.Run(original).Outcome==ChallengeOutcome.Passed && exploration.Snapshot.Forces.Count==1,"Independent trial changed manual exploration or inherited force");});
+        yield return("BatchAndSingleAcceptedScansAgree",()=>{var one=Batch(false);var batch=Batch(true);Check(one.SequenceEqual(batch),"Batch event count or per-event plant-after phase drift");});
+        yield return("ResetRepeatRejectsResetLeakAtCV07",()=>{var r=ChallengeBehaviorTests.Run(ChallengeFixtures.OutputSealIn(),()=>new InterceptPlant(()=>{},resetLeak:true));Check(r.Outcome==ChallengeOutcome.InfrastructureError && r.Cases.Last().CaseId=="CV07" && r.Trace.Any(o=>o.CaseId=="CV07") && !r.Trace.Any(o=>o.CaseId=="CV07" && o.Cycle==1),"Reset leak passed or failed unrelated case");});
+        yield return("WrongIdentityAndNonfinitePlantCannotPass",()=>{var p=ChallengeFixtures.OutputSealIn();var d=ChallengeBehaviorTests.Definition;var wrong=ChallengeBehaviorTests.Identity(p) with{ProgramSha256=new string('f',64)};var r=ChallengeTestRunner.Run(d,p,wrong,()=>new ConveyorChallengePlantAdapter(d.Plant),default);Check(r.Outcome==ChallengeOutcome.InvalidChallenge && r.Trace.Count==0,"Wrong program identity executed");r=ChallengeBehaviorTests.Run(p,()=>new InterceptPlant(()=>{},nonfinite:true));Check(r.Outcome==ChallengeOutcome.InfrastructureError && r.Code=="CH_TRACE_LIMIT","Nonfinite state passed");});
+        yield return("ActualPacketStarterAndPlantFingerprintsArePinned",()=>{var p=ChallengeFixtures.OutputSealIn();var d=ChallengeBehaviorTests.Definition;var identity=ChallengeBehaviorTests.Identity(p);var bytes=System.IO.File.ReadAllBytes("challenges/starters/conveyor-stop.rpproj.json");Check(identity.ChallengeSha256==ChallengeContentIdentity.PacketSha256(d,bytes) && identity.PlantSha256==ChallengeContentIdentity.PlantSha256(d.Plant),"Identity uses synthetic packet/plant placeholders");bool refused=false;bytes[0]^=1;try{ChallengeContentIdentity.PacketSha256(d,bytes);}catch(ArgumentException){refused=true;}Check(refused,"Changed actual starter bytes accepted");var r=ChallengeTestRunner.Run(d,p,identity with{PlantSha256=new string('f',64)},()=>new ConveyorChallengePlantAdapter(d.Plant),default);Check(r.Outcome==ChallengeOutcome.InvalidChallenge && r.Trace.Count==0,"Incorrect available typed plant fingerprint executed");});
+        yield return("OversizedAdapterImagesAbortWithoutPass",()=>{foreach(var limit in new[]{"bool","number","text","text-value"}){var result=ChallengeBehaviorTests.Run(ChallengeFixtures.OutputSealIn(),()=>new InterceptPlant(()=>{},oversized:limit));Check(result.Outcome==ChallengeOutcome.InfrastructureError && result.Code=="CH_TRACE_LIMIT" && result.Cases.Count==1 && result.Trace.Count==0,"Oversized "+limit+" image did not abort first case with remaining cases Not Run");}});
+        yield return("MidCaseAdapterFaultAbortsAndLeavesRemainingCasesNotRun",()=>{int advances=0;var result=ChallengeBehaviorTests.Run(ChallengeFixtures.OutputSealIn(),()=>new InterceptPlant(()=>{if(++advances==27)throw new InvalidOperationException("Injected mid-CV02 plant boundary failure.");}));Check(result.Outcome==ChallengeOutcome.InfrastructureError && result.Code=="CH_ADAPTER_ERROR" && result.Cases.Count==2 && result.Cases[0].Outcome==ChallengeOutcome.Passed && result.Cases[1].CaseId=="CV02" && result.Cases[1].Outcome==ChallengeOutcome.InfrastructureError && result.Trace.Count==26 && result.Cases.All(c=>c.CaseId is "CV01" or "CV02"),"Infrastructure fault fabricated remaining cases or continued scans");});
+    }
+    private static string Key(ChallengeObservation o)=>$"{o.CaseId}:{o.Cycle}:{o.CaseSequence}:{o.ScanNumber}:{o.AppliedOutputs["conveyor_running"]}:{o.PlantAfter.Numbers["object_position"]:R}";
+    private static string[] Batch(bool batch)
+    {
+        var p=ChallengeFixtures.OutputSealIn(true);var plant=new ConveyorChallengePlantAdapter(ChallengeBehaviorTests.Definition.Plant);var s=new VirtualControllerSession(new VirtualControllerRuntime(LadderCompiler.Compile(p).Program!));var rows=new List<string>();
+        s.ScanCompleted+=e=>rows.Add($"{e.ScanNumber}:{e.SampledInputs.Bools.GetValueOrDefault("Begin")}:{e.EffectiveInputs.Bools["Begin"]}:{SceneIoImageMapper.CommitBoolOutputs(p,e.Outputs.Bools)["conveyor_running"]}:{plant.CaptureState().Numbers["object_position"]:R}");
+        s.Run();s.PulseInput("Begin");
+        void Advance(double seconds)=>s.Advance(seconds,()=>SceneIoImageMapper.SampleBoolInputs(p,plant.SampleBoolInputs()),o=>plant.CommitBoolOutputs(SceneIoImageMapper.CommitBoolOutputs(p,o)),seconds=>plant.Advance(TimeSpan.FromSeconds(seconds)));
+        if(batch)Advance(.2);else for(int i=0;i<10;i++)Advance(.02);
+        Check(rows.Count==10 && plant.CaptureState().ObjectPresent && Math.Abs(plant.CaptureState().Numbers["object_position"]-.1)<=1e-9,"Exactly 10 post-step accepted events required");return rows.ToArray();
+    }
+    private sealed class InterceptPlant : IChallengePlantAdapter
+    {
+        private readonly ConveyorChallengePlantAdapter _inner=new(ChallengeBehaviorTests.Definition.Plant);
+        private readonly Action _step; private readonly bool _discharged; private readonly bool _resetLeak; private readonly bool _nonfinite; private readonly string _oversized; private bool _advanced; private int _resets;
+        public InterceptPlant(Action step,bool discharged=false,bool resetLeak=false,bool nonfinite=false,string oversized=""){_step=step;_discharged=discharged;_resetLeak=resetLeak;_nonfinite=nonfinite;_oversized=oversized;}
+        public void Reset(){_inner.Reset();_advanced=false;_resets++;if(_resetLeak && _resets>1){_inner.CommitBoolOutputs(new Dictionary<string,bool>{{"conveyor_running",true}});_inner.Advance(TimeSpan.FromMilliseconds(20));}}
+        public IReadOnlyDictionary<string,bool> SampleBoolInputs()=>_inner.SampleBoolInputs();
+        public IReadOnlyDictionary<string,double> SampleNumericInputs()=>_inner.SampleNumericInputs();
+        public IReadOnlyDictionary<string,string> SampleTextInputs()=>_inner.SampleTextInputs();
+        public void CommitBoolOutputs(IReadOnlyDictionary<string,bool> v)=>_inner.CommitBoolOutputs(v);
+        public void CommitNumericOutputs(IReadOnlyDictionary<string,double> v)=>_inner.CommitNumericOutputs(v);
+        public void CommitTextOutputs(IReadOnlyDictionary<string,string> v)=>_inner.CommitTextOutputs(v);
+        public void Advance(TimeSpan period){_inner.Advance(period);_advanced=true;_step();}
+        public ChallengePlantState CaptureState()
+        {
+            var s=_inner.CaptureState();
+            if(_oversized=="bool")return new(s.Feedback.Concat(Enumerable.Range(0,32).Select(i=>new KeyValuePair<string,bool>("extra"+i,false))).ToDictionary(p=>p.Key,p=>p.Value),s.Numbers,s.Text,s.ObjectPresent,s.Completed);
+            if(_oversized=="number")return new(s.Feedback,s.Numbers.Concat(Enumerable.Range(0,16).Select(i=>new KeyValuePair<string,double>("extra"+i,0))).ToDictionary(p=>p.Key,p=>p.Value),s.Text,s.ObjectPresent,s.Completed);
+            if(_oversized=="text")return new(s.Feedback,s.Numbers,s.Text.Concat(Enumerable.Range(0,16).Select(i=>new KeyValuePair<string,string>("extra"+i,"value"))).ToDictionary(p=>p.Key,p=>p.Value),s.ObjectPresent,s.Completed);
+            if(_oversized=="text-value")return new(s.Feedback,s.Numbers,new Dictionary<string,string>{{"component_state",new string('x',257)}},s.ObjectPresent,s.Completed);
+            if(_nonfinite && _advanced)return new(s.Feedback,new Dictionary<string,double>{{"object_position",double.NaN}},s.Text,s.ObjectPresent,s.Completed);
+            return _discharged&&_advanced?s with{ObjectPresent=false,Completed=1}:s;
+        }
+    }
+}
+
+
+

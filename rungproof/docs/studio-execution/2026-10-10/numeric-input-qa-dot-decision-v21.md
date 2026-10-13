@@ -1,0 +1,5 @@
+# V21 numeric input QA decision
+
+Dot approved the finite plan twelve-numeric-cycle-input-qa-plan-v21.md after review of the exact twelve PC DINT contracts across five scenes. Root independently extracted source values/bindings/hashes in numeric-cycle-authored-contracts-v21.json. Implement narrowly in diagnostic code: reuse ordinary camera navigation, actual left press/release through Main._Input, full authored cycle/wrap, exact displayed text, unchanged unrelated points/PLC outputs/housings, normal Reset callback. No product camera/picker/runtime changes, no PLC solution or direct-action surrogate.
+
+Required evidence: twelve actual images, event traces and exact binary/source identities;18px font line box and12px label-extent margins with actual occlusion review.62 cycle-proof presses plus12 final capture-state presses, each released. Existing EV/Chicken checks remain intact. This is authorized verification within the current all77 goal, not material75 approval or final completion. Implementation has not begun at this checkpoint.
