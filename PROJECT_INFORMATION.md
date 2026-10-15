@@ -28,6 +28,13 @@ references:
 Generated imports, SDK downloads, compiler outputs, release builds, logs,
 backups, and superseded review archives are not source and are excluded.
 
+## AI development handoff
+
+`skills/rungproof-development/SKILL.md` is the maintained entry point for an AI
+coding agent continuing RungProof development. It routes to focused references
+for the project map, controls and live-PLC boundaries, Siemens TIA evidence,
+and verification. Keep it aligned when those governing contracts change.
+
 ## Verification boundary
 
 Successful build, unit-test, and headless Godot checks prove only the local

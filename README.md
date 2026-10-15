@@ -32,6 +32,9 @@ for the pinned tool versions and first-run layout.
 - `tools/` - the minimal external-PLC bridge and its offline tests.
 - `vendor/` - pinned Siemens interface source and third-party license files
   required by the guarded bridge and plant-model parity tests.
+- `skills/rungproof-development/` - reusable project handoff for AI coding
+  agents, with routed architecture, TIA-evidence, safety, and verification
+  guidance.
 
 Generated builds, imported Godot caches, portable SDKs, virtual environments,
 logs, backups, and old review archives are intentionally excluded.
