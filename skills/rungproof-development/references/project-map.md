@@ -73,4 +73,3 @@ For Siemens-facing ladder work, begin with:
 Generated `.tools/`, `.godot/`, build outputs, logs, captures, and release
 archives are evidence or local tooling, not source to commit unless a governing
 document explicitly requires a tracked artifact.
-

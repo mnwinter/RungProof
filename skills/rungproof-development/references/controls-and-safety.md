@@ -70,4 +70,3 @@ State the evidence level explicitly:
 7. commissioned equipment result.
 
 Never collapse one level into a higher one.
-

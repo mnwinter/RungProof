@@ -76,4 +76,3 @@ OPEN.
 Overall wording remains `partial` until every required acceptance criterion is
 closed. Do not turn elapsed effort, broad sweep counts, or absence of a known
 failure into parity.
-

@@ -89,4 +89,3 @@ and exclusions. Keep these boundaries explicit:
 - normal-renderer proof is not installed-TIA parity;
 - installed-TIA parity is not live PLC or safety proof;
 - package verification is not external release approval.
-
