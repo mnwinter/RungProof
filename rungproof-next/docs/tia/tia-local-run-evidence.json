@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "resultKind": "tia-local-run-evidence",
+  "status": "passed",
+  "profile": "full",
+  "sourceRun": {
+    "path": ".tools/tia-parity-full-contract-v6.json",
+    "sha256": "730DDBAF304E7FCE48ED7B4D19595EA3E653F8143FF1031F2CA55E64D4A9B375",
+    "durability": "ephemeral-local"
+  },
+  "evidenceBoundary": {
+    "offlineOnly": true,
+    "installedTiaExecuted": false,
+    "livePlcExecuted": false
+  },
+  "commands": [
+    {
+      "id": "tia-renderer-contact-sheets",
+      "status": "passed",
+      "stableAssertions": {
+        "catalogKeys": 50,
+        "rendererCases": 900,
+        "selectionStates": ["unselected", "selected"],
+        "zoomLevels": [75, 100, 150],
+        "displayModesPerStateAndZoom": 3,
+        "selectedDetails": 150,
+        "contactSheets": 24
+      }
+    },
+    {
+      "id": "tia-monitor-gate-sweep",
+      "status": "passed",
+      "stableAssertions": {
+        "catalogKeys": 50,
+        "monitorCases": 200,
+        "states": ["evaluated-false", "evaluated-true", "unknown-earlier-cycle", "never-executed"],
+        "gateIds": 50
+      }
+    },
+    {
+      "id": "tia-edit-gate-sweep",
+      "status": "passed",
+      "stableAssertions": {
+        "catalogKeys": 50,
+        "editCases": 50,
+        "gateIds": 50,
+        "validatedForms": 49,
+        "structuralCasesWithoutMalformedOperand": ["rung"],
+        "physicalInputRoutes": ["Viewport.PushInput", "Window.PushInput:Enter"]
+      }
+    },
+    {
+      "id": "tia-editor-control-gate-sweep",
+      "status": "passed",
+      "stableAssertions": {
+        "gateIds": 7,
+        "assertions": 36,
+        "structuredPerGateResults": true,
+        "externalTia": false,
+        "livePlc": false
+      }
+    },
+    {
+      "id": "tia-project-tree-gate-sweep",
+      "status": "passed",
+      "stableAssertions": {
+        "gateIds": 9,
+        "assertions": 45,
+        "structuredPerGateResults": true,
+        "nativePointerGeometry": true,
+        "externalTia": false,
+        "livePlc": false
+      }
+    }
+  ],
+  "gateCoverage": {
+    "keyPattern": "tia.{key}.{state}",
+    "keys": [
+      "no",
+      "nc",
+      "edge-rising",
+      "edge-falling",
+      "coil",
+      "set",
+      "reset",
+      "branch",
+      "ton",
+      "tof",
+      "tp",
+      "rto",
+      "timer-reset",
+      "ctu",
+      "ctd",
+      "rung",
+      "call",
+      "return",
+      "jump",
+      "label",
+      "compare-0",
+      "compare-1",
+      "compare-2",
+      "compare-3",
+      "compare-4",
+      "compare-5",
+      "numeric-0",
+      "numeric-1",
+      "numeric-2",
+      "numeric-3",
+      "numeric-4",
+      "numeric-5",
+      "numeric-6",
+      "numeric-7",
+      "numeric-8",
+      "numeric-9",
+      "numeric-10",
+      "numeric-11",
+      "numeric-12",
+      "numeric-13",
+      "numeric-14",
+      "numeric-15",
+      "numeric-16",
+      "numeric-17",
+      "numeric-18",
+      "numeric-19",
+      "numeric-20",
+      "numeric-21",
+      "numeric-22",
+      "numeric-23"
+    ],
+    "states": {
+      "offline": {
+        "commandId": "tia-renderer-contact-sheets",
+        "caseSelector": "{key}|z75,z100,z150|unselected|three-display-modes",
+        "localStatus": "automated-and-visual",
+        "visualReview": true
+      },
+      "selected": {
+        "commandId": "tia-renderer-contact-sheets",
+        "caseSelector": "{key}|z75,z100,z150|selected|three-display-modes",
+        "localStatus": "automated-and-visual",
+        "visualReview": true
+      },
+      "edit": {
+        "commandId": "tia-edit-gate-sweep",
+        "caseSelector": "{key}|invalid-reject-where-representable,valid-apply,stable-id,compile,save-load-save,toolbar-undo-redo,reopen,cleanup",
+        "localStatus": "automated-pass",
+        "visualReview": false
+      },
+      "monitor": {
+        "commandId": "tia-monitor-gate-sweep",
+        "caseSelector": "{key}|evaluated-false,evaluated-true,unknown-earlier-cycle,never-executed",
+        "localStatus": "automated-pass",
+        "visualReview": false
+      }
+    }
+  },
+  "monitorArtifact": {
+    "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-monitor-gate-sweep.json",
+    "sha256": "84F93756DA6A15021F90AC76271E77C27596E9D0CD96FBCBE9EC464770F32619",
+    "status": "passed",
+    "durability": "ephemeral-local"
+  },
+  "editArtifact": {
+    "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-edit-gate-sweep.json",
+    "sha256": "7900FC0FE3847140DBEDCDF05F99D54E90BEF80068106987635B8A3B8E87CF53",
+    "status": "passed",
+    "durability": "ephemeral-local"
+  },
+  "editorControlArtifact": {
+    "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-editor-control-gates.json",
+    "sha256": "EABC0304A72CE28ABDD266149C8CFA95211B8BF477818EC6E154CF59AAF2A243",
+    "status": "passed",
+    "gateCount": 7,
+    "assertionCount": 36,
+    "durability": "ephemeral-local"
+  },
+  "projectTreeArtifact": {
+    "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-project-tree-gates.json",
+    "sha256": "2F9AA28EA11C3EEAFF165F0F2048B08D30C5B96E611209E57FE2263BC7FBFECF",
+    "status": "passed",
+    "gateCount": 9,
+    "assertionCount": 45,
+    "durability": "ephemeral-local"
+  },
+  "selectedVisualReview": {
+    "path": "docs/tia/tia-renderer-visual-review.json",
+    "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305",
+    "status": "visual-pass"
+  },
+  "unselectedVisualReview": {
+    "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+    "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944",
+    "status": "visual-pass"
+  },
+  "selectedArtifactSet": {
+    "canonicalization": "UTF-8 LF with final LF: tia-renderer-artifact-set-v1; selected; operandRepresentation; tagInformationDisplay; tagInformationPosition; sorted zoomLevels; detail file and hash sorted by file; sheet file and hash sorted by file",
+    "entryCount": 174,
+    "sha256": "8734327FB0A89C32E0836324476FF3056BEA9CBD76E38310B5463A814D057A5F"
+  },
+  "unselectedArtifactSet": {
+    "canonicalization": "UTF-8 LF with final LF: tia-renderer-artifact-set-v1; selected; operandRepresentation; tagInformationDisplay; tagInformationPosition; sorted zoomLevels; detail file and hash sorted by file; sheet file and hash sorted by file",
+    "entryCount": 174,
+    "sha256": "7ECF09D337FA245F62A0C5F01BF5EBFDD7F5A22B771BA508198EFA6C223A1588"
+  },
+  "unprovedGateStates": [],
+  "limitations": [
+    "Selected and unselected visual evidence each cover one configured operand and tag-information presentation; two additional display modes per selection state are automated only.",
+    "Edit evidence is an automated native workbench interaction sweep; it has no retained human-reviewed per-key edit pixels or installed-TIA comparison.",
+    "The network/rung structural insertion case has no malformed operand to reject; its edit evidence covers physical insertion, stable identity, compile, persistence, Undo/Redo, reopen, and cleanup.",
+    "Monitor evidence is an automated semantic/state inspection; it has no human-reviewed monitor pixels or installed-TIA comparison.",
+    "The 16 editor/project-tree control gates are exact structured local checks, but they do not execute or visually compare an installed TIA Portal instance.",
+    "No installed TIA Portal or live PLC execution occurred.",
+    "The source run and PNG bundle remain local and untracked; hashes prove identity, not durable availability."
+  ]
+}

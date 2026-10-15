@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "identityFormat": "RP-CANON-1",
+  "engineRevision": "conveyor-engine-v1",
+  "engineSha256": "cbbafc9b30d680ec5248e813204dcfeea391f03fc062a4599f707d6223f72ea7",
+  "evaluatorRevision": "conveyor-evaluator-v1",
+  "evaluatorSha256": "bbadd6d76ea00444aeda273c762c09222eaf2127e083b390bcd236d8c87f9461",
+  "generatorSha256": "45cb58c54eecb1384022b7cce05277ef9ef50dc696c9f6736956909792550751",
+  "engineInputs": [
+    {
+      "byteLength": 1518,
+      "relativePath": "src/Challenges/ChallengeContentIdentity.cs",
+      "sha256": "34f0eb0eae9e1f229bc7e980884ee1725fa7102af1b2b408c846024503b541e8"
+    },
+    {
+      "byteLength": 7642,
+      "relativePath": "src/Challenges/ChallengeContracts.cs",
+      "sha256": "507ac00119478a9e168122b57bd06f2252ea7867eda7e7b6035901260ab58da2"
+    },
+    {
+      "byteLength": 8175,
+      "relativePath": "src/Challenges/ChallengeDefinitionJson.cs",
+      "sha256": "eff14aedc6bb7d217887174351a67f499750c2f43d7eb5c49d0c41b2938342e1"
+    },
+    {
+      "byteLength": 9153,
+      "relativePath": "src/Challenges/ChallengeEligibilityValidator.cs",
+      "sha256": "45a7d90f977857d364eafe3248cbde9781cdcf0fdcd29c26c7794adec4ce6f18"
+    },
+    {
+      "byteLength": 6744,
+      "relativePath": "src/Challenges/ChallengeEvaluator.cs",
+      "sha256": "0398ed08d142076000abea16686dede7f5c9eefee1cd4b32481737a6e66d9982"
+    },
+    {
+      "byteLength": 5904,
+      "relativePath": "src/Challenges/ChallengeProgramIdentity.cs",
+      "sha256": "1ffe2614315d4c275e96f4e91a2704696112064c0e8bf54f6bef42bf1f0d02e1"
+    },
+    {
+      "byteLength": 11743,
+      "relativePath": "src/Challenges/ChallengeProgressRepository.cs",
+      "sha256": "e0e7b666de9183e742e2cc6e37c93f519683fef143b411da95552545458c8c62"
+    },
+    {
+      "byteLength": 3067,
+      "relativePath": "src/Challenges/ChallengeRunLifecycle.cs",
+      "sha256": "aad723c72d91a0091b07d777d96e753839a2e2444a1c6bd0c03f056a410e140c"
+    },
+    {
+      "byteLength": 5116,
+      "relativePath": "src/Challenges/ChallengeSemanticManifest.cs",
+      "sha256": "0aa3e0ac6fe75eda2ee28c70dcc6251da04655ada71f67f1bb9f4ec55c0bd4aa"
+    },
+    {
+      "byteLength": 12440,
+      "relativePath": "src/Challenges/ChallengeTestRunner.cs",
+      "sha256": "d06b4f85d47e0f1f32a8a3699e2f32a4a37c73defde3df3405fbf020d6a94c76"
+    },
+    {
+      "byteLength": 1812,
+      "relativePath": "src/Challenges/ConveyorChallengePlantAdapter.cs",
+      "sha256": "bb3d5c47bf407544e461cbf4305ae0316f075e7afd4e9ff4f0f928b89d2f00c3"
+    },
+    {
+      "byteLength": 1348,
+      "relativePath": "src/Challenges/ConveyorChallengeProtocol.cs",
+      "sha256": "b2d76c5c28b20f2ebead6735a7c0ef12f40a53c4491620633d30d67e2971d5f9"
+    },
+    {
+      "byteLength": 4892,
+      "relativePath": "src/Scenes/ConveyorPlantModel.cs",
+      "sha256": "a10b1990f2855990a91d43e8a6a7cd0b291d527a08ebbd970f41762b39a5c9f6"
+    },
+    {
+      "byteLength": 1810,
+      "relativePath": "src/VirtualController/AggregateArrayDraft.cs",
+      "sha256": "4416d05ba0d401f0be9f6800b2234b257f706470335bfef422aff5344f01892f"
+    },
+    {
+      "byteLength": 27300,
+      "relativePath": "src/VirtualController/AuthoredDemoLadderPrograms.cs",
+      "sha256": "f9ce3588ba52a956fb2a150076cc5a78bce02766d92029a4702f4ddea6e299f4"
+    },
+    {
+      "byteLength": 7609,
+      "relativePath": "src/VirtualController/AuthoredLessonLadderPrograms.cs",
+      "sha256": "92db0e58bc73e209434cf72fdd20c2f5f5e166141b8eb0e42661f7597f5716c4"
+    },
+    {
+      "byteLength": 283,
+      "relativePath": "src/VirtualController/DemoPrograms.cs",
+      "sha256": "8cdcbc8be18c672b33d58da1e7b220ae6cb57477bf4bff6a499f57180ee339fd"
+    },
+    {
+      "byteLength": 10564,
+      "relativePath": "src/VirtualController/EditableLadderLayout.cs",
+      "sha256": "34c9ef90fe08a0ee7d42a7e1d2d9b035110dd8a8a9e66e352fc9210b53b8a2fb"
+    },
+    {
+      "byteLength": 19746,
+      "relativePath": "src/VirtualController/EditableLadderTree.cs",
+      "sha256": "d9c18a12ffe4d74b67552ec4e11e97c50601282b8c1b39a3d7f836fd4278b8a4"
+    },
+    {
+      "byteLength": 2529,
+      "relativePath": "src/VirtualController/EditorDiagnosticTarget.cs",
+      "sha256": "5b97b813e9993f5d82b3328fd03bb3586dfd6c69703b578691fdb258cc4d7125"
+    },
+    {
+      "byteLength": 15465,
+      "relativePath": "src/VirtualController/FrozenObservationTable.cs",
+      "sha256": "bc2186df1a37f8a8bc08cf1bffaa4d18f5dd418d608e2564a9cf8ef1287a475e"
+    },
+    {
+      "byteLength": 2054,
+      "relativePath": "src/VirtualController/FrozenRegisteredMap.cs",
+      "sha256": "f651aedf5b0c4dbafb5f8726ac001327af0a69ce0c1aba0ec15685c252ba0bf9"
+    },
+    {
+      "byteLength": 12696,
+      "relativePath": "src/VirtualController/InstructionObservation.cs",
+      "sha256": "aa99a2bc5a49e818077167e5e2aba741996505709295381a60ba4c2811bbe778"
+    },
+    {
+      "byteLength": 11987,
+      "relativePath": "src/VirtualController/InstructionObservationCollector.cs",
+      "sha256": "410959bdc706acf6d3500b7d13fca6cd014467f3a0de4dc838c22f088fd4e7d0"
+    },
+    {
+      "byteLength": 14238,
+      "relativePath": "src/VirtualController/LadderCallAuthoring.cs",
+      "sha256": "10861f0162fbdfde48cdfeb3db6d2728e55d3e092d018c12851befa62cf651ff"
+    },
+    {
+      "byteLength": 19035,
+      "relativePath": "src/VirtualController/LadderCallBindings.cs",
+      "sha256": "27488c1a557901d8b0fe0bd4c8a3b6027706fd223fda61051512d7fd84d151b3"
+    },
+    {
+      "byteLength": 13041,
+      "relativePath": "src/VirtualController/LadderCallFrames.cs",
+      "sha256": "1dd16b884858edf32ec799cad68925259eb8a5601a69645a86d8eeaaacf65256"
+    },
+    {
+      "byteLength": 72978,
+      "relativePath": "src/VirtualController/LadderCompiler.cs",
+      "sha256": "a794c09d0992ad472bbbf55787baa8624caa077c2d1053075fc7152d515e4d0c"
+    },
+    {
+      "byteLength": 2170,
+      "relativePath": "src/VirtualController/LadderEditTransaction.cs",
+      "sha256": "3dbb9266868c7ab316a186c759656efd06ff1b506d109a302f9ca2a3633de22a"
+    },
+    {
+      "byteLength": 16324,
+      "relativePath": "src/VirtualController/LadderEditorCommands.cs",
+      "sha256": "403eda77445874e16c29e2b1f63d876158862d02c4db6276733f2fa88a096213"
+    },
+    {
+      "byteLength": 76303,
+      "relativePath": "src/VirtualController/LadderEditorDocument.cs",
+      "sha256": "755d63810848672c6a7058a109c7ddee14d860696388871827b2cfbe3026661c"
+    },
+    {
+      "byteLength": 9488,
+      "relativePath": "src/VirtualController/LadderEditorHistory.cs",
+      "sha256": "b3d25e1c86f2587678d29a469e83b752269bca2caa45aa2fa057662a0854c4ff"
+    },
+    {
+      "byteLength": 38406,
+      "relativePath": "src/VirtualController/LadderEditorProjectJson.cs",
+      "sha256": "9f0a661dac1798a52c1ca5a77e8b21c0671fd6feb16890d0dbbfcd189c04b344"
+    },
+    {
+      "byteLength": 3222,
+      "relativePath": "src/VirtualController/LadderInstanceStorage.cs",
+      "sha256": "f9942e6efd33a4b6fbe745564f8ad0a2b049f46a44103147ad615d659b5f6de8"
+    },
+    {
+      "byteLength": 23429,
+      "relativePath": "src/VirtualController/LadderInstructionCatalog.cs",
+      "sha256": "6af5ed4aab81c356bec488b8959ba7b259db30f33fe210de1e8974dcc2d3acf4"
+    },
+    {
+      "byteLength": 3627,
+      "relativePath": "src/VirtualController/LadderOperandSymbols.cs",
+      "sha256": "be5f6bfd617a5a9409a424a12b83f948edf68693df6dcc292913daa113da64ff"
+    },
+    {
+      "byteLength": 26776,
+      "relativePath": "src/VirtualController/LadderProgram.cs",
+      "sha256": "ea7407780c909b7fe881f9a2ad36f0a21881315a4c5fb396478f8acd6bc60f18"
+    },
+    {
+      "byteLength": 3967,
+      "relativePath": "src/VirtualController/LadderProgramJson.Calls.cs",
+      "sha256": "1794400c38d473d2c28cd0d91e483093d150569a40be73e674550ab8854ca5e7"
+    },
+    {
+      "byteLength": 37129,
+      "relativePath": "src/VirtualController/LadderProgramJson.cs",
+      "sha256": "499163e6290efa57198a8b418cfc0ac42f5abd9f44013e22576f01838b2702af"
+    },
+    {
+      "byteLength": 2664,
+      "relativePath": "src/VirtualController/LadderProjectFileStore.cs",
+      "sha256": "4144661e8e9d529b537243b371fd68473f125a439ccdb489a5cb2d314a94f0a9"
+    },
+    {
+      "byteLength": 14626,
+      "relativePath": "src/VirtualController/LadderProjectIndex.cs",
+      "sha256": "3a2bd4832ee83da60b4226c3019326304d5d39c573749cf1ef97cc06eee2f760"
+    },
+    {
+      "byteLength": 1196,
+      "relativePath": "src/VirtualController/LadderStorageNamespace.cs",
+      "sha256": "51738ebe1d8c2fcffe02b3548e7b5c7c6a222c41a58d8c60c08756ff0d1703b4"
+    },
+    {
+      "byteLength": 3609,
+      "relativePath": "src/VirtualController/LadderTimeLiteral.cs",
+      "sha256": "42d9bfad910c983f4023f1ca5d78721022826cd71951e69a1cbf813781ca07b0"
+    },
+    {
+      "byteLength": 7573,
+      "relativePath": "src/VirtualController/LadderTreeEditorCommands.cs",
+      "sha256": "c3b0482d61c1dd27030b51d9fd780222508eb6b919eade694e8624faf5eda751"
+    },
+    {
+      "byteLength": 8292,
+      "relativePath": "src/VirtualController/PlcAggregateSchema.cs",
+      "sha256": "65dea76733d4aaa86fd817f5e0abffc587df7c48f50e05e651710b6d9ee99012"
+    },
+    {
+      "byteLength": 4295,
+      "relativePath": "src/VirtualController/PlcTextValues.cs",
+      "sha256": "ae37e10cc8a377cdc540548a5e2d04dc218a23ff4977d55014f8e645beab956d"
+    },
+    {
+      "byteLength": 1563,
+      "relativePath": "src/VirtualController/ProgramBlockDragPayload.cs",
+      "sha256": "91103ea8da8023ecfa257441494ef5afd25ffd7b1a361f4d050ef440c3cca053"
+    },
+    {
+      "byteLength": 7118,
+      "relativePath": "src/VirtualController/SceneAggregateContract.cs",
+      "sha256": "6f50c1caa16ee16dc1d6f46726bb2782d5242b91c90c56cf46d33c146ff4281c"
+    },
+    {
+      "byteLength": 7505,
+      "relativePath": "src/VirtualController/SceneIoBindingValidator.cs",
+      "sha256": "be3cc9ef07bbdcc3396a8f7c61d96fa4693aa74a37c7d1d53c91783a663570cc"
+    },
+    {
+      "byteLength": 5600,
+      "relativePath": "src/VirtualController/SceneIoImageMapper.cs",
+      "sha256": "6f2be2d0e3a37f099060b3aefb64949ce3690b65628c5b2299ad66d436153d4e"
+    },
+    {
+      "byteLength": 3000,
+      "relativePath": "src/VirtualController/SceneLadderProject.cs",
+      "sha256": "a67c03a238a4296235bbc4dc78444b46fd184379302f7bebb3dbdeddd24e0eda"
+    },
+    {
+      "byteLength": 679,
+      "relativePath": "src/VirtualController/TiaProgramControlLabel.cs",
+      "sha256": "c861c7fc0ba9c398802b0cb3ec8cacbd5cca01aae25872f3ef6ae28764bf329e"
+    },
+    {
+      "byteLength": 2180,
+      "relativePath": "src/VirtualController/VirtualControllerAcceptedScan.cs",
+      "sha256": "8365fe90e17cf992e449c685bf231a076c30b8b327fd78a469ece0bf176544ec"
+    },
+    {
+      "byteLength": 19136,
+      "relativePath": "src/VirtualController/VirtualControllerRuntime.Observations.cs",
+      "sha256": "bcd0fdbb646d689901c66b32ac518b1191508c79de5529270578ca281893580d"
+    },
+    {
+      "byteLength": 78251,
+      "relativePath": "src/VirtualController/VirtualControllerRuntime.cs",
+      "sha256": "6cfbe5723e2be3de2b7a0ef430de5b4258982c76c4ec7caf18f7db297bb3c2d5"
+    },
+    {
+      "byteLength": 1480,
+      "relativePath": "src/VirtualController/VirtualControllerScanCompleted.cs",
+      "sha256": "c5d64e4b7f553bb660a3f2e2f9424cc322307a14d0f9fcf56092ca5083cc2f17"
+    },
+    {
+      "byteLength": 22146,
+      "relativePath": "src/VirtualController/VirtualControllerSession.cs",
+      "sha256": "67a7cfe05d021f4e3b3b054ec7086933d88f07847136ebaa6806e41d28f86d97"
+    }
+  ],
+  "evaluatorInputs": [
+    {
+      "byteLength": 6744,
+      "relativePath": "src/Challenges/ChallengeEvaluator.cs",
+      "sha256": "0398ed08d142076000abea16686dede7f5c9eefee1cd4b32481737a6e66d9982"
+    },
+    {
+      "byteLength": 12440,
+      "relativePath": "src/Challenges/ChallengeTestRunner.cs",
+      "sha256": "d06b4f85d47e0f1f32a8a3699e2f32a4a37c73defde3df3405fbf020d6a94c76"
+    },
+    {
+      "byteLength": 1348,
+      "relativePath": "src/Challenges/ConveyorChallengeProtocol.cs",
+      "sha256": "b2d76c5c28b20f2ebead6735a7c0ef12f40a53c4491620633d30d67e2971d5f9"
+    }
+  ]
+}

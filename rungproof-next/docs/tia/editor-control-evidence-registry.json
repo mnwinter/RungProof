@@ -1,0 +1,813 @@
+{
+  "schemaVersion": 1,
+  "resultKind": "tia-editor-control-evidence-registry",
+  "target": {
+    "vendor": "Siemens",
+    "product": "TIA Portal STEP 7",
+    "preferredDocumentationVersion": "V21",
+    "scope": "RungProof non-catalog LAD editor controls and project-tree object commands",
+    "claimBoundary": "This registry records implementation locations, required checks, and evidence gaps. It does not promote broad command logs to per-gate passes, prove an installed-TIA match, prove project import/export compatibility, or establish live-PLC behavior."
+  },
+  "statusDefinitions": {
+    "localStatus": {
+      "not-assessed": "No exact structured artifact records this stable gate ID and all required assertions.",
+      "automated-pass": "An exact structured artifact records this gate ID, every required assertion, and a passing result.",
+      "automated-fail": "An exact structured artifact records this gate ID and at least one failed required assertion."
+    },
+    "vendorStatus": {
+      "not-assessed": "No exact official source or matched installed-TIA evidence is bound to this gate.",
+      "source-only": "An official Siemens source describes the behavior, but no same-state installed-TIA comparison is bound.",
+      "matched": "A same-state installed-TIA comparison is bound with immutable identity and review metadata."
+    },
+    "implementationStatus": {
+      "present": "The bounded behavior is implemented in the current source tree.",
+      "bounded-subset": "A deliberately narrower behavior is implemented and the excluded behavior is explicit."
+    }
+  },
+  "evidencePolicy": {
+    "qualifyingLocalEvidence": "A JSON result emitted by the production command path with one result object per gate. Each object must contain the exact gateId, status, required assertion outcomes, command identity, source/build identity, timestamps, and the fixed externalTia=false and livePlc=false boundaries.",
+    "nonQualifyingEvidence": [
+      "A broad process exit code or PASS line without a per-gate JSON result.",
+      "A runner command whose gateIds array is empty.",
+      "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
+      "Source presence, documentation prose, or an unreviewed screenshot by itself."
+    ],
+    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (81 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+  },
+  "structuredSweepContracts": [
+    {
+      "commandId": "tia-editor-control-gate-sweep",
+      "implemented": true,
+      "expectedSwitch": "--verify-tia-editor-control-gates",
+      "expectedArtifact": ".tools/tia-editor-control-gates.json",
+      "gateIds": [
+        "tia.editor.contact-shortcuts",
+        "tia.editor.operand-shortcuts",
+        "tia.editor.transaction-resolution",
+        "tia.editor.command-integrity",
+        "tia.editor.view-controls",
+        "tia.editor.block-view-state",
+        "tia.editor.empty-placeholder"
+      ],
+      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these seven gateIds.",
+      "resultExpectation": "The artifact must contain exactly seven unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
+      "latestArtifactId": "artifact.tia-editor-control-gate-sweep.v1"
+    },
+    {
+      "commandId": "tia-project-tree-gate-sweep",
+      "implemented": true,
+      "expectedSwitch": "--verify-tia-project-tree-gates",
+      "expectedArtifact": ".tools/tia-project-tree-gates.json",
+      "gateIds": [
+        "tia.project-tree.activation-semantics",
+        "tia.project-tree.show-all-tags",
+        "tia.project-tree.create-block",
+        "tia.project-tree.create-tag-table",
+        "tia.project-tree.create-watch-table",
+        "tia.project-tree.global-db-contract",
+        "tia.project-tree.instance-db-contract",
+        "tia.project-tree.call-drag-drop",
+        "tia.project-tree.watch-table-delete"
+      ],
+      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these nine gateIds.",
+      "resultExpectation": "The artifact must contain exactly nine unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
+      "latestArtifactId": "artifact.tia-project-tree-gate-sweep.v1"
+    }
+  ],
+  "gateResultRequiredFields": [
+    "gateId",
+    "status",
+    "assertions",
+    "commandId",
+    "sourceRevision",
+    "assemblySha256",
+    "startedUtc",
+    "completedUtc",
+    "externalTia",
+    "livePlc"
+  ],
+  "gates": [
+    {
+      "sequence": 1,
+      "id": "tia.editor.contact-shortcuts",
+      "group": "editor",
+      "key": "contact-shortcuts",
+      "title": "Focused LAD F9/F10 contact shortcuts",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "source-only",
+      "behavior": "With the visible LAD canvas focused, unmodified F9 inserts a normally open contact and unmodified F10 inserts a normally closed contact at the selected insertion point. Unfocused, hidden, and modifier-bearing input must not masquerade as these shortcuts; Undo must restore the prior document.",
+      "implementationPaths": [
+        "src/App/LadderEditorCanvas.cs",
+        "src/App/SimulatorShell.cs"
+      ],
+      "testPaths": [
+        "tests/EditorCommandTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/program-editor/using-the-keyboard-in-the-program-editor"
+      ],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "visible focused LAD accepts unmodified F9 as NO insertion",
+        "visible focused LAD accepts unmodified F10 as NC insertion",
+        "unfocused and hidden LAD reject the shortcuts",
+        "modifier-bearing F9/F10 retain their separate meanings",
+        "each insertion is one undoable edit and Undo restores the exact baseline"
+      ],
+      "limitations": [
+        "The exact local gate artifact is automated and offline; it is not a same-state installed-TIA keyboard comparison.",
+        "No same-state installed-TIA keyboard comparison is bound."
+      ]
+    },
+    {
+      "sequence": 2,
+      "id": "tia.editor.operand-shortcuts",
+      "group": "editor",
+      "key": "operand-shortcuts",
+      "title": "Operand-entry and edit shortcuts",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "source-only",
+      "behavior": "Return or typing opens the first operand, F2 edits the selected operand, Enter applies, Escape discards, Ctrl+I opens suggestions, and Ctrl+Shift+I exposes RungProof's create-and-assign action. Pointer routing must resolve the exact rendered pin or property form.",
+      "implementationPaths": [
+        "src/App/LadderEditorCanvas.cs",
+        "src/App/LadderOperandEditor.cs",
+        "src/App/SimulatorShell.EditorTransactionReview.cs"
+      ],
+      "testPaths": [
+        "tests/EditorTransactionTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/program-editor/using-the-keyboard-in-the-program-editor"
+      ],
+      "nonQualifyingBroadCommandIds": [
+        "editor-transactions",
+        "operand-placement"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "Return opens an empty first-operand editor",
+        "typing opens the first-operand editor with the typed character",
+        "F2 opens the selected operand",
+        "Enter applies exactly once and Escape leaves document and history unchanged",
+        "Ctrl+I opens suggestions and Ctrl+Shift+I exposes create-and-assign",
+        "viewport pointer routing selects the exact pin or instruction property form"
+      ],
+      "limitations": [
+        "RungProof create-and-assign is not claimed to be TIA's exact define-tag dialog.",
+        "The current broad transaction and placement logs are not per-gate structured evidence."
+      ]
+    },
+    {
+      "sequence": 3,
+      "id": "tia.editor.transaction-resolution",
+      "group": "editor",
+      "key": "transaction-resolution",
+      "title": "Pending editor transaction resolution",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Navigation, document changes, and project actions must not silently lose staged editor state. Apply continues only after a successful commit; discard continues without mutation; cancel preserves the current document, history, selection, and destination.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.EditorTransactions.cs",
+        "src/App/SimulatorShell.EditorTransactionReview.cs"
+      ],
+      "testPaths": [
+        "tests/EditorTransactionTests.cs"
+      ],
+      "documentationPaths": [
+        "README.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "editor-transactions"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "failed Apply does not run the queued continuation",
+        "successful Apply commits one edit then runs the continuation once",
+        "Discard runs the continuation without applying the draft",
+        "Cancel runs no continuation and preserves document and history",
+        "multiple pending forms resolve deterministically without partial commit"
+      ],
+      "limitations": [
+        "This is a RungProof integrity gate, not an assertion that TIA uses the same dialog or transaction architecture."
+      ]
+    },
+    {
+      "sequence": 4,
+      "id": "tia.editor.command-integrity",
+      "group": "editor",
+      "key": "command-integrity",
+      "title": "Editor command target and history integrity",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Context, toolbar, menu, and keyboard commands must act on the exact current target, reject stale popup targets, preserve unrelated network conditions, and produce one bounded Undo/Redo transaction.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.EditorCommandReview.cs",
+        "src/App/SimulatorShell.EditorTransactionReview.cs"
+      ],
+      "testPaths": [
+        "tests/EditorCommandTests.cs",
+        "tests/EditorTransactionTests.cs"
+      ],
+      "documentationPaths": [
+        "README.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor",
+        "editor-transactions"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "context commands preserve the selected slot or element identity",
+        "stale popup targets are rejected without document mutation",
+        "output copy, paste, and delete preserve unrelated conditions",
+        "toolbar, context, and keyboard routes converge on the same bounded mutation",
+        "Undo and Redo restore exact serialized states"
+      ],
+      "limitations": [
+        "The structured gate artifact binds the command routes and exact serialized Undo/Redo assertions, but it does not establish vendor UI equivalence."
+      ]
+    },
+    {
+      "sequence": 5,
+      "id": "tia.editor.view-controls",
+      "group": "editor",
+      "key": "view-controls",
+      "title": "Operand and tag-information view controls",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "source-only",
+      "behavior": "Symbolic, Absolute, and Both operand representation must remain independent from Hidden, Show, and Hierarchical tag information and from On operands versus Below network positioning. Hidden must remove supplementary information without removing the operand or changing literals and missing-value markers.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.EditorCommandReview.cs",
+        "src/App/LadderEditorCanvas.cs"
+      ],
+      "testPaths": [
+        "tests/EditorCommandTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/inserting-operands-into-lad-instructions/displaying-or-hiding-tag-information"
+      ],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "all 18 representation by information by position combinations execute",
+        "numeric literals and ??? remain operands in every combination",
+        "Hidden yields no supplementary on-operand or below-network information",
+        "Show and Hierarchical place information at exactly one selected location",
+        "structured leaf and parent comments follow the bounded hierarchy rule"
+      ],
+      "limitations": [
+        "The local model covers one bounded structured-comment hierarchy and does not prove all TIA operand classes.",
+        "The exact local gate artifact binds the 18-case result; the remaining boundary is an installed-TIA comparison across the same combinations."
+      ]
+    },
+    {
+      "sequence": 6,
+      "id": "tia.editor.block-view-state",
+      "group": "editor",
+      "key": "block-view-state",
+      "title": "Per-block selection, scroll, and zoom state",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Each program block retains its own stable selection target, scroll offsets, and zoom across navigation. Pending edits block navigation, and a deleted saved target falls back safely to the network header rather than restoring a stale selection.",
+      "implementationPaths": [
+        "src/App/LadderEditorZoom.cs",
+        "src/App/SimulatorShell.EditorViewReview.cs",
+        "src/VirtualController/EditableLadderLayout.cs"
+      ],
+      "testPaths": [
+        "tests/RecursiveEditorTests.cs"
+      ],
+      "documentationPaths": [
+        "README.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "editor-view-state"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "block A restores its exact stable target, scroll, and zoom",
+        "block B restores its exact stable target, scroll, and zoom",
+        "pending Apply failure or Cancel prevents navigation and state storage",
+        "a deleted saved target falls back to the header and zero scroll",
+        "the restored scrolled viewport still renders instructions"
+      ],
+      "limitations": [
+        "The current verifier is scripted and explicitly reports physicalInput=false.",
+        "No installed-TIA view-state comparison is bound."
+      ]
+    },
+    {
+      "sequence": 7,
+      "id": "tia.editor.empty-placeholder",
+      "group": "editor",
+      "key": "empty-placeholder",
+      "title": "Empty LAD instruction placeholder and chooser",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "The unresolved ??? box is an editor-only placeholder with continuous input lead and a chooser limited to the supported terminal-box operations. Every choice must replace the placeholder with the exact operation and survive JSON save/reload; the unresolved placeholder is never executable.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.CallAuthoring.cs",
+        "src/App/LadderEditorCanvas.cs",
+        "src/VirtualController/LadderEditorDocument.cs"
+      ],
+      "testPaths": [
+        "tests/EditorCommandTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "tia-empty-box"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-editor-control-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "the unresolved placeholder opens its chooser through the production route",
+        "the chooser contains exactly the declared supported choices",
+        "each choice creates the exact expected terminal operation",
+        "replacement clears the placeholder and persists through save/reload",
+        "the unresolved placeholder cannot compile or execute as an instruction"
+      ],
+      "limitations": [
+        "The chooser is intentionally limited to RungProof-supported boxes and is not a Siemens catalog-completeness claim.",
+        "The existing verifier returns one broad boolean and emits no exact gate artifact."
+      ]
+    },
+    {
+      "sequence": 8,
+      "id": "tia.project-tree.activation-semantics",
+      "group": "project-tree",
+      "key": "activation-semantics",
+      "title": "Project-tree selection versus activation",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Single-click selects without opening. Double-click or focused Enter activates supported program-block, tag-table, watch-table, Global DB, generated instance DB, and creation-command rows through the production ItemActivated route.",
+      "implementationPaths": [
+        "src/App/LadderProgramTree.cs",
+        "src/App/SimulatorShell.ProjectTreePointerReview.cs",
+        "src/App/SimulatorShell.EditorCommandReview.cs",
+        "src/App/SimulatorShell.cs"
+      ],
+      "testPaths": [],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "project-tree-pointer",
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "single-click selects every supported row without opening it",
+        "double-click activates every supported object and command row",
+        "focused Enter activates the selected supported row",
+        "activation opens the exact matching document or dialog",
+        "returning from an instance DB restores the correct active block title"
+      ],
+      "limitations": [
+        "Current pointer output aggregates all object and command routes into one broad result string."
+      ]
+    },
+    {
+      "sequence": 9,
+      "id": "tia.project-tree.show-all-tags",
+      "group": "project-tree",
+      "key": "show-all-tags",
+      "title": "Show all tags navigation row",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "The Show all tags row is a navigation object: selection does not open it, activation opens the central tag document without filtering to one named table, and navigation alone does not dirty project content.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.EditorCommandReview.cs"
+      ],
+      "testPaths": [
+        "tests/EditorMigrationTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "the Show all tags row is present with stable metadata",
+        "selection alone leaves the current document open",
+        "activation opens the unfiltered tag document with the matching title",
+        "all tag tables are represented without changing active project content",
+        "navigation does not change the serialized content baseline"
+      ],
+      "limitations": [
+        "The dedicated structured project-tree artifact isolates this row locally; no installed-TIA navigation comparison is bound."
+      ]
+    },
+    {
+      "sequence": 10,
+      "id": "tia.project-tree.create-block",
+      "group": "project-tree",
+      "key": "create-block",
+      "title": "Add new block command",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Activation opens the create-block dialog. The bounded choices are OB, FB, FC, and supported Global DB; blank or duplicate names are rejected atomically, valid creation persists, the tree row appears, and Undo/Redo restores exact states.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.ProjectTreePointerReview.cs",
+        "src/App/SimulatorShell.EditorCommandReview.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "project-tree-pointer",
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "selection does not open the dialog and activation does",
+        "OB, FB, FC, and Global DB choices are explicit",
+        "blank and duplicate names are rejected without history mutation",
+        "valid creation persists and creates the exact tree row",
+        "Undo, Redo, and cleanup reproduce exact serialized states"
+      ],
+      "limitations": [
+        "ARRAY DB, type-based DB, manual instance DB, software-unit release, and add-and-open variants are unsupported."
+      ]
+    },
+    {
+      "sequence": 11,
+      "id": "tia.project-tree.create-tag-table",
+      "group": "project-tree",
+      "key": "create-tag-table",
+      "title": "Add new tag table command",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Activation opens the named tag-table dialog. Blank and duplicate names are rejected atomically; valid creation persists, creates the exact tree row, and participates in Undo/Redo.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.ProjectTreePointerReview.cs",
+        "src/VirtualController/LadderEditorDocument.cs"
+      ],
+      "testPaths": [
+        "tests/EditorMigrationTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "project-tree-pointer",
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "selection does not open the dialog and activation does",
+        "blank and duplicate names are rejected without history mutation",
+        "valid creation persists with stable name and exact tree row",
+        "Undo removes and Redo restores the exact table",
+        "active-table navigation does not itself dirty project content"
+      ],
+      "limitations": [
+        "Tag-table rename and tag-table delete are not implemented and are listed as unsupported below."
+      ]
+    },
+    {
+      "sequence": 12,
+      "id": "tia.project-tree.create-watch-table",
+      "group": "project-tree",
+      "key": "create-watch-table",
+      "title": "Add new watch table command",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Activation opens the named watch-table dialog. Blank and case-insensitive duplicate names are rejected atomically; valid creation persists independently, creates the exact tree row, and participates in Undo/Redo.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.ProjectTreePointerReview.cs",
+        "src/VirtualController/LadderEditorDocument.cs",
+        "src/VirtualController/LadderEditorProjectJson.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "project-tree-pointer",
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "selection does not open the dialog and activation does",
+        "blank and case-insensitive duplicate names are rejected without history mutation",
+        "valid creation persists with independent symbols and exact tree row",
+        "Undo removes and Redo restores the exact table",
+        "selecting another table is navigation rather than a content edit"
+      ],
+      "limitations": [
+        "Watch-table rename is not implemented and is listed as unsupported below."
+      ]
+    },
+    {
+      "sequence": 13,
+      "id": "tia.project-tree.global-db-contract",
+      "group": "project-tree",
+      "key": "global-db-contract",
+      "title": "Supported Global DB object contract",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "A supported optimized-access Global DB appears under Program blocks and activates a declaration document with scalar Name, Data type, Start value, Retain, and Comment fields. It has no LAD networks and cannot be a CALL, task, or program-entry target.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.EditorCommandReview.cs",
+        "src/VirtualController/LadderEditorDocument.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor",
+        "project-tree-pointer"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "the Global DB row appears under Program blocks",
+        "activation opens declarations and not a LAD canvas",
+        "Name, Data type, Start value, Retain, and Comment persist",
+        "LAD network insertion is rejected",
+        "CALL, task, and program-entry target selection excludes the DB"
+      ],
+      "limitations": [
+        "Only the documented scalar optimized-access subset is supported.",
+        "Standard-access DB-wide retention, other columns, access modes, compound DB types, and runtime DB-member addressing are not implemented."
+      ]
+    },
+    {
+      "sequence": 14,
+      "id": "tia.project-tree.instance-db-contract",
+      "group": "project-tree",
+      "key": "instance-db-contract",
+      "title": "Generated instance DB object contract",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Generated FB, timer, and counter instance DB identities appear under Program blocks, activate a read-only definition document, preserve unique DB number/name identity, and return cleanly to the owning block without a stale title.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.ProjectTreePointerReview.cs",
+        "src/VirtualController/LadderEditorDocument.cs"
+      ],
+      "testPaths": [
+        "tests/CallEditorTests.cs",
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "project-tree-pointer",
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "the generated instance DB row appears under Program blocks",
+        "selection does not open and activation opens the exact definition",
+        "DB number and symbolic name are unique and persist",
+        "the definition is not editable as a Global DB or LAD block",
+        "returning to the owner restores the correct block title and canvas"
+      ],
+      "limitations": [
+        "Manual instance DB creation, multi-instance storage, and parameter-instance storage are unsupported."
+      ]
+    },
+    {
+      "sequence": 15,
+      "id": "tia.project-tree.call-drag-drop",
+      "group": "project-tree",
+      "key": "call-drag-drop",
+      "title": "Program-block drag to LAD CALL target",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "source-only",
+      "behavior": "Dragging a supported FC or FB row to a visible terminal target resolves the production tree payload, validates the canvas drop, and opens CALL authoring. Cancel must be exact and history-free; Apply must create the exact target call as one undoable edit with exact Undo/Redo.",
+      "implementationPaths": [
+        "src/App/LadderProgramTree.cs",
+        "src/App/SimulatorShell.ProjectTreePointerReview.cs",
+        "src/App/SimulatorShell.CallAuthoring.cs"
+      ],
+      "testPaths": [
+        "tests/CallEditorTests.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/inserting-lad-elements/insert-block-calls-in-lad/inserting-block-calls-using-a-drag-and-drop-operation?contentId=DLDMKzyVsYR4GEuDUwdqBw"
+      ],
+      "nonQualifyingBroadCommandIds": [
+        "project-tree-pointer",
+        "call-authoring"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "only supported program-block rows produce a CALL drag payload",
+        "the visible terminal accepts the exact payload and rejects invalid targets",
+        "drop opens CALL authoring for the exact source block",
+        "Cancel preserves exact serialized state and creates no Undo entry",
+        "Apply, Undo, and Redo reproduce exact serialized states"
+      ],
+      "limitations": [
+        "The current Windows verifier calls the production payload and canvas drop methods at measured visible coordinates because headless native drag-threshold synthesis is unreliable.",
+        "Multi-instance and parameter-instance FB calls remain unsupported."
+      ]
+    },
+    {
+      "sequence": 16,
+      "id": "tia.project-tree.watch-table-delete",
+      "group": "project-tree",
+      "key": "watch-table-delete",
+      "title": "Active-workspace watch-table deletion",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Deletion is supported only for the active watch table through the watch-table workspace button. It removes exactly that table as one project metadata edit, supports Undo/Redo, selects a surviving table, and refuses to delete the final table.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/VirtualController/LadderEditorDocument.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "README.md",
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "the workspace delete button targets only the active watch table",
+        "deletion removes exactly one table and preserves all survivors",
+        "Undo and Redo restore exact serialized states and active selection",
+        "the delete control is disabled or rejected when one table remains",
+        "no project-tree row context-delete route is exposed"
+      ],
+      "limitations": [
+        "This gate does not claim project-tree row deletion; that route is explicitly unsupported.",
+        "Watch-table rename is unsupported."
+      ]
+    }
+  ],
+  "unsupportedDocumented": [
+    {
+      "id": "tia.unsupported.tag-table-rename",
+      "object": "tag table",
+      "operation": "rename",
+      "status": "documented-unsupported",
+      "boundary": "Named tag tables can be created, selected, opened, and persisted, but no rename command or model operation exists.",
+      "sourcePaths": [
+        "src/VirtualController/LadderEditorDocument.cs",
+        "src/App/SimulatorShell.cs"
+      ]
+    },
+    {
+      "id": "tia.unsupported.tag-table-delete",
+      "object": "tag table",
+      "operation": "delete",
+      "status": "documented-unsupported",
+      "boundary": "Tag tables are not deletable. This avoids silently orphaning or reassigning contained tag declarations until an explicit migration contract exists.",
+      "sourcePaths": [
+        "src/VirtualController/LadderEditorDocument.cs",
+        "src/App/SimulatorShell.cs"
+      ]
+    },
+    {
+      "id": "tia.unsupported.watch-table-rename",
+      "object": "watch table",
+      "operation": "rename",
+      "status": "documented-unsupported",
+      "boundary": "Named watch tables can be created, selected, opened, persisted, and deleted through the active workspace, but no rename command or model operation exists.",
+      "sourcePaths": [
+        "src/VirtualController/LadderEditorDocument.cs",
+        "src/App/SimulatorShell.cs"
+      ]
+    },
+    {
+      "id": "tia.unsupported.project-tree-watch-table-delete",
+      "object": "watch table project-tree row",
+      "operation": "delete",
+      "status": "documented-unsupported",
+      "boundary": "The project-tree row exposes selection and activation only. Watch-table deletion is available only from the active watch-table workspace, and the final remaining table is protected.",
+      "supportedAlternativeGateId": "tia.project-tree.watch-table-delete",
+      "sourcePaths": [
+        "src/App/SimulatorShell.cs",
+        "src/VirtualController/LadderEditorDocument.cs"
+      ]
+    }
+  ],
+  "evidenceArtifacts": [
+    {
+      "id": "artifact.tia-editor-control-gate-sweep.v1",
+      "commandId": "tia-editor-control-gate-sweep",
+      "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-editor-control-gates.json",
+      "kind": "json",
+      "durability": "ephemeral-local",
+      "sha256": "EABC0304A72CE28ABDD266149C8CFA95211B8BF477818EC6E154CF59AAF2A243",
+      "status": "passed",
+      "gateCount": 7,
+      "assertionCount": 36,
+      "externalTia": false,
+      "livePlc": false
+    },
+    {
+      "id": "artifact.tia-project-tree-gate-sweep.v1",
+      "commandId": "tia-project-tree-gate-sweep",
+      "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-project-tree-gates.json",
+      "kind": "json",
+      "durability": "ephemeral-local",
+      "sha256": "2F9AA28EA11C3EEAFF165F0F2048B08D30C5B96E611209E57FE2263BC7FBFECF",
+      "status": "passed",
+      "gateCount": 9,
+      "assertionCount": 45,
+      "externalTia": false,
+      "livePlc": false
+    }
+  ]
+}

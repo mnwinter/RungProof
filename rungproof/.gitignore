@@ -1,9 +1,0 @@
-build/
-backups/
-.claude/
-node_modules/
-prototype/saved-scenes/
-*.pyc
-__pycache__/
-player-server*.log
-.superdesign

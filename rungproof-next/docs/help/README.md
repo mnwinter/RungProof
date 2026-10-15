@@ -1,0 +1,381 @@
+# RungProof Next help index
+
+Generated from the current catalogs and migrated scene contracts. Do not edit generated documents by hand.
+
+## Assets
+
+- [Motorized Industrial Roller Shutter](assets/access-control.door.roller-shutter.v1.md) — production
+- [Pneumatic Product Pusher - 1350 mm Stroke](assets/actuation.pneumatic-pusher.1350mm.v1.md) — production
+- [Industrial Axial Exhaust Fan](assets/air-handling.fan.axial-1900.v1.md) — production
+- [Floorstanding Electrical Enclosure](assets/controls.enclosure.floorstanding.v1.md) — production
+- [Industrial Junction Box](assets/controls.enclosure.junction-box.v1.md) — production
+- [Pedestal Pushbutton and E-Stop Station](assets/controls.operator-station.pushbutton-estop.v1.md) — production
+- [Single Pushbutton Pedestal Station](assets/controls.operator-station.single-pushbutton.v1.md) — production
+- [Three-Tier Stack Light with Buzzer](assets/controls.stack-light.3-tier.v1.md) — production
+- [AC Induction Motor](assets/drives.motor.ac-induction.v1.md) — production
+- [Fixed Caged Ladder - 4 m](assets/facility.access.caged-ladder-4m.v1.md) — production
+- [Industrial Stair Flight - 2 m Rise](assets/facility.access.stair-flight-2m.v1.md) — production
+- [Industrial Concrete Floor Slab - 6 m x 6 m](assets/facility.floor.concrete-6x6.v1.md) — production
+- [Mobile Tool Cabinet](assets/facility.storage.mobile-tool-cabinet.v1.md) — production
+- [Industrial Workbench - 2400 mm](assets/facility.workbench.2400mm.v1.md) — production
+- [Analog Pressure Gauge](assets/instrumentation.pressure.analog-gauge.v1.md) — production
+- [Banded Steel Coil on Saddles](assets/loads.coil.steel-banded.v1.md) — production
+- [Steel Shipping Drum - 55 gal](assets/loads.drum.steel-55gal.v1.md) — production
+- [Intermediate Bulk Container - 1000 L](assets/loads.ibc.1000l.v1.md) — production
+- [GMA Wood Pallet - 48 x 40 in](assets/loads.pallet.gma-48x40.v1.md) — production
+- [Banded Sheet-Metal Stack](assets/loads.sheet-stack.banded.v1.md) — production
+- [Reusable Plastic Tote](assets/loads.tote.reusable-plastic.v1.md) — production
+- [Industrial Pedestal Drill Press](assets/machining.drill-press.pedestal.v1.md) — production
+- [Belt Conveyor - 600 mm x 6 m](assets/material-handling.belt-conveyor.600x6000.v1.md) — production
+- [Hydraulic Scissor Lift Table](assets/material-handling.lift.scissor-table.v1.md) — production
+- [Powered Pallet Roller Conveyor - 1000 mm x 4 m](assets/material-handling.pallet-roller-conveyor.1000x4000.v1.md) — production
+- [Powered Indexing Rotary Table](assets/material-handling.table.powered-rotary.v1.md) — production
+- [Flanged Process Pipe Spool](assets/process.pipe.flanged-spool.v1.md) — production
+- [Centrifugal Pump and Motor Skid](assets/process.pump.centrifugal-skid.v1.md) — production
+- [Multi-Pipe Support Rack](assets/process.support.multi-pipe-rack.v1.md) — production
+- [Vertical Process Tank - 3 m x 5 m](assets/process.tank.vertical-3000x5000.v1.md) — production
+- [Actuated Ball Valve](assets/process.valve.actuated-ball.v1.md) — production
+- [Six-Axis Industrial Robot](assets/robotics.robot.six-axis-medium.v1.md) — production
+- [Safety Bollard - 120 mm](assets/safety.bollard.120mm.v1.md) — production
+- [Machine-Guarding Enclosure Panel with Observation Window](assets/safety.enclosure.observation-window-panel.v1.md) — production
+- [Machine-Guarding Enclosure Panel with Personnel Door](assets/safety.enclosure.personnel-door-panel.v1.md) — production
+- [Machine Safety Fence Panel - 3 m](assets/safety.fence.mesh-panel-3m.v1.md) — production
+- [Machine Safety Swing Gate - 2 m](assets/safety.gate.mesh-swing-2m.v1.md) — production
+- [Pedestrian Guardrail - 4 m](assets/safety.guardrail.pedestrian-4m.v1.md) — production
+- [Coded Magnetic Safety Switch Pair](assets/safety.interlock.coded-magnetic-pair.v1.md) — production
+- [Tongue-Actuated Safety Interlock Switch](assets/safety.interlock.tongue-switch.v1.md) — production
+- [Safety Light Curtain Pair - 1800 mm](assets/safety.light-curtain.1800mm.v1.md) — production
+- [Industrial Safety Laser Scanner](assets/safety.scanner.floor-area.v1.md) — production
+- [Industrial Laser Distance Sensor](assets/sensing.distance.laser.v1.md) — production
+- [Single-Transducer Ultrasonic Distance Sensor](assets/sensing.distance.ultrasonic-single-transducer.v1.md) — production
+- [Fixed Industrial Barcode Scanner](assets/sensing.identification.fixed-barcode-scanner.v1.md) — production
+- [Industrial RFID Read/Write Head](assets/sensing.identification.rfid-read-write-head.v1.md) — production
+- [4-20 mA Level Transmitter](assets/sensing.level.analog-4-20ma.v1.md) — production
+- [Non-Contact Radar Level Transmitter](assets/sensing.level.radar.v1.md) — production
+- [Tuning-Fork Point Level Switch](assets/sensing.level.tuning-fork.v1.md) — production
+- [Diffuse Photoelectric Sensor](assets/sensing.photoelectric.diffuse.v1.md) — production
+- [Through-Beam Photoelectric Sensor Pair](assets/sensing.photoelectric.through-beam-pair.v1.md) — production
+- [Through-Beam Photoelectric Sensor Pair](assets/sensing.photoelectric.through-beam.v1.md) — production
+- [Incremental Rotary Encoder](assets/sensing.position.incremental-encoder.v1.md) — production
+- [Roller-Lever Limit Switch](assets/sensing.position.roller-lever-limit-switch.v1.md) — production
+- [Smart Industrial Pressure Transmitter](assets/sensing.pressure.smart-transmitter.v1.md) — production
+- [M30 Capacitive Proximity Sensor](assets/sensing.proximity.capacitive-m30.v1.md) — production
+- [M18 Inductive Proximity Sensor](assets/sensing.proximity.inductive-m18.v1.md) — production
+- [Industrial Floor Platform Scale](assets/sensing.scale.floor-platform.v1.md) — production
+- [Structural W-Section Beam - 5 m](assets/structures.beam.w-section-5m.v1.md) — production
+- [Elevated Industrial Catwalk Platform - 4 m](assets/structures.catwalk.platform-4m.v1.md) — production
+- [Structural Steel Support Column - 4 m](assets/structures.column.steel-4m.v1.md) — production
+- [Machine Vise with Rectangular 4140 Stock](assets/tooling.workholding.machine-vise-stock.v1.md) — production
+- [Ladder Cable Tray - 4 m](assets/utilities.cable-tray.ladder-4m.v1.md) — production
+- [Enclosed Machining Center](assets/machining.machine.enclosed-center.v1.md) — candidate
+- [Emergency-Stop Pedestal Station](assets/controls.operator-station.emergency-stop.v1.md) — candidate
+- [Single-Tier Signal Beacon](assets/controls.beacon.single-tier.v1.md) — candidate
+- [Solid Machine-Guarding / Acoustic Barrier Panel](assets/safety.fence.solid-acoustic-panel-4x3.v1.md) — candidate
+- [Industrial RTD Temperature Probe](assets/sensing.temperature.rtd-probe.v1.md) — candidate
+- [Insertion Thermal Flow Sensor on Pipe Spool](assets/sensing.flow.insertion-thermal.v1.md) — candidate
+- [Stud-Mount Industrial Vibration Sensor](assets/sensing.condition.vibration.v1.md) — candidate
+- [Shear-Beam Load Cell](assets/sensing.force.shear-beam-load-cell.v1.md) — candidate
+- [Eight-Port IO-Link Master](assets/controls.remote-io.io-link-master-8port.v1.md) — candidate
+- [Three-Button Start Reset Stop Station](assets/controls.operator-station.three-button.v1.md) — candidate
+- [Guarded Industrial Foot Switch](assets/controls.operator-station.guarded-foot-switch.v1.md) — candidate
+- [Rope-Pull Emergency-Stop Switch](assets/safety.estop.rope-pull-switch.v1.md) — candidate
+- [Pressure-Sensitive Industrial Safety Mat](assets/safety.mat.pressure-sensitive-2x1m.v1.md) — candidate
+- [Five-Tier Stack Light with Sounder](assets/controls.stack-light.five-tier-sounder.v1.md) — candidate
+- [ISO Tie-Rod Pneumatic Cylinder](assets/actuation.pneumatic.cylinder.iso-tie-rod.v1.md) — candidate
+- [Guided Pneumatic Cylinder](assets/actuation.pneumatic.cylinder.guided.v1.md) — candidate
+- [Rodless Pneumatic Cylinder](assets/actuation.pneumatic.cylinder.rodless.v1.md) — candidate
+- [Rack-and-Pinion Pneumatic Rotary Actuator](assets/actuation.pneumatic.rotary.rack-pinion.v1.md) — candidate
+- [Industrial Welded-Body Hydraulic Cylinder](assets/actuation.hydraulic.cylinder.welded-body.v1.md) — candidate
+- [Industrial Parallel Two-Jaw Gripper](assets/robotics.end-effector.parallel-two-jaw.v1.md) — candidate
+- [Four-Cup Vacuum Carton Gripper](assets/robotics.end-effector.vacuum-four-cup.v1.md) — candidate
+- [Industrial AC Servo Motor](assets/drives.motor.ac-servo-flange.v1.md) — candidate
+- [NEMA Frame Stepper Motor](assets/drives.motor.stepper-nema.v1.md) — candidate
+- [Inline Helical Gearmotor](assets/drives.gearmotor.inline-helical.v1.md) — candidate
+- [Right-Angle Worm Gearmotor with Hollow Output](assets/drives.gearmotor.right-angle-worm.v1.md) — candidate
+- [Mounted Pillow-Block Bearing](assets/mechanical.bearing.pillow-block.v1.md) — candidate
+- [Flexible Jaw Coupling with Elastomer Spider](assets/mechanical.coupling.flexible-jaw.v1.md) — candidate
+- [Profile Rail Linear Guide and Carriage](assets/mechanical.linear-guide.profile-rail.v1.md) — candidate
+- [Servo Ball-Screw Linear Actuator](assets/actuation.electric.linear.ball-screw.v1.md) — candidate
+- [Motorized Rack-and-Pinion Linear Actuator](assets/actuation.electric.linear.rack-pinion.v1.md) — candidate
+- [Gravity Roller Conveyor Section](assets/material-handling.conveyor.gravity-roller-800x2400.v1.md) — candidate
+- [Two-Strand Pallet Chain Conveyor](assets/material-handling.conveyor.pallet-chain-2strand.v1.md) — candidate
+- [Steel Slat Conveyor](assets/material-handling.conveyor.steel-slat.v1.md) — candidate
+- [Modular Plastic Belt Conveyor](assets/material-handling.conveyor.modular-plastic-belt.v1.md) — candidate
+- [90-Degree Pop-Up Chain Transfer](assets/material-handling.transfer.popup-chain-90deg.v1.md) — candidate
+- [Vertical Reciprocating Conveyor](assets/material-handling.lift.vertical-reciprocating.v1.md) — candidate
+- [Open-Trough Screw Conveyor](assets/material-handling.conveyor.screw-open-trough.v1.md) — candidate
+- [Continuous Bucket Elevator](assets/material-handling.elevator.bucket-continuous.v1.md) — candidate
+- [Vibratory Bowl Feeder](assets/material-handling.feeder.vibratory-bowl.v1.md) — candidate
+- [Bulk Hopper with Powered Slide Gate](assets/material-handling.hopper.bulk-slide-gate.v1.md) — candidate
+- [Powered Conveyor Swing-Arm Diverter](assets/material-handling.diverter.powered-swing-arm.v1.md) — candidate
+- [Pneumatic Pallet Stop](assets/material-handling.stop.pneumatic-pallet.v1.md) — candidate
+- [Flanged Rising-Stem Gate Valve](assets/process.valve.gate.flanged-handwheel.v1.md) — candidate
+- [Flanged Globe Valve](assets/process.valve.globe.flanged-handwheel.v1.md) — candidate
+- [Wafer Butterfly Valve with Lever](assets/process.valve.butterfly.wafer-lever.v1.md) — candidate
+- [Flanged Swing Check Valve](assets/process.valve.check.swing-flanged.v1.md) — candidate
+- [Handwheel Knife-Gate Valve](assets/process.valve.knife-gate.handwheel.v1.md) — candidate
+- [Pneumatic Globe Control Valve](assets/process.valve.control.globe-diaphragm.v1.md) — candidate
+- [Baseplate End-Suction Centrifugal Pump](assets/process.pump.centrifugal.end-suction-baseplate.v1.md) — candidate
+- [Air-Operated Double-Diaphragm Pump](assets/process.pump.aodd.dual-diaphragm.v1.md) — candidate
+- [External-Gear Hydraulic Power Unit Trainer](assets/training.hydraulics.power-unit.external-gear-cutaway.v1.md) — candidate
+- [Three-Piece Filter-Regulator-Lubricator](assets/pneumatics.air-preparation.frl-three-piece.v1.md) — candidate
+- [Seven-Station Pneumatic Solenoid Valve Manifold](assets/pneumatics.valve-manifold.seven-station.v1.md) — candidate
+- [Horizontal Shell-and-Tube Heat Exchanger](assets/process.heat-exchanger.shell-tube-horizontal.v1.md) — candidate
+- [Tangential-Inlet Cyclone Separator](assets/process.separator.cyclone-tangential.v1.md) — candidate
+- [Pulse-Jet Dust Collector](assets/process.filter.dust-collector.pulse-jet.v1.md) — candidate
+- [Withdrawable MCC Motor-Feeder Bucket](assets/electrical.mcc.bucket.withdrawable-motor-feeder.v1.md) — candidate
+- [Wall-Mount Variable Frequency Drive](assets/drives.vfd.wall-mount-keypad.v1.md) — candidate
+- [Book-Form Servo Drive](assets/drives.servo.book-form.v1.md) — candidate
+- [Six-Slot Modular PLC Rack](assets/controls.plc.modular-rack-six-slot.v1.md) — candidate
+- [10-Inch Industrial Touch HMI](assets/controls.hmi.touch-panel-10in.v1.md) — candidate
+- [Open-Core Control Transformer](assets/electrical.transformer.control-open-core.v1.md) — candidate
+- [Enclosed Fused Disconnect Switch](assets/electrical.disconnect.enclosed-fused-rotary.v1.md) — candidate
+- [Three-Pole Molded-Case Circuit Breaker](assets/electrical.breaker.molded-case-three-pole.v1.md) — candidate
+- [14-Way DIN-Rail Terminal Strip](assets/electrical.terminal-strip.din-rail-14way.v1.md) — candidate
+- [DIN-Rail 24 VDC 10 A Power Supply](assets/electrical.power-supply.din-24vdc-10a.v1.md) — candidate
+- [Eight-Port Managed Industrial Ethernet Switch](assets/network.industrial-ethernet.managed-8port.v1.md) — candidate
+- [Dual-Channel DIN-Rail Safety Relay](assets/safety.relay.dual-channel-din.v1.md) — candidate
+- [Three-Pole Contactor and Overload Starter](assets/electrical.starter.contactor-overload-three-pole.v1.md) — candidate
+- [Three-Phase Soft Starter](assets/drives.soft-starter.three-phase.v1.md) — candidate
+- [Enclosed Rotary-Screw Air Compressor](assets/utilities.compressed-air.compressor.rotary-screw-enclosed.v1.md) — candidate
+- [Vertical Compressed-Air Receiver](assets/utilities.compressed-air.receiver.vertical.v1.md) — candidate
+- [Refrigerated Compressed-Air Dryer](assets/utilities.compressed-air.dryer.refrigerated.v1.md) — candidate
+- [Twin-Tower Desiccant Air Dryer](assets/utilities.compressed-air.dryer.desiccant-twin-tower.v1.md) — candidate
+- [Two-Fan Air-Cooled Water Chiller](assets/utilities.cooling.chiller.air-cooled-two-fan.v1.md) — candidate
+- [Package Induced-Draft Cooling Tower](assets/utilities.cooling.tower.induced-draft-package.v1.md) — candidate
+- [Horizontal Firetube Steam Boiler](assets/utilities.steam.boiler.horizontal-firetube.v1.md) — candidate
+- [Oil-Sealed Rotary-Vane Vacuum Pump](assets/utilities.vacuum.pump.oil-sealed-rotary-vane.v1.md) — candidate
+- [Regenerative Side-Channel Blower](assets/utilities.air.blower.regenerative-side-channel.v1.md) — candidate
+- [Production Hydraulic Power Unit](assets/utilities.hydraulic.power-unit.production-skid.v1.md) — candidate
+- [Centralized Grease Lubrication Skid](assets/utilities.lubrication.centralized-grease-skid.v1.md) — candidate
+- [Twin-Tower PSA Nitrogen Generator](assets/utilities.gas-generation.nitrogen-psa-twin-tower.v1.md) — candidate
+- [Gasketed Plate-and-Frame Heat Exchanger](assets/utilities.heat-transfer.plate-frame-gasketed.v1.md) — candidate
+- [Duplex Steam Condensate Return Unit](assets/utilities.steam.condensate-return-duplex.v1.md) — candidate
+- [Hydraulic C-Frame Press](assets/machines.forming.press.hydraulic-c-frame.v1.md) — candidate
+- [Mechanical Gap-Frame Press](assets/machines.forming.press.mechanical-gap-frame.v1.md) — candidate
+- [CNC Hydraulic Press Brake](assets/machines.forming.press-brake.cnc-hydraulic.v1.md) — candidate
+- [Horizontal Pivot Bandsaw](assets/machines.cutting.saw.horizontal-band.v1.md) — candidate
+- [Pivoting Circular Cold Saw](assets/machines.cutting.saw.circular-cold.v1.md) — candidate
+- [Double-Ended Pedestal Grinder](assets/machines.finishing.grinder.double-ended-pedestal.v1.md) — candidate
+- [Manual Engine Lathe](assets/machines.machining.lathe.manual-engine.v1.md) — candidate
+- [Vertical Knee Milling Machine](assets/machines.machining.mill.vertical-knee.v1.md) — candidate
+- [Horizontal Injection Molding Machine](assets/machines.plastics.injection-molder.horizontal.v1.md) — candidate
+- [Tilt-Rotate Welding Positioner](assets/machines.welding.positioner.tilt-rotate.v1.md) — candidate
+- [Pedestal Resistance Spot Welder](assets/machines.welding.resistance.pedestal-spot.v1.md) — candidate
+- [Front-Load Aqueous Parts Washer](assets/machines.cleaning.parts-washer.front-load-aqueous.v1.md) — candidate
+- [Rotary Barrel Mass-Finishing Tumbler](assets/machines.finishing.tumbler.rotary-barrel.v1.md) — candidate
+- [Enclosed Laser Marking Station](assets/machines.marking.laser.enclosed-class1.v1.md) — candidate
+- [Four-Axis SCARA Robot](assets/robotics.robot.scara-four-axis.v1.md) — candidate
+- [Three-Arm Delta Pick Robot](assets/robotics.robot.delta-three-arm.v1.md) — candidate
+- [Six-Axis Collaborative Robot](assets/robotics.robot.collaborative-six-axis.v1.md) — candidate
+- [Cartesian XYZ Gantry Robot](assets/robotics.robot.cartesian-xyz-gantry.v1.md) — candidate
+- [Four-Axis Palletizing Robot](assets/robotics.robot.palletizer-four-axis.v1.md) — candidate
+- [Robot Seventh-Axis Linear Track](assets/robotics.positioner.linear-track-seventh-axis.v1.md) — candidate
+- [Automatic Robot Tool Changer](assets/robotics.tooling.changer.automatic-pneumatic.v1.md) — candidate
+- [Robotic MIG Welding Torch](assets/robotics.end-effector.welding.mig-torch.v1.md) — candidate
+- [Robotic Servo Spot-Weld Gun](assets/robotics.end-effector.welding.servo-spot-gun.v1.md) — candidate
+- [Robotic Automatic Paint Spray Gun](assets/robotics.end-effector.paint.automatic-spray-gun.v1.md) — candidate
+- [Robotic High-Speed Machining Spindle](assets/robotics.end-effector.machining.high-speed-spindle.v1.md) — candidate
+- [Six-Pole Electromagnetic Sheet Gripper](assets/robotics.end-effector.magnetic.sheet-gripper-six-pole.v1.md) — candidate
+- [Adjustable Robotic Pallet-Fork End Effector](assets/robotics.end-effector.fork.adjustable-pallet.v1.md) — candidate
+- [Industrial Stereo 3D Vision Camera](assets/robotics.vision.camera.stereo-3d-industrial.v1.md) — candidate
+- [Volumetric Tote Filling Station](assets/process.packaging.filler.tote-volumetric.v1.md) — candidate
+- [Inline Tote Capping Station](assets/process.packaging.capper.tote-inline.v1.md) — candidate
+- [Pressure-Sensitive Tote Labeling Station](assets/process.packaging.labeler.tote-pressure-sensitive.v1.md) — candidate
+- [Multi-Camera Tote Vision Inspection Station](assets/inspection.vision.tote-multicamera.v1.md) — candidate
+- [Liquid Metering Pump Skid](assets/process.dosing.skid.liquid-metering.v1.md) — candidate
+- [Two-Position Container Receiving Fixture](assets/material-handling.receiver.container-two-position.v1.md) — candidate
+- [Three-Height Parcel Sensor Bank](assets/sensing.dimensioning.parcel-three-height.v1.md) — candidate
+- [Palletized Corrugated Case Load - GMA 48 x 40 in](assets/loads.palletized-cases.gma-48x40.v1.md) — candidate
+- [Corrugated Shipping Carton - Regular Slotted](assets/loads.carton.corrugated-rsc.v1.md) — candidate
+- [Handled HDPE Jerry Can](assets/loads.container.jerry-can-hdpe.v1.md) — candidate
+- [Reusable Capped Process Bottle](assets/loads.container.process-bottle.v1.md) — candidate
+- [Two-Clamp Modular Assembly Fixture](assets/tooling.fixture.modular-two-clamp.v1.md) — candidate
+- [Clamped Plate Workholding Fixture](assets/tooling.fixture.clamped-plate.v1.md) — candidate
+- [Ev/Charger Bay](assets/training.accessory.ev_charger_bay.v1.md) — candidate
+- [Vfd Diagnostic Panel](assets/training.accessory.vfd_diagnostic_panel.v1.md) — candidate
+- [Xy Gantry](assets/training.accessory.xy_gantry.v1.md) — candidate
+- [Air Outlet](assets/training.accessory.air_outlet.v1.md) — candidate
+- [Alarm Beacon](assets/training.accessory.alarm_beacon.v1.md) — candidate
+- [Authorization Reader](assets/training.accessory.authorization_reader.v1.md) — candidate
+- [Bag Product Load](assets/training.accessory.bag_product_load.v1.md) — candidate
+- [Barrel/Container Load](assets/training.accessory.barrel_container_load.v1.md) — candidate
+- [Bridge Limit Switches](assets/training.accessory.bridge_limit_switches.v1.md) — candidate
+- [Bulk Powder Hopper](assets/training.accessory.bulk_powder_hopper.v1.md) — candidate
+- [Cable Cutter](assets/training.accessory.cable_cutter.v1.md) — candidate
+- [Cable Dancer](assets/training.accessory.cable_dancer.v1.md) — candidate
+- [Carton Load](assets/training.accessory.carton_load.v1.md) — candidate
+- [Chain Conveyor](assets/training.accessory.chain_conveyor.v1.md) — candidate
+- [Chain Hoist/Vertical Lift](assets/training.accessory.chain_hoist_vertical_lift.v1.md) — candidate
+- [Checkweigher](assets/training.accessory.checkweigher.v1.md) — candidate
+- [Coating Enclosure](assets/training.accessory.coating_enclosure.v1.md) — candidate
+- [Coded Safety Gate Switch](assets/training.accessory.coded_safety_gate_switch.v1.md) — candidate
+- [Collection Tank Bank](assets/training.accessory.collection_tank_bank.v1.md) — candidate
+- [Common Stop Station](assets/training.accessory.common_stop_station.v1.md) — candidate
+- [Connector Latch](assets/training.accessory.connector_latch.v1.md) — candidate
+- [Coordinate Sensors](assets/training.accessory.coordinate_sensors.v1.md) — candidate
+- [Count Display](assets/training.accessory.count_display.v1.md) — candidate
+- [Crosswalk/Road Module](assets/training.accessory.crosswalk_road_module.v1.md) — candidate
+- [Cut-Length Display](assets/training.accessory.cut_length_display.v1.md) — candidate
+- [Destination Conveyor Bank](assets/training.accessory.destination_conveyor_bank.v1.md) — candidate
+- [Dimension Sensors](assets/training.accessory.dimension_sensors.v1.md) — candidate
+- [Drawbridge Deck](assets/training.accessory.drawbridge_deck.v1.md) — candidate
+- [Drive Status Indicator](assets/training.accessory.drive_status_indicator.v1.md) — candidate
+- [Elevator Car/Shaft](assets/training.accessory.elevator_car_shaft.v1.md) — candidate
+- [Emergency-Stop Station](assets/training.accessory.emergency_stop_station.v1.md) — candidate
+- [Energy Meter](assets/training.accessory.energy_meter.v1.md) — candidate
+- [Fieldbus Alarm-String Display](assets/training.accessory.fieldbus_alarm_string_display.v1.md) — candidate
+- [Fill Nozzle](assets/training.accessory.fill_nozzle.v1.md) — candidate
+- [Floor Call Station](assets/training.accessory.floor_call_station.v1.md) — candidate
+- [Floor-Position Sensor](assets/training.accessory.floor_position_sensor.v1.md) — candidate
+- [Flow Meter](assets/training.accessory.flow_meter.v1.md) — candidate
+- [Food Product Load](assets/training.accessory.food_product_load.v1.md) — candidate
+- [Formatted Label Display](assets/training.accessory.formatted_label_display.v1.md) — candidate
+- [Four-Lane Diverter](assets/training.accessory.four_lane_diverter.v1.md) — candidate
+- [Function-Block Calculation Panel](assets/training.accessory.function_block_calculation_panel.v1.md) — candidate
+- [Function-Block Panel](assets/training.accessory.function_block_panel.v1.md) — candidate
+- [Group Motor Status Panel](assets/training.accessory.group_motor_status_panel.v1.md) — candidate
+- [Guarded Access Gate](assets/training.accessory.guarded_access_gate.v1.md) — candidate
+- [Guided Group Stop](assets/training.accessory.guided_group_stop.v1.md) — candidate
+- [Hand-Presence Sensor](assets/training.accessory.hand_presence_sensor.v1.md) — candidate
+- [Heating Element](assets/training.accessory.heating_element.v1.md) — candidate
+- [Indexing Conveyor](assets/training.accessory.indexing_conveyor.v1.md) — candidate
+- [Industrial Vision Camera](assets/training.accessory.industrial_vision_camera.v1.md) — candidate
+- [Label Printer](assets/training.accessory.label_printer.v1.md) — candidate
+- [Landing Door](assets/training.accessory.landing_door.v1.md) — candidate
+- [Length Encoder](assets/training.accessory.length_encoder.v1.md) — candidate
+- [Level Transmitters](assets/training.accessory.level_transmitters.v1.md) — candidate
+- [Lift Limit Switches](assets/training.accessory.lift_limit_switches.v1.md) — candidate
+- [Load Cell](assets/training.accessory.load_cell.v1.md) — candidate
+- [Luggage Load](assets/training.accessory.luggage_load.v1.md) — candidate
+- [Machine-Guarding Fence](assets/training.accessory.machine_guarding_fence.v1.md) — candidate
+- [Manual Pause Station](assets/training.accessory.manual_pause_station.v1.md) — candidate
+- [Mechanical Stop](assets/training.accessory.mechanical_stop.v1.md) — candidate
+- [Mobile Traffic Signal Head](assets/training.accessory.mobile_traffic_signal_head.v1.md) — candidate
+- [Motor Diagnostic Faceplate](assets/training.accessory.motor_diagnostic_faceplate.v1.md) — candidate
+- [Numeric Measurement Display](assets/training.accessory.numeric_measurement_display.v1.md) — candidate
+- [Numeric Result Display](assets/training.accessory.numeric_result_display.v1.md) — candidate
+- [Numeric Selector/Display](assets/training.accessory.numeric_selector_display.v1.md) — candidate
+- [Occupancy Counter Display](assets/training.accessory.occupancy_counter_display.v1.md) — candidate
+- [Package Spacing Sensor](assets/training.accessory.package_spacing_sensor.v1.md) — candidate
+- [Package-Class Result Display](assets/training.accessory.package_class_result_display.v1.md) — candidate
+- [Packaging Machine](assets/training.accessory.packaging_machine.v1.md) — candidate
+- [Pallet Load](assets/training.accessory.pallet_load.v1.md) — candidate
+- [Pallet Magazine](assets/training.accessory.pallet_magazine.v1.md) — candidate
+- [Pallet Receiver](assets/training.accessory.pallet_receiver.v1.md) — candidate
+- [Pallet Roller Conveyor Zone](assets/training.accessory.pallet_roller_conveyor_zone.v1.md) — candidate
+- [Pallet-Type Sensor](assets/training.accessory.pallet_type_sensor.v1.md) — candidate
+- [Parking Barrier Arm](assets/training.accessory.parking_barrier_arm.v1.md) — candidate
+- [Payoff Reel](assets/training.accessory.payoff_reel.v1.md) — candidate
+- [Pedestrian Signal Head](assets/training.accessory.pedestrian_signal_head.v1.md) — candidate
+- [Pipe Manifold](assets/training.accessory.pipe_manifold.v1.md) — candidate
+- [Powder Discharge Chute](assets/training.accessory.powder_discharge_chute.v1.md) — candidate
+- [Powered Roller Conveyor](assets/training.accessory.powered_roller_conveyor.v1.md) — candidate
+- [Product Counter](assets/training.accessory.product_counter.v1.md) — candidate
+- [Progress Display](assets/training.accessory.progress_display.v1.md) — candidate
+- [Pulse-Output Meter](assets/training.accessory.pulse_output_meter.v1.md) — candidate
+- [Recipe Selector](assets/training.accessory.recipe_selector.v1.md) — candidate
+- [Reject Diverter](assets/training.accessory.reject_diverter.v1.md) — candidate
+- [Reversible Drive](assets/training.accessory.reversible_drive.v1.md) — candidate
+- [Road Barrier](assets/training.accessory.road_barrier.v1.md) — candidate
+- [Roadway Module](assets/training.accessory.roadway_module.v1.md) — candidate
+- [Robot Controller/Status Panel](assets/training.accessory.robot_controller_status_panel.v1.md) — candidate
+- [Safety Light-Curtain Pair](assets/training.accessory.safety_light_curtain_pair.v1.md) — candidate
+- [Safety Relay/Status Beacon](assets/training.accessory.safety_relay_status_beacon.v1.md) — candidate
+- [Scale/Load-Cell Platform](assets/training.accessory.scale_load_cell_platform.v1.md) — candidate
+- [Signal Synchronization Link](assets/training.accessory.signal_synchronization_link.v1.md) — candidate
+- [Slide-Gate Feeder](assets/training.accessory.slide_gate_feeder.v1.md) — candidate
+- [Spray Head](assets/training.accessory.spray_head.v1.md) — candidate
+- [Staggered-Start Sequence Display](assets/training.accessory.staggered_start_sequence_display.v1.md) — candidate
+- [Structured-Data Monitor](assets/training.accessory.structured_data_monitor.v1.md) — candidate
+- [Temperature Display](assets/training.accessory.temperature_display.v1.md) — candidate
+- [Ten-Motor Lineup Asset](assets/training.accessory.ten_motor_lineup_asset.v1.md) — candidate
+- [Traffic Signal Head](assets/training.accessory.traffic_signal_head.v1.md) — candidate
+- [Vacuum Gripper](assets/training.accessory.vacuum_gripper.v1.md) — candidate
+- [Vehicle/Load Asset](assets/training.accessory.vehicle_load_asset.v1.md) — candidate
+- [Ventilation Damper](assets/training.accessory.ventilation_damper.v1.md) — candidate
+- [Weight Display](assets/training.accessory.weight_display.v1.md) — candidate
+- [Workpiece Load](assets/training.accessory.workpiece_load.v1.md) — candidate
+- [Zone Handoff Sensor](assets/training.accessory.zone_handoff_sensor.v1.md) — candidate
+- [Rotary Selector Station (three-mark master)](assets/controls.operator-station.selector.v1.md) — candidate
+- [Open-fill IBC - finishing installation candidate](assets/loads.ibc.open-finishing.v1.md) — candidate
+
+## Scenes
+
+- [Conveyor Inspection Cell](scenes/conveyor-cell.md)
+- [Reusable Equipment Gallery](scenes/equipment-gallery.md)
+- [Lab 10.1 - Drive Alarm-Code String](scenes/lab-10-01-drive-alarm-code-string.md)
+- [Lab 10.2 - Chicken Label Print](scenes/lab-10-02-chicken-label-print.md)
+- [Lab 10.3 - Vision Package Sorter](scenes/lab-10-03-vision-package-sorter.md)
+- [Lab 10.4 - Motor Operating-State Enum](scenes/lab-10-04-motor-enum-state.md)
+- [Lab 10.5 - Motor STRUCT Data](scenes/lab-10-05-motor-struct-data.md)
+- [Lab 10.6 - Ten-Motor Array Startup](scenes/lab-10-06-ten-motor-array-startup.md)
+- [Lab 11.6 - Wastewater Collection](scenes/lab-11-06-wastewater-collection.md)
+- [Lab 11.7 - Multi-Conveyor Pallet Route](scenes/lab-11-07-multi-conveyor-pallet-route.md)
+- [Lab 11.11 - Service Elevator](scenes/lab-11-11-service-elevator.md)
+- [Lab 11.12 - Mobile Traffic Lights](scenes/lab-11-12-mobile-traffic-lights.md)
+- [Lab 11.13 - XY Palletizing Cell](scenes/lab-11-13-xy-palletizing.md)
+- [Lab 11.19 - Powder Batch Mixer](scenes/lab-11-19-powder-batch-mixer.md)
+- [Lab 2.1 - Workstation Call Lamp](scenes/lab-2-01-workstation-call.md)
+- [Lab 2.2 - Dual Confirmation Lamp](scenes/lab-2-02-dual-confirmation.md)
+- [Lab 2.3 - Service Marker Inhibit](scenes/lab-2-03-service-marker-inhibit.md)
+- [Lab 2.4 - Two-Station Call Beacon](scenes/lab-2-04-two-station-call.md)
+- [Lab 2.5 - Bay Light Selector](scenes/lab-2-05-bay-light-selector.md)
+- [Lab 2.6 - Ready / Attention Button](scenes/lab-2-06-ready-attention.md)
+- [Lab 2.7 - Dual-Contact Permissive](scenes/lab-2-07-dual-contact-permissive.md)
+- [Lab 2.8 - Inspection Vote Stacklight](scenes/lab-2-08-inspection-vote.md)
+- [Lab 2.9 - Maintenance Beacon Selector](scenes/lab-2-09-maintenance-beacon.md)
+- [Lab 2.10 - Dust Collector Seal-In](scenes/lab-2-10-dust-collector-seal-in.md)
+- [Lab 2.11 - Inbound Tote Stop](scenes/lab-2-11-inbound-tote-stop.md)
+- [Lab 2.12 - Ergonomic Assembly Lift](scenes/lab-2-12-assembly-lift.md)
+- [Lab 2.13 - Coolant Jug Filling Cell](scenes/lab-2-13-coolant-jug-fill.md)
+- [Lab 2.14 - Sump Dewatering Pump](scenes/lab-2-14-sump-pump.md)
+- [Lab 2.15 - Weld Fume Extractor](scenes/lab-2-15-fume-extractor.md)
+- [Lab 2.16 - Fixture-Safe Drill Station](scenes/lab-2-16-safe-drill.md)
+- [Lab 2.17 - Twin-Container Pallet Cell](scenes/lab-2-17-pallet-robot.md)
+- [Lab 2.18 - Shipping Pallet Accumulation](scenes/lab-2-18-pallet-pickup.md)
+- [Lab 2.19 - Service Door Shutter](scenes/lab-2-19-service-door.md)
+- [Lab 2.20 - Bottle Shuttle Conveyor](scenes/lab-2-20-bottle-shuttle.md)
+- [Lab 2.21 - Chemical Tote Finishing Line](scenes/lab-2-21-tote-finishing.md)
+- [Lab 2.22 - Dual-Spindle Plate Cell](scenes/lab-2-22-dual-spindle.md)
+- [Lab 2.23 - Parcel Size Sorter](scenes/lab-2-23-parcel-sorter.md)
+- [Lab 2.24 - Robot CNC Tending Cell](scenes/lab-2-24-robot-cnc.md)
+- [Lab 2.25 - Inspection Light Toggle](scenes/lab-2-25-inspection-toggle.md)
+- [Lab 3.1 - Guarded Pallet Transfer](scenes/lab-3-01-guarded-pallet-transfer.md)
+- [Lab 3.2 - Robot Cell Safe Restart](scenes/lab-3-02-robot-cell-safe-restart.md)
+- [Lab 4.1 - Press-Count Lamp](scenes/lab-4-01-press-count-lamp.md)
+- [Lab 4.2 - Counter Reset Lamp](scenes/lab-4-02-counter-reset-lamp.md)
+- [Lab 4.3 - Repeat-Cycle Counter](scenes/lab-4-03-repeat-cycle-counter.md)
+- [Lab 4.4 - Sequence Light Tower](scenes/lab-4-04-sequence-light-tower.md)
+- [Lab 4.5 - Dual-Input Count Window](scenes/lab-4-05-dual-input-count-window.md)
+- [Lab 4.6 - Multi-Press Confirmation](scenes/lab-4-06-multi-press-confirmation.md)
+- [Lab 4.7 - Parking Garage Entry](scenes/lab-4-07-parking-garage-entry.md)
+- [Lab 4.8 - Package Grouping Station](scenes/lab-4-08-package-grouping.md)
+- [Lab 4.9 - Chain-Drive Lift](scenes/lab-4-09-chain-drive-lift.md)
+- [Lab 4.10 - Cookie Packaging Cell](scenes/lab-4-10-cookie-packaging.md)
+- [Lab 4.11 - Barrel Fill Station](scenes/lab-4-11-barrel-fill-station.md)
+- [Lab 4.12 - Cable Cut-Length Cell](scenes/lab-4-12-cable-cut-length.md)
+- [Lab 5.1 - Delayed Lamp](scenes/lab-5-01-delayed-lamp.md)
+- [Lab 5.2 - Timed Lamp-Off](scenes/lab-5-02-timed-lamp-off.md)
+- [Lab 5.3 - Rotary Flasher](scenes/lab-5-03-rotary-flasher.md)
+- [Lab 5.4 - Alternating Lamps](scenes/lab-5-04-alternating-lamps.md)
+- [Lab 5.5 - Variable Flash Rate](scenes/lab-5-05-variable-flash-rate.md)
+- [Lab 5.6 - Running-Light Tower](scenes/lab-5-06-running-light-tower.md)
+- [Lab 5.7 - Pedestrian Crossing](scenes/lab-5-07-pedestrian-crossing.md)
+- [Lab 5.8 - Drawbridge Control](scenes/lab-5-08-drawbridge-control.md)
+- [Lab 5.9 - Bag Indexing Conveyor](scenes/lab-5-09-bag-indexing-conveyor.md)
+- [Lab 5.10 - Coating Line](scenes/lab-5-10-coating-line.md)
+- [Lab 6.7 - Luggage Weight Sort](scenes/lab-6-07-luggage-weight-sort.md)
+- [Lab 6.8 - Timed Hand-Dryer](scenes/lab-6-08-hand-dryer.md)
+- [Lab 9.1 - Sum Function Block](scenes/lab-9-01-sum-function.md)
+- [Lab 9.2 - Product Function Block](scenes/lab-9-02-product-function.md)
+- [Lab 9.3 - Sum and Counter Function](scenes/lab-9-03-sum-and-counter-function.md)
+- [Lab 9.4 - Function Selector](scenes/lab-9-04-function-selector.md)
+- [Lab 9.10 - Box Volume Calculation](scenes/lab-9-10-box-volume.md)
+- [Lab 9.11 - Pallet Count Function](scenes/lab-9-11-pallet-counting.md)
+- [Lab 9.12 - EV Charging Manager](scenes/lab-9-12-ev-charging-manager.md)
+- [Conveyor Stop](scenes/scene-1-conveyor-stop.md)
+- [Conveyor Pusher](scenes/scene-2-conveyor-pusher.md)
+- [Water Tank — High/Low Switches](scenes/tank-high-low.md)
+- [Tank Level / 4–20 mA](scenes/tank-level.md)
+- [Water Tank — Radar Level](scenes/tank-radar.md)

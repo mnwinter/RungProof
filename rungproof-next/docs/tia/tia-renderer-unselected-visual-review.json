@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "resultKind": "tia-renderer-unselected-visual-review",
+  "reviewStatus": "visual-pass",
+  "reviewedUtc": "2026-10-15T19:29:14.1719529Z",
+  "sourceManifest": {
+    "path": ".tools/tia-parity-visual-unselected-v3-artifacts/tia-renderer-unselected/tia-renderer-contact-sheets-manifest.json",
+    "sha256": "A7C6E12BAB1E1789046C82E42C41E2C812464D48E0143C11DABBF7C1A2DD1E26",
+    "artifactDurability": "ephemeral-local",
+    "generatedHumanReviewStatus": "pending",
+    "keyCount": 50,
+    "detailCount": 150,
+    "sheetCount": 24
+  },
+  "scope": {
+    "selected": false,
+    "operandRepresentation": "SymbolicAndAbsolute",
+    "tagInformationDisplay": "Show",
+    "tagInformationPosition": "OnOperands",
+    "zoomLevels": [75, 100, 150],
+    "detailWidth": 1600,
+    "detailHeight": 1080
+  },
+  "reviewedKeys": [
+    "no",
+    "nc",
+    "edge-rising",
+    "edge-falling",
+    "coil",
+    "set",
+    "reset",
+    "branch",
+    "ton",
+    "tof",
+    "tp",
+    "rto",
+    "timer-reset",
+    "ctu",
+    "ctd",
+    "rung",
+    "call",
+    "return",
+    "jump",
+    "label",
+    "compare-0",
+    "compare-1",
+    "compare-2",
+    "compare-3",
+    "compare-4",
+    "compare-5",
+    "numeric-0",
+    "numeric-1",
+    "numeric-2",
+    "numeric-3",
+    "numeric-4",
+    "numeric-5",
+    "numeric-6",
+    "numeric-7",
+    "numeric-8",
+    "numeric-9",
+    "numeric-10",
+    "numeric-11",
+    "numeric-12",
+    "numeric-13",
+    "numeric-14",
+    "numeric-15",
+    "numeric-16",
+    "numeric-17",
+    "numeric-18",
+    "numeric-19",
+    "numeric-20",
+    "numeric-21",
+    "numeric-22",
+    "numeric-23"
+  ],
+  "detailReview": {
+    "count": 150,
+    "status": "visual-pass",
+    "method": "All 24 native-resolution contact sheets were inspected across three zoom bands; high-risk original 1600x1080 details were opened separately. A CALL InOut text/conductor collision found at 150 percent was fixed, guarded by an automated geometry invariant, regenerated, and rechecked at 75, 100, and 150 percent."
+  },
+  "sheetReview": {
+    "count": 24,
+    "status": "visual-pass",
+    "method": "Every family sheet was inspected for framing, selection residue, conductor continuity, clipping, and operand/pin readability. The corrected Program sheets were rechecked after regeneration; all unchanged images were verified byte-identical to the previously reviewed set."
+  },
+  "integrityReview": {
+    "artifactCount": 174,
+    "sha256Mismatches": 0
+  },
+  "artifactSet": {
+    "canonicalization": "UTF-8 LF with final LF: tia-renderer-artifact-set-v1; selected; operandRepresentation; tagInformationDisplay; tagInformationPosition; sorted zoomLevels; detail file and hash sorted by file; sheet file and hash sorted by file",
+    "entryCount": 174,
+    "sha256": "7ECF09D337FA245F62A0C5F01BF5EBFDD7F5A22B771BA508198EFA6C223A1588"
+  },
+  "evidenceBoundary": {
+    "offlineOnly": true,
+    "installedTiaExecuted": false,
+    "livePlcExecuted": false
+  },
+  "limitations": [
+    "This is a hash-bound review of local RungProof renderer artifacts, not an installed TIA Portal comparison.",
+    "The generated PNGs and source manifest remain ignored ephemeral-local files; this source-tree verdict does not make the pixels portable.",
+    "The reviewed set covers unselected offline rendering with symbolic and absolute operands, tag information shown on operands, and 75, 100, and 150 percent zoom.",
+    "Two additional operand and tag-information display modes are automated only.",
+    "Installed-TIA selected, edit, and online captures, live PLC execution, project interchange, downloading, forcing, and commissioning remain unproved."
+  ]
+}

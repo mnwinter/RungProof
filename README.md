@@ -1,331 +1,58 @@
-# Siemens PLC-PC Interface
+# RungProof
 
-An open PC-to-Siemens PLC interface for testing automation logic with
-simulated sensors, actuators, and processes.
+RungProof is a Godot/.NET visual PLC logic simulator with an integrated ladder
+editor, virtual controller, authored industrial scenes, training challenges,
+and a guarded optional Siemens S7 connection path.
 
-## Project goal
+This repository is the current RungProof source. The former
+`Siemens-PLC-PC-Interface` repository contents were preserved in Git history
+before this source became `main`.
 
-The goal is to build a maintainable Factory I/O-style interface that can:
+## Start the application
 
-- connect a Windows PC to a Siemens S7-1200 or S7-1500;
-- read PLC commands and status;
-- write simulated sensor and process values;
-- use configuration files instead of hard-coded PLC addresses;
-- provide connection state, heartbeat, diagnostics, and safe defaults;
-- support a graphical scene/runtime layer for PLC program testing.
-
-The PLC remains responsible for permissives, interlocks, operating modes,
-fault handling, and safety. The PC interface is a simulation and commissioning
-tool, not a safety controller.
-
-## Architecture
-
-```mermaid
-flowchart LR
-    Scene["Scene runtime and visualizer"]
-    Client["PC S7 client"]
-    DB["Dedicated standard-access simulation DB"]
-    Mapping["PLC mapping and heartbeat logic"]
-    Program["Machine control program"]
-
-    Scene <--> Client
-    Client <--> DB
-    DB <--> Mapping
-    Mapping <--> Program
-```
-
-The dedicated DB prevents the PC from writing physical `%I` or `%Q` addresses
-directly and gives every field one defined writer.
-
-## Current status
-
-The communications baseline has been proven on real hardware:
-
-| Component | Proven configuration |
-|---|---|
-| PLC | Siemens CPU 1512SP-1 PN |
-| Engineering software | TIA Portal V17 |
-| PC | Windows Server 2019 VM |
-| Network | Passed-through ASIX USB Ethernet adapter |
-| Library | `python-snap7 3.1.0` |
-| Result | DB14 round trip, watchdog, continuous runtime, and safe cleanup passed |
-
-S7-1200 support is planned but has not yet been hardware-proven by this
-project. Other S7-1500 models and firmware must also be verified before being
-listed as proven.
-
-The Python communications/runtime layer described below contains a
-graphical conveyor/photoeye runtime and an offline-tested second conveyor/
-pusher scene in addition to the proven connection
-diagnostics, the PLC-side communication watchdog, the DB14 memory
-contract, setup documentation, a validated JSON configuration model, and a
-guarded configuration-driven Snap7 runtime. It also contains an offline-tested
-typed point layer for digital inversion, analog scaling, units, range quality,
-and ownership-aware DB address grouping. A deterministic typed simulation
-update loop now stages scene values, decodes PLC points, reports communication
-and point health, and can emit JSON-lines cycle logs. The first reusable
-offline equipment model adds a single-object conveyor, simulated photoeye,
-explicit operating states, product discharge, reset, and fail-safe point
-binding. The first deterministic headless scene now loads the conveyor from
-JSON, advances physics in fixed steps, exchanges typed points at a configured
-rate, and reports bounded timing/overrun metrics. The optimized transport
-reads the PLC-owned DB14 fields in one contiguous request and normally writes
-only the heartbeat in a second request.
-
-The Snap7 transport and runtime pass offline tests with fake clients. On
-2026-07-29, the packaged runtime passed live heartbeat progression, recovery,
-the enabled gated command path, and its best-effort safe-state write against
-the real CPU 1512SP-1 PN. The earlier live watchdog test proved timeout and
-gated false behavior when heartbeat progression stops.
-
-## Start here
-
-### Migrated RungProof visualizer
-
-For the current Windows Godot application, launch
-[`rungproof/rungproof-next/RUN-RUNGPROOF-NEXT.cmd`](rungproof/rungproof-next/RUN-RUNGPROOF-NEXT.cmd)
-after following its [development setup](rungproof/rungproof-next/docs/DEVELOPMENT_SETUP.md).
-It includes the offline ladder editor, scene workspace authoring and guarded
-external bridge. The older Qt launcher is a retained reference implementation.
-
-This repository is the canonical home of the PLC-to-PC visualizer. The
-complete migrated application is under [`rungproof/`](rungproof/README.md);
-the Godot/C# application is under `rungproof/rungproof-next/`. Do not continue
-its development in the retired RungProof or PLC_Code_Visualizer repository.
-Read [`rungproof/docs/CANONICAL_TAKEOVER.md`](rungproof/docs/CANONICAL_TAKEOVER.md)
-for migration identity, fresh-checkout setup, current evidence, and open gates.
-
-New users should follow:
-
-1. [Processor, network, DB, and PC setup](docs/USER_SETUP.md)
-2. [DB14 memory contract](docs/DB14_INTERFACE.md)
-3. [JSON configuration reference](docs/CONFIGURATION.md)
-4. [Typed digital and analog point model](docs/POINT_MODEL.md)
-5. [Typed simulation update loop and logging](docs/UPDATE_LOOP.md)
-6. [Reusable simulation components](docs/COMPONENTS.md)
-7. [First conveyor/photoeye scene](docs/FIRST_SCENE.md)
-8. [Graphical conveyor viewer](docs/GRAPHICAL_VIEWER.md)
-9. [Scene 2 conveyor/pusher](docs/SCENE_2_PUSHER.md)
-10. [Real-hardware proof results](docs/PROOF_RESULTS.md)
-
-Use one standalone TIA project per scene. Create the next project with
-**Save As** from the last completed scene, then replace only that scene's
-DB14 members and control logic. Do not accumulate every scene's unused tags
-and DBs in one PLC program. The prior TIA project remains the restore point.
-
-The setup guide covers:
-
-- processor network configuration;
-- CPU PUT/GET and firmware-dependent access-control settings;
-- the secure PG/PC option;
-- creation of the standard/non-optimized DB14;
-- PLC watchdog, gated mapping logic, and watch table;
-- PC dependency installation;
-- read-only and guarded round-trip testing;
-- failure symptoms and first checks.
-
-## Quick software setup
+The application project is in [`rungproof-next`](rungproof-next/README.md).
+Its portable Godot and .NET toolchains are local-only and intentionally not
+stored in Git.
 
 ```powershell
-git clone https://github.com/mnwinter/Siemens-PLC-PC-Interface.git
-cd Siemens-PLC-PC-Interface
-py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+cd .\rungproof-next
+.\RUN-RUNGPROOF-NEXT.cmd
 ```
 
-Run the read-only connection proof first:
+See [`rungproof-next/docs/DEVELOPMENT_SETUP.md`](rungproof-next/docs/DEVELOPMENT_SETUP.md)
+for the pinned tool versions and first-run layout.
+
+## Repository layout
+
+- `rungproof-next/` - current Godot/C# application, runtime assets, tests, and
+  developer tooling.
+- `prototype/scenes/` - original scene contracts retained for deterministic
+  migration and parity checks.
+- `prototype/plc-profiles/` - explicit guarded PLC connection profiles.
+- `tools/` - the minimal external-PLC bridge and its offline tests.
+- `vendor/` - pinned Siemens interface source and third-party license files
+  required by the guarded bridge and plant-model parity tests.
+
+Generated builds, imported Godot caches, portable SDKs, virtual environments,
+logs, backups, and old review archives are intentionally excluded.
+
+## Verification
+
+From `rungproof-next` with the pinned local toolchain installed:
 
 ```powershell
-.\.venv\Scripts\python.exe .\tools\prove_s7_connection.py `
-    --ip 10.70.9.201
+& '.tools/dotnet/dotnet.exe' build RungProof.Next.csproj
+& '.tools/dotnet/dotnet.exe' run --project tests/RungProof.Next.VirtualController.Tests.csproj
+& '.tools/godot/Godot_v4.7.2-stable_mono_win64/Godot_v4.7.2-stable_mono_win64_console.exe' --headless --path . -- --verify-app-shell
 ```
 
-Validate the example configuration without connecting:
+These checks are offline. They do not prove Siemens TIA Portal parity, a live
+PLC connection, or safe commissioning on equipment.
 
-```powershell
-.\.venv\Scripts\siemens-plc-pc-interface.exe validate `
-    .\examples\db14-interface.json
-```
+## Controls boundary
 
-Preview the runtime's exact write scope. This still does not connect:
+RungProof is a simulator and training tool, not a safety controller. External
+PLC operation requires the configured profile, an explicit operator action,
+the declared write scope, a PLC-side watchdog, and normal machine safety
+controls. Never expose S7 PUT/GET directly to an untrusted network.
 
-```powershell
-.\.venv\Scripts\siemens-plc-pc-interface.exe run `
-    .\examples\db14-interface.json `
-    --cycles 20 `
-    --set pc_to_plc=true
-```
-
-Both commands explicitly report
-`PLC_CONNECTION_ATTEMPTED: False`.
-
-Validate the first scene without connecting:
-
-```powershell
-.\.venv\Scripts\siemens-plc-pc-interface.exe scene-validate `
-    .\examples\db14-conveyor-interface.json `
-    .\examples\conveyor-scene.json
-```
-
-The proven first scene uses a 10 ms fixed physics step and a 20 ms PLC
-exchange. A separate 5 ms physics profile supports controlled 20, 15, 10, and
-5 ms rate tests through `scene-run --cycle-ms`. Read
-[the first-scene commissioning guide](docs/FIRST_SCENE.md) before live use:
-the original DB14 Boolean echo rung must become a stop-at-photoeye PLC command
-rung for the conveyor to move.
-
-Only after DB14 and the PLC watchdog are downloaded, set
-`Simulation_Enable = true` from TIA and authorize the guarded runtime:
-
-```powershell
-.\.venv\Scripts\siemens-plc-pc-interface.exe run `
-    .\examples\db14-interface.json `
-    --execute `
-    --cycles 20 `
-    --set pc_to_plc=true `
-    --write-safe-state-on-exit
-```
-
-The runtime writes only the two configured PC-owned DB14 fields. It does not
-write `Simulation_Enable`.
-
-Open the first graphical conveyor scene with the same guarded write scope:
-
-```powershell
-.\.venv\Scripts\siemens-plc-pc-interface.exe scene-visualize `
-    .\examples\db14-conveyor-interface.json `
-    .\examples\conveyor-scene-fast.json `
-    --execute `
-    --write-safe-state-on-exit
-```
-
-The 20 ms PLC exchange drives the existing deterministic scene engine. The
-window redraws independently, so a delayed display frame does not alter scene
-physics or PLC communication. TIA Portal remains responsible for changing
-`Simulation_Enable`. This is deliberately a best-effort visual simulator;
-fixed simulation steps do not make Windows or Snap7 hard real-time.
-
-Scene 2 adds a PLC-controlled spring-return pusher. Copy the Scene 1 TIA
-project with **Save As**, reuse DB14 inside the new project, and follow
-[the Scene 2 guide](docs/SCENE_2_PUSHER.md). Scene 1 stays unchanged.
-
-## Validated Scene 1 DB14 proof contract
-
-| Address | Symbol | Type | Owner |
-|---|---|---|---|
-| `DB14.DBX0.0` | `PC_To_PLC` | `Bool` | PC writes |
-| `DB14.DBX0.1` | `PLC_To_PC` | `Bool` | PLC writes |
-| `DB14.DBD2` | `PC_Heartbeat` | `DInt` | PC writes |
-| `DB14.DBD6` | `PLC_Heartbeat_Echo` | `DInt` | PLC writes |
-| `DB14.DBX10.0` | `Simulation_Enable` | `Bool` | Operator/PLC writes |
-| `DB14.DBX10.1` | `Simulation_Comm_OK` | `Bool` | PLC writes |
-| `DB14.DBX10.2` | `Simulation_Timeout` | `Bool` | PLC writes |
-
-DB14 must use standard/non-optimized access because the current S7 client uses
-fixed absolute addresses.
-
-Scene 2 deliberately reuses DB14 inside its own standalone TIA project but
-changes the scene-specific Boolean members. Its exact contract is documented
-in [`SCENE_2_PUSHER.md`](docs/SCENE_2_PUSHER.md). Do not combine the two DB14
-layouts in one project.
-
-## Safety and security boundary
-
-Each scene configuration declares and prints its exact write scope before
-connecting. Scene 1 writes `DB14.DBX0.0` and `DB14.DBD2`. Scene 2 writes
-three simulated sensors at `DB14.DBX0.0` through `DB14.DBX0.2` plus
-`DB14.DBD2`. Neither scene writes physical I/O, operator enable, PLC-owned
-commands/status, or CPU operating state.
-
-PUT/GET is not authenticated or encrypted. Use an isolated or properly
-segmented controls network, limit access to TCP port 102, and never expose the
-PLC directly to the Internet.
-
-Do not connect simulated commands directly to hazardous motion or outputs.
-PLC permissives, interlocks, safety logic, and a heartbeat timeout must remain
-authoritative.
-
-## Roadmap
-
-1. **Complete:** validated configuration-driven connection and tag model.
-2. **Complete offline:** guarded Snap7 transport and continuous heartbeat
-   runtime with unit-tested ownership and shutdown behavior.
-3. **Complete on hardware:** continuous heartbeat, healthy state, recovery,
-   enabled gated output, watchdog timeout, and safe cleanup.
-4. **Complete offline:** typed digital and analog point model with ownership,
-   inversion, scaling, units, safe values, range quality, and address-group
-   diagnostics.
-5. **Complete offline:** deterministic simulation update loop with retained
-   scene values, point diagnostics, communication health, and JSON-lines
-   logging.
-6. **Complete offline:** first reusable conveyor/photoeye component.
-7. **Complete on hardware:** deterministic first conveyor/photoeye scene,
-   guarded 20 ms PLC exchange, heartbeat proof, and safe cleanup.
-8. **Complete on hardware:** the optimized 20/15/10/5 ms rate sweep retained
-   heartbeat and safe cleanup at every rate. Only 20 ms passed the timing
-   criteria with zero overruns, zero resynchronizations, 6.758 ms p99, and
-   9.660 ms maximum duration in the five-second sweep. A later 30,000-cycle
-   soak retained heartbeat and safe cleanup with 5.913 ms p99 and 13.012 ms
-   maximum workload, but recorded 23 scheduler overruns and seven
-   resynchronizations. The project is a visual logic simulator rather than a
-   real-time machine controller, so the proven best-effort 20 ms exchange is
-   the supported default; the PLC watchdog remains authoritative.
-9. **Complete offline:** first graphical conveyor/photoeye viewer using the
-   existing headless engine, a dedicated PLC worker thread, independent GUI
-   redraws, guarded `--execute`, and clean window-close shutdown.
-10. **Complete on hardware:** the standalone graphical conveyor/photoeye
-    viewer opened in the Windows Server 2019 VM, reached healthy
-    communication, and displayed the expected stop-at-photoeye behavior.
-11. **Complete offline; packaged for live test:** Scene 2 adds a
-    single-solenoid pusher, extended/retracted feedback, a separate DB14
-    contract, deterministic process behavior, graphical rendering, and
-    one-click VM launch files. Its live PLC sequence is not yet proven.
-
-## Development
-
-Install development dependencies:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-```
-
-Generated EXEs, ZIP packages, PLC project archives, credentials, and Python
-environments are intentionally excluded from Git.
-
-Build the standalone Windows runtime from an approved development computer:
-
-```powershell
-.\.venv\Scripts\python.exe -m PyInstaller `
-    --noconfirm --clean --onefile `
-    --name SiemensPlcPcInterface `
-    --paths src --collect-all snap7 `
-    --distpath build\vm-package `
-    --workpath build\pyinstaller-work `
-    --specpath build\pyinstaller-spec `
-    tools\runtime_entrypoint.py
-```
-
-Build the complete graphical-viewer VM ZIP:
-
-```powershell
-.\tools\build_graphical_viewer_package.ps1
-```
-
-The generated package is
-`build\SiemensPlcPcInterface-GraphicalViewer-VM.zip`.
-
-Build the separate Scene 2 conveyor/pusher VM ZIP:
-
-```powershell
-.\tools\build_scene_2_pusher_package.ps1
-```
-
-The generated package is
-`build\SiemensPlcPcInterface-Scene-2-Pusher-VM.zip`.
-
-Run the offline unit suite:
-
-```powershell
-$env:PYTHONPATH = "src"
-py -3 -m unittest discover -s tests -v
-```

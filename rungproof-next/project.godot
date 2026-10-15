@@ -1,0 +1,47 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="RungProof"
+config/description="PLC Visual Simulator — Build the logic. Prove the machine."
+run/main_scene="res://scenes/app/main.tscn"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+config/icon="res://assets/brand/rungproof-icon.svg"
+config/use_custom_user_dir.offline_demo=true
+config/custom_user_dir_name.offline_demo="RungProof Offline Demo"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/size/window_width_override=1600
+window/size/window_height_override=900
+window/size/min_width=1200
+window/size/min_height=675
+
+[dotnet]
+
+project/assembly_name="RungProof.Next"
+
+[filesystem]
+
+import/blender/enabled=false
+
+[physics]
+
+3d/default_gravity=9.80665
+
+[rendering]
+
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=3
+anti_aliasing/quality/msaa_3d=2
+anti_aliasing/quality/use_taa=true

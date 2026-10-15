@@ -1,7 +1,0 @@
-# Dot finite-belt cache review V1
-
-Bounded cache correctness and visual review passes with limits. Independently verified SimulatorShell now reads authoritative simulation.type with a String guard, selecting the finite cache suffix and bypassing authored source starter generation. Existing native-v2 log reports failures=0 and exact original/finite custom valid/invalid draft, saved baseline, point-domain, project-path/history undo-redo restoration, no implicit load and invalid no-fallback checks. Reviewer read evidence, did not rerun tests.
-
-Personally viewed all three finite-belt-cache-capture-v1 PNGs. Hashes match, saved markers and clean ERROR/FATAL scan, unchanged current assembly 9E49EA5C3A80F437BCD2E8737106A9C8516EE99458428796321EE52FFA7B1689. Intended finite view shows Observed with scan/reset/program/layout identity, real PC beam true and PLC run false. Wrong finite view shows NeedsAttention rather than success and supported terminal carton. Source Demo3 view restores authored controller title, original point domain and original cabinet/stacklight; first visible rung is monitored but expanded Scene I/O clips its lower branch. No complete-rung visual claim.
-
-Scope is same-source demo/preset namespace isolation and these actual views. Observer force/edit-only preservation and native scan semantics are separate runtime evidence. Historical AE captures remain historical. Retained cream material styling and human wider-rollout gate remain open; no all77 or physical commissioning approval.

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "resultKind": "tia-renderer-visual-review",
+  "reviewStatus": "visual-pass",
+  "reviewedUtc": "2026-10-15T19:53:38.2291004Z",
+  "sourceManifest": {
+    "path": ".tools/tia-parity-visual-unselected-v3-artifacts/tia-renderer-contact-sheets-manifest.json",
+    "sha256": "7C38A4E7C6B2734A55A4F8350B09C78DCAC5A0F522A2FCA673FA9619049E1D7E",
+    "artifactDurability": "ephemeral-local",
+    "generatedHumanReviewStatus": "pending",
+    "keyCount": 50,
+    "detailCount": 150,
+    "sheetCount": 24
+  },
+  "scope": {
+    "selected": true,
+    "operandRepresentation": "SymbolicAndAbsolute",
+    "tagInformationDisplay": "Show",
+    "tagInformationPosition": "OnOperands",
+    "zoomLevels": [75, 100, 150],
+    "detailWidth": 1600,
+    "detailHeight": 1080
+  },
+  "reviewedKeys": [
+    "no",
+    "nc",
+    "edge-rising",
+    "edge-falling",
+    "coil",
+    "set",
+    "reset",
+    "branch",
+    "ton",
+    "tof",
+    "tp",
+    "rto",
+    "timer-reset",
+    "ctu",
+    "ctd",
+    "rung",
+    "call",
+    "return",
+    "jump",
+    "label",
+    "compare-0",
+    "compare-1",
+    "compare-2",
+    "compare-3",
+    "compare-4",
+    "compare-5",
+    "numeric-0",
+    "numeric-1",
+    "numeric-2",
+    "numeric-3",
+    "numeric-4",
+    "numeric-5",
+    "numeric-6",
+    "numeric-7",
+    "numeric-8",
+    "numeric-9",
+    "numeric-10",
+    "numeric-11",
+    "numeric-12",
+    "numeric-13",
+    "numeric-14",
+    "numeric-15",
+    "numeric-16",
+    "numeric-17",
+    "numeric-18",
+    "numeric-19",
+    "numeric-20",
+    "numeric-21",
+    "numeric-22",
+    "numeric-23"
+  ],
+  "detailReview": {
+    "count": 150,
+    "status": "visual-pass",
+    "method": "The original 150 details were reviewed across native-resolution sheets and high-risk original 1600x1080 details. After the shared CALL annotation fix changed six selected artifacts, the CALL details and Program sheets at 75, 100, and 150 percent were re-reviewed; the other 168 artifacts were byte-identical."
+  },
+  "sheetReview": {
+    "count": 24,
+    "status": "visual-pass",
+    "method": "All family contact sheets were inspected for framing and catalog consistency. The three regenerated Program sheets were rechecked after the CALL fix; fine text was judged from original details."
+  },
+  "integrityReview": {
+    "artifactCount": 174,
+    "sha256Mismatches": 0
+  },
+  "evidenceBoundary": {
+    "offlineOnly": true,
+    "installedTiaExecuted": false,
+    "livePlcExecuted": false
+  },
+  "limitations": [
+    "This is a hash-bound review of local RungProof renderer artifacts, not an installed TIA Portal comparison.",
+    "The generated PNGs and source manifest remain ignored ephemeral-local files; this checked-in verdict does not make the pixels portable.",
+    "The reviewed set covers selected offline rendering with symbolic and absolute operands, tag information shown on operands, and 75, 100, and 150 percent zoom.",
+    "Installed-TIA edit and online captures, live PLC execution, project interchange, downloading, forcing, and commissioning remain unproved."
+  ]
+}

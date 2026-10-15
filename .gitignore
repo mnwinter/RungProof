@@ -1,28 +1,34 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-.pytest_cache/
-.mypy_cache/
-
-# Local configuration and secrets
-.env
-.env.*
-!.env.example
-
-# Build outputs
+# Local toolchains and generated application state
+.tools/
+**/.tools/
+.godot/
+**/.godot/
+.mono/
+**/.mono/
+bin/
+**/bin/
+obj/
+**/obj/
 build/
-dist/
-*.spec
-*.exe
-*.zip
+**/build/
+artifacts/
+**/artifacts/
+TestResults/
+**/TestResults/
 
-# Editor and operating-system files
-.vscode/
-.idea/
-Thumbs.db
-.DS_Store
+# Language/package caches
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+**/.pytest_cache/
+node_modules/
+*.pyc
+*.user
 
-# Runtime output
+# Local runtime data and logs
+backups/
+.claude/
+prototype/saved-scenes/
+player-server*.log
 *.log
+

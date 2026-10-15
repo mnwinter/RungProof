@@ -1,0 +1,692 @@
+{
+  "fileType": "plc-visual-scene",
+  "version": 1,
+  "id": "lab-11-13-xy-palletizing",
+  "name": "Lab 11.13 - XY Palletizing Cell",
+  "description": "Four-carton palletizing lesson: one Start runs a complete gantry batch using simulated three-axis encoder feedback, PLC-commanded vacuum, placement feedback and home return.",
+  "camera": {
+    "position": [
+      11,
+      8,
+      12
+    ],
+    "target": [
+      0,
+      1.1,
+      0
+    ],
+    "fov": 45
+  },
+  "equipment": [
+    {
+      "id": "conveyor_1",
+      "type": "conveyor",
+      "label": "XY Palletizing Cell conveyor",
+      "position": [
+        -3.3,
+        0,
+        -0.4
+      ],
+      "config": {
+        "length": 2.8,
+        "width": 0.6,
+        "deckHeight": 1.055,
+        "beltColor": 2568760,
+        "running": false
+      }
+    },
+    {
+      "id": "box_2",
+      "type": "box",
+      "label": "XY Palletizing Cell box",
+      "position": [
+        -0.95,
+        1.055,
+        -0.4
+      ],
+      "config": {
+        "size": [
+          0.45,
+          0.4,
+          0.35
+        ],
+        "installation": "palletizerCarton"
+      }
+    },
+    {
+      "id": "indicator_3",
+      "type": "indicator",
+      "label": "XY Palletizing Cell indicator",
+      "position": [
+        3.3000000000000003,
+        0,
+        0
+      ],
+      "config": {
+        "colors": [
+          "red",
+          "amber",
+          "green"
+        ],
+        "active": "red"
+      }
+    },
+    {
+      "id": "training_accessory_4",
+      "type": "trainingAccessory",
+      "label": "XY Palletizing Cell - XY gantry",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "config": {
+        "assetName": "XY gantry",
+        "catalogAssetId": "training.accessory.xy_gantry.v1"
+      }
+    },
+    {
+      "id": "training_accessory_6",
+      "type": "trainingAccessory",
+      "label": "XY Palletizing Cell - pallet magazine",
+      "position": [
+        0,
+        0.12,
+        0
+      ],
+      "config": {
+        "assetName": "pallet magazine",
+        "catalogAssetId": "training.accessory.pallet_magazine.v1"
+      }
+    },
+    {
+      "id": "training_accessory_7",
+      "type": "trainingAccessory",
+      "label": "XY Palletizing Cell - carton load",
+      "position": [
+        2.8,
+        0,
+        0.7
+      ],
+      "config": {
+        "assetName": "carton load",
+        "catalogAssetId": "training.accessory.carton_load.v1"
+      }
+    },
+    {
+      "id": "training_accessory_8",
+      "type": "trainingAccessory",
+      "label": "Conveyor-to-gantry pickup table",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "config": {
+        "installation": "palletizerPickTable",
+        "assetName": "supported pickup table"
+      }
+    },
+    {
+      "id": "switch_10",
+      "type": "switch",
+      "label": "Palletizer system enable",
+      "position": [
+        -2.4,
+        0,
+        4.7
+      ],
+      "config": {
+        "style": "rotary",
+        "action": "toggle-system_enable",
+        "color": 2204518,
+        "faceLabel": "ENABLE"
+      }
+    },
+    {
+      "id": "switch_9",
+      "type": "switch",
+      "label": "XY Palletizing Cell operator input",
+      "position": [
+        -0.20000000000000007,
+        0,
+        4.7
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "start-palletizer",
+        "color": 2204518,
+        "faceLabel": "START"
+      }
+    },
+    {
+      "id": "switch_14",
+      "type": "switch",
+      "label": "Palletizer machine Stop",
+      "position": [
+        1.0,
+        0,
+        4.7
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "stop-palletizer",
+        "color": 11141120,
+        "faceLabel": "STOP"
+      }
+    },
+    {
+      "id": "switch_15",
+      "type": "switch",
+      "label": "Palletizer machine Reset",
+      "position": [
+        2.1,
+        0,
+        4.7
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "reset-palletizer",
+        "color": 2204518,
+        "faceLabel": "RESET"
+      }
+    },
+    {
+      "id": "switch_16",
+      "type": "switch",
+      "label": "Simulated safety status - training only",
+      "position": [
+        3.1,
+        0,
+        4.7
+      ],
+      "config": {
+        "style": "rotary",
+        "action": "toggle-safety_trip",
+        "color": 11141120,
+        "faceLabel": "SIM TRIP"
+      }
+    },
+    {
+      "id": "switch_11",
+      "type": "switch",
+      "label": "XY Palletizing Cell operator input",
+      "position": [
+        4.2,
+        0,
+        4.7
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "toggle-pallet_position_valid",
+        "color": 2204518,
+        "faceLabel": "PALLET"
+      }
+    },
+    {
+      "id": "indicator_12",
+      "type": "indicator",
+      "label": "XY Palletizing Cell output indication",
+      "position": [
+        -1.9500000000000002,
+        0,
+        7.050000000000001
+      ],
+      "config": {
+        "colors": [
+          "red",
+          "amber",
+          "green"
+        ],
+        "active": "red"
+      }
+    },
+    {
+      "id": "indicator_13",
+      "type": "indicator",
+      "label": "XY Palletizing Cell output indication",
+      "position": [
+        0.25,
+        0,
+        7.050000000000001
+      ],
+      "config": {
+        "colors": [
+          "red",
+          "amber",
+          "green"
+        ],
+        "active": "red"
+      }
+    }
+  ],
+  "simulation": {
+    "type": "booleanPanel",
+    "points": [
+      {
+        "name": "system_enable",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true
+      },
+      {
+        "name": "start_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "stop_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "reset_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "safety_trip",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "carton_at_pick",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true
+      },
+      {
+        "name": "gantry_home",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true
+      },
+      {
+        "name": "pallet_position_valid",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true
+      },
+      {
+        "name": "gantry_x_positive",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "gantry_x_negative",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "gantry_y_positive",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "gantry_y_negative",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "gantry_z_positive",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "gantry_z_negative",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "vacuum_pick",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "palletizer_reset",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "cell_active",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "layer_complete",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output"
+      },
+      {
+        "name": "at_pickup",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "at_place",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "carton_attached",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "pick_complete",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "cycle_in_progress",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "palletizer_fault",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false
+      },
+      {
+        "name": "placed_cartons",
+        "type": "DINT",
+        "owner": "PC",
+        "initial": 0
+      },
+      {
+        "name": "gantry_x_encoder_counts",
+        "type": "DINT",
+        "owner": "PC",
+        "initial": 0
+      },
+      {
+        "name": "gantry_y_encoder_counts",
+        "type": "DINT",
+        "owner": "PC",
+        "initial": 0
+      },
+      {
+        "name": "gantry_z_encoder_counts",
+        "type": "DINT",
+        "owner": "PC",
+        "initial": 0
+      }
+    ],
+    "actions": [
+      {
+        "id": "toggle-system_enable",
+        "label": "Toggle system enable",
+        "type": "toggle",
+        "point": "system_enable"
+      },
+      {
+        "id": "start-palletizer",
+        "label": "Start / resume four-carton batch",
+        "type": "pulse",
+        "point": "start_command"
+      },
+      {
+        "id": "stop-palletizer",
+        "label": "Machine Stop",
+        "type": "pulse",
+        "point": "stop_command"
+      },
+      {
+        "id": "reset-palletizer",
+        "label": "Machine Reset",
+        "type": "pulse",
+        "point": "reset_command"
+      },
+      {
+        "id": "toggle-safety_trip",
+        "label": "Toggle simulated safety trip (training only)",
+        "type": "toggle",
+        "point": "safety_trip"
+      },
+      {
+        "id": "toggle-pallet_position_valid",
+        "label": "Toggle pallet permissive",
+        "type": "toggle",
+        "point": "pallet_position_valid"
+      }
+    ],
+    "rules": [],
+    "edgeRules": [],
+    "pointBindings": [
+      {
+        "point": "system_enable",
+        "equipmentId": "switch_10",
+        "mode": "switch"
+      },
+      {
+        "point": "pallet_position_valid",
+        "equipmentId": "switch_11",
+        "mode": "switch"
+      },
+      {
+        "point": "vacuum_pick",
+        "equipmentId": "indicator_3",
+        "mode": "indicator",
+        "activeColor": "green"
+      },
+      {
+        "point": "cell_active",
+        "equipmentId": "indicator_12",
+        "mode": "indicator",
+        "activeColor": "green"
+      },
+      {
+        "point": "layer_complete",
+        "equipmentId": "indicator_13",
+        "mode": "indicator",
+        "activeColor": "green"
+      },
+      {
+        "point": "start_command",
+        "equipmentId": "switch_9",
+        "mode": "switch"
+      },
+      {
+        "point": "stop_command",
+        "equipmentId": "switch_14",
+        "mode": "switch"
+      },
+      {
+        "point": "reset_command",
+        "equipmentId": "switch_15",
+        "mode": "switch"
+      },
+      {
+        "point": "safety_trip",
+        "equipmentId": "switch_16",
+        "mode": "switch"
+      }
+    ],
+    "palletizerPlant": {
+      "model": "four-carton-layer-v1"
+    }
+  },
+  "training": {
+    "hints": [
+      "Run, then Start once. The batch picks, carries and places all four cartons, restaging from the carton-load supply after each home return.",
+      "X, Y and Z encoder-count tags are simulated plant feedback, zeroed at the pickup/home pose and scaled at 10 counts/mm. A PLC comparison rung requires every axis to be within ±5 mm before accepting Start.",
+      "A 750 ms pickup dwell enables vacuum. The CTU counts a completed placement plus home return, not elapsed time alone.",
+      "Machine Stop, System Enable loss, pallet-permissive loss, or the simulated training trip clears every axis command and requires a fresh Start. Machine Reset returns the plant and PLC sequence to home."
+    ],
+    "solution": {
+      "summary": "This is an original functional reference for the control concept, not a copy of the photographed solution.",
+      "steps": [
+        "Trace System Enable, Start, Stop, Reset, simulated trip, pallet permissive and measured feedback in Main.",
+        "Inspect the X, Y and Z calls to FB_AxisDrive and the vacuum call to FB_VacuumGripper; each FB call has its own instance DB.",
+        "Follow sequence_step and the encoder comparisons that create the six independent axis-direction commands."
+      ],
+      "acceptance": "A carton is picked only at home and placed only at a valid pallet position."
+    },
+    "assetRequirements": [
+      "XY gantry",
+      "pallet magazine",
+      "carton load",
+      "supported pickup table"
+    ],
+    "machineGuide": {
+      "purpose": "Four-carton palletizing lesson: one Start runs a complete gantry batch with simulated encoder feedback, PLC-commanded vacuum, placement feedback and home return.",
+      "startConditions": [
+        "Select the built-in offline controller; no PLC connection is required.",
+        "System Enable and pallet permissive are true, simulated trip is clear, the pickup carton is present, and all measured axes are home."
+      ],
+      "normalSequence": [
+        "Run, then press Start once to begin the four-carton batch.",
+        "After each home return, the carton-load supply stages the next carton at the supported pickup station until all four positions are filled.",
+        "The gantry lowers onto the carton, dwells 750 ms, picks up, carries to the next pallet slot, releases on the pallet, and returns home.",
+        "The layer-complete lamp follows the fourth completed home return. The X/Y/Z encoder-count watch values track simulated position relative to pickup home."
+      ],
+      "stopBehavior": [
+        "Machine Stop freezes pose and attachment, clears all six axis commands and vacuum, and preserves the PLC sequence step and placed cartons. Fresh Start resumes; app Run alone does not.",
+        "System Enable loss, pallet-permissive loss, or simulated trip removes the machine seal-in. Clear the cause and press Start. Machine Reset clears the sequence/count and restores the preloaded home plant."
+      ],
+      "faultBehavior": [
+        "Opposed axis commands, actuator commands without pallet permission, or vacuum loss away from a supported place latch a modeled plant fault. Machine Reset restores the lesson. The safety-trip input is instructional only, not a safety-rated function."
+      ],
+      "expectedObservations": [
+        "The pickup carton remains on a table until attached. Carried cartons follow the tool; released cartons remain on four separate pallet slots.",
+        "Encoder counts change with simulated travel. Home is generated from the completed return; the placement counter advances after release and home return."
+      ]
+    },
+    "sequenceNumber": 69,
+    "inheritsFrom": "lab-11-12-mobile-traffic-lights",
+    "foundation": "common-plc-watchdog-foundation",
+    "retainedTags": [
+      "PC_Heartbeat",
+      "PLC_Heartbeat_Echo",
+      "Simulation_Enable",
+      "Simulation_Comm_OK",
+      "Simulation_Timeout"
+    ],
+    "addedTags": [
+      "system_enable",
+      "start_command",
+      "stop_command",
+      "reset_command",
+      "safety_trip",
+      "carton_at_pick",
+      "gantry_home",
+      "pallet_position_valid",
+      "gantry_x_positive",
+      "gantry_x_negative",
+      "gantry_y_positive",
+      "gantry_y_negative",
+      "gantry_z_positive",
+      "gantry_z_negative",
+      "vacuum_pick",
+      "palletizer_reset",
+      "cell_active",
+      "layer_complete",
+      "at_pickup",
+      "at_place",
+      "carton_attached",
+      "pick_complete",
+      "cycle_in_progress",
+      "palletizer_fault",
+      "placed_cartons",
+      "gantry_x_encoder_counts",
+      "gantry_y_encoder_counts",
+      "gantry_z_encoder_counts"
+    ],
+    "changedTags": [],
+    "previousAcceptance": [
+      "lab-11-12-mobile-traffic-lights"
+    ]
+  },
+  "verification": {
+    "cases": [
+      {
+        "name": "initial-safe-state",
+        "expect": {
+          "gantry_x_positive": false,
+          "gantry_x_negative": false,
+          "gantry_y_positive": false,
+          "gantry_y_negative": false,
+          "gantry_z_positive": false,
+          "gantry_z_negative": false,
+          "vacuum_pick": false,
+          "palletizer_reset": false,
+          "cell_active": false,
+          "layer_complete": false
+        }
+      }
+    ]
+  },
+  "migration": {
+    "sourceFile": "prototype/scenes/lab-11-13-xy-palletizing.plcscene",
+    "sourceFormat": "plcscene",
+    "assetMappings": {
+      "conveyor": "material-handling.belt-conveyor.600x6000.v1",
+      "photoeye": "sensing.photoelectric.through-beam.v1",
+      "switch": "controls.operator-station.single-pushbutton.v1",
+      "indicator": "controls.beacon.single-tier.v1",
+      "pusher": "actuation.pneumatic-pusher.1350mm.v1",
+      "motor": "drives.motor.ac-induction.v1",
+      "pipe": "process.pipe.flanged-spool.v1",
+      "tank": "process.tank.vertical-3000x5000.v1",
+      "pump": "process.pump.centrifugal-skid.v1",
+      "valve": "process.valve.actuated-ball.v1",
+      "levelSensor": "sensing.level.analog-4-20ma.v1",
+      "radarLevelSensor": "sensing.level.radar.v1",
+      "rotarySwitch": "controls.operator-station.selector.v1",
+      "fan": "air-handling.fan.axial-1900.v1",
+      "liftTable": "material-handling.lift.scissor-table.v1",
+      "drillPress": "machining.drill-press.pedestal.v1",
+      "robotArm": "robotics.robot.six-axis-medium.v1",
+      "rotaryTable": "material-handling.table.powered-rotary.v1",
+      "rollerShutter": "access-control.door.roller-shutter.v1",
+      "machine": "machining.machine.enclosed-center.v1",
+      "palletLoad": "loads.palletized-cases.gma-48x40.v1",
+      "toteFiller": "process.packaging.filler.tote-volumetric.v1",
+      "toteCapper": "process.packaging.capper.tote-inline.v1",
+      "toteLabeler": "process.packaging.labeler.tote-pressure-sensitive.v1",
+      "toteVision": "inspection.vision.tote-multicamera.v1",
+      "meteringSkid": "process.dosing.skid.liquid-metering.v1",
+      "containerReceiver": "material-handling.receiver.container-two-position.v1",
+      "sizeSensorBank": "sensing.dimensioning.parcel-three-height.v1"
+    },
+    "scenePropTypes": [
+      "box"
+    ],
+    "unresolvedAssetTypes": [
+      "trainingAccessory"
+    ],
+    "visualStatus": "partial",
+    "productionApproved": false,
+    "reason": "Production approval requires every reusable asset and the complete scene to pass visual review."
+  }
+}

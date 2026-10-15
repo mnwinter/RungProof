@@ -1,28 +1,55 @@
-# Project instructions
+# AI and contributor instructions
 
-Read `PROJECT_INFORMATION.md`, `README.md`, and the relevant file under
-`docs/` before changing the interface.
+This repository is the PLC Visual Simulator / RungProof project. Preserve the
+existing application and its history. Do not replace working behavior with a
+throwaway demo.
 
-## Controls constraints
+## Project rules
 
-- Preserve the validated DB14 memory contract unless a coordinated PLC and PC
-  migration is explicitly requested.
-- Keep the PLC IP address configurable. Do not hard-code a new site address.
-- Never write physical `%I` or `%Q` addresses from a test utility.
-- PC-owned and PLC-owned fields must remain separate.
-- Any utility that writes PLC memory must require an explicit `--execute`
-  argument and must state its exact write scope.
-- Restore temporary test values when a diagnostic ends, including after an
-  exception whenever communication still permits restoration.
-- Do not issue CPU RUN, STOP, reset, download, or hardware-configuration
-  commands.
-- Treat heartbeat timeout handling as a required fail-safe before controlling
-  simulated machine outputs.
+- Read `CONTEXT.md`, `PROJECT_INFORMATION.md`, `README.md`, and the relevant
+  `docs/` material before making architectural changes.
+- Preserve unrelated local work. Never use `git clean`, `git reset --hard`, or
+  broad checkout/revert operations unless the user explicitly requests it.
+- The local checkout is authoritative when the user asks to integrate and push.
+  Inspect the branch and remote first, then commit and push the exact branch.
+- A clean Git tree means the working files match the last commit; it does not
+  mean the project has no history or generated assets.
+- Do not report completion from static inspection alone. Run the relevant build,
+  deterministic tests, and application verifier, and distinguish visual proof,
+  simulator proof, and live-PLC proof.
 
-## Repository constraints
+## Controls and PLC rules
 
-- Commit source and documentation, not generated EXEs, ZIP files, virtual
-  environments, credentials, or customer project archives.
-- Keep changes small and testable.
-- Record newly proven hardware behavior in `PROJECT_INFORMATION.md`.
-- Clearly distinguish tested behavior from proposed architecture.
+- Keep command, feedback, permissive, interlock, status, and fault signals
+  distinct. Do not turn momentary safety inputs into latches accidentally.
+- The built-in simulator and an external PLC are different execution sources.
+  The simulator must remain usable without a PLC.
+- The existing guarded S7 live path owns real PLC transport. It writes only the
+  configured PC-owned scope, reads only configured PLC-owned points/status, and
+  keeps playback state separate from connection state.
+- Do not invent PLC addresses, protocol support, tag mappings, or hardware
+  behavior. Use the validated profile and transport code already in the repo.
+- Live PLC work requires the configured CPU/profile, exact scope confirmation,
+  authorized controls-network access, and direct observation of the machine.
+  Automated tests must use the in-memory adapter and must not contact a plant.
+
+## RungProof Next boundary
+
+`rungproof-next/` is the Godot/C# successor with the integrated ladder editor,
+scene browser, split view, virtual controller, authored demos, and training
+assets. Its current architecture is symbolic/offline and deliberately does not
+own direct PLC transport. See `docs/AI_HANDOFF.md` before attempting to restore
+the live-PLC bridge in that shell.
+
+## Verification
+
+From `rungproof-next/`:
+
+```powershell
+& '.tools/dotnet/dotnet.exe' build RungProof.Next.csproj --no-restore
+& '.tools/dotnet/dotnet.exe' run --project tests/RungProof.Next.VirtualController.Tests.csproj --no-restore
+& '.tools/godot/Godot_v4.7.2-stable_mono_win64/Godot_v4.7.2-stable_mono_win64_console.exe' --headless --path . -- --verify-app-shell
+```
+
+The exact Godot path may be one directory different depending on the pinned
+tool bundle; locate it under `rungproof-next/.tools/godot/` if needed.

@@ -1,0 +1,4079 @@
+{
+  "schemaVersion": 1,
+  "target": {
+    "vendor": "Siemens",
+    "product": "TIA Portal STEP 7 LAD",
+    "preferredVersion": "V21",
+    "cpuFamilies": [
+      "S7-1200",
+      "S7-1500"
+    ],
+    "claimBoundary": "Registry records RungProof evidence and open vendor comparisons; it does not assert overall parity."
+  },
+  "entries": [
+    {
+      "key": "no",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 no instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/bit-logic-operations-s7-1200-s7-1500-s7-1200-g2/normally-open-contact-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.no.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.no.local-run.v1",
+            "artifact.no.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.no.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.no.local-run.v1",
+            "artifact.no.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.no.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.no.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.no.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.no.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.no.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.no.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.no.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "nc",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 nc instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/bit-logic-operations-s7-1200-s7-1500-s7-1200-g2/normally-closed-contact-s7-1200-s7-1500-s7-1200-g2?contentId=IeoGUKGSZqx5uM3E6NsvqQ",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.nc.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.nc.local-run.v1",
+            "artifact.nc.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.nc.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.nc.local-run.v1",
+            "artifact.nc.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.nc.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.nc.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.nc.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.nc.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.nc.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.nc.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.nc.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "edge-rising",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 edge-rising instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/bit-logic-operations-s7-1200-s7-1500-s7-1200-g2/p-scan-operand-for-positive-signal-edge-s7-1200-s7-1500-s7-1200-g2?contentId=s7_wEUjrTWNDuj1RbiydBQ",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.edge-rising.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-rising.local-run.v1",
+            "artifact.edge-rising.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.edge-rising.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-rising.local-run.v1",
+            "artifact.edge-rising.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.edge-rising.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-rising.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.edge-rising.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-rising.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.edge-rising.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.edge-rising.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.edge-rising.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "edge-falling",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 edge-falling instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/bit-logic-operations-s7-1200-s7-1500/n-scan-operand-for-negative-signal-edge-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.edge-falling.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-falling.local-run.v1",
+            "artifact.edge-falling.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.edge-falling.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-falling.local-run.v1",
+            "artifact.edge-falling.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.edge-falling.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-falling.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.edge-falling.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.edge-falling.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.edge-falling.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.edge-falling.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.edge-falling.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "coil",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 coil instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/bit-logic-operations-s7-1200-s7-1500-s7-1200-g2/assignment-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.coil.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.coil.local-run.v1",
+            "artifact.coil.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.coil.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.coil.local-run.v1",
+            "artifact.coil.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.coil.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.coil.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.coil.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.coil.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.coil.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.coil.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.coil.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "set",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 set instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/bit-logic-operations-s7-1200-s7-1500-s7-1200-g2/s-set-output-s7-1200-s7-1500-s7-1200-g2?contentId=Wh9qyAlMOIlzh6OBxbOEYA",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.set.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.set.local-run.v1",
+            "artifact.set.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.set.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.set.local-run.v1",
+            "artifact.set.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.set.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.set.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.set.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.set.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.set.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.set.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.set.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "reset",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 reset instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/bit-logic-operations-s7-1200-s7-1500-s7-1200-g2/r-reset-output-s7-1200-s7-1500-s7-1200-g2?contentId=C2FGQIC3pRy1AxpaDUjqVg",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.reset.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.reset.local-run.v1",
+            "artifact.reset.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.reset.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.reset.local-run.v1",
+            "artifact.reset.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.reset.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.reset.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.reset.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.reset.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.reset.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.reset.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.reset.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "branch",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 branch structural reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/branches-in-lad/rules-for-branches-in-lad?contentId=jsBAKV~wzHUUwt657xLTzw",
+          "version": "V21",
+          "scope": "exact-structure"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.branch.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.branch.local-run.v1",
+            "artifact.branch.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.branch.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.branch.local-run.v1",
+            "artifact.branch.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.branch.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.branch.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.branch.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.branch.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.branch.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.branch.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.branch.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "ton",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 ton instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/timer-operations-s7-1200-s7-1500-s7-1200-g2/ton-generate-on-delay-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.ton.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ton.local-run.v1",
+            "artifact.ton.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.ton.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ton.local-run.v1",
+            "artifact.ton.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.ton.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ton.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.ton.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ton.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.ton.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.ton.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.ton.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "The exact instruction URL is cited in the matrix source set rather than the per-key row."
+      ]
+    },
+    {
+      "key": "tof",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 tof instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/timer-operations-s7-1200-s7-1500-s7-1200-g2/tof-generate-off-delay-s7-1200-s7-1500-s7-1200-g2?contentId=tduU5NPra2zAa2IVt4F4Sg",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.tof.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tof.local-run.v1",
+            "artifact.tof.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.tof.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tof.local-run.v1",
+            "artifact.tof.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.tof.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tof.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.tof.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tof.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.tof.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.tof.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.tof.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "tp",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 tp instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/timer-operations-s7-1200-s7-1500-s7-1200-g2/tp-generate-pulse-s7-1200-s7-1500-s7-1200-g2?contentId=QQuAEAuwAXH2pfmK0Ra99A",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.tp.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tp.local-run.v1",
+            "artifact.tp.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.tp.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tp.local-run.v1",
+            "artifact.tp.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.tp.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tp.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.tp.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.tp.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.tp.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.tp.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.tp.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "rto",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 rto instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/timer-operations-s7-1200-s7-1500/tonr-time-accumulator-s7-1200-s7-1500?contentId=hGjN_YcYJMeP90tnT0RrIQ",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.rto.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rto.local-run.v1",
+            "artifact.rto.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.rto.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rto.local-run.v1",
+            "artifact.rto.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.rto.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rto.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.rto.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rto.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.rto.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.rto.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.rto.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "The exact instruction URL is cited in the matrix source set rather than the per-key row."
+      ]
+    },
+    {
+      "key": "timer-reset",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 timer-reset instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/timer-operations-s7-1200-s7-1500/rt-reset-timer-s7-1200-s7-1500?contentId=AKFPqRIboeN2pXJD3JZD~w",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.timer-reset.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.timer-reset.local-run.v1",
+            "artifact.timer-reset.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.timer-reset.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.timer-reset.local-run.v1",
+            "artifact.timer-reset.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.timer-reset.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.timer-reset.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.timer-reset.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.timer-reset.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.timer-reset.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.timer-reset.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.timer-reset.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "The exact instruction URL is cited in the matrix source set rather than the per-key row."
+      ]
+    },
+    {
+      "key": "ctu",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 ctu instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/counter-operations-s7-1200-s7-1500-s7-1200-g2/ctu-count-up-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.ctu.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctu.local-run.v1",
+            "artifact.ctu.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.ctu.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctu.local-run.v1",
+            "artifact.ctu.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.ctu.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctu.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.ctu.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctu.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.ctu.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.ctu.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.ctu.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "The exact instruction URL is cited in the matrix source set rather than the per-key row."
+      ]
+    },
+    {
+      "key": "ctd",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 ctd instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/counter-operations-s7-1200-s7-1500-s7-1200-g2/ctd-count-down-s7-1200-s7-1500-s7-1200-g2?contentId=oLiHDq7BX5tXv0mFOZV~pA",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.ctd.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctd.local-run.v1",
+            "artifact.ctd.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.ctd.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctd.local-run.v1",
+            "artifact.ctd.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.ctd.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctd.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.ctd.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.ctd.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.ctd.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.ctd.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.ctd.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "counter-load",
+      "supportClass": "rungproof-local",
+      "source": [],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.counter-load.offline",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "selected",
+          "id": "tia.counter-load.selected",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "edit",
+          "id": "tia.counter-load.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "monitor",
+          "id": "tia.counter-load.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        }
+      ],
+      "artifacts": [],
+      "limitations": [
+        "RungProof-local operation; excluded from Siemens parity claims."
+      ]
+    },
+    {
+      "key": "counter-reset",
+      "supportClass": "rungproof-local",
+      "source": [],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.counter-reset.offline",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "selected",
+          "id": "tia.counter-reset.selected",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "edit",
+          "id": "tia.counter-reset.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "monitor",
+          "id": "tia.counter-reset.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        }
+      ],
+      "artifacts": [],
+      "limitations": [
+        "RungProof-local operation; excluded from Siemens parity claims."
+      ]
+    },
+    {
+      "key": "rung",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 rung structural reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/rungs-in-lad/basic-information-on-rungs-in-lad",
+          "version": "V21",
+          "scope": "exact-structure"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.rung.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rung.local-run.v1",
+            "artifact.rung.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.rung.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rung.local-run.v1",
+            "artifact.rung.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.rung.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rung.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.rung.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.rung.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.rung.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.rung.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.rung.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "call",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 inserting block calls in LAD",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/inserting-lad-elements/insert-block-calls-in-lad/inserting-block-calls-using-a-drag-and-drop-operation?contentId=DLDMKzyVsYR4GEuDUwdqBw",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.call.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.call.local-run.v1",
+            "artifact.call.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.call.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.call.local-run.v1",
+            "artifact.call.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.call.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.call.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.call.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.call.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.call.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.call.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.call.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "return",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 return instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/program-control-operations-s7-1200-s7-1500-s7-1200-g2/ret-return-s7-1200-s7-1500-s7-1200-g2?contentId=lhCb6mPKhOdBnmUeoI1CLA",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.return.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.return.local-run.v1",
+            "artifact.return.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.return.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.return.local-run.v1",
+            "artifact.return.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.return.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.return.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.return.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.return.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.return.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.return.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.return.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "jump",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 jump instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/program-control-operations-s7-1200-s7-1500-s7-1200-g2/jmp-jump-if-rlo-1-s7-1200-s7-1500-s7-1200-g2?contentId=KhfLS4DbhPuqOhfgl4f74A",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.jump.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.jump.local-run.v1",
+            "artifact.jump.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.jump.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.jump.local-run.v1",
+            "artifact.jump.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.jump.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.jump.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.jump.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.jump.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.jump.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.jump.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.jump.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "label",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 label instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/program-control-operations-s7-1200-s7-1500-s7-1200-g2/label-jump-label-s7-1200-s7-1500-s7-1200-g2?contentId=8cBMdACqyMR4XJkgqaLcZA",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.label.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.label.local-run.v1",
+            "artifact.label.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.label.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.label.local-run.v1",
+            "artifact.label.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.label.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.label.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.label.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.label.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.label.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.label.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.label.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "compare-0",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 compare-0 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/comparator-operations-s7-1200-s7-1500-s7-1200-g2/cmp-equal-s7-1200-s7-1500-s7-1200-g2?contentId=89iNuOP56Ffprg7zIjqDZQ",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-0.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-0.local-run.v1",
+            "artifact.compare-0.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-0.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-0.local-run.v1",
+            "artifact.compare-0.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-0.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-0.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-0.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-0.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.compare-0.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.compare-0.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.compare-0.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "compare-1",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 compare-1 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/comparator-operations-s7-1200-s7-1500-s7-1200-g2/cmp-not-equal-s7-1200-s7-1500-s7-1200-g2?contentId=nQ9KvGMpDgqimsk~dbE63g",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-1.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-1.local-run.v1",
+            "artifact.compare-1.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-1.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-1.local-run.v1",
+            "artifact.compare-1.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-1.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-1.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-1.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-1.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.compare-1.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.compare-1.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.compare-1.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "compare-2",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 comparator family reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/cem-s7-1200-s7-1500-s7-1200-g2/cause-instructions-s7-1200-s7-1500-s7-1200-g2/comparator-operations-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "family-reference"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-2.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-2.local-run.v1",
+            "artifact.compare-2.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-2.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-2.local-run.v1",
+            "artifact.compare-2.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-2.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-2.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-2.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-2.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.compare-2.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.compare-2.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.compare-2.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "No per-key exact official URL is recorded in the current matrix; the family source is not exact instruction evidence."
+      ]
+    },
+    {
+      "key": "compare-3",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 comparator family reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/cem-s7-1200-s7-1500-s7-1200-g2/cause-instructions-s7-1200-s7-1500-s7-1200-g2/comparator-operations-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "family-reference"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-3.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-3.local-run.v1",
+            "artifact.compare-3.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-3.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-3.local-run.v1",
+            "artifact.compare-3.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-3.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-3.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-3.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-3.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.compare-3.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.compare-3.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.compare-3.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "No per-key exact official URL is recorded in the current matrix; the family source is not exact instruction evidence."
+      ]
+    },
+    {
+      "key": "compare-4",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 comparator family reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/cem-s7-1200-s7-1500-s7-1200-g2/cause-instructions-s7-1200-s7-1500-s7-1200-g2/comparator-operations-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "family-reference"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-4.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-4.local-run.v1",
+            "artifact.compare-4.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-4.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-4.local-run.v1",
+            "artifact.compare-4.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-4.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-4.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-4.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-4.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.compare-4.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.compare-4.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.compare-4.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "No per-key exact official URL is recorded in the current matrix; the family source is not exact instruction evidence."
+      ]
+    },
+    {
+      "key": "compare-5",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 comparator family reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/cem-s7-1200-s7-1500-s7-1200-g2/cause-instructions-s7-1200-s7-1500-s7-1200-g2/comparator-operations-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "family-reference"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-5.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-5.local-run.v1",
+            "artifact.compare-5.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-5.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-5.local-run.v1",
+            "artifact.compare-5.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-5.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-5.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-5.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.compare-5.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.compare-5.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.compare-5.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.compare-5.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry.",
+        "No per-key exact official URL is recorded in the current matrix; the family source is not exact instruction evidence."
+      ]
+    },
+    {
+      "key": "compare-6",
+      "supportClass": "rungproof-local",
+      "source": [],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.compare-6.offline",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "selected",
+          "id": "tia.compare-6.selected",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "edit",
+          "id": "tia.compare-6.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "monitor",
+          "id": "tia.compare-6.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        }
+      ],
+      "artifacts": [],
+      "limitations": [
+        "RungProof-local operation; excluded from Siemens parity claims."
+      ]
+    },
+    {
+      "key": "numeric-0",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-0 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/move-operations-s7-1200-s7-1500-s7-1200-g2/move-move-value-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-0.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-0.local-run.v1",
+            "artifact.numeric-0.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-0.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-0.local-run.v1",
+            "artifact.numeric-0.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-0.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-0.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-0.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-0.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-0.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-0.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-0.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-1",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-1 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/add-add-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-1.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-1.local-run.v1",
+            "artifact.numeric-1.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-1.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-1.local-run.v1",
+            "artifact.numeric-1.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-1.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-1.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-1.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-1.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-1.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-1.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-1.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-2",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-2 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/sub-subtract-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-2.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-2.local-run.v1",
+            "artifact.numeric-2.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-2.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-2.local-run.v1",
+            "artifact.numeric-2.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-2.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-2.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-2.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-2.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-2.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-2.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-2.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-3",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-3 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/mul-multiply-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-3.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-3.local-run.v1",
+            "artifact.numeric-3.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-3.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-3.local-run.v1",
+            "artifact.numeric-3.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-3.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-3.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-3.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-3.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-3.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-3.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-3.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-4",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-4 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/div-divide-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-4.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-4.local-run.v1",
+            "artifact.numeric-4.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-4.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-4.local-run.v1",
+            "artifact.numeric-4.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-4.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-4.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-4.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-4.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-4.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-4.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-4.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-5",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-5 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/mod-return-remainder-of-division-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-5.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-5.local-run.v1",
+            "artifact.numeric-5.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-5.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-5.local-run.v1",
+            "artifact.numeric-5.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-5.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-5.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-5.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-5.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-5.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-5.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-5.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-6",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-6 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/simatic_s7_1200_manual_collection_enus_20/basic-instructions/math-functions/abs-form-absolute-value",
+          "version": "Manual collection 20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-6.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-6.local-run.v1",
+            "artifact.numeric-6.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-6.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-6.local-run.v1",
+            "artifact.numeric-6.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-6.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-6.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-6.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-6.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-6.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-6.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-6.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-7",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-7 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/neg-create-twos-complement-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-7.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-7.local-run.v1",
+            "artifact.numeric-7.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-7.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-7.local-run.v1",
+            "artifact.numeric-7.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-7.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-7.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-7.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-7.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-7.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-7.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-7.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-8",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-8 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/sqrt-form-square-root-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-8.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-8.local-run.v1",
+            "artifact.numeric-8.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-8.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-8.local-run.v1",
+            "artifact.numeric-8.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-8.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-8.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-8.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-8.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-8.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-8.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-8.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-9",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-9 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/math-functions-s7-1200-s7-1500-s7-1200-g2/expt-exponentiate-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-9.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-9.local-run.v1",
+            "artifact.numeric-9.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-9.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-9.local-run.v1",
+            "artifact.numeric-9.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-9.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-9.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-9.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-9.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-9.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-9.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-9.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-10",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-10 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/ln-form-natural-logarithm-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-10.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-10.local-run.v1",
+            "artifact.numeric-10.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-10.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-10.local-run.v1",
+            "artifact.numeric-10.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-10.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-10.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-10.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-10.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-10.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-10.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-10.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-11",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-11 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/sin-form-sine-value-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-11.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-11.local-run.v1",
+            "artifact.numeric-11.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-11.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-11.local-run.v1",
+            "artifact.numeric-11.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-11.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-11.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-11.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-11.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-11.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-11.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-11.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-12",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-12 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/cos-form-cosine-value-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-12.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-12.local-run.v1",
+            "artifact.numeric-12.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-12.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-12.local-run.v1",
+            "artifact.numeric-12.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-12.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-12.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-12.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-12.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-12.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-12.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-12.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-13",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-13 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/tan-form-tangent-value-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-13.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-13.local-run.v1",
+            "artifact.numeric-13.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-13.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-13.local-run.v1",
+            "artifact.numeric-13.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-13.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-13.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-13.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-13.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-13.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-13.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-13.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-14",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-14 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/asin-form-arcsine-value-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-14.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-14.local-run.v1",
+            "artifact.numeric-14.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-14.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-14.local-run.v1",
+            "artifact.numeric-14.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-14.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-14.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-14.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-14.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-14.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-14.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-14.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-15",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-15 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/acos-form-arccosine-value-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-15.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-15.local-run.v1",
+            "artifact.numeric-15.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-15.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-15.local-run.v1",
+            "artifact.numeric-15.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-15.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-15.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-15.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-15.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-15.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-15.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-15.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-16",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-16 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v20/lad-s7-1200-s7-1500/math-functions-s7-1200-s7-1500/atan-form-arctangent-value-s7-1200-s7-1500",
+          "version": "V20",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-16.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-16.local-run.v1",
+            "artifact.numeric-16.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-16.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-16.local-run.v1",
+            "artifact.numeric-16.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-16.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-16.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-16.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-16.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-16.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-16.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-16.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-17",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-17 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/trunc-truncate-numerical-value-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-17.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-17.local-run.v1",
+            "artifact.numeric-17.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-17.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-17.local-run.v1",
+            "artifact.numeric-17.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-17.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-17.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-17.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-17.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-17.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-17.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-17.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-18",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-18 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/norm_x-normalize-s7-1200-s7-1500-s7-1200-g2?contentId=uA~cqSMsnHtloOSfeOPy3A",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-18.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-18.local-run.v1",
+            "artifact.numeric-18.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-18.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-18.local-run.v1",
+            "artifact.numeric-18.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-18.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-18.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-18.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-18.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-18.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-18.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-18.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-19",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-19 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/scale_x-scale-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-19.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-19.local-run.v1",
+            "artifact.numeric-19.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-19.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-19.local-run.v1",
+            "artifact.numeric-19.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-19.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-19.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-19.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-19.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-19.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-19.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-19.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-20",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-20 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/convert-convert-value-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-20.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-20.local-run.v1",
+            "artifact.numeric-20.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-20.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-20.local-run.v1",
+            "artifact.numeric-20.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-20.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-20.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-20.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-20.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-20.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-20.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-20.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-21",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-21 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/round-round-numerical-value-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-21.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-21.local-run.v1",
+            "artifact.numeric-21.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-21.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-21.local-run.v1",
+            "artifact.numeric-21.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-21.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-21.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-21.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-21.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-21.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-21.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-21.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-22",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-22 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/ceil-generate-next-higher-integer-from-floating-point-number-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-22.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-22.local-run.v1",
+            "artifact.numeric-22.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-22.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-22.local-run.v1",
+            "artifact.numeric-22.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-22.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-22.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-22.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-22.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-22.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-22.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-22.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-23",
+      "supportClass": "siemens-subset",
+      "source": [
+        {
+          "title": "Siemens STEP 7 numeric-23 instruction reference",
+          "url": "https://docs.tia.siemens.cloud/r/en-us/v21/lad-s7-1200-s7-1500-s7-1200-g2/conversion-operations-s7-1200-s7-1500-s7-1200-g2/floor-generate-next-lower-integer-from-floating-point-number-s7-1200-s7-1500-s7-1200-g2",
+          "version": "V21",
+          "scope": "exact-instruction"
+        }
+      ],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-23.offline",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-23.local-run.v1",
+            "artifact.numeric-23.offline-review.v1"
+          ]
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-23.selected",
+          "localStatus": "automated-and-visual",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-23.local-run.v1",
+            "artifact.numeric-23.selected-review.v1"
+          ]
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-23.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-23.local-run.v1"
+          ]
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-23.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "source-only",
+          "artifactIds": [
+            "artifact.numeric-23.local-run.v1"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact.numeric-23.local-run.v1",
+          "path": "docs/tia/tia-local-run-evidence.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "75B9FBBD85EAD326C713D1F808AFE47A0704255277480895CD792890D2D43B56"
+        },
+        {
+          "id": "artifact.numeric-23.selected-review.v1",
+          "path": "docs/tia/tia-renderer-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "C33EF3F4DCC8DE7E043063766699FAEE74B9B95AB533FF654C0BA4708FEA2305"
+        },
+        {
+          "id": "artifact.numeric-23.offline-review.v1",
+          "path": "docs/tia/tia-renderer-unselected-visual-review.json",
+          "kind": "json",
+          "durability": "ephemeral-local",
+          "sha256": "14EB0481492F0FF083C1C0A9DA9C870DE44D9410186FA86D87443A474A582944"
+        }
+      ],
+      "limitations": [
+        "Local evidence remains partial; matched installed-TIA state comparison is not recorded in this registry."
+      ]
+    },
+    {
+      "key": "numeric-24",
+      "supportClass": "rungproof-local",
+      "source": [],
+      "gates": [
+        {
+          "state": "offline",
+          "id": "tia.numeric-24.offline",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "selected",
+          "id": "tia.numeric-24.selected",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "edit",
+          "id": "tia.numeric-24.edit",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        },
+        {
+          "state": "monitor",
+          "id": "tia.numeric-24.monitor",
+          "localStatus": "automated-pass",
+          "vendorStatus": "not-required",
+          "artifactIds": []
+        }
+      ],
+      "artifacts": [],
+      "limitations": [
+        "RungProof-local operation; excluded from Siemens parity claims."
+      ]
+    }
+  ]
+}
