@@ -7336,7 +7336,10 @@ public partial class SimulatorShell : CanvasLayer
         };
         addAllWatch.Pressed += () =>
         {
-            var missing = document.Tags.Select(tag => tag.Name)
+            // Match the Add All scope to the symbol picker: aggregate roots
+            // and their individually selectable fields/elements are valid
+            // watch operands too.
+            var missing = AggregateWatchVariables(document.Tags).Select(tag => tag.Name)
                 .Where(name => !document.WatchVariables.Contains(name, StringComparer.Ordinal)).ToArray();
             if (missing.Length == 0 || !BeginProjectMetadataEdit("Add all watch-table symbols")) return;
             document.WatchVariables.AddRange(missing);

@@ -66,7 +66,9 @@ public partial class SimulatorShell
                 canvas.SelectTreeNode(0, "a1-left-leaf"); canvas.SetZoomPercent(150); await Frames();
                 scroll.ScrollHorizontal = 140; scroll.ScrollVertical = 180; await Frames();
                 var savedA = canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical);
-                Navigate(1); await Frames(); canvas.SelectElement(1, -1, -1, true); canvas.SetZoomPercent(75); await Frames();
+                Navigate(1); await Frames();
+                GD.Print($"BLOCK_VIEW_NAVIGATION vendor={vendor} requested=view-b actual={_ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id} activeIndex={_ladderDocument.ActiveBlockIndex} selectedRung={canvas.SelectedRung} current={canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical)}");
+                canvas.SelectElement(1, -1, -1, true); canvas.SetZoomPercent(75); await Frames();
                 scroll.ScrollHorizontal = 80; scroll.ScrollVertical = 240; await Frames();
                 var savedB = canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical);
                 Navigate(0); await Frames();

@@ -128,6 +128,45 @@ public partial class SimulatorShell
             Check(WatchText("qa_struct_renamed").Contains("ready=TRUE", StringComparison.Ordinal) && WatchText("qa_struct_renamed").Contains("value=42.25", StringComparison.Ordinal), "aggregate_root_watch_shows_actual_members");
             Check(WatchText("qa_struct_renamed.ready") == "TRUE" && WatchText("qa_struct_renamed.value") == "42.25" && WatchText("qa_array_ui[9]") == "TRUE", "typed_bool_numeric_element_watches_show_actual_scan_values");
             Check(_virtualControllerVariables.Text.Contains("value=42.25", StringComparison.Ordinal), "aggregate_monitor_never_falls_through_to_false_boolean");
+
+            var clearWatchButton = Widget<Button>("ClearWatchSymbols");
+            _ladderHistory.Clear();
+            var beforeWatchClear = LadderEditorProjectJson.Save(_ladderDocument);
+            clearWatchButton.EmitSignal(Button.SignalName.Pressed);
+            var afterWatchClear = LadderEditorProjectJson.Save(_ladderDocument);
+            var watchCleared = _ladderDocument.WatchVariables.Count == 0
+                && watch.GetRoot()?.GetFirstChild() is null;
+            var watchClearUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeWatchClear;
+            var watchClearRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterWatchClear;
+            var watchClearSavedLoaded = LadderEditorProjectJson.Load(afterWatchClear) is { IsReadable: true, Document: not null } clearedWatchLoaded
+                && LadderEditorProjectJson.Save(clearedWatchLoaded.Document) == afterWatchClear;
+            Check(watchCleared && watchClearUndo && watchClearRedo && watchClearSavedLoaded,
+                "watch_clear_undo_redo_save_load_exact");
+
+            _ladderHistory.Clear();
+            var beforeAddAll = LadderEditorProjectJson.Save(_ladderDocument);
+            Widget<Button>("AddAllWatchSymbols").EmitSignal(Button.SignalName.Pressed);
+            var afterAddAll = LadderEditorProjectJson.Save(_ladderDocument);
+            var watchSymbolPicker = Widget<OptionButton>("WatchSymbol");
+            var offeredWatchSymbols = Enumerable.Range(0, watchSymbolPicker.ItemCount)
+                .Select(index => watchSymbolPicker.GetItemText(index)).ToArray();
+            var watchGridSymbols = new List<string>();
+            for (var watchRow = watch.GetRoot()?.GetFirstChild(); watchRow is not null; watchRow = watchRow.GetNext())
+                watchGridSymbols.Add(watchRow.GetMetadata(0).AsString());
+            var addAllMatchesPicker = offeredWatchSymbols.SequenceEqual(watchGridSymbols, StringComparer.Ordinal)
+                && offeredWatchSymbols.Contains("qa_struct_renamed.ready", StringComparer.Ordinal)
+                && offeredWatchSymbols.Contains("qa_array_ui[9]", StringComparer.Ordinal);
+            var addAllUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeAddAll;
+            var addAllRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterAddAll;
+            var addAllSavedLoaded = LadderEditorProjectJson.Load(afterAddAll) is { IsReadable: true, Document: not null } allWatchLoaded
+                && LadderEditorProjectJson.Save(allWatchLoaded.Document) == afterAddAll;
+            Check(addAllMatchesPicker && addAllUndo && addAllRedo && addAllSavedLoaded,
+                "watch_add_all_covers_picker_symbols_undo_redo_save_load");
+
             SelectIndexedTreeRow(table, _ladderDocument.Tags.FindIndex(v => v.Name == "qa_array_ui")); table.EmitSignal(Tree.SignalName.ItemSelected);
             before = LadderEditorProjectJson.Save(_ladderDocument); var undo = _ladderHistory.UndoDescription; var redo = _ladderHistory.RedoDescription;
             nameField.Text = "qa_struct_renamed.ready"; apply.EmitSignal(Button.SignalName.Pressed);

@@ -744,12 +744,64 @@ a safety-rated circuit or installed-TIA parity.
 
 | Area | Current evidence | Acceptance still open |
 | --- | --- | --- |
-| Global DB inline cells | An isolated screen-control walkthrough visibly committed Name, Data Type, Start Value, Retain, and Comment. The current gate covers editable-cell state and property-form transactions. | Invalid and duplicate inline edits, atomic rejection feedback, exact Undo/Redo, and a project-file Save/Load/Save cycle through the visible workflow. |
-| Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. Screen control confirmed selected-row Remove and return to the Project Tree. | Fresh screen proof of each action across multiple rows and visible Save/Load. |
+| Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit a Comment edit through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. A fresh scratch screen pass visibly applied Data Type, Start Value, Retain, and Comment changes, then undid and redid them. | Invalid and duplicate inline edits, atomic rejection feedback, Name-cell commit, and a project-file Save/Load/Save cycle through the visible workflow. |
+| Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
 | Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
-| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, and Undo/Redo. Symbol references are identity-aware across rename/delete, including aggregate leaves and unresolved symbols. | Fresh visible walkthrough of tag property Apply/Undo/Redo/Save-Load. User/System constants and tag-to-operand drag remain unsupported. |
-| Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. Screen control verified visible Watch row selection above expanded Scene I/O. | Fresh visible Add Symbol, Remove, and Clear with selected-row targeting and Save/Load. Address-based rows, display formats, simulator-safe modify values, and reorder remain unsupported. |
+| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, and Undo/Redo. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. | Tag Cancel remains unverified by screen control. User/System constants and tag-to-operand drag remain unsupported. |
+| Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. Fresh scratch screen control confirmed Add Symbol, non-first-row Remove, Clear, Add All, and Save/reopen. The tested scene exposed five root tags and no aggregate leaves; source coverage exercises aggregate leaves. | Address-based rows, display formats, simulator-safe modify values, and row reorder remain unsupported. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
+
+### 2026-10-19: property transaction review update
+
+An independent source review found that the Watch symbol picker offered
+aggregate roots and expanded leaf operands, but **ADD ALL** added only declared
+tag roots. The handler now uses the same expanded symbol list as the picker.
+The aggregate editor verification now exercises visible Clear and Add All
+handlers, confirms the Add All rows match the picker (including aggregate
+members and array elements), and checks exact Undo/Redo plus project
+serialization round trips. The tag property transaction route now also checks
+exact Redo and Save/Load after Apply.
+
+The Watch-table creation gate now creates through the production dialog and
+actually runs Undo/Redo; the former gate reported those outcomes from a direct
+model mutation without invoking history. The updated source builds with zero
+warnings and errors, and an independent code review found no further actionable
+issue in these changes. These are source/build results.
+
+The independent scratch screen-control pass then edited the `start_command`
+Comment, applied it, visibly undid and redid the value, saved the scratch
+project, and reopened it with the comment retained. In Watch, Add Symbol showed
+the selected tag row; a two-row selection test removed only the selected second
+row; Clear changed the table from five rows to zero; Add All changed it from
+one row to all five picker entries; and Save/reopen retained the single
+`stop_command` row. Raising the Scene I/O splitter was necessary to expose both
+rows for selection. The loaded scene had no aggregate leaf symbols, so that
+specific visible case is covered only by the source verification route. Tag
+Cancel remains unverified. No user project was saved or modified by this pass.
+
+The complete interaction profile now passes all 15 commands, including the
+editor-control gate (7/7 gates, 36/36 assertions), project-tree gate (11/11,
+75/75), and aggregate property route. The build reports zero warnings/errors.
+These results are local and offline (`externalTia=false`, `livePlc=false`); they
+do not establish installed TIA V21 parity.
+
+The latest complete interaction rerun also passes 15/15 commands. The Global DB
+project-tree gate now selects an editable declaration cell, starts the native
+Tree editor, submits text through its focused LineEdit, and verifies that the
+production ItemEdited handler commits the Comment. Its 11 project-tree gates
+and 75 assertions pass; exact Undo/Redo and a JSON serializer round trip pass
+for that commit. The isolated fixture is undone and has a deserialized fallback
+for cleanup so a failed history assertion cannot contaminate later gate cases.
+
+A separate scratch screen-control pass visibly changed `FirstFlag` from
+BOOL/FALSE to INT/0, set Retain and Comment, applied the edit, then visibly
+undid and redid the edit. It added `SecondFlag` and showed both rows in the
+declaration table. Clicking a Name cell entered edit focus, but Escape did not
+establish a clear row-selection result. Visible multi-row Remove, invalid or
+duplicate cell rejection, and project Save/reopen remain unverified. The
+scratch DB was not saved; its temporary block name was malformed by the bridge
+text-input route, and the isolated process and bridge were closed without
+touching the user's open process or project.
 
 ### Work order
 

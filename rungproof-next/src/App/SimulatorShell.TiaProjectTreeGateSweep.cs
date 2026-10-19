@@ -634,20 +634,41 @@ public partial class SimulatorShell
 
             var watchGate = Gate("tia.project-tree.create-watch-table");
             var watchSnapshot = _ladderDocument.CaptureSnapshot();
-            var independent = _ladderDocument.AddWatchTable("Structured Watch");
-            independent.Variables.Add("structured-only");
-            var defaultIndependent = !_ladderDocument.WatchTables[0].Variables.Contains("structured-only", StringComparer.Ordinal);
-            var watchDuplicate = false;
-            try { _ladderDocument.AddWatchTable("structured WATCH"); }
-            catch (InvalidOperationException) { watchDuplicate = true; }
+            _ladderHistory.Clear();
+            var watchBeforeCreate = LadderEditorProjectJson.Save(_ladderDocument);
+            Find<Button>("AddWatchTable").EmitSignal(BaseButton.SignalName.Pressed);
+            var createWatchDialog = Find<ConfirmationDialog>("CreateWatchTableDialog");
+            var createWatchName = (LineEdit)createWatchDialog.FindChild("CreationName", true, false);
+            var createWatchError = (Label)createWatchDialog.FindChild("CreationError", true, false);
+            createWatchName.Text = "Structured Watch";
+            createWatchDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            await Frames();
+            var watchAfterCreate = LadderEditorProjectJson.Save(_ladderDocument);
+            var createdWatch = !_ladderDocument.WatchTables[0].Variables.Contains("structured-only", StringComparer.Ordinal)
+                && _ladderDocument.WatchTables.Any(table => table.Name == "Structured Watch")
+                && _ladderDocument.ActiveWatchTable.Name == "Structured Watch";
+            createWatchDialog.PopupCentered();
+            createWatchName.Text = "structured WATCH";
+            createWatchDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            await Frames();
+            var duplicateRejected = createWatchDialog.Visible
+                && createWatchError.Text.Contains("already exists", StringComparison.OrdinalIgnoreCase)
+                && LadderEditorProjectJson.Save(_ladderDocument) == watchAfterCreate;
+            createWatchDialog.Hide();
+            var watchCreateUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == watchBeforeCreate;
+            var watchCreateRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == watchAfterCreate;
+            var watchCreateSavedLoaded = LadderEditorProjectJson.Load(watchAfterCreate) is { IsReadable: true, Document: not null } watchLoaded
+                && LadderEditorProjectJson.Save(watchLoaded.Document) == watchAfterCreate;
             var watchNavBefore = LadderEditorProjectJson.Save(_ladderDocument);
             _ladderDocument.SelectWatchTable(0);
             var watchNavClean = !LadderEditorProjectJson.HasUnsavedChanges(_ladderDocument, watchNavBefore);
-            _ladderDocument.RestoreSnapshot(watchSnapshot); Refresh(); await Frames();
+            _ladderDocument.RestoreSnapshot(watchSnapshot); _ladderHistory.Clear(); Refresh(); await Frames();
             watchGate.Set("selection-versus-dialog", broadPass, "physical selection/double-click dialog route");
-            watchGate.Set("invalid-is-atomic", broadPass && watchDuplicate, $"blank=broad caseInsensitiveDuplicate={watchDuplicate}");
-            watchGate.Set("valid-create-persists", broadPass && defaultIndependent, $"broadTreeAndPersist={broadPass} independentSymbols={defaultIndependent}");
-            watchGate.Set("undo-redo-exact", broadPass, "exact JSON Undo/Redo lifecycle");
+            watchGate.Set("invalid-is-atomic", broadPass && duplicateRejected, $"physical={broadPass} caseInsensitiveDuplicateRejected={duplicateRejected}");
+            watchGate.Set("valid-create-persists", broadPass && createdWatch && watchCreateSavedLoaded, $"physical={broadPass} created={createdWatch} saveLoad={watchCreateSavedLoaded}");
+            watchGate.Set("undo-redo-exact", watchCreateUndo && watchCreateRedo, $"undo={watchCreateUndo} redo={watchCreateRedo}");
             watchGate.Set("navigation-is-clean", watchNavClean, "serialized project content unchanged by active-table selection");
             watchGate.Finish();
 
@@ -789,6 +810,65 @@ public partial class SimulatorShell
             var inlineGridFieldsEditable = declaration is not null
                 && Enumerable.Range(0, globalDbDeclarations.Columns).All(declaration.IsEditable)
                 && declaration.GetCellMode(3) == TreeItem.TreeCellMode.Check;
+            LineEdit? FindFocusedTreeEditor()
+            {
+                var pending = new Stack<Node>();
+                pending.Push(globalDbDeclarations);
+                while (pending.Count > 0)
+                {
+                    var current = pending.Pop();
+                    if (current is LineEdit editor && editor.HasFocus() && editor.IsVisibleInTree()) return editor;
+                    foreach (var child in current.GetChildren(true)) pending.Push(child);
+                }
+                return null;
+            }
+            async Task<bool> EditGlobalDeclarationCell(string id, int column, string value)
+            {
+                var item = FindMetadata(globalDbDeclarations.GetRoot(), id);
+                if (item is null) return false;
+                globalDbDeclarations.SetSelected(item, column);
+                if (!globalDbDeclarations.EditSelected()) return false;
+                await Frames();
+                var editor = FindFocusedTreeEditor();
+                if (editor is null) return false;
+                editor.Text = value;
+                editor.EmitSignal(LineEdit.SignalName.TextSubmitted, value);
+                await Frames();
+                return globalDbDeclarations.GetEdited() is null;
+            }
+
+            // Exercise the same editable-cell path used by the operator, then
+            // prove one accepted commit is a single exact history transaction.
+            _ladderHistory.Clear();
+            var beforeInlineComment = LadderEditorProjectJson.Save(_ladderDocument);
+            var inlineBaselineDocument = LadderEditorProjectJson.Load(beforeInlineComment).Document;
+            var inlineCommentCommitted = await EditGlobalDeclarationCell(targetSpeedId, 4, "Inline comment");
+            var afterInlineComment = LadderEditorProjectJson.Save(_ladderDocument);
+            var inlineCommentValue = globalDb.Interface.Single(parameter => parameter.Id == targetSpeedId).Comment;
+            var inlineCommentUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeInlineComment;
+            var inlineCommentRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterInlineComment;
+            var inlineCommentSavedLoaded = LadderEditorProjectJson.Load(afterInlineComment) is { IsReadable: true, Document: not null } inlineCommentLoaded
+                && LadderEditorProjectJson.Save(inlineCommentLoaded.Document) == afterInlineComment;
+            var inlineCommentTransaction = inlineCommentCommitted && inlineCommentValue == "Inline comment"
+                && inlineCommentUndo && inlineCommentRedo && inlineCommentSavedLoaded;
+            // Restore the fixture before the existing side-form transaction
+            // checks; the new inline case owns and clears its history entries.
+            var inlineCommentCleanup = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeInlineComment;
+            if (!inlineCommentCleanup && inlineBaselineDocument is not null)
+            {
+                _ladderDocument.RestoreSnapshot(inlineBaselineDocument.CaptureSnapshot());
+                inlineCommentCleanup = LadderEditorProjectJson.Save(_ladderDocument) == beforeInlineComment;
+            }
+            _ladderHistory.Clear();
+            Refresh(); await Frames();
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+            declaration = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
+            var inlineCommentRestored = globalDb.Interface.Single(parameter => parameter.Id == targetSpeedId).Comment == "Retained speed"
+                && declaration?.GetText(4) == "Retained speed" && inlineCommentCleanup;
+            inlineGridFieldsEditable = inlineGridFieldsEditable && inlineCommentTransaction && inlineCommentRestored;
             var memberEditorButton = Find<Button>("EditGlobalDbMembers");
             var addMemberAction = Find<Button>("GlobalDbAddMember");
             var editMemberAction = Find<Button>("GlobalDbEditMember");
@@ -1047,7 +1127,7 @@ public partial class SimulatorShell
             globalGate.Set("fields-persist", fieldPersisted && declarationEditLifecycle,
                 $"original={originalDeclarationText} selected={selectedDeclarationLoaded} edited={declarationEdited} undo={declarationUndoExact} redo={declarationRedoExact}");
             globalGate.Set("declaration-grid-inline-edit", inlineGridFieldsEditable,
-                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)}");
+                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)} committed={inlineCommentCommitted} value={inlineCommentValue} undo={inlineCommentUndo} redo={inlineCommentRedo} saveLoad={inlineCommentSavedLoaded} restored={inlineCommentRestored}");
             globalGate.Set("pending-form-blocks-inline-edit", inlineGridBlockedByMemberDraft,
                 $"pendingForms={pendingFormCountDuringGridCheck} editable={pendingDraftCellEditability}");
             globalGate.Set("member-draft-cancel-restores-inline-edit", inlineGridRestoredAfterMemberCancel,

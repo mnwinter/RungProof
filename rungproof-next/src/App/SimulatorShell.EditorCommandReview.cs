@@ -155,10 +155,14 @@ public partial class SimulatorShell
             menu.Hide();
 
             var tagType = Find<OptionButton>("NewTagType"); tagType.Select(5);
+            tagType.EmitSignal(OptionButton.SignalName.ItemSelected, 5L);
             Find<MenuButton>("LadderToolsMenu").GetPopup().EmitSignal(PopupMenu.SignalName.IdPressed, 0L);
             var tagName = Find<LineEdit>("NewTagName"); tagName.Text = "verify_bool_menu";
             Find<Button>("AddTag").EmitSignal(BaseButton.SignalName.Pressed);
-            Require("BoolMenuResetsPendingType", tagType.Selected == 0 && _ladderDocument.Tags.Any(tag => tag.Name == "verify_bool_menu" && tag.Type == PlcVariableType.Bool));
+            var boolMenuTag = _ladderDocument.Tags.SingleOrDefault(tag => tag.Name == "verify_bool_menu");
+            var boolMenuReset = tagType.Selected == 0 && boolMenuTag?.Type == PlcVariableType.Bool;
+            GD.Print($"EDITOR_COMMAND_ROUTE_BOOL_MENU selected={tagType.Selected} createdType={boolMenuTag?.Type.ToString() ?? "<missing>"} addDisabled={Find<Button>("AddTag").Disabled} status={output.Text}");
+            Require("BoolMenuResetsPendingType", boolMenuReset);
             TryUndoLadderEdit(out _); Refresh();
 
             void NamedCreation(string buttonName, string dialogName, string customName)

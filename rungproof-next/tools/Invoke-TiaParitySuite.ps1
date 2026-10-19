@@ -214,6 +214,7 @@ $projectTreeEvidence = Join-Path $artifactDirectory 'tia-project-tree-gates.json
 $interactionCommands = @(
     (New-GodotVerificationCommand -Id 'editor-transactions' -Name 'Editor transaction routes' -Switch '--verify-editor-transactions'),
     (New-GodotVerificationCommand -Id 'ladder-editor' -Name 'Ladder editor routes' -Switch '--verify-ladder-editor'),
+    (New-GodotVerificationCommand -Id 'motor-aggregate-editor' -Name 'Aggregate tag and watch property routes' -Switch '--verify-motor-aggregates' -NativeRenderer),
     (New-GodotVerificationCommand -Id 'call-authoring' -Name 'Atomic FC/FB CALL authoring routes' -Switch '--verify-call-authoring'),
     (New-GodotVerificationCommand -Id 'operand-placement' -Name 'Physical operand and property-form routes' -Switch '--verify-operand-placement' -NativeRenderer),
     (New-GodotVerificationCommand -Id 'project-tree-pointer' -Name 'Physical project-tree routes' -Switch '--verify-project-tree-pointer' -NativeRenderer),

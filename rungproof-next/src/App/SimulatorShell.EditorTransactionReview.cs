@@ -147,9 +147,29 @@ public partial class SimulatorShell
             foreach (var form in _pendingEditorForms) if (form.HasPending()) form.Discard();
             SelectIndexedTreeRow(tags, 0); tags.EmitSignal(Tree.SignalName.ItemSelected);
             tagName.Text = "valid_tag_edit"; tagName.EmitSignal(LineEdit.SignalName.TextChanged, "valid_tag_edit");
+            var beforeTagApply = LadderEditorProjectJson.Save(_ladderDocument);
             Find<Button>("ApplyTagEdit").EmitSignal(BaseButton.SignalName.Pressed);
-            Require("FreshTagFormApplies", _ladderDocument.Tags[0].Name == "valid_tag_edit");
-            Require("TagFormUndo", TryUndoLadderEdit(out _) && _ladderDocument.Tags[0].Name == oldTag);
+            var afterTagApply = LadderEditorProjectJson.Save(_ladderDocument);
+            Require("FreshTagFormApplies", _ladderDocument.Tags[0].Name == "valid_tag_edit" && afterTagApply != beforeTagApply);
+            Require("TagFormUndo", TryUndoLadderEdit(out _) && LadderEditorProjectJson.Save(_ladderDocument) == beforeTagApply);
+            var tagFormRedo = TryRedoLadderEdit(out _) && LadderEditorProjectJson.Save(_ladderDocument) == afterTagApply;
+            var tagLoadResult = LadderEditorProjectJson.Load(afterTagApply);
+            var tagRoundTripJson = tagLoadResult.Document is null ? string.Empty : LadderEditorProjectJson.Save(tagLoadResult.Document);
+            var canonicalTagLoad = LadderEditorProjectJson.Load(tagRoundTripJson);
+            var reserializedTagRoundTrip = canonicalTagLoad.Document is null ? string.Empty : LadderEditorProjectJson.Save(canonicalTagLoad.Document);
+            var persistedTag = tagLoadResult.Document?.Tags.SingleOrDefault(tag => tag.Name == "valid_tag_edit");
+            // Loading repairs a stale allocation cursor in older/in-memory
+            // documents, so require the authored tag to survive and the
+            // normalized Save/Load form to be stable instead of byte-equality
+            // against the pre-normalized source JSON.
+            var tagFormSaveLoad = tagLoadResult.IsReadable && persistedTag is not null
+                && persistedTag.Comment == Find<LineEdit>("TagComment").Text
+                && canonicalTagLoad.IsReadable && tagRoundTripJson == reserializedTagRoundTrip;
+            GD.Print($"EDITOR_TRANSACTION_TAG_PERSISTENCE redo={tagFormRedo} loaded={tagLoadResult.IsReadable} roundTrip={tagFormSaveLoad} firstTag={tagLoadResult.Document?.Tags.FirstOrDefault()?.Name ?? "<missing>"} issues={string.Join(";", tagLoadResult.Issues)}");
+            Require("TagFormRedo", tagFormRedo);
+            Require("TagFormSaveLoad", tagFormSaveLoad);
+            Require("TagFormRedoCleanup", TryUndoLadderEdit(out _) && LadderEditorProjectJson.Save(_ladderDocument) == beforeTagApply
+                && _ladderDocument.Tags[0].Name == oldTag);
             tagName.Text = "delete_pending_regression"; tagName.EmitSignal(LineEdit.SignalName.TextChanged, "delete_pending_regression");
             Find<Button>("AddTag").EmitSignal(BaseButton.SignalName.Pressed);
             var deleteIndex = _ladderDocument.Tags.FindIndex(tag => tag.Name == "delete_pending_regression");
