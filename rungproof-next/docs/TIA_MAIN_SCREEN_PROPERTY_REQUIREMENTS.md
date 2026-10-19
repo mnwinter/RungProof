@@ -190,6 +190,21 @@ that move without ladder-owned outputs.
   visible blank-name rejection with unchanged document and Undo history.
 - The Global DB declaration grid remains a bounded scalar optimized-access
   subset; broader TIA column/access-mode support is still open.
+- The current-source project-tree gate passed 9/9 gates and 63/63 assertions
+  at 1600×900 and 800×600. At 800×600, the member dock rendered at 281 px,
+  wrapped all four actions, kept them inside the dock, and restored the prior
+  240 px width. The blank-name assertion visibly reports validation, focuses
+  Name, and preserves both serialized DB state and Undo availability. An
+  independent code review found no new defect in these changes. The fast and
+  interaction parity profiles also passed; all remain offline RungProof
+  evidence, not installed-TIA or PLC evidence.
+- A fresh-PID screen-control pass used Add new block → Enter, created an
+  unsaved Global DB, and visibly applied `AuditMember BOOL FALSE` into the DB
+  grid and member list. Escape closed the pending-changes prompt while keeping
+  the draft. The Remove click did not produce an unambiguous visible result;
+  existing-row Edit/Cancel and successful Remove remain unverified. No Save
+  was used, and the isolated process/helper were closed without affecting the
+  original unsaved Demo 5 window.
 - CUA's native-app inventory is empty, but the existing Chrome extension tab
   titled `RungProof CUA Screen Bridge` exposes the live native Godot window at
   1616×939 when bound in the owning CUA session. An independent screen-control
