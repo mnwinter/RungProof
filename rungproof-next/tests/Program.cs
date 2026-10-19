@@ -3754,6 +3754,27 @@ internal static partial class Program
         False(invalidDbSectionLoad.IsReadable);
         True(invalidDbSectionLoad.Issues.Any(issue => issue.Message.Contains("Global DB declarations", StringComparison.Ordinal)
             && issue.Message.Contains("Static section", StringComparison.Ordinal)));
+        foreach (var unsupportedType in new[] { PlcVariableType.Struct, PlcVariableType.Array, PlcVariableType.Time })
+        {
+            var unsupportedDbTypeJson = JsonNode.Parse(LadderEditorProjectJson.Save(editor))!.AsObject();
+            unsupportedDbTypeJson["blocks"]![2]!["interface"]![0]!["type"] = unsupportedType.ToString();
+            var unsupportedDbTypeLoad = LadderEditorProjectJson.Load(unsupportedDbTypeJson.ToJsonString());
+            False(unsupportedDbTypeLoad.IsReadable);
+            True(unsupportedDbTypeLoad.Issues.Any(issue => issue.Message.Contains("unsupported " + unsupportedType.ToString().ToUpperInvariant(), StringComparison.Ordinal)));
+        }
+        var invalidDbEnumJson = JsonNode.Parse(LadderEditorProjectJson.Save(editor))!.AsObject();
+        var enumMemberJson = invalidDbEnumJson["blocks"]![2]!["interface"]![0]!;
+        enumMemberJson["type"] = PlcVariableType.Enum.ToString();
+        enumMemberJson["initial"] = "UnknownState";
+        enumMemberJson["enumMembers"] = new JsonArray("Stopped", "Running");
+        var invalidDbEnumLoad = LadderEditorProjectJson.Load(invalidDbEnumJson.ToJsonString());
+        False(invalidDbEnumLoad.IsReadable);
+        True(invalidDbEnumLoad.Issues.Any(issue => issue.Message.Contains("ENUM member", StringComparison.Ordinal)));
+        enumMemberJson["initial"] = "Running";
+        var validDbEnumLoad = LadderEditorProjectJson.Load(invalidDbEnumJson.ToJsonString());
+        True(validDbEnumLoad.IsReadable);
+        Equal("Running", validDbEnumLoad.Document!.Blocks[2].Interface[0].InitialValue);
+        True(validDbEnumLoad.Document.Blocks[2].Interface[0].EnumMembers!.SequenceEqual(new[] { "Stopped", "Running" }));
         Equal(0, loaded.Document.Blocks[2].Rungs.Count);
         Equal(LadderBlockType.FunctionBlock, loaded.Document.BuildProgram().Blocks![1].BlockType);
         True(LadderCompiler.Compile(loaded.Document.BuildProgram()).IsValid);
@@ -4783,7 +4804,8 @@ internal static partial class Program
         };
         var expectedProjectTree = new HashSet<string>(StringComparer.Ordinal)
         {
-            "tia.project-tree.activation-semantics", "tia.project-tree.show-all-tags",
+            "tia.project-tree.activation-semantics", "tia.project-tree.visible-form-cancel-actions",
+            "tia.project-tree.show-all-tags",
             "tia.project-tree.create-block", "tia.project-tree.create-tag-table",
             "tia.project-tree.create-watch-table", "tia.project-tree.global-db-contract",
             "tia.project-tree.instance-db-contract", "tia.project-tree.call-drag-drop",
@@ -4792,8 +4814,8 @@ internal static partial class Program
         };
         var gates = root.GetProperty("gates").EnumerateArray().ToArray();
         var ids = gates.Select(gate => gate.GetProperty("id").GetString()!).ToArray();
-        Require(gates.Length == 18 && ids.Distinct(StringComparer.Ordinal).Count() == 18,
-            "TIA editor-control registry must contain exactly 18 unique gates.");
+        Require(gates.Length == 19 && ids.Distinct(StringComparer.Ordinal).Count() == 19,
+            "TIA editor-control registry must contain exactly 19 unique gates.");
         Require(gates.Where(gate => gate.GetProperty("group").GetString() == "editor")
                 .Select(gate => gate.GetProperty("id").GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedEditor)
@@ -4831,7 +4853,7 @@ internal static partial class Program
             && contracts.Single(contract => contract.GetProperty("commandId").GetString() == "tia-project-tree-gate-sweep")
                 .GetProperty("gateIds").EnumerateArray().Select(item => item.GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedProjectTree),
-            "TIA editor-control structured sweep contracts do not exactly partition the 18 gates.");
+            "TIA editor-control structured sweep contracts do not exactly partition the 19 gates.");
 
         var artifacts = root.GetProperty("evidenceArtifacts").EnumerateArray().ToArray();
         Require(artifacts.Length == 2
@@ -4898,9 +4920,11 @@ internal static partial class Program
         Require(root.GetProperty("schemaVersion").GetInt32() == 1,
             "TIA local run evidence schemaVersion must be 1.");
         Require(RequiredString(root, "resultKind", "TIA local run evidence") == "tia-local-run-evidence"
-            && RequiredString(root, "status", "TIA local run evidence") == "passed"
-            && RequiredString(root, "profile", "TIA local run evidence") == "full",
-            "TIA local run evidence must describe a passing full profile.");
+            && RequiredString(root, "status", "TIA local run evidence") == "historical-pass"
+            && RequiredString(root, "profile", "TIA local run evidence") == "full"
+            && !root.GetProperty("currentSourceVerified").GetBoolean()
+            && !string.IsNullOrWhiteSpace(RequiredString(root, "supersededReason", "TIA local run evidence")),
+            "TIA full-profile evidence must be clearly marked as historical when it does not prove the current source.");
 
         var sourceRun = root.GetProperty("sourceRun");
         var sourceRunPath = RequiredString(sourceRun, "path", "TIA local run source");
@@ -5125,8 +5149,10 @@ internal static partial class Program
 
         foreach (var expected in new[]
         {
-            (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 11, Assertions: 75),
+            (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36,
+                Status: "historical-pass", CurrentSource: false),
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 12, Assertions: 82,
+                Status: "passed", CurrentSource: true),
         })
         {
             var artifact = root.GetProperty(expected.Property);
@@ -5136,9 +5162,10 @@ internal static partial class Program
             RequireSha256(artifactHash, expected.Kind + " hash");
             Require(artifactPath.StartsWith(".tools/", StringComparison.Ordinal)
                 && RequiredString(artifact, "durability", expected.Kind) == "ephemeral-local"
-                && RequiredString(artifact, "status", expected.Kind) == "passed"
+                && RequiredString(artifact, "status", expected.Kind) == expected.Status
                 && artifact.GetProperty("gateCount").GetInt32() == expected.Gates
-                && artifact.GetProperty("assertionCount").GetInt32() == expected.Assertions,
+                && artifact.GetProperty("assertionCount").GetInt32() == expected.Assertions
+                && artifact.GetProperty("currentSource").GetBoolean() == expected.CurrentSource,
                 $"{expected.Kind} summary is incomplete.");
             var actualArtifactPath = Path.Combine(projectRoot, artifactPath.Replace('/', Path.DirectorySeparatorChar));
             if (!File.Exists(actualArtifactPath)) continue;

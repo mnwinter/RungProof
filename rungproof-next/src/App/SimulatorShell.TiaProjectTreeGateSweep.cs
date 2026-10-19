@@ -80,6 +80,14 @@ public partial class SimulatorShell
                 ("project-open-replaces-document-tabs", "opening another project closes documents owned by the previous project and selects the new project's active block"),
                 ("project-open-does-not-retarget-colliding-keys", "project-local block IDs and DB numbers do not retarget old document tabs to objects in the replacement project"),
             ],
+            ["tia.project-tree.visible-form-cancel-actions"] =
+            [
+                ("cancel-controls-visible", "Tag, Block, and Task property forms provide visible Cancel actions"),
+                ("tag-add-cancel-is-atomic", "Cancel discards a staged new tag without changing project data or history"),
+                ("tag-edit-cancel-is-atomic", "Cancel restores an edited tag form without changing project data or history"),
+                ("block-cancel-is-atomic", "Cancel restores the selected block name without changing project data or history"),
+                ("task-cancel-is-atomic", "Cancel restores the selected schedule without changing project data or history"),
+            ],
             ["tia.project-tree.show-all-tags"] =
             [
                 ("stable-row", "the Show all tags row is present with stable metadata"),
@@ -92,6 +100,7 @@ public partial class SimulatorShell
             [
                 ("selection-versus-dialog", "selection does not open the dialog and activation does"),
                 ("explicit-supported-types", "OB, FB, FC, and Global DB choices are explicit"),
+                ("no-index-derived-block-numbers", "program-block rows do not fabricate Siemens block numbers from list position"),
                 ("invalid-is-atomic", "blank and duplicate names are rejected without history mutation"),
                 ("valid-create-persists", "valid creation persists and creates the exact tree row"),
                 ("undo-redo-cleanup-exact", "Undo, Redo, and cleanup reproduce exact serialized states"),
@@ -118,6 +127,7 @@ public partial class SimulatorShell
             ["tia.project-tree.global-db-contract"] =
             [
                 ("row-under-program-blocks", "the Global DB row appears under Program blocks"),
+                ("block-number-not-inferred-from-row-order", "Global DB tree and document labels do not derive DB numbers from block order"),
                 ("activation-opens-declarations", "activation opens declarations and not a LAD canvas"),
                 ("empty-member-name-rejected", "applying a blank member name shows validation, focuses Name, and leaves the DB and Undo history unchanged"),
                 ("fields-persist", "Name, Data type, Start value, Retain, and Comment persist"),
@@ -321,6 +331,114 @@ public partial class SimulatorShell
             activation.Set("enter-activates-selected-row", enterAll, $"commandRows={enterTargets.Length} allOpened={enterAll}");
             activation.Set("activation-opens-exact-target", broadPass && showAll.Status == "passed", "program/tag/watch/DB/instance/command aggregate plus Show all tags");
             activation.Set("instance-return-restores-owner", broadPass, "physical pointer verifier finalTitle assertion");
+            activation.Finish();
+
+            var cancelGate = Gate("tia.project-tree.visible-form-cancel-actions");
+            var cancelTagButton = Find<Button>("CancelTagEdit");
+            var cancelBlockButton = Find<Button>("CancelBlockEdit");
+            var cancelTaskButton = Find<Button>("CancelTaskEdit");
+            var cancelFixture = _ladderDocument.CaptureSnapshot();
+            var cancelHistory = _ladderHistory.Copy();
+            var cancelTagAddAtomic = false;
+            var cancelTagEditAtomic = false;
+            var cancelBlockAtomic = false;
+            var cancelTaskAtomic = false;
+            var cancelTagVisible = false;
+            var cancelBlockVisible = false;
+            var cancelTaskVisible = false;
+            try
+            {
+                await Activate("tag-table:Default tag table");
+                cancelTagVisible = cancelTagButton.IsVisibleInTree();
+                var tagNameControl = Find<LineEdit>("NewTagName");
+                var tagCommentControl = Find<LineEdit>("TagComment");
+                var beforeAddCancel = LadderEditorProjectJson.Save(_ladderDocument);
+                var addCancelHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
+                tagNameControl.Text = "CancelGate_NewTag";
+                tagCommentControl.Text = "unapplied new-tag draft";
+                cancelTagButton.EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                var tagAddressControl = Find<LineEdit>("TagAddress");
+                cancelTagAddAtomic = LadderEditorProjectJson.Save(_ladderDocument) == beforeAddCancel
+                    && _ladderDocument.Tags.All(tag => tag.Name != "CancelGate_NewTag")
+                    && tagNameControl.Text.Length == 0
+                    && tagCommentControl.Text.Length == 0
+                    && tagAddressControl.Text.Length == 0
+                    && Find<LineEdit>("TagInitialValue").Text == "FALSE"
+                    && !_pendingEditorForms.Any(form => form.HasPending())
+                    && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == addCancelHistory;
+
+                _ladderDocument.AddTag("CancelGate_ExistingTag", PlcVariableRole.Memory,
+                    type: PlcVariableType.Bool, initialValue: false, comment: "persisted comment");
+                Refresh();
+                await Frames();
+                await Activate("tag-table:Default tag table");
+                var tagTree = Find<Tree>("TagTable");
+                var fixtureTagIndex = _ladderDocument.Tags.FindIndex(tag => tag.Name == "CancelGate_ExistingTag");
+                var fixtureTagRow = FindMetadata(tagTree.GetRoot(), $"tag:{fixtureTagIndex}");
+                fixtureTagRow?.Select(0);
+                tagTree.EmitSignal(Tree.SignalName.ItemSelected);
+                await Frames();
+                var beforeEditCancel = LadderEditorProjectJson.Save(_ladderDocument);
+                var editCancelHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
+                tagCommentControl.Text = "unapplied edit draft";
+                cancelTagButton.EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                cancelTagEditAtomic = fixtureTagRow is not null
+                    && LadderEditorProjectJson.Save(_ladderDocument) == beforeEditCancel
+                    && _ladderDocument.Tags.Single(tag => tag.Name == "CancelGate_ExistingTag").Comment == "persisted comment"
+                    && tagCommentControl.Text == "persisted comment"
+                    && !_pendingEditorForms.Any(form => form.HasPending())
+                    && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == editCancelHistory;
+
+                await Activate("program:0");
+                Find<TabContainer>("ProjectTreeAndTags").CurrentTab = 2;
+                await Frames();
+                cancelBlockVisible = cancelBlockButton.IsVisibleInTree();
+                cancelTaskVisible = cancelTaskButton.IsVisibleInTree();
+                var blockNameControl = Find<LineEdit>("BlockName");
+                var originalBlockName = _ladderDocument.Blocks[0].Name;
+                var beforeBlockCancel = LadderEditorProjectJson.Save(_ladderDocument);
+                var blockCancelHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
+                blockNameControl.Text = "Unapplied_Block_Rename";
+                cancelBlockButton.EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                cancelBlockAtomic = LadderEditorProjectJson.Save(_ladderDocument) == beforeBlockCancel
+                    && _ladderDocument.Blocks[0].Name == originalBlockName
+                    && blockNameControl.Text == originalBlockName
+                    && !_pendingEditorForms.Any(form => form.HasPending())
+                    && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == blockCancelHistory;
+
+                if (_ladderDocument.Tasks.Count > 0)
+                {
+                    var taskNameControl = Find<LineEdit>("TaskName");
+                    var originalTaskName = _ladderDocument.Tasks[0].Name;
+                    var beforeTaskCancel = LadderEditorProjectJson.Save(_ladderDocument);
+                    var taskCancelHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
+                    taskNameControl.Text = "Unapplied_Task_Rename";
+                    cancelTaskButton.EmitSignal(BaseButton.SignalName.Pressed);
+                    await Frames();
+                    cancelTaskAtomic = LadderEditorProjectJson.Save(_ladderDocument) == beforeTaskCancel
+                        && _ladderDocument.Tasks[0].Name == originalTaskName
+                        && taskNameControl.Text == originalTaskName
+                        && !_pendingEditorForms.Any(form => form.HasPending())
+                        && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == taskCancelHistory;
+                }
+            }
+            finally
+            {
+                _ladderDocument.RestoreSnapshot(cancelFixture);
+                _ladderHistory = cancelHistory;
+                Refresh();
+                await Frames();
+            }
+            cancelGate.Set("cancel-controls-visible", cancelTagVisible && cancelBlockVisible && cancelTaskVisible,
+                $"tag={cancelTagVisible} block={cancelBlockVisible} task={cancelTaskVisible}");
+            cancelGate.Set("tag-add-cancel-is-atomic", cancelTagAddAtomic, "new-tag draft discarded without project or history changes");
+            cancelGate.Set("tag-edit-cancel-is-atomic", cancelTagEditAtomic, "existing tag draft discarded and original comment reloaded");
+            cancelGate.Set("block-cancel-is-atomic", cancelBlockAtomic, "block name draft discarded and original value reloaded");
+            cancelGate.Set("task-cancel-is-atomic", cancelTaskAtomic, "schedule name draft discarded and original value reloaded");
+            cancelGate.Finish();
 
             // Block tabs must resolve stable block IDs rather than whatever
             // block later occupies the original list position. Exercise the
@@ -485,7 +603,7 @@ public partial class SimulatorShell
                     && replacementTabs[0].GetMeta("editorDocumentKey").AsString() == expectedKey
                     && replacementTabs[0].ButtonPressed
                     && _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == replacementMainId
-                    && title.Text.Contains("Replacement_Main [OB1]", StringComparison.Ordinal)
+                    && title.Text.Contains("Replacement_Main [OB]", StringComparison.Ordinal)
                     && canvas.IsVisibleInTree();
                 var staleDocumentsCleared = replacementTabs.All(button =>
                 {
@@ -530,8 +648,21 @@ public partial class SimulatorShell
             var duplicateBlockRejected = false;
             try { _ladderDocument.AddBlock(_ladderDocument.Blocks[0].Name); }
             catch (InvalidOperationException) { duplicateBlockRejected = true; }
+            var noSyntheticBlockNumbers = _ladderDocument.Blocks.Select((block, index) =>
+            {
+                var code = block.BlockType switch
+                {
+                    LadderBlockType.OrganizationBlock => "OB",
+                    LadderBlockType.FunctionBlock => "FB",
+                    LadderBlockType.DataBlock => "DB",
+                    _ => "FC",
+                };
+                return FindMetadata(tree.GetRoot(), $"program:{index}")?.GetText(0) == $"{block.Name} [{code}]";
+            }).All(matches => matches);
             blockGate.Set("selection-versus-dialog", broadPass && !blockDialog.Visible, "physical selection/double-click dialog route");
             blockGate.Set("explicit-supported-types", explicitTypes, "OB/FB/FC/DB toggle controls present");
+            blockGate.Set("no-index-derived-block-numbers", noSyntheticBlockNumbers,
+                "tree rows show block kind without asserting an unmodeled Siemens block number");
             blockGate.Set("invalid-is-atomic", broadPass && duplicateBlockRejected, $"blank=broad duplicate={duplicateBlockRejected}");
             blockGate.Set("valid-create-persists", broadPass, "physical creation, JSON mutation, and exact tree-row assertion");
             blockGate.Set("undo-redo-cleanup-exact", broadPass, "exact JSON baseline/apply/undo/redo/cleanup lifecycle");
@@ -788,6 +919,9 @@ public partial class SimulatorShell
             var globalRowName = globalRow?.GetText(0) ?? "<missing>";
             var globalRowUnderBlocks = globalRow?.GetParent()?.GetMetadata(0).AsString() == "blocks";
             await Activate($"program:{globalIndex}");
+            var globalDbLabelHasNoInventedNumber = globalRowName == "StructuredGlobalData [DB]"
+                && title.Text.Contains("StructuredGlobalData [DB]", StringComparison.Ordinal)
+                && !title.Text.Contains("[DB2]", StringComparison.Ordinal);
             var applyDeclaration = Find<Button>("AddInterface");
             var newMemberButton = Find<Button>("NewInterface");
             var editSection = Find<OptionButton>("InterfaceSection");
@@ -1144,6 +1278,8 @@ public partial class SimulatorShell
             var currentGridEditability = currentGridDeclaration is not null
                 && Enumerable.Range(0, globalDbDeclarations.Columns).All(currentGridDeclaration.IsEditable);
             globalGate.Set("row-under-program-blocks", globalRowUnderBlocks, $"row={globalRowName}");
+            globalGate.Set("block-number-not-inferred-from-row-order", globalDbLabelHasNoInventedNumber,
+                $"tree={globalRowName} tab={title.Text}");
             globalGate.Set("activation-opens-declarations", globalDbDocument.IsVisibleInTree() && !canvas.IsVisibleInTree(), $"db={globalDbDocument.IsVisibleInTree()} lad={canvas.IsVisibleInTree()}");
             globalGate.Set("empty-member-name-rejected", emptyMemberRejected,
                 $"visibleFeedback={emptyMemberFeedback} focus={emptyMemberFocused} documentUnchanged={emptyMemberDocumentUnchanged} undoUnchanged={emptyMemberUndoUnchanged}");
@@ -1517,10 +1653,10 @@ public partial class SimulatorShell
             var fcIndex = _ladderDocument.Blocks.IndexOf(fc);
             var fbIndex = _ladderDocument.Blocks.IndexOf(fb);
             var dbIndex = _ladderDocument.Blocks.IndexOf(db);
-            var payloadFiltered = ProgramBlockDragPayload.FromTreeItem($"program:{fcIndex}", $"StructuredFC [FC{fcIndex + 1}]") is not null
-                && ProgramBlockDragPayload.FromTreeItem($"program:{fbIndex}", $"StructuredFB [FB{fbIndex + 1}]") is not null
-                && ProgramBlockDragPayload.FromTreeItem("program:0", "Main [OB1]") is null
-                && ProgramBlockDragPayload.FromTreeItem($"program:{dbIndex}", $"StructuredDB [DB{dbIndex + 1}]") is null
+            var payloadFiltered = ProgramBlockDragPayload.FromTreeItem($"program:{fcIndex}", "StructuredFC [FC]") is not null
+                && ProgramBlockDragPayload.FromTreeItem($"program:{fbIndex}", "StructuredFB [FB]") is not null
+                && ProgramBlockDragPayload.FromTreeItem("program:0", "Main [OB]") is null
+                && ProgramBlockDragPayload.FromTreeItem($"program:{dbIndex}", "StructuredDB [DB]") is null
                 && ProgramBlockDragPayload.FromTreeItem("tag-table:", "Show all tags") is null;
             await Activate("program:0");
             canvas.SelectElement(0, -1, -1, output: true);
@@ -1604,8 +1740,8 @@ public partial class SimulatorShell
             await Frames();
         }
 
-        var passed = gates.Count == 11
-            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 11
+        var passed = gates.Count == 12
+            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 12
             && gates.All(gate => gate.Status == "passed"
                 && gate.Assertions.Count == ProjectTreeRequirements[gate.GateId].Count()
                 && gate.Assertions.All(assertion => assertion.Passed && assertion.Status == "passed"));

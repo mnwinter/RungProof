@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$EditorArtifactPath = '.tools/tia-parity-full-contract-v6-artifacts/tia-editor-control-gates.json',
-    [string]$ProjectTreeArtifactPath = '.tools/tia-parity-full-contract-v6-artifacts/tia-project-tree-gates.json'
+    [string]$ProjectTreeArtifactPath = '.tools/tia-parity-full-contract-v6-artifacts/tia-project-tree-gates.json',
+    [Parameter(Mandatory = $true)][string]$CurrentSourceRevision
 )
 
 $ErrorActionPreference = 'Stop'
@@ -68,8 +69,8 @@ function Read-And-ValidateArtifact(
 $registry = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
 $editorIds = @($registry.gates | Where-Object group -eq 'editor' | ForEach-Object { [string]$_.id })
 $treeIds = @($registry.gates | Where-Object group -eq 'project-tree' | ForEach-Object { [string]$_.id })
-if ($editorIds.Count -ne 7 -or $treeIds.Count -ne 11) {
-    throw "Registry must contain exactly 7 editor and 11 project-tree gates."
+if ($editorIds.Count -ne 7 -or $treeIds.Count -ne 12) {
+    throw "Registry must contain exactly 7 editor and 12 project-tree gates."
 }
 
 $editor = Read-And-ValidateArtifact $EditorArtifactPath 'tia-editor-control-gate-sweep' `
@@ -83,6 +84,10 @@ $totalAssertions = @(
 
 $editorArtifactId = 'artifact.tia-editor-control-gate-sweep.v1'
 $treeArtifactId = 'artifact.tia-project-tree-gate-sweep.v1'
+$editorIsCurrent = -not [string]::IsNullOrWhiteSpace($CurrentSourceRevision) -and
+    $editor.Artifact.sourceRevision -eq $CurrentSourceRevision
+$treeIsCurrent = -not [string]::IsNullOrWhiteSpace($CurrentSourceRevision) -and
+    $tree.Artifact.sourceRevision -eq $CurrentSourceRevision
 $registry | Add-Member -Force NoteProperty evidenceArtifacts @(
     [pscustomobject][ordered]@{
         id = $editorArtifactId
@@ -94,6 +99,8 @@ $registry | Add-Member -Force NoteProperty evidenceArtifacts @(
         status = 'passed'
         gateCount = 7
         assertionCount = @($editor.Artifact.gates.assertions).Count
+        sourceRevision = [string]$editor.Artifact.sourceRevision
+        currentSource = $editorIsCurrent
         externalTia = $false
         livePlc = $false
     },
@@ -105,8 +112,10 @@ $registry | Add-Member -Force NoteProperty evidenceArtifacts @(
         durability = 'ephemeral-local'
         sha256 = $tree.Sha256
         status = 'passed'
-        gateCount = 11
+        gateCount = 12
         assertionCount = @($tree.Artifact.gates.assertions).Count
+        sourceRevision = [string]$tree.Artifact.sourceRevision
+        currentSource = $treeIsCurrent
         externalTia = $false
         livePlc = $false
     }
@@ -125,5 +134,5 @@ $registry.evidencePolicy.currentAssessment = "Exact structured production-path a
 
 $json = $registry | ConvertTo-Json -Depth 100
 [IO.File]::WriteAllText($registryPath, $json + "`n", [Text.UTF8Encoding]::new($false))
-Write-Output "TIA_EDITOR_CONTROL_REGISTRY_UPDATE_PASS editor=7/7 editorAssertions=$(@($editor.Artifact.gates.assertions).Count) tree=11/11 treeAssertions=$(@($tree.Artifact.gates.assertions).Count)"
+Write-Output "TIA_EDITOR_CONTROL_REGISTRY_UPDATE_PASS editor=7/7 editorAssertions=$(@($editor.Artifact.gates.assertions).Count) tree=12/12 treeAssertions=$(@($tree.Artifact.gates.assertions).Count)"
 

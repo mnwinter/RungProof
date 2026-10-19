@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 18 local gates (111 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 18 local gates (118 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -60,6 +60,7 @@
       "expectedArtifact": ".tools/tia-project-tree-gates.json",
       "gateIds": [
         "tia.project-tree.activation-semantics",
+        "tia.project-tree.visible-form-cancel-actions",
         "tia.project-tree.show-all-tags",
         "tia.project-tree.create-block",
         "tia.project-tree.create-tag-table",
@@ -71,8 +72,8 @@
         "tia.project-tree.watch-symbol-remove",
         "tia.project-tree.watch-stale-symbol-visible"
       ],
-      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these eleven gateIds.",
-      "resultExpectation": "The artifact must contain exactly eleven unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
+      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these twelve gateIds.",
+      "resultExpectation": "The artifact must contain exactly twelve unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
       "latestArtifactId": "artifact.tia-project-tree-gate-sweep.v1"
     }
   ],
@@ -793,7 +794,7 @@
       ]
     },
     {
-      "sequence": 18,
+      "sequence": 19,
       "id": "tia.project-tree.watch-stale-symbol-visible",
       "group": "project-tree",
       "key": "watch-stale-symbol-visible",
@@ -828,6 +829,45 @@
       ],
       "limitations": [
         "Address-based watch entries, display-format editing, online monitor values, and physical PLC modification are outside this gate."
+      ]
+    },
+    {
+      "sequence": 18,
+      "id": "tia.project-tree.visible-form-cancel-actions",
+      "group": "project-tree",
+      "key": "visible-form-cancel-actions",
+      "title": "Visible property-form Cancel actions",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "Tag Add/Edit, block, and task property forms expose a visible Cancel action that discards staged edits without changing project content or history.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.TiaProjectTreeGateSweep.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md",
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "Tag, Block, and Task property forms provide visible Cancel actions",
+        "Cancel discards a staged new tag without changing project data or history",
+        "Cancel restores an edited tag form without changing project data or history",
+        "Cancel restores the selected block name without changing project data or history",
+        "Cancel restores the selected schedule without changing project data or history"
+      ],
+      "limitations": [
+        "The local gate checks visible controls and production cancel handlers; screen-control behavior is tracked separately and no installed-TIA comparison is bound."
       ]
     }
   ],
@@ -867,19 +907,23 @@
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
+      "sourceRevision": "sha256:884B47DDA57EAEEB44278F7558986ED7F7D5BEAFB67ECF41E696316A555E0294",
+      "currentSource": false,
       "externalTia": false,
       "livePlc": false
     },
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-parity-suite/rungproof-parity-interaction-20261019-artifacts/tia-project-tree-gates.json",
+      "path": ".tools/tia-parity-active-cancel-check/tia-project-tree-gates-targeted-v4.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "D5D1CA3622D2B44BCC9A1FC0F6CC80A05624F132F4D26CA6E1B782DB6F437718",
+      "sha256": "0CF8F366A82E067166BCF94BEC34C591668AC3F3F22CEEC77CE4C2204F7EE4DD",
       "status": "passed",
-      "gateCount": 11,
-      "assertionCount": 75,
+      "gateCount": 12,
+      "assertionCount": 82,
+      "sourceRevision": "sha256:EC929B8C4659D9BC28EB9EFF37A7C3236CA5F2CBE6618BB99EA401C353972D2A",
+      "currentSource": true,
       "externalTia": false,
       "livePlc": false
     }

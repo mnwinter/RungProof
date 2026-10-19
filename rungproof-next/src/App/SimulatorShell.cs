@@ -4931,7 +4931,7 @@ public partial class SimulatorShell : CanvasLayer
             // invents a TIA folder that is not part of this supported view.
             taskFolder.Visible = false;
             initialTaskItem = organization.CreateItem(taskFolder);
-            initialTaskItem.SetText(0, "Main cycle [OB1]");
+            initialTaskItem.SetText(0, "Main cycle [OB]");
             initialTaskItem.SetMetadata(0, "task:0");
             initialTaskItem.Visible = false;
             blockFolder = organization.CreateItem(plcItem);
@@ -4941,7 +4941,7 @@ public partial class SimulatorShell : CanvasLayer
             addNewBlockItem.SetText(0, "Add new block");
             addNewBlockItem.SetMetadata(0, "add-block");
             mainItem = organization.CreateItem(blockFolder);
-            mainItem.SetText(0, $"{document.Blocks[0].Name} [OB1]");
+            mainItem.SetText(0, $"{document.Blocks[0].Name} [OB]");
             mainItem.SetMetadata(0, "program:0");
             // TIA lists instance DBs in Program blocks beside OBs, FBs and FCs;
             // they are not a separate sibling folder in the project tree.
@@ -6225,7 +6225,7 @@ public partial class SimulatorShell : CanvasLayer
                 _ => "FC",
             };
             editorTabTitle.Text = siemens
-                ? $"{(projectDirty ? "* " : string.Empty)}{activeBlockName} [{activeBlockCode}{activeBlockOrdinal + 1}]  —  {projectFileName}"
+                ? $"{(projectDirty ? "* " : string.Empty)}{activeBlockName} [{activeBlockCode}]  —  {projectFileName}"
                 : $"{(projectDirty ? "* " : string.Empty)}MainProgram — {activeBlockName} [LAD]  —  {projectFileName}";
             editorTabTitle.TooltipText = projectDirty
                 ? $"Unsaved project changes · {projectFileName}"
@@ -6301,7 +6301,9 @@ public partial class SimulatorShell : CanvasLayer
                     LadderBlockType.DataBlock => "DB",
                     _ => "FC",
                 };
-                var suffix = siemens ? $" [{blockCode}{index + 1}]" : string.Empty;
+                // Block numbers are not stored in this project model. Do not
+                // imply TIA identities by deriving them from tree order.
+                var suffix = siemens ? $" [{blockCode}]" : string.Empty;
                 blockItems[index].SetText(0, document.Blocks[index].Name + suffix);
                 blockItems[index].Visible = true;
             }
@@ -7008,8 +7010,10 @@ public partial class SimulatorShell : CanvasLayer
 
         var addTask = Command("AddTask", siemens ? "+ OB" : "+ TASK");
         var applyBlock = Command("ApplyBlock", siemens ? "RENAME BLOCK" : "RENAME ROUTINE");
+        var cancelBlock = Command("CancelBlockEdit", "CANCEL");
         var removeBlock = Command("RemoveBlock", siemens ? "DELETE BLOCK" : "DELETE ROUTINE");
         var applyTask = Command("ApplyTask", "APPLY");
+        var cancelTask = Command("CancelTaskEdit", "CANCEL");
         var removeTask = Command("RemoveTask", siemens ? "DELETE OB" : "DELETE TASK");
         center.AddChild(instructionChrome);
 
@@ -7683,10 +7687,12 @@ public partial class SimulatorShell : CanvasLayer
         tagEditActions.AddThemeConstantOverride("h_separation", 5);
         tagEditActions.AddThemeConstantOverride("v_separation", 5);
         applyTagEdit = ToolbarButton("ApplyTagEdit", "APPLY TAG CHANGES", new Color("4d6674"), 165);
+        var cancelTagEdit = ToolbarButton("CancelTagEdit", "CANCEL", new Color("4d6674"), 90);
         deleteTag = ToolbarButton("DeleteTag", "DELETE UNUSED TAG", new Color("8a4d55"), 155);
         applyTagEdit.Disabled = true;
         deleteTag.Disabled = true;
         tagEditActions.AddChild(applyTagEdit);
+        tagEditActions.AddChild(cancelTagEdit);
         tagEditActions.AddChild(deleteTag);
         tagPage.AddChild(tagEditActions);
         var tagScroll = new ScrollContainer
@@ -8152,7 +8158,11 @@ public partial class SimulatorShell : CanvasLayer
             tagType.Select(0);
             tagRole.Select((int)PlcVariableRole.Memory);
             tagInitialValue.Text = "FALSE";
+            tagAddress.Clear();
+            tagComment.Clear();
+            tagEnumMembers.Text = "Stopped, Running, Fault";
             tagBinding.Clear();
+            aggregateTagEditor.Load(PlcVariableType.Bool);
             loadingFormControls = false;
             RefreshTagBindingOptions(PlcVariableType.Bool, PlcVariableRole.Memory, string.Empty);
             RefreshEditor();
@@ -8217,6 +8227,7 @@ public partial class SimulatorShell : CanvasLayer
         blockCommands.AddThemeConstantOverride("v_separation", 4);
         blockCommands.AddChild(addBlock);
         blockCommands.AddChild(applyBlock);
+        blockCommands.AddChild(cancelBlock);
         blockCommands.AddChild(removeBlock);
         projectPage.AddChild(blockCommands);
         projectPage.AddChild(CreateBlockSemanticControls(document, () => { BeginEdit("Convert block", recordHistory: false); RefreshEditor(); }));
@@ -8267,6 +8278,7 @@ public partial class SimulatorShell : CanvasLayer
         taskCommands.AddThemeConstantOverride("v_separation", 4);
         taskCommands.AddChild(addTask);
         taskCommands.AddChild(applyTask);
+        taskCommands.AddChild(cancelTask);
         taskCommands.AddChild(removeTask);
         projectPage.AddChild(taskCommands);
         var objectsScroll = new ScrollContainer
@@ -8630,7 +8642,7 @@ public partial class SimulatorShell : CanvasLayer
             {
                 if (siemens && railIndex == 1)
                 {
-                    OpenTagDocument(null);
+                    ResolvePendingEditorForms(() => OpenTagDocument(null));
                 }
                 else if (siemens && railIndex == 2)
                 {
@@ -10796,15 +10808,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             tagFormDirty = false;
             if (selectedTagIndex >= 0) LoadTagControls();
-            else
-            {
-                loadingFormControls = true;
-                tagName.Clear(); tagAddress.Clear(); tagComment.Clear(); tagInitialValue.Text = "FALSE";
-                aggregateTagEditor.Load(SelectedTagType());
-                loadingFormControls = false;
-                RefreshTagTableEditorControls();
-                UpdateGlobalDbDeclarationGridEditability();
-            }
+            else OpenTagDocument(activeTagTableName);
         }
         void DiscardBlock()
         {
@@ -10840,6 +10844,21 @@ public partial class SimulatorShell : CanvasLayer
             ResetInterfaceForm();
             interfaceTable.DeselectAll();
         }
+        cancelTagEdit.Pressed += () =>
+        {
+            DiscardTag();
+            output.Text = "Tag changes discarded. No project data or history was changed.";
+        };
+        cancelBlock.Pressed += () =>
+        {
+            DiscardBlock();
+            output.Text = "Block changes discarded. No project data or history was changed.";
+        };
+        cancelTask.Pressed += () =>
+        {
+            DiscardTask();
+            output.Text = "Schedule changes discarded. No project data or history was changed.";
+        };
         _pendingEditorForms.Add(new(() => tagFormDirty, () => { (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed); return !tagFormDirty; }, DiscardTag));
         _pendingEditorForms.Add(new(() => blockFormDirty, () => { applyBlock.EmitSignal(BaseButton.SignalName.Pressed); return !blockFormDirty; }, DiscardBlock));
         _pendingEditorForms.Add(new(() => taskFormDirty, () => { applyTask.EmitSignal(BaseButton.SignalName.Pressed); return !taskFormDirty; }, DiscardTask));
@@ -11387,14 +11406,17 @@ public partial class SimulatorShell : CanvasLayer
             }
             else if (id == 1)
             {
-                tagItem.Select(0);
-                organization.ScrollToItem(tagItem);
-                if (siemens) OpenTagDocument(null);
-                else
+                ResolvePendingEditorForms(() =>
                 {
-                    projectTabs.CurrentTab = 1;
-                    tagName.GrabFocus();
-                }
+                    tagItem.Select(0);
+                    organization.ScrollToItem(tagItem);
+                    if (siemens) OpenTagDocument(null);
+                    else
+                    {
+                        projectTabs.CurrentTab = 1;
+                        tagName.GrabFocus();
+                    }
+                });
             }
             else if (id == 2)
             {
@@ -11431,14 +11453,17 @@ public partial class SimulatorShell : CanvasLayer
         {
             if (id == 0)
             {
-                ShowProjectDock();
-                if (siemens) OpenTagDocument(null);
-                else projectTabs.CurrentTab = 1;
-                tagType.Select(0);
-                tagType.EmitSignal(OptionButton.SignalName.ItemSelected, 0L);
-                tagName.Clear();
-                tagInitialValue.Text = "FALSE";
-                tagName.GrabFocus();
+                ResolvePendingEditorForms(() =>
+                {
+                    ShowProjectDock();
+                    if (siemens) OpenTagDocument(null);
+                    else projectTabs.CurrentTab = 1;
+                    tagType.Select(0);
+                    tagType.EmitSignal(OptionButton.SignalName.ItemSelected, 0L);
+                    tagName.Clear();
+                    tagInitialValue.Text = "FALSE";
+                    tagName.GrabFocus();
+                });
             }
             else if (id == 1)
             {
@@ -11465,7 +11490,7 @@ public partial class SimulatorShell : CanvasLayer
                 _ => "FC",
             };
             var key = BlockDocumentKey(block.Id);
-            AddEditorDocumentTab(key, $"{block.Name} [{blockCode}{blockIndex + 1}]");
+            AddEditorDocumentTab(key, $"{block.Name} [{blockCode}]");
             ActivateEditorDocument(key);
             blockItems[blockIndex].Select(0);
             organization.ScrollToItem(blockItems[blockIndex]);
@@ -11528,25 +11553,30 @@ public partial class SimulatorShell : CanvasLayer
             var name = watchTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
             var index = document.Tags.FindIndex(tag => name == tag.Name || name.StartsWith(tag.Name + ".", StringComparison.Ordinal) || name.StartsWith(tag.Name + "[", StringComparison.Ordinal));
             if (index < 0) return;
-            activeTagTableName = null;
-            if (siemens) OpenTagDocument(null, index);
+            if (siemens) ResolvePendingEditorForms(() =>
+            {
+                activeTagTableName = null;
+                OpenTagDocument(null, index);
+                aggregateTagEditor.RevealMember(name, document.Tags[index].Name);
+            });
             else
             {
+                activeTagTableName = null;
                 RefreshEditor();
                 ShowProjectDock();
                 projectTabs.CurrentTab = 1;
                 SelectIndexedTreeRow(tagList, index);
                 tagList.EmitSignal(Tree.SignalName.ItemSelected);
                 tagList.ScrollToItem(tagList.GetSelected());
+                aggregateTagEditor.RevealMember(name, document.Tags[index].Name);
             }
-            aggregateTagEditor.RevealMember(name, document.Tags[index].Name);
         };
         RefreshTagBindingOptions(SelectedTagType(), SelectedTagRole(SelectedTagType()), string.Empty);
         if (siemens)
         {
             var initialBlock = document.Blocks[0];
             var initialBlockKey = BlockDocumentKey(initialBlock.Id);
-            AddEditorDocumentTab(initialBlockKey, $"{initialBlock.Name} [OB1]");
+            AddEditorDocumentTab(initialBlockKey, $"{initialBlock.Name} [OB]");
             editorDocumentButtons[initialBlockKey].ButtonPressed = true;
         }
         _ladderEditorProjectReplacementResetters.Add(() =>

@@ -203,8 +203,8 @@ if ($editorControlGateIds.Count -ne 7 -or @($editorControlGateIds | Sort-Object 
 $projectTreeGateIds = @($editorControlRegistry.gates |
     Where-Object group -eq 'project-tree' |
     ForEach-Object { [string]$_.id })
-if ($projectTreeGateIds.Count -ne 11 -or @($projectTreeGateIds | Sort-Object -Unique).Count -ne 11) {
-    throw "Project-tree control sweep requires exactly 11 unique gate IDs; found $($projectTreeGateIds.Count)."
+if ($projectTreeGateIds.Count -ne 12 -or @($projectTreeGateIds | Sort-Object -Unique).Count -ne 12) {
+    throw "Project-tree control sweep requires exactly 12 unique gate IDs; found $($projectTreeGateIds.Count)."
 }
 $monitorEvidence = Join-Path $artifactDirectory 'tia-monitor-gate-sweep.json'
 $editEvidence = Join-Path $artifactDirectory 'tia-edit-gate-sweep.json'

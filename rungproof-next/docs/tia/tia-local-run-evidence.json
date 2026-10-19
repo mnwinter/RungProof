@@ -1,8 +1,10 @@
 {
   "schemaVersion": 1,
   "resultKind": "tia-local-run-evidence",
-  "status": "passed",
+  "status": "historical-pass",
   "profile": "full",
+  "currentSourceVerified": false,
+  "supersededReason": "The full-profile record predates current source changes. Its project-tree gate was 11/75; current-source focused evidence is recorded separately, and the latest full interaction run did not pass all commands.",
   "sourceRun": {
     "path": ".tools/tia-parity-full-contract-v6.json",
     "sha256": "730DDBAF304E7FCE48ED7B4D19595EA3E653F8143FF1031F2CA55E64D4A9B375",
@@ -186,17 +188,19 @@
   "editorControlArtifact": {
     "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-editor-control-gates.json",
     "sha256": "3903E669625C7DB35564FE17CC8D16EEC59F3E46AFCDEB1AC4DB0CC951107147",
-    "status": "passed",
+    "status": "historical-pass",
     "gateCount": 7,
     "assertionCount": 36,
+    "currentSource": false,
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
-    "path": ".tools/tia-parity-suite/rungproof-parity-interaction-20261019-artifacts/tia-project-tree-gates.json",
-    "sha256": "D5D1CA3622D2B44BCC9A1FC0F6CC80A05624F132F4D26CA6E1B782DB6F437718",
+    "path": ".tools/tia-parity-active-cancel-check/tia-project-tree-gates-targeted-v4.json",
+    "sha256": "0CF8F366A82E067166BCF94BEC34C591668AC3F3F22CEEC77CE4C2204F7EE4DD",
     "status": "passed",
-    "gateCount": 11,
-    "assertionCount": 75,
+    "gateCount": 12,
+    "assertionCount": 82,
+    "currentSource": true,
     "durability": "ephemeral-local"
   },
   "selectedVisualReview": {

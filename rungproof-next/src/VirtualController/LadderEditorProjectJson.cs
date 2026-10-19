@@ -153,6 +153,7 @@ public static class LadderEditorProjectJson
             var issues = new List<LadderValidationIssue>();
             var tags = dto.Tags.Select((tag, index) => ParseTag(tag, index, issues)).ToArray();
             var blocks = dto.Blocks.Select((block, index) => ParseBlock(block, index, issues, dto.SchemaVersion)).ToArray();
+            ValidateGlobalDbDeclarations(blocks, issues);
             var tasks = dto.Tasks.Select((task, index) => ParseTask(task, index, issues)).ToArray();
             if (issues.Count > 0) return new(null, issues);
             ValidateIdentities(blocks, tasks);
@@ -529,6 +530,40 @@ public static class LadderEditorProjectJson
         TimeSpan.FromMilliseconds(dto.PeriodMs),
         dto.Priority,
         dto.EntryBlock ?? string.Empty);
+
+    private static void ValidateGlobalDbDeclarations(
+        IReadOnlyList<EditableBlock> blocks,
+        ICollection<LadderValidationIssue> issues)
+    {
+        var supportedTypes = new HashSet<PlcVariableType>
+        {
+            PlcVariableType.Bool, PlcVariableType.Int, PlcVariableType.DInt,
+            PlcVariableType.Real, PlcVariableType.Timer, PlcVariableType.Counter,
+            PlcVariableType.String, PlcVariableType.Enum,
+        };
+        for (var blockIndex = 0; blockIndex < blocks.Count; blockIndex++)
+        {
+            var block = blocks[blockIndex];
+            if (block.BlockType != LadderBlockType.DataBlock) continue;
+            for (var memberIndex = 0; memberIndex < block.Interface.Count; memberIndex++)
+            {
+                var member = block.Interface[memberIndex];
+                var path = $"$.blocks[{blockIndex}].interface[{memberIndex}]";
+                if (!supportedTypes.Contains(member.Type))
+                {
+                    issues.Add(new("EPJ001", path + ".type",
+                        $"Global DB member '{member.Name}' uses unsupported {member.Type.ToString().ToUpperInvariant()} type. Supported scalar types are BOOL, INT, DINT, REAL, TIMER, COUNTER, STRING, and ENUM."));
+                    continue;
+                }
+                if (member.Type == PlcVariableType.Enum
+                    && (!PlcTextValues.IsValidDomain(member.EnumMembers)
+                        || member.InitialValue is not string initial
+                        || !member.EnumMembers!.Contains(initial, StringComparer.Ordinal)))
+                    issues.Add(new("EPJ001", path,
+                        $"Global DB ENUM member '{member.Name}' must have a valid member domain and an initial value in that domain."));
+            }
+        }
+    }
 
     private static T ParseEnum<T>(string? value, T fallback, string path, ICollection<LadderValidationIssue> issues)
         where T : struct, Enum
