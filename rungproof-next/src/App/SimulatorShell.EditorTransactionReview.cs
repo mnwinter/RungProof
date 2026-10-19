@@ -8,6 +8,20 @@ namespace RungProof.Next.App;
 
 public partial class SimulatorShell
 {
+    private void ActivateReviewProgramBlock(Control host)
+    {
+        var block = _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex];
+        var key = EditorDocumentIdentity.ForBlock(block.Id);
+        var documents = host.FindChild("EditorDocuments", true, false) as Control
+            ?? throw new InvalidOperationException("Missing editor document tabs.");
+        var tab = documents.GetChildren().OfType<HBoxContainer>()
+            .SelectMany(item => item.GetChildren().OfType<Button>())
+            .SingleOrDefault(button => button.HasMeta("editorDocumentKey")
+                && button.GetMeta("editorDocumentKey").AsString() == key)
+            ?? throw new InvalidOperationException($"Missing program editor tab {key}.");
+        tab.EmitSignal(BaseButton.SignalName.Pressed);
+    }
+
     public bool VerifyEditorTransactions(out string detail, System.Action<string, bool>? assertionObserver = null)
     {
         var host = GetNode<Control>("Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal");
@@ -21,6 +35,7 @@ public partial class SimulatorShell
             foreach (var form in _pendingEditorForms) form.Discard();
             SetReviewState("ladder", ""); _ladderEnvironmentTabs.CurrentTab = 0;
             _ladderDocument.ReplaceFromProgram(LadderEditorDocument.CreateConveyorExample().BuildProgram()); _ladderHistory.Clear(); Refresh();
+            ActivateReviewProgramBlock(host);
             var canvas = Find<LadderEditorCanvas>("GraphicalLadderCanvas");
             canvas.SelectElement(0, 0, 0);
             canvas.GrabFocus(); GD.Print($"EDITOR_TRANSACTION_FOCUS visible={canvas.IsVisibleInTree()} focused={canvas.HasFocus()} selected={canvas.SelectedNodeId} rung={canvas.SelectedRung}"); canvas._ShortcutInput(new InputEventKey { Pressed = true, Keycode = Key.F2 });
@@ -288,8 +303,14 @@ public partial class SimulatorShell
             SetReviewState("ladder", ""); _ladderEnvironmentTabs.CurrentTab = 0;
             _ladderDocument.ReplaceFromProgram(LadderEditorDocument.CreateConveyorExample().BuildProgram()); _ladderHistory.Clear();
             foreach (var refresh in _ladderEditorRefreshers) refresh();
+            ActivateReviewProgramBlock(host);
             for (var frame = 0; frame < 3; frame++) await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             var canvas = (LadderEditorCanvas)host.FindChild("GraphicalLadderCanvas", true, false);
+            var routineView = (Control)host.FindChild("RoutineView", true, false);
+            if (!_ladderWorkspace.IsVisibleInTree() || !routineView.IsVisibleInTree()
+                || routineView.Size.X < 500 || routineView.Size.Y < 150)
+                return (false, $"Ladder editor layout precondition failed: workspace={_ladderWorkspace.GetGlobalRect()} "
+                    + $"routine={routineView.GetGlobalRect()} routineVisible={routineView.IsVisibleInTree()}");
             canvas.SelectElement(0, 0, 0); canvas.GrabFocus();
             canvas._ShortcutInput(new InputEventKey { Pressed = true, Keycode = Key.F2 });
             editor = (LadderOperandEditor)host.FindChild("InlineOperandEditor", true, false);

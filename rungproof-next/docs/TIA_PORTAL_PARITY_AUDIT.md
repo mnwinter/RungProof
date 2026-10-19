@@ -7638,3 +7638,40 @@ assertions; editor-control registry total: 16 gates / 93 assertions.
 The independent follow-up review found no remaining P1/P2 issue in this member-
 form flow. This is a scoped code review, not a claim that the remaining TIA
 property-management work or other application paths have no defects.
+
+## 2026-10-19 follow-up: active editor document and DB rendering
+
+The earlier editor-layout/operand sweep failures were caused by test setup
+leaving a DB or tag document active after replacing the ladder program. The
+production document-body switch correctly hides the ladder canvas while a
+non-block document is active. The review harness now activates the current
+program-block tab by stable block identity and checks that the routine viewport
+is visible and large enough before running pointer routes. The fresh
+`--verify-editor-transactions` run passes 58 routes. The fresh
+`--verify-operand-placement` run passes at 1600×900, including contact/coil,
+timer/counter/numeric/comparison pins, all supported type selectors, 13
+property forms, 12 property transactions, and 48 palette mutations. This fixes
+the false negative in the review route; it does not establish exact TIA parity.
+
+The compact 900 px layout now uses a 112 px instruction palette minimum, an
+8 px gap above the diagnostics/Scene I/O dock, and a 44 px block-interface
+summary minimum. Current-source normal-renderer captures were inspected at
+1600×900: `.tools/tia-parity-current-review/operand-placement-current.png`,
+`.tools/tia-parity-current-review/instance-db-current.png`, and
+`.tools/tia-parity-current-review/global-db-current.png`. The instance view
+shows Name, Data type, Default value, Start value, Retain, and Comment, grouped
+by Input/Output/Static; the Global DB view shows the supported editable
+Name/Data type/Start value/Retain/Comment subset. The focused project-tree
+gate passes 12 gates / 82 assertions, including block, tag-table, watch-table,
+Global DB, and instance-DB navigation and property contracts. An independent
+read-only source review found no P1/P2 issue in the layout or verifier changes.
+
+These renderer captures and automated gates establish current RungProof
+behavior only. Exact installed-TIA V21 comparison remains OPEN. The model does
+not provide all optional TIA declaration columns, standard-access offsets, all
+DB families/access modes, online monitor/snapshot and HMI attributes, or
+instance-specific override workflows. A separate screen-control retry could
+read the active UI and navigate between Scene and Logic Editor, but coordinate
+misrouting prevented reliable DB/tag edits, cancel/apply, and save/reopen; those
+functions remain unverified by a human-visible screen walkthrough. No project
+data was saved through that retry, and no external TIA or live PLC was used.

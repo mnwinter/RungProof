@@ -2745,9 +2745,11 @@ public partial class SimulatorShell : CanvasLayer
             if (GetNodeOrNull<Control>($"{programRoot}/InstructionToolbarChrome") is { } palette)
             {
                 palette.Visible = !narrowHeight;
-                // The category selector plus two wrapped command rows must
-                // fit together; shorter palettes clipped the second row.
-                palette.CustomMinimumSize = new Vector2(0, compactPalette ? 144 : 180);
+                // At a 900 px viewport, two wrapped command rows need 64 px;
+                // the category row, spacing, and frame bring the full palette
+                // to about 108 px. The old 144 px minimum left too little room
+                // for the ladder routine while adding blank space below tools.
+                palette.CustomMinimumSize = new Vector2(0, compactPalette ? 112 : 180);
             }
             if (GetNodeOrNull<Control>($"{programRoot}/InstructionToolbarChrome/InstructionToolbar/Selection") is { } selection)
                 selection.Visible = !compactPalette;
@@ -3827,11 +3829,11 @@ public partial class SimulatorShell : CanvasLayer
             _diagnosticsDock.OffsetBottom = -58;
             _leftDock.OffsetBottom = -(operatorHeight + 66.0f);
             _rightDock.OffsetBottom = -(operatorHeight + 66.0f);
-            // The Watch grid's minimum layout can extend below the nominal
-            // ladder workspace edge at short window heights. Reserve the
-            // collapsed/expanded Scene I/O dock aperture plus a small gutter
-            // so its translucent panel cannot cover the final visible Watch row.
-            _ladderWorkspace.OffsetBottom = _diagnosticsDock.OffsetTop - 54.0f;
+            // Stop the ladder pane just above the diagnostics/Scene I/O dock.
+            // OffsetTop already accounts for the dock height and its bottom
+            // margin; reserving another 54 px leaves a large unused band and
+            // unnecessarily shortens the routine viewport.
+            _ladderWorkspace.OffsetBottom = _diagnosticsDock.OffsetTop - 8.0f;
             return;
         }
         if (toggle is not null) toggle.Text = _diagnosticsExpanded ? "COLLAPSE" : "EXPAND";
@@ -7025,7 +7027,7 @@ public partial class SimulatorShell : CanvasLayer
             // wrapped text at the initial narrow width and can force the
             // entire workbench beyond the viewport and the points dock.
             FitContent = false,
-            CustomMinimumSize = new Vector2(0, 64),
+            CustomMinimumSize = new Vector2(0, 44),
             ScrollActive = true,
             TooltipText = "Inspect interface declarations. Legacy calls use shared project tags; Parameterized FC/FB calls use explicit bindings and FB instance storage.",
         };
