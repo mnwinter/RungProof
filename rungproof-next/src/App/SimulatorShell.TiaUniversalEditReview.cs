@@ -160,7 +160,10 @@ public partial class SimulatorShell
                 if (!canvas.GetGlobalRect().HasPoint(viewportPoint)
                     || !scroll.GetGlobalRect().HasPoint(viewportPoint)
                     || !GetViewport().GetVisibleRect().HasPoint(viewportPoint))
+                {
+                    GD.Print($"TIA_EDIT_POINTER_REJECT key={key} block={_ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id} canvasVisible={canvas.IsVisibleInTree()} canvasRect={canvas.GetGlobalRect()} scrollRect={scroll.GetGlobalRect()} viewportRect={GetViewport().GetVisibleRect()} point={viewportPoint}");
                     return false;
+                }
                 void Mouse(bool pressed, bool doubleClick = false) => GetViewport().PushInput(new InputEventMouseButton
                 {
                     ButtonIndex = MouseButton.Left,
@@ -174,7 +177,9 @@ public partial class SimulatorShell
                 await Frames();
                 Mouse(true, doubleClick: true); Mouse(false);
                 await Frames(3);
-                return key == "call" ? _callAuthoring is { Visible: true } : propertyPopup.Visible;
+                var opened = key == "call" ? _callAuthoring is { Visible: true } : propertyPopup.Visible;
+                GD.Print($"TIA_EDIT_POINTER_ROUTE key={key} block={_ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id} canvasVisible={canvas.IsVisibleInTree()} target={fixture.TargetKind}/{fixture.TargetId} point={viewportPoint} opened={opened}");
+                return opened;
             }
 
             static void SelectOption(OptionButton selector, string text)
@@ -291,6 +296,7 @@ public partial class SimulatorShell
                 _ladderProjectPath = null;
                 foreach (var pending in _pendingEditorForms.ToArray()) pending.Discard();
                 Refresh();
+                ActivateReviewProgramBlock(host);
                 await Frames(3);
 
                 var baselineJson = LadderEditorProjectJson.Save(_ladderDocument);

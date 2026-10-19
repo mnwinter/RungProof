@@ -845,3 +845,40 @@ touching the user's open process or project.
 4. Re-run the complete GUI/property acceptance matrix and archive its evidence.
    Start demo sequence and ladder-owned safety logic remediation only after this
    GUI/property batch is closed.
+
+### Current-source continuation — 2026-10-19
+
+An independent review found that Siemens address rejection text could remain
+visible after changing the tag's role or data type. The tag form now clears
+that stale message on either selection change. The production-shell gate checks
+that an Output-role `%I0.0` rejection appears, changing the role to Input clears
+the message, and the tag model and Undo history remain untouched.
+
+The current-source build completed with zero warnings and errors. The focused
+project-tree sweep passed 12 gates / 84 assertions. Its Global DB contract now
+checks a BOOL Start Value commit, Undo, and Redo against the member model,
+serialized project, and rendered declaration-grid cell. The artifact is
+`.tools/tia-parity-goal-continuation/project-tree-current-source-20261019.json`
+and remains local-only evidence (`externalTia=false`, `livePlc=false`).
+
+A separate fresh-build screen-control check visibly showed the address
+rejection below the Siemens address field, cleared it after changing the role,
+and restored the new-tag draft with Cancel. The runtime remained stopped and
+the PLC disconnected; no project save or load was performed. This closes the
+address-feedback screen check. The previous physical Global DB Redo display
+observation still needs a repeat screen walkthrough; the shell gate is not a
+substitute for that pointer/keyboard check. Installed TIA V21 comparison,
+remaining tag/watch scope, and the rest of the GUI/property acceptance matrix
+remain open.
+
+### Current-source Global DB screen check — 2026-10-19
+
+An independent screen-control pass on a fresh current-source RungProof process
+visibly confirmed the Global DB grid columns: Name, Data Type, Start Value,
+Retain, and Comment. It created and removed a disposable DB and added a temporary
+BOOL member with FALSE start value; no Save, Load, Run, or PLC Connect action was
+used. The bridge duplicated the temporary DB name during text entry. A FALSE to
+TRUE cell edit briefly displayed malformed `TRUETRUE`, so the visible commit and
+physical Undo/Redo result remain unverified. The runtime remained STOPPED and
+the PLC DISCONNECTED. This is RungProof screen evidence only; matched TIA V21
+comparison remains open.

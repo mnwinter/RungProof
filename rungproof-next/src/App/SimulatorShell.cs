@@ -5408,6 +5408,14 @@ public partial class SimulatorShell : CanvasLayer
             CustomMinimumSize = new Vector2(0, 32),
         };
         var tagAddress = new LineEdit { Name = "TagAddress", PlaceholderText = siemens ? "%I0.0 or %DB1.DBX0.0" : "optional controller address" };
+        var tagAddressValidation = new Label
+        {
+            Name = "TagAddressValidation",
+            Visible = false,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+        };
+        tagAddressValidation.AddThemeColorOverride("font_color", new Color("b42318"));
         if (siemens)
             tagAddress.TooltipText = "Optional S7-1500 address metadata. Supported editor subset: BOOL I/Q/M bit or DBX; INT IW/MW/DBW; DINT, REAL, or TIME ID/MD/DBD. This does not map addresses to hardware or enable PLC I/O.";
         var tagComment = new LineEdit { Name = "TagComment", PlaceholderText = "Tag comment" };
@@ -6001,7 +6009,14 @@ public partial class SimulatorShell : CanvasLayer
         bool ValidateSiemensTagAddress(string? excludedTagName, PlcVariableType type, PlcVariableRole role)
         {
             if (!siemens || SiemensPlcTagAddress.TryValidate(tagAddress.Text, type, role,
-                    document.Tags, excludedTagName, out var addressError)) return true;
+                    document.Tags, excludedTagName, out var addressError))
+            {
+                tagAddressValidation.Text = string.Empty;
+                tagAddressValidation.Visible = false;
+                return true;
+            }
+            tagAddressValidation.Text = $"ADDRESS REJECTED · {addressError}";
+            tagAddressValidation.Visible = true;
             output.Text = $"[color=#d64545]Tag definition rejected.[/color] {Escape(addressError)}";
             tagAddress.GrabFocus();
             return false;
@@ -7673,6 +7688,7 @@ public partial class SimulatorShell : CanvasLayer
         tagTableMembershipRow.Visible = siemens;
         tagPage.AddChild(tagTableMembershipRow);
         tagPage.AddChild(TagFieldRow("TagAddressRow", "ADDRESS", tagAddress));
+        tagPage.AddChild(tagAddressValidation);
         tagPage.AddChild(TagFieldRow("TagCommentRow", "COMMENT", tagComment));
         tagPage.AddChild(TagFieldRow("TagTypeRow", "TYPE", tagType));
         tagPage.AddChild(TagFieldRow("TagRoleRow", "ROLE", tagRole));
@@ -7982,7 +7998,7 @@ public partial class SimulatorShell : CanvasLayer
         var globalDbBoundary = Inspector("GlobalDbBoundary");
         globalDbBoundary.FitContent = true;
         globalDbBoundary.AddThemeColorOverride("default_color", new Color("607983"));
-        globalDbBoundary.Text = "Editable optimized-access Global DB declaration subset. Edit Name, Data type, Start value, Retain, and Comment directly in the table; use + Member or Remove for row management. Monitoring, snapshots, offsets, access-mode selection, ARRAY DB, PLC/system-type DB, and manual instance-DB creation are not modeled.";
+        globalDbBoundary.Text = "Optimized-access offline subset: Name, Data type, Start value, Retain, Comment. TIA V21 may add Default value, HMI visibility/access/write, Setpoint, and Supervision columns; Offset requires standard access; Monitor values require an online connection; creating a snapshot requires online access, though a saved snapshot can be viewed offline. These are omitted. Retain is metadata; power-cycle retention is not simulated. ARRAY/system-type DB and manual instance-DB creation are unsupported.";
         globalDbDocument.AddChild(globalDbBoundary);
         center.AddChild(globalDbDocument);
         void SetEditorDocumentBody(string key)
@@ -8445,6 +8461,8 @@ public partial class SimulatorShell : CanvasLayer
         {
             if (selectedTagIndex < 0 || selectedTagIndex >= document.Tags.Count) return;
             loadingFormControls = true;
+            tagAddressValidation.Text = string.Empty;
+            tagAddressValidation.Visible = false;
             var tag = document.Tags[selectedTagIndex];
             tagName.Text = tag.Name;
             tagAddress.Text = tag.Address;
@@ -10687,6 +10705,8 @@ public partial class SimulatorShell : CanvasLayer
         timerDbName.TextChanged += _ => StageProperty(); counterDbName.TextChanged += _ => StageProperty();
         tagType.ItemSelected += index =>
         {
+            tagAddressValidation.Text = string.Empty;
+            tagAddressValidation.Visible = false;
             var isInstance = index is 1 or 2;
             if (isInstance) tagRole.Select((int)PlcVariableRole.Memory);
             tagRole.Disabled = isInstance;
@@ -10721,6 +10741,8 @@ public partial class SimulatorShell : CanvasLayer
         };
         tagRole.ItemSelected += _ =>
         {
+            tagAddressValidation.Text = string.Empty;
+            tagAddressValidation.Visible = false;
             var type = SelectedTagType();
             RefreshTagBindingOptions(type, SelectedTagRole(type), string.Empty);
         };
@@ -10790,6 +10812,11 @@ public partial class SimulatorShell : CanvasLayer
             else if (control is CheckBox checkBox) checkBox.Toggled += _ => Changed();
         }
         foreach (var field in new Control[] { tagName, tagTableMembership, tagAddress, tagComment, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding }) WatchPending(field, () => { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; });
+        tagAddress.TextChanged += _ =>
+        {
+            tagAddressValidation.Text = string.Empty;
+            tagAddressValidation.Visible = false;
+        };
         aggregateTagEditor.PendingChanged += () =>
         {
             if (refreshingEditor || loadingFormControls) return;
@@ -10809,6 +10836,8 @@ public partial class SimulatorShell : CanvasLayer
         void DiscardTag()
         {
             tagFormDirty = false;
+            tagAddressValidation.Text = string.Empty;
+            tagAddressValidation.Visible = false;
             if (selectedTagIndex >= 0) LoadTagControls();
             else OpenTagDocument(activeTagTableName);
         }

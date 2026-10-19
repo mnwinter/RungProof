@@ -195,11 +195,11 @@
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
-    "path": ".tools/tia-parity-active-cancel-check/tia-project-tree-gates-targeted-v4.json",
-    "sha256": "0CF8F366A82E067166BCF94BEC34C591668AC3F3F22CEEC77CE4C2204F7EE4DD",
+    "path": ".tools/tia-parity-goal-continuation/project-tree-current-source-20261019.json",
+    "sha256": "F9DA9FDC506F1D5044B96A48380B3B4011F96729A13FDF9260910871E4798D58",
     "status": "passed",
     "gateCount": 12,
-    "assertionCount": 82,
+    "assertionCount": 84,
     "currentSource": true,
     "durability": "ephemeral-local"
   },

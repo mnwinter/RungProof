@@ -157,6 +157,14 @@ public partial class SimulatorShell
             var tagType = Find<OptionButton>("NewTagType"); tagType.Select(5);
             tagType.EmitSignal(OptionButton.SignalName.ItemSelected, 5L);
             Find<MenuButton>("LadderToolsMenu").GetPopup().EmitSignal(PopupMenu.SignalName.IdPressed, 0L);
+            var pendingTypeDialog = _pendingEditorDialog;
+            Require("BoolMenuPendingDraftRequiresResolution", pendingTypeDialog?.Visible == true);
+            var discardPendingType = pendingTypeDialog!.FindChildren("*", "Button", true, false)
+                .OfType<Button>().FirstOrDefault(button => button.Text == "Discard");
+            Require("BoolMenuPendingDraftOffersDiscard", discardPendingType is not null);
+            discardPendingType!.EmitSignal(BaseButton.SignalName.Pressed);
+            Require("BoolMenuPendingDraftDiscardContinues", !pendingTypeDialog.Visible
+                && tagType.Selected == 0);
             var tagName = Find<LineEdit>("NewTagName"); tagName.Text = "verify_bool_menu";
             Find<Button>("AddTag").EmitSignal(BaseButton.SignalName.Pressed);
             var boolMenuTag = _ladderDocument.Tags.SingleOrDefault(tag => tag.Name == "verify_bool_menu");

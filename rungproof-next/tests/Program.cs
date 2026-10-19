@@ -5151,7 +5151,7 @@ internal static partial class Program
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36,
                 Status: "historical-pass", CurrentSource: false),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 12, Assertions: 82,
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 12, Assertions: 84,
                 Status: "passed", CurrentSource: true),
         })
         {

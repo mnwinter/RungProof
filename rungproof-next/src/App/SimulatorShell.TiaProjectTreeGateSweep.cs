@@ -84,6 +84,7 @@ public partial class SimulatorShell
             [
                 ("cancel-controls-visible", "Tag, Block, and Task property forms provide visible Cancel actions"),
                 ("tag-add-cancel-is-atomic", "Cancel discards a staged new tag without changing project data or history"),
+                ("invalid-tag-address-has-visible-feedback", "an invalid Siemens tag address is rejected with visible inline feedback and no project or history mutation"),
                 ("tag-edit-cancel-is-atomic", "Cancel restores an edited tag form without changing project data or history"),
                 ("block-cancel-is-atomic", "Cancel restores the selected block name without changing project data or history"),
                 ("task-cancel-is-atomic", "Cancel restores the selected schedule without changing project data or history"),
@@ -132,6 +133,7 @@ public partial class SimulatorShell
                 ("empty-member-name-rejected", "applying a blank member name shows validation, focuses Name, and leaves the DB and Undo history unchanged"),
                 ("fields-persist", "Name, Data type, Start value, Retain, and Comment persist"),
                 ("declaration-grid-inline-edit", "all five Global DB fields render as editable cells, with Retain shown as a checkbox"),
+                ("start-value-undo-redo-refreshes-grid", "a Start Value cell edit, Undo, and Redo keep the model value, serialized project, and visible cell text synchronized"),
                 ("pending-form-blocks-inline-edit", "all declaration cells become noneditable while a member draft is pending"),
                 ("member-draft-cancel-restores-inline-edit", "Cancel discards the draft without changing the DB and restores cell editability"),
                 ("new-member-resolves-pending-form", "starting a new member resolves the pending form without silently discarding or mutating it"),
@@ -340,6 +342,7 @@ public partial class SimulatorShell
             var cancelFixture = _ladderDocument.CaptureSnapshot();
             var cancelHistory = _ladderHistory.Copy();
             var cancelTagAddAtomic = false;
+            var invalidTagAddressFeedback = false;
             var cancelTagEditAtomic = false;
             var cancelBlockAtomic = false;
             var cancelTaskAtomic = false;
@@ -367,6 +370,39 @@ public partial class SimulatorShell
                     && Find<LineEdit>("TagInitialValue").Text == "FALSE"
                     && !_pendingEditorForms.Any(form => form.HasPending())
                     && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == addCancelHistory;
+
+                var beforeInvalidAddress = LadderEditorProjectJson.Save(_ladderDocument);
+                var invalidAddressHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
+                tagNameControl.Text = "CancelGate_InvalidAddress";
+                tagAddressControl.Text = "INVALID";
+                Find<Button>("AddTag").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                var addressFeedback = Find<Label>("TagAddressValidation");
+                invalidTagAddressFeedback = addressFeedback.Visible
+                    && addressFeedback.Text.Contains("ADDRESS REJECTED", StringComparison.Ordinal)
+                    && tagAddressControl.Text == "INVALID"
+                    && LadderEditorProjectJson.Save(_ladderDocument) == beforeInvalidAddress
+                    && _ladderDocument.Tags.All(tag => tag.Name != "CancelGate_InvalidAddress")
+                    && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == invalidAddressHistory;
+                var tagRoleControl = Find<OptionButton>("NewTagRole");
+                tagRoleControl.Select((int)PlcVariableRole.Output);
+                tagRoleControl.EmitSignal(OptionButton.SignalName.ItemSelected, (long)tagRoleControl.Selected);
+                tagAddressControl.Text = "%I0.0";
+                Find<Button>("AddTag").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                addressFeedback = Find<Label>("TagAddressValidation");
+                var roleSpecificAddressRejected = addressFeedback.Visible
+                    && addressFeedback.Text.Contains("ADDRESS REJECTED", StringComparison.Ordinal)
+                    && addressFeedback.Text.Contains("Address area I is inconsistent", StringComparison.Ordinal);
+                tagRoleControl.Select((int)PlcVariableRole.Input);
+                tagRoleControl.EmitSignal(OptionButton.SignalName.ItemSelected, (long)tagRoleControl.Selected);
+                await Frames();
+                invalidTagAddressFeedback &= roleSpecificAddressRejected
+                    && !addressFeedback.Visible && addressFeedback.Text.Length == 0
+                    && LadderEditorProjectJson.Save(_ladderDocument) == beforeInvalidAddress
+                    && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == invalidAddressHistory;
+                cancelTagButton.EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
 
                 _ladderDocument.AddTag("CancelGate_ExistingTag", PlcVariableRole.Memory,
                     type: PlcVariableType.Bool, initialValue: false, comment: "persisted comment");
@@ -435,6 +471,8 @@ public partial class SimulatorShell
             cancelGate.Set("cancel-controls-visible", cancelTagVisible && cancelBlockVisible && cancelTaskVisible,
                 $"tag={cancelTagVisible} block={cancelBlockVisible} task={cancelTaskVisible}");
             cancelGate.Set("tag-add-cancel-is-atomic", cancelTagAddAtomic, "new-tag draft discarded without project or history changes");
+            cancelGate.Set("invalid-tag-address-has-visible-feedback", invalidTagAddressFeedback,
+                "invalid address feedback is visible on rejection and clears when the role changes to a compatible role; no tag or Undo history entry is created");
             cancelGate.Set("tag-edit-cancel-is-atomic", cancelTagEditAtomic, "existing tag draft discarded and original comment reloaded");
             cancelGate.Set("block-cancel-is-atomic", cancelBlockAtomic, "block name draft discarded and original value reloaded");
             cancelGate.Set("task-cancel-is-atomic", cancelTaskAtomic, "schedule name draft discarded and original value reloaded");
@@ -979,6 +1017,34 @@ public partial class SimulatorShell
             globalDb.Interface.Add(new LadderInterfaceParameter("DuplicateGuard", PlcVariableType.Bool,
                 LadderInterfaceSection.Static, false, Id: "gate-inline-duplicate-guard"));
             Refresh(); await Frames();
+            const string startValueMemberId = "gate-inline-duplicate-guard";
+            bool StartValueMatches(bool expected)
+            {
+                var activeDb = _ladderDocument.Blocks.Single(block => block.Id == globalDb.Id);
+                var member = activeDb.Interface.Single(parameter => parameter.Id == startValueMemberId);
+                var row = FindMetadata(globalDbDeclarations.GetRoot(), startValueMemberId);
+                return member.InitialValue is bool value && value == expected
+                    && row?.GetText(2) == (expected ? "TRUE" : "FALSE");
+            }
+            var beforeStartValueEdit = LadderEditorProjectJson.Save(_ladderDocument);
+            var startValueCommitted = await EditGlobalDeclarationCell(startValueMemberId, 2, "TRUE");
+            var afterStartValueEdit = LadderEditorProjectJson.Save(_ladderDocument);
+            var startValueCommitMatches = startValueCommitted && afterStartValueEdit != beforeStartValueEdit
+                && StartValueMatches(true);
+            var startValueUndoMatches = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeStartValueEdit
+                && StartValueMatches(false);
+            var startValueRedoMatches = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterStartValueEdit
+                && StartValueMatches(true);
+            var startValueCleanupMatches = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeStartValueEdit
+                && StartValueMatches(false);
+            var startValueUndoRedoMatches = startValueCommitMatches && startValueUndoMatches
+                && startValueRedoMatches && startValueCleanupMatches;
+            _ladderHistory.Clear();
+            Refresh(); await Frames();
+            globalDb = _ladderDocument.Blocks.Single(block => block.Id == globalDb.Id);
             var beforeInlineComment = LadderEditorProjectJson.Save(_ladderDocument);
             var inlineCommentCommitted = await EditGlobalDeclarationCell(targetSpeedId, 4, "Inline comment");
             var afterInlineComment = LadderEditorProjectJson.Save(_ladderDocument);
@@ -1287,6 +1353,8 @@ public partial class SimulatorShell
                 $"original={originalDeclarationText} selected={selectedDeclarationLoaded} edited={declarationEdited} undo={declarationUndoExact} redo={declarationRedoExact}");
             globalGate.Set("declaration-grid-inline-edit", inlineGridFieldsEditable,
                 $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)} committed={inlineCommentCommitted} value={inlineCommentValue} undo={inlineCommentUndo} redo={inlineCommentRedo} saveLoad={inlineCommentSavedLoaded} duplicateRejected={duplicateInlineRejected} blankRejected={blankInlineRejected} restored={inlineCommentRestored}");
+            globalGate.Set("start-value-undo-redo-refreshes-grid", startValueUndoRedoMatches,
+                $"commit={startValueCommitMatches} undo={startValueUndoMatches} redo={startValueRedoMatches} cleanup={startValueCleanupMatches}");
             globalGate.Set("pending-form-blocks-inline-edit", inlineGridBlockedByMemberDraft,
                 $"pendingForms={pendingFormCountDuringGridCheck} editable={pendingDraftCellEditability}");
             globalGate.Set("member-draft-cancel-restores-inline-edit", inlineGridRestoredAfterMemberCancel,
