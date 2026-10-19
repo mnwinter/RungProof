@@ -130,6 +130,17 @@ public sealed partial class LadderEditorDocument
     public void RestoreSnapshot(LadderEditorSnapshot snapshot)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
+        if (!LadderEditorDocument.TryValidateTagTableNames(snapshot.TagTables, out var tagTableError))
+            throw new ArgumentException(tagTableError, nameof(snapshot));
+
+        // Prepare table declarations before mutating the live document. Older
+        // snapshots may omit the list or omit a table referenced by a tag.
+        var restoredTagTables = (snapshot.TagTables ?? []).ToList();
+        if (restoredTagTables.Count == 0) restoredTagTables.Add("Default tag table");
+        foreach (var tagTable in snapshot.Tags.Select(tag => string.IsNullOrWhiteSpace(tag.TagTable)
+                     ? "Default tag table" : tag.TagTable.Trim()).Distinct(StringComparer.OrdinalIgnoreCase))
+            if (!restoredTagTables.Contains(tagTable, StringComparer.OrdinalIgnoreCase)) restoredTagTables.Add(tagTable);
+
         InvalidateCommandTargets();
         Id = snapshot.Id;
         Name = snapshot.Name;
@@ -138,10 +149,15 @@ public sealed partial class LadderEditorDocument
         Tags.Clear();
         Tags.AddRange(snapshot.Tags);
         TagTables.Clear();
-        TagTables.AddRange(snapshot.TagTables ?? []);
-        if (TagTables.Count == 0) TagTables.Add("Default tag table");
-        foreach (var tagTable in Tags.Select(tag => tag.TagTable).Where(name => !string.IsNullOrWhiteSpace(name)))
-            if (!TagTables.Contains(tagTable, StringComparer.Ordinal)) TagTables.Add(tagTable);
+        TagTables.AddRange(restoredTagTables);
+        for (var tagIndex = 0; tagIndex < Tags.Count; tagIndex++)
+        {
+            var requestedTable = string.IsNullOrWhiteSpace(Tags[tagIndex].TagTable)
+                ? "Default tag table" : Tags[tagIndex].TagTable.Trim();
+            var tagTableIndex = TagTables.FindIndex(name => name.Equals(requestedTable, StringComparison.OrdinalIgnoreCase));
+            if (tagTableIndex >= 0 && Tags[tagIndex].TagTable != TagTables[tagTableIndex])
+                Tags[tagIndex] = Tags[tagIndex] with { TagTable = TagTables[tagTableIndex] };
+        }
         Instances.Clear(); Instances.AddRange(snapshot.Instances ?? []);
         Blocks.Clear();
         Blocks.AddRange(snapshot.Blocks.Select(CloneBlock));

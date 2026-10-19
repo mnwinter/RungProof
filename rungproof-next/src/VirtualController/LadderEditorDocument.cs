@@ -479,6 +479,106 @@ public sealed partial class LadderEditorDocument
         return normalizedName;
     }
 
+    /// <summary>Checks the persisted PLC tag-table declaration list. A null list is a legacy project with no explicit table list.</summary>
+    public static bool TryValidateTagTableNames(IEnumerable<string?>? names, out string error)
+    {
+        error = string.Empty;
+        if (names is null) return true;
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var name in names)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                error = "PLC tag-table names must not be null, empty, or whitespace.";
+                return false;
+            }
+            var normalized = name.Trim();
+            if (!string.Equals(name, normalized, StringComparison.Ordinal))
+            {
+                error = $"PLC tag-table name '{name}' has leading or trailing whitespace.";
+                return false;
+            }
+            if (!seen.Add(normalized))
+            {
+                error = $"PLC tag-table name '{normalized}' is duplicated; names must be unique without regard to case.";
+                return false;
+            }
+        }
+        if (seen.Count > 0 && !seen.Contains("Default tag table"))
+        {
+            error = "The built-in Default tag table must be present in every explicit PLC tag-table list.";
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>Renames an existing PLC tag table and updates each member tag atomically.</summary>
+    public string RenameTagTable(string currentName, string newName)
+    {
+        var normalizedCurrentName = currentName?.Trim();
+        var index = TagTables.FindIndex(name => name.Equals(normalizedCurrentName, StringComparison.OrdinalIgnoreCase));
+        if (index < 0) throw new InvalidOperationException($"PLC tag table '{currentName}' does not exist.");
+        if (TagTables[index].Equals("Default tag table", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("The default PLC tag table cannot be renamed.");
+        var normalized = newName?.Trim();
+        if (string.IsNullOrWhiteSpace(normalized)) throw new InvalidOperationException("PLC tag-table name cannot be empty.");
+        if (TagTables.Where((_, tableIndex) => tableIndex != index)
+            .Any(name => name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"PLC tag table '{normalized}' already exists.");
+
+        var oldName = TagTables[index];
+        TagTables[index] = normalized;
+        for (var tagIndex = 0; tagIndex < Tags.Count; tagIndex++)
+            if (Tags[tagIndex].TagTable.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                Tags[tagIndex] = Tags[tagIndex] with { TagTable = normalized };
+        return normalized;
+    }
+
+    /// <summary>Removes an empty non-default PLC tag table. Failed attempts never mutate the document.</summary>
+    public bool TryRemoveTagTable(string name, out string reason)
+    {
+        var normalizedName = name?.Trim();
+        var index = TagTables.FindIndex(table => table.Equals(normalizedName, StringComparison.OrdinalIgnoreCase));
+        if (index < 0)
+        {
+            reason = $"PLC tag table '{name}' does not exist.";
+            return false;
+        }
+        var existingName = TagTables[index];
+        if (existingName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase))
+        {
+            reason = "The default PLC tag table cannot be deleted.";
+            return false;
+        }
+        if (Tags.Any(tag => tag.TagTable.Equals(existingName, StringComparison.OrdinalIgnoreCase)))
+        {
+            reason = $"PLC tag table '{existingName}' is not empty.";
+            return false;
+        }
+        TagTables.RemoveAt(index);
+        reason = string.Empty;
+        return true;
+    }
+
+    /// <summary>Moves a tag by its stable global identity (or its legacy name when it has no ID).</summary>
+    public PlcVariable MoveTag(string tagIdentity, string targetTableName)
+    {
+        var matchingTags = Tags.Select((tag, index) => (tag, index))
+            .Where(entry => string.Equals(LadderCallBindings.GlobalId(entry.tag), tagIdentity, StringComparison.Ordinal))
+            .ToArray();
+        if (matchingTags.Length != 1)
+            throw new InvalidOperationException(matchingTags.Length == 0
+                ? $"PLC tag identity '{tagIdentity}' does not exist."
+                : $"PLC tag identity '{tagIdentity}' is ambiguous.");
+        var normalizedTableName = targetTableName?.Trim();
+        var tableName = TagTables.FirstOrDefault(table => table.Equals(normalizedTableName, StringComparison.OrdinalIgnoreCase));
+        if (tableName is null) throw new InvalidOperationException($"PLC tag table '{targetTableName}' does not exist.");
+        var (tag, index) = matchingTags[0];
+        var moved = tag with { TagTable = tableName };
+        Tags[index] = moved;
+        return moved;
+    }
+
     public PlcVariable AddAggregateTag(string name, PlcVariableRole role, PlcVariableType type, PlcAggregateSchema schema, object initialValue, string binding = "", string tagTable = "Default tag table", string address = "", string comment = "")
     {
         if (!PlcAggregates.IsAggregate(type)) throw new ArgumentException("Aggregate tag requires STRUCT or ARRAY.");

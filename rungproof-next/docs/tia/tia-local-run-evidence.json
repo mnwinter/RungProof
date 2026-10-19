@@ -81,8 +81,8 @@
       "id": "tia-project-tree-gate-sweep",
       "status": "passed",
       "stableAssertions": {
-        "gateIds": 9,
-        "assertions": 65,
+        "gateIds": 11,
+        "assertions": 75,
         "structuredPerGateResults": true,
         "nativePointerGeometry": true,
         "externalTia": false,
@@ -192,11 +192,11 @@
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
-    "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-project-tree-gates.json",
-    "sha256": "C3B1D8070A1FE1C3C27EEDF46A78B0D2913D715290118B4E099AB04DFB248FA8",
+    "path": ".tools/tia-parity-suite/rungproof-parity-interaction-20261019-artifacts/tia-project-tree-gates.json",
+    "sha256": "D5D1CA3622D2B44BCC9A1FC0F6CC80A05624F132F4D26CA6E1B782DB6F437718",
     "status": "passed",
-    "gateCount": 10,
-    "assertionCount": 69,
+    "gateCount": 11,
+    "assertionCount": 75,
     "durability": "ephemeral-local"
   },
   "selectedVisualReview": {
@@ -225,7 +225,7 @@
     "Edit evidence is an automated native workbench interaction sweep; it has no retained human-reviewed per-key edit pixels or installed-TIA comparison.",
     "The network/rung structural insertion case has no malformed operand to reject; its edit evidence covers physical insertion, stable identity, compile, persistence, Undo/Redo, reopen, and cleanup.",
     "Monitor evidence is an automated semantic/state inspection; it has no human-reviewed monitor pixels or installed-TIA comparison.",
-    "The 16 editor/project-tree control gates are exact structured local checks, but they do not execute or visually compare an installed TIA Portal instance.",
+    "The 18 editor/project-tree control gates are exact structured local checks, but they do not execute or visually compare an installed TIA Portal instance.",
     "No installed TIA Portal or live PLC execution occurred.",
     "The source run and PNG bundle remain local and untracked; hashes prove identity, not durable availability."
   ]

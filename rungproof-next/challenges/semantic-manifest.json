@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "identityFormat": "RP-CANON-1",
   "engineRevision": "conveyor-engine-v1",
-  "engineSha256": "ff1f5a6227d5f9b5c271bdb37eb2552031caf4813f262d501bed89b781b48657",
+  "engineSha256": "a76c0a5c44227674fcd83818f16467a5a658bf33216738b06b5f30182733163e",
   "evaluatorRevision": "conveyor-evaluator-v1",
   "evaluatorSha256": "bbadd6d76ea00444aeda273c762c09222eaf2127e083b390bcd236d8c87f9461",
   "generatorSha256": "45cb58c54eecb1384022b7cce05277ef9ef50dc696c9f6736956909792550751",
@@ -158,19 +158,19 @@
       "sha256": "5c57fdeea1e2e4f07e150f83a5f66c7a66c9b6fa902e7d72de87f7b132f96958"
     },
     {
-      "byteLength": 80090,
+      "byteLength": 85054,
       "relativePath": "src/VirtualController/LadderEditorDocument.cs",
-      "sha256": "f11bce1539608135d60f9f24025142a95d9889083cfa1f9ef7fdd4d3bb188c21"
+      "sha256": "77ce693648249551dd6e1ad5a1b118566329d57be43a757db94c3b7a779e7150"
     },
     {
-      "byteLength": 9488,
+      "byteLength": 10575,
       "relativePath": "src/VirtualController/LadderEditorHistory.cs",
-      "sha256": "b3d25e1c86f2587678d29a469e83b752269bca2caa45aa2fa057662a0854c4ff"
+      "sha256": "2b373a7a0409f0e8b8e552270efbb4fbb3291e889473ca85d10e6a92ef40b962"
     },
     {
-      "byteLength": 39357,
+      "byteLength": 39757,
       "relativePath": "src/VirtualController/LadderEditorProjectJson.cs",
-      "sha256": "4e4c2bb690b72efe08eb9fdd5a53400c3cc6311c80422a70eafb6a4a915a86db"
+      "sha256": "7f7e6deb99a670b0f0e747ecba12f38c6e12bba7f99dba4a2ff9cc9153fa8dc7"
     },
     {
       "byteLength": 3222,

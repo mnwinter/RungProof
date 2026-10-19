@@ -103,6 +103,9 @@ public partial class SimulatorShell
                 ("valid-create-persists", "valid creation persists with stable name and exact tree row"),
                 ("undo-redo-exact", "Undo removes and Redo restores the exact table"),
                 ("navigation-is-clean", "active-table navigation does not itself dirty project content"),
+                ("properties-assign-membership", "the tag properties editor assigns a new tag to the selected table"),
+                ("rename-preserves-membership-and-history", "renaming through the table editor preserves membership and remains consistent through Undo/Redo and Save/Load"),
+                ("empty-table-delete-and-history", "the table editor deletes only an empty table and Undo/Redo restores exact state"),
             ],
             ["tia.project-tree.create-watch-table"] =
             [
@@ -167,6 +170,12 @@ public partial class SimulatorShell
                 ("removes-selected-symbol-from-active-table", "Remove deletes the selected symbol from the active table, preserves other symbols and tables, and refreshes the visible count"),
                 ("undo-redo-restores-exact-state", "Undo and Redo restore exact watch-table JSON and active selection"),
                 ("save-load-preserves-table-isolation", "Save/Load retains the removed symbol's absence in the active table and its presence in another table"),
+            ],
+            ["tia.project-tree.watch-stale-symbol-visible"] =
+            [
+                ("persisted-unresolved-symbol-remains-visible", "a saved watch symbol with no current PLC tag remains visible and counted as unresolved"),
+                ("unresolved-symbol-save-load", "Save/Load preserves an unresolved watch symbol"),
+                ("unresolved-symbol-remove-and-undo-redo", "the unresolved row can be removed and Undo/Redo restores the exact state"),
             ],
         };
 
@@ -535,11 +544,92 @@ public partial class SimulatorShell
             var tagNavBefore = LadderEditorProjectJson.Save(_ladderDocument);
             await Activate("tag-table:Default tag table");
             var tagNavClean = LadderEditorProjectJson.Save(_ladderDocument) == tagNavBefore;
+            var tagTableFixture = _ladderDocument.CaptureSnapshot();
+            var tagTableFixtureJson = LadderEditorProjectJson.Save(_ladderDocument);
+            _ladderHistory.Clear();
+            await Activate("add-tag-table");
+            var tagTableCreateDialog = Find<ConfirmationDialog>("CreateTagTableDialog");
+            (tagTableCreateDialog.FindChild("CreationName", true, false) as LineEdit)!.Text = "GateSource";
+            tagTableCreateDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            await Frames();
+            var createdTagTableJson = LadderEditorProjectJson.Save(_ladderDocument);
+            var createdTagTable = _ladderDocument.TagTables.Contains("GateSource", StringComparer.Ordinal)
+                && FindMetadata(tree.GetRoot(), "tag-table:GateSource") is not null;
+            var createTagTableUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == tagTableFixtureJson;
+            var createTagTableRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == createdTagTableJson;
+
+            await Activate("tag-table:Default tag table");
+            var membership = Find<OptionButton>("TagTableMembership");
+            var membershipIndex = Enumerable.Range(0, membership.ItemCount)
+                .FirstOrDefault(index => membership.GetItemMetadata(index).AsString() == "GateSource", -1);
+            var newTagName = Find<LineEdit>("NewTagName");
+            var addTag = Find<Button>("AddTag");
+            newTagName.Text = "gate_table_member";
+            membership.Select(membershipIndex);
+            _ladderHistory.Clear();
+            addTag.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var memberTag = _ladderDocument.Tags.SingleOrDefault(tag => tag.Name == "gate_table_member");
+            var membershipAssigned = membershipIndex >= 0 && memberTag?.TagTable == "GateSource";
+
+            await Activate("tag-table:GateSource");
+            var renameTable = Find<Button>("RenameTagTable");
+            renameTable.EmitSignal(BaseButton.SignalName.Pressed);
+            var renameDialog = Find<ConfirmationDialog>("RenameTagTableDialog");
+            (renameDialog.FindChild("CreationName", true, false) as LineEdit)!.Text = "GateRenamed";
+            renameDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            await Frames();
+            var renamedJson = LadderEditorProjectJson.Save(_ladderDocument);
+            var renamePreservedMember = !_ladderDocument.TagTables.Contains("GateSource", StringComparer.Ordinal)
+                && _ladderDocument.TagTables.Contains("GateRenamed", StringComparer.Ordinal)
+                && _ladderDocument.Tags.SingleOrDefault(tag => tag.Name == "gate_table_member")?.TagTable == "GateRenamed"
+                && FindMetadata(tree.GetRoot(), "tag-table:GateRenamed") is not null;
+            var renameSavedLoaded = LadderEditorProjectJson.Load(renamedJson) is { IsReadable: true, Document: not null } renameLoaded
+                && LadderEditorProjectJson.Save(renameLoaded.Document) == renamedJson;
+            var renameUndo = TryUndoLadderEdit(out _);
+            var undoReconciled = renameUndo
+                && _ladderDocument.TagTables.Contains("GateSource", StringComparer.Ordinal)
+                && _ladderDocument.Tags.SingleOrDefault(tag => tag.Name == "gate_table_member")?.TagTable == "GateSource"
+                && Find<Label>("TagTableContextHeading").Text == "TAG TABLE: DEFAULT TAG TABLE";
+            var renameRedo = TryRedoLadderEdit(out _);
+            var redoReconciled = renameRedo
+                && _ladderDocument.TagTables.Contains("GateRenamed", StringComparer.Ordinal)
+                && _ladderDocument.Tags.SingleOrDefault(tag => tag.Name == "gate_table_member")?.TagTable == "GateRenamed"
+                && Find<Label>("TagTableContextHeading").Text == "TAG TABLE: DEFAULT TAG TABLE";
+
+            await Activate("add-tag-table");
+            tagTableCreateDialog = Find<ConfirmationDialog>("CreateTagTableDialog");
+            (tagTableCreateDialog.FindChild("CreationName", true, false) as LineEdit)!.Text = "GateEmpty";
+            tagTableCreateDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            await Frames();
+            await Activate("tag-table:GateEmpty");
+            var deleteEmptyTable = Find<Button>("RemoveEmptyTagTable");
+            var emptyDeleteEnabled = !deleteEmptyTable.Disabled;
+            _ladderHistory.Clear();
+            var beforeDeleteEmptyTable = LadderEditorProjectJson.Save(_ladderDocument);
+            deleteEmptyTable.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var afterDeleteEmptyTable = LadderEditorProjectJson.Save(_ladderDocument);
+            var emptyTableDeleted = !_ladderDocument.TagTables.Contains("GateEmpty", StringComparer.Ordinal);
+            var deleteEmptyUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeDeleteEmptyTable;
+            var deleteEmptyRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterDeleteEmptyTable;
+            _ladderDocument.RestoreSnapshot(tagTableFixture); _ladderHistory.Clear(); Refresh(); await Frames();
             tagGate.Set("selection-versus-dialog", broadPass, "physical selection/double-click dialog route");
             tagGate.Set("invalid-is-atomic", broadPass && tagDuplicate, $"blank=broad caseInsensitiveDuplicate={tagDuplicate}");
             tagGate.Set("valid-create-persists", broadPass, "physical creation persisted with exact named tree row");
-            tagGate.Set("undo-redo-exact", broadPass, "exact JSON Undo/Redo lifecycle");
+            tagGate.Set("undo-redo-exact", broadPass && createdTagTable && createTagTableUndo && createTagTableRedo,
+                $"physical={broadPass} created={createdTagTable} undo={createTagTableUndo} redo={createTagTableRedo}");
             tagGate.Set("navigation-is-clean", tagNavClean, "serialized baseline unchanged after table activation");
+            tagGate.Set("properties-assign-membership", membershipAssigned,
+                $"selectedIndex={membershipIndex} assigned={memberTag?.TagTable ?? "<missing>"}");
+            tagGate.Set("rename-preserves-membership-and-history", renamePreservedMember && renameSavedLoaded && undoReconciled && redoReconciled,
+                $"member={renamePreservedMember} saveLoad={renameSavedLoaded} undoReconciled={undoReconciled} redoReconciled={redoReconciled}");
+            tagGate.Set("empty-table-delete-and-history", emptyDeleteEnabled && emptyTableDeleted && deleteEmptyUndo && deleteEmptyRedo,
+                $"enabled={emptyDeleteEnabled} deleted={emptyTableDeleted} undo={deleteEmptyUndo} redo={deleteEmptyRedo}");
             tagGate.Finish();
 
             var watchGate = Gate("tia.project-tree.create-watch-table");
@@ -619,6 +709,51 @@ public partial class SimulatorShell
             watchRemoveGate.Set("save-load-preserves-table-isolation", saveLoadWatchRemove,
                 $"readable={loadedWatchRemoval.IsReadable} activeAndOtherIsolated={saveLoadWatchRemove}");
             watchRemoveGate.Finish();
+
+            var staleWatchGate = Gate("tia.project-tree.watch-stale-symbol-visible");
+            var staleWatchFixture = _ladderDocument.CaptureSnapshot();
+            _ladderDocument.SelectWatchTable(0);
+            const string staleWatchSymbol = "DeletedLegacyTag";
+            _ladderDocument.WatchVariables.Clear();
+            _ladderDocument.WatchVariables.Add(staleWatchSymbol);
+            Refresh(); await Frames();
+            var staleWatchTree = Find<Tree>("WatchTable");
+            var staleWatchRow = staleWatchTree.GetRoot()?.GetFirstChild();
+            var staleWatchRowName = staleWatchRow?.GetText(0) ?? "<missing>";
+            var staleWatchRowType = staleWatchRow?.GetText(1) ?? "<missing>";
+            var staleWatchStatus = Find<Label>("WatchStatus").Text;
+            var staleWatchVisible = staleWatchRow is not null
+                && staleWatchRow.GetMetadata(0).AsString() == staleWatchSymbol
+                && staleWatchRow.GetText(1) == "UNRESOLVED"
+                && staleWatchRow.GetText(4) == "UNRESOLVED SYMBOL"
+                && staleWatchStatus.Contains("1 SYMBOL(S)", StringComparison.Ordinal);
+            var staleWatchJson = LadderEditorProjectJson.Save(_ladderDocument);
+            var staleWatchLoaded = LadderEditorProjectJson.Load(staleWatchJson);
+            var staleWatchRoundTrip = staleWatchLoaded.IsReadable
+                && staleWatchLoaded.Document?.WatchVariables.SequenceEqual([staleWatchSymbol], StringComparer.Ordinal) == true;
+            staleWatchRow?.Select(0);
+            staleWatchTree.EmitSignal(Tree.SignalName.ItemSelected);
+            var beforeStaleWatchRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            _ladderHistory.Clear();
+            Find<Button>("RemoveWatchSymbol").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var afterStaleWatchRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            var staleWatchRemoved = !_ladderDocument.WatchVariables.Contains(staleWatchSymbol, StringComparer.Ordinal)
+                && staleWatchTree.GetRoot()?.GetFirstChild() is null
+                && Find<Label>("WatchStatus").Text.Contains("0 SYMBOL(S)", StringComparison.Ordinal);
+            var staleWatchUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeStaleWatchRemove;
+            var staleWatchRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterStaleWatchRemove;
+            _ladderDocument.RestoreSnapshot(staleWatchFixture);
+            _ladderHistory.Clear(); Refresh(); await Frames();
+            staleWatchGate.Set("persisted-unresolved-symbol-remains-visible", staleWatchVisible,
+                $"row={staleWatchRowName} type={staleWatchRowType} status={staleWatchStatus}");
+            staleWatchGate.Set("unresolved-symbol-save-load", staleWatchRoundTrip,
+                $"readable={staleWatchLoaded.IsReadable} savedSymbol={staleWatchLoaded.Document?.WatchVariables.FirstOrDefault() ?? "<missing>"}");
+            staleWatchGate.Set("unresolved-symbol-remove-and-undo-redo", staleWatchRemoved && staleWatchUndo && staleWatchRedo,
+                $"removed={staleWatchRemoved} undo={staleWatchUndo} redo={staleWatchRedo}");
+            staleWatchGate.Finish();
 
             // Global DB contract via the production tree/document controls.
             var globalGate = Gate("tia.project-tree.global-db-contract");
@@ -1366,8 +1501,8 @@ public partial class SimulatorShell
             await Frames();
         }
 
-        var passed = gates.Count == 10
-            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 10
+        var passed = gates.Count == 11
+            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 11
             && gates.All(gate => gate.Status == "passed"
                 && gate.Assertions.Count == ProjectTreeRequirements[gate.GateId].Count()
                 && gate.Assertions.All(assertion => assertion.Passed && assertion.Status == "passed"));

@@ -12,6 +12,8 @@ internal static partial class Program
         Test("EditorSchema6WritesAndReadsLegacyDemos", EditorSchema6WritesAndReadsLegacyDemos);
         Test("OpenBranchStatePersistsButCannotExportExecutableProgram", OpenBranchStatePersistsButCannotExportExecutableProgram);
         Test("TagTablesPersistAndLegacyTagsUseDefaultTable", TagTablesPersistAndLegacyTagsUseDefaultTable);
+        Test("TagTableOperationsPreserveIdentityAndHistory", TagTableOperationsPreserveIdentityAndHistory);
+        Test("TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic", TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic);
         Test("HierarchicalAggregateCommentsPersist", HierarchicalAggregateCommentsPersist);
         Test("UnassignedTimerPresetPersistsAndFailsLoadValidation", UnassignedTimerPresetPersistsAndFailsLoadValidation);
         Test("RetentiveTimerResetOperandPersistsAndValidates", RetentiveTimerResetOperandPersistsAndValidates);
@@ -231,11 +233,144 @@ internal static partial class Program
         legacy.AsObject().Remove("tagTables");
         foreach (var tag in legacy["tags"]!.AsArray()) tag!.AsObject().Remove("tagTable");
         var migrated = LadderEditorProjectJson.Load(legacy.ToJsonString());
-        True(migrated.IsReadable);
+        if (!migrated.IsReadable) throw new InvalidOperationException(string.Join("; ", migrated.Issues.Select(issue => $"{issue.Code} {issue.Path}: {issue.Message}")));
         Equal("Default tag table", migrated.Document!.Tags.Single(tag => tag.Name == "start").TagTable);
         Equal("Default tag table", migrated.Document.Tags.Single(tag => tag.Name == "counter_enable").TagTable);
         Equal("%M0.1", migrated.Document.Tags.Single(tag => tag.Name == "counter_enable").Address);
         Equal("Counter permission", migrated.Document.Tags.Single(tag => tag.Name == "counter_enable").Comment);
+    }
+
+    private static void TagTableOperationsPreserveIdentityAndHistory()
+    {
+        var document = new LadderEditorDocument();
+        document.AddBlock("Main", LadderBlockType.OrganizationBlock);
+        document.AddTag("legacy_input", PlcVariableRole.Input);
+        var stable = document.AddTag("cell_enable", PlcVariableRole.Memory);
+        document.Tags[1] = stable with { Id = "tag-stable-cell-enable" };
+        document.AddTagTable("Cell");
+        var history = new LadderEditorHistory();
+        var original = LadderEditorProjectJson.Save(document);
+
+        history.Execute(document, "Move stable tag", () => document.MoveTag("tag-stable-cell-enable", "cell"));
+        history.Execute(document, "Move legacy tag", () => document.MoveTag("legacy_input", "Cell"));
+        history.Execute(document, "Rename table", () => Equal("CellInputs", document.RenameTagTable("cell", " CellInputs ")));
+        Equal("CellInputs", document.Tags.Single(tag => tag.Name == "legacy_input").TagTable);
+        Equal("CellInputs", document.Tags.Single(tag => tag.Name == "cell_enable").TagTable);
+        Equal("tag-stable-cell-enable", LadderCallBindings.GlobalId(document.Tags.Single(tag => tag.Name == "cell_enable")));
+        Equal("legacy_input", LadderCallBindings.GlobalId(document.Tags.Single(tag => tag.Name == "legacy_input")));
+
+        var savedAfterEdits = LadderEditorProjectJson.Save(document);
+        var loaded = LadderEditorProjectJson.Load(savedAfterEdits);
+        True(loaded.IsReadable);
+        Equal(savedAfterEdits, LadderEditorProjectJson.Save(loaded.Document!));
+        Equal("CellInputs", loaded.Document!.Tags.Single(tag => tag.Name == "cell_enable").TagTable);
+
+        True(history.Undo(document, out _));
+        True(history.Undo(document, out _));
+        True(history.Undo(document, out _));
+        Equal(original, LadderEditorProjectJson.Save(document));
+        True(history.Redo(document, out _));
+        True(history.Redo(document, out _));
+        True(history.Redo(document, out _));
+        Equal(savedAfterEdits, LadderEditorProjectJson.Save(document));
+
+        history.Execute(document, "Add empty table", () => document.AddTagTable("Empty"));
+        history.Execute(document, "Delete empty table", () =>
+        {
+            if (!document.TryRemoveTagTable(" empty ", out var reason))
+                throw new InvalidOperationException(reason);
+        });
+        False(document.TagTables.Contains("Empty", StringComparer.OrdinalIgnoreCase));
+        True(history.Undo(document, out _));
+        True(document.TagTables.Contains("Empty", StringComparer.OrdinalIgnoreCase));
+        True(history.Redo(document, out _));
+        False(document.TagTables.Contains("Empty", StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static void TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic()
+    {
+        var document = new LadderEditorDocument();
+        document.AddBlock("Main", LadderBlockType.OrganizationBlock);
+        document.AddTag("member", PlcVariableRole.Input, tagTable: "Occupied");
+        document.AddTagTable("Empty");
+        var before = LadderEditorProjectJson.Save(document);
+
+        False(document.TryRemoveTagTable("Default tag table", out var defaultReason));
+        True(defaultReason.Contains("default", StringComparison.OrdinalIgnoreCase));
+        False(document.TryRemoveTagTable("Occupied", out var occupiedReason));
+        True(occupiedReason.Contains("empty", StringComparison.OrdinalIgnoreCase));
+        False(document.TryRemoveTagTable("missing", out var missingReason));
+        True(missingReason.Contains("does not exist", StringComparison.OrdinalIgnoreCase));
+        var defaultRenameRejected = false;
+        try { document.RenameTagTable("Default tag table", "DefaultRenamed"); }
+        catch (InvalidOperationException exception)
+        { defaultRenameRejected = exception.Message.Contains("default", StringComparison.OrdinalIgnoreCase); }
+        True(defaultRenameRejected);
+        Equal(before, LadderEditorProjectJson.Save(document));
+
+        foreach (var (table, replacement) in new[]
+        {
+            ("Empty", " "), ("Empty", "Occupied"), ("missing", "Renamed"),
+        })
+        {
+            var rejected = false;
+            try { document.RenameTagTable(table, replacement); }
+            catch (InvalidOperationException) { rejected = true; }
+            True(rejected);
+            Equal(before, LadderEditorProjectJson.Save(document));
+        }
+        foreach (var (identity, target) in new[] { ("missing-tag-id", "Empty"), ("member", "Missing") })
+        {
+            var rejected = false;
+            try { document.MoveTag(identity, target); }
+            catch (InvalidOperationException) { rejected = true; }
+            True(rejected);
+            Equal(before, LadderEditorProjectJson.Save(document));
+        }
+
+        var snapshot = document.CaptureSnapshot();
+        var whitespaceMembership = new LadderEditorDocument();
+        whitespaceMembership.RestoreSnapshot(snapshot with
+        {
+            TagTables = new[] { "Default tag table", "Cell" },
+            Tags = snapshot.Tags.Select(tag => tag with { TagTable = " Cell " }).ToArray(),
+        });
+        Equal(2, whitespaceMembership.TagTables.Count);
+        True(whitespaceMembership.Tags.All(tag => tag.TagTable == "Cell"));
+
+        foreach (var malformedTables in new IReadOnlyList<string>[]
+        {
+            new string[] { null! }, [""], ["   "], ["Default tag table", " Cell "],
+            ["Occupied", "occupied"], ["Only custom table"],
+        })
+        {
+            var rejected = false;
+            try { document.RestoreSnapshot(snapshot with { TagTables = malformedTables }); }
+            catch (ArgumentException exception)
+            {
+                rejected = exception.Message.Contains("tag-table", StringComparison.OrdinalIgnoreCase)
+                    || exception.Message.Contains("tag table", StringComparison.OrdinalIgnoreCase);
+            }
+            True(rejected);
+            Equal(before, LadderEditorProjectJson.Save(document));
+        }
+
+        foreach (var malformedJson in new[]
+        {
+            "[null]", "[\"\"]", "[\"  \"]", "[\"Default tag table\",\" Cell \"]",
+            "[\"Occupied\",\"occupied\"]", "[\"Only custom table\"]",
+        })
+        {
+            var project = JsonNode.Parse(before)!;
+            project["tagTables"] = JsonNode.Parse(malformedJson);
+            var loaded = LadderEditorProjectJson.Load(project.ToJsonString());
+            False(loaded.IsReadable);
+            True(loaded.Issues.Any(issue => issue.Message.Contains("tag-table", StringComparison.OrdinalIgnoreCase)
+                || issue.Message.Contains("tag table", StringComparison.OrdinalIgnoreCase)));
+        }
+        var legacy = JsonNode.Parse(before)!;
+        legacy.AsObject().Remove("tagTables");
+        True(LadderEditorProjectJson.Load(legacy.ToJsonString()).IsReadable);
     }
 
     private static void ComparatorDataTypePersistsAndDefaultsForLegacyNodes()

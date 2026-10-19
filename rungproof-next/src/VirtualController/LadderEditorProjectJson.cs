@@ -104,6 +104,9 @@ public static class LadderEditorProjectJson
                 return Invalid($"Unsupported project kind '{dto.Kind}'.");
             if (dto.Tags is null || dto.Blocks is null || dto.Tasks is null || dto.WatchVariables is null || dto.Instances is null)
                 return Invalid("Editor project collections must not be null.");
+            if (dto.TagTables is not null
+                && !LadderEditorDocument.TryValidateTagTableNames(dto.TagTables, out var tagTableError))
+                return Invalid(tagTableError);
             if (dto.SchemaVersion >= 5 && dto.WatchTables is null)
                 return Invalid("Schema 5 requires watchTables.");
             if (dto.Blocks.Count == 0)
@@ -176,7 +179,10 @@ public static class LadderEditorProjectJson
                 dto.EntryBlockId ?? string.Empty,
                 nextId, dto.SchemaVersion == 1 ? [] : dto.Instances,
                 (IReadOnlyList<string>?)dto.TagTables
-                    ?? tags.Select(tag => tag.TagTable).Distinct(StringComparer.Ordinal).DefaultIfEmpty("Default tag table").ToArray(),
+                    ?? new[] { "Default tag table" }.Concat(tags.Select(tag => tag.TagTable)
+                        .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name.Trim())
+                        .Distinct(StringComparer.OrdinalIgnoreCase))
+                        .Distinct(StringComparer.OrdinalIgnoreCase).ToArray(),
                 watchTables, Math.Clamp(dto.ActiveWatchTableIndex, 0, watchTables.Length - 1));
             var document = new LadderEditorDocument();
             document.RestoreSnapshot(snapshot);

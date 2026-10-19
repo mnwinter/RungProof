@@ -14,6 +14,8 @@ internal static partial class Program
 {
     private static int _passed;
     private static int _failed;
+    private static int _selected;
+    private static string? _testFilter;
 
     private static string FindProjectRoot()
     {
@@ -24,6 +26,16 @@ internal static partial class Program
 
     private static int Main(string[] args)
     {
+        var filterIndex = Array.IndexOf(args, "--filter");
+        if (filterIndex >= 0)
+        {
+            if (filterIndex + 1 >= args.Length || string.IsNullOrWhiteSpace(args[filterIndex + 1]))
+            {
+                Console.Error.WriteLine("--filter requires a test-name substring.");
+                return 2;
+            }
+            _testFilter = args[filterIndex + 1];
+        }
         // Stack exhaustion terminates a process rather than throwing a catchable
         // exception. Keep the adversarial flat CALL chain in its own process.
         if (args.Contains("--deep-call-probe", StringComparer.Ordinal))
@@ -242,6 +254,11 @@ internal static partial class Program
 
         Console.WriteLine($"VIRTUAL_CONTROLLER_TESTS_PASS {_passed}");
         Console.WriteLine($"VIRTUAL_CONTROLLER_TESTS_FAIL {_failed}");
+        if (_testFilter is not null && _selected == 0)
+        {
+            Console.Error.WriteLine($"No tests matched filter '{_testFilter}'.");
+            return 2;
+        }
         Console.WriteLine("REAL_PLC_TRANSPORT_CONSTRUCTED FALSE");
         Console.WriteLine("REAL_PLC_CONNECTION_ATTEMPTED FALSE");
         return _failed == 0 ? 0 : 1;
@@ -533,6 +550,8 @@ internal static partial class Program
 
     private static void Test(string name, Action body)
     {
+        if (_testFilter is not null && !name.Contains(_testFilter, StringComparison.OrdinalIgnoreCase)) return;
+        _selected++;
         try
         {
             body();
@@ -4769,11 +4788,12 @@ internal static partial class Program
             "tia.project-tree.create-watch-table", "tia.project-tree.global-db-contract",
             "tia.project-tree.instance-db-contract", "tia.project-tree.call-drag-drop",
             "tia.project-tree.watch-table-delete", "tia.project-tree.watch-symbol-remove",
+            "tia.project-tree.watch-stale-symbol-visible",
         };
         var gates = root.GetProperty("gates").EnumerateArray().ToArray();
         var ids = gates.Select(gate => gate.GetProperty("id").GetString()!).ToArray();
-        Require(gates.Length == 17 && ids.Distinct(StringComparer.Ordinal).Count() == 17,
-            "TIA editor-control registry must contain exactly 17 unique gates.");
+        Require(gates.Length == 18 && ids.Distinct(StringComparer.Ordinal).Count() == 18,
+            "TIA editor-control registry must contain exactly 18 unique gates.");
         Require(gates.Where(gate => gate.GetProperty("group").GetString() == "editor")
                 .Select(gate => gate.GetProperty("id").GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedEditor)
@@ -4786,6 +4806,14 @@ internal static partial class Program
                 && gate.GetProperty("requiredAssertions").GetArrayLength() > 0
                 && gate.GetProperty("limitations").GetArrayLength() > 0),
             "TIA editor-control gates must bind exactly one passing structured artifact.");
+        var tagTableGate = gates.Single(gate => gate.GetProperty("id").GetString() == "tia.project-tree.create-tag-table");
+        var tagTableRequirements = tagTableGate.GetProperty("requiredAssertions").EnumerateArray()
+            .Select(item => item.GetString()!).ToHashSet(StringComparer.Ordinal);
+        Require(tagTableRequirements.IsSupersetOf([
+            "the tag properties editor assigns a new tag to the selected table",
+            "renaming through the table editor preserves membership and remains consistent through Undo/Redo and Save/Load",
+            "the table editor deletes only an empty table and Undo/Redo restores exact state",
+        ]), "TIA tag-table evidence contract omits membership or table lifecycle behavior.");
         foreach (var gate in gates)
         foreach (var property in new[] { "implementationPaths", "testPaths", "documentationPaths" })
         foreach (var item in gate.GetProperty(property).EnumerateArray())
@@ -4803,7 +4831,7 @@ internal static partial class Program
             && contracts.Single(contract => contract.GetProperty("commandId").GetString() == "tia-project-tree-gate-sweep")
                 .GetProperty("gateIds").EnumerateArray().Select(item => item.GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedProjectTree),
-            "TIA editor-control structured sweep contracts do not exactly partition the 17 gates.");
+            "TIA editor-control structured sweep contracts do not exactly partition the 18 gates.");
 
         var artifacts = root.GetProperty("evidenceArtifacts").EnumerateArray().ToArray();
         Require(artifacts.Length == 2
@@ -4826,10 +4854,9 @@ internal static partial class Program
             "TIA editor-control gates are not bound to their group-specific structured artifacts.");
 
         var unsupported = root.GetProperty("unsupportedDocumented").EnumerateArray().ToArray();
-        Require(unsupported.Length == 4
+        Require(unsupported.Length == 2
             && unsupported.All(item => item.GetProperty("status").GetString() == "documented-unsupported")
             && unsupported.Select(item => item.GetProperty("id").GetString()).ToHashSet(StringComparer.Ordinal).SetEquals([
-                "tia.unsupported.tag-table-rename", "tia.unsupported.tag-table-delete",
                 "tia.unsupported.watch-table-rename", "tia.unsupported.project-tree-watch-table-delete",
             ]),
             "TIA editor-control unsupported-operation boundary is incomplete.");
@@ -4945,8 +4972,8 @@ internal static partial class Program
             && editorControlAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && !editorControlAssertions.GetProperty("externalTia").GetBoolean()
             && !editorControlAssertions.GetProperty("livePlc").GetBoolean()
-            && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 9
-            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 65
+            && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 11
+            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 75
             && projectTreeAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && projectTreeAssertions.GetProperty("nativePointerGeometry").GetBoolean()
             && !projectTreeAssertions.GetProperty("externalTia").GetBoolean()
@@ -5099,7 +5126,7 @@ internal static partial class Program
         foreach (var expected in new[]
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 10, Assertions: 69),
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 11, Assertions: 75),
         })
         {
             var artifact = root.GetProperty(expected.Property);

@@ -3827,7 +3827,11 @@ public partial class SimulatorShell : CanvasLayer
             _diagnosticsDock.OffsetBottom = -58;
             _leftDock.OffsetBottom = -(operatorHeight + 66.0f);
             _rightDock.OffsetBottom = -(operatorHeight + 66.0f);
-            _ladderWorkspace.OffsetBottom = _diagnosticsDock.OffsetTop - 8.0f;
+            // The Watch grid's minimum layout can extend below the nominal
+            // ladder workspace edge at short window heights. Reserve the
+            // collapsed/expanded Scene I/O dock aperture plus a small gutter
+            // so its translucent panel cannot cover the final visible Watch row.
+            _ladderWorkspace.OffsetBottom = _diagnosticsDock.OffsetTop - 54.0f;
             return;
         }
         if (toggle is not null) toggle.Text = _diagnosticsExpanded ? "COLLAPSE" : "EXPAND";
@@ -5394,6 +5398,13 @@ public partial class SimulatorShell : CanvasLayer
         ConfigureSelectableList(tagList);
         tagList.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
         var tagName = new LineEdit { Name = "NewTagName", PlaceholderText = "new_bool_tag" };
+        var tagTableMembership = new OptionButton
+        {
+            Name = "TagTableMembership",
+            FitToLongestItem = false,
+            ClipText = true,
+            CustomMinimumSize = new Vector2(0, 32),
+        };
         var tagAddress = new LineEdit { Name = "TagAddress", PlaceholderText = siemens ? "%I0.0 or %DB1.DBX0.0" : "optional controller address" };
         if (siemens)
             tagAddress.TooltipText = "Optional S7-1500 address metadata. Supported editor subset: BOOL I/Q/M bit or DBX; INT IW/MW/DBW; DINT, REAL, or TIME ID/MD/DBD. This does not map addresses to hardware or enable PLC I/O.";
@@ -6108,17 +6119,93 @@ public partial class SimulatorShell : CanvasLayer
 
         Label? interfaceHeading = null;
         Label? interfaceExecutionNote = null;
+        Label? tagTableContextHeading = null;
+        Button? renameTagTableAction = null;
+        Button? removeTagTableAction = null;
         RichTextLabel? blockInterfaceSummary = null;
         VBoxContainer? globalDbDocument = null;
         RichTextLabel? globalDbHeading = null;
         Action? restoreActiveEditorDocumentBody = null;
 
+        string SelectedTagTableMembership() => tagTableMembership.Selected >= 0
+            ? tagTableMembership.GetItemMetadata(tagTableMembership.Selected).AsString()
+            : activeTagTableName ?? "Default tag table";
+
+        void RefreshTagTableEditorControls()
+        {
+            var tableForForm = selectedTagIndex >= 0 && selectedTagIndex < document.Tags.Count
+                ? document.Tags[selectedTagIndex].TagTable
+                : activeTagTableName ?? "Default tag table";
+            var wasLoading = loadingFormControls;
+            loadingFormControls = true;
+            if (!tagFormDirty)
+            {
+                tagTableMembership.Clear();
+                foreach (var tableName in document.TagTables)
+                {
+                    tagTableMembership.AddItem(tableName);
+                    tagTableMembership.SetItemMetadata(tagTableMembership.ItemCount - 1, tableName);
+                }
+                var selectedTable = Enumerable.Range(0, tagTableMembership.ItemCount)
+                    .FirstOrDefault(index => tagTableMembership.GetItemMetadata(index).AsString()
+                        .Equals(tableForForm, StringComparison.OrdinalIgnoreCase), -1);
+                if (selectedTable >= 0) tagTableMembership.Select(selectedTable);
+            }
+            loadingFormControls = wasLoading;
+            if (tagTableContextHeading is not null)
+                tagTableContextHeading.Text = activeTagTableName is null
+                    ? "ALL TAGS"
+                    : $"TAG TABLE: {activeTagTableName.ToUpperInvariant()}";
+            var isUserTable = activeTagTableName is not null
+                && !activeTagTableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase)
+                && document.TagTables.Contains(activeTagTableName, StringComparer.OrdinalIgnoreCase);
+            if (renameTagTableAction is not null)
+                renameTagTableAction.Disabled = !isUserTable || tagFormDirty || ChallengeMutationLocked;
+            if (removeTagTableAction is not null)
+                removeTagTableAction.Disabled = !isUserTable || tagFormDirty || ChallengeMutationLocked
+                    || document.Tags.Any(tag => tag.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase));
+        }
+
         Action? refreshTreeActions = null;
+        void ReconcileTagTableEditorState()
+        {
+            var staleActiveKey = activeTagTableName is not null
+                && !document.TagTables.Contains(activeTagTableName, StringComparer.OrdinalIgnoreCase)
+                && string.Equals(activeEditorDocumentKey, $"tags:{activeTagTableName}", StringComparison.Ordinal);
+            var staleKeys = editorTagDocuments
+                .Where(pair => pair.Value is not null
+                    && !document.TagTables.Contains(pair.Value, StringComparer.OrdinalIgnoreCase))
+                .Select(pair => pair.Key)
+                .ToArray();
+
+            if (activeTagTableName is not null)
+            {
+                var canonicalName = document.TagTables.FirstOrDefault(name =>
+                    name.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase));
+                activeTagTableName = canonicalName
+                    ?? document.TagTables.FirstOrDefault(name => name.Equals("Default tag table", StringComparison.OrdinalIgnoreCase))
+                    ?? document.TagTables.FirstOrDefault();
+            }
+
+            foreach (var key in staleKeys) CloseEditorDocument(key);
+
+            // Undoing a rename can restore the old table after its document tab
+            // was closed by the rename action. Reopen the built-in table so the
+            // editor never remains attached to a missing table name.
+            if (staleActiveKey && activeTagTableName is not null)
+            {
+                selectedTagIndex = -1;
+                OpenTagDocument(activeTagTableName);
+            }
+        }
+
         void RefreshEditor()
         {
             UpdateGlobalDbDeclarationGridEditability();
             if (propertyDirty || tagFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty) return;
+            ReconcileTagTableEditorState();
             refreshingEditor = true;
+            RefreshTagTableEditorControls();
             document.EnsureInstanceDataBlocks();
             var activeBlockName = document.Blocks.Count > 0
                 ? document.Blocks[Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1)].Name
@@ -6510,6 +6597,7 @@ public partial class SimulatorShell : CanvasLayer
             applyTagEdit!.Disabled = selectedTagIndex < 0;
             deleteTag!.Disabled = selectedTagIndex < 0;
             if (selectedTagIndex >= 0) SelectIndexedTreeRow(tagList, selectedTagIndex);
+            RefreshTagTableEditorControls();
             for (var index = 0; index < document.Blocks.Count; index++)
             {
                 if (document.Blocks[index].BlockType != LadderBlockType.DataBlock)
@@ -7164,10 +7252,13 @@ public partial class SimulatorShell : CanvasLayer
                 if (selectedIndex >= 0) watchSymbol.Select(selectedIndex);
                 watchTagNames = tagNames;
             }
-            var variables = document.WatchVariables
-                .Select(name => watchVariables.FirstOrDefault(tag => tag.Name == name))
-                .OfType<PlcVariable>().ToArray();
-            var rowNames = variables.Select(variable => variable.Name).ToArray();
+            // Keep unresolved persisted entries visible. Silently filtering them
+            // out makes the status count disagree with the grid and leaves the
+            // operator without a way to select and remove a stale symbol.
+            var rows = document.WatchVariables
+                .Select(name => (Name: name, Variable: watchVariables.FirstOrDefault(tag => tag.Name == name)))
+                .ToArray();
+            var rowNames = rows.Select(row => row.Name).ToArray();
             if (watchTable.GetRoot() is null || !watchRowNames.SequenceEqual(rowNames, StringComparer.Ordinal))
             {
                 var selectedName = watchTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
@@ -7184,11 +7275,20 @@ public partial class SimulatorShell : CanvasLayer
                 }
                 watchRowNames = rowNames;
             }
-            for (var index = 0; index < variables.Length; index++)
+            for (var index = 0; index < rows.Length; index++)
             {
-                var variable = variables[index];
-                var name = variable.Name;
+                var (name, variable) = rows[index];
                 var item = watchRows[index];
+                if (variable is null)
+                {
+                    item.SetText(1, "UNRESOLVED");
+                    item.SetText(2, "—");
+                    item.SetText(3, "—");
+                    item.SetText(4, "UNRESOLVED SYMBOL");
+                    item.SetText(5, "—");
+                    item.SetTooltipText(0, "This saved watch entry does not match a current PLC tag. Select it and use Remove to clear the stale entry.");
+                    continue;
+                }
                 item.SetText(1, variable.Type.ToString().ToUpperInvariant());
                 var current = snapshot is not null && _ladderMonitorMatchesLoadedProgram;
                 item.SetText(2, current ? WatchValue(variable, snapshot!) : "—");
@@ -7531,6 +7631,23 @@ public partial class SimulatorShell : CanvasLayer
         tagPage.AddChild(tagList);
         var xrefSelectedTag = ToolbarButton("CrossReferenceSelectedTag", siemens ? "XREF SELECTED TAG" : "FIND ALL FOR SELECTED TAG", accent, 200);
         tagPage.AddChild(xrefSelectedTag);
+        var tagTableActions = new HBoxContainer { Name = "TagTableActions" };
+        tagTableActions.AddThemeConstantOverride("separation", 5);
+        var tagTableHeading = Heading("TAG TABLE", 11, new Color("344851"));
+        tagTableHeading.Name = "TagTableContextHeading";
+        tagTableContextHeading = tagTableHeading;
+        tagTableHeading.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        tagTableActions.AddChild(tagTableHeading);
+        var renameTagTable = ToolbarButton("RenameTagTable", "RENAME TABLE", new Color("4d6674"), 130);
+        renameTagTableAction = renameTagTable;
+        renameTagTable.Disabled = true;
+        tagTableActions.AddChild(renameTagTable);
+        var removeTagTable = ToolbarButton("RemoveEmptyTagTable", "DELETE EMPTY TABLE", new Color("8a4d55"), 164);
+        removeTagTableAction = removeTagTable;
+        removeTagTable.Disabled = true;
+        tagTableActions.AddChild(removeTagTable);
+        tagTableActions.Visible = siemens;
+        tagPage.AddChild(tagTableActions);
         HBoxContainer TagFieldRow(string name, string label, Control field)
         {
             var row = new HBoxContainer { Name = name };
@@ -7543,6 +7660,9 @@ public partial class SimulatorShell : CanvasLayer
             return row;
         }
         tagPage.AddChild(TagFieldRow("TagNameRow", "NAME", tagName));
+        var tagTableMembershipRow = TagFieldRow("TagTableMembershipRow", "TAG TABLE", tagTableMembership);
+        tagTableMembershipRow.Visible = siemens;
+        tagPage.AddChild(tagTableMembershipRow);
         tagPage.AddChild(TagFieldRow("TagAddressRow", "ADDRESS", tagAddress));
         tagPage.AddChild(TagFieldRow("TagCommentRow", "COMMENT", tagComment));
         tagPage.AddChild(TagFieldRow("TagTypeRow", "TYPE", tagType));
@@ -8339,6 +8459,7 @@ public partial class SimulatorShell : CanvasLayer
             deleteTag!.Disabled = false;
             output.Text = $"[color=#18864b]{Escape(tag.Name)} selected.[/color] Edit its definition or inspect references before deletion.";
             loadingFormControls = false; tagFormDirty = false;
+            RefreshTagTableEditorControls();
             UpdateGlobalDbDeclarationGridEditability();
         }
         bool restoringTagSelection = false;
@@ -8381,11 +8502,18 @@ public partial class SimulatorShell : CanvasLayer
             if (!TryReadTagInitialValue(type, out var initialValue)) return;
             var schema = PlcAggregates.IsAggregate(type) && aggregateTagEditor.TryRead(type, out var editedSchema, out _, out _) ? editedSchema : null;
             var binding = type is PlcVariableType.Timer or PlcVariableType.Counter ? string.Empty : SelectedTagBinding();
-            if (!PreflightTagEdit(preview => preview.UpdateTag(current.Name, normalizedName, type, role, binding, initialValue, schema,
-                    enumMembers: SelectedEnumMembers(type), address: tagAddress.Text, comment: tagComment.Text))) return;
+            var targetTable = SelectedTagTableMembership();
+            PlcVariable UpdateTagDefinition(LadderEditorDocument target)
+            {
+                var updatedTag = target.UpdateTag(current.Name, normalizedName, type, role, binding, initialValue, schema,
+                    enumMembers: SelectedEnumMembers(type), address: tagAddress.Text, comment: tagComment.Text);
+                return updatedTag.TagTable.Equals(targetTable, StringComparison.OrdinalIgnoreCase)
+                    ? updatedTag
+                    : target.MoveTag(LadderCallBindings.GlobalId(updatedTag), targetTable);
+            }
+            if (!PreflightTagEdit(UpdateTagDefinition)) return;
             if (!BeginEdit("Update tag definition")) return;
-            var updated = document.UpdateTag(current.Name, normalizedName, type, role, binding, initialValue, schema,
-                enumMembers: SelectedEnumMembers(type), address: tagAddress.Text, comment: tagComment.Text);
+            var updated = UpdateTagDefinition(document);
             tagFormDirty = false;
             RefreshEditor();
             output.Text = $"[color=#18864b]Tag updated.[/color] {Escape(updated.Name)} · {updated.Type} · {updated.Role}. All symbolic references were renamed atomically.";
@@ -9599,7 +9727,7 @@ public partial class SimulatorShell : CanvasLayer
             if (document.TagTables.Contains(normalizedName, StringComparer.OrdinalIgnoreCase))
                 return $"Tag table '{normalizedName}' already exists.";
             if (ChallengeMutationLocked) return "Project changes are locked for this lesson.";
-            if (!BeginEdit("Add tag table")) return "Editing unavailable.";
+            if (!BeginProjectMetadataEdit("Add tag table")) return "Editing unavailable.";
             try
             {
                 activeTagTableName = document.AddTagTable(normalizedName);
@@ -9618,6 +9746,66 @@ public partial class SimulatorShell : CanvasLayer
             }
             catch (InvalidOperationException exception) { return exception.Message; }
         }, out var tagTableCreationName, out var tagTableCreationError);
+        var tagTableRenameDialog = NamedCreationDialog("RenameTagTableDialog", "Rename tag table", name =>
+        {
+            var oldName = activeTagTableName;
+            if (oldName is null) return "Open a user-defined tag table first.";
+            if (ChallengeMutationLocked) return "Project changes are locked for this lesson.";
+            var normalizedName = name.Trim();
+            if (normalizedName.Length == 0) return "Enter a tag table name.";
+            if (normalizedName.Equals(oldName, StringComparison.Ordinal)) return string.Empty;
+            try
+            {
+                var preview = new LadderEditorDocument();
+                preview.RestoreSnapshot(document.CaptureSnapshot());
+                preview.RenameTagTable(oldName, normalizedName);
+            }
+            catch (Exception exception) when (exception is ArgumentException or InvalidOperationException)
+            { return exception.Message; }
+            if (!BeginProjectMetadataEdit("Rename tag table")) return "Editing unavailable.";
+            var renamed = document.RenameTagTable(oldName, normalizedName);
+            foreach (var key in editorTagDocuments
+                         .Where(pair => pair.Value?.Equals(oldName, StringComparison.OrdinalIgnoreCase) == true)
+                         .Select(pair => pair.Key).ToArray())
+                CloseEditorDocument(key);
+            activeTagTableName = renamed;
+            RefreshEditor();
+            if (siemens) OpenTagDocument(renamed, selectedTagIndex);
+            RefreshTagTableEditorControls();
+            output.Text = $"[color=#18864b]Tag table renamed.[/color] {Escape(oldName)} → {Escape(renamed)}. Member tags stayed in the table.";
+            return string.Empty;
+        }, out var tagTableRenameName, out var tagTableRenameError);
+        renameTagTable.Pressed += () =>
+        {
+            if (activeTagTableName is null || renameTagTable.Disabled) return;
+            tagTableRenameName.Text = activeTagTableName;
+            tagTableRenameError.Text = string.Empty;
+            tagTableRenameDialog.PopupCentered();
+            tagTableRenameName.GrabFocus();
+            tagTableRenameName.SelectAll();
+        };
+        removeTagTable.Pressed += () =>
+        {
+            var oldName = activeTagTableName;
+            if (oldName is null || removeTagTable.Disabled) return;
+            var preview = new LadderEditorDocument();
+            preview.RestoreSnapshot(document.CaptureSnapshot());
+            if (!preview.TryRemoveTagTable(oldName, out var rejection))
+            { output.Text = $"[color=#d64545]Tag table delete rejected.[/color] {Escape(rejection)}"; return; }
+            if (!BeginProjectMetadataEdit("Delete empty tag table")) return;
+            if (!document.TryRemoveTagTable(oldName, out rejection))
+            { output.Text = $"[color=#d64545]Tag table delete rejected.[/color] {Escape(rejection)}"; return; }
+            foreach (var key in editorTagDocuments
+                         .Where(pair => pair.Value?.Equals(oldName, StringComparison.OrdinalIgnoreCase) == true)
+                         .Select(pair => pair.Key).ToArray())
+                CloseEditorDocument(key);
+            activeTagTableName = "Default tag table";
+            selectedTagIndex = -1;
+            RefreshEditor();
+            if (siemens) OpenTagDocument(activeTagTableName);
+            RefreshTagTableEditorControls();
+            output.Text = $"[color=#18864b]Empty tag table deleted.[/color] {Escape(oldName)}. Undo restores it.";
+        };
         void OpenTagTableCreation()
         {
             if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
@@ -10544,9 +10732,9 @@ public partial class SimulatorShell : CanvasLayer
             var binding = type is PlcVariableType.Timer or PlcVariableType.Counter ? string.Empty : SelectedTagBinding();
             PlcVariable AddDefinition(LadderEditorDocument target) => schema is not null
                 ? target.AddAggregateTag(tagName.Text, role, type, schema, initialValue, binding,
-                    activeTagTableName ?? "Default tag table", tagAddress.Text, tagComment.Text)
+                    SelectedTagTableMembership(), tagAddress.Text, tagComment.Text)
                 : target.AddTag(tagName.Text, role, binding, type, initialValue,
-                    enumMembers: SelectedEnumMembers(type), tagTable: activeTagTableName ?? "Default tag table",
+                    enumMembers: SelectedEnumMembers(type), tagTable: SelectedTagTableMembership(),
                     address: tagAddress.Text, comment: tagComment.Text);
             if (!PreflightTagEdit(AddDefinition)) return;
             if (!BeginEdit("Add tag")) return;
@@ -10576,6 +10764,7 @@ public partial class SimulatorShell : CanvasLayer
             {
                 if (refreshingEditor || loadingFormControls) return;
                 mark();
+                RefreshTagTableEditorControls();
                 UpdateGlobalDbDeclarationGridEditability();
             }
             if (control is LineEdit text) text.TextChanged += _ => Changed();
@@ -10583,7 +10772,7 @@ public partial class SimulatorShell : CanvasLayer
             else if (control is SpinBox number) number.ValueChanged += _ => Changed();
             else if (control is CheckBox checkBox) checkBox.Toggled += _ => Changed();
         }
-        foreach (var field in new Control[] { tagName, tagAddress, tagComment, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding }) WatchPending(field, () => { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; });
+        foreach (var field in new Control[] { tagName, tagTableMembership, tagAddress, tagComment, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding }) WatchPending(field, () => { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; });
         aggregateTagEditor.PendingChanged += () =>
         {
             if (refreshingEditor || loadingFormControls) return;
@@ -10610,6 +10799,7 @@ public partial class SimulatorShell : CanvasLayer
                 tagName.Clear(); tagAddress.Clear(); tagComment.Clear(); tagInitialValue.Text = "FALSE";
                 aggregateTagEditor.Load(SelectedTagType());
                 loadingFormControls = false;
+                RefreshTagTableEditorControls();
                 UpdateGlobalDbDeclarationGridEditability();
             }
         }
@@ -10663,7 +10853,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             field.GuiInput += input => { if (input is InputEventKey { Pressed: true, Keycode: Key.Escape }) { discard(); field.AcceptEvent(); } };
         }
-        foreach (var field in new Control[] { tagName, tagAddress, tagComment, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding, aggregateTagEditor }) EscapeForm(field, DiscardTag);
+        foreach (var field in new Control[] { tagName, tagTableMembership, tagAddress, tagComment, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding, aggregateTagEditor }) EscapeForm(field, DiscardTag);
         foreach (var field in new Control[] { blockName, blockTypeSelector }) EscapeForm(field, DiscardBlock);
         foreach (var field in new Control[] { taskName, taskKind, taskPeriod, taskPriority, taskTarget }) EscapeForm(field, DiscardTask);
         foreach (var field in new Control[] { interfaceName, interfaceType, interfaceSection, interfaceInitial, interfaceEnumMembers, interfaceRetain, interfaceComment }) EscapeForm(field, DiscardInterface);

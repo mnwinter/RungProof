@@ -701,7 +701,7 @@ The current-source follow-up below updates the Remove evidence.
 
 ### Current-source gate and review update
 
-The project-tree sweep now passes 10/10 gates and 69/69 assertions, including
+The project-tree sweep now passes 11/11 gates and 75/75 assertions, including
 the dedicated `tia.project-tree.watch-symbol-remove` route. That gate verifies
 the active-table-only removal, survivor/table isolation, visible count refresh,
 Undo/Redo, and Save/Load. The Global DB contract gate now covers ordinary
@@ -730,18 +730,25 @@ remaining function-by-function screen walkthrough are still open.
 ## Current acceptance checkpoint — 2026-10-19
 
 All evidence below is local RungProof evidence. No installed TIA project or
-live PLC was used. The build passes with zero warnings/errors; the virtual
-controller suite passes 379 checks; the app-shell verifier passes for 77
-scenes, five demos, and 295 assets; and the project-tree sweep passes 10/10
-gates with 69/69 assertions.
+live PLC was used. The current build passes with zero warnings/errors; the
+virtual-controller suite passes 381/381; the app-shell verifier passes for 77
+scenes, five demos, and 295 assets; the interaction profile passes 14/14
+commands; and the project-tree sweep passes 11/11 gates with 75/75 assertions.
+Screen control in a disposable 1616×939 run confirmed the Watch row remains
+visible and selectable above the expanded Scene I/O dock. A fresh live screen
+walkthrough confirmed the built-in controller Run command, conveyor Start
+(`conveyor_run=true`), E-stop (`conveyor_run=false`, `estop_ok=false`, controller
+stopped), and Reset (`estop_ok=true`, controller remains stopped). PLC transport
+was disconnected throughout; this is local simulator UI evidence, not proof of
+a safety-rated circuit or installed-TIA parity.
 
 | Area | Current evidence | Acceptance still open |
 | --- | --- | --- |
-| Global DB inline cells | An isolated screen-control walkthrough visibly committed Name, Data Type, Start Value, Retain, and Comment. Comment survived returning to the blank member form, Cancel, redraw, and row reselection. The automated project-tree gate confirms editability and property-form transactions, but does not execute inline commit. | Invalid and duplicate inline edits, atomic rejection feedback, exact Undo/Redo, and a project-file Save/Load/Save cycle through the visible workflow. The attempted automated inline editor extension was reverted after Godot Tree selection crashes; its failed artifact is not accepted as product behavior. |
-| Global DB actions | Existing gates cover Add/Edit/Remove, stable declaration identity, exact survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. Screen control previously confirmed selected-row Remove and the Project Tree return. | Fresh screen proof of each action across multiple rows and visible Save/Load. |
-| Instance DB | Current screen evidence shows the assigned FB and grouped six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. Start Value is intentionally read-only and the unsupported instance override/retentivity/monitor boundary is disclosed. | Matched TIA V21 comparison. Keep the read-only boundary until a complete identity, validation, persistence, history, and runtime initialization slice exists. |
-| PLC tags and tag tables | Source review found and fixed symbolic CALL actual reference counting and rename handling, including aggregate leaves; literals, discarded outputs, stable IDs, and unresolved symbols are preserved. Regressions cover delete blocking, rename, Undo/Redo, and exact project JSON round-trip. | Tag-table rename/remove/duplicate and membership editing, User/System constants, and tag-to-operand drag are not implemented. Fresh visible tag Apply/Undo/Redo/Save-Load evidence is also open. |
-| Watch tables | Automated project-tree gates cover watch-table deletion and symbol removal, survivor isolation, Undo/Redo, and Save/Load. | The latest screen attempt did not establish reliable row selection, so Add Symbol, Remove, and Clear are not accepted from that pass. Absolute addresses, display formats, simulator-safe modify values, and row reorder are not modeled. |
+| Global DB inline cells | An isolated screen-control walkthrough visibly committed Name, Data Type, Start Value, Retain, and Comment. The current gate covers editable-cell state and property-form transactions. | Invalid and duplicate inline edits, atomic rejection feedback, exact Undo/Redo, and a project-file Save/Load/Save cycle through the visible workflow. |
+| Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. Screen control confirmed selected-row Remove and return to the Project Tree. | Fresh screen proof of each action across multiple rows and visible Save/Load. |
+| Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
+| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, and Undo/Redo. Symbol references are identity-aware across rename/delete, including aggregate leaves and unresolved symbols. | Fresh visible walkthrough of tag property Apply/Undo/Redo/Save-Load. User/System constants and tag-to-operand drag remain unsupported. |
+| Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. Screen control verified visible Watch row selection above expanded Scene I/O. | Fresh visible Add Symbol, Remove, and Clear with selected-row targeting and Save/Load. Address-based rows, display formats, simulator-safe modify values, and reorder remain unsupported. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
 ### Work order
@@ -749,15 +756,12 @@ gates with 69/69 assertions.
 1. Finish the screen-control matrix for Global DB transactions, tag properties,
    and Watch Add/Remove/Clear; verify selected-row targeting, validation,
    Undo/Redo, and project Save/Load without saving over the user's project.
-2. Close the code-level tag reference defect and the property-management data
-   lifecycle regressions before adding new declaration controls.
-3. Implement the declared TIA property subset that is still missing: tag-table
-   membership/lifecycle, User/System constants where sourced metadata exists,
-   and Watch address/format/modify behavior with an explicit simulator-only
-   write boundary.
-4. Keep instance DB overrides read-only until their storage and runtime
+2. Implement remaining property scope: User/System constants when sourced
+   metadata exists, tag-to-operand drag, and Watch address/format/modify
+   behavior behind an explicit simulator-only write boundary.
+3. Keep instance DB overrides read-only until their storage and runtime
    semantics can be implemented end to end; compare the current layout against
    matched TIA V21 captures.
-5. Re-run the complete GUI/property acceptance matrix and archive its evidence.
+4. Re-run the complete GUI/property acceptance matrix and archive its evidence.
    Start demo sequence and ladder-owned safety logic remediation only after this
    GUI/property batch is closed.
