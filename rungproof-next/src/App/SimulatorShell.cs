@@ -8115,8 +8115,12 @@ public partial class SimulatorShell : CanvasLayer
         interfaceFields.AddChild(interfaceComment);
 
         projectPage.AddChild(interfaceFields);
-        var interfaceCommands = new HBoxContainer { Name = "InterfaceCommands" };
-        interfaceCommands.AddThemeConstantOverride("separation", 4);
+        // Keep every member action reachable when the project dock is narrow.
+        // The ObjectContent page also supports horizontal scrolling for fields,
+        // but the core add/new/cancel/remove actions must remain in the visible dock.
+        var interfaceCommands = new HFlowContainer { Name = "InterfaceCommands" };
+        interfaceCommands.AddThemeConstantOverride("h_separation", 4);
+        interfaceCommands.AddThemeConstantOverride("v_separation", 4);
         interfaceCommands.AddChild(addInterface);
         interfaceCommands.AddChild(newInterface);
         interfaceCommands.AddChild(cancelInterface);
@@ -9881,7 +9885,13 @@ public partial class SimulatorShell : CanvasLayer
         addInterface.Pressed += () =>
         {
             if (interfaceFormDirty && !CurrentForm(interfaceFormRevision)) return;
-            if (!siemens || document.Blocks.Count == 0 || string.IsNullOrWhiteSpace(interfaceName.Text)) return;
+            if (!siemens || document.Blocks.Count == 0) return;
+            if (string.IsNullOrWhiteSpace(interfaceName.Text))
+            {
+                output.Text = "[color=#d64545]Interface parameter rejected.[/color] Enter a non-empty declaration name.";
+                interfaceName.GrabFocus();
+                return;
+            }
             var activeBlock = document.Blocks[document.ActiveBlockIndex];
             var isEditing = selectedInterfaceIndex >= 0;
             if (isEditing && (!StringComparer.Ordinal.Equals(selectedInterfaceBlockId, activeBlock.Id)

@@ -1,6 +1,6 @@
 # TIA Portal V21 main-screen and property-management requirements
 
-Updated: 2026-10-18
+Updated: 2026-10-19
 
 ## Purpose and evidence boundary
 
@@ -177,14 +177,17 @@ that move without ladder-owned outputs.
 - The Global DB declaration grid now has direct Add/Edit/Remove commands and
   an inspected current-source normal-renderer capture at
   `.tools/global-db-direct-actions-v1.png`. The property form remains the
-  editor for selected declarations. Inline cell editing and file Save/reopen
-  coverage remain open. The form has an explicit Cancel action; Remove
+  editor for selected declarations. The source also handles inline edits for
+  Name, Data Type, Start Value, Retain, and Comment. Manual current-build
+  commit/recovery behavior and file Save/reopen coverage remain open. The form
+  has an explicit Cancel action; Remove
   resolves pending edits before deletion, covered by an exact
   Cancel/Discard/Undo/Redo gate. The form also tracks Retain-only edits and
   supplies an ENUM
   initial value from the member domain (seeding `Value1` when that domain is
   empty). Untouched defaults also change to the selected scalar type. The
-  latest project-tree sweep passes 9 gates / 59 assertions.
+  current project-tree sweep passes 9 gates / 63 assertions, including
+  visible blank-name rejection with unchanged document and Undo history.
 - The Global DB declaration grid remains a bounded scalar optimized-access
   subset; broader TIA column/access-mode support is still open.
 - CUA's native-app inventory is empty, but the existing Chrome extension tab
@@ -446,10 +449,10 @@ presentation defect in the shared member dock: it called global DB declarations
 an `DB INTERFACE`, showed a disabled `STATIC` selector, and displayed a generic
 FB/FC capability note. The Global DB table itself showed the five supported
 columns (Name, Data Type, Start Value, Retain, Comment) and Add/Edit/Remove
-actions. The dock now says `GLOBAL DB DECLARATIONS`, hides the implied Static section selector, and gives a Global DB-specific optimized-access subset note. It widens to at least 560 px while open so all four member actions fit, then restores the previous width when returning to the project tree. The FB capability note remains specific to FB editing. No declaration was applied or saved during the screen inspection.
+actions. The dock now says `GLOBAL DB DECLARATIONS`, hides the implied Static section selector, and gives a Global DB-specific optimized-access subset note. It requests 560 px on wide viewports; on narrower viewports the member actions wrap so they remain reachable, then the previous dock width is restored when returning to the project tree. The FB capability note remains specific to FB editing. No declaration was applied or saved during the screen inspection.
 
 The updated source builds with 0 warnings/errors. The production project-tree
-gate passes 9 gates / 59 assertions; `externalTia=false` and `livePlc=false`.
+gate passes 9 gates / 63 assertions; `externalTia=false` and `livePlc=false`.
 The gate checks that the Global DB dock label, hidden Static selector, and
 context-specific note match the selected block. A fresh-source browser-bridge walkthrough confirmed the corrected label, hidden Static selector, Global DB note, and full-width member controls at a 1328×837 sandbox window. Cancel left the draft empty, and Project Tree restored the original dock width. Installed TIA V21 comparison and Save/Load parity remain open.
 

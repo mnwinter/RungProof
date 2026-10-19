@@ -114,6 +114,7 @@ public partial class SimulatorShell
             [
                 ("row-under-program-blocks", "the Global DB row appears under Program blocks"),
                 ("activation-opens-declarations", "activation opens declarations and not a LAD canvas"),
+                ("empty-member-name-rejected", "applying a blank member name shows validation, focuses Name, and leaves the DB and Undo history unchanged"),
                 ("fields-persist", "Name, Data type, Start value, Retain, and Comment persist"),
                 ("declaration-grid-inline-edit", "all five Global DB fields render as editable cells, with Retain shown as a checkbox"),
                 ("pending-form-blocks-inline-edit", "all declaration cells become noneditable while a member draft is pending"),
@@ -480,6 +481,17 @@ public partial class SimulatorShell
             await Frames();
             var directAddOpened = projectTabs.CurrentTab == 2 && applyDeclaration.Text == "+ MEMBER"
                 && Find<LineEdit>("InterfaceName").Text.Length == 0;
+            var beforeEmptyMemberApply = LadderEditorProjectJson.Save(_ladderDocument);
+            var undoBeforeEmptyMemberApply = _ladderHistory.CanUndo;
+            var emptyMemberName = Find<LineEdit>("InterfaceName");
+            applyDeclaration.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var emptyMemberFeedback = output.Text.Contains("non-empty declaration name", StringComparison.OrdinalIgnoreCase);
+            var emptyMemberFocused = emptyMemberName.HasFocus();
+            var emptyMemberDocumentUnchanged = LadderEditorProjectJson.Save(_ladderDocument) == beforeEmptyMemberApply;
+            var emptyMemberUndoUnchanged = _ladderHistory.CanUndo == undoBeforeEmptyMemberApply;
+            var emptyMemberRejected = emptyMemberFeedback && emptyMemberFocused
+                && emptyMemberDocumentUnchanged && emptyMemberUndoUnchanged;
             Find<Button>("CancelInterface").EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var directAddIsDraftOnly = LadderEditorProjectJson.Save(_ladderDocument) == directAddBefore
@@ -505,27 +517,44 @@ public partial class SimulatorShell
             // proves both the widen and exact restore behavior even headless.
             projectSplit.SplitOffsets = [240];
             await Frames();
+            var baselineMemberDockWidth = projectDock.GetGlobalRect().Size.X;
             var memberEditorRouteVisible = memberEditorButton.IsVisibleInTree();
             memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var expectedMemberDockWidth = Math.Min(600, Math.Max(560, (int)projectSplit.Size.X / 3));
-            var openedDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
-            var removeMemberButtonFitsDock = Find<Button>("RemoveInterface").GetGlobalRect().End.X
-                <= projectDock.GetGlobalRect().End.X;
-            var memberEditorDockEnd = projectDock.GetGlobalRect().End.X;
-            var memberEditorRemoveEnd = Find<Button>("RemoveInterface").GetGlobalRect().End.X;
+            var requestedMemberDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
+            var projectDockRect = projectDock.GetGlobalRect();
+            var actualMemberDockWidth = projectDockRect.Size.X;
+            var memberActionButtons = new[]
+            {
+                Find<Button>("AddInterface"), Find<Button>("NewInterface"),
+                Find<Button>("CancelInterface"), Find<Button>("RemoveInterface"),
+            };
+            var interfaceCommands = Find<HFlowContainer>("InterfaceCommands");
+            var memberActionsFitDock = memberActionButtons.All(button =>
+            {
+                var rect = button.GetGlobalRect();
+                return button.IsVisibleInTree()
+                    && rect.Position.X >= projectDockRect.Position.X
+                    && rect.End.X <= projectDockRect.End.X;
+            });
+            var memberActionsWrap = interfaceCommands.Size.Y
+                > memberActionButtons.Max(button => button.Size.Y) + 1;
+            var wideDockReached = actualMemberDockWidth >= 560 && requestedMemberDockWidth >= 560;
+            var narrowDockUsable = actualMemberDockWidth >= 150 && memberActionsWrap && memberActionsFitDock;
             var memberEditorTreeVisible = Find<Tree>("BlockInterface").IsVisibleInTree();
             var memberEditorTab = projectTabs.CurrentTab;
             var memberEditorButtonText = memberEditorButton.Text;
             var memberEditorOpened = projectTabs.CurrentTab == 2 && memberEditorButton.Text == "PROJECT TREE"
                 && projectDock.Visible && memberEditorTreeVisible
-                && openedDockWidth == expectedMemberDockWidth && openedDockWidth > 240
-                && removeMemberButtonFitsDock;
+                && (wideDockReached || narrowDockUsable) && memberActionsFitDock;
             memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var restoredDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
+            var restoredActualDockWidth = projectDock.GetGlobalRect().Size.X;
             var projectTreeRestored = projectTabs.CurrentTab == 0 && memberEditorButton.Text == "EDIT MEMBERS"
-                && projectDock.Visible && restoredDockWidth == 240;
+                && projectDock.Visible && restoredDockWidth == 240
+                && Math.Abs(restoredActualDockWidth - baselineMemberDockWidth) <= 1;
             // Keep the gate isolated from the shell state expected by later
             // assertions and restore the splitter value that preceded setup.
             projectSplit.SplitOffsets = [priorDockWidth];
@@ -693,6 +722,8 @@ public partial class SimulatorShell
                 && Enumerable.Range(0, globalDbDeclarations.Columns).All(currentGridDeclaration.IsEditable);
             globalGate.Set("row-under-program-blocks", globalRowUnderBlocks, $"row={globalRowName}");
             globalGate.Set("activation-opens-declarations", globalDbDocument.IsVisibleInTree() && !canvas.IsVisibleInTree(), $"db={globalDbDocument.IsVisibleInTree()} lad={canvas.IsVisibleInTree()}");
+            globalGate.Set("empty-member-name-rejected", emptyMemberRejected,
+                $"visibleFeedback={emptyMemberFeedback} focus={emptyMemberFocused} documentUnchanged={emptyMemberDocumentUnchanged} undoUnchanged={emptyMemberUndoUnchanged}");
             globalGate.Set("fields-persist", fieldPersisted && declarationEditLifecycle,
                 $"original={originalDeclarationText} selected={selectedDeclarationLoaded} edited={declarationEdited} undo={declarationUndoExact} redo={declarationRedoExact}");
             globalGate.Set("declaration-grid-inline-edit", inlineGridFieldsEditable,
@@ -859,9 +890,10 @@ public partial class SimulatorShell
             globalGate.Set("form-context-labels", formContextLabels,
                 $"initialDb={globalMemberLabelsOnEntry} fb={fbMemberLabels} returnedDb={globalMemberLabelsAfterReturn}");
             globalGate.Set("member-editor-route", memberEditorRouteVisible && memberEditorOpened && projectTreeRestored,
-                $"visible={memberEditorRouteVisible} opened={memberEditorOpened} widened={openedDockWidth}/{expectedMemberDockWidth} from=240 restored={projectTreeRestored}:{restoredDockWidth}/240 "
+                $"visible={memberEditorRouteVisible} opened={memberEditorOpened} requested={requestedMemberDockWidth}/{expectedMemberDockWidth} actual={actualMemberDockWidth} "
+                + $"wide={wideDockReached} wrapped={memberActionsWrap} actionsFit={memberActionsFitDock} from=240 restored={projectTreeRestored}:{restoredDockWidth}/240 actual={restoredActualDockWidth}/{baselineMemberDockWidth} "
                 + $"openTab={memberEditorTab} openButton={memberEditorButtonText} dock={projectDock.Visible} interface={memberEditorTreeVisible} "
-                + $"fits={removeMemberButtonFitsDock} split={projectSplit.Size.X} removeEnd={memberEditorRemoveEnd} dockEnd={memberEditorDockEnd}");
+                + $"split={projectSplit.Size.X}");
             globalGate.Set("declaration-grid-actions", directGridActions && removeResolvesPending,
                 $"addOpensDraft={directAddOpened} addIsAtomic={directAddIsDraftOnly} editLoadsSelection={directEditLoaded} removeResolvesDraft={removeResolvesPending}");
             globalGate.Set("edit-selection-block-scoped", selectionLoadedBeforeSwitch && editSelectionClearedOnSwitch,

@@ -76,6 +76,10 @@ $editor = Read-And-ValidateArtifact $EditorArtifactPath 'tia-editor-control-gate
     'tia-editor-control-gate-sweep' $editorIds
 $tree = Read-And-ValidateArtifact $ProjectTreeArtifactPath 'tia-project-tree-gate-sweep' `
     'tia-project-tree-gate-sweep' $treeIds
+$totalAssertions = @(
+    @($editor.Artifact.gates | ForEach-Object { @($_.assertions).Count })
+    @($tree.Artifact.gates | ForEach-Object { @($_.assertions).Count })
+) | Measure-Object -Sum | Select-Object -ExpandProperty Sum
 
 $editorArtifactId = 'artifact.tia-editor-control-gate-sweep.v1'
 $treeArtifactId = 'artifact.tia-project-tree-gate-sweep.v1'
@@ -117,7 +121,7 @@ foreach ($gate in $registry.gates) {
     $gate.localStatus = 'automated-pass'
     $gate.evidenceArtifactIds = @($(if ($gate.group -eq 'editor') { $editorArtifactId } else { $treeArtifactId }))
 }
-$registry.evidencePolicy.currentAssessment = 'Exact structured production-path artifacts pass all 16 local gates (81 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity.'
+$registry.evidencePolicy.currentAssessment = "Exact structured production-path artifacts pass all 16 local gates ($totalAssertions assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
 
 $json = $registry | ConvertTo-Json -Depth 100
 [IO.File]::WriteAllText($registryPath, $json + "`n", [Text.UTF8Encoding]::new($false))

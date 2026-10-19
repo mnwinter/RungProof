@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (93 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (99 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -817,10 +817,10 @@
       "path": ".tools/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "A6D5B3C7AD320A37F81095D6382609BB80A7FC7B8F8021E85E7F9E0F5B6508D1",
+      "sha256": "3081D4AB2D39FC78C9472E0049BFF1E4587B0E79F745A564AD768CCB23CD5734",
       "status": "passed",
       "gateCount": 9,
-      "assertionCount": 62,
+      "assertionCount": 63,
       "externalTia": false,
       "livePlc": false
     }

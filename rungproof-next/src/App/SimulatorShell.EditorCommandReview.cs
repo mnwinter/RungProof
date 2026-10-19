@@ -247,15 +247,19 @@ public partial class SimulatorShell
                 && output.Text.Contains("Double-click", StringComparison.Ordinal));
             instanceDbRow.Select(0);
             projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            if (_pendingEditorDialog?.Visible == true)
+            {
+                _pendingEditorDialog.EmitSignal(ConfirmationDialog.SignalName.CustomAction, "discard");
+                _pendingEditorDialog.Hide();
+            }
             var instanceDbMember = instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetFirstChild();
             Require("TiaInstanceDbActivationOpensDefinition", instanceDbDocument.IsVisibleInTree()
-                && instanceDbSubtitle.Text.Contains("IEC_COUNTER", StringComparison.Ordinal)
+                && instanceDbSubtitle.Text.Contains("Instruction instance", StringComparison.Ordinal)
                 && instanceDbSubtitle.Text.Contains("verify_counter", StringComparison.Ordinal)
                 && instanceDbMember?.GetText(0) == "Q" && instanceDbMember.GetText(1) == "BOOL");
             Find<Button>("EditorDocument_0").EmitSignal(BaseButton.SignalName.Pressed);
-            // Earlier command-route checks intentionally leave form drafts pending. Production
-            // document navigation must retain that guard, so resolve it through the same Discard
-            // action an operator uses instead of bypassing ResolvePendingEditorForms in the tab.
+            // Keep using the production Discard action when earlier command-route
+            // checks have staged a form; do not bypass the navigation guard.
             if (_pendingEditorDialog?.Visible == true)
                 _pendingEditorDialog.EmitSignal(ConfirmationDialog.SignalName.CustomAction, "discard");
             Require("TiaInstanceDbReturnRestoresLadder", canvas.IsVisibleInTree()
