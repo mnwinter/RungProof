@@ -14,7 +14,7 @@ RungProof simulator. It is deliberately **simulation-only**:
 Add the server for the current Windows user:
 
 ```powershell
-codex mcp add rungproof -- py "C:\Users\matt.winter\Documents\PLC Visual Simulator\rungproof-next\tools\rungproof_mcp.py"
+codex mcp add rungproof -- py "C:\Users\matt.winter\Documents\RungProof\rungproof-next\tools\rungproof_mcp.py"
 codex mcp list
 ```
 

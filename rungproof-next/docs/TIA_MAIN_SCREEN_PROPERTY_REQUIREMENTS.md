@@ -186,12 +186,19 @@ that move without ladder-owned outputs.
   supplies an ENUM
   initial value from the member domain (seeding `Value1` when that domain is
   empty). Untouched defaults also change to the selected scalar type. The
-  current project-tree sweep passes 9 gates / 63 assertions, including
+  current project-tree sweep passes 9 gates / 65 assertions, including
   visible blank-name rejection with unchanged document and Undo history.
 - The Global DB declaration grid remains a bounded scalar optimized-access
   subset; broader TIA column/access-mode support is still open.
-- The current-source project-tree gate passed 9/9 gates and 63/63 assertions
-  at 1600×900 and 800×600. At 800×600, the member dock rendered at 281 px,
+- MAIN-03 project replacement now clears project-owned document tabs and
+  selection maps before refreshing the replacement project. Its gate opens a
+  tag table, instance DB, and non-entry block, then opens a second project with
+  the same project-local initial block ID and verifies that only the new active
+  block tab remains selected. Re-run this gate after changes to project-open,
+  tab identity, or editor-document navigation.
+- The project-tree gate now passes with 65 assertions, including project-open
+  tab replacement and ID/DB-number collision checks. At
+  800×600, the last verified narrow-layout run rendered the member dock at 281 px,
   wrapped all four actions, kept them inside the dock, and restored the prior
   240 px width. The blank-name assertion visibly reports validation, focuses
   Name, and preserves both serialized DB state and Undo availability. An
@@ -467,7 +474,7 @@ columns (Name, Data Type, Start Value, Retain, Comment) and Add/Edit/Remove
 actions. The dock now says `GLOBAL DB DECLARATIONS`, hides the implied Static section selector, and gives a Global DB-specific optimized-access subset note. It requests 560 px on wide viewports; on narrower viewports the member actions wrap so they remain reachable, then the previous dock width is restored when returning to the project tree. The FB capability note remains specific to FB editing. No declaration was applied or saved during the screen inspection.
 
 The updated source builds with 0 warnings/errors. The production project-tree
-gate passes 9 gates / 63 assertions; `externalTia=false` and `livePlc=false`.
+gate passes 9 gates / 65 assertions; `externalTia=false` and `livePlc=false`.
 The gate checks that the Global DB dock label, hidden Static selector, and
 context-specific note match the selected block. A fresh-source browser-bridge walkthrough confirmed the corrected label, hidden Static selector, Global DB note, and full-width member controls at a 1328×837 sandbox window. Cancel left the draft empty, and Project Tree restored the original dock width. Installed TIA V21 comparison and Save/Load parity remain open.
 
@@ -648,3 +655,33 @@ those are implemented together, the accurate read-only boundary stays in the
 UI. Retain and Comment editing remain open design/evidence items because the
 project does not yet model TIA access mode, retentive power-cycle behavior, or
 instance-vs-FB comment semantics.
+
+## 2026-10-19: Project replacement and isolated screen-control follow-up
+
+Project replacement now clears old editor tabs and project-local document
+maps before refreshing the replacement project. The new native project-tree
+gate opens a tag table, instance DB, and non-entry block in the old project,
+then opens a project that deliberately reuses the old block IDs and DB number.
+It confirms that the replacement opens on its active block with only that
+document tab selected and that the loaded project retains the DB-number
+collision. The gate passes 9/9 with 65/65 assertions; the editor-control gate
+passes 7/7 with 36/36 assertions. The controller/editor suite passes 377/377.
+These are local offline results (`externalTia=false`, `livePlc=false`).
+
+A separate screen-control agent used its own scratch process and loopback
+bridge; the pre-existing unsaved process was left untouched and no scratch
+project was saved. The visible walk reached the scene, Logic Editor, default
+tag table, watch table, table-creation dialogs, Global DB creation, and Add
+Member. Clear visibly changed the watch count from five to zero, and Add Member
+visibly added `audit_bit | BOOL | FALSE`. In this run, Watch Remove and Global
+DB Edit/Remove clicks did not produce an unambiguous visible result; delayed
+repaint and coordinate targeting limit that evidence. Instance DB navigation
+was not reached. Existing earlier Edit/Remove evidence remains separate and
+does not turn this incomplete retry into a pass.
+
+The broader interaction profile initially exposed an internal verifier that
+selected `EditorDocument_0` by generated node name. It now finds the initial
+block tab by stable document key. The final interaction profile passes all
+14/14 commands, including ladder-editor, project-tree, property-edit, and
+view-state routes. Installed TIA V21 visual comparison, instance-DB editing,
+and confirmed Remove behavior remain open.

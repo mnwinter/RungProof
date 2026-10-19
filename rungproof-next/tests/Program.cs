@@ -4946,7 +4946,7 @@ internal static partial class Program
             && !editorControlAssertions.GetProperty("externalTia").GetBoolean()
             && !editorControlAssertions.GetProperty("livePlc").GetBoolean()
             && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 9
-            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 63
+            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 65
             && projectTreeAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && projectTreeAssertions.GetProperty("nativePointerGeometry").GetBoolean()
             && !projectTreeAssertions.GetProperty("externalTia").GetBoolean()
@@ -5099,7 +5099,7 @@ internal static partial class Program
         foreach (var expected in new[]
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 9, Assertions: 63),
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 9, Assertions: 65),
         })
         {
             var artifact = root.GetProperty(expected.Property);

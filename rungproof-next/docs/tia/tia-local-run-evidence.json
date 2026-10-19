@@ -82,7 +82,7 @@
       "status": "passed",
       "stableAssertions": {
         "gateIds": 9,
-        "assertions": 63,
+        "assertions": 65,
         "structuredPerGateResults": true,
         "nativePointerGeometry": true,
         "externalTia": false,
@@ -184,19 +184,19 @@
     "durability": "ephemeral-local"
   },
   "editorControlArtifact": {
-    "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-editor-control-gates.json",
-    "sha256": "EABC0304A72CE28ABDD266149C8CFA95211B8BF477818EC6E154CF59AAF2A243",
+    "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-editor-control-gates.json",
+    "sha256": "E0506798E6C2ADB3C6EE4BD53A4EBC34D385962A58FD3538A5EF4EF87C7F98CF",
     "status": "passed",
     "gateCount": 7,
     "assertionCount": 36,
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
-    "path": ".tools/tia-project-tree-gates.json",
-    "sha256": "3081D4AB2D39FC78C9472E0049BFF1E4587B0E79F745A564AD768CCB23CD5734",
+    "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-project-tree-gates.json",
+    "sha256": "991F7E04BF1EADDD7734EF13C5C5D464721582AD474C559B959223E8FE538E36",
     "status": "passed",
     "gateCount": 9,
-    "assertionCount": 63,
+    "assertionCount": 65,
     "durability": "ephemeral-local"
   },
   "selectedVisualReview": {

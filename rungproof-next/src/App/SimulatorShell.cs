@@ -195,6 +195,7 @@ public partial class SimulatorShell : CanvasLayer
     private EditorClipboard? _ladderCommandClipboard;
     private bool _ladderMonitorMatchesLoadedProgram;
     private readonly List<Action> _ladderEditorRefreshers = [];
+    private readonly List<Action> _ladderEditorProjectReplacementResetters = [];
     private readonly List<Action> _ladderSceneDiagnosticResetters = [];
     private readonly List<Action<VirtualControllerSnapshot?>> _ladderWatchRefreshers = [];
     private readonly List<Action<IReadOnlyList<LadderValidationIssue>>> _ladderValidationRefreshers = [];
@@ -1699,7 +1700,7 @@ public partial class SimulatorShell : CanvasLayer
         brand.AddChild(Heading("Rung", 20, new Color("e9f4f8")));
         brand.AddChild(Heading("Proof", 20, new Color("16a34a")));
         toolbarRow.AddChild(brand);
-        var subtitle = Heading("PLC VISUAL SIMULATOR", 9, new Color("7fa7ba"));
+        var subtitle = Heading("PLC TRAINING WORKBENCH", 9, new Color("7fa7ba"));
         subtitle.Name = "BrandSubtitle";
         toolbarRow.AddChild(subtitle);
         toolbarRow.AddChild(VRule());
@@ -4580,6 +4581,7 @@ public partial class SimulatorShell : CanvasLayer
         _ladderHistory.Clear();
         _ladderRungClipboard = null;
         _ladderContactClipboard = null; _ladderCommandClipboard = null;
+        foreach (var resetDocuments in _ladderEditorProjectReplacementResetters) resetDocuments();
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         RefreshLadderMonitorMatch();
         if (!TryBuildCurrentLadderProgram(out var program, out var issues))
@@ -11354,6 +11356,42 @@ public partial class SimulatorShell : CanvasLayer
             AddEditorDocumentTab(initialBlockKey, $"{initialBlock.Name} [OB1]");
             editorDocumentButtons[initialBlockKey].ButtonPressed = true;
         }
+        _ladderEditorProjectReplacementResetters.Add(() =>
+        {
+            if (!siemens) return;
+            foreach (var item in editorDocumentItems.Values.ToArray())
+            {
+                editorDocumentTabs.RemoveChild(item);
+                item.QueueFree();
+            }
+            editorDocumentButtons.Clear();
+            editorDocumentItems.Clear();
+            editorTagDocuments.Clear();
+            editorInstanceDbDocuments.Clear();
+            activeTagTableName = null;
+            selectedTagIndex = -1;
+
+            if (document.Blocks.Count == 0)
+            {
+                activeEditorDocumentKey = string.Empty;
+                SetEditorDocumentBody(string.Empty);
+                return;
+            }
+
+            var activeBlockIndex = Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1);
+            var activeBlock = document.Blocks[activeBlockIndex];
+            activeEditorDocumentKey = BlockDocumentKey(activeBlock.Id);
+            var blockCode = activeBlock.BlockType switch
+            {
+                LadderBlockType.OrganizationBlock => "OB",
+                LadderBlockType.FunctionBlock => "FB",
+                LadderBlockType.DataBlock => "DB",
+                _ => "FC",
+            };
+            AddEditorDocumentTab(activeEditorDocumentKey, $"{activeBlock.Name} [{blockCode}{activeBlockIndex + 1}]");
+            editorDocumentButtons[activeEditorDocumentKey].ButtonPressed = true;
+            SetEditorDocumentBody(activeEditorDocumentKey);
+        });
         _ladderEditorRefreshers.Add(RefreshEditor);
         _ladderSceneDiagnosticResetters.Add(() =>
         {
@@ -14608,9 +14646,13 @@ public partial class SimulatorShell : CanvasLayer
                         projectTree.EmitSignal(Tree.SignalName.ItemActivated);
                         var allTagsOpenedCentrally = centralTagDocument.Visible
                             && tiaEditorTabTitle.Text == "Show all tags";
-                        GetNode<Button>($"{editorRoot}/EditorDocumentsHost/EditorDocumentsScroll/EditorDocuments/EditorDocumentItem_0/EditorDocument_0")
-                            .EmitSignal(BaseButton.SignalName.Pressed);
-                        var ladderTabRestored = _ladderDocument.ActiveBlockIndex == 0 && !centralTagDocument.Visible;
+                        var initialBlockKey = EditorDocumentIdentity.ForBlock(_ladderDocument.Blocks[0].Id);
+                        var initialBlockTab = editorDocumentTabs.GetChildren().OfType<HBoxContainer>()
+                            .SelectMany(item => item.GetChildren().OfType<Button>())
+                            .FirstOrDefault(button => button.GetMeta("editorDocumentKey").AsString() == initialBlockKey);
+                        initialBlockTab?.EmitSignal(BaseButton.SignalName.Pressed);
+                        var ladderTabRestored = initialBlockTab is not null
+                            && _ladderDocument.ActiveBlockIndex == 0 && !centralTagDocument.Visible;
                         tiaProjectDocumentNavigationWorked = singleClickStayedInTree
                             && enterOpenedBlock
                             && activationOpenedBlock

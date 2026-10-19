@@ -1,8 +1,7 @@
 # AI and contributor instructions
 
-This repository is the PLC Visual Simulator / RungProof project. Preserve the
-existing application and its history. Do not replace working behavior with a
-throwaway demo.
+This repository is the RungProof project. Preserve the existing application
+and its history. Do not replace working behavior with a throwaway demo.
 
 For substantive RungProof development, review, verification, TIA-parity, demo,
 asset, or external-PLC work, load

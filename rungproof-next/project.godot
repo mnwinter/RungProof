@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="RungProof"
-config/description="PLC Visual Simulator — Build the logic. Prove the machine."
+config/description="RungProof — Build the logic. Prove the machine."
 run/main_scene="res://scenes/app/main.tscn"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://assets/brand/rungproof-icon.svg"

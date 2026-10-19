@@ -77,6 +77,8 @@ public partial class SimulatorShell
                 ("activation-opens-exact-target", "activation opens the exact matching document or dialog"),
                 ("instance-return-restores-owner", "returning from an instance DB restores the correct active block title"),
                 ("block-tab-identity-survives-reindex", "open block tabs keep their block identity across rename, Undo/Redo, and deletion of an earlier block"),
+                ("project-open-replaces-document-tabs", "opening another project closes documents owned by the previous project and selects the new project's active block"),
+                ("project-open-does-not-retarget-colliding-keys", "project-local block IDs and DB numbers do not retarget old document tabs to objects in the replacement project"),
             ],
             ["tia.project-tree.show-all-tags"] =
             [
@@ -383,6 +385,117 @@ public partial class SimulatorShell
                 await Frames();
             }
             activation.Set("block-tab-identity-survives-reindex", tabIdentityPassed, tabIdentityDetail);
+
+            var replacementTabsPassed = false;
+            var replacementTabsDetail = "not run";
+            var replacementFile = Path.Combine(Path.GetTempPath(), $"rungproof-project-replacement-{Guid.NewGuid():N}.rpproj.json");
+            try
+            {
+                // Open documents from the current project through production
+                // routes, then replace it with a fresh project whose first
+                // block deliberately has the same project-local ID.
+                _ladderDocument.EnsureInstanceDataBlocks();
+                if (!_ladderDocument.Instances.Any(instance => instance.InstanceDataBlock is not null))
+                {
+                    var oldInstanceBlock = _ladderDocument.AddBlock("ProjectReplacement_OldFB", LadderBlockType.FunctionBlock);
+                    _ladderDocument.AddInterfaceParameter(oldInstanceBlock.Id, "Ready", PlcVariableType.Bool,
+                        LadderInterfaceSection.Input, false);
+                    var usedDbNumbers = _ladderDocument.Blocks.SelectMany(block => block.Rungs)
+                        .SelectMany(rung => new[] { rung.TimerInstanceDataBlock?.Number, rung.CounterInstanceDataBlock?.Number })
+                        .Concat(_ladderDocument.Instances.Select(instance => instance.InstanceDataBlock?.Number))
+                        .Where(number => number.HasValue).Select(number => number!.Value).ToHashSet();
+                    var newDbNumber = 60000;
+                    while (usedDbNumbers.Contains(newDbNumber)) newDbNumber++;
+                    _ladderDocument.Instances.Add(new LadderInstance("project_replacement_old", "ProjectReplacementOld",
+                        oldInstanceBlock.Id, new LadderInstanceDataBlock(newDbNumber, "ProjectReplacement_Old_DB")));
+                    Refresh();
+                    await Frames();
+                }
+                var staleBlock = _ladderDocument.Blocks.Skip(1).FirstOrDefault()
+                    ?? throw new InvalidOperationException("Project-replacement gate requires a non-entry block.");
+                var staleDbNumber = _ladderDocument.Instances
+                    .Select(instance => instance.InstanceDataBlock?.Number)
+                    .FirstOrDefault(number => number.HasValue)
+                    ?? throw new InvalidOperationException("Project-replacement gate requires an instance DB.");
+                await Activate("tag-table:Default tag table");
+                await Activate($"instance-db:{staleDbNumber}");
+                var staleBlockIndex = _ladderDocument.Blocks.FindIndex(block => block.Id == staleBlock.Id);
+                _tiaProgramBlockActivator?.Invoke(staleBlockIndex);
+                await Frames();
+                var beforeReplacementKeys = Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                    .SelectMany(item => item.GetChildren().OfType<Button>())
+                    .Where(button => button.HasMeta("editorDocumentKey"))
+                    .Select(button => button.GetMeta("editorDocumentKey").AsString())
+                    .ToArray();
+                var previousInitialId = _ladderDocument.Blocks[0].Id;
+                var staleDocumentsWereOpen = beforeReplacementKeys.Contains("tags:Default tag table", StringComparer.Ordinal)
+                    && beforeReplacementKeys.Contains($"instance-db:{staleDbNumber}", StringComparer.Ordinal)
+                    && beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(previousInitialId), StringComparer.Ordinal)
+                    && beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(staleBlock.Id), StringComparer.Ordinal);
+
+                var replacementProject = new LadderEditorDocument();
+                replacementProject.ResetProject("replacement-project", "Replacement_Main", TimeSpan.FromMilliseconds(20));
+                var replacementMain = replacementProject.Blocks[0];
+                var replacementHelper = replacementProject.AddBlock("Replacement_Axis", LadderBlockType.FunctionBlock);
+                replacementProject.AddInterfaceParameter(replacementHelper.Id, "Ready", PlcVariableType.Bool,
+                    LadderInterfaceSection.Input, false);
+                replacementProject.Instances.Add(new LadderInstance("replacement_axis", "ReplacementAxis",
+                    replacementHelper.Id, new LadderInstanceDataBlock(staleDbNumber, "ReplacementAxis_DB")));
+                replacementProject.AddTag("replacement_ready", PlcVariableRole.Memory);
+                replacementProject.AddTagTable("Replacement_Tags");
+                // Reuse the old project's exact IDs and DB number so this is
+                // a true collision test rather than merely a different-project test.
+                var replacementMainId = previousInitialId;
+                var replacementHelperId = staleBlock.Id;
+                var replacementJson = LadderEditorProjectJson.Save(replacementProject)
+                    .Replace(replacementMain.Id, replacementMainId, StringComparison.Ordinal)
+                    .Replace(replacementHelper.Id, replacementHelperId, StringComparison.Ordinal);
+                File.WriteAllText(replacementFile, replacementJson);
+                var replacementOpened = TryOpenLadderProject(replacementFile, out var replacementMessage);
+                await Frames();
+
+                var replacementTabs = Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                    .SelectMany(item => item.GetChildren().OfType<Button>())
+                    .Where(button => button.HasMeta("editorDocumentKey"))
+                    .ToArray();
+                var expectedKey = EditorDocumentIdentity.ForBlock(replacementMainId);
+                var exactNewDocumentSelected = replacementTabs.Length == 1
+                    && replacementTabs[0].GetMeta("editorDocumentKey").AsString() == expectedKey
+                    && replacementTabs[0].ButtonPressed
+                    && _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == replacementMainId
+                    && title.Text.Contains("Replacement_Main [OB1]", StringComparison.Ordinal)
+                    && canvas.IsVisibleInTree();
+                var staleDocumentsCleared = replacementTabs.All(button =>
+                {
+                    var key = button.GetMeta("editorDocumentKey").AsString();
+                    return key.StartsWith("block:", StringComparison.Ordinal)
+                        && !key.StartsWith("tags:", StringComparison.Ordinal)
+                        && !key.StartsWith("instance-db:", StringComparison.Ordinal);
+                });
+                var projectLocalIdCollision = beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(previousInitialId), StringComparer.Ordinal)
+                    && beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(staleBlock.Id), StringComparer.Ordinal)
+                    && replacementMainId == previousInitialId && replacementHelperId == staleBlock.Id;
+                var projectLocalDbNumberCollision = beforeReplacementKeys.Contains($"instance-db:{staleDbNumber}", StringComparer.Ordinal)
+                    && replacementOpened
+                    && _ladderDocument.Instances.Any(instance => instance.InstanceDataBlock?.Number == staleDbNumber);
+                replacementTabsPassed = staleDocumentsWereOpen && replacementOpened && exactNewDocumentSelected
+                    && staleDocumentsCleared && projectLocalIdCollision && projectLocalDbNumberCollision;
+                replacementTabsDetail = $"staleOpen={staleDocumentsWereOpen} opened={replacementOpened} idCollision={projectLocalIdCollision} dbNumberCollision={projectLocalDbNumberCollision} "
+                    + $"tabs={replacementTabs.Length} selected={exactNewDocumentSelected} staleCleared={staleDocumentsCleared} message={replacementMessage}";
+                activation.Set("project-open-replaces-document-tabs", replacementTabsPassed, replacementTabsDetail);
+                activation.Set("project-open-does-not-retarget-colliding-keys", replacementTabsPassed,
+                    $"oldInitial={previousInitialId} replacementInitial={replacementMainId} oldBlock={staleBlock.Id} replacementBlock={replacementHelperId} oldDb={staleDbNumber} {replacementTabsDetail}");
+            }
+            finally
+            {
+                if (File.Exists(replacementFile)) File.Delete(replacementFile);
+                _ladderDocument.RestoreSnapshot(originalDocument);
+                _ladderSavedProjectJson = originalSaved;
+                _ladderProjectPath = originalPath;
+                foreach (var resetDocuments in _ladderEditorProjectReplacementResetters) resetDocuments();
+                Refresh();
+                await Frames();
+            }
             activation.Finish();
 
             // Creation gates: the physical broad route proves dialog selection,

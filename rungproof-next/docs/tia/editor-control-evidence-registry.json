@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (99 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (101 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -801,10 +801,10 @@
     {
       "id": "artifact.tia-editor-control-gate-sweep.v1",
       "commandId": "tia-editor-control-gate-sweep",
-      "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-editor-control-gates.json",
+      "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-editor-control-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "EABC0304A72CE28ABDD266149C8CFA95211B8BF477818EC6E154CF59AAF2A243",
+      "sha256": "E0506798E6C2ADB3C6EE4BD53A4EBC34D385962A58FD3538A5EF4EF87C7F98CF",
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
@@ -814,13 +814,13 @@
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-project-tree-gates.json",
+      "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "3081D4AB2D39FC78C9472E0049BFF1E4587B0E79F745A564AD768CCB23CD5734",
+      "sha256": "991F7E04BF1EADDD7734EF13C5C5D464721582AD474C559B959223E8FE538E36",
       "status": "passed",
       "gateCount": 9,
-      "assertionCount": 63,
+      "assertionCount": 65,
       "externalTia": false,
       "livePlc": false
     }

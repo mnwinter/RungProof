@@ -29,6 +29,16 @@ public partial class SimulatorShell
             assertions.Add(name);
         }
         void Refresh() { foreach (var refresh in _ladderEditorRefreshers) refresh(); }
+        bool ActivateBlockDocument(string blockId)
+        {
+            var key = EditorDocumentIdentity.ForBlock(blockId);
+            var tab = Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                .SelectMany(item => item.GetChildren().OfType<Button>())
+                .FirstOrDefault(button => button.GetMeta("editorDocumentKey").AsString() == key);
+            if (tab is null) return false;
+            tab.EmitSignal(BaseButton.SignalName.Pressed);
+            return true;
+        }
         var panels = new[] { Find<Control>("ProjectDockHost"), Find<Control>("ProjectOrganization"),
             Find<Control>("BottomDockHost"), Find<Control>("InspectorOutputDock") };
         var priorVisibility = panels.Select(panel => panel.Visible).ToArray();
@@ -257,12 +267,13 @@ public partial class SimulatorShell
                 && instanceDbSubtitle.Text.Contains("Instruction instance", StringComparison.Ordinal)
                 && instanceDbSubtitle.Text.Contains("verify_counter", StringComparison.Ordinal)
                 && instanceDbMember?.GetText(0) == "Q" && instanceDbMember.GetText(1) == "BOOL");
-            Find<Button>("EditorDocument_0").EmitSignal(BaseButton.SignalName.Pressed);
+            var initialBlockId = _ladderDocument.Blocks[0].Id;
+            var initialBlockTabActivated = ActivateBlockDocument(initialBlockId);
             // Keep using the production Discard action when earlier command-route
             // checks have staged a form; do not bypass the navigation guard.
             if (_pendingEditorDialog?.Visible == true)
                 _pendingEditorDialog.EmitSignal(ConfirmationDialog.SignalName.CustomAction, "discard");
-            Require("TiaInstanceDbReturnRestoresLadder", canvas.IsVisibleInTree()
+            Require("TiaInstanceDbReturnRestoresLadder", initialBlockTabActivated && canvas.IsVisibleInTree()
                 && editorTitle.Text.Contains(_ladderDocument.Blocks[0].Name, StringComparison.Ordinal)
                 && !editorTitle.Text.Contains("IEC_Counter_0_DB", StringComparison.Ordinal));
             _ladderDocument.RestoreSnapshot(treeDbProbeSnapshot); Refresh();
@@ -399,9 +410,9 @@ public partial class SimulatorShell
             // document area before undo removes it. Restore the original ladder
             // through the same document-tab route a user takes so keyboard input
             // is tested only while its canvas is visible and focused.
-            Find<Button>("EditorDocument_0").EmitSignal(BaseButton.SignalName.Pressed);
+            initialBlockTabActivated = ActivateBlockDocument(_ladderDocument.Blocks[0].Id);
             Refresh();
-            Require("OutputDeleteLadderDocumentVisible", canvas.IsVisibleInTree());
+            Require("OutputDeleteLadderDocumentVisible", initialBlockTabActivated && canvas.IsVisibleInTree());
 
             var deletionFixture = _ladderDocument.CaptureSnapshot();
             foreach (var kind in new[] { "coil", "counter", "call" })
