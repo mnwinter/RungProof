@@ -504,3 +504,13 @@ its synthetic viewport and is not used as a dock-fit verdict. Matched TIA V21
 capture comparison, alternate-type/Remove/Edit DB behavior, invalid-value
 recovery and Save/Load workflows, remaining function-by-function screen
 control, and ladder-owned demo remediation remain open.
+
+## 2026-10-19 gate follow-up
+
+The current source advances the project-tree sweep to 10/10 gates and 69/69
+assertions, with a dedicated watch-symbol Remove gate and exact ordinary
+Global DB Remove survivor/Undo/Redo assertions. The LAD editor-control sweep
+passes 7/7 gates and 36/36 assertions; the virtual-controller suite passes
+377 checks. An independent review also found and fixed an Undo/Redo history
+restoration hazard by moving isolated-history replacement inside the gate's
+`try/finally` scope. These are offline source checks only. Focused screen`r`ncontrol now confirms Global DB Remove deletes the selected member and preserves`r`nits sibling; inline Global DB cell commits, instance-DB editing, remaining`r`nscreen-control coverage, and matched installed-TIA V21 comparison remain open.

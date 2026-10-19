@@ -68,8 +68,8 @@ function Read-And-ValidateArtifact(
 $registry = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
 $editorIds = @($registry.gates | Where-Object group -eq 'editor' | ForEach-Object { [string]$_.id })
 $treeIds = @($registry.gates | Where-Object group -eq 'project-tree' | ForEach-Object { [string]$_.id })
-if ($editorIds.Count -ne 7 -or $treeIds.Count -ne 9) {
-    throw "Registry must contain exactly 7 editor and 9 project-tree gates."
+if ($editorIds.Count -ne 7 -or $treeIds.Count -ne 10) {
+    throw "Registry must contain exactly 7 editor and 10 project-tree gates."
 }
 
 $editor = Read-And-ValidateArtifact $EditorArtifactPath 'tia-editor-control-gate-sweep' `
@@ -105,7 +105,7 @@ $registry | Add-Member -Force NoteProperty evidenceArtifacts @(
         durability = 'ephemeral-local'
         sha256 = $tree.Sha256
         status = 'passed'
-        gateCount = 9
+        gateCount = 10
         assertionCount = @($tree.Artifact.gates.assertions).Count
         externalTia = $false
         livePlc = $false
@@ -121,9 +121,9 @@ foreach ($gate in $registry.gates) {
     $gate.localStatus = 'automated-pass'
     $gate.evidenceArtifactIds = @($(if ($gate.group -eq 'editor') { $editorArtifactId } else { $treeArtifactId }))
 }
-$registry.evidencePolicy.currentAssessment = "Exact structured production-path artifacts pass all 16 local gates ($totalAssertions assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+$registry.evidencePolicy.currentAssessment = "Exact structured production-path artifacts pass all 17 local gates ($totalAssertions assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
 
 $json = $registry | ConvertTo-Json -Depth 100
 [IO.File]::WriteAllText($registryPath, $json + "`n", [Text.UTF8Encoding]::new($false))
-Write-Output "TIA_EDITOR_CONTROL_REGISTRY_UPDATE_PASS editor=7/7 editorAssertions=$(@($editor.Artifact.gates.assertions).Count) tree=9/9 treeAssertions=$(@($tree.Artifact.gates.assertions).Count)"
+Write-Output "TIA_EDITOR_CONTROL_REGISTRY_UPDATE_PASS editor=7/7 editorAssertions=$(@($editor.Artifact.gates.assertions).Count) tree=10/10 treeAssertions=$(@($tree.Artifact.gates.assertions).Count)"
 

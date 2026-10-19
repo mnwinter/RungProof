@@ -4768,12 +4768,12 @@ internal static partial class Program
             "tia.project-tree.create-block", "tia.project-tree.create-tag-table",
             "tia.project-tree.create-watch-table", "tia.project-tree.global-db-contract",
             "tia.project-tree.instance-db-contract", "tia.project-tree.call-drag-drop",
-            "tia.project-tree.watch-table-delete",
+            "tia.project-tree.watch-table-delete", "tia.project-tree.watch-symbol-remove",
         };
         var gates = root.GetProperty("gates").EnumerateArray().ToArray();
         var ids = gates.Select(gate => gate.GetProperty("id").GetString()!).ToArray();
-        Require(gates.Length == 16 && ids.Distinct(StringComparer.Ordinal).Count() == 16,
-            "TIA editor-control registry must contain exactly 16 unique gates.");
+        Require(gates.Length == 17 && ids.Distinct(StringComparer.Ordinal).Count() == 17,
+            "TIA editor-control registry must contain exactly 17 unique gates.");
         Require(gates.Where(gate => gate.GetProperty("group").GetString() == "editor")
                 .Select(gate => gate.GetProperty("id").GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedEditor)
@@ -4803,7 +4803,7 @@ internal static partial class Program
             && contracts.Single(contract => contract.GetProperty("commandId").GetString() == "tia-project-tree-gate-sweep")
                 .GetProperty("gateIds").EnumerateArray().Select(item => item.GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedProjectTree),
-            "TIA editor-control structured sweep contracts do not exactly partition the 16 gates.");
+            "TIA editor-control structured sweep contracts do not exactly partition the 17 gates.");
 
         var artifacts = root.GetProperty("evidenceArtifacts").EnumerateArray().ToArray();
         Require(artifacts.Length == 2
@@ -5099,7 +5099,7 @@ internal static partial class Program
         foreach (var expected in new[]
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 9, Assertions: 65),
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 10, Assertions: 69),
         })
         {
             var artifact = root.GetProperty(expected.Property);

@@ -184,19 +184,19 @@
     "durability": "ephemeral-local"
   },
   "editorControlArtifact": {
-    "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-editor-control-gates.json",
-    "sha256": "E0506798E6C2ADB3C6EE4BD53A4EBC34D385962A58FD3538A5EF4EF87C7F98CF",
+    "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-editor-control-gates.json",
+    "sha256": "3903E669625C7DB35564FE17CC8D16EEC59F3E46AFCDEB1AC4DB0CC951107147",
     "status": "passed",
     "gateCount": 7,
     "assertionCount": 36,
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
-    "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-project-tree-gates.json",
-    "sha256": "991F7E04BF1EADDD7734EF13C5C5D464721582AD474C559B959223E8FE538E36",
+    "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-project-tree-gates.json",
+    "sha256": "C3B1D8070A1FE1C3C27EEDF46A78B0D2913D715290118B4E099AB04DFB248FA8",
     "status": "passed",
-    "gateCount": 9,
-    "assertionCount": 65,
+    "gateCount": 10,
+    "assertionCount": 69,
     "durability": "ephemeral-local"
   },
   "selectedVisualReview": {

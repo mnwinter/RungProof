@@ -694,6 +694,35 @@ The broader interaction profile initially exposed an internal verifier that
 selected `EditorDocument_0` by generated node name. It now finds the initial
 block tab by stable document key. The final interaction profile passes all
 14/14 commands, including ladder-editor, project-tree, property-edit, and
-view-state routes. Installed TIA V21 visual comparison, instance-DB editing,
-inline Global DB cell-commit behavior, exact Global DB Remove behavior, and
-automated watch-symbol Remove coverage remain open.
+view-state routes. At that checkpoint, installed TIA V21 visual comparison,
+instance-DB editing, inline Global DB cell-commit behavior, exact Global DB
+Remove behavior, and automated watch-symbol Remove coverage remained open.
+The current-source follow-up below updates the Remove evidence.
+
+### Current-source gate and review update
+
+The project-tree sweep now passes 10/10 gates and 69/69 assertions, including
+the dedicated `tia.project-tree.watch-symbol-remove` route. That gate verifies
+the active-table-only removal, survivor/table isolation, visible count refresh,
+Undo/Redo, and Save/Load. The Global DB contract gate now covers ordinary
+Remove with no pending form, exact survivors, other-DB isolation, Undo, and
+Redo; pending-form removal also verifies its survivor set. The direct editor
+gate remains 7/7 gates and 36/36 assertions, and the controller/editor suite
+passes 377 checks. All are local offline evidence (`externalTia=false`,
+`livePlc=false`).
+
+An independent code review found and fixed a cleanup hazard: the gate now
+swaps in isolated Undo/Redo history only after entering its `try/finally`, so
+an assembly/setup failure cannot discard the live editor's history. Inline
+Global DB cell commits are still not covered; they need a real Tree edit
+context.
+
+A separate screen-control pass created two temporary BOOL/FALSE Global DB
+members, selected `remove_member`, and clicked the visible red **REMOVE**
+button. A fresh follow-up capture showed only `keep_member` remained in both
+the grid and STATIC list. Add Member → Cancel preserved that row, and Project
+Tree restored the wider tree layout. This was an isolated scratch process;
+the existing unsaved process was untouched and no project was saved. This
+confirms the focused Global DB Remove screen behavior. Installed TIA V21
+comparison, instance-DB edit semantics, inline Global DB cell commits, and the
+remaining function-by-function screen walkthrough are still open.

@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (101 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 17 local gates (105 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -67,10 +67,11 @@
         "tia.project-tree.global-db-contract",
         "tia.project-tree.instance-db-contract",
         "tia.project-tree.call-drag-drop",
-        "tia.project-tree.watch-table-delete"
+        "tia.project-tree.watch-table-delete",
+        "tia.project-tree.watch-symbol-remove"
       ],
-      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these nine gateIds.",
-      "resultExpectation": "The artifact must contain exactly nine unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
+      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these ten gateIds.",
+      "resultExpectation": "The artifact must contain exactly ten unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
       "latestArtifactId": "artifact.tia-project-tree-gate-sweep.v1"
     }
   ],
@@ -748,6 +749,44 @@
         "This gate does not claim project-tree row deletion; that route is explicitly unsupported.",
         "Watch-table rename is unsupported."
       ]
+    },
+    {
+      "sequence": 17,
+      "id": "tia.project-tree.watch-symbol-remove",
+      "group": "project-tree",
+      "key": "watch-symbol-remove",
+      "title": "Remove selected watch-table symbol",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "not-assessed",
+      "behavior": "The workspace Remove button removes the selected symbol from the active watch table. Other symbols and other watch tables remain unchanged; the mutation participates in Undo/Redo and project Save/Load.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/VirtualController/LadderEditorDocument.cs",
+        "src/VirtualController/LadderEditorProjectJson.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md",
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "Remove deletes the selected symbol from the active table, preserves other symbols and tables, and refreshes the visible count",
+        "Undo and Redo restore exact watch-table JSON and active selection",
+        "Save/Load retains the removed symbol's absence in the active table and its presence in another table"
+      ],
+      "limitations": [
+        "Address-based watch entries, display-format editing, online monitor values, and physical PLC modification are outside this gate."
+      ]
     }
   ],
   "unsupportedDocumented": [
@@ -801,10 +840,10 @@
     {
       "id": "artifact.tia-editor-control-gate-sweep.v1",
       "commandId": "tia-editor-control-gate-sweep",
-      "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-editor-control-gates.json",
+      "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-editor-control-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "E0506798E6C2ADB3C6EE4BD53A4EBC34D385962A58FD3538A5EF4EF87C7F98CF",
+      "sha256": "3903E669625C7DB35564FE17CC8D16EEC59F3E46AFCDEB1AC4DB0CC951107147",
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
@@ -814,13 +853,13 @@
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-parity-interaction-final-stable-tab/tia-parity-interaction-20261019-073839-artifacts/tia-project-tree-gates.json",
+      "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "991F7E04BF1EADDD7734EF13C5C5D464721582AD474C559B959223E8FE538E36",
+      "sha256": "C3B1D8070A1FE1C3C27EEDF46A78B0D2913D715290118B4E099AB04DFB248FA8",
       "status": "passed",
-      "gateCount": 9,
-      "assertionCount": 65,
+      "gateCount": 10,
+      "assertionCount": 69,
       "externalTia": false,
       "livePlc": false
     }

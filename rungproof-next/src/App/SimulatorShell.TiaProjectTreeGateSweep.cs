@@ -127,6 +127,7 @@ public partial class SimulatorShell
                 ("enum-domain-edit-validates-atomically", "editing an ENUM domain reseeds an untouched initial, valid domains apply, and invalid domains are rejected before history changes"),
                 ("retain-only-draft-prompts", "Retain-only edits on existing and new members prompt before navigation, and Cancel restores the form without model mutation"),
                 ("remove-resolves-pending-form", "removing a selected member resolves its pending form; Cancel preserves it, Discard removes the declaration, and Undo/Redo restore exact states"),
+                ("ordinary-remove-preserves-survivors", "ordinary Remove without a pending form deletes exactly the selected declaration, preserves all other declarations and DBs, and supports exact Undo/Redo"),
                 ("cancel-member-form", "Cancel discards an unapplied member draft without changing the declaration or Undo history"),
                 ("form-context-labels", "initial DB entry and DB-to-FB-to-DB navigation refresh member labels and defaults"),
                 ("member-editor-route", "the DB screen exposes the member form and returns to the tree while restoring the prior dock width"),
@@ -160,6 +161,12 @@ public partial class SimulatorShell
                 ("undo-redo-restores-selection", "Undo and Redo restore exact serialized states and active selection"),
                 ("final-table-protected", "the delete control is disabled or rejected when one table remains"),
                 ("no-tree-row-delete", "no project-tree row context-delete route is exposed"),
+            ],
+            ["tia.project-tree.watch-symbol-remove"] =
+            [
+                ("removes-selected-symbol-from-active-table", "Remove deletes the selected symbol from the active table, preserves other symbols and tables, and refreshes the visible count"),
+                ("undo-redo-restores-exact-state", "Undo and Redo restore exact watch-table JSON and active selection"),
+                ("save-load-preserves-table-isolation", "Save/Load retains the removed symbol's absence in the active table and its presence in another table"),
             ],
         };
 
@@ -208,6 +215,12 @@ public partial class SimulatorShell
 
         try
         {
+            // Gate actions exercise production mutations and Undo/Redo. Isolate
+            // them from any history the user already has in the live editor.
+            // Swap only after entering try so every setup failure restores the
+            // user's original history reference in finally.
+            _ladderHistory = new LadderEditorHistory();
+
             // Preserve the proven physical pointer/CALL lifecycle, then restore
             // before the isolated supplemental assertions below.
             var broad = await VerifyTiaProjectTreePointerAsync();
@@ -547,6 +560,65 @@ public partial class SimulatorShell
             watchGate.Set("undo-redo-exact", broadPass, "exact JSON Undo/Redo lifecycle");
             watchGate.Set("navigation-is-clean", watchNavClean, "serialized project content unchanged by active-table selection");
             watchGate.Finish();
+
+            var watchRemoveGate = Gate("tia.project-tree.watch-symbol-remove");
+            var watchRemoveFixture = _ladderDocument.CaptureSnapshot();
+            var watchSymbols = _ladderDocument.Tags.Select(tag => tag.Name).Distinct(StringComparer.Ordinal).Take(2).ToArray();
+            if (watchSymbols.Length < 2)
+                throw new InvalidOperationException("Watch-symbol removal gate requires two distinct project tags.");
+            var activeWatch = _ladderDocument.AddWatchTable("Symbol Remove Active");
+            activeWatch.Variables.AddRange(watchSymbols);
+            var activeWatchIndex = _ladderDocument.WatchTables.IndexOf(activeWatch);
+            var otherWatch = _ladderDocument.AddWatchTable("Symbol Remove Other");
+            otherWatch.Variables.Add(watchSymbols[0]);
+            var otherWatchIndex = _ladderDocument.WatchTables.IndexOf(otherWatch);
+            _ladderDocument.SelectWatchTable(activeWatchIndex);
+            Refresh(); await Frames();
+            var watchRows = Find<Tree>("WatchTable");
+            var selectedWatchRow = watchRows.GetRoot()?.GetFirstChild();
+            while (selectedWatchRow is not null && selectedWatchRow.GetMetadata(0).AsString() != watchSymbols[0])
+                selectedWatchRow = selectedWatchRow.GetNext();
+            selectedWatchRow?.Select(0);
+            watchRows.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            var selectedWatchSymbol = watchRows.GetSelected()?.GetMetadata(0).AsString() == watchSymbols[0];
+            var beforeWatchSymbolRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            _ladderHistory.Clear();
+            Find<Button>("RemoveWatchSymbol").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var afterWatchSymbolRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            var activeWatchAfterRemove = _ladderDocument.WatchTables[activeWatchIndex];
+            var otherWatchAfterRemove = _ladderDocument.WatchTables[otherWatchIndex];
+            var removeIsolated = selectedWatchSymbol
+                && _ladderDocument.ActiveWatchTable.Name == "Symbol Remove Active"
+                && activeWatchAfterRemove.Variables.SequenceEqual([watchSymbols[1]], StringComparer.Ordinal)
+                && otherWatchAfterRemove.Variables.SequenceEqual([watchSymbols[0]], StringComparer.Ordinal)
+                && _ladderDocument.WatchTables.Count == watchRemoveFixture.WatchTables!.Count + 2
+                && Find<Label>("WatchStatus").Text.Contains("1 SYMBOL(S)", StringComparison.Ordinal)
+                && watchRows.GetRoot()?.GetFirstChild()?.GetMetadata(0).AsString() == watchSymbols[1];
+            var watchRemovalStatus = Find<Label>("WatchStatus").Text;
+            var undoWatchSymbolRemove = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeWatchSymbolRemove
+                && _ladderDocument.ActiveWatchTable.Name == "Symbol Remove Active";
+            var redoWatchSymbolRemove = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterWatchSymbolRemove
+                && _ladderDocument.ActiveWatchTable.Name == "Symbol Remove Active";
+            var loadedWatchRemoval = LadderEditorProjectJson.Load(afterWatchSymbolRemove);
+            var loadedWatchDocument = loadedWatchRemoval.Document;
+            var saveLoadWatchRemove = loadedWatchRemoval.IsReadable
+                && loadedWatchDocument is not null
+                && loadedWatchDocument.WatchTables[activeWatchIndex].Variables.SequenceEqual([watchSymbols[1]], StringComparer.Ordinal)
+                && loadedWatchDocument.WatchTables[otherWatchIndex].Variables.SequenceEqual([watchSymbols[0]], StringComparer.Ordinal)
+                && loadedWatchDocument.ActiveWatchTable.Name == "Symbol Remove Active";
+            _ladderDocument.RestoreSnapshot(watchRemoveFixture);
+            _ladderHistory.Clear(); Refresh(); await Frames();
+            watchRemoveGate.Set("removes-selected-symbol-from-active-table", removeIsolated,
+                $"selected={selectedWatchSymbol} active={activeWatchAfterRemove.Name} remaining={string.Join(',', activeWatchAfterRemove.Variables)} other={string.Join(',', otherWatchAfterRemove.Variables)} refreshed={watchRemovalStatus}");
+            watchRemoveGate.Set("undo-redo-restores-exact-state", undoWatchSymbolRemove && redoWatchSymbolRemove,
+                $"undo={undoWatchSymbolRemove} redo={redoWatchSymbolRemove}");
+            watchRemoveGate.Set("save-load-preserves-table-isolation", saveLoadWatchRemove,
+                $"readable={loadedWatchRemoval.IsReadable} activeAndOtherIsolated={saveLoadWatchRemove}");
+            watchRemoveGate.Finish();
 
             // Global DB contract via the production tree/document controls.
             var globalGate = Gate("tia.project-tree.global-db-contract");
@@ -961,6 +1033,8 @@ public partial class SimulatorShell
             globalDbDeclarations.EmitSignal(Tree.SignalName.ItemSelected);
             await Frames();
             var beforePendingRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            var removeSurvivorsBefore = JsonSerializer.Serialize(globalDb.Interface
+                .Where(parameter => !StringComparer.Ordinal.Equals(parameter.Id, targetSpeedId)).ToArray());
             editComment.Text = "Unapplied comment before remove";
             editComment.EmitSignal(LineEdit.SignalName.TextChanged, editComment.Text);
             var removeMemberButton = removeMemberAction;
@@ -982,7 +1056,9 @@ public partial class SimulatorShell
             globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
             var afterDiscardedRemove = LadderEditorProjectJson.Save(_ladderDocument);
             var removeDiscardDeletesOriginal = !globalDb.Interface.Any(parameter => parameter.Name == "TargetSpeedEdited")
-                && !_pendingEditorForms.Any(form => form.HasPending());
+                && !_pendingEditorForms.Any(form => form.HasPending())
+                && globalDb.Interface.Count == 1
+                && JsonSerializer.Serialize(globalDb.Interface) == removeSurvivorsBefore;
             Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var removeUndoExact = LadderEditorProjectJson.Save(_ladderDocument) == beforePendingRemove;
@@ -997,6 +1073,40 @@ public partial class SimulatorShell
                 && removeDiscardDialogReopened && removeDiscardDeletesOriginal && removeUndoExact && removeRedoExact && removeCleanupUndoExact;
             globalGate.Set("remove-resolves-pending-form", removeResolvesPending,
                 $"waits={removeWaitsForResolution} cancelKeepsDraft={removeCancelKeepsDraft} discardDialog={removeDiscardDialogReopened} removed={removeDiscardDeletesOriginal} undo={removeUndoExact} redo={removeRedoExact} cleanup={removeCleanupUndoExact}");
+
+            var ordinaryRemoveRow = FindMetadata(globalDbDeclarations.GetRoot(), "gate-reorder-marker");
+            ordinaryRemoveRow?.Select(0);
+            globalDbDeclarations.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            var beforeOrdinaryRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            var ordinaryRemoveSurvivorsBefore = JsonSerializer.Serialize(globalDb.Interface
+                .Where(parameter => !StringComparer.Ordinal.Equals(parameter.Id, "gate-reorder-marker")).ToArray());
+            var ordinaryRemoveHadNoDraft = !_pendingEditorForms.Any(form => form.HasPending());
+            var ordinaryRemoveTargetSelected = globalDbDeclarations.GetSelected()?.GetMetadata(0).AsString() == "gate-reorder-marker";
+            _ladderHistory.Clear();
+            removeMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+            var afterOrdinaryRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            var ordinaryRemoveTargetGone = !globalDb.Interface.Any(parameter => parameter.Id == "gate-reorder-marker");
+            var ordinaryRemoveSurvivorExact = globalDb.Interface.Count == 1
+                && globalDb.Interface.Single().Id == targetSpeedId
+                && JsonSerializer.Serialize(globalDb.Interface) == ordinaryRemoveSurvivorsBefore;
+            var currentSecondGlobalDb = _ladderDocument.Blocks.First(block => block.Id == secondGlobalDb.Id);
+            var ordinaryRemoveOtherDbExact = JsonSerializer.Serialize(currentSecondGlobalDb.Interface[0]) == secondDbDeclarationBeforeSwitch;
+            var ordinaryRemoveExact = ordinaryRemoveTargetSelected && ordinaryRemoveHadNoDraft
+                && !_pendingEditorForms.Any(form => form.HasPending())
+                && ordinaryRemoveTargetGone && ordinaryRemoveSurvivorExact && ordinaryRemoveOtherDbExact;
+            var ordinaryRemoveUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeOrdinaryRemove;
+            var ordinaryRemoveRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == afterOrdinaryRemove;
+            var ordinaryRemoveCleanup = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeOrdinaryRemove;
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+            globalGate.Set("ordinary-remove-preserves-survivors", ordinaryRemoveExact && ordinaryRemoveUndo
+                    && ordinaryRemoveRedo && ordinaryRemoveCleanup,
+                $"selected={ordinaryRemoveTargetSelected} noDraft={ordinaryRemoveHadNoDraft} targetGone={ordinaryRemoveTargetGone} survivorExact={ordinaryRemoveSurvivorExact} otherDbExact={ordinaryRemoveOtherDbExact} undo={ordinaryRemoveUndo} redo={ordinaryRemoveRedo} cleanup={ordinaryRemoveCleanup} survivors={globalDb.Interface.Count}");
 
             globalGate.Set("cancel-member-form", cancelMemberIsAtomic,
                 $"serializedUnchanged={cancelMemberSerializedUnchanged} noPending={cancelMemberNoPendingForm} cleared={cancelMemberFormCleared} undoUnchanged={cancelMemberUndoUnchanged}");
@@ -1244,18 +1354,20 @@ public partial class SimulatorShell
         }
         finally
         {
+            // Restore the live editor's history before any cleanup that might
+            // itself fail, so verifier teardown cannot strand isolated history.
+            _ladderHistory = originalHistory;
             _callAuthoring?.CancelEdit();
             _pendingEditorDialog?.Hide();
             _ladderDocument.RestoreSnapshot(originalDocument);
-            _ladderHistory = originalHistory;
             _ladderSavedProjectJson = originalSaved;
             _ladderProjectPath = originalPath;
             Refresh();
             await Frames();
         }
 
-        var passed = gates.Count == 9
-            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 9
+        var passed = gates.Count == 10
+            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 10
             && gates.All(gate => gate.Status == "passed"
                 && gate.Assertions.Count == ProjectTreeRequirements[gate.GateId].Count()
                 && gate.Assertions.All(assertion => assertion.Passed && assertion.Status == "passed"));
