@@ -673,15 +673,27 @@ bridge; the pre-existing unsaved process was left untouched and no scratch
 project was saved. The visible walk reached the scene, Logic Editor, default
 tag table, watch table, table-creation dialogs, Global DB creation, and Add
 Member. Clear visibly changed the watch count from five to zero, and Add Member
-visibly added `audit_bit | BOOL | FALSE`. In this run, Watch Remove and Global
-DB Edit/Remove clicks did not produce an unambiguous visible result; delayed
-repaint and coordinate targeting limit that evidence. Instance DB navigation
-was not reached. Existing earlier Edit/Remove evidence remains separate and
-does not turn this incomplete retry into a pass.
+visibly added `audit_bit | BOOL | FALSE`.
+
+In a focused retry, Global DB Edit visibly loaded
+`audit_member | BOOL | FALSE` into the selected member form, and Cancel cleared
+the form. Selecting `start_command` then clicking Watch Remove visibly reduced
+the count from five to four. The retry left the existing unsaved process
+untouched and saved no scratch project.
+
+Global DB Remove remains unconfirmed by screen control: a later capture showed
+an empty declaration grid, but coordinate drift made it impossible to attribute
+that state to the Remove action. Instance DB navigation was not available in
+the scratch project. Source review also found that the Global DB gate does not
+exercise inline cell commits or prove exact survivor semantics for Remove;
+watch-symbol Remove has no dedicated automated gate. Keep these as open
+acceptance items rather than treating the visible Add/Edit and Watch Remove
+results as full PROP-03/08 completion.
 
 The broader interaction profile initially exposed an internal verifier that
 selected `EditorDocument_0` by generated node name. It now finds the initial
 block tab by stable document key. The final interaction profile passes all
 14/14 commands, including ladder-editor, project-tree, property-edit, and
 view-state routes. Installed TIA V21 visual comparison, instance-DB editing,
-and confirmed Remove behavior remain open.
+inline Global DB cell-commit behavior, exact Global DB Remove behavior, and
+automated watch-symbol Remove coverage remain open.
