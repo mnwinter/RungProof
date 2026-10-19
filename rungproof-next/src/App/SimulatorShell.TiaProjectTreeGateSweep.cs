@@ -1717,6 +1717,12 @@ public partial class SimulatorShell
             var db = _ladderDocument.AddBlock("StructuredDB", LadderBlockType.DataBlock);
             fc.SemanticMode = LadderSemanticMode.Parameterized;
             fb.SemanticMode = LadderSemanticMode.Parameterized;
+            var tagSource = _ladderDocument.Tags.First(tag => tag.Type == PlcVariableType.Bool);
+            var tagDestination = _ladderDocument.Tags.First(tag => tag.Type == PlcVariableType.Bool && tag.Name != tagSource.Name);
+            var rejectedTag = _ladderDocument.AddTag("TagDropWrongType", PlcVariableRole.Memory,
+                type: PlcVariableType.DInt, initialValue: 1L);
+            var destinationRung = _ladderDocument.AddRung("Tag operand drop destination", tagDestination.Name);
+            _ladderDocument.AddContact(_ladderDocument.Rungs.Count - 1, 0, tagDestination.Name, normallyClosed: false);
             Refresh(); await Frames();
             var fcIndex = _ladderDocument.Blocks.IndexOf(fc);
             var fbIndex = _ladderDocument.Blocks.IndexOf(fb);
@@ -1732,11 +1738,45 @@ public partial class SimulatorShell
             var validPayload = Variant.From(ProgramBlockDragPayload.FromTreeMetadata($"program:{fcIndex}")!);
             var invalidPayload = Variant.From(ProgramBlockDragPayload.FromTreeMetadata($"program:{dbIndex}")!);
             var terminalValidation = canvas._CanDropData(terminal, validPayload) && !canvas._CanDropData(terminal, invalidPayload);
+
+            // Exercise the production tag drag/drop route on a different rung
+            // from the current selection, then apply through the normal inline
+            // editor and verify exact model/history Undo and Redo.
+            _ladderHistory.Clear();
+            var beforeTagDrop = LadderEditorProjectJson.Save(_ladderDocument);
+            var destinationIndex = _ladderDocument.Rungs.IndexOf(destinationRung);
+            var tagTarget = canvas.GetElementPosition(destinationIndex, 0, 0);
+            var tagPayloadText = LadderTagOperandDragPayload.FromIdentity(LadderCallBindings.GlobalId(tagSource))!;
+            var tagPayload = Variant.From(tagPayloadText);
+            canvas.SelectRung(0);
+            var validBoolDrop = canvas._CanDropData(tagTarget, tagPayload);
+            var beforeRejectedDrops = LadderEditorProjectJson.Save(_ladderDocument);
+            var undoBeforeRejectedDrops = _ladderHistory.UndoDescription;
+            var redoBeforeRejectedDrops = _ladderHistory.RedoDescription;
+            var rejectedTypeDrop = !canvas._CanDropData(tagTarget,
+                Variant.From(LadderTagOperandDragPayload.FromIdentity(LadderCallBindings.GlobalId(rejectedTag))!));
+            var rejectedInvalidTarget = !canvas._CanDropData(new Vector2(-100, -100), tagPayload);
+            var invalidDropsAtomic = LadderEditorProjectJson.Save(_ladderDocument) == beforeRejectedDrops
+                && _ladderHistory.UndoDescription == undoBeforeRejectedDrops
+                && _ladderHistory.RedoDescription == redoBeforeRejectedDrops;
+            canvas._DropData(tagTarget, tagPayload);
+            var inlineEditor = canvas.GetNodeOrNull<LadderOperandEditor>("InlineOperandEditor");
+            var exactDestinationSelected = canvas.SelectedRung == destinationIndex
+                && inlineEditor is { Visible: true } && inlineEditor.PendingText == tagSource.Name;
+            var applied = inlineEditor?.TryApply(false) == true;
+            var afterTagDrop = LadderEditorProjectJson.Save(_ladderDocument);
+            var committedOperand = _ladderDocument.Rungs[destinationIndex].Branches[0].Contacts[0].Variable == tagSource.Name;
+            var undoTagDrop = TryUndoLadderEdit(out _) && LadderEditorProjectJson.Save(_ladderDocument) == beforeTagDrop;
+            var redoTagDrop = TryRedoLadderEdit(out _) && LadderEditorProjectJson.Save(_ladderDocument) == afterTagDrop;
             dragGate.Set("supported-rows-only", payloadFiltered, $"fc/fb accepted, ob/db/non-program rejected={payloadFiltered}");
-            dragGate.Set("terminal-validates-payload", broadPass && terminalValidation, $"physicalVisible=broad validFcInvalidDb={terminalValidation} rejection={canvas.ReviewBlockDropRejection}");
+            dragGate.Set("terminal-validates-payload", broadPass && terminalValidation
+                && validBoolDrop && rejectedTypeDrop && rejectedInvalidTarget && invalidDropsAtomic,
+                $"physicalVisible=broad callValid={terminalValidation} boolContact={validBoolDrop} wrongTypeRejected={rejectedTypeDrop} invalidTargetRejected={rejectedInvalidTarget} rejectedDropsAtomic={invalidDropsAtomic}");
             dragGate.Set("drop-opens-exact-call", broadPass, "physical broad route opened CALL authoring for exact FC source");
             dragGate.Set("cancel-is-exact", broadPass, "physical broad route exact JSON/no-history Cancel assertion");
-            dragGate.Set("apply-undo-redo-exact", broadPass, "physical broad route exact Apply/Undo/Redo assertion");
+            dragGate.Set("apply-undo-redo-exact", broadPass && exactDestinationSelected && applied
+                && committedOperand && undoTagDrop && redoTagDrop,
+                $"physical call route plus tag route selectedDestination={exactDestinationSelected} applied={applied} committed={committedOperand} undo={undoTagDrop} redo={redoTagDrop}");
             dragGate.Finish();
             _ladderDocument.RestoreSnapshot(dragFixture); Refresh(); await Frames();
 

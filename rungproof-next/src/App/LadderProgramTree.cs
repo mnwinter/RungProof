@@ -5,10 +5,9 @@ using RungProof.Next.VirtualController;
 namespace RungProof.Next.App;
 
 /// <summary>
-/// TIA-style project-tree source for dragging an FC/FB program block onto a
-/// network's terminal instruction position. Tree rows keep their existing
-/// navigation metadata; the drag payload is a stable, validated block index
-/// for the duration of the drag.
+/// TIA-style tree drag source for program-block calls and PLC tag operands.
+/// Navigation metadata remains unchanged; a tag row carries its stable
+/// identity separately in metadata column 1.
 /// </summary>
 public partial class LadderProgramTree : Tree
 {
@@ -19,8 +18,10 @@ public partial class LadderProgramTree : Tree
         var item = GetItemAtPosition(atPosition);
         if (item is null) return default;
 
-        var payload = ProgramBlockDragPayload.FromTreeItem(
-            item.GetMetadata(0).AsString(), item.GetText(0));
+        var rowMetadata = item.GetMetadata(0).AsString();
+        var payload = ProgramBlockDragPayload.FromTreeItem(rowMetadata, item.GetText(0))
+            ?? LadderTagOperandDragPayload.FromTreeMetadata(
+                rowMetadata, item.GetMetadata(1).AsString());
         if (payload is null) return default;
 
         var preview = new Label { Text = item.GetText(0), ThemeTypeVariation = "TooltipLabel" };

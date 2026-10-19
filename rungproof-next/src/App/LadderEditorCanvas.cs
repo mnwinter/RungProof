@@ -76,9 +76,12 @@ public partial class LadderEditorCanvas : Control
     public event Action<int>? MoveRequested;
     public event Action<string, int, int, int>? InstructionDropRequested;
     public event Action<int, int>? BlockCallDropRequested;
+    public event Action<string, string>? TagOperandDropRequested;
     internal int ReviewBlockDropChecks { get; private set; }
     internal int ReviewBlockDrops { get; private set; }
     internal string ReviewBlockDropRejection { get; private set; } = string.Empty;
+    internal int ReviewTagDropChecks { get; private set; }
+    internal string ReviewTagDropRejection { get; private set; } = string.Empty;
     public event Action<LadderTreeEditorRequest>? TreeCommandRequested;
     public EditableLadderNode? TreeClipboard { get; set; }
     public string SelectedNodeId { get; private set; } = string.Empty;
@@ -868,30 +871,61 @@ public partial class LadderEditorCanvas : Control
     {
         ReviewBlockDropChecks++;
         var payload = data.AsString();
-        if (!ProgramBlockDragPayload.TryGetBlockIndex(payload, out var blockIndex))
-        { ReviewBlockDropRejection = "payload"; return false; }
-        if (MutationLocked) { ReviewBlockDropRejection = "locked"; return false; }
-        if (blockIndex < 0 || blockIndex >= _document.Blocks.Count)
-        { ReviewBlockDropRejection = "block-index"; return false; }
-        if (_document.Blocks[blockIndex].BlockType is not (LadderBlockType.Function or LadderBlockType.FunctionBlock))
-        { ReviewBlockDropRejection = "block-type"; return false; }
-        if (_document.Blocks[_document.ActiveBlockIndex].Id == _document.Blocks[blockIndex].Id
-            || _document.Blocks[blockIndex].SemanticMode != LadderSemanticMode.Parameterized)
-        { ReviewBlockDropRejection = "self-or-mode"; return false; }
+        if (ProgramBlockDragPayload.TryGetBlockIndex(payload, out var blockIndex))
+            return CanDropProgramBlock(atPosition, blockIndex);
+        ReviewTagDropChecks++;
+        if (!LadderTagOperandDragPayload.TryGetIdentity(payload, out var tagIdentity))
+        { ReviewBlockDropRejection = "payload"; ReviewTagDropRejection = "payload"; return false; }
+        if (MutationLocked) { ReviewTagDropRejection = "locked"; return false; }
+        if (!LadderTagOperandDragPayload.TryResolveScalarTag(_document, tagIdentity, out var tag, out var operand))
+        { ReviewTagDropRejection = "tag-identity"; return false; }
+        if (!TryTagDropTarget(atPosition, out var rungIndex, out var nodeId, out var target, out var requiredType, out var writable))
+        { ReviewTagDropRejection = "target"; return false; }
+        if (LadderOperandSymbols.Validate(LadderOperandSymbols.ForDocument(_document), operand, requiredType, writable, allowLiteral: false) is { } error)
+        { ReviewTagDropRejection = error; return false; }
+        ReviewTagDropRejection = string.Empty;
+        ReviewBlockDropRejection = string.Empty;
+        return true;
 
-        var position = ToLogical(atPosition);
-        var rungIndex = RungIndexAt(position.Y);
-        if (rungIndex < 0) { ReviewBlockDropRejection = $"rung:{atPosition}->{position}"; return false; }
-        var accepted = TryHitElement(rungIndex, position, out _, out _, out var output) && output;
-        ReviewBlockDropRejection = accepted ? string.Empty : $"terminal:{atPosition}->{position}:rung={rungIndex}";
-        return accepted;
+        bool CanDropProgramBlock(Vector2 position, int blockIndex)
+        {
+            if (MutationLocked) { ReviewBlockDropRejection = "locked"; return false; }
+            if (blockIndex < 0 || blockIndex >= _document.Blocks.Count)
+            { ReviewBlockDropRejection = "block-index"; return false; }
+            if (_document.Blocks[blockIndex].BlockType is not (LadderBlockType.Function or LadderBlockType.FunctionBlock))
+            { ReviewBlockDropRejection = "block-type"; return false; }
+            if (_document.Blocks[_document.ActiveBlockIndex].Id == _document.Blocks[blockIndex].Id
+                || _document.Blocks[blockIndex].SemanticMode != LadderSemanticMode.Parameterized)
+            { ReviewBlockDropRejection = "self-or-mode"; return false; }
+
+            var logical = ToLogical(position);
+            var blockRungIndex = RungIndexAt(logical.Y);
+            if (blockRungIndex < 0) { ReviewBlockDropRejection = $"rung:{position}->{logical}"; return false; }
+            var accepted = TryHitElement(blockRungIndex, logical, out _, out _, out var output) && output;
+            ReviewBlockDropRejection = accepted ? string.Empty : $"terminal:{position}->{logical}:rung={blockRungIndex}";
+            return accepted;
+        }
     }
 
     public override void _DropData(Vector2 atPosition, Variant data)
     {
         ReviewBlockDrops++;
-        if (!_CanDropData(atPosition, data)) return;
         var payload = data.AsString();
+        if (!_CanDropData(atPosition, data)) return;
+        if (LadderTagOperandDragPayload.TryGetIdentity(payload, out var tagIdentity))
+        {
+            if (!TryTagDropTarget(atPosition, out var tagRungIndex, out var nodeId, out _, out _, out _)) return;
+            var logical = ToLogical(atPosition);
+            // InlineOperandRequested resolves the selected network, so instruction-pin
+            // targets (which do not hit a selectable node) must select their rung too.
+            SelectRung(tagRungIndex);
+            if (nodeId.Length > 0) SelectTreeNode(tagRungIndex, nodeId);
+            else if (TryHitElement(tagRungIndex, logical, out var branchIndex, out var contactIndex, out var tagOutput))
+                SelectElement(tagRungIndex, branchIndex, contactIndex, tagOutput);
+            if (TryTagDropTarget(atPosition, out _, out _, out var target, out _, out _))
+                TagOperandDropRequested?.Invoke(tagIdentity, target);
+            return;
+        }
         if (!ProgramBlockDragPayload.TryGetBlockIndex(payload, out var blockIndex))
             return;
 
@@ -901,6 +935,126 @@ public partial class LadderEditorCanvas : Control
             return;
         BlockCallDropRequested?.Invoke(rungIndex, blockIndex);
     }
+
+    private bool TryTagDropTarget(Vector2 atPosition, out int rungIndex, out string nodeId,
+        out string target, out PlcVariableType requiredType, out bool writable)
+    {
+        rungIndex = -1;
+        nodeId = target = string.Empty;
+        requiredType = PlcVariableType.Bool;
+        writable = false;
+        var position = ToLogical(atPosition);
+        rungIndex = RungIndexAt(position.Y);
+        if (rungIndex < 0 || rungIndex >= _document.Rungs.Count) return false;
+        var rung = _document.Rungs[rungIndex];
+
+        if (TryHitTiaComparisonOperand(rungIndex, position, out nodeId, out target))
+        {
+            var node = EditableLadderTree.Find(rung.Root, nodeId);
+            if (node is null) return false;
+            requiredType = node.ComparisonValueType switch
+            {
+                LadderComparisonValueType.Int => PlcVariableType.Int,
+                LadderComparisonValueType.Real => PlcVariableType.Real,
+                LadderComparisonValueType.DInt => PlcVariableType.DInt,
+                _ => target == "compare-right" ? PlcVariableType.Int
+                    : LadderOperandSymbols.ForDocument(_document).FirstOrDefault(symbol => symbol.Name == node.Variable)?.Type ?? PlcVariableType.DInt,
+            };
+            return true;
+        }
+
+        // Existing rendered instruction input/output operands use the same
+        // inline editor and validation path as double-click editing.
+        var currentSymbols = LadderOperandSymbols.ForDocument(_document);
+        var currentOperand = string.Empty;
+        if (TryHitTiaInstructionOperand(rungIndex, position, out target))
+        {
+            // Counter PV is authored as the instruction's numeric literal in
+            // the current editor/runtime model; a tag drag cannot be applied.
+            if (target == "terminal-counter-pv") return false;
+            currentOperand = target switch
+            {
+                "terminal-counter-r" => rung.CounterResetInput,
+                "terminal-counter-load" => rung.CounterLoadInput,
+                "terminal-counter-pv" => rung.CounterPreset.ToString(CultureInfo.InvariantCulture),
+                "terminal-timer-reset" => rung.TimerResetOperand,
+                "terminal-timer-pt" => rung.TimerPresetOperand,
+                "terminal-numeric-a" => rung.NumericSourceA,
+                "terminal-numeric-b" => rung.NumericSourceB,
+                "terminal-numeric-c" => rung.NumericSourceC,
+                "terminal-output" => rung.IsNumericOperation ? rung.NumericDestination : rung.CoilVariable,
+                _ => string.Empty,
+            };
+            requiredType = target switch
+            {
+                "terminal-counter-r" or "terminal-counter-load" or "terminal-timer-reset" => PlcVariableType.Bool,
+                "terminal-counter-pv" => rung.CounterValueType is LadderCounterValueType.DInt or LadderCounterValueType.UDInt ? PlcVariableType.DInt : PlcVariableType.Int,
+                "terminal-timer-pt" => PlcVariableType.Time,
+                "terminal-numeric-a" => NumericSourceType(0),
+                "terminal-numeric-b" => NumericSourceType(1),
+                "terminal-numeric-c" => NumericSourceType(2),
+                _ => currentSymbols.FirstOrDefault(symbol => symbol.Name == currentOperand)?.Type ?? PlcVariableType.DInt,
+            };
+            writable = target == "terminal-output";
+            return true;
+        }
+
+        if (!TryHitElement(rungIndex, position, out _, out _, out var output)) return false;
+        if (output && (IsBitCoil(rung) || rung.IsTimer || rung.IsTimerReset || rung.IsCounter || rung.IsCounterLoad || rung.IsCounterReset))
+        {
+            target = "terminal-output";
+            requiredType = rung.IsTimer || rung.IsTimerReset ? PlcVariableType.Timer
+                : rung.IsCounter || rung.IsCounterLoad || rung.IsCounterReset ? PlcVariableType.Counter
+                : PlcVariableType.Bool;
+            writable = true;
+            return true;
+        }
+
+        var hit = TreeLayout(rung).HitNode(position.X - TreeOrigin(rungIndex).X, position.Y - TreeOrigin(rungIndex).Y);
+        if (hit?.Node.Kind != LadderNodeKind.Contact) return false;
+        nodeId = hit.Node.Id;
+        target = "contact";
+        requiredType = PlcVariableType.Bool;
+        return true;
+
+        PlcVariableType NumericSourceType(int sourceIndex)
+        {
+            var selected = LadderNumericOperationRules.SelectedDataTypeForSource(
+                rung.NumericOperationKind, sourceIndex, rung.NumericDataType,
+                rung.NumericInputDataType, rung.NumericOutputDataType);
+            if (selected == LadderNumericDataType.Unspecified)
+            {
+                var choices = LadderNumericOperationRules.HasTiaDualDataTypeSelectors(rung.NumericOperationKind)
+                    ? rung.NumericOperationKind == LadderNumericOperationKind.Scale && sourceIndex != 1
+                        ? LadderNumericDataTypePresentation.TiaOutputTypesFor(rung.NumericOperationKind)
+                        : LadderNumericDataTypePresentation.TiaInputTypesFor(rung.NumericOperationKind)
+                    : LadderNumericDataTypePresentation.TiaSelectableTypesFor(rung.NumericOperationKind);
+                var fixedTypes = choices.Where(item => item != LadderNumericDataType.Unspecified).Distinct().ToArray();
+                if (fixedTypes.Length == 1) selected = fixedTypes[0];
+                var inferenceOperand = rung.NumericOperationKind switch
+                {
+                    LadderNumericOperationKind.Scale when sourceIndex == 1 => null,
+                    LadderNumericOperationKind.Scale => rung.NumericDestination,
+                    LadderNumericOperationKind.Normalize => rung.NumericSourceA,
+                    LadderNumericOperationKind.Move => rung.NumericDestination,
+                    _ => currentSymbols.FirstOrDefault(symbol => symbol.Name == currentOperand)?.Name,
+                };
+                if (selected == LadderNumericDataType.Unspecified)
+                    selected = LadderNumericDataTypePresentation.FromVariableType(
+                        currentSymbols.FirstOrDefault(symbol => symbol.Name == inferenceOperand)?.Type);
+            }
+            return selected switch
+            {
+                LadderNumericDataType.Int => PlcVariableType.Int,
+                LadderNumericDataType.Real => PlcVariableType.Real,
+                _ => PlcVariableType.DInt,
+            };
+        }
+    }
+
+    /// <summary>Open the same transactional inline operand editor used by double-click/F2.</summary>
+    public void RequestInlineOperandEdit(string? initialText, bool clearOnOpen, string? target) =>
+        InlineOperandRequested?.Invoke(initialText, clearOnOpen, target);
 
     public override void _GuiInput(InputEvent input)
     {

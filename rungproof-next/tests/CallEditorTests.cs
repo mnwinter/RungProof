@@ -16,6 +16,41 @@ internal static partial class Program
             False(ProgramBlockDragPayload.TryGetBlockIndex("rungproof:fc-fb-call:-1", out _));
             False(ProgramBlockDragPayload.TryGetBlockIndex("rungproof:other:3", out _));
         });
+        Test("TagOperandDragPayloadCarriesStableIdentity", () =>
+        {
+            var payload = LadderTagOperandDragPayload.FromTreeMetadata("tag:4", "tag-id:stable/tag id");
+            True(payload is not null);
+            True(LadderTagOperandDragPayload.TryGetIdentity(payload!, out var identity));
+            Equal("stable/tag id", identity);
+            True(LadderTagOperandDragPayload.FromTreeMetadata("program:4", "tag-id:stable") is null);
+            True(LadderTagOperandDragPayload.FromTreeMetadata("tag:no-index", "tag-id:stable") is null);
+            True(LadderTagOperandDragPayload.FromTreeMetadata("tag:4", "tag-id:") is null);
+            False(LadderTagOperandDragPayload.TryGetIdentity("rungproof:tag-operand:", out _));
+            False(LadderTagOperandDragPayload.TryGetIdentity("rungproof:fc-fb-call:4", out _));
+        });
+        Test("TagOperandDragResolvesRenamedAndParameterizedDeclarationsById", () =>
+        {
+            var document = LadderEditorDocument.CreateConveyorExample();
+            var tag = document.Tags.First(item => item.Type == PlcVariableType.Bool);
+            var tagIndex = document.Tags.IndexOf(tag);
+            tag = tag with { Id = "drag-stable-id" };
+            document.Tags[tagIndex] = tag;
+            var identity = LadderCallBindings.GlobalId(tag);
+            document.Tags[tagIndex] = tag with { Name = "RenamedDragTag" };
+            True(LadderTagOperandDragPayload.TryResolveScalarTag(document, identity, out var resolved, out var legacyOperand));
+            Equal("RenamedDragTag", resolved.Name);
+            Equal("RenamedDragTag", legacyOperand);
+
+            document.Blocks[document.ActiveBlockIndex].SemanticMode = LadderSemanticMode.Parameterized;
+            True(LadderTagOperandDragPayload.TryResolveScalarTag(document, identity, out _, out var parameterizedOperand));
+            Equal("global:" + identity, parameterizedOperand);
+
+            var aggregate = document.Tags.FirstOrDefault(item => PlcAggregates.IsAggregate(item.Type));
+            if (aggregate is not null)
+                False(LadderTagOperandDragPayload.TryResolveScalarTag(document,
+                    LadderCallBindings.GlobalId(aggregate), out _, out _));
+            False(LadderTagOperandDragPayload.TryResolveScalarTag(document, "missing-id", out _, out _));
+        });
 
         (LadderEditorDocument, string, string, string) Fixture()
         {

@@ -5362,7 +5362,7 @@ public partial class SimulatorShell : CanvasLayer
         Button? applyTagEdit = null;
         Button? deleteTag = null;
         var rungLabel = new LineEdit { Name = "RungLabel", CustomMinimumSize = new Vector2(230, 32) };
-        var tagList = new Tree
+        var tagList = new LadderProgramTree
         {
             Name = "TagTable",
             Columns = siemens ? 7 : 5,
@@ -6584,6 +6584,7 @@ public partial class SimulatorShell : CanvasLayer
                     && !tag.TagTable.Equals(activeTagTableName, StringComparison.Ordinal)) continue;
                 var tagRow = tagList.CreateItem(tagRoot);
                 tagRow.SetMetadata(0, $"tag:{index}");
+                tagRow.SetMetadata(1, "tag-id:" + LadderCallBindings.GlobalId(tag));
                 tagRow.SetText(0, tag.Name);
                 var addressColumn = siemens ? 1 : -1;
                 var commentColumn = siemens ? 2 : -1;
@@ -7998,7 +7999,7 @@ public partial class SimulatorShell : CanvasLayer
         var globalDbBoundary = Inspector("GlobalDbBoundary");
         globalDbBoundary.FitContent = true;
         globalDbBoundary.AddThemeColorOverride("default_color", new Color("607983"));
-        globalDbBoundary.Text = "Optimized-access offline subset: Name, Data type, Start value, Retain, Comment. TIA V21 may add Default value, HMI visibility/access/write, Setpoint, and Supervision columns; Offset requires standard access; Monitor values require an online connection; creating a snapshot requires online access, though a saved snapshot can be viewed offline. These are omitted. Retain is metadata; power-cycle retention is not simulated. ARRAY/system-type DB and manual instance-DB creation are unsupported.";
+        globalDbBoundary.Text = "Optimized-access offline subset: Name, Data type, Start value, Retain, Comment. TIA V21 supports additional configurable columns, including Default value, HMI visibility/access/write, Setpoint, and Supervision; Offset requires standard access. Monitor values require an online connection; creating a snapshot requires online access, though a saved snapshot can be viewed offline. These are omitted. Retain is metadata; power-cycle retention is not simulated. ARRAY/system-type DB and manual instance-DB creation are unsupported.";
         globalDbDocument.AddChild(globalDbBoundary);
         center.AddChild(globalDbDocument);
         void SetEditorDocumentBody(string key)
@@ -9022,6 +9023,15 @@ public partial class SimulatorShell : CanvasLayer
             }, CancelOperand, initialText, clearOnOpen);
             operandEditor.PlaceInline(operandBounds);
         });
+        canvas.TagOperandDropRequested += (tagIdentity, target) =>
+        {
+            if (!LadderTagOperandDragPayload.TryResolveScalarTag(document, tagIdentity, out _, out var operand))
+            {
+                output.Text = "[color=#d64545]Tag drop rejected.[/color] The source declaration no longer exists or is not a scalar tag.";
+                return;
+            }
+            canvas.RequestInlineOperandEdit(operand, clearOnOpen: false, target);
+        };
         canvas.KeyboardInstructionRequested += InsertInstructionKind;
         canvas.KeyboardSelectionChanged += () =>
         {

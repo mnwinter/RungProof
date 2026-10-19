@@ -59,6 +59,20 @@ Evidence must remain separated:
   distinguishes per-tag Retain under optimized access from centralized retain
   behavior under standard access. Do not present the current Retain checkbox as
   proof that power-cycle retention is implemented by the offline runtime.
+- Siemens V21's [PLC tag table reference](https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/structure-of-the-plc-tag-tables)
+  includes Tags and User constants tabs in tag tables, plus a System constants
+  tab in Default and All tags. System constants are read-only hardware
+  identifiers; [their naming and assignment rules](https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/declaring-global-constants/rules-for-global-system-constants)
+  require real device metadata. Do not seed example hardware IDs into a generic
+  simulator project.
+- Siemens V21's [watch table layout](https://docs.tia.siemens.cloud/r/en-us/v21/testing-the-user-program/testing-with-the-watch-table/layout-of-the-watch-table)
+  defines Name, Address, Display format, Monitor value, Modify value, modify
+  selection, Comment, and Tag comment columns in basic mode, with trigger
+  columns in expanded mode. [Watch-table creation](https://docs.tia.siemens.cloud/r/en-us/v21/testing-the-user-program/testing-with-the-watch-table/creating-and-editing-watch-tables/creating-a-watch-table)
+  accepts symbolic names or absolute addresses, and [display formats](https://docs.tia.siemens.cloud/r/en-us/v21/testing-the-user-program/testing-with-the-watch-table/entering-tags-in-the-watch-table/overview-of-the-display-formats)
+  are restricted by data type. Implement only the RungProof S7-1500 subset;
+  preserve a clear simulator-only boundary for any Modify control and never
+  route it to the external PLC transport.
 - Compare the same editor object, declaration/member set, zoom, selection,
   display settings, and online state. Record monitor/modify state separately.
 - Match hierarchy, table columns, row grouping, selection feedback, editor tabs,
@@ -83,7 +97,7 @@ Evidence must remain separated:
 | 1 | Main workbench layout and navigation parity: shell chrome, project tree, document tabs, inspector/work panes, diagnostics and status. | Requirement MAIN-01 through MAIN-04 have source, offline, rendered, and interaction evidence; remaining TIA differences are listed. |
 | 2 | Property form correctness: transactional selection, form loading, validation, Cancel, Apply, Undo/Redo, and Save/Load across existing editor forms. | PROP-01/02/09 gates pass, including cross-block same-index isolation. |
 | 3 | Data blocks: finish Global DB editing and declaration presentation; decide the supported optimized-access model; implement or disclose advanced columns and access modes. | PROP-03/04/06 gates pass and the Global/Instance DB normal-renderer captures are inspected. |
-| 4 | PLC tags and constants: editable tag metadata, User constants, System constants display, and all-tags navigation. | PROP-07 round-trip and row-action gates pass; hardware constants are sourced from project metadata. |
+| 4 | PLC tags and constants: editable tag metadata, User constants, System constants display, all-tags navigation, and a visible tag-source route while editing ladder operands. | PROP-07 round-trip and row-action gates pass; hardware constants are sourced from project metadata; a real screen drag can reach the intended rung operand and is verified with pointer interaction. |
 | 5 | Watch table: addresses, display formats, modification values, simulator execution/quality, and safe offline messaging. | PROP-08 row-action and persistence gates pass; no route reaches a physical PLC write. |
 | 6 | Independent review and manual walkthrough. | Independent code review has no unresolved high-severity findings; screen-control agent exercises each relevant visible function and records pass/fail evidence. |
 | 7 | TIA V21 comparison and closeout. | Matched installed-TIA captures and a requirement-by-requirement evidence audit are complete; report installed-TIA gaps separately from local application results. |
@@ -747,11 +761,11 @@ a safety-rated circuit or installed-TIA parity.
 
 | Area | Current evidence | Acceptance still open |
 | --- | --- | --- |
-| Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. A fresh scratch screen pass visibly applied Data Type, Start Value, Retain, and Comment changes, then undid and redid them. | Visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
+| Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. An earlier scratch-screen checkpoint visibly applied Data Type, Start Value, Retain, and Comment changes and undid/redid them; it predates the current-source check below. | Current-source visible Start Value commit and physical Undo/Redo, visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
 | Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
 | Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
-| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, and Undo/Redo. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. A separate scratch pass clicked Cancel on a tag edit and confirmed the original blank Comment was restored; pending-edit prompts appeared through View, tag rail, Tools, and Add Tag navigation. | Visible Cancel for a new-tag draft and successful Add Tag creation remain unverified by screen control. User/System constants and tag-to-operand drag remain unsupported. |
-| Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. Fresh scratch screen control confirmed Add Symbol, non-first-row Remove, Clear, Add All, and Save/reopen. The tested scene exposed five root tags and no aggregate leaves; source coverage exercises aggregate leaves. | Address-based rows, display formats, simulator-safe modify values, and row reorder remain unsupported. |
+| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. A separate scratch pass clicked Cancel on a tag edit and confirmed the original blank Comment was restored; pending-edit prompts appeared through View, tag rail, Tools, and Add Tag navigation. The current-source walkthrough opened a disposable tag draft; Cancel in its pending-edits prompt kept the draft, while Discard restored the default draft and left the table at five tags. | Visible Add Tag Apply/creation and a form-level Cancel that discards the draft remain unverified. User/System constants remain unsupported. Physical tag-to-operand drag remains blocked because the tag table and ladder are separate editor tabs and there is no visible cross-tab drag/source panel; only the direct production-handler route is gate-verified. |
+| Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. A current-source screen walk opened Watch table 1, visibly removed a selected row (5→4), cleared (4→0), used Add All (0→5), and replayed the changes through Undo/Redo before restoring five rows. | Adding a new nonduplicate symbol remains unverified by screen control. Address-based rows, display formats, simulator-safe modify values, and row reorder remain unsupported. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
 ### 2026-10-19: property transaction review update
@@ -882,3 +896,57 @@ TRUE cell edit briefly displayed malformed `TRUETRUE`, so the visible commit and
 physical Undo/Redo result remain unverified. The runtime remained STOPPED and
 the PLC DISCONNECTED. This is RungProof screen evidence only; matched TIA V21
 comparison remains open.
+
+### Current-source main/property screen walk — 2026-10-19
+
+An independent screen-control agent used the isolated RungProof scratch process
+PID 43228 through the local-only bridge on port 18784. The process displayed
+Conveyor Inspection Cell; runtime was STOPPED and PLC DISCONNECTED before and
+after the walk. Create Program Block opened a dialog with the FB1 default and
+OB/FB/FC/DB choices; Cancel left only Conveyor_Main [OB1]. The tag draft
+pending-edits prompt behaved as designed: Cancel kept the draft, Discard reset
+the form, and Default tag table remained at five tags. No Tag Add/Apply or
+Global DB action was completed in this run.
+
+Watch table 1 opened with five rows. The agent removed the selected
+`start_command` row (5→4), cleared the table (4→0), used Add All (0→5), and
+visibly exercised Undo/Redo through those changes before restoring the original
+five rows. Add Symbol remained inconclusive because the selected
+`start_command` was already present. A separate direct screen check opened Add
+new watch table and clicked Cancel; a fresh capture showed the dialog closed
+with Watch table 1 still at five rows. No project was saved or loaded, no Run
+or PLC Connect action was used, and the bridge's delayed updates required fresh
+captures before recording each result. These are RungProof UI observations,
+not installed-TIA or live-PLC evidence.
+
+The current-source screen pass also selected **Add new watch table**, opened the
+`Watch_table_1` creation dialog, and clicked **Cancel**. A fresh capture showed
+the dialog closed and the project tree still contained only `Watch table 1 [5]`;
+no watch-table count or content changed. The runtime remained STOPPED and PLC
+DISCONNECTED. No project Save or Load was used. This closes the visible Cancel
+check for that creation dialog only.
+
+### Current-source project-tree gate — 2026-10-19
+
+The focused gate was rerun against local source based on HEAD
+`91fc1438557ce565023018adb5f1307286945b52` with the Global DB boundary-copy
+clarification and tag-operand drag path. The headless invocation failed only
+`global-db-contract/member-editor-route`: the default headless viewport yielded
+a 183 px client pane, below the editor's 560 px requirement. The supported
+normal-renderer run at 1600×900 passed all 12 gates and 84 assertions; its
+source revision is `sha256:71065B89332FF945C5B0AB7B842D10082BBCD8BC0ACA736A8523E3734A3B76E4`
+and assembly SHA-256 is
+`C0CC143E43C8A8202F1C27C8FB9142EB00007B4612121601AE6B657BC7DE24C2`. The
+drag gate accepted a BOOL contact operand, rejected a wrong-type tag and invalid
+target without mutation/history changes, selected the exact destination rung,
+and verified Apply/Undo/Redo through the production inline editor path.
+Its artifact is
+`rungproof-next/.tools/tia-project-tree-gates.json`; the result is local offline
+evidence (`externalTia=false`, `livePlc=false`). The project window minimum is
+1200 px, so the headless failure does not establish a failure at a supported
+window size. It also does not replace outstanding physical screen checks. A
+separate screen-control walkthrough confirmed that the tag table and ladder are
+separate tabs; Scenario + Ladder Split places the 3D scene beside the editor,
+not the tag grid beside the rung. Therefore the current drag gate proves source
+handling only, and a visible simultaneous tag-source/ladder-target workflow is
+still a GUI requirement. No physical drag is claimed.
