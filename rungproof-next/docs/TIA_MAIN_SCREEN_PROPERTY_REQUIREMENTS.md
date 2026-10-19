@@ -1009,12 +1009,13 @@ project-tree sweeps. Its project-tree artifact is
 
 A fresh 1816×1039 screen-control pass verified watch-table copy, rename,
 reorder, boundary disabling, Undo/Redo, and delete, with selector and tree state
-consistent after each action. It also verified the Global DB declaration grid
-and adding/selecting a BOOL member; no clipping was visible at that viewport.
-The member Cancel result was ambiguous and remains unverified. A second
-1816×1039 screen-control pass created an unsaved DB1, opened its declaration
-detail panel, and clicked PROJECT TREE. The fresh view showed the tree again,
-DB1 remained selected, and the DB1 document tab remained open. Runtime stayed
-STOPPED and PLC DISCONNECTED; neither screen pass used Save, Load, Run, or
-Connect. Matched TIA Portal V21 captures and live PLC proof remain separate,
-outstanding gates.
+consistent after each action. It also verified the Global DB declaration grid,
+member creation and selection, and the DB detail panel's PROJECT TREE return;
+no clipping was visible at that viewport. A follow-up pass verified member
+Cancel discarded `discard_me`, then applied `applied_member` as BOOL/FALSE and
+reopened it with those values displayed. A separate pass created an unsaved
+DB1, opened its declaration detail panel, and clicked PROJECT TREE; the tree
+returned, DB1 remained selected, and the DB1 document tab remained open. Each
+screen pass used an isolated scratch process with runtime STOPPED and PLC
+DISCONNECTED and no Save, Load, Run, or Connect. Matched TIA Portal V21
+captures and live PLC proof remain separate, outstanding gates.
