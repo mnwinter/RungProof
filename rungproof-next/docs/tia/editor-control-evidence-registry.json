@@ -573,7 +573,7 @@
         "selecting another table is navigation rather than a content edit"
       ],
       "limitations": [
-        "Watch-table rename is not implemented and is listed as unsupported below."
+        "This gate covers creation, naming validation, Undo/Redo, and activation. Watch-table Rename, Copy, Up/Down, and Delete are covered by the current controller/editor checks and screen-control walkthrough; installed-TIA matching remains open."
       ]
     },
     {
@@ -918,17 +918,6 @@
   ],
   "unsupportedDocumented": [
     {
-      "id": "tia.unsupported.watch-table-rename",
-      "object": "watch table",
-      "operation": "rename",
-      "status": "documented-unsupported",
-      "boundary": "Named watch tables can be created, selected, opened, persisted, and deleted through the active workspace, but no rename command or model operation exists.",
-      "sourcePaths": [
-        "src/VirtualController/LadderEditorDocument.cs",
-        "src/App/SimulatorShell.cs"
-      ]
-    },
-    {
       "id": "tia.unsupported.project-tree-watch-table-delete",
       "object": "watch table project-tree row",
       "operation": "delete",
@@ -945,14 +934,14 @@
     {
       "id": "artifact.tia-editor-control-gate-sweep.v1",
       "commandId": "tia-editor-control-gate-sweep",
-      "path": ".tools/tia-parity-suite/codex-interaction-treeclick/tia-parity-interaction-20261019-181209-artifacts/tia-editor-control-gates.json",
+      "path": ".tools/tia-project-tree-enter-rerun/tia-parity-interaction-20261019-192857-artifacts/tia-editor-control-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "51B5C89052808B755E7664FD3CE30F12F61991E231BDE8F0787FE63A4E38A57E",
+      "sha256": "C7C58CB36BAF032D52EBC4B3FEBFD9170478E3F8E4F8338660567FF92E4DD9F2",
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
-      "sourceRevision": "sha256:473B974DF5F6A6E26B8B3A7B64BDBE5258AD15D479E30DD7DF81D5158D662132",
+      "sourceRevision": "sha256:555AC9648D1C680F9330B511597687F587CCD270C50B4113D43188DBB3B396B6",
       "currentSource": true,
       "externalTia": false,
       "livePlc": false
@@ -960,14 +949,14 @@
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-parity-suite/codex-interaction-treeclick/tia-parity-interaction-20261019-181209-artifacts/tia-project-tree-gates.json",
+      "path": ".tools/tia-project-tree-enter-rerun/tia-parity-interaction-20261019-192857-artifacts/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "D165952A57DD26A082D1BFF88BE2C7AA98BA20E180B391155B7D80062E599CA8",
+      "sha256": "87753840A8EA6F774C848DE7593158953899855DF8941FB32AD5F16175D09BF6",
       "status": "passed",
       "gateCount": 13,
       "assertionCount": 88,
-      "sourceRevision": "sha256:473B974DF5F6A6E26B8B3A7B64BDBE5258AD15D479E30DD7DF81D5158D662132",
+      "sourceRevision": "sha256:555AC9648D1C680F9330B511597687F587CCD270C50B4113D43188DBB3B396B6",
       "currentSource": true,
       "externalTia": false,
       "livePlc": false

@@ -87,6 +87,8 @@ public partial class SimulatorShell : CanvasLayer
     private bool _pointsCollapsed;
     private bool _pointsCollapsedBeforeEditor;
     private bool _compactDockDefaultsApplied;
+    private int _tiaProjectDockSplitOffset = 280;
+    private int _studio5000ProjectDockSplitOffset = 280;
     private string _activeSceneName = "Loading project…";
     private ItemList _diagnosticList = null!;
     private Label _sceneTitle = null!;
@@ -4562,25 +4564,23 @@ public partial class SimulatorShell : CanvasLayer
             message = "PROJECT REJECTED · " + loaded.Issues[0].Message.ToUpperInvariant();
             return false;
         }
-        // Loading a scene installs its authored starter program. Do that
-        // first, then restore the user's saved program so it cannot be replaced
-        // by the demo template during a cross-scene open.
-        if (loaded.Document.SourceSceneId.Length > 0
-            && !string.Equals(_activeScene?.Id, loaded.Document.SourceSceneId, StringComparison.Ordinal))
+        var sourceSceneId = loaded.Document.SourceSceneId.Trim();
+        if (sourceSceneId.Length > 0)
         {
-            // Queue the whole open so the saved ladder is restored only after
-            // its target scene has actually been attached.
-            if (WorkspaceReplacementGuard?.Invoke(() =>
-                {
-                    TryOpenLadderProject(path, out var resumedMessage);
-                    _ladderWorkspaceStatus.Text = resumedMessage;
-                }) == false)
+            if (!_sceneCatalog.Scenes.Any(scene => scene.Id.Equals(sourceSceneId, StringComparison.Ordinal)))
             {
-                message = "PROJECT OPEN WAITING · RESOLVE UNSAVED WORKSPACE EDITS";
+                message = $"PROJECT OPEN REJECTED · UNKNOWN SOURCE SCENE '{sourceSceneId}'";
                 return false;
             }
-            SceneRequested?.Invoke(loaded.Document.SourceSceneId);
+            if (!string.Equals(_activeScene?.Id, sourceSceneId, StringComparison.Ordinal))
+            {
+                message = $"PROJECT OPEN BLOCKED · SOURCE SCENE MISMATCH · SELECT '{sourceSceneId}' THEN OPEN AGAIN";
+                return false;
+            }
         }
+        // Scene IDs are serialized metadata. Normalize the value that is
+        // restored so the editor cannot retain whitespace-padded identities.
+        loaded.Document.SourceSceneId = sourceSceneId;
         ChallengeDraftChanged?.Invoke();
         _ladderDocument.RestoreSnapshot(loaded.Document.CaptureSnapshot());
         _ladderProjectPath = System.IO.Path.GetFullPath(path);
@@ -4598,10 +4598,13 @@ public partial class SimulatorShell : CanvasLayer
             message = $"PROJECT OPENED · {System.IO.Path.GetFileName(path)} · VERIFY + LOAD REQUIRED · {issues.Count} issue(s) · {retained}";
             return true;
         }
-        VirtualControllerProgramRequested?.Invoke(program);
-        _ladderWorkspaceStatus.Text = "VALID · PROJECT OPENED · OFFLINE RUNTIME LOADED";
+        foreach (var refresh in _ladderValidationRefreshers) refresh(issues);
+        var validDraftControllerState = _virtualProgram is null
+            ? "NO CONTROLLER LOADED"
+            : "PREVIOUS CONTROLLER RETAINED";
+        _ladderWorkspaceStatus.Text = $"VALID DRAFT · PROJECT OPENED · NOT LOADED · VERIFY + LOAD REQUIRED · {validDraftControllerState}";
         _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
-        message = $"PROJECT OPENED · {System.IO.Path.GetFileName(path)} · VERIFIED + LOADED OFFLINE";
+        message = $"PROJECT OPENED · {System.IO.Path.GetFileName(path)} · VALID DRAFT · NOT LOADED · VERIFY + LOAD REQUIRED · {validDraftControllerState}";
         return true;
     }
 
@@ -4660,46 +4663,115 @@ public partial class SimulatorShell : CanvasLayer
 
     public bool VerifyCrossSceneProjectOpen(out string result)
     {
+        // Exercise the rejected-open boundary without changing scenes. A real
+        // scene hop would also replace workspace/runtime state owned by Main.
         var sceneId = _activeScene?.Id ?? string.Empty;
         var original = _ladderDocument.CaptureSnapshot();
         var savedJson = _ladderSavedProjectJson;
         var projectPath = _ladderProjectPath;
         var history = _ladderHistory;
+        var rungClipboard = _ladderRungClipboard;
+        var contactClipboard = _ladderContactClipboard;
+        var commandClipboard = _ladderCommandClipboard;
         var drafts = _sceneLadderDrafts.ToArray();
-        var path = System.IO.Path.Combine(OS.GetUserDataDir(),
-            $"cross-scene-review-{Guid.NewGuid():N}.rpproj.json");
+        var targetSceneId = "lab-11-13-xy-palletizing";
+        var path = System.IO.Path.Combine(OS.GetUserDataDir(), $"cross-scene-review-{Guid.NewGuid():N}.rpproj.json");
+        var unknownPath = System.IO.Path.Combine(OS.GetUserDataDir(), $"unknown-scene-review-{Guid.NewGuid():N}.rpproj.json");
         try
         {
-            const string marker = "Saved user network - cross-scene regression";
-            _ladderDocument.Rungs[0].Label = marker;
-            var saved = TrySaveLadderProject(path, out var saveResult);
-            SceneRequested?.Invoke("lab-11-13-xy-palletizing");
-            var changedScene = _activeScene?.Id != sceneId;
-            var opened = TryOpenLadderProject(path, out var openResult);
-            var preserved = changedScene && saved && opened
+            var originalDocumentJson = LadderEditorProjectJson.Save(_ladderDocument);
+            var loadedProgram = _virtualProgram;
+            var loadedScan = _virtualSnapshot?.ScanNumber;
+            var loadedState = _virtualSnapshot?.State;
+            var mismatchProject = LadderEditorProjectJson.Load(originalDocumentJson);
+            var unknownProject = LadderEditorProjectJson.Load(originalDocumentJson);
+            if (!mismatchProject.IsReadable || mismatchProject.Document is null
+                || !unknownProject.IsReadable || unknownProject.Document is null)
+                throw new InvalidOperationException("Cross-scene Open regression needs readable source fixtures.");
+            mismatchProject.Document.SourceSceneId = targetSceneId;
+            unknownProject.Document.SourceSceneId = "missing-scene-review-id";
+            System.IO.File.WriteAllText(path, LadderEditorProjectJson.Save(mismatchProject.Document));
+            System.IO.File.WriteAllText(unknownPath, LadderEditorProjectJson.Save(unknownProject.Document));
+
+            var targetBaseline = LadderEditorProjectJson.Load(originalDocumentJson).Document!;
+            var targetDraft = LadderEditorProjectJson.Load(originalDocumentJson).Document!;
+            targetDraft.SourceSceneId = targetSceneId;
+            const string dirtyTargetMarker = "Dirty cached target scene draft";
+            if (targetDraft.Rungs.Count > 0)
+                targetDraft.Rungs[0].Label = dirtyTargetMarker;
+            else
+                targetDraft.AddRung(dirtyTargetMarker, string.Empty);
+            _sceneLadderDrafts[targetSceneId] = new(
+                targetDraft.CaptureSnapshot(), LadderEditorProjectJson.Save(targetBaseline),
+                "cached-review.rpproj.json", new LadderEditorHistory(150));
+            var targetDraftJson = DraftJson(_sceneLadderDrafts[targetSceneId]);
+
+            var mismatchOpened = TryOpenLadderProject(path, out var mismatchMessage);
+            var mismatchRejectedWithoutMutation = !mismatchOpened
+                && mismatchMessage.Contains("SOURCE SCENE MISMATCH", StringComparison.Ordinal)
                 && _activeScene?.Id == sceneId
-                && _ladderDocument.Rungs[0].Label == marker
-                && _virtualProgram?.Networks[0].Label == marker;
-            result = $"preserved={preserved} changedScene={changedScene} {saveResult} {openResult}";
-            return preserved;
+                && LadderEditorProjectJson.Save(_ladderDocument) == originalDocumentJson
+                && _ladderProjectPath == projectPath
+                && ReferenceEquals(_ladderHistory, history)
+                && ReferenceEquals(_virtualProgram, loadedProgram)
+                && _virtualSnapshot?.ScanNumber == loadedScan
+                && _virtualSnapshot?.State == loadedState
+                && ReferenceEquals(_ladderRungClipboard, rungClipboard)
+                && ReferenceEquals(_ladderContactClipboard, contactClipboard)
+                && ReferenceEquals(_ladderCommandClipboard, commandClipboard);
+
+            var unknownOpened = TryOpenLadderProject(unknownPath, out var unknownMessage);
+            var unknownSceneRejectedWithoutMutation = !unknownOpened
+                && unknownMessage.Contains("UNKNOWN SOURCE SCENE", StringComparison.Ordinal)
+                && _activeScene?.Id == sceneId
+                && LadderEditorProjectJson.Save(_ladderDocument) == originalDocumentJson
+                && _ladderProjectPath == projectPath
+                && ReferenceEquals(_ladderHistory, history)
+                && ReferenceEquals(_virtualProgram, loadedProgram)
+                && _virtualSnapshot?.ScanNumber == loadedScan
+                && _virtualSnapshot?.State == loadedState
+                && ReferenceEquals(_ladderRungClipboard, rungClipboard)
+                && ReferenceEquals(_ladderContactClipboard, contactClipboard)
+                && ReferenceEquals(_ladderCommandClipboard, commandClipboard);
+            var cachedDraftStayedSafeOnRejectedOpen = _sceneLadderDrafts.TryGetValue(targetSceneId, out var stillCachedTarget)
+                && DraftJson(stillCachedTarget) == targetDraftJson
+                && DraftHasUnsavedChanges(stillCachedTarget);
+
+            var passed = mismatchRejectedWithoutMutation
+                && unknownSceneRejectedWithoutMutation
+                && cachedDraftStayedSafeOnRejectedOpen;
+            result = $"mismatchRejected={mismatchRejectedWithoutMutation} unknownRejected={unknownSceneRejectedWithoutMutation} cachedTargetPreserved={cachedDraftStayedSafeOnRejectedOpen} sceneTransitions=0";
+            return passed;
         }
         finally
         {
-            VirtualControllerDisabled?.Invoke();
-            if (_activeScene?.Id != sceneId) SceneRequested?.Invoke(sceneId);
             _ladderDocument.RestoreSnapshot(original);
             _ladderSavedProjectJson = savedJson;
             _ladderProjectPath = projectPath;
             _ladderHistory = history;
+            _ladderRungClipboard = rungClipboard;
+            _ladderContactClipboard = contactClipboard;
+            _ladderCommandClipboard = commandClipboard;
             _sceneLadderDrafts.Clear();
             foreach (var entry in drafts) _sceneLadderDrafts.Add(entry.Key, entry.Value);
             foreach (var refresh in _ladderEditorRefreshers) refresh();
-            System.IO.File.Delete(path);
+            if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+            if (System.IO.File.Exists(unknownPath)) System.IO.File.Delete(unknownPath);
         }
     }
 
     private Control BuildLadderEnvironment(string tabName, bool siemens)
     {
+        int GetProjectDockSplitOffset() => siemens
+            ? _tiaProjectDockSplitOffset
+            : _studio5000ProjectDockSplitOffset;
+
+        void SetProjectDockSplitOffset(int value)
+        {
+            if (siemens) _tiaProjectDockSplitOffset = value;
+            else _studio5000ProjectDockSplitOffset = value;
+        }
+
         var document = _ladderDocument;
         _ = document.Rungs;
         var root = new VBoxContainer { Name = tabName };
@@ -4824,7 +4896,6 @@ public partial class SimulatorShell : CanvasLayer
         work.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
         work.SplitOffsets = [280];
         ConfigureDockSplit(work);
-        var projectDockSplitOffset = 280;
         root.AddChild(work);
 
         var projectDockHost = new HBoxContainer { Name = "ProjectDockHost" };
@@ -4869,7 +4940,6 @@ public partial class SimulatorShell : CanvasLayer
         // Tag/object pages contain dark engineering labels. Use the same
         // light surface as the project tree instead of the default gray tab.
         projectTabs.AddThemeStyleboxOverride("panel", BoxStyle(new Color("eef0f2"), new Color("9aa7ad")));
-        projectBody.AddChild(projectTabs);
         var projectTitle = new HBoxContainer { Name = "ProjectTitle" };
         var projectHeading = Heading(siemens ? "Project tree" : "Controller Organizer", 13, new Color("263943"));
         projectHeading.Name = "ProjectTreeHeading";
@@ -4902,7 +4972,11 @@ public partial class SimulatorShell : CanvasLayer
         var collapseProjectDock = ToolbarButton("CollapseProjectDock", "◀", new Color("637985"), 30);
         collapseProjectDock.TooltipText = siemens ? "Hide project tree" : "Hide Controller Organizer";
         projectTitle.AddChild(collapseProjectDock);
+        // Keep the project header and its TREE shortcut ahead of the expanding
+        // tab content. At constrained heights, a fill-first TabContainer can
+        // consume the VBox space and push this header outside the viewport.
         projectBody.AddChild(projectTitle);
+        projectBody.AddChild(projectTabs);
         var organization = new LadderProgramTree
         {
             Name = "ProjectTree",
@@ -5087,7 +5161,9 @@ public partial class SimulatorShell : CanvasLayer
 
         collapseProjectDock.Pressed += () =>
         {
-            projectDockSplitOffset = work.SplitOffsets.Length > 0 ? work.SplitOffsets[0] : projectDockSplitOffset;
+            SetProjectDockSplitOffset(work.SplitOffsets.Length > 0
+                ? work.SplitOffsets[0]
+                : GetProjectDockSplitOffset());
             projectPanel.Visible = false;
             reopenProjectDock.Visible = true;
             work.SplitOffsets = [(int)reopenProjectDock.CustomMinimumSize.X];
@@ -5096,7 +5172,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             reopenProjectDock.Visible = false;
             projectPanel.Visible = true;
-            work.SplitOffsets = [projectDockSplitOffset];
+            work.SplitOffsets = [GetProjectDockSplitOffset()];
         };
 
         var center = new VBoxContainer { Name = "ProgramEditor", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
@@ -7974,27 +8050,47 @@ public partial class SimulatorShell : CanvasLayer
             // the divider since the cache was last updated.
             var currentDockWidth = work.SplitOffsets.Length > 0
                 ? work.SplitOffsets[0]
-                : projectDockSplitOffset;
+                : GetProjectDockSplitOffset();
             var dockWasVisible = projectPanel.Visible;
             if (showMemberEditor)
             {
                 globalDbEditorPreviousDockWidth = dockWasVisible
                     ? currentDockWidth
-                    : projectDockSplitOffset;
+                    : GetProjectDockSplitOffset();
             }
 
             ShowProjectDock();
             projectTabs.CurrentTab = showMemberEditor ? 2 : 0;
             if (showMemberEditor)
             {
-                projectDockSplitOffset = Math.Min(600, Math.Max(560, (int)root.Size.X / 3));
+                var preferredDockWidth = Math.Min(600, Math.Max(560, (int)root.Size.X / 3));
+                // The splitter's combined minimum can be stale while the
+                // Global DB document and object tab are changing visibility.
+                // Request the preferred width, then read the constrained
+                // project panel geometry after Godot lays out the splitter.
+                SetProjectDockSplitOffset(preferredDockWidth);
             }
             else if (globalDbEditorPreviousDockWidth > 0)
             {
-                projectDockSplitOffset = globalDbEditorPreviousDockWidth;
+                SetProjectDockSplitOffset(globalDbEditorPreviousDockWidth);
                 globalDbEditorPreviousDockWidth = 0;
             }
-            work.SplitOffsets = [projectDockSplitOffset];
+            work.SplitOffsets = [GetProjectDockSplitOffset()];
+            if (showMemberEditor)
+            {
+                var requestedDockWidth = GetProjectDockSplitOffset();
+                Callable.From(() => Callable.From(() =>
+                {
+                    if (!GodotObject.IsInstanceValid(work)
+                        || !GodotObject.IsInstanceValid(projectPanel)
+                        || !projectPanel.IsVisibleInTree())
+                        return;
+
+                    var layoutClampedWidth = (int)Math.Round(projectPanel.Size.X);
+                    SetProjectDockSplitOffset(Math.Min(requestedDockWidth, layoutClampedWidth));
+                    work.SplitOffsets = [GetProjectDockSplitOffset()];
+                }).CallDeferred()).CallDeferred();
+            }
             projectHeading.Text = showMemberEditor ? "Project objects" : "Project tree";
             editGlobalDbMembers.Text = showMemberEditor ? "PROJECT TREE" : "EDIT MEMBERS";
             output.Text = showMemberEditor
@@ -8374,10 +8470,17 @@ public partial class SimulatorShell : CanvasLayer
             : "Simulator-native Logix-style workbench. No ACD file or Rockwell connection is created.";
         tagPage.AddChild(boundary);
 
+        var projectObjectsTab = new VBoxContainer
+        {
+            Name = "Project objects",
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+        };
         var projectPage = new VBoxContainer
         {
             Name = "ObjectContent",
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
         };
         projectPage.AddThemeConstantOverride("separation", 6);
         projectPage.AddChild(Heading(siemens ? "PROGRAM BLOCK" : "ROUTINE", 11, new Color("344851")));
@@ -8426,7 +8529,6 @@ public partial class SimulatorShell : CanvasLayer
         interfaceCommands.AddChild(newInterface);
         interfaceCommands.AddChild(cancelInterface);
         interfaceCommands.AddChild(removeInterface);
-        projectPage.AddChild(interfaceCommands);
         projectPage.AddChild(interfaceTable);
         projectPage.AddChild(Heading(siemens ? "OB SCHEDULE" : "TASK SCHEDULE", 11, new Color("344851")));
         projectPage.AddChild(taskName);
@@ -8448,12 +8550,19 @@ public partial class SimulatorShell : CanvasLayer
         projectPage.AddChild(taskCommands);
         var objectsScroll = new ScrollContainer
         {
-            Name = siemens ? "Project objects" : "Controller objects",
+            Name = "ProjectObjectScroll",
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
             HorizontalScrollMode = ScrollContainer.ScrollMode.Auto,
             VerticalScrollMode = ScrollContainer.ScrollMode.Auto,
         };
         objectsScroll.AddChild(projectPage);
-        projectTabs.AddChild(objectsScroll);
+        // Keep the core member actions in the fixed-width tab viewport. The
+        // declaration fields below remain horizontally scrollable, but their
+        // preferred minimum width must not push Add/New/Cancel/Remove off dock.
+        projectObjectsTab.AddChild(interfaceCommands);
+        projectObjectsTab.AddChild(objectsScroll);
+        projectTabs.AddChild(projectObjectsTab);
 
         // Keep the established project-tree, tag-dock, and project-object tab
         // indices stable. Several DB/property routes intentionally target tab 2.
@@ -8861,7 +8970,7 @@ public partial class SimulatorShell : CanvasLayer
                     // instruction/search/help pages in the right tool dock.
                     reopenProjectDock.Visible = false;
                     projectPanel.Visible = true;
-                    work.SplitOffsets = [projectDockSplitOffset];
+                    work.SplitOffsets = [GetProjectDockSplitOffset()];
                     projectTabs.CurrentTab = railIndex;
                 }
                 else toolTabs.CurrentTab = railIndex == 0 ? 0 : railIndex == 3 ? 1 : 2;
@@ -11284,6 +11393,13 @@ public partial class SimulatorShell : CanvasLayer
                 return;
             }
             var totalNetworks = program.Blocks?.Sum(block => block.Networks.Count) ?? program.Networks.Count;
+            if (_externalMode)
+            {
+                output.Text = "[color=#d17a00]Verification complete; local controller NOT LOADED.[/color] Select Built-in Simulator to load this project into the offline runtime.";
+                _ladderWorkspaceStatus.Text = "VALID DRAFT · EXTERNAL PLC MODE · LOCAL CONTROLLER NOT LOADED";
+                _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("f1aa5b"));
+                return;
+            }
             output.Text = $"[color=#18864b]Verification complete.[/color] {program.Blocks?.Count ?? 1} blocks · {program.Tasks?.Count ?? 1} tasks · {totalNetworks} networks/rungs · {program.Variables.Count} tags · loaded into offline runtime.";
             _ladderWorkspaceStatus.Text = $"VALID · {tabName.ToUpperInvariant()} WORKFLOW · OFFLINE RUNTIME";
             _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
@@ -13005,14 +13121,15 @@ public partial class SimulatorShell : CanvasLayer
         var inspectorRoot = $"{root}/EditorAndTasks/EditorAndInspector/BottomDockHost/InspectorOutputDock/InspectorOutputBody";
         var toolRoot = $"{root}/EditorAndTasks/ToolDockHost/InstructionAndTags/ToolBody";
         var projectTabsRoot = $"{root}/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags";
-        var projectObjectsRoot = $"{projectTabsRoot}/Project objects/ObjectContent";
+        var projectObjectsRoot = $"{projectTabsRoot}/Project objects/ProjectObjectScroll/ObjectContent";
         var blockCommandsRoot = $"{projectObjectsRoot}/BlockCommands";
         var taskCommandsRoot = $"{projectObjectsRoot}/TaskCommands";
         var blockName = GetNodeOrNull<LineEdit>($"{projectObjectsRoot}/BlockName");
         var blockTypeSelector = GetNodeOrNull<OptionButton>($"{projectObjectsRoot}/BlockTypeSelector");
         var interfaceTable = GetNodeOrNull<Tree>($"{projectObjectsRoot}/BlockInterface");
-        var addInterface = GetNodeOrNull<Button>($"{projectObjectsRoot}/InterfaceCommands/AddInterface");
-        var removeInterface = GetNodeOrNull<Button>($"{projectObjectsRoot}/InterfaceCommands/RemoveInterface");
+        var interfaceCommandsRoot = $"{projectTabsRoot}/Project objects/InterfaceCommands";
+        var addInterface = GetNodeOrNull<Button>($"{interfaceCommandsRoot}/AddInterface");
+        var removeInterface = GetNodeOrNull<Button>($"{interfaceCommandsRoot}/RemoveInterface");
         var addBlock = GetNodeOrNull<Button>($"{blockCommandsRoot}/AddBlock");
         var applyBlock = GetNodeOrNull<Button>($"{blockCommandsRoot}/ApplyBlock");
         var removeBlock = GetNodeOrNull<Button>($"{blockCommandsRoot}/RemoveBlock");
@@ -13145,18 +13262,69 @@ public partial class SimulatorShell : CanvasLayer
         var originalSavedProjectJson = _ladderSavedProjectJson;
         var originalProjectPath = _ladderProjectPath;
         var projectRoundTripPath = ProjectSettings.GlobalizePath("res://build/verify-ladder-project.rpproj.json");
+        var validProjectRoundTripPath = ProjectSettings.GlobalizePath("res://build/verify-valid-ladder-project.rpproj.json");
         var priorRuntimeProgram = _virtualProgram;
         var priorRuntimeSnapshot = _virtualSnapshot;
         try
         {
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(projectRoundTripPath)!);
             if (System.IO.File.Exists(projectRoundTripPath)) System.IO.File.Delete(projectRoundTripPath);
+            if (System.IO.File.Exists(validProjectRoundTripPath)) System.IO.File.Delete(validProjectRoundTripPath);
             var priorCompilation = LadderCompiler.Compile(originalProgram);
             if (!priorCompilation.IsValid || priorCompilation.Program is null)
                 throw new InvalidOperationException("Persistence regression needs a valid loaded program.");
             var persistenceRuntime = new VirtualControllerRuntime(priorCompilation.Program);
             persistenceRuntime.Run();
             AttachVirtualController(originalProgram, persistenceRuntime.Scan(new Dictionary<string, bool>()));
+
+            var validOpenMarker = originalEditorSnapshot.Blocks[originalEditorSnapshot.ActiveBlockIndex].Rungs[0].Label + " valid Open regression";
+            _ladderDocument.Rungs[0].Label = validOpenMarker;
+            foreach (var refresh in _ladderEditorRefreshers) refresh();
+            var validSaved = TrySaveLadderProject(validProjectRoundTripPath, out var validSaveMessage);
+            _ladderDocument.Rungs[0].Label = originalEditorSnapshot.Blocks[originalEditorSnapshot.ActiveBlockIndex].Rungs[0].Label;
+            var validRuntimeProgramBeforeOpen = _virtualProgram;
+            var validRuntimeScanBeforeOpen = _virtualSnapshot?.ScanNumber;
+            var validOpened = TryOpenLadderProject(validProjectRoundTripPath, out var validOpenMessage);
+            var validOpenRetainedRuntime = validSaved && validOpened
+                && _ladderDocument.Rungs[0].Label == validOpenMarker
+                && _ladderDocument.SourceSceneId == _activeScene?.Id
+                && validOpenMessage.Contains("VALID DRAFT · NOT LOADED · VERIFY + LOAD REQUIRED", StringComparison.Ordinal)
+                && ReferenceEquals(validRuntimeProgramBeforeOpen, _virtualProgram)
+                && validRuntimeScanBeforeOpen == _virtualSnapshot?.ScanNumber
+                && _virtualSnapshot?.State == VirtualControllerState.Running
+                && _virtualControllerStatus.Text.Contains("RUNNING", StringComparison.Ordinal)
+                && _cycleStatus.Text.Contains("SCAN", StringComparison.Ordinal);
+            var paddedSceneProject = LadderEditorProjectJson.Load(System.IO.File.ReadAllText(validProjectRoundTripPath));
+            if (!paddedSceneProject.IsReadable || paddedSceneProject.Document is null)
+                throw new InvalidOperationException("Scene ID normalization regression needs a readable project.");
+            paddedSceneProject.Document.SourceSceneId = $" {_activeScene?.Id} ";
+            System.IO.File.WriteAllText(validProjectRoundTripPath, LadderEditorProjectJson.Save(paddedSceneProject.Document));
+            var paddedSceneOpened = TryOpenLadderProject(validProjectRoundTripPath, out _);
+            var paddedSceneIdNormalized = paddedSceneOpened
+                && _ladderDocument.SourceSceneId == _activeScene?.Id
+                && ReferenceEquals(validRuntimeProgramBeforeOpen, _virtualProgram)
+                && validRuntimeScanBeforeOpen == _virtualSnapshot?.ScanNumber
+                && _virtualSnapshot?.State == VirtualControllerState.Running;
+            var priorExternalMode = _externalMode;
+            _externalMode = true;
+            verifyAndLoad.EmitSignal(BaseButton.SignalName.Pressed);
+            var externalModeBlocksLocalLoadClearly = ReferenceEquals(validRuntimeProgramBeforeOpen, _virtualProgram)
+                && validRuntimeScanBeforeOpen == _virtualSnapshot?.ScanNumber
+                && output.Text.Contains("NOT LOADED", StringComparison.Ordinal)
+                && !output.Text.Contains("loaded into offline runtime", StringComparison.OrdinalIgnoreCase)
+                && _ladderWorkspaceStatus.Text.Contains("EXTERNAL PLC MODE", StringComparison.Ordinal);
+            _externalMode = priorExternalMode;
+            verifyAndLoad.EmitSignal(BaseButton.SignalName.Pressed);
+            var verifyLoadReplacedRuntime = validOpenRetainedRuntime
+                && !ReferenceEquals(validRuntimeProgramBeforeOpen, _virtualProgram)
+                && _virtualProgram?.Networks[0].Label == validOpenMarker
+                && _virtualSnapshot?.State == VirtualControllerState.Stopped;
+
+            // Reattach a running offline controller to prove an invalid draft
+            // opened afterward also leaves the prior program and scan intact.
+            var invalidDraftRuntime = new VirtualControllerRuntime(priorCompilation.Program);
+            invalidDraftRuntime.Run();
+            AttachVirtualController(originalProgram, invalidDraftRuntime.Scan(new Dictionary<string, bool>()));
             var runtimeProgramBeforeOpen = _virtualProgram;
             var runtimeScanBeforeOpen = _virtualSnapshot?.ScanNumber;
             var draftContact = _ladderDocument.Rungs[0].Branches[0].Contacts[0];
@@ -13186,7 +13354,10 @@ public partial class SimulatorShell : CanvasLayer
                 && _virtualControllerStatus.Text.Contains("RUNNING", StringComparison.Ordinal)
                 && _cycleStatus.Text.Contains("SCAN", StringComparison.Ordinal)
                 && !editorCanvas.MonitorActive && !logixCanvas.MonitorActive
-                && validationIssues.ItemCount > 0;
+                && validationIssues.ItemCount > 0
+                && validOpenRetainedRuntime && paddedSceneIdNormalized && verifyLoadReplacedRuntime
+                && externalModeBlocksLocalLoadClearly
+                && validSaveMessage.Contains("WORK IN PROGRESS PRESERVED", StringComparison.Ordinal);
         }
         finally
         {
@@ -13200,6 +13371,7 @@ public partial class SimulatorShell : CanvasLayer
             foreach (var refresh in _ladderEditorRefreshers) refresh();
             RefreshLadderMonitorMatch();
             if (System.IO.File.Exists(projectRoundTripPath)) System.IO.File.Delete(projectRoundTripPath);
+            if (System.IO.File.Exists(validProjectRoundTripPath)) System.IO.File.Delete(validProjectRoundTripPath);
         }
         _ladderDocument.Rungs[0].Label += " unsaved guard review";
         var guardedJson = LadderEditorProjectJson.Save(_ladderDocument);

@@ -152,7 +152,7 @@ public partial class SimulatorShell
                 ("ordinary-remove-preserves-survivors", "ordinary Remove without a pending form deletes exactly the selected declaration, preserves all other declarations and DBs, and supports exact Undo/Redo"),
                 ("cancel-member-form", "Cancel discards an unapplied member draft without changing the declaration or Undo history"),
                 ("form-context-labels", "initial DB entry and DB-to-FB-to-DB navigation refresh member labels and defaults"),
-                ("member-editor-route", "the DB screen exposes the member form and returns to the tree while restoring the prior dock width"),
+                ("member-editor-route", "member actions fit in constrained and wide project docks and returning to the tree restores the prior dock width"),
                 ("declaration-grid-actions", "the Global DB declaration grid exposes Add, Edit, and Remove actions that target the selected declaration"),
                 ("member-selection-stable-id", "a selected declaration remains selected by persistent member ID after same-DB row insertion and edits the same member"),
                 ("edit-selection-block-scoped", "declaration selection is cleared when activation changes the owning block"),
@@ -204,6 +204,21 @@ public partial class SimulatorShell
         var originalHistory = _ladderHistory;
         var originalSaved = _ladderSavedProjectJson;
         var originalPath = _ladderProjectPath;
+        var originalWindowSize = GetWindow().Size;
+        const string projectWorkbenchPath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench";
+        var originalProjectSplit = GetNodeOrNull<HSplitContainer>(projectWorkbenchPath);
+        var originalProjectSplitOffsets = originalProjectSplit?.SplitOffsets ?? Array.Empty<int>();
+        var originalProjectTabs = GetNodeOrNull<TabContainer>(
+            projectWorkbenchPath + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags");
+        var originalProjectTab = originalProjectTabs?.CurrentTab ?? -1;
+        var originalProjectDockHost = GetNodeOrNull<Control>(projectWorkbenchPath + "/ProjectDockHost");
+        var originalProjectDockVisible = originalProjectDockHost?.Visible;
+        var originalProjectDockPanel = GetNodeOrNull<Control>(projectWorkbenchPath + "/ProjectDockHost/ProjectOrganization");
+        var originalProjectDockPanelVisible = originalProjectDockPanel?.Visible;
+        var originalProjectDockReopen = GetNodeOrNull<Control>(projectWorkbenchPath + "/ProjectDockHost/ReopenProjectDock");
+        var originalProjectDockReopenVisible = originalProjectDockReopen?.Visible;
+        var originalTiaProjectDockWidthCache = _tiaProjectDockSplitOffset;
+        var originalStudio5000ProjectDockWidthCache = _studio5000ProjectDockSplitOffset;
         var sweepStarted = DateTimeOffset.UtcNow.ToString("O");
         var sourceRevision = ComputeSourceRevision();
         var assemblyPath = typeof(SimulatorShell).Assembly.Location;
@@ -1169,13 +1184,26 @@ public partial class SimulatorShell
                 && declaration?.GetText(4) == "Retained speed" && inlineCommentCleanup
                 && !globalDb.Interface.Any(parameter => parameter.Id == "gate-inline-duplicate-guard");
             inlineGridFieldsEditable = inlineGridFieldsEditable && inlineCommentTransaction && inlineCommentRestored;
-            var memberEditorButton = Find<Button>("EditGlobalDbMembers");
+            var memberEditorButton = GetNodeOrNull<Button>(
+                projectWorkbenchPath + "/EditorAndTasks/EditorAndInspector/ProgramEditor/GlobalDbDocument/GlobalDbHeader/EditGlobalDbMembers")
+                ?? throw new InvalidOperationException("TIA Global DB member editor route is unavailable.");
             var addMemberAction = Find<Button>("GlobalDbAddMember");
             var editMemberAction = Find<Button>("GlobalDbEditMember");
             var removeMemberAction = Find<Button>("GlobalDbRemoveMember");
-            var projectTabs = Find<TabContainer>("ProjectTreeAndTags");
-            var projectDock = Find<Control>("ProjectOrganization");
-            var projectSplit = Find<SplitContainer>("Workbench");
+            var projectTabs = originalProjectTabs
+                ?? throw new InvalidOperationException("TIA project tabs are unavailable.");
+            // Resolve these layout controls from the TIA tab's full path. The
+            // workbench also exists in the Studio 5000 tab, so a name-only
+            // recursive lookup can measure a different splitter than the
+            // route under test.
+            var projectDock = GetNodeOrNull<Control>(
+                projectWorkbenchPath + "/ProjectDockHost/ProjectOrganization")
+                ?? throw new InvalidOperationException("TIA project dock is unavailable.");
+            var projectSplit = originalProjectSplit
+                ?? throw new InvalidOperationException("TIA workbench splitter is unavailable.");
+            var memberProjectTreeShortcut = GetNodeOrNull<Button>(
+                projectWorkbenchPath + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/ProjectTreeShortcutSlot/ShowProjectTree")
+                ?? throw new InvalidOperationException("TIA Project Tree shortcut is unavailable.");
             var directAddBefore = LadderEditorProjectJson.Save(_ladderDocument);
             addMemberAction.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
@@ -1212,12 +1240,17 @@ public partial class SimulatorShell
             memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var priorDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : 280;
+            // Exercise a viewport where the 560 px editor preference must be
+            // clamped to the actual room left by the main editor pane.
+            GetWindow().Size = new Vector2I(1000, 900);
+            await Frames(4);
             // 240 is a valid manually selected width above the 150 px dock
-            // minimum and is below the route's 280 px editing minimum. This
-            // proves both the widen and exact restore behavior even headless.
+            // minimum and is below the route's 280 px editing minimum.
             projectSplit.SplitOffsets = [240];
             await Frames();
             var baselineMemberDockWidth = projectDock.GetGlobalRect().Size.X;
+            var studio5000CacheSentinel = Math.Max(731, originalStudio5000ProjectDockWidthCache + 1);
+            _studio5000ProjectDockSplitOffset = studio5000CacheSentinel;
             var memberEditorRouteVisible = memberEditorButton.IsVisibleInTree();
             memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
@@ -1230,31 +1263,94 @@ public partial class SimulatorShell
                 Find<Button>("AddInterface"), Find<Button>("NewInterface"),
                 Find<Button>("CancelInterface"), Find<Button>("RemoveInterface"),
             };
-            var interfaceCommands = Find<HFlowContainer>("InterfaceCommands");
-            var memberActionsFitDock = memberActionButtons.All(button =>
+            bool MemberActionsFitDock(Rect2 dockRect, out string bounds)
             {
-                var rect = button.GetGlobalRect();
-                return button.IsVisibleInTree()
-                    && rect.Position.X >= projectDockRect.Position.X
-                    && rect.End.X <= projectDockRect.End.X;
-            });
-            var memberActionsWrap = interfaceCommands.Size.Y
-                > memberActionButtons.Max(button => button.Size.Y) + 1;
-            var wideDockReached = actualMemberDockWidth >= 560 && requestedMemberDockWidth >= 560;
-            var narrowDockUsable = actualMemberDockWidth >= 150 && memberActionsWrap && memberActionsFitDock;
+                var viewportRect = GetViewport().GetVisibleRect();
+                var controls = memberActionButtons.Append(memberProjectTreeShortcut).ToArray();
+                var details = controls.Select(button =>
+                {
+                    var rect = button.GetGlobalRect();
+                    return $"{button.Name}={button.IsVisibleInTree()}:{rect.Position.X:0},{rect.Position.Y:0}-{rect.End.X:0},{rect.End.Y:0}";
+                }).ToArray();
+                bounds = string.Join(";", details);
+                return controls.All(button =>
+                {
+                    var rect = button.GetGlobalRect();
+                    return button.IsVisibleInTree()
+                        && rect.Position.X >= dockRect.Position.X
+                        && rect.End.X <= dockRect.End.X
+                        && rect.Position.Y >= dockRect.Position.Y
+                        && rect.End.Y <= dockRect.End.Y
+                        && rect.Position.X >= viewportRect.Position.X
+                        && rect.End.X <= viewportRect.End.X
+                        && rect.Position.Y >= viewportRect.Position.Y
+                        && rect.End.Y <= viewportRect.End.Y;
+                });
+            }
+            var narrowActionsFitDock = MemberActionsFitDock(projectDockRect, out var narrowActionBounds);
+            var projectSplitRightPane = projectSplit.GetChild(1) as Control
+                ?? throw new InvalidOperationException("Project splitter is missing its editor pane.");
+            var narrowAvailableDockWidth = Math.Max((int)projectDock.CustomMinimumSize.X,
+                (int)(projectSplit.Size.X - projectSplitRightPane.GetCombinedMinimumSize().X
+                    - projectSplit.GetThemeConstant("separation")));
+            var narrowExpectedDockWidth = Math.Min(expectedMemberDockWidth, narrowAvailableDockWidth);
+            var narrowRequestedMatchesClamp = _tiaProjectDockSplitOffset == narrowExpectedDockWidth;
+            var otherWorkbenchCachePreserved = _studio5000ProjectDockSplitOffset == studio5000CacheSentinel;
+            var narrowActualMatchesClamp = requestedMemberDockWidth == narrowExpectedDockWidth
+                && Math.Abs(actualMemberDockWidth - narrowExpectedDockWidth) <= 1;
+            var narrowDockWithinAvailable = narrowRequestedMatchesClamp && narrowActualMatchesClamp;
+            var narrowDockUsable = actualMemberDockWidth >= 150 && narrowActionsFitDock;
             var memberEditorTreeVisible = Find<Tree>("BlockInterface").IsVisibleInTree();
             var memberEditorTab = projectTabs.CurrentTab;
             var memberEditorButtonText = memberEditorButton.Text;
             var memberEditorOpened = projectTabs.CurrentTab == 2 && memberEditorButton.Text == "PROJECT TREE"
                 && projectDock.Visible && memberEditorTreeVisible
-                && (wideDockReached || narrowDockUsable) && memberActionsFitDock;
+                && narrowDockUsable && narrowDockWithinAvailable
+                && narrowAvailableDockWidth < expectedMemberDockWidth
+                && otherWorkbenchCachePreserved;
             memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var restoredDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
             var restoredActualDockWidth = projectDock.GetGlobalRect().Size.X;
-            var projectTreeRestored = projectTabs.CurrentTab == 0 && memberEditorButton.Text == "EDIT MEMBERS"
+            var narrowTreeRestored = projectTabs.CurrentTab == 0 && memberEditorButton.Text == "EDIT MEMBERS"
                 && projectDock.Visible && restoredDockWidth == 240
                 && Math.Abs(restoredActualDockWidth - baselineMemberDockWidth) <= 1;
+
+            // Prove the same action strip at a width where the splitter can
+            // honor its preferred wide editing size. Restore the user's window
+            // size in the outer finally block even if a later assertion fails.
+            GetWindow().Size = new Vector2I(2200, 1200);
+            await Frames(4);
+            projectSplit.SplitOffsets = [240];
+            await Frames();
+            var wideBaselineMemberDockWidth = projectDock.GetGlobalRect().Size.X;
+            memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var wideTargetDockWidth = Math.Min(600, Math.Max(560, (int)projectSplit.Size.X / 3));
+            var wideAvailableDockWidth = Math.Max((int)projectDock.CustomMinimumSize.X,
+                (int)(projectSplit.Size.X - projectSplitRightPane.GetCombinedMinimumSize().X
+                    - projectSplit.GetThemeConstant("separation")));
+            var wideExpectedDockWidth = Math.Min(wideTargetDockWidth, wideAvailableDockWidth);
+            var wideRequestedDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
+            var wideActualDockWidth = projectDock.GetGlobalRect().Size.X;
+            var wideProjectDockRect = projectDock.GetGlobalRect();
+            var wideActionsFitDock = MemberActionsFitDock(wideProjectDockRect, out var wideActionBounds);
+            var wideMemberEditorOpened = projectTabs.CurrentTab == 2 && memberEditorButton.Text == "PROJECT TREE"
+                && projectDock.Visible && memberEditorTreeVisible && wideActionsFitDock
+                && wideActualDockWidth >= 560 && wideRequestedDockWidth >= 560
+                && Math.Abs(wideRequestedDockWidth - wideExpectedDockWidth) <= 1
+                && _tiaProjectDockSplitOffset == wideExpectedDockWidth
+                && Math.Abs(wideActualDockWidth - wideExpectedDockWidth) <= 1;
+            memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var wideRestoredDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
+            var wideRestoredActualDockWidth = projectDock.GetGlobalRect().Size.X;
+            var wideTreeRestored = projectTabs.CurrentTab == 0 && memberEditorButton.Text == "EDIT MEMBERS"
+                && projectDock.Visible && wideRestoredDockWidth == 240
+                && Math.Abs(wideRestoredActualDockWidth - wideBaselineMemberDockWidth) <= 1;
+            var projectTreeRestored = narrowTreeRestored && wideTreeRestored;
+            GetWindow().Size = originalWindowSize;
+            await Frames(4);
             // Keep the gate isolated from the shell state expected by later
             // assertions and restore the splitter value that preceded setup.
             projectSplit.SplitOffsets = [priorDockWidth];
@@ -1632,8 +1728,9 @@ public partial class SimulatorShell
             globalGate.Set("form-context-labels", formContextLabels,
                 $"initialDb={globalMemberLabelsOnEntry} fb={fbMemberLabels} returnedDb={globalMemberLabelsAfterReturn}");
             globalGate.Set("member-editor-route", memberEditorRouteVisible && memberEditorOpened && projectTreeRestored,
-                $"visible={memberEditorRouteVisible} opened={memberEditorOpened} requested={requestedMemberDockWidth}/{expectedMemberDockWidth} actual={actualMemberDockWidth} "
-                + $"wide={wideDockReached} wrapped={memberActionsWrap} actionsFit={memberActionsFitDock} from=240 restored={projectTreeRestored}:{restoredDockWidth}/240 actual={restoredActualDockWidth}/{baselineMemberDockWidth} "
+                $"visible={memberEditorRouteVisible} opened={memberEditorOpened} narrowRequested={requestedMemberDockWidth} target={expectedMemberDockWidth} available={narrowAvailableDockWidth} expectedActualMax={narrowExpectedDockWidth} withinAvailable={narrowDockWithinAvailable} narrowActual={actualMemberDockWidth} "
+                + $"narrowActionsFit={narrowActionsFitDock}[{narrowActionBounds}] otherWorkbenchCachePreserved={otherWorkbenchCachePreserved} restored={narrowTreeRestored}:{restoredDockWidth}/240 actual={restoredActualDockWidth}/{baselineMemberDockWidth} "
+                + $"wideRequested={wideRequestedDockWidth}/{wideExpectedDockWidth} wideActual={wideActualDockWidth} wideActionsFit={wideActionsFitDock}[{wideActionBounds}] wideOpened={wideMemberEditorOpened} wideRestored={wideTreeRestored}:{wideRestoredDockWidth}/240 actual={wideRestoredActualDockWidth}/{wideBaselineMemberDockWidth} "
                 + $"openTab={memberEditorTab} openButton={memberEditorButtonText} dock={projectDock.Visible} interface={memberEditorTreeVisible} "
                 + $"split={projectSplit.Size.X}");
             globalGate.Set("declaration-grid-actions", directGridActions && removeResolvesPending,
@@ -1922,6 +2019,20 @@ public partial class SimulatorShell
             _ladderSavedProjectJson = originalSaved;
             _ladderProjectPath = originalPath;
             Refresh();
+            GetWindow().Size = originalWindowSize;
+            await Frames(4);
+            if (originalProjectSplit is not null && originalProjectSplitOffsets.Length > 0)
+                originalProjectSplit.SplitOffsets = originalProjectSplitOffsets;
+            if (originalProjectTabs is not null && originalProjectTab >= 0)
+                originalProjectTabs.CurrentTab = originalProjectTab;
+            if (originalProjectDockHost is not null && originalProjectDockVisible is { } dockVisible)
+                originalProjectDockHost.Visible = dockVisible;
+            if (originalProjectDockPanel is not null && originalProjectDockPanelVisible is { } panelVisible)
+                originalProjectDockPanel.Visible = panelVisible;
+            if (originalProjectDockReopen is not null && originalProjectDockReopenVisible is { } reopenVisible)
+                originalProjectDockReopen.Visible = reopenVisible;
+            _tiaProjectDockSplitOffset = originalTiaProjectDockWidthCache;
+            _studio5000ProjectDockSplitOffset = originalStudio5000ProjectDockWidthCache;
             await Frames();
         }
 

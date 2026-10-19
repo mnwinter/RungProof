@@ -29,9 +29,9 @@ the GUI/property exit criteria are closed.
 
 | Order | Status | Exit condition |
 | --- | --- | --- |
-| Screen-control matrix for Global DB, PLC tags, and Watch controls | Open | Confirm selected-row targeting and visible Apply/Cancel, Add/Remove/Clear, Undo/Redo, and Save/Load behavior in a disposable current-source project. The recent pass confirmed all five Global DB inline fields but did not finish Save/Load or Watch row actions. |
+| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Open | Confirm selected-row targeting and visible Apply/Cancel, Add/Remove/Clear, Undo/Redo, and Save/Load behavior in a disposable current-source project. Source/headless verification now proves valid same-scene Open preserves the running program and scan, Verify + Load replaces it, unknown/mismatched source scenes are rejected before mutation, and a dirty cached target-scene draft survives rejection. A fresh screen-control pass is still required; recent retries have not delivered mouse clicks to the app. |
 | Tag-reference lifecycle integrity | Fixed in source; local regression suite passes | Symbolic CALL actuals block referenced-tag deletion and follow rename, including aggregate leaves, while literals, discards, stable IDs, and unresolved references remain unchanged. |
-| Remaining declared property features | Not started | Implement tag-table rename/remove/duplicate and membership, sourced User/System constants, tag-to-operand drag, and Watch address/display/modify behavior with explicit simulator-only writes. Keep undeveloped behavior disclosed. |
+| Remaining declared property features | Partial | Tag-table add/rename/empty-delete, watch-table lifecycle, and member/tag transactions already have source coverage. Remaining work includes block and tag-table duplication; typed User constants; a hardware-sourced, read-only System constants view when project metadata exists; physical tag-to-operand drag; and Watch address/display/modify behavior with explicit simulator-only writes. Keep undeveloped behavior disclosed. |
 | Instance DB presentation and semantics | Layout locally verified; editing remains read-only | Pair the six-column grouped table with installed TIA V21; add overrides only as a complete identity, validation, persistence, history, and runtime-initialization slice. |
 | Installed TIA V21 comparison | Open | Capture matched project objects and states using the controlled installed-TIA capture pack. |
 | Demo sequence and ladder-owned safety logic | Deferred until GUI/property work closes | Implement and verify the demo requirements only after the preceding GUI/property gates pass. |
@@ -529,4 +529,38 @@ Global DB Remove survivor/Undo/Redo assertions. The LAD editor-control sweep
 passes 7/7 gates and 36/36 assertions; the virtual-controller suite passes
 377 checks. An independent review also found and fixed an Undo/Redo history
 restoration hazard by moving isolated-history replacement inside the gate's
-`try/finally` scope. These are offline source checks only. Focused screen`r`ncontrol now confirms Global DB Remove deletes the selected member and preserves`r`nits sibling; inline Global DB cell commits, instance-DB editing, remaining`r`nscreen-control coverage, and matched installed-TIA V21 comparison remain open.
+`try/finally` scope. These are offline source checks only. Focused screen control
+now confirms Global DB Remove deletes the selected member and preserves its
+sibling; inline Global DB cell commits, instance-DB editing, remaining
+screen-control coverage, and matched installed-TIA V21 comparison remain open.
+
+## 2026-10-19 constrained DB layout and splitter-cache review
+
+The independent diff review found that the two vendor workbenches shared one
+project-dock width cache. The cache is now separate for TIA Portal and Studio
+5000, and the focused gate sets a sentinel in the inactive workbench while it
+opens and restores the TIA member editor. At a 1000×900 window the TIA splitter
+has 521 px available against a 560 px request; it clamps to 521, all member
+actions and the Project Tree shortcut remain inside the visible dock, and
+returning to the tree restores the prior 240 px width. At 2200×1200 the editor
+uses 600 px and also restores 240 px. The gate passes 13/13 gates and 88/88
+assertions. This is normal-renderer automation, not pointer-click evidence.
+
+After these source changes, the build passed with 0 warnings/errors and the
+virtual-controller/editor suite passed 383/383. A fresh Demo 5 screen pass at
+1000×900 confirmed DB101's Name, Data Type, Default Value, Start Value, Retain,
+and Comment columns when the project tree is collapsed. With the tree expanded,
+Comment requires horizontal scrolling. Instance DBs remain read-only. The
+screen pass could not reach a Global DB member editor from Demo 5 and did not
+verify Add/Edit/Remove/Apply/Undo/Redo or the member-editor TREE return. The
+scratch project stayed unsaved and PLC-disconnected; its app and bridge were
+closed afterward.
+
+The latest attempt to rerun the entire interaction profile passed build, tests,
+editor transactions, ladder editor, aggregate properties, CALL authoring,
+operand placement, project-tree pointer, empty-box, renderer, and monitor gates,
+then stalled in the TIA edit sweep after scene load with no further output. That
+single verifier process was stopped; its result is not counted as a full-profile
+pass. The focused current-source project-tree gate above passed separately.
+Matched installed-TIA V21 comparison, remaining screen-control coverage, and
+ladder-owned demo remediation remain open.

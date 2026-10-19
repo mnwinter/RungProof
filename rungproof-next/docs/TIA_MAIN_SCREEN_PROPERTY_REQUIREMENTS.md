@@ -27,7 +27,7 @@ Evidence must remain separated:
 | --- | --- | --- |
 | MAIN-01 | Keep one consistent TIA-style engineering workspace with project tree, active editor documents, navigation/tool panes, diagnostics/output, and clear offline/online status. | Matched-state captures at the required window size; no clipped titles, hidden controls, or contradictory status. |
 | MAIN-02 | Project-tree selection must not accidentally open or mutate an object; double-click and focused Enter must activate the exact selected object. | Exercise every supported block, DB, tag-table, watch-table, and creation row with pointer and keyboard; verify exact target and no content change from selection. |
-| MAIN-03 | Open editor documents must retain stable identity and correct title when navigating between blocks, tags, watch tables, and DBs. | Switch repeatedly among documents and verify owner/title restoration, dirty-state prompts, Save/Undo/Redo, and no stale document content. |
+| MAIN-03 | Open editor documents must retain stable identity and correct title when navigating between blocks, tags, watch tables, and DBs. Opening a saved Ladder project restores authoring state only; it must not load or replace the controller. | Switch repeatedly among documents and verify owner/title restoration, dirty-state prompts, Save/Undo/Redo, and no stale document content. Verify valid Open preserves the loaded program/snapshot; only Verify + Load replaces it. Reject unknown or mismatched source scenes before mutation. |
 | MAIN-04 | Main-screen commands, diagnostics, editing mode, simulator state, and transport state must be visibly distinct. | Offline/connected/blocked status captures and state tests; never imply live TIA or PLC execution from an offline run. |
 | MAIN-05 | Scene-level machine commands must expose their runtime prerequisites and report a clear blocked reason when the offline controller is stopped. E-stop/reset state must be visible and remain distinct from a safety-rated circuit. | Through the live screen bridge, click scene Start while STOPPED and confirm a visible controller-prerequisite message; run the offline controller, exercise Start/Stop and E-stop/reset, then leave STOPPED with `estop_ok=true` and `conveyor_run=false`. This proves simulator UI behavior only. |
 
@@ -110,7 +110,20 @@ that move without ladder-owned outputs.
 
 ## Current state and known open items
 
-### Latest review snapshot — 2026-10-18
+### Latest review snapshot — 2026-10-19
+
+- Open-project execution boundary is fixed in source. A valid same-scene Open
+  restores the authoring document without raising the controller-load event;
+  the loaded program reference, scan number, and RUNNING state remain intact.
+  Verify + Load is separately exercised and replaces that runtime. Projects
+  with an unknown or non-active `SourceSceneId` are rejected before scene,
+  controller, editor document, or cached-scene draft mutation. The headless
+  verifier also seeds a dirty target-scene draft and proves the rejected Open
+  leaves its serialized draft cached and marked dirty. The gate does not call
+  the later scene-draft restore route, so actual restoration remains
+  unverified. Build, 383 offline tests, and app-shell verifier pass. These are
+  RungProof results; the independent screen-control
+  walkthrough and matched installed-TIA V21 comparison remain open.
 
 - CUA's native application provider returns no Godot windows, even while
   RungProof is running. This is a provider-binding limitation, not evidence
@@ -1019,3 +1032,28 @@ returned, DB1 remained selected, and the DB1 document tab remained open. Each
 screen pass used an isolated scratch process with runtime STOPPED and PLC
 DISCONNECTED and no Save, Load, Run, or Connect. Matched TIA Portal V21
 captures and live PLC proof remain separate, outstanding gates.
+
+### Constrained DB layout follow-up — 2026-10-19
+
+An independent code review found that TIA Portal and Studio 5000 shared one
+project-dock width cache. The cache is now per workbench. The focused
+normal-renderer gate preserves a sentinel value in the inactive workbench,
+exercises TIA at 1000×900 with only 521 px available for the 560 px preferred
+member editor, verifies all actions and the Project Tree shortcut fit, then
+restores the 240 px tree dock. The wide 2200×1200 case uses 600 px and restores
+240 px. All 13 project-tree gates and 88 assertions pass.
+
+A separate fresh Demo 5 screen pass confirmed the current DB101 view has Name,
+Data Type, Default Value, Start Value, Retain, and Comment columns. At 1000×900
+the six columns fit when the project tree is collapsed; with the tree expanded,
+Comment requires horizontal scrolling. This instance DB view is read-only.
+Global DB member actions and the member-editor TREE return were not exercised
+on screen in this pass because the Demo 5 project contains instance DBs only
+and the create-DB route could not be reached reliably. No project was saved or
+PLC connected. Installed TIA Portal V21 comparison remains open.
+
+The new build passed with 0 warnings/errors and the virtual-controller/editor
+suite passed 383/383. A full interaction-profile rerun passed its build, test,
+and early UI gates, then stalled in the TIA edit sweep after scene load without
+further output; that process was stopped and is not reported as a full-profile
+pass. The focused current-source project-tree gate passed independently.

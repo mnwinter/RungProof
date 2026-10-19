@@ -4917,10 +4917,10 @@ internal static partial class Program
             "TIA editor-control gates are not bound to their group-specific structured artifacts.");
 
         var unsupported = root.GetProperty("unsupportedDocumented").EnumerateArray().ToArray();
-        Require(unsupported.Length == 2
+        Require(unsupported.Length == 1
             && unsupported.All(item => item.GetProperty("status").GetString() == "documented-unsupported")
             && unsupported.Select(item => item.GetProperty("id").GetString()).ToHashSet(StringComparer.Ordinal).SetEquals([
-                "tia.unsupported.watch-table-rename", "tia.unsupported.project-tree-watch-table-delete",
+                "tia.unsupported.project-tree-watch-table-delete",
             ]),
             "TIA editor-control unsupported-operation boundary is incomplete.");
     }

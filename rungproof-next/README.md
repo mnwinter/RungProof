@@ -604,6 +604,9 @@ state but never starts or replaces the simulator controller. Verify + Load is
 the separate fail-closed boundary that compiles the current document before it
 can execute. The `.ld.json` format remains the validated executable-program
 interchange described in the program schema; it is not the editor project file.
+When a project names a different or unknown source scene, Open rejects it
+without changing the active scene, runtime, or cached scene drafts; select its
+source scene first, then open it.
 Both workbenches show the active block/routine and current project filename in
 the editor tab. Both use the conventional leading `*` while the
 current editor snapshot differs from the last successful Save/Open baseline;
