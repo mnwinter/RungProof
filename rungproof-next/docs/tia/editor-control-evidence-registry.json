@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 18 local gates (118 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 20 local gates (124 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -70,10 +70,11 @@
         "tia.project-tree.call-drag-drop",
         "tia.project-tree.watch-table-delete",
         "tia.project-tree.watch-symbol-remove",
-        "tia.project-tree.watch-stale-symbol-visible"
+        "tia.project-tree.watch-stale-symbol-visible",
+        "tia.project-tree.tag-detail-view"
       ],
-      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these twelve gateIds.",
-      "resultExpectation": "The artifact must contain exactly twelve unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
+      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these thirteen gateIds.",
+      "resultExpectation": "The artifact must contain exactly thirteen unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
       "latestArtifactId": "artifact.tia-project-tree-gate-sweep.v1"
     }
   ],
@@ -871,6 +872,48 @@
       "limitations": [
         "The local gate checks visible controls and production cancel handlers; screen-control behavior is tracked separately and no installed-TIA comparison is bound."
       ]
+    },
+    {
+      "sequence": 19,
+      "id": "tia.project-tree.tag-detail-view",
+      "group": "project-tree",
+      "key": "tag-detail-view",
+      "title": "PLC tag detail view for LAD operands",
+      "implementationStatus": "bounded-subset",
+      "localStatus": "automated-pass",
+      "vendorStatus": "source-only",
+      "behavior": "Selecting the PLC tags folder opens a visible tag table while the LAD document remains open; rows expose validated stable tag identities for the production operand drag path.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/LadderProgramTree.cs",
+        "src/App/SimulatorShell.TiaProjectTreeGateSweep.cs"
+      ],
+      "testPaths": [
+        "src/App/SimulatorShell.TiaProjectTreeGateSweep.cs",
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md",
+        "docs/TIA_PORTAL_PARITY_AUDIT.md"
+      ],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/inserting-operands-into-lad-instructions/inserting-operands"
+      ],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "selecting the PLC tags folder opens its detail table while the LAD document remains visible",
+        "a visible tag row yields the same stable identity payload as the production drag source",
+        "returning to the project tree leaves project content unchanged",
+        "a pointer click on TREE returns to the project tree without opening Add Block"
+      ],
+      "limitations": [
+        "The local gate does not perform a physical pointer drag and does not establish installed-TIA visual parity."
+      ]
     }
   ],
   "unsupportedDocumented": [
@@ -902,29 +945,29 @@
     {
       "id": "artifact.tia-editor-control-gate-sweep.v1",
       "commandId": "tia-editor-control-gate-sweep",
-      "path": ".tools/tia-parity-suite/rungproof-parity-interaction-20261019-artifacts/tia-editor-control-gates.json",
+      "path": ".tools/tia-parity-suite/codex-interaction-treeclick/tia-parity-interaction-20261019-181209-artifacts/tia-editor-control-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "DF2F90F24D1C1929009437D20CD7B2339165BBA2634316174390D8756362987C",
+      "sha256": "51B5C89052808B755E7664FD3CE30F12F61991E231BDE8F0787FE63A4E38A57E",
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
-      "sourceRevision": "sha256:884B47DDA57EAEEB44278F7558986ED7F7D5BEAFB67ECF41E696316A555E0294",
-      "currentSource": false,
+      "sourceRevision": "sha256:473B974DF5F6A6E26B8B3A7B64BDBE5258AD15D479E30DD7DF81D5158D662132",
+      "currentSource": true,
       "externalTia": false,
       "livePlc": false
     },
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-parity-goal-continuation/project-tree-current-source-20261019.json",
+      "path": ".tools/tia-parity-suite/codex-interaction-treeclick/tia-parity-interaction-20261019-181209-artifacts/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "F9DA9FDC506F1D5044B96A48380B3B4011F96729A13FDF9260910871E4798D58",
+      "sha256": "D165952A57DD26A082D1BFF88BE2C7AA98BA20E180B391155B7D80062E599CA8",
       "status": "passed",
-      "gateCount": 12,
-      "assertionCount": 84,
-      "sourceRevision": "sha256:5623B8E2320C33541D72206E35F2DB24846704D5E4F59ED728B6FCC5EF6EEF22",
+      "gateCount": 13,
+      "assertionCount": 88,
+      "sourceRevision": "sha256:473B974DF5F6A6E26B8B3A7B64BDBE5258AD15D479E30DD7DF81D5158D662132",
       "currentSource": true,
       "externalTia": false,
       "livePlc": false

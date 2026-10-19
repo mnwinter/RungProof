@@ -43,6 +43,8 @@ public partial class SimulatorShell
                 var scroll = GetNode<ScrollContainer>(scope + "/ProgramEditor/RoutineView");
                 var canvas = scroll.GetNode<LadderEditorCanvas>("GraphicalLadderCanvas");
                 var organization = GetNode<Tree>($"Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/{vendor}/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree");
+                var projectDockTabs = GetNode<TabContainer>($"Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/{vendor}/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags");
+                var projectHeading = GetNode<Label>($"Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/{vendor}/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/ProjectTreeHeading");
                 TreeItem? Find(TreeItem? item, string metadata)
                 {
                     for (var next = item; next is not null; next = next.GetNext())
@@ -63,6 +65,12 @@ public partial class SimulatorShell
                         (_tiaProgramBlockActivator ?? throw new InvalidOperationException("TIA block activator missing"))(block);
                 }
                 await Frames();
+                projectDockTabs.CurrentTab = 2;
+                await Frames();
+                projectDockTabs.CurrentTab = 0;
+                await Frames();
+                Check(projectHeading.Text == (vendor == "TIA Portal" ? "Project tree" : "Controller Organizer"),
+                    vendor + "ProjectTreeHeadingRestored");
                 canvas.SelectTreeNode(0, "a1-left-leaf"); canvas.SetZoomPercent(150); await Frames();
                 scroll.ScrollHorizontal = 140; scroll.ScrollVertical = 180; await Frames();
                 var savedA = canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical);

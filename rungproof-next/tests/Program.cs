@@ -223,7 +223,7 @@ internal static partial class Program
         Test("instruction help catalog has unique complete entries", TestInstructionHelpCatalog);
         Test("TIA evidence matrix covers every catalog key and state gate", TestTiaEvidenceMatrixCoverage);
         Test("TIA evidence registry separates local and vendor state for every catalog key", TestTiaEvidenceRegistryCoverage);
-        Test("TIA editor-control registry binds exact structured evidence for all 16 non-catalog gates", TestTiaEditorControlEvidenceRegistry);
+        Test("TIA editor-control registry binds exact structured evidence for all 20 non-catalog gates", TestTiaEditorControlEvidenceRegistry);
         Test("TIA local run evidence binds exact local gate coverage", TestTiaLocalRunEvidenceRecord);
         Test("TIA renderer visual review is hash-bound and covers every Siemens-facing key", TestTiaRendererVisualReviewRecord);
         Test("TIA unselected renderer visual review is hash-bound and covers every Siemens-facing key", TestTiaRendererUnselectedVisualReviewRecord);
@@ -4810,12 +4810,12 @@ internal static partial class Program
             "tia.project-tree.create-watch-table", "tia.project-tree.global-db-contract",
             "tia.project-tree.instance-db-contract", "tia.project-tree.call-drag-drop",
             "tia.project-tree.watch-table-delete", "tia.project-tree.watch-symbol-remove",
-            "tia.project-tree.watch-stale-symbol-visible",
+            "tia.project-tree.watch-stale-symbol-visible", "tia.project-tree.tag-detail-view",
         };
         var gates = root.GetProperty("gates").EnumerateArray().ToArray();
         var ids = gates.Select(gate => gate.GetProperty("id").GetString()!).ToArray();
-        Require(gates.Length == 19 && ids.Distinct(StringComparer.Ordinal).Count() == 19,
-            "TIA editor-control registry must contain exactly 19 unique gates.");
+        Require(gates.Length == 20 && ids.Distinct(StringComparer.Ordinal).Count() == 20,
+            "TIA editor-control registry must contain exactly 20 unique gates.");
         Require(gates.Where(gate => gate.GetProperty("group").GetString() == "editor")
                 .Select(gate => gate.GetProperty("id").GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedEditor)
@@ -4853,7 +4853,7 @@ internal static partial class Program
             && contracts.Single(contract => contract.GetProperty("commandId").GetString() == "tia-project-tree-gate-sweep")
                 .GetProperty("gateIds").EnumerateArray().Select(item => item.GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedProjectTree),
-            "TIA editor-control structured sweep contracts do not exactly partition the 19 gates.");
+            "TIA editor-control structured sweep contracts do not exactly partition the 20 gates.");
 
         var artifacts = root.GetProperty("evidenceArtifacts").EnumerateArray().ToArray();
         Require(artifacts.Length == 2

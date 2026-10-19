@@ -97,6 +97,13 @@ public partial class SimulatorShell
                 ("all-tables-represented", "all tag tables are represented without changing active project content"),
                 ("navigation-is-clean", "navigation does not change the serialized content baseline"),
             ],
+            ["tia.project-tree.tag-detail-view"] =
+            [
+                ("folder-opens-detail-view", "selecting the PLC tags folder opens the detail view while the LAD document remains visible"),
+                ("tag-row-produces-stable-drag-payload", "a visible detail-view row produces the same stable tag identity payload as the production tree drag source"),
+                ("return-restores-project-tree", "the detail-view return action restores the project tree without changing project content"),
+                ("project-tree-shortcut-restores-tree", "a pointer click on the project-dock TREE shortcut returns to the project tree without activating Add Block"),
+            ],
             ["tia.project-tree.create-block"] =
             [
                 ("selection-versus-dialog", "selection does not open the dialog and activation does"),
@@ -307,6 +314,64 @@ public partial class SimulatorShell
             showAll.Set("all-tables-represented", tagRows && showClean, $"tables={_ladderDocument.TagTables.Count} treeRows={tagRows}");
             showAll.Set("navigation-is-clean", showClean, "serialized baseline unchanged after selection and activation");
             showAll.Finish();
+
+            var tagDetailGate = Gate("tia.project-tree.tag-detail-view");
+            var tagDetailView = Find<LadderProgramTree>("TagOperandDetailTable");
+            var detailProjectTabs = Find<TabContainer>("ProjectTreeAndTags");
+            var detailTabIndex = Find<VBoxContainer>("TagOperandDetailView").GetIndex();
+            await Activate("program:0");
+            var tagDetailBaseline = LadderEditorProjectJson.Save(_ladderDocument);
+            await SelectOnly("tags");
+            var detailOpened = detailProjectTabs.CurrentTab == detailTabIndex && tagDetailView.IsVisibleInTree()
+                && canvas.IsVisibleInTree();
+            var sourceTag = _ladderDocument.Tags.FirstOrDefault(tag => tag.Type == PlcVariableType.Bool);
+            var sourceIndex = sourceTag is null ? -1 : _ladderDocument.Tags.IndexOf(sourceTag);
+            var sourceRow = sourceIndex < 0 ? null : FindMetadata(tagDetailView.GetRoot(), $"tag:{sourceIndex}");
+            var sourcePayload = LadderProgramTree.DragPayloadForItem(sourceRow);
+            var sourcePayloadValid = sourceTag is not null
+                && sourcePayload is not null
+                && LadderTagOperandDragPayload.TryGetIdentity(sourcePayload, out var sourceIdentity)
+                && sourceIdentity == LadderCallBindings.GlobalId(sourceTag);
+            var returnButton = Find<Button>("ReturnToProjectTree");
+            returnButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var returnedToTree = detailProjectTabs.CurrentTab == 0 && tree.IsVisibleInTree()
+                && LadderEditorProjectJson.Save(_ladderDocument) == tagDetailBaseline;
+            tagDetailGate.Set("folder-opens-detail-view", detailOpened,
+                $"tab={detailProjectTabs.CurrentTab} detailVisible={tagDetailView.IsVisibleInTree()} ladderVisible={canvas.IsVisibleInTree()}");
+            tagDetailGate.Set("tag-row-produces-stable-drag-payload", sourcePayloadValid,
+                $"row={sourceRow?.GetText(0)} payload={sourcePayload} expectedId={(sourceTag is null ? "<none>" : LadderCallBindings.GlobalId(sourceTag))}");
+            tagDetailGate.Set("return-restores-project-tree", returnedToTree,
+                $"treeVisible={tree.IsVisibleInTree()} contentUnchanged={LadderEditorProjectJson.Save(_ladderDocument) == tagDetailBaseline}");
+            detailProjectTabs.CurrentTab = 2;
+            await Frames();
+            var projectTreeShortcut = Find<Button>("ShowProjectTree");
+            var shortcutVisible = projectTreeShortcut.IsVisibleInTree();
+            var shortcutCenter = projectTreeShortcut.GetGlobalRect().GetCenter();
+            GetViewport().PushInput(new InputEventMouseMotion { Position = shortcutCenter, GlobalPosition = shortcutCenter }, true);
+            GetViewport().PushInput(new InputEventMouseButton
+            {
+                ButtonIndex = MouseButton.Left,
+                ButtonMask = MouseButtonMask.Left,
+                Pressed = true,
+                Position = shortcutCenter,
+                GlobalPosition = shortcutCenter,
+            }, true);
+            GetViewport().PushInput(new InputEventMouseButton
+            {
+                ButtonIndex = MouseButton.Left,
+                Pressed = false,
+                Position = shortcutCenter,
+                GlobalPosition = shortcutCenter,
+            }, true);
+            await Frames();
+            var shortcutReturned = detailProjectTabs.CurrentTab == 0 && tree.IsVisibleInTree()
+                && Find<Label>("ProjectTreeHeading").Text == "Project tree"
+                && Find<Button>("AddBlockFromProjectTree").Visible
+                && !Find<ConfirmationDialog>("CreateBlockDialog").Visible;
+            tagDetailGate.Set("project-tree-shortcut-restores-tree", shortcutVisible && shortcutReturned,
+                $"visible={shortcutVisible} tab={detailProjectTabs.CurrentTab} treeVisible={tree.IsVisibleInTree()} addBlockDialog={Find<ConfirmationDialog>("CreateBlockDialog").Visible}");
+            tagDetailGate.Finish();
 
             // The broad route physically checks click selection, double-click,
             // object/command activation, and returning from an instance DB.
@@ -1848,8 +1913,8 @@ public partial class SimulatorShell
             await Frames();
         }
 
-        var passed = gates.Count == 12
-            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 12
+        var passed = gates.Count == 13
+            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 13
             && gates.All(gate => gate.Status == "passed"
                 && gate.Assertions.Count == ProjectTreeRequirements[gate.GateId].Count()
                 && gate.Assertions.All(assertion => assertion.Passed && assertion.Status == "passed"));

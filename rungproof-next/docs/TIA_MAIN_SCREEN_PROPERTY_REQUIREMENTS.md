@@ -764,7 +764,7 @@ a safety-rated circuit or installed-TIA parity.
 | Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. An earlier scratch-screen checkpoint visibly applied Data Type, Start Value, Retain, and Comment changes and undid/redid them; it predates the current-source check below. | Current-source visible Start Value commit and physical Undo/Redo, visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
 | Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
 | Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
-| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. A separate scratch pass clicked Cancel on a tag edit and confirmed the original blank Comment was restored; pending-edit prompts appeared through View, tag rail, Tools, and Add Tag navigation. The current-source walkthrough opened a disposable tag draft; Cancel in its pending-edits prompt kept the draft, while Discard restored the default draft and left the table at five tags. | Visible Add Tag Apply/creation and a form-level Cancel that discards the draft remain unverified. User/System constants remain unsupported. Physical tag-to-operand drag remains blocked because the tag table and ladder are separate editor tabs and there is no visible cross-tab drag/source panel; only the direct production-handler route is gate-verified. |
+| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. A separate scratch pass clicked Cancel on a tag edit and confirmed the original blank Comment was restored; pending-edit prompts appeared through View, tag rail, Tools, and Add Tag navigation. The current-source walkthrough opened a disposable tag draft; Cancel in its pending-edits prompt kept the draft, while Discard restored the default draft and left the table at five tags. | Visible Add Tag Apply/creation and a form-level Cancel that discards the draft remain unverified. User/System constants remain unsupported. Physical pointer drag from the new detail table to a LAD operand remains unverified; the source gate verifies payload identity and production-handler behavior. |
 | Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. A current-source screen walk opened Watch table 1, visibly removed a selected row (5→4), cleared (4→0), used Add All (0→5), and replayed the changes through Undo/Redo before restoring five rows. | Adding a new nonduplicate symbol remains unverified by screen control. Address-based rows, display formats, simulator-safe modify values, and row reorder remain unsupported. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
@@ -944,9 +944,37 @@ Its artifact is
 `rungproof-next/.tools/tia-project-tree-gates.json`; the result is local offline
 evidence (`externalTia=false`, `livePlc=false`). The project window minimum is
 1200 px, so the headless failure does not establish a failure at a supported
-window size. It also does not replace outstanding physical screen checks. A
-separate screen-control walkthrough confirmed that the tag table and ladder are
-separate tabs; Scenario + Ladder Split places the 3D scene beside the editor,
-not the tag grid beside the rung. Therefore the current drag gate proves source
-handling only, and a visible simultaneous tag-source/ladder-target workflow is
-still a GUI requirement. No physical drag is claimed.
+window size. It also does not replace outstanding physical screen checks. The
+PLC tags folder now opens a dedicated tag detail table while the LAD document
+stays visible, matching [Siemens STEP 7 V21's documented detail-view operand
+workflow](https://docs.tia.siemens.cloud/r/en-us/v21/creating-lad-programs/inserting-operands-into-lad-instructions/inserting-operands). The
+detail page is appended after the established project-tree, tag-dock, and
+project-object pages so existing property and Global DB routes retain their
+tab indices. A visible TREE shortcut returns from project objects to the tree
+and resolves pending editor forms before navigating. Source gates verify both
+routes and stable tag identity. A physical pointer drag is still unverified and
+remains an acceptance requirement.
+
+### Current-source parity rerun — 2026-10-19
+
+The normal-renderer `interaction` profile passed all 15 commands, including the
+project-tree sweep at 13 gates / 88 assertions and the ladder-editor navigation
+check. The editor-view-state command also checks that returning to tab 0 restores
+the vendor-specific heading in both TIA Portal and Studio 5000. The full
+virtual-controller/editor test suite passed 383/383, with no real PLC transport
+constructed and no connection attempted. The generated project-tree artifact
+is
+`rungproof-next/.tools/tia-parity-suite/codex-interaction-treeclick/tia-parity-interaction-20261019-181209-artifacts/tia-project-tree-gates.json`;
+its source revision is
+`sha256:473B974DF5F6A6E26B8B3A7B64BDBE5258AD15D479E30DD7DF81D5158D662132`.
+The TREE return pointer assertion confirms it returns to tab 0 without opening
+the Add Block dialog. This catches and prevents click-through as the project
+tree and detail pages change visibility. A fresh-process screen-control pass on
+this build confirmed the five-row BOOL tag detail view while the LAD document
+remained open, TREE returned to the project tree without opening a dialog, and
+the separate + control opened Create program block; Cancel closed it with tree
+counts unchanged. The fixture did not expose a DB object/page for this pass.
+No Save or runtime/PLC actions occurred; the app remained STOPPED and
+DISCONNECTED.
+The run remains offline RungProof evidence and does not establish installed-TIA
+matching or live-PLC behavior.

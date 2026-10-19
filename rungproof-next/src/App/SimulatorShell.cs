@@ -4871,13 +4871,33 @@ public partial class SimulatorShell : CanvasLayer
         projectBody.AddChild(projectTabs);
         var projectTitle = new HBoxContainer { Name = "ProjectTitle" };
         var projectHeading = Heading(siemens ? "Project tree" : "Controller Organizer", 13, new Color("263943"));
+        projectHeading.Name = "ProjectTreeHeading";
         projectHeading.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         projectTitle.AddChild(projectHeading);
+        var showProjectTree = ToolbarButton("ShowProjectTree", "TREE", new Color("4d6674"), 52);
+        showProjectTree.TooltipText = "Return to the project tree.";
+        showProjectTree.Visible = false;
+        var projectTreeShortcutSlot = new CenterContainer
+        {
+            Name = "ProjectTreeShortcutSlot",
+            CustomMinimumSize = new Vector2(52, 30),
+            Visible = siemens,
+            MouseFilter = Control.MouseFilterEnum.Ignore,
+        };
+        projectTreeShortcutSlot.AddChild(showProjectTree);
+        projectTitle.AddChild(projectTreeShortcutSlot);
         var addBlockFromTree = ToolbarButton("AddBlockFromProjectTree", "+", accent, 30);
         addBlockFromTree.TooltipText = siemens
             ? "Add OB / FB / FC / DB to Program blocks"
             : "Add a routine to the Controller Organizer";
-        projectTitle.AddChild(addBlockFromTree);
+        var addBlockSlot = new CenterContainer
+        {
+            Name = "AddBlockFromProjectTreeSlot",
+            CustomMinimumSize = new Vector2(30, 30),
+            MouseFilter = Control.MouseFilterEnum.Ignore,
+        };
+        addBlockSlot.AddChild(addBlockFromTree);
+        projectTitle.AddChild(addBlockSlot);
         var collapseProjectDock = ToolbarButton("CollapseProjectDock", "◀", new Color("637985"), 30);
         collapseProjectDock.TooltipText = siemens ? "Hide project tree" : "Hide Controller Organizer";
         projectTitle.AddChild(collapseProjectDock);
@@ -5010,6 +5030,58 @@ public partial class SimulatorShell : CanvasLayer
                     tagTableItems.Add(tableItem);
         }
         projectTabs.AddChild(organization);
+        LadderProgramTree? tagOperandDetailView = null;
+        VBoxContainer? tagOperandDetailPage = null;
+        var tagOperandDetailTabIndex = -1;
+        if (siemens)
+        {
+            tagOperandDetailPage = new VBoxContainer { Name = "TagOperandDetailView" };
+            var detailPage = tagOperandDetailPage;
+            detailPage.AddThemeConstantOverride("separation", 6);
+            var detailHeader = new HBoxContainer { Name = "TagOperandDetailHeader" };
+            var detailTitle = Heading("PLC tag detail view", 13, new Color("263943"));
+            detailTitle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            detailHeader.AddChild(detailTitle);
+            var returnToTree = ToolbarButton("ReturnToProjectTree", "←", new Color("637985"), 30);
+            returnToTree.TooltipText = "Return to the project tree.";
+            returnToTree.Pressed += () =>
+            {
+                projectTabs.CurrentTab = 0;
+                projectHeading.Text = "Project tree";
+                addBlockFromTree.Visible = true;
+                organization.GrabFocus();
+            };
+            detailHeader.AddChild(returnToTree);
+            detailPage.AddChild(detailHeader);
+            var detailHint = new Label
+            {
+                Name = "TagOperandDetailHint",
+                Text = "Drag a tag onto a compatible operand in the open LAD document.",
+                AutowrapMode = TextServer.AutowrapMode.WordSmart,
+                CustomMinimumSize = new Vector2(0, 34),
+            };
+            detailHint.AddThemeColorOverride("font_color", new Color("607983"));
+            detailPage.AddChild(detailHint);
+            tagOperandDetailView = new LadderProgramTree
+            {
+                Name = "TagOperandDetailTable",
+                Columns = 2,
+                ColumnTitlesVisible = true,
+                HideRoot = true,
+                SelectMode = Tree.SelectModeEnum.Single,
+                SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+                TooltipText = "Drag a declared scalar tag row onto a compatible LAD operand.",
+            };
+            tagOperandDetailView.SetColumnTitle(0, "TAG");
+            tagOperandDetailView.SetColumnTitle(1, "DATA TYPE");
+            tagOperandDetailView.SetColumnExpand(0, true);
+            tagOperandDetailView.SetColumnExpand(1, true);
+            tagOperandDetailView.AddThemeColorOverride("font_color", new Color("263943"));
+            tagOperandDetailView.AddThemeColorOverride("font_selected_color", new Color("ffffff"));
+            ConfigureSelectableList(tagOperandDetailView);
+            tagOperandDetailView.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
+            detailPage.AddChild(tagOperandDetailView);
+        }
         projectDockHost.AddChild(projectPanel);
 
         collapseProjectDock.Pressed += () =>
@@ -6525,6 +6597,26 @@ public partial class SimulatorShell : CanvasLayer
             taskTarget.Clear();
             tagList.Clear();
             var tagRoot = tagList.CreateItem();
+            if (tagOperandDetailView is not null)
+            {
+                tagOperandDetailView.Clear();
+                var detailRoot = tagOperandDetailView.CreateItem();
+                for (var index = 0; index < document.Tags.Count; index++)
+                {
+                    var tag = document.Tags[index];
+                    var row = tagOperandDetailView.CreateItem(detailRoot);
+                    row.SetMetadata(0, $"tag:{index}");
+                    row.SetMetadata(1, "tag-id:" + LadderCallBindings.GlobalId(tag));
+                    row.SetText(0, tag.Name);
+                    row.SetText(1, tag.Type.ToString().ToUpperInvariant());
+                    row.SetTooltipText(0, string.IsNullOrWhiteSpace(tag.Comment)
+                        ? $"{tag.Name} · {tag.Type} · drag onto a compatible LAD operand"
+                        : $"{tag.Name} · {tag.Type} · {tag.Comment} · drag onto a compatible LAD operand");
+                    row.SetTooltipText(1, PlcAggregates.IsAggregate(tag.Type)
+                        ? "Aggregate operands are not supported by the offline tag-drag editor."
+                        : tag.Type.ToString().ToUpperInvariant());
+                }
+            }
             foreach (var (tag, index) in document.Tags.Select((tag, index) => (tag, index)))
             {
                 if (tag.Type == PlcVariableType.Bool && tag.Role == PlcVariableRole.Memory)
@@ -8308,6 +8400,43 @@ public partial class SimulatorShell : CanvasLayer
         };
         objectsScroll.AddChild(projectPage);
         projectTabs.AddChild(objectsScroll);
+
+        // Keep the established project-tree, tag-dock, and project-object tab
+        // indices stable. Several DB/property routes intentionally target tab 2.
+        if (tagOperandDetailPage is not null)
+        {
+            projectTabs.AddChild(tagOperandDetailPage);
+            tagOperandDetailTabIndex = tagOperandDetailPage.GetIndex();
+            projectTabs.SetTabTitle(tagOperandDetailTabIndex, "PLC tag detail view");
+            projectTabs.CurrentTab = 0;
+        }
+        projectTabs.TabChanged += tabIndex =>
+        {
+            showProjectTree.Visible = siemens && tabIndex != 0;
+            if (tabIndex == 0)
+            {
+                projectHeading.Text = siemens ? "Project tree" : "Controller Organizer";
+                addBlockFromTree.Visible = true;
+            }
+            else if (tagOperandDetailPage is not null && tabIndex == tagOperandDetailTabIndex)
+            {
+                projectHeading.Text = "PLC tag detail view";
+                addBlockFromTree.Visible = false;
+            }
+            else if (siemens && tabIndex == 2)
+            {
+                projectHeading.Text = "Project objects";
+                addBlockFromTree.Visible = false;
+            }
+        };
+        showProjectTree.Pressed += () => ResolvePendingEditorForms(() =>
+        {
+            ShowProjectDock();
+            projectTabs.CurrentTab = 0;
+            projectHeading.Text = siemens ? "Project tree" : "Controller Organizer";
+            addBlockFromTree.Visible = true;
+            organization.GrabFocus();
+        });
 
         var searchPage = new VBoxContainer { Name = siemens ? "Find and cross-reference" : "Find All" };
         var searchQuery = new LineEdit
@@ -11302,7 +11431,18 @@ public partial class SimulatorShell : CanvasLayer
                 case "tags":
                     if (siemens)
                     {
-                        output.Text = "PLC tags folder selected. Double-click a tag table to open it in the program editor.";
+                        if (tagOperandDetailView is not null)
+                        {
+                            ShowProjectDock();
+                            projectTabs.CurrentTab = tagOperandDetailTabIndex;
+                            projectHeading.Text = "PLC tag detail view";
+                            addBlockFromTree.Visible = false;
+                            output.Text = "PLC tag detail view opened. Drag a tag onto a compatible operand in the open LAD document.";
+                        }
+                        else
+                        {
+                            output.Text = "PLC tags folder selected. Double-click a tag table to open it in the program editor.";
+                        }
                         break;
                     }
                     activeTagTableName = null;
@@ -12726,7 +12866,7 @@ public partial class SimulatorShell : CanvasLayer
         const string root = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench";
         var projectTree = GetNodeOrNull<Tree>($"{root}/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree");
         var addBlockFromTree = GetNodeOrNull<Button>(
-            $"{root}/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/AddBlockFromProjectTree");
+            $"{root}/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/AddBlockFromProjectTreeSlot/AddBlockFromProjectTree");
         var projectMenu = GetNodeOrNull<MenuButton>(
             "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/VendorChrome/VendorMenuBar/LadderProjectMenu");
         var projectPanelNode = GetNodeOrNull<Control>($"{root}/ProjectDockHost/ProjectOrganization");
@@ -14744,10 +14884,11 @@ public partial class SimulatorShell : CanvasLayer
             && toolDockHostNode is not null
             && projectTabs is not null
             && !projectTabs.TabsVisible
-            && projectTabs.GetTabCount() == 3
+            && projectTabs.GetTabCount() == 4
             && projectTabs.GetTabTitle(0) == "Project tree"
             && projectTabs.GetTabTitle(1) == "PLC tags"
-            && projectTabs.GetTabTitle(2) == "Blocks / tasks";
+            && projectTabs.GetTabTitle(2) == "Blocks / tasks"
+            && projectTabs.GetTabTitle(3) == "PLC tag detail view";
         var selectable = projectTree.MouseFilter != Control.MouseFilterEnum.Ignore
             && projectTree.GetRoot() is not null;
         var monitorProgram = _ladderDocument.BuildProgram();
