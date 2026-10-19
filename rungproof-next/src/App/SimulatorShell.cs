@@ -195,6 +195,7 @@ public partial class SimulatorShell : CanvasLayer
     private EditorClipboard? _ladderCommandClipboard;
     private bool _ladderMonitorMatchesLoadedProgram;
     private readonly List<Action> _ladderEditorRefreshers = [];
+    private Action? _restoreActiveWatchTableTreeRow;
     private readonly List<Action> _ladderEditorProjectReplacementResetters = [];
     private readonly List<Action> _ladderSceneDiagnosticResetters = [];
     private readonly List<Action<VirtualControllerSnapshot?>> _ladderWatchRefreshers = [];
@@ -1700,7 +1701,7 @@ public partial class SimulatorShell : CanvasLayer
         brand.AddChild(Heading("Rung", 20, new Color("e9f4f8")));
         brand.AddChild(Heading("Proof", 20, new Color("16a34a")));
         toolbarRow.AddChild(brand);
-        var subtitle = Heading("PLC TRAINING WORKBENCH", 9, new Color("7fa7ba"));
+        var subtitle = Heading("RUNGPROOF ENGINEERING WORKBENCH", 9, new Color("7fa7ba"));
         subtitle.Name = "BrandSubtitle";
         toolbarRow.AddChild(subtitle);
         toolbarRow.AddChild(VRule());
@@ -7265,21 +7266,36 @@ public partial class SimulatorShell : CanvasLayer
         watchStatus.Name = "WatchStatus";
         watchStatus.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         watchHeader.AddChild(watchStatus);
+        var addWatchTable = ToolbarButton("AddWatchTable", "+ TABLE", accent, 72);
+        var removeWatchTable = ToolbarButton("RemoveWatchTable", "− TABLE", new Color("8a4d55"), 72);
+        var renameWatchTable = ToolbarButton("RenameWatchTable", "RENAME", new Color("4d6674"), 72);
+        var duplicateWatchTable = ToolbarButton("DuplicateWatchTable", "COPY", new Color("4d6674"), 60);
+        var moveWatchTableUp = ToolbarButton("MoveWatchTableUp", "UP", new Color("4d6674"), 48);
+        var moveWatchTableDown = ToolbarButton("MoveWatchTableDown", "DOWN", new Color("4d6674"), 52);
+        renameWatchTable.TooltipText = "Rename the active watch table";
+        duplicateWatchTable.TooltipText = "Copy the active watch table and its symbols";
+        moveWatchTableUp.TooltipText = "Move the active watch table earlier in the project tree";
+        moveWatchTableDown.TooltipText = "Move the active watch table later in the project tree";
+        watchHeader.AddChild(addWatchTable);
+        watchHeader.AddChild(renameWatchTable);
+        watchHeader.AddChild(duplicateWatchTable);
+        watchHeader.AddChild(moveWatchTableUp);
+        watchHeader.AddChild(moveWatchTableDown);
+        watchHeader.AddChild(removeWatchTable);
+        watchPage.AddChild(watchHeader);
+        var watchSymbolHeader = new HBoxContainer { Name = "WatchSymbolActions" };
+        watchSymbolHeader.AddThemeConstantOverride("separation", 4);
         var watchSymbol = new OptionButton { Name = "WatchSymbol", CustomMinimumSize = new Vector2(180, 30) };
-        watchHeader.AddChild(watchSymbol);
+        watchSymbolHeader.AddChild(watchSymbol);
         var addWatch = ToolbarButton("AddWatchSymbol", "+ SYMBOL", accent, 82);
         var removeWatch = ToolbarButton("RemoveWatchSymbol", "REMOVE", new Color("8a4d55"), 82);
         var addAllWatch = ToolbarButton("AddAllWatchSymbols", "ADD ALL", new Color("4d6674"), 82);
         var clearWatch = ToolbarButton("ClearWatchSymbols", "CLEAR", new Color("637985"), 72);
-        var addWatchTable = ToolbarButton("AddWatchTable", "+ TABLE", accent, 72);
-        var removeWatchTable = ToolbarButton("RemoveWatchTable", "− TABLE", new Color("8a4d55"), 72);
-        watchHeader.AddChild(addWatch);
-        watchHeader.AddChild(removeWatch);
-        watchHeader.AddChild(addAllWatch);
-        watchHeader.AddChild(clearWatch);
-        watchHeader.AddChild(addWatchTable);
-        watchHeader.AddChild(removeWatchTable);
-        watchPage.AddChild(watchHeader);
+        watchSymbolHeader.AddChild(addWatch);
+        watchSymbolHeader.AddChild(removeWatch);
+        watchSymbolHeader.AddChild(addAllWatch);
+        watchSymbolHeader.AddChild(clearWatch);
+        watchPage.AddChild(watchSymbolHeader);
         var watchTable = new Tree
         {
             Name = "WatchTable",
@@ -7317,6 +7333,7 @@ public partial class SimulatorShell : CanvasLayer
         string[] watchTableNames = [];
         var watchRows = new List<TreeItem>();
         Action openWatchTableCreation = () => { };
+        Action openWatchTableRename = () => { };
 
         string WatchValue(PlcVariable variable, VirtualControllerSnapshot snapshot)
         {
@@ -7356,6 +7373,8 @@ public partial class SimulatorShell : CanvasLayer
             }
             watchTableSelector.Select(document.ActiveWatchTableIndex);
             removeWatchTable.Disabled = document.WatchTables.Count <= 1;
+            moveWatchTableUp.Disabled = document.ActiveWatchTableIndex <= 0;
+            moveWatchTableDown.Disabled = document.ActiveWatchTableIndex >= document.WatchTables.Count - 1;
             var tagNames = watchVariables.Select(tag => tag.Name).ToArray();
             if (!watchTagNames.SequenceEqual(tagNames, StringComparer.Ordinal))
             {
@@ -7425,11 +7444,21 @@ public partial class SimulatorShell : CanvasLayer
 
         void RefreshWatchMetadataEditors()
         {
-            // Watch membership is saved project metadata. Refresh both vendor
-            // workbenches' dirty titles and Undo/Redo without invalidating the
-            // executable controller or its monitoring snapshot.
+            // Watch membership is saved project metadata. Refresh editor titles,
+            // selector items, monitor rows, and Undo/Redo without invalidating
+            // the executable controller or its monitoring snapshot.
             foreach (var refresh in _ladderEditorRefreshers) refresh();
+            foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
         }
+
+        void SelectActiveWatchTableTreeRow()
+        {
+            if (!siemens || document.ActiveWatchTableIndex < 0 || document.ActiveWatchTableIndex >= watchTableItems.Count) return;
+            var item = watchTableItems[document.ActiveWatchTableIndex];
+            item.Select(0);
+            organization.ScrollToItem(item);
+        }
+        if (siemens) _restoreActiveWatchTableTreeRow = SelectActiveWatchTableTreeRow;
 
         addWatch.Pressed += () =>
         {
@@ -7476,14 +7505,39 @@ public partial class SimulatorShell : CanvasLayer
             }
         };
         addWatchTable.Pressed += () => openWatchTableCreation();
+        renameWatchTable.Pressed += () => openWatchTableRename();
+        duplicateWatchTable.Pressed += () =>
+        {
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            if (!BeginProjectMetadataEdit("Duplicate watch table")) return;
+            var duplicate = document.DuplicateActiveWatchTable();
+            RefreshWatchMetadataEditors();
+            SelectActiveWatchTableTreeRow();
+            output.Text = $"[color=#18864b]Watch table duplicated.[/color] {Escape(duplicate.Name)}";
+        };
+        moveWatchTableUp.Pressed += () => MoveWatchTable(-1);
+        moveWatchTableDown.Pressed += () => MoveWatchTable(1);
         removeWatchTable.Pressed += () =>
         {
             if (document.WatchTables.Count <= 1 || !BeginProjectMetadataEdit("Delete watch table")) return;
             var removedName = document.ActiveWatchTable.Name;
             document.RemoveActiveWatchTable();
             RefreshWatchMetadataEditors();
+            SelectActiveWatchTableTreeRow();
             output.Text = $"[color=#18864b]Watch table deleted.[/color] {Escape(removedName)}";
         };
+
+        void MoveWatchTable(int offset)
+        {
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            var destination = document.ActiveWatchTableIndex + offset;
+            if (destination < 0 || destination >= document.WatchTables.Count) return;
+            if (!BeginProjectMetadataEdit("Reorder watch tables")) return;
+            if (!document.MoveActiveWatchTable(offset)) return;
+            RefreshWatchMetadataEditors();
+            SelectActiveWatchTableTreeRow();
+            output.Text = $"[color=#18864b]Watch table order updated.[/color] {Escape(document.ActiveWatchTable.Name)}";
+        }
         bottomDockHost.AddChild(bottomPanel);
         editorAndInspector.AddChild(bottomDockHost);
 
@@ -10005,11 +10059,7 @@ public partial class SimulatorShell : CanvasLayer
                 bottomPanel.Visible = true;
                 reopenBottomDock.Visible = false;
                 bottomTabs.CurrentTab = 2;
-                if (document.ActiveWatchTableIndex < watchTableItems.Count)
-                {
-                    watchTableItems[document.ActiveWatchTableIndex].Select(0);
-                    organization.ScrollToItem(watchTableItems[document.ActiveWatchTableIndex]);
-                }
+                SelectActiveWatchTableTreeRow();
                 output.Text = $"[color=#18864b]Watch table created.[/color] {Escape(document.ActiveWatchTable.Name)} · add symbols to this table.";
                 return string.Empty;
             }
@@ -10023,6 +10073,37 @@ public partial class SimulatorShell : CanvasLayer
             watchTableCreation.PopupCentered();
             watchTableCreationName.GrabFocus();
             watchTableCreationName.SelectAll();
+        };
+        var watchTableRename = NamedCreationDialog("RenameWatchTableDialog", "Rename watch table", name =>
+        {
+            var normalizedName = name.Trim();
+            if (normalizedName.Length == 0) return "Enter a watch table name.";
+            if (document.WatchTables.Where((_, index) => index != document.ActiveWatchTableIndex)
+                .Any(table => table.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
+                return $"Watch table '{normalizedName}' already exists.";
+            if (document.ActiveWatchTable.Name.Equals(normalizedName, StringComparison.Ordinal)) return string.Empty;
+            if (ChallengeMutationLocked) return "Project changes are locked for this lesson.";
+            if (!BeginProjectMetadataEdit("Rename watch table")) return "Editing unavailable.";
+            try
+            {
+                var oldName = document.ActiveWatchTable.Name;
+                document.RenameActiveWatchTable(normalizedName);
+                RefreshEditor();
+                RefreshWatchMetadataEditors();
+                SelectActiveWatchTableTreeRow();
+                output.Text = $"[color=#18864b]Watch table renamed.[/color] {Escape(oldName)} → {Escape(normalizedName)}";
+                return string.Empty;
+            }
+            catch (InvalidOperationException exception) { return exception.Message; }
+        }, out var watchTableRenameName, out var watchTableRenameError);
+        openWatchTableRename = () =>
+        {
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            watchTableRenameName.Text = document.ActiveWatchTable.Name;
+            watchTableRenameError.Text = string.Empty;
+            watchTableRename.PopupCentered();
+            watchTableRenameName.GrabFocus();
+            watchTableRenameName.SelectAll();
         };
         applyBlock.Pressed += () =>
         {
@@ -12421,6 +12502,8 @@ public partial class SimulatorShell : CanvasLayer
         ChallengeDraftChanged?.Invoke();
         if (!_ladderHistory.Undo(_ladderDocument, out description)) return false;
         foreach (var refresh in _ladderEditorRefreshers) refresh();
+        foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
+        _restoreActiveWatchTableTreeRow?.Invoke();
         RefreshLadderMonitorMatch();
         _ladderWorkspaceStatus.Text = $"UNDO · {description.ToUpperInvariant()} · OFFLINE";
         _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
@@ -12434,6 +12517,8 @@ public partial class SimulatorShell : CanvasLayer
         ChallengeDraftChanged?.Invoke();
         if (!_ladderHistory.Redo(_ladderDocument, out description)) return false;
         foreach (var refresh in _ladderEditorRefreshers) refresh();
+        foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
+        _restoreActiveWatchTableTreeRow?.Invoke();
         RefreshLadderMonitorMatch();
         _ladderWorkspaceStatus.Text = $"REDO · {description.ToUpperInvariant()} · OFFLINE";
         _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
@@ -12991,7 +13076,7 @@ public partial class SimulatorShell : CanvasLayer
         var watchRoot = $"{inspectorRoot}/InspectorOutputTabs/Watch table 1/Content";
         var watchStatus = GetNodeOrNull<Label>($"{watchRoot}/WatchHeader/WatchStatus");
         var watchTable = GetNodeOrNull<Tree>($"{watchRoot}/WatchTable");
-        var clearWatch = GetNodeOrNull<Button>($"{watchRoot}/WatchHeader/ClearWatchSymbols");
+        var clearWatch = GetNodeOrNull<Button>($"{watchRoot}/WatchSymbolActions/ClearWatchSymbols");
         var instructionTree = GetNodeOrNull<Tree>($"{toolRoot}/ToolTabsHost/ToolTabs/Instructions/InstructionTree");
         var toolPanelNode = GetNodeOrNull<Control>($"{root}/EditorAndTasks/ToolDockHost/InstructionAndTags");
         var toolDockHostNode = GetNodeOrNull<Control>($"{root}/EditorAndTasks/ToolDockHost");

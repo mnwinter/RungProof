@@ -285,6 +285,40 @@ public sealed partial class LadderEditorDocument
         return true;
     }
 
+    public void RenameActiveWatchTable(string name)
+    {
+        var normalized = name.Trim();
+        if (normalized.Length == 0) throw new InvalidOperationException("Watch table name cannot be empty.");
+        if (WatchTables.Where((_, index) => index != ActiveWatchTableIndex)
+            .Any(table => table.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Watch table name '{normalized}' already exists.");
+        ActiveWatchTable.Name = normalized;
+    }
+
+    public EditableWatchTable DuplicateActiveWatchTable()
+    {
+        var source = ActiveWatchTable;
+        var baseName = source.Name + " Copy";
+        var name = baseName;
+        for (var suffix = 2; WatchTables.Any(table => table.Name.Equals(name, StringComparison.OrdinalIgnoreCase)); suffix++)
+            name = $"{baseName} {suffix}";
+        var copy = new EditableWatchTable(name, source.Variables);
+        WatchTables.Insert(ActiveWatchTableIndex + 1, copy);
+        ActiveWatchTableIndex++;
+        return copy;
+    }
+
+    public bool MoveActiveWatchTable(int offset)
+    {
+        if (offset is not (-1 or 1)) throw new ArgumentOutOfRangeException(nameof(offset));
+        var destination = ActiveWatchTableIndex + offset;
+        if (destination < 0 || destination >= WatchTables.Count) return false;
+        (WatchTables[ActiveWatchTableIndex], WatchTables[destination]) =
+            (WatchTables[destination], WatchTables[ActiveWatchTableIndex]);
+        ActiveWatchTableIndex = destination;
+        return true;
+    }
+
     public EditableBlock AddBlock(string name, LadderBlockType? blockType = null)
     {
         var normalizedName = ValidateUniqueName(name, Blocks.Select(block => block.Name), "Block/routine",

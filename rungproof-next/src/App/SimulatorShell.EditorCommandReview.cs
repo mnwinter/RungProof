@@ -413,6 +413,68 @@ public partial class SimulatorShell
             Require("TiaWatchTableActivationSelectsIndependently", _ladderDocument.ActiveWatchTableIndex == 0
                 && Find<OptionButton>("WatchTableSelector").Selected == 0);
             _ladderDocument.SelectWatchTable(_ladderDocument.WatchTables.Count - 1);
+            Refresh();
+            var copyWatchTableButton = Find<Button>("DuplicateWatchTable");
+            copyWatchTableButton.EmitSignal(BaseButton.SignalName.Pressed);
+            Refresh();
+            var copyWatchTableIndex = _ladderDocument.WatchTables.Count - 1;
+            var copyWatchTableRow = FindTreeItem(projectTree.GetRoot(), $"watch-table:{copyWatchTableIndex}");
+            Require("TiaWatchTableCopyActionCopiesMembershipAndSelectsCopy",
+                _ladderDocument.WatchTables.Count == watchTablesBeforeCreate + 2
+                && _ladderDocument.ActiveWatchTable.Name == "Commissioning Copy"
+                && _ladderDocument.WatchVariables.SequenceEqual(["start_command"], StringComparer.Ordinal)
+                && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex
+                && copyWatchTableRow is not null
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex}");
+
+            Find<Button>("RenameWatchTable").EmitSignal(BaseButton.SignalName.Pressed);
+            var renameWatchTableDialog = Find<ConfirmationDialog>("RenameWatchTableDialog");
+            var renameWatchTableName = renameWatchTableDialog.FindChild("CreationName", true, false) as LineEdit
+                ?? throw new InvalidOperationException("Watch-table rename field missing");
+            var renameWatchTableError = renameWatchTableDialog.FindChild("CreationError", true, false) as Label
+                ?? throw new InvalidOperationException("Watch-table rename error field missing");
+            renameWatchTableName.Text = "Watch table 1";
+            renameWatchTableDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            Require("TiaWatchTableRenameRejectsDuplicateWithoutMutation",
+                _ladderDocument.ActiveWatchTable.Name == "Commissioning Copy"
+                && renameWatchTableError.Text.Length > 0 && renameWatchTableDialog.Visible);
+            renameWatchTableName.Text = "Commissioning QA";
+            renameWatchTableDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
+            Refresh();
+            Require("TiaWatchTableRenameCommitsAndKeepsSelection",
+                _ladderDocument.ActiveWatchTable.Name == "Commissioning QA"
+                && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex}");
+
+            Find<Button>("MoveWatchTableUp").EmitSignal(BaseButton.SignalName.Pressed);
+            Refresh();
+            Require("TiaWatchTableMoveUpChangesActiveSelection",
+                _ladderDocument.ActiveWatchTableIndex == copyWatchTableIndex - 1
+                && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex - 1
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex - 1}");
+            var watchMoveUndoWorked = TryUndoLadderEdit(out var watchMoveUndoDescription);
+            var watchMoveUndoSelector = Find<OptionButton>("WatchTableSelector").Selected;
+            var watchMoveUndoTree = projectTree.GetSelected()?.GetMetadata(0).AsString() ?? "<none>";
+            Require($"TiaWatchTableMoveUndoRestoresActiveSelection [undo={watchMoveUndoWorked}:{watchMoveUndoDescription} active={_ladderDocument.ActiveWatchTableIndex} selector={watchMoveUndoSelector} tree={watchMoveUndoTree}]",
+                _ladderDocument.ActiveWatchTableIndex == copyWatchTableIndex
+                && watchMoveUndoSelector == copyWatchTableIndex
+                && watchMoveUndoTree == $"watch-table:{copyWatchTableIndex}");
+            TryRedoLadderEdit(out _);
+            Require("TiaWatchTableMoveRedoRestoresActiveSelection",
+                _ladderDocument.ActiveWatchTableIndex == copyWatchTableIndex - 1
+                && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex - 1
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex - 1}");
+
+            _ladderDocument.SelectWatchTable(0); Refresh();
+            Require("TiaWatchTableMoveBoundaryControlsDisableAtFirstRow",
+                Find<Button>("MoveWatchTableUp").Disabled && !Find<Button>("MoveWatchTableDown").Disabled);
+            _ladderDocument.SelectWatchTable(_ladderDocument.WatchTables.Count - 1); Refresh();
+            Require("TiaWatchTableMoveBoundaryControlsDisableAtLastRow",
+                !Find<Button>("MoveWatchTableUp").Disabled && Find<Button>("MoveWatchTableDown").Disabled);
+
+            TryUndoLadderEdit(out _); Refresh(); // Undo the verified move.
+            TryUndoLadderEdit(out _); Refresh(); // Undo the verified rename.
+            TryUndoLadderEdit(out _); Refresh(); // Undo the verified copy.
             TryUndoLadderEdit(out _); Refresh();
             Require("TiaWatchTableCreateUndo", _ladderDocument.WatchTables.Count == watchTablesBeforeCreate);
             NamedCreation("AddBlock", "CreateBlockDialog", "VerifierNamedFC");

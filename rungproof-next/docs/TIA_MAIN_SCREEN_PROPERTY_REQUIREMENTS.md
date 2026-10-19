@@ -137,8 +137,13 @@ that move without ladder-owned outputs.
   and case-insensitive duplicate-name rejection and verifies that the model,
   displayed cell, and history remain unchanged. Manual screen proof of these
   rejection messages and visible project Save/Load/Save remain open. Tag-table
-  lifecycle supports add, rename, and empty-table deletion; watch tables support add/remove but not rename,
-  duplicate, or reorder.
+  lifecycle supports add, rename, and empty-table deletion. Watch-table
+  rename, duplicate, and ordering controls are implemented and covered by model
+  tests for name validation, copied membership, ordering, persistence, and
+  Undo/Redo. A fresh current-source screen-control pass verified copy, rename,
+  reorder, boundary disabling, Undo/Redo, and delete with selector/tree state
+  consistent after each action. The earlier bridge pass could not navigate
+  reliably from its loaded DB editor and is superseded by that fresh pass.
 - The latest review/walkthrough are separate evidence streams. A visible
   browser-mirrored screen proves RungProof click behavior only; it does not
   establish installed-TIA parity, live PLC behavior, safety-rated behavior, or
@@ -978,3 +983,38 @@ No Save or runtime/PLC actions occurred; the app remained STOPPED and
 DISCONNECTED.
 The run remains offline RungProof evidence and does not establish installed-TIA
 matching or live-PLC behavior.
+
+### Watch-table lifecycle and property-gate rerun — 2026-10-19
+
+The current working-tree build passed the full virtual-controller/editor test
+suite (383/383), `--verify-app-shell`, and `--verify-ladder-editor`. The ladder
+editor gate includes watch-table Rename, Copy, Up/Down, duplicate-name rejection,
+selection restoration through Undo/Redo, and a Save→Load→Save round trip that
+checks table order, active table, membership, and serialized stability. The UI
+refreshes the monitor and selector after metadata edits and history operations.
+These results are local offline evidence only.
+
+An initial `--verify-tia-project-tree-gates` run reported three failures among
+13 gates / 88 assertions: Enter activation, the TREE return pointer route, and
+Global DB member-editor width. The Enter sweep did not wait for the selected
+Tree row to gain focus and used a logical key code only. The sweep now waits for
+focus, sends physical Enter press/release events on separate frames, and the
+same 1600×900 interaction profile passes all 13 gates / 88 assertions. The
+TREE pointer route returns to tab 0 with the project tree visible and no dialog;
+the DB member editor reaches 560 px, fits its actions, and restores the prior
+240 px project-tree dock. The full `interaction` profile passes all 15
+commands, including build, regression tests, renderer, edit, control, and
+project-tree sweeps. Its project-tree artifact is
+`rungproof-next/.tools/tia-project-tree-enter-rerun/tia-parity-interaction-20261019-192857-artifacts/tia-project-tree-gates.json`.
+
+A fresh 1816×1039 screen-control pass verified watch-table copy, rename,
+reorder, boundary disabling, Undo/Redo, and delete, with selector and tree state
+consistent after each action. It also verified the Global DB declaration grid
+and adding/selecting a BOOL member; no clipping was visible at that viewport.
+The member Cancel result was ambiguous and remains unverified. A second
+1816×1039 screen-control pass created an unsaved DB1, opened its declaration
+detail panel, and clicked PROJECT TREE. The fresh view showed the tree again,
+DB1 remained selected, and the DB1 document tab remained open. Runtime stayed
+STOPPED and PLC DISCONNECTED; neither screen pass used Save, Load, Run, or
+Connect. Matched TIA Portal V21 captures and live PLC proof remain separate,
+outstanding gates.

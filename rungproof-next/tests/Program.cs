@@ -1410,6 +1410,47 @@ internal static partial class Program
         True(history.Undo(reopened.Document, out _));
         Equal(2, reopened.Document.WatchTables.Count);
         Equal("Commissioning", reopened.Document.ActiveWatchTable.Name);
+
+        var lifecycle = reopened.Document;
+        lifecycle.SelectWatchTable(1);
+        var lifecycleHistory = new LadderEditorHistory();
+        lifecycleHistory.Execute(lifecycle, "Rename watch table", () => lifecycle.RenameActiveWatchTable("  Commissioning QA  "));
+        Equal("Commissioning QA", lifecycle.ActiveWatchTable.Name);
+        var duplicateRejectedByRename = false;
+        try { lifecycle.RenameActiveWatchTable("Watch table 1"); }
+        catch (InvalidOperationException) { duplicateRejectedByRename = true; }
+        True(duplicateRejectedByRename);
+        Equal("Commissioning QA", lifecycle.ActiveWatchTable.Name);
+        True(lifecycleHistory.Undo(lifecycle, out _));
+        Equal("Commissioning", lifecycle.ActiveWatchTable.Name);
+        True(lifecycleHistory.Redo(lifecycle, out _));
+        Equal("Commissioning QA", lifecycle.ActiveWatchTable.Name);
+
+        lifecycleHistory.Execute(lifecycle, "Duplicate watch table", () => lifecycle.DuplicateActiveWatchTable());
+        Equal("Commissioning QA Copy", lifecycle.ActiveWatchTable.Name);
+        Equal("conveyor_running", lifecycle.WatchVariables.Single());
+        lifecycleHistory.Execute(lifecycle, "Move watch table", () => True(lifecycle.MoveActiveWatchTable(-1)));
+        Equal(1, lifecycle.ActiveWatchTableIndex);
+        Equal("Commissioning QA Copy", lifecycle.ActiveWatchTable.Name);
+        var lifecycleSaved = LadderEditorProjectJson.Save(lifecycle);
+        var lifecycleReopened = LadderEditorProjectJson.Load(lifecycleSaved);
+        True(lifecycleReopened.IsReadable);
+        Equal("Watch table 1,Commissioning QA Copy,Commissioning QA",
+            string.Join(',', lifecycleReopened.Document!.WatchTables.Select(table => table.Name)));
+        Equal(1, lifecycleReopened.Document.ActiveWatchTableIndex);
+        Equal("conveyor_running", lifecycleReopened.Document.WatchTables[1].Variables.Single());
+        Equal("conveyor_running", lifecycleReopened.Document.WatchTables[2].Variables.Single());
+        Equal(lifecycleSaved, LadderEditorProjectJson.Save(lifecycleReopened.Document));
+        True(lifecycleHistory.Undo(lifecycle, out _));
+        Equal(2, lifecycle.ActiveWatchTableIndex);
+        True(lifecycleHistory.Undo(lifecycle, out _));
+        Equal(2, lifecycle.WatchTables.Count);
+        Equal(1, lifecycle.ActiveWatchTableIndex);
+        Equal("Commissioning QA", lifecycle.ActiveWatchTable.Name);
+        True(lifecycleHistory.Undo(lifecycle, out _));
+        Equal("Commissioning", lifecycle.ActiveWatchTable.Name);
+        True(lifecycleHistory.Redo(lifecycle, out _));
+        Equal("Commissioning QA", lifecycle.ActiveWatchTable.Name);
     }
 
     private static void TestSceneIoBindings()

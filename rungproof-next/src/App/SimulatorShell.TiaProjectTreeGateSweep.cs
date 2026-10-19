@@ -387,8 +387,20 @@ public partial class SimulatorShell
                 CloseDialogs();
                 var row = FindMetadata(tree.GetRoot(), metadata)!;
                 row.Select(0); tree.ScrollToItem(row); tree.GrabFocus();
-                GetViewport().PushInput(new InputEventKey { Keycode = Key.Enter, Pressed = true }, true);
-                GetViewport().PushInput(new InputEventKey { Keycode = Key.Enter, Pressed = false }, true);
+                await Frames();
+                GetViewport().PushInput(new InputEventKey
+                {
+                    Keycode = Key.Enter,
+                    PhysicalKeycode = Key.Enter,
+                    Pressed = true,
+                }, true);
+                await Frames();
+                GetViewport().PushInput(new InputEventKey
+                {
+                    Keycode = Key.Enter,
+                    PhysicalKeycode = Key.Enter,
+                    Pressed = false,
+                }, true);
                 await Frames();
                 enterAll &= Find<ConfirmationDialog>(dialogName).Visible;
             }
