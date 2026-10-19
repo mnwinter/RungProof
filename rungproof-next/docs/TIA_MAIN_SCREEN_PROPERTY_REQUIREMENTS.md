@@ -1041,7 +1041,8 @@ normal-renderer gate preserves a sentinel value in the inactive workbench,
 exercises TIA at 1000×900 with only 521 px available for the 560 px preferred
 member editor, verifies all actions and the Project Tree shortcut fit, then
 restores the 240 px tree dock. The wide 2200×1200 case uses 600 px and restores
-240 px. All 13 project-tree gates and 88 assertions pass.
+240 px. At that review point, the project-tree gate had 88 assertions; the
+current 90-assertion result is recorded below.
 
 A separate fresh Demo 5 screen pass confirmed the current DB101 view has Name,
 Data Type, Default Value, Start Value, Retain, and Comment columns. At 1000×900
@@ -1051,6 +1052,41 @@ Global DB member actions and the member-editor TREE return were not exercised
 on screen in this pass because the Demo 5 project contains instance DBs only
 and the create-DB route could not be reached reliably. No project was saved or
 PLC connected. Installed TIA Portal V21 comparison remains open.
+
+An earlier current-source screen-control pass at 1000×900 selected DB101 and
+reported that Enter opened `X_Axis_DB [DB101]` with all six headers visible.
+A later independent browser-bridge retest at 1600×900 isolated the input path:
+with OB1 active and DB101 selected, the bridge Enter button (key-down only) did
+not open DB101, while the paired page key-down/up method alone opened
+`X_Axis_DB [DB101]`. The resulting screen showed the DB tab active and OB1
+still open. The bridge could not expose the native control focus owner, so the
+manual run proves the exact keyboard activation route but not native focus
+ownership; the production-shell gate below verifies focus. This is
+bridge-mediated RungProof UI evidence, not installed-TIA evidence. No project
+was saved and no PLC was connected.
+
+The current production-shell gate first leaves DB731, then explicitly focuses
+the Project Tree, captures selected-row/focus/pending-dialog state before
+Enter, and requires the exact fixture DB731 to transition from closed to open;
+it passes as one of 13 gates / 91 assertions. An independent review found that
+the all-tags tab key collided with a user tag table named `all`, and gate
+teardown did not verify the active editor heading. The unfiltered tab now uses
+the empty-suffix key `tags:` so it stays distinct from every named table. The
+gate activates the all-tags view even when it is already open and checks its
+heading and visible tag count, then verifies tab order, tab labels, active key,
+and active heading for both the two-tab gate baseline and the caller's original
+state. Nested cleanup restores the caller's size, splitter, dock, and width
+cache even if editor-document restoration throws. The gate keeps the same
+instance DB open through 1000→1600→1000→1600 resizes: the
+declaration grid measured 672 px at 1000 with 10 px text and widths
+96/64/86/78/54/274, and 1224 px at 1600 with 12 px text and widths
+155/80/101/100/65/691. In both states the columns fit the grid width, and
+repeated sizes match. This is headless production-shell evidence; it does not
+prove a normal-renderer resize in one visible window. The current build passed
+with zero warnings/errors, the virtual-controller/editor suite passed 383/383,
+the app-shell verifier passed, and the focused gate passed. Godot reports
+renderer/ObjectDB leak warnings at shutdown; do not describe the headless
+shutdown as clean. Installed TIA V21 comparison remains open.
 
 The new build passed with 0 warnings/errors and the virtual-controller/editor
 suite passed 383/383. A full interaction-profile rerun passed its build, test,

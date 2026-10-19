@@ -198,6 +198,10 @@ public partial class SimulatorShell : CanvasLayer
     private bool _ladderMonitorMatchesLoadedProgram;
     private readonly List<Action> _ladderEditorRefreshers = [];
     private Action? _restoreActiveWatchTableTreeRow;
+    private Func<string>? _getActiveTiaEditorDocumentKey;
+    private Action<string, string>? _ensureTiaEditorDocumentTab;
+    private Action<IReadOnlyList<string>>? _orderTiaEditorDocumentTabs;
+    private Action<string>? _activateTiaEditorDocument;
     private readonly List<Action> _ladderEditorProjectReplacementResetters = [];
     private readonly List<Action> _ladderSceneDiagnosticResetters = [];
     private readonly List<Action<VirtualControllerSnapshot?>> _ladderWatchRefreshers = [];
@@ -7985,21 +7989,45 @@ public partial class SimulatorShell : CanvasLayer
         instanceDbDeclarations.SetColumnTitle(3, "START VALUE");
         instanceDbDeclarations.SetColumnTitle(4, "RETAIN");
         instanceDbDeclarations.SetColumnTitle(5, "COMMENT");
-        instanceDbDeclarations.SetColumnExpand(0, false);
-        instanceDbDeclarations.SetColumnCustomMinimumWidth(0, 205);
-        instanceDbDeclarations.SetColumnExpand(1, false);
-        instanceDbDeclarations.SetColumnCustomMinimumWidth(1, 105);
-        instanceDbDeclarations.SetColumnExpand(2, false);
-        instanceDbDeclarations.SetColumnCustomMinimumWidth(2, 125);
-        instanceDbDeclarations.SetColumnExpand(3, false);
-        instanceDbDeclarations.SetColumnCustomMinimumWidth(3, 125);
-        instanceDbDeclarations.SetColumnExpand(4, false);
-        instanceDbDeclarations.SetColumnCustomMinimumWidth(4, 80);
-        instanceDbDeclarations.SetColumnExpand(5, true);
-        instanceDbDeclarations.SetColumnCustomMinimumWidth(5, 220);
+        void ApplyInstanceDbColumnLayout()
+        {
+            // The expanded project tree leaves less room for the declaration
+            // grid on a 1000 px workstation. Compact the six columns only when
+            // that pane is narrow; the Comment column takes remaining space.
+            // Wider panes keep readable name/comment widths without a scrollbar.
+            var compact = instanceDbDeclarations.Size.X < 720;
+            var minimumWidths = compact
+                ? new[] { 96, 64, 78, 78, 54, 78 }
+                : new[] { 155, 80, 100, 100, 65, 120 };
+            for (var column = 0; column < minimumWidths.Length; column++)
+            {
+                instanceDbDeclarations.SetColumnExpand(column, column == 5);
+                instanceDbDeclarations.SetColumnCustomMinimumWidth(column, minimumWidths[column]);
+            }
+            instanceDbDeclarations.AddThemeFontSizeOverride("font_size", compact ? 10 : 12);
+        }
+        var instanceDbLayoutUpdateQueued = false;
+        void QueueInstanceDbColumnLayout()
+        {
+            if (instanceDbLayoutUpdateQueued) return;
+            instanceDbLayoutUpdateQueued = true;
+            // The root/splitter resize notifications can precede the child
+            // layout pass. Apply after two deferred frames so the decision
+            // uses the final declaration-grid width, including when the grid
+            // was hidden during a window resize.
+            Callable.From(() => Callable.From(() =>
+            {
+                instanceDbLayoutUpdateQueued = false;
+                if (GodotObject.IsInstanceValid(instanceDbDeclarations))
+                    ApplyInstanceDbColumnLayout();
+            }).CallDeferred()).CallDeferred();
+        }
+        instanceDbDeclarations.Resized += QueueInstanceDbColumnLayout;
+        root.Resized += QueueInstanceDbColumnLayout;
         instanceDbDeclarations.AddThemeColorOverride("font_color", new Color("263943"));
         instanceDbDeclarations.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
         instanceDbDocument.AddChild(instanceDbDeclarations);
+        Callable.From(ApplyInstanceDbColumnLayout).CallDeferred();
         var instanceDbBoundary = new Label
         {
             Name = "InstanceDbBoundary",
@@ -8350,6 +8378,9 @@ public partial class SimulatorShell : CanvasLayer
                         memberRow.SetTooltipText(3, "Inherited FB default. Per-instance start-value overrides are not modeled.");
                         memberRow.SetText(4, parameter.Retain ? "YES" : "NO");
                         memberRow.SetText(5, parameter.Comment);
+                        memberRow.SetTooltipText(5, string.IsNullOrWhiteSpace(parameter.Comment)
+                            ? "No comment."
+                            : parameter.Comment);
                         memberRow.SetSelectable(0, false);
                     }
                     sectionRow.Collapsed = false;
@@ -8390,6 +8421,7 @@ public partial class SimulatorShell : CanvasLayer
             }
             declarationRoot.Collapsed = false;
             SetEditorDocumentBody(key);
+            QueueInstanceDbColumnLayout();
             editorDocumentButtons[key].ButtonPressed = true;
             editorTabTitle.Text = $"{db.Name} [DB{db.Number}]";
             editorTabTitle.TooltipText = "Read-only instance DB definition generated from the current FB or IEC instruction assignment.";
@@ -8404,7 +8436,9 @@ public partial class SimulatorShell : CanvasLayer
                 projectTabs.CurrentTab = 1;
                 return;
             }
-            var key = tableName is null ? "tags:all" : $"tags:{tableName}";
+            // The empty suffix is reserved for the unfiltered view so a user
+            // table named "all" keeps a distinct persistent document key.
+            var key = tableName is null ? "tags:" : $"tags:{tableName}";
             editorTagDocuments[key] = tableName;
             var projectFileName = _ladderProjectPath is null
                 ? "Untitled.rpproj.json"
@@ -8459,6 +8493,34 @@ public partial class SimulatorShell : CanvasLayer
                 OpenTagDocument(tableName);
             else if (editorInstanceDbDocuments.TryGetValue(key, out var dbNumber))
                 OpenInstanceDbDocument(dbNumber);
+        }
+        if (siemens)
+        {
+            _getActiveTiaEditorDocumentKey = () => activeEditorDocumentKey;
+            _ensureTiaEditorDocumentTab = (key, title) =>
+            {
+                AddEditorDocumentTab(key, title);
+                if (key.StartsWith("tags:", StringComparison.Ordinal))
+                {
+                    var tableName = key["tags:".Length..];
+                    editorTagDocuments[key] = tableName.Length == 0 ? null : tableName;
+                }
+                else if (key.StartsWith("instance-db:", StringComparison.Ordinal)
+                    && int.TryParse(key.AsSpan("instance-db:".Length), out var dbNumber))
+                {
+                    editorInstanceDbDocuments[key] = dbNumber;
+                }
+            };
+            _orderTiaEditorDocumentTabs = keys =>
+            {
+                for (var index = 0; index < keys.Count; index++)
+                    if (editorDocumentItems.TryGetValue(keys[index], out var item))
+                        editorDocumentTabs.MoveChild(item, index);
+            };
+            _activateTiaEditorDocument = key =>
+            {
+                if (editorDocumentButtons.ContainsKey(key)) ActivateEditorDocument(key);
+            };
         }
         var apply = ToolbarButton("ValidateAndLoadButton", "VERIFY + LOAD OFFLINE", new Color("1f8a58"), 210);
         tagPage.AddChild(apply);

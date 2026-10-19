@@ -79,6 +79,7 @@ public partial class SimulatorShell
                 ("block-tab-identity-survives-reindex", "open block tabs keep their block identity across rename, Undo/Redo, and deletion of an earlier block"),
                 ("project-open-replaces-document-tabs", "opening another project closes documents owned by the previous project and selects the new project's active block"),
                 ("project-open-does-not-retarget-colliding-keys", "project-local block IDs and DB numbers do not retarget old document tabs to objects in the replacement project"),
+                ("gate-restores-original-editor-documents", "the gate restores the original editor tabs, titles, and active document during teardown"),
             ],
             ["tia.project-tree.visible-form-cancel-actions"] =
             [
@@ -166,6 +167,8 @@ public partial class SimulatorShell
                 ("selection-versus-definition", "selection does not open and activation opens the exact definition"),
                 ("identity-is-unique-and-persistent", "DB number and symbolic name are unique and persist"),
                 ("definition-is-read-only", "the read-only instance table renders inherited defaults for FB Input, Output, and Static members, renders modeled IEC timer/counter member names and types, excludes TEMP locals, and discloses unsupported properties"),
+                ("focused-enter-opens-selected-db", "with the exact instance DB row selected and Project Tree focused, Enter opens that DB and reports the focus state before activation"),
+                ("declaration-grid-reflows-live", "the open instance DB grid changes column widths and font size across narrow and wide window resizes in both directions"),
                 ("owner-return-restores-editor", "returning to the owner restores the correct block title and canvas"),
             ],
             ["tia.project-tree.call-drag-drop"] =
@@ -246,6 +249,22 @@ public partial class SimulatorShell
         }
         T Find<T>(string name) where T : Node => FindChild(name, true, false) as T
             ?? throw new InvalidOperationException($"Required project-tree verifier control '{name}' is unavailable.");
+        (string Key, string Title)[] CaptureEditorDocumentTabs() => Find<HBoxContainer>("EditorDocuments").GetChildren()
+            .OfType<HBoxContainer>()
+            .Select(item => (
+                Key: item.GetMeta("editorDocumentKey").AsString(),
+                Title: item.GetChild(0) is Button tabButton ? tabButton.Text : string.Empty))
+            .Where(tab => !string.IsNullOrEmpty(tab.Key))
+            .ToArray();
+        var liveEditorDocumentTabs = CaptureEditorDocumentTabs();
+        var liveActiveEditorDocumentKey = _getActiveTiaEditorDocumentKey?.Invoke();
+        var liveActiveEditorHeading = Find<Label>("EditorTabTitle").Text;
+        var gateEditorDocumentTabs = liveEditorDocumentTabs;
+        var gateActiveEditorDocumentKey = liveActiveEditorDocumentKey;
+        var gateActiveEditorHeading = liveActiveEditorHeading;
+        var allTagsDocumentRouteWorks = false;
+        var gateEditorViewRestored = false;
+        var liveEditorViewRestored = false;
         TreeItem? FindMetadata(TreeItem? first, string metadata)
         {
             for (var item = first; item is not null; item = item.GetNext())
@@ -258,6 +277,35 @@ public partial class SimulatorShell
 
         try
         {
+            // The headless window starts at 64×64 before layout is explicitly
+            // requested. Run the UI interaction gates at a real editor size so
+            // screen coordinates and focus routing are inside the viewport.
+            GetWindow().Size = new Vector2I(1600, 900);
+            await Frames(4);
+            // Seed a temporary second open document with the active block in
+            // the non-first tab position. This makes the teardown assertion
+            // prove order restoration even when the caller started with only
+            // the default OB tab open.
+            var seededAllTagsDocument = liveEditorDocumentTabs.All(tab => tab.Key != "tags:");
+            if (seededAllTagsDocument)
+            {
+                _ensureTiaEditorDocumentTab?.Invoke("tags:", "Show all tags");
+                var seededTabOrder = new[] { "tags:" }.Concat(liveEditorDocumentTabs.Select(tab => tab.Key)).ToArray();
+                _orderTiaEditorDocumentTabs?.Invoke(seededTabOrder);
+            }
+            _activateTiaEditorDocument?.Invoke("tags:");
+            await Frames();
+            allTagsDocumentRouteWorks = string.Equals(Find<Label>("EditorTabTitle").Text, "Show all tags", StringComparison.Ordinal)
+                && string.Equals(Find<RichTextLabel>("OutputWindow").Text, $"Showing all {_ladderDocument.Tags.Count} PLC tags.", StringComparison.Ordinal);
+            if (!string.IsNullOrEmpty(liveActiveEditorDocumentKey))
+            {
+                _activateTiaEditorDocument?.Invoke(liveActiveEditorDocumentKey);
+                await Frames();
+            }
+            gateEditorDocumentTabs = CaptureEditorDocumentTabs();
+            gateActiveEditorDocumentKey = _getActiveTiaEditorDocumentKey?.Invoke();
+            gateActiveEditorHeading = Find<Label>("EditorTabTitle").Text;
+
             // Gate actions exercise production mutations and Undo/Redo. Isolate
             // them from any history the user already has in the live editor.
             // Swap only after entering try so every setup failure restores the
@@ -362,7 +410,9 @@ public partial class SimulatorShell
             await Frames();
             var projectTreeShortcut = Find<Button>("ShowProjectTree");
             var shortcutVisible = projectTreeShortcut.IsVisibleInTree();
-            var shortcutCenter = projectTreeShortcut.GetGlobalRect().GetCenter();
+            var shortcutRect = projectTreeShortcut.GetGlobalRect();
+            var shortcutCenter = shortcutRect.GetCenter();
+            var viewportRect = GetViewport().GetVisibleRect();
             GetViewport().PushInput(new InputEventMouseMotion { Position = shortcutCenter, GlobalPosition = shortcutCenter }, true);
             GetViewport().PushInput(new InputEventMouseButton
             {
@@ -385,7 +435,7 @@ public partial class SimulatorShell
                 && Find<Button>("AddBlockFromProjectTree").Visible
                 && !Find<ConfirmationDialog>("CreateBlockDialog").Visible;
             tagDetailGate.Set("project-tree-shortcut-restores-tree", shortcutVisible && shortcutReturned,
-                $"visible={shortcutVisible} tab={detailProjectTabs.CurrentTab} treeVisible={tree.IsVisibleInTree()} addBlockDialog={Find<ConfirmationDialog>("CreateBlockDialog").Visible}");
+                $"visible={shortcutVisible} rect={shortcutRect} inViewport={viewportRect.HasPoint(shortcutCenter)} viewport={viewportRect} tab={detailProjectTabs.CurrentTab} treeVisible={tree.IsVisibleInTree()} addBlockDialog={Find<ConfirmationDialog>("CreateBlockDialog").Visible}");
             tagDetailGate.Finish();
 
             // The broad route physically checks click selection, double-click,
@@ -397,12 +447,16 @@ public partial class SimulatorShell
             // editor-command verifier; prove it here on every command kind.
             var enterTargets = new[] { ("add-block", "CreateBlockDialog"), ("add-tag-table", "CreateTagTableDialog"), ("add-watch-table", "CreateWatchTableDialog") };
             var enterAll = true;
+            var enterDetails = new List<string>();
             foreach (var (metadata, dialogName) in enterTargets)
             {
                 CloseDialogs();
                 var row = FindMetadata(tree.GetRoot(), metadata)!;
                 row.Select(0); tree.ScrollToItem(row); tree.GrabFocus();
                 await Frames();
+                var selectedBefore = tree.GetSelected()?.GetMetadata(0).AsString() ?? "<none>";
+                var focusBefore = GetViewport().GuiGetFocusOwner()?.GetPath().ToString() ?? "<none>";
+                var pendingBefore = _pendingEditorDialog?.Visible ?? false;
                 GetViewport().PushInput(new InputEventKey
                 {
                     Keycode = Key.Enter,
@@ -417,12 +471,15 @@ public partial class SimulatorShell
                     Pressed = false,
                 }, true);
                 await Frames();
-                enterAll &= Find<ConfirmationDialog>(dialogName).Visible;
+                var dialogOpened = Find<ConfirmationDialog>(dialogName).Visible;
+                enterAll &= dialogOpened;
+                var focusOwner = GetViewport().GuiGetFocusOwner();
+                enterDetails.Add($"{metadata}:opened={dialogOpened} selectedBefore={selectedBefore} focusBefore={focusBefore} pendingBefore={pendingBefore} selectedAfter={tree.GetSelected()?.GetMetadata(0).AsString()} focusAfter={focusOwner?.GetPath()} pendingAfter={_pendingEditorDialog?.Visible} rowVisible={row.IsVisibleInTree()}");
             }
             CloseDialogs();
             activation.Set("single-click-selects-without-opening", broadPass && rowsPresent, "physical pointer aggregate plus exact row inventory: " + broad.Detail);
             activation.Set("double-click-activates-supported-rows", broadPass && rowsPresent, "physical double-click aggregate: " + broad.Detail);
-            activation.Set("enter-activates-selected-row", enterAll, $"commandRows={enterTargets.Length} allOpened={enterAll}");
+            activation.Set("enter-activates-selected-row", enterAll, string.Join("; ", enterDetails));
             activation.Set("activation-opens-exact-target", broadPass && showAll.Status == "passed", "program/tag/watch/DB/instance/command aggregate plus Show all tags");
             activation.Set("instance-return-restores-owner", broadPass, "physical pointer verifier finalTitle assertion");
             activation.Finish();
@@ -1761,10 +1818,44 @@ public partial class SimulatorShell
             await SelectOnly("instance-db:731");
             var selectionClosed = !instanceDbDocument.IsVisibleInTree();
             await Activate("instance-db:731");
+            await Frames(6);
             var exactDefinition = instanceDbDocument.IsVisibleInTree()
                 && instanceDbHeading.Text.Contains("Structured_Count_DB", StringComparison.Ordinal)
                 && instanceDbHeading.Text.Contains("DB731", StringComparison.Ordinal)
                 && instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetFirstChild()?.GetText(0) == "Q";
+            await Activate($"program:{ownerIndex}");
+            await Frames();
+            CloseDialogs();
+            var instanceEnterRow = FindMetadata(tree.GetRoot(), "instance-db:731")!;
+            instanceEnterRow.Select(0);
+            tree.ScrollToItem(instanceEnterRow);
+            tree.GrabFocus();
+            await Frames();
+            var instanceEnterFocusBefore = GetViewport().GuiGetFocusOwner()?.GetPath().ToString() ?? "<none>";
+            var instanceEnterSelectedBefore = tree.GetSelected()?.GetMetadata(0).AsString() ?? "<none>";
+            var instanceEnterPendingBefore = _pendingEditorDialog?.Visible ?? false;
+            var instanceEnterWasClosedBefore = !instanceDbDocument.IsVisibleInTree();
+            GetViewport().PushInput(new InputEventKey
+            {
+                Keycode = Key.Enter,
+                PhysicalKeycode = Key.Enter,
+                Pressed = true,
+            }, true);
+            await Frames();
+            GetViewport().PushInput(new InputEventKey
+            {
+                Keycode = Key.Enter,
+                PhysicalKeycode = Key.Enter,
+                Pressed = false,
+            }, true);
+            await Frames(2);
+            var instanceEnterOpenedExact = instanceDbDocument.IsVisibleInTree()
+                && instanceDbHeading.Text.Contains("Structured_Count_DB", StringComparison.Ordinal)
+                && instanceDbHeading.Text.Contains("DB731", StringComparison.Ordinal);
+            var instanceEnterFocusAfter = GetViewport().GuiGetFocusOwner()?.GetPath().ToString() ?? "<none>";
+            var instanceEnterOpenedByKey = instanceEnterSelectedBefore == "instance-db:731"
+                && instanceEnterFocusBefore == tree.GetPath().ToString()
+                && !instanceEnterPendingBefore && instanceEnterWasClosedBefore && instanceEnterOpenedExact;
             TreeItem? FindInstanceMember(string sectionName, string memberName)
             {
                 for (var section = instanceDbDeclarations.GetRoot()?.GetFirstChild(); section is not null; section = section.GetNext())
@@ -1844,6 +1935,45 @@ public partial class SimulatorShell
                 && instanceDbBoundary.Text.Contains("monitor/snapshots", StringComparison.Ordinal)
                 && instanceDbBoundary.Text.Contains("HMI attributes", StringComparison.Ordinal)
                 && instanceDbBoundary.Text.Contains("supervision", StringComparison.Ordinal);
+            // Keep the generated instance DB open while the shell window
+            // changes size. This verifies that the responsive grid follows
+            // the actual editor pane width in both directions, rather than
+            // only receiving compact/wide defaults when the document opens.
+            int[] InstanceDbWidths() => Enumerable.Range(0, 6)
+                .Select(instanceDbDeclarations.GetColumnWidth).ToArray();
+            GetWindow().Size = new Vector2I(1000, 900);
+            await Frames(6);
+            var instanceDbCompactPane = instanceDbDeclarations.Size.X;
+            var instanceDbCompactFont = instanceDbDeclarations.GetThemeFontSize("font_size");
+            var instanceDbCompactWidths = InstanceDbWidths();
+            GetWindow().Size = new Vector2I(1600, 900);
+            await Frames(6);
+            var instanceDbWidePane = instanceDbDeclarations.Size.X;
+            var instanceDbWideFont = instanceDbDeclarations.GetThemeFontSize("font_size");
+            var instanceDbWideWidths = InstanceDbWidths();
+            GetWindow().Size = new Vector2I(1000, 900);
+            await Frames(6);
+            var instanceDbCompactAgainPane = instanceDbDeclarations.Size.X;
+            var instanceDbCompactAgainFont = instanceDbDeclarations.GetThemeFontSize("font_size");
+            var instanceDbCompactAgainWidths = InstanceDbWidths();
+            GetWindow().Size = new Vector2I(1600, 900);
+            await Frames(6);
+            var instanceDbWideAgainPane = instanceDbDeclarations.Size.X;
+            var instanceDbWideAgainFont = instanceDbDeclarations.GetThemeFontSize("font_size");
+            var instanceDbWideAgainWidths = InstanceDbWidths();
+            var responsiveGridReflows = instanceDbWidePane >= 720 && instanceDbWideFont == 12
+                && instanceDbCompactPane < 720 && instanceDbCompactFont == 10
+                && instanceDbWideAgainPane >= 720 && instanceDbWideAgainFont == 12
+                && instanceDbCompactAgainPane < 720 && instanceDbCompactAgainFont == 10
+                && instanceDbWideWidths.Sum() <= instanceDbWidePane
+                && instanceDbCompactWidths.Sum() <= instanceDbCompactPane
+                && instanceDbWideAgainWidths.Sum() <= instanceDbWideAgainPane
+                && instanceDbCompactAgainWidths.Sum() <= instanceDbCompactAgainPane
+                && instanceDbCompactWidths[5] >= 180
+                && instanceDbWideWidths[0] > instanceDbCompactWidths[0]
+                && instanceDbWideWidths[5] > instanceDbCompactWidths[5]
+                && instanceDbWideAgainWidths.SequenceEqual(instanceDbWideWidths)
+                && instanceDbCompactAgainWidths.SequenceEqual(instanceDbCompactWidths);
             var fbDefaultValue = fbEnable?.GetText(2) ?? "<missing>";
             var fbStartValue = fbEnable?.GetText(3) ?? "<missing>";
             var fbOutputDefault = fbAtPosition?.GetText(2) ?? "<missing>";
@@ -1875,8 +2005,12 @@ public partial class SimulatorShell
             instanceGate.Set("row-under-program-blocks", parentIsBlocks, $"row={instanceRowName}");
             instanceGate.Set("selection-versus-definition", selectionClosed && exactDefinition, $"selectionClosed={selectionClosed} exactDefinition={exactDefinition}");
             instanceGate.Set("identity-is-unique-and-persistent", identityUnique, $"instances={dbs.Length} saveLoad={saveLoad is not null}");
+            instanceGate.Set("focused-enter-opens-selected-db", instanceEnterOpenedByKey,
+                $"selectedBefore={instanceEnterSelectedBefore} focusBefore={instanceEnterFocusBefore} pendingDialogBefore={instanceEnterPendingBefore} closedBefore={instanceEnterWasClosedBefore} exactTitleAfter={instanceEnterOpenedExact} focusAfter={instanceEnterFocusAfter}");
             instanceGate.Set("definition-is-read-only", readonlyDefinition,
                 $"instance={instanceDbDocument.IsVisibleInTree()} globalDb={globalDbDocument.IsVisibleInTree()} ladder={canvas.IsVisibleInTree()} input={fbDefaultValue}/{fbStartValue} output={fbOutputDefault}/{fbOutputStart} static={fbStaticDefault}/{fbStaticStart} counter={counterMembersRendered} timer={timerMembersRendered} tempSection={tempSectionRendered} tempOnlyEmpty={tempOnlyEmptyState}");
+            instanceGate.Set("declaration-grid-reflows-live", responsiveGridReflows,
+                $"wide={instanceDbWidePane}px/{instanceDbWideFont}px-font/{string.Join(',', instanceDbWideWidths)} compact={instanceDbCompactPane}px/{instanceDbCompactFont}px-font/{string.Join(',', instanceDbCompactWidths)} wideAgain={instanceDbWideAgainPane}px/{instanceDbWideAgainFont}px-font/{string.Join(',', instanceDbWideAgainWidths)} compactAgain={instanceDbCompactAgainPane}px/{instanceDbCompactAgainFont}px-font/{string.Join(',', instanceDbCompactAgainWidths)}");
             instanceGate.Set("owner-return-restores-editor", ownerReturned, $"title={title.Text} ladder={canvas.IsVisibleInTree()}");
             instanceGate.Finish();
             _ladderDocument.RestoreSnapshot(instanceFixture); Refresh(); await Frames();
@@ -2018,23 +2152,65 @@ public partial class SimulatorShell
             _ladderDocument.RestoreSnapshot(originalDocument);
             _ladderSavedProjectJson = originalSaved;
             _ladderProjectPath = originalPath;
-            Refresh();
-            GetWindow().Size = originalWindowSize;
-            await Frames(4);
-            if (originalProjectSplit is not null && originalProjectSplitOffsets.Length > 0)
-                originalProjectSplit.SplitOffsets = originalProjectSplitOffsets;
-            if (originalProjectTabs is not null && originalProjectTab >= 0)
-                originalProjectTabs.CurrentTab = originalProjectTab;
-            if (originalProjectDockHost is not null && originalProjectDockVisible is { } dockVisible)
-                originalProjectDockHost.Visible = dockVisible;
-            if (originalProjectDockPanel is not null && originalProjectDockPanelVisible is { } panelVisible)
-                originalProjectDockPanel.Visible = panelVisible;
-            if (originalProjectDockReopen is not null && originalProjectDockReopenVisible is { } reopenVisible)
-                originalProjectDockReopen.Visible = reopenVisible;
-            _tiaProjectDockSplitOffset = originalTiaProjectDockWidthCache;
-            _studio5000ProjectDockSplitOffset = originalStudio5000ProjectDockWidthCache;
-            await Frames();
+            try
+            {
+                foreach (var resetProjectDocuments in _ladderEditorProjectReplacementResetters)
+                    resetProjectDocuments();
+                foreach (var (key, title) in gateEditorDocumentTabs)
+                    _ensureTiaEditorDocumentTab?.Invoke(key, title);
+                _orderTiaEditorDocumentTabs?.Invoke(gateEditorDocumentTabs.Select(tab => tab.Key).ToArray());
+                Refresh();
+                if (!string.IsNullOrEmpty(gateActiveEditorDocumentKey))
+                    _activateTiaEditorDocument?.Invoke(gateActiveEditorDocumentKey);
+                await Frames();
+                gateEditorViewRestored = gateEditorDocumentTabs.SequenceEqual(CaptureEditorDocumentTabs())
+                    && string.Equals(gateActiveEditorDocumentKey, _getActiveTiaEditorDocumentKey?.Invoke(), StringComparison.Ordinal)
+                    && string.Equals(gateActiveEditorHeading, Find<Label>("EditorTabTitle").Text, StringComparison.Ordinal);
+            }
+            finally
+            {
+                // After attempting restoration of the multi-tab baseline,
+                // restore the caller's actual tabs even if that assertion fails.
+                try
+                {
+                    foreach (var resetProjectDocuments in _ladderEditorProjectReplacementResetters)
+                        resetProjectDocuments();
+                    foreach (var (key, title) in liveEditorDocumentTabs)
+                        _ensureTiaEditorDocumentTab?.Invoke(key, title);
+                    _orderTiaEditorDocumentTabs?.Invoke(liveEditorDocumentTabs.Select(tab => tab.Key).ToArray());
+                    Refresh();
+                    if (!string.IsNullOrEmpty(liveActiveEditorDocumentKey))
+                        _activateTiaEditorDocument?.Invoke(liveActiveEditorDocumentKey);
+                    await Frames();
+                    liveEditorViewRestored = liveEditorDocumentTabs.SequenceEqual(CaptureEditorDocumentTabs())
+                        && string.Equals(liveActiveEditorDocumentKey, _getActiveTiaEditorDocumentKey?.Invoke(), StringComparison.Ordinal)
+                        && string.Equals(liveActiveEditorHeading, Find<Label>("EditorTabTitle").Text, StringComparison.Ordinal);
+                }
+                finally
+                {
+                    GetWindow().Size = originalWindowSize;
+                    await Frames(4);
+                    if (originalProjectSplit is not null && originalProjectSplitOffsets.Length > 0)
+                        originalProjectSplit.SplitOffsets = originalProjectSplitOffsets;
+                    if (originalProjectTabs is not null && originalProjectTab >= 0)
+                        originalProjectTabs.CurrentTab = originalProjectTab;
+                    if (originalProjectDockHost is not null && originalProjectDockVisible is { } dockVisible)
+                        originalProjectDockHost.Visible = dockVisible;
+                    if (originalProjectDockPanel is not null && originalProjectDockPanelVisible is { } panelVisible)
+                        originalProjectDockPanel.Visible = panelVisible;
+                    if (originalProjectDockReopen is not null && originalProjectDockReopenVisible is { } reopenVisible)
+                        originalProjectDockReopen.Visible = reopenVisible;
+                    _tiaProjectDockSplitOffset = originalTiaProjectDockWidthCache;
+                    _studio5000ProjectDockSplitOffset = originalStudio5000ProjectDockWidthCache;
+                    await Frames();
+                }
+            }
         }
+
+        var activationGateAfterCleanup = Gate("tia.project-tree.activation-semantics");
+        activationGateAfterCleanup.Set("gate-restores-original-editor-documents", gateEditorViewRestored && liveEditorViewRestored && allTagsDocumentRouteWorks,
+            $"gateTabs={gateEditorDocumentTabs.Length} restored={gateEditorViewRestored} liveTabs={liveEditorDocumentTabs.Length} restored={liveEditorViewRestored} active={liveActiveEditorDocumentKey}->{_getActiveTiaEditorDocumentKey?.Invoke()} heading={liveActiveEditorHeading}->{Find<Label>("EditorTabTitle").Text} allTagsRoute={allTagsDocumentRouteWorks}");
+        activationGateAfterCleanup.Finish();
 
         var passed = gates.Count == 13
             && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 13
