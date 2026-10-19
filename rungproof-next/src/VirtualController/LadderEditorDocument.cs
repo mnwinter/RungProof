@@ -559,7 +559,7 @@ public sealed partial class LadderEditorDocument
             PlcAggregates.Expand(Tags.Where((_, tagIndex) => tagIndex != index).Append(updated).ToArray());
         if (!current.Name.Equals(normalizedName, StringComparison.Ordinal))
         {
-            RenameTagReferences(current.Name, normalizedName);
+            RenameTagReferences(current, updated);
             foreach (var table in WatchTables)
             for (var watchIndex = 0; watchIndex < table.Variables.Count; watchIndex++)
                 if (table.Variables[watchIndex].Equals(current.Name, StringComparison.Ordinal)
@@ -574,6 +574,7 @@ public sealed partial class LadderEditorDocument
     public int CountTagReferences(string name)
     {
         var count = 0;
+        var referencedTag = Tags.FirstOrDefault(tag => tag.Name.Equals(name, StringComparison.Ordinal));
         bool Matches(string operand) => operand.Equals(name, StringComparison.Ordinal)
             || operand.StartsWith(name + ".", StringComparison.Ordinal)
             || operand.StartsWith(name + "[", StringComparison.Ordinal);
@@ -598,6 +599,9 @@ public sealed partial class LadderEditorDocument
                 if (Matches(rung.NumericDestination)) count++;
             }
             else if (!rung.IsCall && !rung.IsReturn && !rung.IsJump && rung.HasTerminalAction && Matches(rung.CoilVariable)) count++;
+            if (referencedTag is not null)
+                count += rung.CallBindings.Count(binding => binding.Kind == LadderActualKind.Symbol
+                    && TryGetCallTagSuffix(referencedTag, binding.Symbol, out _));
         }
         return count;
     }
@@ -614,8 +618,10 @@ public sealed partial class LadderEditorDocument
         return true;
     }
 
-    private void RenameTagReferences(string oldName, string newName)
+    private void RenameTagReferences(PlcVariable oldTag, PlcVariable updatedTag)
     {
+        var oldName = oldTag.Name;
+        var newName = updatedTag.Name;
         string RenameOperand(string operand)
         {
             if (operand.Equals(oldName, StringComparison.Ordinal)) return newName;
@@ -646,7 +652,46 @@ public sealed partial class LadderEditorDocument
             rung.NumericSourceB = RenameOperand(rung.NumericSourceB);
             rung.NumericSourceC = RenameOperand(rung.NumericSourceC);
             rung.NumericDestination = RenameOperand(rung.NumericDestination);
+
+            var oldGlobalId = LadderCallBindings.GlobalId(oldTag);
+            var newGlobalId = LadderCallBindings.GlobalId(updatedTag);
+            if (oldGlobalId.Equals(newGlobalId, StringComparison.Ordinal)) continue;
+            var bindings = rung.CallBindings.ToArray();
+            var changed = false;
+            for (var index = 0; index < bindings.Length; index++)
+            {
+                var binding = bindings[index];
+                if (binding.Kind != LadderActualKind.Symbol
+                    || !TryGetCallTagSuffix(oldTag, binding.Symbol, out var suffix)) continue;
+                bindings[index] = binding with { Symbol = "global:" + newGlobalId + suffix };
+                changed = true;
+            }
+            if (changed) rung.CallBindings = bindings;
         }
+    }
+
+    private static bool TryGetCallTagSuffix(PlcVariable tag, string symbol, out string suffix)
+    {
+        var prefix = "global:" + LadderCallBindings.GlobalId(tag);
+        if (!PlcAggregates.IsAggregate(tag.Type) && symbol.Equals(prefix, StringComparison.Ordinal))
+        {
+            suffix = string.Empty;
+            return true;
+        }
+
+        if (PlcAggregates.IsAggregate(tag.Type))
+        {
+            foreach (var leaf in PlcAggregates.Expand([tag]))
+            {
+                var leafSuffix = leaf.Name[tag.Name.Length..];
+                if (!symbol.Equals(prefix + leafSuffix, StringComparison.Ordinal)) continue;
+                suffix = leafSuffix;
+                return true;
+            }
+        }
+
+        suffix = string.Empty;
+        return false;
     }
 
     private static object InitialValue(PlcVariableType type) => type switch

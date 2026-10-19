@@ -1,6 +1,6 @@
 # TIA parity batch execution plan
 
-Updated: 2026-10-18
+Updated: 2026-10-19
 
 This is the current execution dashboard. `TIA_INSTRUCTION_EVIDENCE_MATRIX.md`
 remains the requirement ledger and `TIA_PORTAL_PARITY_AUDIT.md` remains the
@@ -19,6 +19,22 @@ chronological engineering record.
   local gates. Installed-TIA same-state pairing remains incomplete.
 - `.tools` is an ignored scratch directory. Current screenshots are useful local
   review evidence, but they are not a portable evidence archive.
+
+## Main-screen and property-management sequence
+
+The detailed acceptance ledger is
+[`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md`](TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md).
+Keep the work in this order and defer the demo-logic remediation batch until
+the GUI/property exit criteria are closed.
+
+| Order | Status | Exit condition |
+| --- | --- | --- |
+| Screen-control matrix for Global DB, PLC tags, and Watch controls | Open | Confirm selected-row targeting and visible Apply/Cancel, Add/Remove/Clear, Undo/Redo, and Save/Load behavior in a disposable current-source project. The recent pass confirmed all five Global DB inline fields but did not finish Save/Load or Watch row actions. |
+| Tag-reference lifecycle integrity | Fixed in source; local regression suite passes | Symbolic CALL actuals block referenced-tag deletion and follow rename, including aggregate leaves, while literals, discards, stable IDs, and unresolved references remain unchanged. |
+| Remaining declared property features | Not started | Implement tag-table rename/remove/duplicate and membership, sourced User/System constants, tag-to-operand drag, and Watch address/display/modify behavior with explicit simulator-only writes. Keep undeveloped behavior disclosed. |
+| Instance DB presentation and semantics | Layout locally verified; editing remains read-only | Pair the six-column grouped table with installed TIA V21; add overrides only as a complete identity, validation, persistence, history, and runtime-initialization slice. |
+| Installed TIA V21 comparison | Open | Capture matched project objects and states using the controlled installed-TIA capture pack. |
+| Demo sequence and ladder-owned safety logic | Deferred until GUI/property work closes | Implement and verify the demo requirements only after the preceding GUI/property gates pass. |
 
 ## Work lanes
 
