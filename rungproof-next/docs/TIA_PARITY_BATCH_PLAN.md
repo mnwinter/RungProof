@@ -1,6 +1,6 @@
 # TIA parity batch execution plan
 
-Updated: 2026-10-15
+Updated: 2026-10-18
 
 This is the current execution dashboard. `TIA_INSTRUCTION_EVIDENCE_MATRIX.md`
 remains the requirement ledger and `TIA_PORTAL_PARITY_AUDIT.md` remains the
@@ -352,10 +352,66 @@ status remains independent and is not promoted.
 
 ## Next batches
 
-1. Execute the controlled installed-TIA capture pack and pair results by exact
-   instruction, state, and configuration.
-2. Retain the v6 structured artifacts durably when the source tree is placed
-   under version control; current `.tools` evidence remains local and ephemeral.
+The complete acceptance ledger for the main workbench and property-management
+scope is [`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md`](TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md).
+It owns the detailed requirements and dependencies below.
+
+1. **Main workbench parity:** finish TIA V21-style shell, project tree, document
+   tabs, editor/inspector panes, diagnostics, and online/offline status. Capture
+   the same screens at the same window size and record all intentional
+   differences.
+2. **Transactional property workflows:** exercise existing property forms
+   through select, load, validate, Apply/Cancel, Undo/Redo, and Save/Load.
+   Include declaration row isolation across blocks and tables.
+3. **DB declaration management:** complete the supported Global DB editor and
+   visual contract; explicitly choose which declaration columns and access
+   modes RungProof supports. Decide whether per-instance start overrides and
+   online Monitor values are in scope; implement them end-to-end or keep them
+   clearly disclosed as unsupported.
+4. **PLC tags and constants:** add PLC-tag properties, User constants, and the
+   Default/All-tags System constants view, with typed validation, table
+   membership, drag-to-operand, persistence, and Undo/Redo.
+5. **Watch table:** add addresses, type-valid Display format selection, and
+   modify values evaluated only through the offline simulator. Preserve clear
+   quality and no-physical-write boundaries.
+6. **Independent review and screen walkthrough:** close high-severity code
+   findings, then exercise each visible navigation, declaration, tag,
+   watch-table, and property function with screen control. CUA has no native
+   window discovery API, so a session-only loopback browser bridge now mirrors
+   the Godot window and forwards browser input to it. CUA has verified Global
+   DB creation, member-editor navigation, text entry, Add, and DB grid update;
+   the broader walkthrough remains incomplete. The bridge is local-only and is
+   not a browser build of RungProof.
+7. **Installed TIA V21 comparison:** execute the controlled capture pack and
+   pair by exact screen/object/state/settings. Do not claim a visual match from
+   RungProof captures or automated gates.
+8. Retain structured evidence durably when the source tree is placed under
+   version control; current `.tools` artifacts remain local and ephemeral.
+
+## Current property-management batch result
+
+The project-tree gate previously reported Global DB `fields-persist` as failed
+because its test looked one child too far into a `HideRoot` declaration Tree.
+The gate now selects the actual row. This exposed a real production risk: a
+selected declaration index could survive a block switch and target another
+block's row. The editor now scopes the selected declaration to its owning block
+and name, clears the form on block changes, and verifies that a second DB with
+the same row index remains unchanged. The current local build passes with zero
+warnings/errors; `--verify-tia-project-tree-gates` passes all 9 gates and 48
+assertions. A native-screen walkthrough also found that the DB screen pointed
+to a Siemens-mode Project inspector whose tabs were hidden, leaving member
+editing without a discoverable route. The DB view now exposes Edit members /
+Project tree actions and widens the inspector dock while the declaration form
+is active. Local Windows mouse/keyboard input verified creating a DB, adding a
+BOOL member, editing its comment and Retain state, and returning to the tree.
+This is local app behavior, not installed-TIA comparison.
+
+The current local gaps are Watch table address/display-format/modify-value
+editing, PLC User/System constants and tag attributes, expanded Global DB
+columns/access modes, per-instance DB overrides/online values, full screen
+coverage across all supported property surfaces, and matched installed-TIA V21
+captures. Track these by the
+requirement IDs in the linked acceptance ledger, not as isolated fixes.
 
 ## External blockers
 
@@ -368,3 +424,83 @@ status remains independent and is not promoted.
 - deliberately unsupported Siemens features already named in the matrix.
 
 Overall Siemens parity remains **OPEN**.
+
+## 2026-10-18 recovery and verification update
+
+The current task's screen-control blocker is resolved for this workstation:
+the CUA native-app provider remains empty, but a session-only loopback browser
+bridge bound to the exact scratch-process PID provides screen control. The
+separate screen-control pass exercised tag/watch creation modal cancellation,
+tag selection and visible property fields, Watch table 1 status/actions, DB
+navigation, Start/Stop blocked messaging without a loaded controller, and
+simulated E-stop/reset state changes. After starting the local simulator,
+scene Start changed `conveyor_run` false-to-true and cartons moved; a second
+click stopped the conveyor. Bottom STOP returned LOCAL RUNTIME to STOPPED,
+with scan progression visible while running. No scratch project was saved.
+
+The independent read-only review identified and the implementation fixed two
+Global DB form issues: the New action could erase pending member edits, and
+member labels/defaults could remain stale across DB↔FB navigation. The New
+action now invokes the common Apply/Discard/Cancel resolver; the DB form uses
+member-specific labels and resets defaults when its owner block changes. A
+visible Cancel action now discards an unapplied member form, and changing a
+new member's type replaces an untouched BOOL default with a valid type default.
+ENUM selects a matching member/start value (seeding `Value1` for an empty
+domain), and Retain-only changes now participate in pending-form resolution.
+Independent source review then found a loader gap: malformed JSON could place
+Input/Output/InOut/Temp members in a Global DB although the authoring API
+rejects them. The loader now rejects those documents, with a regression test.
+The prior claim that the DB row traversal skipped rows was stale; current
+source walks direct declaration-row siblings and the gate confirms all five
+cells lock during a pending edit and restore on Cancel.
+
+The separate screen pass visibly added a Global DB member and edited Name,
+Start value, Retain, and Comment; the BOOL start value was restored after
+inspection. Alternate-type editing was not verified. Remove caused an
+ambiguous redraw. A focused screen retry confirmed existing-row Edit when
+selection is explicit: click the Name cell without typing, press Escape to
+leave inline editing, then click EDIT. The member pane loaded the selected
+member's name, BOOL type, FALSE start value, and Retain state; Cancel returned
+to a blank form without changing the row. The earlier blank form was a
+selection-state issue, not a confirmed Edit defect. The DB project remained
+unsaved.
+
+### Fresh-process CUA recovery and instance-DB walkthrough
+
+The CUA native-app inventory still reports `apps: []`; its Windows binding is
+not exposing Godot windows. The browser-only workaround is a session-local
+loopback input/screenshot relay pinned to a specific visible Godot PID. The
+first relay target had started before the current `RungProof.Next.dll` build,
+which explained why that window could not prove the current DB layout. The
+older scratch session was left open and untouched. A new current-build process
+was launched beside it and given a separate process-pinned relay; no key or
+session token is recorded here.
+
+On that fresh process, screen control dismissed the startup simulator notice,
+opened the Scenario Browser, loaded Demo 5 without a confirmation prompt,
+entered Logic Editor, and opened both `X_Axis_DB [DB101]` and
+`Y_Axis_DB [DB102]`. The live tabs show the assigned FB, a six-column
+declaration table (Name, Data Type, Default Value, Start Value, Retain,
+Comment), grouped interface sections, and the explicit read-only/offline
+capability boundary. Switching between the two DB tabs restored the correct
+heading. Clicking Start Value produced no edit, consistent with the disclosed
+read-only behavior. No project changes were saved.
+
+This resolves the screen-control blocker and the specific instance-DB layout
+confusion for the current build: the earlier paragraph-style “Interface
+storage” image is not the current live screen. One bridged older process was
+indeed stale relative to the current assembly. Source/rendered/live evidence
+now agrees on the six-column layout. TIA V21 visual parity is still open; the
+current instance DB remains read-only, and per-instance Start/Retain/Comment
+semantics require an end-to-end model, persistence, history, and runtime slice
+before those cells can be offered for editing. The old scratch process and its
+unsaved draft remain intact.
+
+The current source builds with 0 warnings/errors. The visible 2048x1152
+project-tree gate passes 9/9 gates and 62/62 assertions; the virtual-controller
+suite passes 376/376; and the app-shell verifier passes for 77 scenes, five
+demos, and 295 assets. The headless project-tree geometry sample is invalid at
+its synthetic viewport and is not used as a dock-fit verdict. Matched TIA V21
+capture comparison, alternate-type/Remove/Edit DB behavior, invalid-value
+recovery and Save/Load workflows, remaining function-by-function screen
+control, and ladder-owned demo remediation remain open.

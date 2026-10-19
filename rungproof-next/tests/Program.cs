@@ -98,6 +98,7 @@ internal static partial class Program
         Test("compiler rejects unsupported sub-millisecond scan periods", TestMinimumScanPeriod);
         Test("new project reset clears all prior engineering state", TestNewProjectReset);
         Test("typed tag initial values parse persist and initialize runtime", TestTagInitialValues);
+        Test("S7-1500 PLC tag addresses validate type, role, range, and overlap", TestSiemensPlcTagAddresses);
         Test("watch table persists and follows tag lifecycle", TestWatchTablePersistence);
         Test("watch table validates symbols and participates in undo", TestWatchTableValidationAndUndo);
         Test("named watch tables persist independently and follow tag lifecycle", TestNamedWatchTables);
@@ -191,6 +192,10 @@ internal static partial class Program
         Test("parallel branch removal preserves one required logic path", TestParallelBranchRemoval);
         Test("tag rename updates every symbolic reference atomically", TestTagRename);
         Test("referenced tag deletion is blocked and unused deletion succeeds", TestTagDeletion);
+        Test("tag assignment uses canonical tag-table casing", TestTagTableNameCanonicalization);
+        Test("PLC tag and block names are unique across the CPU namespace", TestCpuSymbolUniqueness);
+        Test("editor block document identity survives rename, delete, undo, and redo", TestEditorBlockDocumentIdentity);
+        Test("compiler rejects case-insensitive tag and block name collisions", TestCompilerCpuSymbolUniqueness);
         Test("simulator input force overrides sampled BOOL input", TestInputForce);
         Test("input force release restores unforced image without new samples", TestInputForceRelease);
         Test("forced input retains latest sampled held and pulsed operator image", TestInputForceRawUpdates);
@@ -1244,6 +1249,51 @@ internal static partial class Program
                 : item).ToArray(),
         };
         HasIssue(outOfRange, "VC002");
+    }
+
+    private static void TestSiemensPlcTagAddresses()
+    {
+        static void Valid(string address, PlcVariableType type, PlcVariableRole role)
+        {
+            True(SiemensPlcTagAddress.TryValidate(address, type, role, [], null, out var error),
+                $"Expected valid S7-1500 tag address '{address}' for {type}/{role}; {error}");
+        }
+
+        static void Invalid(string address, PlcVariableType type, PlcVariableRole role)
+        {
+            False(SiemensPlcTagAddress.TryValidate(address, type, role, [], null, out _),
+                $"Expected invalid S7-1500 tag address '{address}' for {type}/{role}.");
+        }
+
+        Valid("%I0.0", PlcVariableType.Bool, PlcVariableRole.Input);
+        Valid("Q32767.7", PlcVariableType.Bool, PlcVariableRole.Output);
+        Valid("%M16383.7", PlcVariableType.Bool, PlcVariableRole.Memory);
+        Valid("%DB12.DBX0.7", PlcVariableType.Bool, PlcVariableRole.Memory);
+        Valid("%IW32766", PlcVariableType.Int, PlcVariableRole.Input);
+        Valid("%MW16382", PlcVariableType.Int, PlcVariableRole.Memory);
+        Valid("%QD32764", PlcVariableType.DInt, PlcVariableRole.Output);
+        Valid("%MD16380", PlcVariableType.Real, PlcVariableRole.Memory);
+        Valid("%DB12.DBD16", PlcVariableType.Time, PlcVariableRole.Memory);
+        Valid(string.Empty, PlcVariableType.Array, PlcVariableRole.Memory);
+
+        Invalid("%IW1", PlcVariableType.Bool, PlcVariableRole.Input);
+        Invalid("%I0.0", PlcVariableType.Bool, PlcVariableRole.Memory);
+        Invalid("%I0.8", PlcVariableType.Bool, PlcVariableRole.Input);
+        Invalid("%ID32765", PlcVariableType.DInt, PlcVariableRole.Input);
+        Invalid("%MW16383", PlcVariableType.Int, PlcVariableRole.Memory);
+        Invalid("%DB0.DBX0.0", PlcVariableType.Bool, PlcVariableRole.Memory);
+        Invalid("%M0.0", PlcVariableType.String, PlcVariableRole.Memory);
+
+        var occupied = new PlcVariable("existing", PlcVariableType.Int, PlcVariableRole.Memory,
+            0L, Address: "MW0");
+        False(SiemensPlcTagAddress.TryValidate("%M1.0", PlcVariableType.Bool,
+                PlcVariableRole.Memory, [occupied], null, out var overlapError),
+            "A BOOL bit must not overlap a declared INT word address.");
+        True(overlapError.Contains("overlaps", StringComparison.Ordinal),
+            "Overlapping address rejection should identify the conflict.");
+        True(SiemensPlcTagAddress.TryValidate("%MW0", PlcVariableType.Int,
+                PlcVariableRole.Memory, [occupied], "existing", out _),
+            "Editing a declaration must not conflict with its own existing address.");
     }
 
     private static void TestWatchTablePersistence()
@@ -3644,6 +3694,10 @@ internal static partial class Program
         var db = editor.AddBlock("DB_Motor", LadderBlockType.DataBlock);
         editor.AddInterfaceParameter(db.Id, "Speed", PlcVariableType.Real, LadderInterfaceSection.Static, 12.5,
             retain: true, comment: "Retained line-speed setpoint");
+        var duplicateGlobalMemberRejected = false;
+        try { editor.AddInterfaceParameter(db.Id, "speed", PlcVariableType.Real, LadderInterfaceSection.Static, 1.0); }
+        catch (InvalidOperationException) { duplicateGlobalMemberRejected = true; }
+        True(duplicateGlobalMemberRejected);
         editor.SelectBlock(editor.Blocks.IndexOf(db));
         var dbNetworkRejected = false;
         try { editor.AddRung("Invalid DB network", string.Empty); }
@@ -3668,6 +3722,19 @@ internal static partial class Program
         Equal(12.5, Convert.ToDouble(loaded.Document.Blocks[2].Interface[0].InitialValue));
         True(loaded.Document.Blocks[2].Interface[0].Retain);
         Equal("Retained line-speed setpoint", loaded.Document.Blocks[2].Interface[0].Comment);
+        var duplicateDbJson = JsonNode.Parse(LadderEditorProjectJson.Save(editor))!.AsObject();
+        var duplicateDbMembers = duplicateDbJson["blocks"]![2]!["interface"]!.AsArray();
+        duplicateDbMembers.Add(duplicateDbMembers[0]!.DeepClone());
+        duplicateDbMembers[1]!["name"] = "speed";
+        var duplicateDbLoad = LadderEditorProjectJson.Load(duplicateDbJson.ToJsonString());
+        False(duplicateDbLoad.IsReadable);
+        True(duplicateDbLoad.Issues.Any(issue => issue.Message.Contains("Global DB declarations", StringComparison.Ordinal)));
+        var invalidDbSectionJson = JsonNode.Parse(LadderEditorProjectJson.Save(editor))!.AsObject();
+        invalidDbSectionJson["blocks"]![2]!["interface"]![0]!["section"] = LadderInterfaceSection.Input.ToString();
+        var invalidDbSectionLoad = LadderEditorProjectJson.Load(invalidDbSectionJson.ToJsonString());
+        False(invalidDbSectionLoad.IsReadable);
+        True(invalidDbSectionLoad.Issues.Any(issue => issue.Message.Contains("Global DB declarations", StringComparison.Ordinal)
+            && issue.Message.Contains("Static section", StringComparison.Ordinal)));
         Equal(0, loaded.Document.Blocks[2].Rungs.Count);
         Equal(LadderBlockType.FunctionBlock, loaded.Document.BuildProgram().Blocks![1].BlockType);
         True(LadderCompiler.Compile(loaded.Document.BuildProgram()).IsValid);
@@ -3996,6 +4063,130 @@ internal static partial class Program
         True(editor.TryRemoveTag("unused_spare", out var unusedReferences));
         Equal(0, unusedReferences);
         False(editor.Tags.Any(tag => tag.Name == "unused_spare"));
+    }
+
+    private static void TestCpuSymbolUniqueness()
+    {
+        var editor = new LadderEditorDocument { Id = "cpu-name-scope", Name = "NameScope" };
+        var block = editor.AddBlock("OB1", LadderBlockType.OrganizationBlock);
+        editor.AddTagTable("Auxiliary");
+        editor.AddTag("Ready", PlcVariableRole.Memory);
+
+        var duplicateAcrossTablesRejected = false;
+        try { editor.AddTag("READY", PlcVariableRole.Memory, tagTable: "Auxiliary"); }
+        catch (InvalidOperationException) { duplicateAcrossTablesRejected = true; }
+        True(duplicateAcrossTablesRejected);
+        Equal(1, editor.Tags.Count);
+
+        var tagAgainstBlockRejected = false;
+        try { editor.AddTag("ob1", PlcVariableRole.Memory); }
+        catch (InvalidOperationException) { tagAgainstBlockRejected = true; }
+        True(tagAgainstBlockRejected);
+
+        var blockAgainstTagRejected = false;
+        try { editor.AddBlock("ready"); }
+        catch (InvalidOperationException) { blockAgainstTagRejected = true; }
+        True(blockAgainstTagRejected);
+
+        var blockRenameRejected = false;
+        try { editor.RenameBlock(block.Id, "READY"); }
+        catch (InvalidOperationException) { blockRenameRejected = true; }
+        True(blockRenameRejected);
+        Equal("OB1", block.Name);
+
+        var tagRenameRejected = false;
+        try
+        {
+            editor.UpdateTag("Ready", "oB1", PlcVariableType.Bool, PlcVariableRole.Memory);
+        }
+        catch (InvalidOperationException) { tagRenameRejected = true; }
+        True(tagRenameRejected);
+        Equal("Ready", editor.Tags.Single().Name);
+    }
+
+    private static void TestTagTableNameCanonicalization()
+    {
+        var document = new LadderEditorDocument();
+
+        var scalar = document.AddTag("Ready", PlcVariableRole.Memory, tagTable: "default TAG table");
+        Equal("Default tag table", scalar.TagTable);
+        Equal(1, document.TagTables.Count);
+
+        var aggregate = document.AddAggregateTag(
+            "SampleArray",
+            PlcVariableRole.Memory,
+            PlcVariableType.Array,
+            new PlcAggregateSchema(ElementType: PlcVariableType.Bool, Length: 1),
+            new object[] { false },
+            tagTable: "DEFAULT TAG TABLE");
+        Equal("Default tag table", aggregate.TagTable);
+        Equal(1, document.TagTables.Count);
+        True(document.Tags.All(tag => document.TagTables.Contains(tag.TagTable, StringComparer.Ordinal)));
+    }
+
+    private static void TestEditorBlockDocumentIdentity()
+    {
+        var editor = LadderEditorDocument.CreateConveyorExample();
+        var earlier = editor.AddBlock("Earlier_Unused", LadderBlockType.Function);
+        var survivor = editor.AddBlock("Survivor", LadderBlockType.Function);
+        var key = EditorDocumentIdentity.ForBlock(survivor);
+
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var originalIndex));
+        Equal(survivor.Id, editor.Blocks[originalIndex].Id);
+
+        var history = new LadderEditorHistory();
+        history.Execute(editor, "Rename survivor", () => editor.RenameBlock(survivor.Id, "Survivor_Renamed"));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var renamedIndex));
+        Equal(survivor.Id, editor.Blocks[renamedIndex].Id);
+        Equal("Survivor_Renamed", editor.Blocks[renamedIndex].Name);
+        True(history.Undo(editor, out _));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var undoRenameIndex));
+        Equal(survivor.Id, editor.Blocks[undoRenameIndex].Id);
+        True(history.Redo(editor, out _));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var redoRenameIndex));
+        Equal(survivor.Id, editor.Blocks[redoRenameIndex].Id);
+
+        history.Execute(editor, "Delete earlier block", () => True(editor.TryRemoveBlock(earlier.Id, out _)));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var shiftedIndex));
+        Equal(survivor.Id, editor.Blocks[shiftedIndex].Id);
+        Equal(originalIndex - 1, shiftedIndex);
+        True(history.Undo(editor, out _));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var undoDeleteIndex));
+        Equal(survivor.Id, editor.Blocks[undoDeleteIndex].Id);
+        Equal(originalIndex, undoDeleteIndex);
+        True(history.Redo(editor, out _));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var redoDeleteIndex));
+        Equal(survivor.Id, editor.Blocks[redoDeleteIndex].Id);
+        Equal(originalIndex - 1, redoDeleteIndex);
+
+        history.Execute(editor, "Delete survivor", () => True(editor.TryRemoveBlock(survivor.Id, out _)));
+        False(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out _));
+        True(history.Undo(editor, out _));
+        True(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out var restoredIndex));
+        Equal(survivor.Id, editor.Blocks[restoredIndex].Id);
+        True(history.Redo(editor, out _));
+        False(EditorDocumentIdentity.TryResolveBlockIndex(editor, key, out _));
+    }
+
+    private static void TestCompilerCpuSymbolUniqueness()
+    {
+        var program = LadderEditorDocument.CreateConveyorExample().BuildProgram();
+        var firstTag = program.Variables[0];
+        var duplicateTag = program with
+        {
+            Variables = program.Variables.Append(firstTag with { Name = firstTag.Name.ToUpperInvariant() }).ToArray(),
+        };
+        True(LadderCompiler.Validate(duplicateTag).Any(issue =>
+            issue.Code == "VC004" && issue.Path.StartsWith("$.variables[", StringComparison.Ordinal)));
+
+        var collidingBlock = program.Blocks![0] with { Name = firstTag.Name.ToUpperInvariant() };
+        var blockCollision = program with
+        {
+            Blocks = program.Blocks.Select((block, index) => index == 0 ? collidingBlock : block).ToArray(),
+        };
+        True(LadderCompiler.Validate(blockCollision).Any(issue =>
+            issue.Code == "VC004" && issue.Path.StartsWith("$.variables[", StringComparison.Ordinal)
+            && issue.Message.Contains("conflicts with a block/routine", StringComparison.Ordinal)));
     }
 
     private static void TestInputForce()
@@ -4755,7 +4946,7 @@ internal static partial class Program
             && !editorControlAssertions.GetProperty("externalTia").GetBoolean()
             && !editorControlAssertions.GetProperty("livePlc").GetBoolean()
             && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 9
-            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 45
+            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 62
             && projectTreeAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && projectTreeAssertions.GetProperty("nativePointerGeometry").GetBoolean()
             && !projectTreeAssertions.GetProperty("externalTia").GetBoolean()
@@ -4908,7 +5099,7 @@ internal static partial class Program
         foreach (var expected in new[]
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 9, Assertions: 45),
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 9, Assertions: 62),
         })
         {
             var artifact = root.GetProperty(expected.Property);

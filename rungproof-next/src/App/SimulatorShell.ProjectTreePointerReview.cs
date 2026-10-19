@@ -26,7 +26,7 @@ public partial class SimulatorShell
             ?? throw new InvalidOperationException("TIA editor title is unavailable.");
         var globalDbDocument = FindChild("GlobalDbDocument", true, false) as Control
             ?? throw new InvalidOperationException("TIA Global DB document is unavailable.");
-        var instanceDbDocument = FindChild("InstanceDbDocument", true, false) as RichTextLabel
+        var instanceDbDocument = FindChild("InstanceDbDocument", true, false) as VBoxContainer
             ?? throw new InvalidOperationException("TIA instance DB document is unavailable.");
         var bottomPanel = FindChild("InspectorOutputDock", true, false) as Control
             ?? throw new InvalidOperationException("TIA bottom workspace is unavailable.");
@@ -156,7 +156,10 @@ public partial class SimulatorShell
         var instanceDbObject = await VerifyObject("instance-db:321",
             () => !instanceDbDocument.Visible && _ladderDocument.ActiveBlockIndex == 1,
             () => instanceDbDocument.IsVisibleInTree()
-                && instanceDbDocument.Text.Contains("Pointer_Count_DB", StringComparison.Ordinal));
+                && FindChild("InstanceDbHeading", true, false) is Label instanceDbHeading
+                && instanceDbHeading.Text.Contains("Pointer_Count_DB", StringComparison.Ordinal)
+                && FindChild("InstanceDbDeclarations", true, false) is Tree instanceDbDeclarations
+                && instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetFirstChild()?.GetText(0) == "Q");
 
         await OpenProgramFixture();
         bottomPanel.Hide();

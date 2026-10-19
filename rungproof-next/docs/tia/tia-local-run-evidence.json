@@ -20,8 +20,15 @@
       "stableAssertions": {
         "catalogKeys": 50,
         "rendererCases": 900,
-        "selectionStates": ["unselected", "selected"],
-        "zoomLevels": [75, 100, 150],
+        "selectionStates": [
+          "unselected",
+          "selected"
+        ],
+        "zoomLevels": [
+          75,
+          100,
+          150
+        ],
         "displayModesPerStateAndZoom": 3,
         "selectedDetails": 150,
         "contactSheets": 24
@@ -33,7 +40,12 @@
       "stableAssertions": {
         "catalogKeys": 50,
         "monitorCases": 200,
-        "states": ["evaluated-false", "evaluated-true", "unknown-earlier-cycle", "never-executed"],
+        "states": [
+          "evaluated-false",
+          "evaluated-true",
+          "unknown-earlier-cycle",
+          "never-executed"
+        ],
         "gateIds": 50
       }
     },
@@ -45,8 +57,13 @@
         "editCases": 50,
         "gateIds": 50,
         "validatedForms": 49,
-        "structuralCasesWithoutMalformedOperand": ["rung"],
-        "physicalInputRoutes": ["Viewport.PushInput", "Window.PushInput:Enter"]
+        "structuralCasesWithoutMalformedOperand": [
+          "rung"
+        ],
+        "physicalInputRoutes": [
+          "Viewport.PushInput",
+          "Window.PushInput:Enter"
+        ]
       }
     },
     {
@@ -65,7 +82,7 @@
       "status": "passed",
       "stableAssertions": {
         "gateIds": 9,
-        "assertions": 45,
+        "assertions": 62,
         "structuredPerGateResults": true,
         "nativePointerGeometry": true,
         "externalTia": false,
@@ -175,11 +192,11 @@
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
-    "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-project-tree-gates.json",
-    "sha256": "2F9AA28EA11C3EEAFF165F0F2048B08D30C5B96E611209E57FE2263BC7FBFECF",
+    "path": ".tools/tia-project-tree-gates.json",
+    "sha256": "A6D5B3C7AD320A37F81095D6382609BB80A7FC7B8F8021E85E7F9E0F5B6508D1",
     "status": "passed",
     "gateCount": 9,
-    "assertionCount": 45,
+    "assertionCount": 62,
     "durability": "ephemeral-local"
   },
   "selectedVisualReview": {

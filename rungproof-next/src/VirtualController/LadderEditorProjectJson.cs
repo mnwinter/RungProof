@@ -128,6 +128,17 @@ public static class LadderEditorProjectJson
                 || dto.Blocks.SelectMany(block => block.Rungs).SelectMany(rung => rung.Branches)
                     .Any(branch => branch.Contacts is null || branch.Contacts.Any(contact => contact is null)))
                 return Invalid("Editor project block, rung, branch, and contact collections must not be null.");
+            foreach (var block in dto.Blocks.Where(block => string.Equals(
+                         block.BlockType, LadderBlockType.DataBlock.ToString(), StringComparison.OrdinalIgnoreCase)))
+            {
+                var names = block.Interface.Select(parameter => parameter.Name ?? string.Empty).ToArray();
+                if (names.Any(string.IsNullOrWhiteSpace)
+                    || names.GroupBy(name => name, StringComparer.OrdinalIgnoreCase).Any(group => group.Count() > 1))
+                    return Invalid($"Global DB declarations in block '{block.Name}' must have nonempty, case-insensitively unique names.");
+                if (block.Interface.Any(parameter => !string.Equals(
+                        parameter.Section, LadderInterfaceSection.Static.ToString(), StringComparison.OrdinalIgnoreCase)))
+                    return Invalid($"Global DB declarations in block '{block.Name}' must use the Static section.");
+            }
             if (dto.SchemaVersion == 1 && dto.Blocks.Any(block => block.Rungs.Any(rung => rung.Branches.Count == 0)))
                 return Invalid("Every network/rung must retain at least one branch path.");
             if (dto.SchemaVersion >= 2 && dto.Blocks.Any(block => block.Rungs.Any(rung => rung.Root is null)))

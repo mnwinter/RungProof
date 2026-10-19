@@ -238,16 +238,20 @@ public partial class SimulatorShell
             Require("TiaInstanceDbListedInsideProgramBlocks", instanceDbRow is not null
                 && instanceDbRow.GetParent()?.GetMetadata(0).AsString() == "blocks"
                 && FindTreeItem(projectTree.GetRoot(), "instance-dbs") is null);
-            var instanceDbDocument = Find<RichTextLabel>("InstanceDbDocument");
+            var instanceDbDocument = Find<VBoxContainer>("InstanceDbDocument");
+            var instanceDbSubtitle = Find<Label>("InstanceDbSubtitle");
+            var instanceDbDeclarations = Find<Tree>("InstanceDbDeclarations");
             instanceDbRow!.Select(0);
             projectTree.EmitSignal(Tree.SignalName.ItemSelected);
             Require("TiaInstanceDbSelectionDoesNotOpen", !instanceDbDocument.Visible
                 && output.Text.Contains("Double-click", StringComparison.Ordinal));
             instanceDbRow.Select(0);
             projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            var instanceDbMember = instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetFirstChild();
             Require("TiaInstanceDbActivationOpensDefinition", instanceDbDocument.IsVisibleInTree()
-                && instanceDbDocument.Text.Contains("IEC_COUNTER", StringComparison.Ordinal)
-                && instanceDbDocument.Text.Contains("verify_counter", StringComparison.Ordinal));
+                && instanceDbSubtitle.Text.Contains("IEC_COUNTER", StringComparison.Ordinal)
+                && instanceDbSubtitle.Text.Contains("verify_counter", StringComparison.Ordinal)
+                && instanceDbMember?.GetText(0) == "Q" && instanceDbMember.GetText(1) == "BOOL");
             Find<Button>("EditorDocument_0").EmitSignal(BaseButton.SignalName.Pressed);
             // Earlier command-route checks intentionally leave form drafts pending. Production
             // document navigation must retain that guard, so resolve it through the same Discard
@@ -273,8 +277,11 @@ public partial class SimulatorShell
             Require("TiaGlobalDbActivationOpensDeclarationsNotLad", globalDbDocument.IsVisibleInTree()
                 && !canvas.IsVisibleInTree() && globalDbRow?.GetText(0) == "TargetSpeed"
                 && globalDbRow.GetText(1) == "REAL" && globalDbRow.GetText(2) == "1250");
-            Require("TiaGlobalDbRetainAndCommentRender", globalDbRow?.GetText(3) == "YES"
+            Require("TiaGlobalDbRetainAndCommentRender", globalDbRow?.IsChecked(3) == true
                 && globalDbRow.GetText(4) == "Retained conveyor speed setpoint");
+            Require("TiaGlobalDbDeclarationCellsEditable", globalDbRow is not null
+                && Enumerable.Range(0, globalDbDeclarations.Columns).All(globalDbRow.IsEditable)
+                && globalDbRow.GetCellMode(3) == TreeItem.TreeCellMode.Check);
             var blockTypeSelector = Find<OptionButton>("BlockTypeSelector");
             var interfaceSectionSelector = Find<OptionButton>("InterfaceSection");
             Require("TiaGlobalDbTypeAndStaticSectionAreImmutable", blockTypeSelector.Disabled

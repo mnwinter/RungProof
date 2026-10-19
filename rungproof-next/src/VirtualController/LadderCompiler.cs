@@ -53,15 +53,33 @@ public static class LadderCompiler
         if (program.ScanPeriod < TimeSpan.FromMilliseconds(1))
             issues.Add(new("VC100", "$.scanPeriodMs", "scanPeriodMs must be at least 1 ms for the offline simulator."));
 
+        var blocks = program.Blocks is { Count: > 0 }
+            ? program.Blocks
+            : [new LadderBlock("main", program.Name, program.Networks)];
+        var blockNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var index = 0; index < blocks.Count; index++)
+        {
+            var name = blocks[index].Name;
+            if (!string.IsNullOrWhiteSpace(name) && !blockNames.Add(name))
+                issues.Add(new("VC004", $"$.blocks[{index}].name", $"Duplicate CPU symbol '{name}' (block/routine names are case-insensitive)."));
+        }
+
         var variables = new Dictionary<string, PlcVariable>(StringComparer.Ordinal);
+        var variableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         for (var index = 0; index < program.Variables.Count; index++)
         {
             var variable = program.Variables[index];
             var path = $"$.variables[{index}]";
             if (string.IsNullOrWhiteSpace(variable.Name))
                 issues.Add(new("VC001", $"{path}.name", "Variable name is required."));
-            else if (!variables.TryAdd(variable.Name, variable))
-                issues.Add(new("VC004", $"{path}.name", $"Duplicate variable '{variable.Name}'."));
+            else
+            {
+                if (!variableNames.Add(variable.Name))
+                    issues.Add(new("VC004", $"{path}.name", $"Duplicate CPU symbol '{variable.Name}' (PLC tag names are case-insensitive across tag tables)."));
+                if (blockNames.Contains(variable.Name))
+                    issues.Add(new("VC004", $"{path}.name", $"PLC tag '{variable.Name}' conflicts with a block/routine name."));
+                variables.TryAdd(variable.Name, variable);
+            }
             if (variable.Type is not (PlcVariableType.Bool or PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real or PlcVariableType.Time or PlcVariableType.Timer or PlcVariableType.Counter or PlcVariableType.String or PlcVariableType.Enum))
                 issues.Add(new("VC002", $"{path}.type", $"The current runtime supports BOOL, INT, DINT, REAL, TIME, TIMER, and COUNTER; '{variable.Name}' is {variable.Type}."));
             if (PlcTextValues.IsText(variable.Type) && !PlcTextValues.IsValid(variable, variable.InitialValue))
@@ -119,11 +137,7 @@ public static class LadderCompiler
         }
 
         var ids = new HashSet<string>(StringComparer.Ordinal);
-        var blocks = program.Blocks is { Count: > 0 }
-            ? program.Blocks
-            : [new LadderBlock("main", program.Name, program.Networks)];
         var blockIds = new HashSet<string>(StringComparer.Ordinal);
-        var blockNames = new HashSet<string>(StringComparer.Ordinal);
         var timerInstructionPaths = new Dictionary<string, string>(StringComparer.Ordinal);
         var edgeMemoryOperands = new HashSet<string>(StringComparer.Ordinal);
         for (var blockIndex = 0; blockIndex < blocks.Count; blockIndex++)
@@ -136,8 +150,6 @@ public static class LadderCompiler
                 issues.Add(new("VC004", $"{blockPath}.id", $"Duplicate block ID '{block.Id}'."));
             if (string.IsNullOrWhiteSpace(block.Name))
                 issues.Add(new("VC100", $"{blockPath}.name", "Block name is required."));
-            else if (!blockNames.Add(block.Name))
-                issues.Add(new("VC004", $"{blockPath}.name", $"Duplicate block name '{block.Name}'."));
             for (var labelIndex = 0; labelIndex < block.Networks.Count; labelIndex++)
             {
                 var label = block.Networks[labelIndex].LabelInstruction;

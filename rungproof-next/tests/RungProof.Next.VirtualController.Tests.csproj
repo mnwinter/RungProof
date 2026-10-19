@@ -25,6 +25,7 @@
     <Compile Include="CallEditorTests.cs" />
     <Compile Include="InstructionPresentationTests.cs" />
     <Compile Include="../src/App/TiaMonitorValueFormatter.cs" />
+    <Compile Include="../src/App/EditorDocumentIdentity.cs" />
     <Compile Include="../src/App/LadderInstructionPresentation.cs" />
     <Compile Include="../src/App/TiaNumericInstructionPorts.cs" />
     <Compile Include="..\src\VirtualController\*.cs" />

@@ -76,6 +76,7 @@ public partial class SimulatorShell
                 ("enter-activates-selected-row", "focused Enter activates the selected supported row"),
                 ("activation-opens-exact-target", "activation opens the exact matching document or dialog"),
                 ("instance-return-restores-owner", "returning from an instance DB restores the correct active block title"),
+                ("block-tab-identity-survives-reindex", "open block tabs keep their block identity across rename, Undo/Redo, and deletion of an earlier block"),
             ],
             ["tia.project-tree.show-all-tags"] =
             [
@@ -114,6 +115,22 @@ public partial class SimulatorShell
                 ("row-under-program-blocks", "the Global DB row appears under Program blocks"),
                 ("activation-opens-declarations", "activation opens declarations and not a LAD canvas"),
                 ("fields-persist", "Name, Data type, Start value, Retain, and Comment persist"),
+                ("declaration-grid-inline-edit", "all five Global DB fields render as editable cells, with Retain shown as a checkbox"),
+                ("pending-form-blocks-inline-edit", "all declaration cells become noneditable while a member draft is pending"),
+                ("member-draft-cancel-restores-inline-edit", "Cancel discards the draft without changing the DB and restores cell editability"),
+                ("new-member-resolves-pending-form", "starting a new member resolves the pending form without silently discarding or mutating it"),
+                ("type-change-seeds-valid-initial", "changing a new member type replaces only the untouched default with a valid type-specific value"),
+                ("enum-default-is-domain-member", "selecting ENUM seeds a nonempty member domain and a matching initial value"),
+                ("enum-domain-edit-validates-atomically", "editing an ENUM domain reseeds an untouched initial, valid domains apply, and invalid domains are rejected before history changes"),
+                ("retain-only-draft-prompts", "Retain-only edits on existing and new members prompt before navigation, and Cancel restores the form without model mutation"),
+                ("remove-resolves-pending-form", "removing a selected member resolves its pending form; Cancel preserves it, Discard removes the declaration, and Undo/Redo restore exact states"),
+                ("cancel-member-form", "Cancel discards an unapplied member draft without changing the declaration or Undo history"),
+                ("form-context-labels", "initial DB entry and DB-to-FB-to-DB navigation refresh member labels and defaults"),
+                ("member-editor-route", "the DB screen exposes the member form and returns to the tree while restoring the prior dock width"),
+                ("declaration-grid-actions", "the Global DB declaration grid exposes Add, Edit, and Remove actions that target the selected declaration"),
+                ("member-selection-stable-id", "a selected declaration remains selected by persistent member ID after same-DB row insertion and edits the same member"),
+                ("edit-selection-block-scoped", "declaration selection is cleared when activation changes the owning block"),
+                ("block-switch-does-not-mutate", "switching blocks leaves the other DB declaration byte-identical"),
                 ("lad-network-rejected", "LAD network insertion is rejected"),
                 ("excluded-from-executable-targets", "CALL, task, and program-entry target selection excludes the DB"),
             ],
@@ -122,7 +139,7 @@ public partial class SimulatorShell
                 ("row-under-program-blocks", "the generated instance DB row appears under Program blocks"),
                 ("selection-versus-definition", "selection does not open and activation opens the exact definition"),
                 ("identity-is-unique-and-persistent", "DB number and symbolic name are unique and persist"),
-                ("definition-is-read-only", "the definition is not editable as a Global DB or LAD block"),
+                ("definition-is-read-only", "the read-only instance table renders inherited defaults for FB Input, Output, and Static members, renders modeled IEC timer/counter member names and types, excludes TEMP locals, and discloses unsupported properties"),
                 ("owner-return-restores-editor", "returning to the owner restores the correct block title and canvas"),
             ],
             ["tia.project-tree.call-drag-drop"] =
@@ -206,7 +223,10 @@ public partial class SimulatorShell
                 ?? throw new InvalidOperationException("TIA central tag document is unavailable.");
             var globalDbDocument = Find<Control>("GlobalDbDocument");
             var globalDbDeclarations = Find<Tree>("GlobalDbDeclarations");
-            var instanceDbDocument = Find<RichTextLabel>("InstanceDbDocument");
+            var instanceDbDocument = Find<VBoxContainer>("InstanceDbDocument");
+            var instanceDbHeading = Find<Label>("InstanceDbHeading");
+            var instanceDbDeclarations = Find<Tree>("InstanceDbDeclarations");
+            var instanceDbBoundary = Find<Label>("InstanceDbBoundary");
             var canvas = GetNodeOrNull<LadderEditorCanvas>(editorRoot + "/RoutineView/GraphicalLadderCanvas")
                 ?? throw new InvalidOperationException("TIA ladder canvas is unavailable.");
             var output = Find<RichTextLabel>("OutputWindow");
@@ -276,6 +296,92 @@ public partial class SimulatorShell
             activation.Set("enter-activates-selected-row", enterAll, $"commandRows={enterTargets.Length} allOpened={enterAll}");
             activation.Set("activation-opens-exact-target", broadPass && showAll.Status == "passed", "program/tag/watch/DB/instance/command aggregate plus Show all tags");
             activation.Set("instance-return-restores-owner", broadPass, "physical pointer verifier finalTitle assertion");
+
+            // Block tabs must resolve stable block IDs rather than whatever
+            // block later occupies the original list position. Exercise the
+            // actual production tab buttons and rename/delete/Undo/Redo routes.
+            var tabSnapshot = _ladderDocument.CaptureSnapshot();
+            var tabHistory = _ladderHistory.Copy();
+            var tabIdentityPassed = false;
+            var tabIdentityDetail = "not run";
+            try
+            {
+                var earlierBlock = _ladderDocument.AddBlock("TabIdentity_Earlier", LadderBlockType.Function);
+                var laterBlock = _ladderDocument.AddBlock("TabIdentity_Survivor", LadderBlockType.Function);
+                Refresh();
+                await Frames();
+                int BlockIndex(string id) => _ladderDocument.Blocks.FindIndex(block => block.Id == id);
+                var documentTabs = Find<Control>("EditorDocuments");
+                IEnumerable<Button> OpenDocumentButtons() => documentTabs.GetChildren().OfType<HBoxContainer>()
+                    .SelectMany(item => item.GetChildren().OfType<Button>())
+                    .Where(button => button.HasMeta("editorDocumentKey"));
+                Button BlockTab(string blockId) => OpenDocumentButtons()
+                    .Single(button => button.GetMeta("editorDocumentKey").AsString() == EditorDocumentIdentity.ForBlock(blockId));
+                var initialBlockTab = BlockTab(_ladderDocument.Blocks[0].Id);
+                var startupBlockTabUsesStableIdentity = !initialBlockTab.Disabled
+                    && OpenDocumentButtons().All(button =>
+                        button.GetMeta("editorDocumentKey").AsString() != "block:0");
+                void ActivateTab(string blockId) => BlockTab(blockId).EmitSignal(BaseButton.SignalName.Pressed);
+
+                _tiaProgramBlockActivator!(BlockIndex(earlierBlock.Id));
+                await Frames();
+                _tiaProgramBlockActivator!(BlockIndex(laterBlock.Id));
+                await Frames();
+                var bothTabsOpened = BlockTab(earlierBlock.Id).IsVisibleInTree()
+                    && BlockTab(laterBlock.Id).IsVisibleInTree();
+
+                Find<LineEdit>("BlockName").Text = "TabIdentity_Survivor_Renamed";
+                Find<Button>("ApplyBlock").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                var renameTargetsOriginal = BlockTab(laterBlock.Id).IsVisibleInTree()
+                    && BlockTab(laterBlock.Id).Text.Contains("TabIdentity_Survivor_Renamed [", StringComparison.Ordinal);
+                Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                ActivateTab(laterBlock.Id);
+                var undoRenameTargetsOriginal = _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == laterBlock.Id;
+                Find<Button>("LadderRedo").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                ActivateTab(laterBlock.Id);
+                var redoRenameTargetsOriginal = _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == laterBlock.Id;
+
+                ActivateTab(earlierBlock.Id);
+                var earlierTabSelected = _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == earlierBlock.Id;
+                Find<Button>("RemoveBlock").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                var earlierTabDisabled = BlockTab(earlierBlock.Id).Disabled
+                    && BlockTab(earlierBlock.Id).Text == "[Deleted block]";
+                var survivorTabStillTargetsOriginal = _ladderDocument.Blocks.Any(block => block.Id == laterBlock.Id);
+                ActivateTab(laterBlock.Id);
+                survivorTabStillTargetsOriginal &= _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == laterBlock.Id;
+
+                Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                var undoDeleteRestoresTab = _ladderDocument.Blocks.Any(block => block.Id == earlierBlock.Id)
+                    && !BlockTab(earlierBlock.Id).Disabled;
+                ActivateTab(earlierBlock.Id);
+                undoDeleteRestoresTab &= _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == earlierBlock.Id;
+                Find<Button>("LadderRedo").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+                var redoDeleteDisablesOnlyDeletedTab = BlockTab(earlierBlock.Id).Disabled
+                    && BlockTab(earlierBlock.Id).Text == "[Deleted block]";
+                ActivateTab(laterBlock.Id);
+                redoDeleteDisablesOnlyDeletedTab &= _ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == laterBlock.Id;
+
+                tabIdentityPassed = startupBlockTabUsesStableIdentity && bothTabsOpened && renameTargetsOriginal && undoRenameTargetsOriginal
+                    && redoRenameTargetsOriginal && earlierTabSelected && earlierTabDisabled
+                    && survivorTabStillTargetsOriginal && undoDeleteRestoresTab && redoDeleteDisablesOnlyDeletedTab;
+                tabIdentityDetail = $"startupBlockTabUsesStableIdentity={startupBlockTabUsesStableIdentity} opened={bothTabsOpened} rename={renameTargetsOriginal} undoRename={undoRenameTargetsOriginal} "
+                    + $"redoRename={redoRenameTargetsOriginal} deletedTabDisabled={earlierTabDisabled} survivorStable={survivorTabStillTargetsOriginal} "
+                    + $"undoRestores={undoDeleteRestoresTab} redoKeepsDeletedTabDisabled={redoDeleteDisablesOnlyDeletedTab}";
+            }
+            finally
+            {
+                _ladderDocument.RestoreSnapshot(tabSnapshot);
+                _ladderHistory = tabHistory;
+                Refresh();
+                await Frames();
+            }
+            activation.Set("block-tab-identity-survives-reindex", tabIdentityPassed, tabIdentityDetail);
             activation.Finish();
 
             // Creation gates: the physical broad route proves dialog selection,
@@ -337,11 +443,241 @@ public partial class SimulatorShell
             var globalIndex = _ladderDocument.Blocks.IndexOf(globalDb);
             Refresh(); await Frames();
             var globalRow = FindMetadata(tree.GetRoot(), $"program:{globalIndex}");
+            var globalRowName = globalRow?.GetText(0) ?? "<missing>";
+            var globalRowUnderBlocks = globalRow?.GetParent()?.GetMetadata(0).AsString() == "blocks";
             await Activate($"program:{globalIndex}");
-            var declaration = globalDbDeclarations.GetRoot()?.GetFirstChild();
+            var applyDeclaration = Find<Button>("AddInterface");
+            var newMemberButton = Find<Button>("NewInterface");
+            var editSection = Find<OptionButton>("InterfaceSection");
+            var editRetain = Find<CheckBox>("InterfaceRetain");
+            var editComment = Find<LineEdit>("InterfaceComment");
+            var interfaceExecutionNote = Find<Label>("InterfaceExecutionNote");
+            var interfaceHeading = Find<Label>("BlockInterfaceHeading");
+            var globalMemberLabelsOnEntry = applyDeclaration.Text == "+ MEMBER"
+                && newMemberButton.Text == "NEW MEMBER"
+                && editSection.Selected == (int)LadderInterfaceSection.Static
+                && !editSection.Visible
+                && editRetain.Visible && editComment.Visible
+                && interfaceHeading.Text == "GLOBAL DB DECLARATIONS"
+                && interfaceExecutionNote.Text == "Optimized-access Global DB subset: supported scalar members only.";
+            var targetSpeedId = globalDb.Interface.Single(parameter => parameter.Name == "TargetSpeed").Id;
+            var declaration = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
             var fieldPersisted = declaration?.GetText(0) == "TargetSpeed"
                 && declaration.GetText(1) == "REAL" && declaration.GetText(2) == "1250"
-                && declaration.GetText(3) == "YES" && declaration.GetText(4) == "Retained speed";
+                && declaration.IsChecked(3) && declaration.GetText(4) == "Retained speed";
+            var inlineGridFieldsEditable = declaration is not null
+                && Enumerable.Range(0, globalDbDeclarations.Columns).All(declaration.IsEditable)
+                && declaration.GetCellMode(3) == TreeItem.TreeCellMode.Check;
+            var memberEditorButton = Find<Button>("EditGlobalDbMembers");
+            var addMemberAction = Find<Button>("GlobalDbAddMember");
+            var editMemberAction = Find<Button>("GlobalDbEditMember");
+            var removeMemberAction = Find<Button>("GlobalDbRemoveMember");
+            var projectTabs = Find<TabContainer>("ProjectTreeAndTags");
+            var projectDock = Find<Control>("ProjectOrganization");
+            var projectSplit = Find<SplitContainer>("Workbench");
+            var directAddBefore = LadderEditorProjectJson.Save(_ladderDocument);
+            addMemberAction.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var directAddOpened = projectTabs.CurrentTab == 2 && applyDeclaration.Text == "+ MEMBER"
+                && Find<LineEdit>("InterfaceName").Text.Length == 0;
+            Find<Button>("CancelInterface").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var directAddIsDraftOnly = LadderEditorProjectJson.Save(_ladderDocument) == directAddBefore
+                && !_pendingEditorForms.Any(form => form.HasPending());
+            memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var globalEditRow = globalDbDeclarations.GetRoot()?.GetFirstChild();
+            globalEditRow?.Select(0);
+            globalDbDeclarations.EmitSignal(Tree.SignalName.ItemSelected);
+            editMemberAction.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var directEditLoaded = projectTabs.CurrentTab == 2 && applyDeclaration.Text == "APPLY MEMBER"
+                && Find<LineEdit>("InterfaceName").Text == "TargetSpeed";
+            Find<Button>("CancelInterface").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var directGridActions = addMemberAction.IsVisibleInTree() && editMemberAction.IsVisibleInTree()
+                && removeMemberAction.IsVisibleInTree() && directAddOpened && directAddIsDraftOnly && directEditLoaded;
+            memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var priorDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : 280;
+            // 240 is a valid manually selected width above the 150 px dock
+            // minimum and is below the route's 280 px editing minimum. This
+            // proves both the widen and exact restore behavior even headless.
+            projectSplit.SplitOffsets = [240];
+            await Frames();
+            var memberEditorRouteVisible = memberEditorButton.IsVisibleInTree();
+            memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var expectedMemberDockWidth = Math.Min(600, Math.Max(560, (int)projectSplit.Size.X / 3));
+            var openedDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
+            var removeMemberButtonFitsDock = Find<Button>("RemoveInterface").GetGlobalRect().End.X
+                <= projectDock.GetGlobalRect().End.X;
+            var memberEditorDockEnd = projectDock.GetGlobalRect().End.X;
+            var memberEditorRemoveEnd = Find<Button>("RemoveInterface").GetGlobalRect().End.X;
+            var memberEditorTreeVisible = Find<Tree>("BlockInterface").IsVisibleInTree();
+            var memberEditorTab = projectTabs.CurrentTab;
+            var memberEditorButtonText = memberEditorButton.Text;
+            var memberEditorOpened = projectTabs.CurrentTab == 2 && memberEditorButton.Text == "PROJECT TREE"
+                && projectDock.Visible && memberEditorTreeVisible
+                && openedDockWidth == expectedMemberDockWidth && openedDockWidth > 240
+                && removeMemberButtonFitsDock;
+            memberEditorButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var restoredDockWidth = projectSplit.SplitOffsets.Length > 0 ? projectSplit.SplitOffsets[0] : -1;
+            var projectTreeRestored = projectTabs.CurrentTab == 0 && memberEditorButton.Text == "EDIT MEMBERS"
+                && projectDock.Visible && restoredDockWidth == 240;
+            // Keep the gate isolated from the shell state expected by later
+            // assertions and restore the splitter value that preceded setup.
+            projectSplit.SplitOffsets = [priorDockWidth];
+            await Frames();
+            var originalDeclarationText = declaration is null ? "<missing>"
+                : $"{declaration.GetText(0)}/{declaration.GetText(1)}/{declaration.GetText(2)}/{declaration.GetText(3)}/{declaration.GetText(4)}";
+            var declarationsTable = Find<Tree>("BlockInterface");
+            // BlockInterface hides its root and stores declaration rows as
+            // direct children. The extra GetFirstChild() returned null and
+            // made this gate report a false failure without selecting a row.
+            var existingDeclarationRow = declarationsTable.GetRoot()?.GetFirstChild();
+            existingDeclarationRow?.Select(0);
+            declarationsTable.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            var editName = Find<LineEdit>("InterfaceName");
+            var editInitial = Find<LineEdit>("InterfaceInitial");
+            var editEnumMembers = Find<LineEdit>("InterfaceEnumMembers");
+            var editType = Find<OptionButton>("InterfaceType");
+            var cancelMember = Find<Button>("CancelInterface");
+            var selectedDeclarationLoaded = editName.Text == "TargetSpeed" && applyDeclaration.Text == "APPLY MEMBER";
+            var beforePendingMemberDraft = LadderEditorProjectJson.Save(_ladderDocument);
+            editComment.Text = "Discarded pending comment";
+            editComment.EmitSignal(LineEdit.SignalName.TextChanged, editComment.Text);
+            await Frames();
+            var pendingDraftRow = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
+            var pendingDraftCellEditability = pendingDraftRow is null
+                ? "<row-missing>"
+                : string.Join(",", Enumerable.Range(0, globalDbDeclarations.Columns).Select(column => pendingDraftRow.IsEditable(column)));
+            var pendingFormCountDuringGridCheck = _pendingEditorForms.Count(form => form.HasPending());
+            var inlineGridBlockedByMemberDraft = pendingDraftRow is not null
+                && Enumerable.Range(0, globalDbDeclarations.Columns).All(column => !pendingDraftRow.IsEditable(column));
+            cancelMember.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var rowAfterDraftCancel = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
+            var inlineGridRestoredAfterMemberCancel = rowAfterDraftCancel is not null
+                && Enumerable.Range(0, globalDbDeclarations.Columns).All(rowAfterDraftCancel.IsEditable)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforePendingMemberDraft
+                && globalDb.Interface.Single(parameter => parameter.Name == "TargetSpeed").Comment == "Retained speed";
+            var sideRowAfterDraftCancel = FindMetadata(declarationsTable.GetRoot(), targetSpeedId);
+            sideRowAfterDraftCancel?.Select(0);
+            declarationsTable.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            globalDb.Interface.Insert(0, new LadderInterfaceParameter("ReorderMarker", PlcVariableType.Bool,
+                LadderInterfaceSection.Static, false, Id: "gate-reorder-marker"));
+            Refresh(); await Frames();
+            var selectedDeclarationSurvivesReorder = editName.Text == "TargetSpeed"
+                && applyDeclaration.Text == "APPLY MEMBER"
+                && declarationsTable.GetSelected()?.GetMetadata(0).AsString() == targetSpeedId;
+            var originalDeclaration = LadderEditorProjectJson.Save(_ladderDocument);
+            editName.Text = "TargetSpeedEdited";
+            editInitial.Text = "1500";
+            editRetain.ButtonPressed = false;
+            editComment.Text = "Edited speed setpoint";
+            applyDeclaration.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var editedDeclaration = globalDb.Interface.SingleOrDefault(parameter => parameter.Name == "TargetSpeedEdited");
+            var editedRow = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
+            var declarationEdited = editedDeclaration is { Type: PlcVariableType.Real, InitialValue: double speed }
+                && speed == 1500.0 && !editedDeclaration.Retain && editedDeclaration.Comment == "Edited speed setpoint"
+                && editedRow?.GetText(0) == "TargetSpeedEdited" && editedRow.GetText(2) == "1500";
+            var editedDeclarationState = LadderEditorProjectJson.Save(_ladderDocument);
+            Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var declarationUndoExact = LadderEditorProjectJson.Save(_ladderDocument) == originalDeclaration;
+            Find<Button>("LadderRedo").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var declarationRedoExact = LadderEditorProjectJson.Save(_ladderDocument) == editedDeclarationState;
+            var declarationEditLifecycle = selectedDeclarationLoaded && declarationEdited
+                && declarationUndoExact && declarationRedoExact;
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+
+            // Starting another member must resolve an unapplied form before clearing it.
+            var beforeNewMemberDraft = LadderEditorProjectJson.Save(_ladderDocument);
+            editName.Text = "UnappliedMember";
+            editName.EmitSignal(LineEdit.SignalName.TextChanged, editName.Text);
+            newMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            var newMemberWaitsForResolution = _pendingEditorDialog?.Visible == true
+                && editName.Text == "UnappliedMember"
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeNewMemberDraft;
+            _pendingEditorDialog?.EmitSignal(ConfirmationDialog.SignalName.Canceled);
+            _pendingEditorDialog?.Hide();
+            var newMemberCancelKeepsDraft = editName.Text == "UnappliedMember"
+                && _pendingEditorForms.Any(form => form.HasPending())
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeNewMemberDraft;
+            newMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            var newMemberDiscardDialogReopened = _pendingEditorDialog?.Visible == true;
+            _pendingEditorDialog?.EmitSignal(ConfirmationDialog.SignalName.CustomAction, "discard");
+            _pendingEditorDialog?.Hide();
+            var newMemberDiscardIsAtomic = LadderEditorProjectJson.Save(_ladderDocument) == beforeNewMemberDraft
+                && editName.Text.Length == 0 && applyDeclaration.Text == "+ MEMBER"
+                && !_pendingEditorForms.Any(form => form.HasPending());
+
+            // A new numeric member must get a numeric zero instead of carrying
+            // the default BOOL literal into an invalid type/value pair. Cancel
+            // must discard that form state without adding a declaration/history.
+            var beforeCancelMember = LadderEditorProjectJson.Save(_ladderDocument);
+            var undoBeforeCancelMember = _ladderHistory.CanUndo;
+            editName.Text = "CanceledMember";
+            editType.Select(1);
+            editType.EmitSignal(OptionButton.SignalName.ItemSelected, 1L);
+            var numericDefaultIsValid = editInitial.Text == "0";
+            cancelMember.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var cancelMemberSerializedUnchanged = LadderEditorProjectJson.Save(_ladderDocument) == beforeCancelMember;
+            var cancelMemberNoPendingForm = !_pendingEditorForms.Any(form => form.HasPending());
+            var cancelMemberFormCleared = editName.Text.Length == 0 && editInitial.Text == "FALSE"
+                && editType.Selected == 0 && cancelMember.Disabled;
+            var cancelMemberUndoUnchanged = undoBeforeCancelMember == _ladderHistory.CanUndo;
+            var cancelMemberIsAtomic = cancelMemberSerializedUnchanged && cancelMemberNoPendingForm
+                && cancelMemberUndoUnchanged && cancelMemberFormCleared;
+
+            var labelFb = _ladderDocument.AddBlock("MemberFormContextFB", LadderBlockType.FunctionBlock);
+            var labelFbIndex = _ladderDocument.Blocks.IndexOf(labelFb);
+            Refresh(); await Frames();
+            await Activate($"program:{labelFbIndex}");
+            var fbMemberLabels = applyDeclaration.Text == "+ PARAMETER"
+                && newMemberButton.Text == "NEW"
+                && editSection.Selected == (int)LadderInterfaceSection.Input
+                && !editRetain.Visible && !editComment.Visible;
+            await Activate($"program:{globalIndex}");
+            var globalMemberLabelsAfterReturn = applyDeclaration.Text == "+ MEMBER"
+                && newMemberButton.Text == "NEW MEMBER"
+                && editSection.Selected == (int)LadderInterfaceSection.Static
+                && editRetain.Visible && editComment.Visible;
+            var formContextLabels = globalMemberLabelsOnEntry && fbMemberLabels && globalMemberLabelsAfterReturn;
+
+            // A selected row belongs to one specific block. Switching blocks
+            // must clear the edit form so its old row index cannot target a
+            // declaration at the same index in a different DB.
+            var secondGlobalDb = _ladderDocument.AddBlock("SecondGlobalData", LadderBlockType.DataBlock);
+            _ladderDocument.AddInterfaceParameter(secondGlobalDb.Id, "PressureLimit", PlcVariableType.Real,
+                LadderInterfaceSection.Static, 2300.0, comment: "Second DB member");
+            var secondGlobalIndex = _ladderDocument.Blocks.IndexOf(secondGlobalDb);
+            Refresh(); await Frames();
+            var globalDeclarationRow = FindMetadata(declarationsTable.GetRoot(), targetSpeedId);
+            globalDeclarationRow?.Select(0);
+            declarationsTable.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            var selectionLoadedBeforeSwitch = applyDeclaration.Text == "APPLY MEMBER"
+                && editName.Text == "TargetSpeedEdited";
+            var secondDbDeclarationBeforeSwitch = JsonSerializer.Serialize(secondGlobalDb.Interface[0]);
+            await Activate($"program:{secondGlobalIndex}");
+            var editSelectionClearedOnSwitch = editName.Text.Length == 0
+                && applyDeclaration.Text == "+ MEMBER"
+                && editSection.Selected == (int)LadderInterfaceSection.Static;
+            applyDeclaration.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var otherDbUnchangedOnSwitch = JsonSerializer.Serialize(secondGlobalDb.Interface[0]) == secondDbDeclarationBeforeSwitch
+                && secondGlobalDb.Interface.SingleOrDefault(parameter => parameter.Name == "PressureLimit") is
+                    { InitialValue: double pressureLimit, Comment: "Second DB member" } && pressureLimit == 2300.0;
+            await Activate($"program:{globalIndex}");
+
             var rungCount = globalDb.Rungs.Count;
             Find<Button>("AddRung").EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
@@ -352,9 +688,186 @@ public partial class SimulatorShell
                 .Any(index => selector.GetItemMetadata(index).AsString() == globalDb.Id);
             var executableExcluded = Excluded(callTargets) && Excluded(taskTargets)
                 && _ladderDocument.EntryBlockId != globalDb.Id;
-            globalGate.Set("row-under-program-blocks", globalRow?.GetParent()?.GetMetadata(0).AsString() == "blocks", $"row={globalRow?.GetText(0)}");
+            var currentGridDeclaration = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
+            var currentGridEditability = currentGridDeclaration is not null
+                && Enumerable.Range(0, globalDbDeclarations.Columns).All(currentGridDeclaration.IsEditable);
+            globalGate.Set("row-under-program-blocks", globalRowUnderBlocks, $"row={globalRowName}");
             globalGate.Set("activation-opens-declarations", globalDbDocument.IsVisibleInTree() && !canvas.IsVisibleInTree(), $"db={globalDbDocument.IsVisibleInTree()} lad={canvas.IsVisibleInTree()}");
-            globalGate.Set("fields-persist", fieldPersisted, $"row={declaration?.GetText(0)}/{declaration?.GetText(1)}/{declaration?.GetText(2)}/{declaration?.GetText(3)}/{declaration?.GetText(4)}");
+            globalGate.Set("fields-persist", fieldPersisted && declarationEditLifecycle,
+                $"original={originalDeclarationText} selected={selectedDeclarationLoaded} edited={declarationEdited} undo={declarationUndoExact} redo={declarationRedoExact}");
+            globalGate.Set("declaration-grid-inline-edit", inlineGridFieldsEditable,
+                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)}");
+            globalGate.Set("pending-form-blocks-inline-edit", inlineGridBlockedByMemberDraft,
+                $"pendingForms={pendingFormCountDuringGridCheck} editable={pendingDraftCellEditability}");
+            globalGate.Set("member-draft-cancel-restores-inline-edit", inlineGridRestoredAfterMemberCancel,
+                "Cancel discards the draft without changing the DB and restores cell editability");
+            globalGate.Set("member-selection-stable-id", selectedDeclarationSurvivesReorder,
+                $"selected={selectedDeclarationLoaded} survivesSameDbPrepend={selectedDeclarationSurvivesReorder} id={targetSpeedId}");
+            globalGate.Set("new-member-resolves-pending-form", newMemberWaitsForResolution && newMemberCancelKeepsDraft
+                    && newMemberDiscardDialogReopened && newMemberDiscardIsAtomic,
+                $"waits={newMemberWaitsForResolution} cancelKeepsDraft={newMemberCancelKeepsDraft} discardDialog={newMemberDiscardDialogReopened} discardedAtomically={newMemberDiscardIsAtomic}");
+            globalGate.Set("type-change-seeds-valid-initial", numericDefaultIsValid,
+                $"selectedType={editType.GetItemText(1)} initial={numericDefaultIsValid}");
+            editType.Select(7);
+            editType.EmitSignal(OptionButton.SignalName.ItemSelected, 7L);
+            var enumMembers = editEnumMembers.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var enumDefaultIsDomainMember = enumMembers.Length > 0
+                && LadderEditorDocument.TryParseInitialValue(PlcVariableType.Enum, editInitial.Text, out var enumInitial, out _)
+                && enumMembers.Contains(enumInitial.ToString(), StringComparer.Ordinal);
+            globalGate.Set("enum-default-is-domain-member", enumDefaultIsDomainMember,
+                $"members={editEnumMembers.Text} initial={editInitial.Text}");
+            cancelMember.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+
+            var beforeEnumApply = LadderEditorProjectJson.Save(_ladderDocument);
+            editName.Text = "EnumDomainMember";
+            editName.EmitSignal(LineEdit.SignalName.TextChanged, editName.Text);
+            editType.Select(7);
+            editType.EmitSignal(OptionButton.SignalName.ItemSelected, 7L);
+            editEnumMembers.Text = "Stopped,Running";
+            editEnumMembers.EmitSignal(LineEdit.SignalName.TextChanged, editEnumMembers.Text);
+            var enumDomainReseedsInitial = editInitial.Text == "Stopped";
+            applyDeclaration.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var appliedEnum = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id).Interface
+                .SingleOrDefault(parameter => parameter.Name == "EnumDomainMember");
+            var validEnumDomainApplied = enumDomainReseedsInitial
+                && appliedEnum?.Type == PlcVariableType.Enum
+                && appliedEnum.InitialValue is string appliedEnumInitial && appliedEnumInitial == "Stopped"
+                && appliedEnum.EnumMembers?.SequenceEqual(["Stopped", "Running"], StringComparer.Ordinal) == true;
+            Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var enumUndoExact = LadderEditorProjectJson.Save(_ladderDocument) == beforeEnumApply;
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+
+            var beforeInvalidEnum = LadderEditorProjectJson.Save(_ladderDocument);
+            var undoBeforeInvalidEnum = _ladderHistory.CanUndo;
+            editName.Text = "InvalidEnumDomain";
+            editName.EmitSignal(LineEdit.SignalName.TextChanged, editName.Text);
+            editType.Select(7);
+            editType.EmitSignal(OptionButton.SignalName.ItemSelected, 7L);
+            editEnumMembers.Text = "Not valid";
+            editEnumMembers.EmitSignal(LineEdit.SignalName.TextChanged, editEnumMembers.Text);
+            applyDeclaration.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var invalidEnumRejectedAtomically = LadderEditorProjectJson.Save(_ladderDocument) == beforeInvalidEnum
+                && undoBeforeInvalidEnum == _ladderHistory.CanUndo
+                && output.Text.Contains("ENUM members must be", StringComparison.Ordinal);
+            cancelMember.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            globalGate.Set("enum-domain-edit-validates-atomically", validEnumDomainApplied && enumUndoExact && invalidEnumRejectedAtomically,
+                $"reseeds={enumDomainReseedsInitial} applied={validEnumDomainApplied} undo={enumUndoExact} invalidRejected={invalidEnumRejectedAtomically}");
+
+            var interfaceTable = Find<Tree>("BlockInterface");
+            var existingRetainRow = FindMetadata(interfaceTable.GetRoot(), targetSpeedId);
+            existingRetainRow?.Select(0);
+            interfaceTable.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            var beforeExistingRetainOnlyEdit = LadderEditorProjectJson.Save(_ladderDocument);
+            var undoBeforeExistingRetainOnlyEdit = _ladderHistory.CanUndo;
+            editRetain.ButtonPressed = true;
+            editRetain.EmitSignal(BaseButton.SignalName.Toggled, true);
+            newMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            var existingRetainPrompts = editName.Text == "TargetSpeedEdited"
+                && editRetain.ButtonPressed
+                && _pendingEditorDialog?.Visible == true
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeExistingRetainOnlyEdit;
+            _pendingEditorDialog?.EmitSignal(ConfirmationDialog.SignalName.Canceled);
+            _pendingEditorDialog?.Hide();
+            var existingRetainDraftKeeps = editRetain.ButtonPressed
+                && _pendingEditorForms.Any(form => form.HasPending())
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeExistingRetainOnlyEdit;
+            cancelMember.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var existingRetainCancelRestores = !editRetain.ButtonPressed
+                && !_pendingEditorForms.Any(form => form.HasPending())
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeExistingRetainOnlyEdit
+                && undoBeforeExistingRetainOnlyEdit == _ladderHistory.CanUndo;
+
+            var beforeRetainOnlyEdit = LadderEditorProjectJson.Save(_ladderDocument);
+            var undoBeforeRetainOnlyEdit = _ladderHistory.CanUndo;
+            editRetain.ButtonPressed = true;
+            editRetain.EmitSignal(BaseButton.SignalName.Toggled, true);
+            newMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            var retainOnlyPrompts = editRetain.ButtonPressed
+                && _pendingEditorDialog?.Visible == true
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeRetainOnlyEdit;
+            _pendingEditorDialog?.EmitSignal(ConfirmationDialog.SignalName.Canceled);
+            _pendingEditorDialog?.Hide();
+            var retainOnlyCancelKeepsDraft = editRetain.ButtonPressed
+                && _pendingEditorForms.Any(form => form.HasPending())
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeRetainOnlyEdit;
+            cancelMember.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var retainOnlyCancelRestoresForm = !editRetain.ButtonPressed
+                && !_pendingEditorForms.Any(form => form.HasPending())
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeRetainOnlyEdit
+                && undoBeforeRetainOnlyEdit == _ladderHistory.CanUndo;
+            globalGate.Set("retain-only-draft-prompts", existingRetainPrompts && existingRetainDraftKeeps && existingRetainCancelRestores
+                    && retainOnlyPrompts && retainOnlyCancelKeepsDraft && retainOnlyCancelRestoresForm,
+                $"existingPrompt={existingRetainPrompts} existingDraftPreserved={existingRetainDraftKeeps} existingCancelRestored={existingRetainCancelRestores}; newPrompt={retainOnlyPrompts} newDraftPreserved={retainOnlyCancelKeepsDraft} newCancelRestored={retainOnlyCancelRestoresForm}");
+
+            // Remove must not silently throw away an unapplied member draft.
+            // Cancel keeps both the row and draft; Discard continues the delete,
+            // and one Undo/Redo must restore the exact serialized states.
+            var removeTargetRow = globalDbDeclarations.GetRoot()?.GetFirstChild();
+            while (removeTargetRow is not null && removeTargetRow.GetText(0) != "TargetSpeedEdited")
+                removeTargetRow = removeTargetRow.GetNext();
+            removeTargetRow?.Select(0);
+            globalDbDeclarations.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
+            var beforePendingRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            editComment.Text = "Unapplied comment before remove";
+            editComment.EmitSignal(LineEdit.SignalName.TextChanged, editComment.Text);
+            var removeMemberButton = removeMemberAction;
+            removeMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            var removeWaitsForResolution = _pendingEditorDialog?.Visible == true
+                && _ladderDocument.Blocks.First(block => block.Id == globalDb.Id).Interface.Any(parameter => parameter.Name == "TargetSpeedEdited")
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforePendingRemove
+                && editComment.Text == "Unapplied comment before remove";
+            _pendingEditorDialog?.EmitSignal(ConfirmationDialog.SignalName.Canceled);
+            _pendingEditorDialog?.Hide();
+            var removeCancelKeepsDraft = _pendingEditorForms.Any(form => form.HasPending())
+                && _ladderDocument.Blocks.First(block => block.Id == globalDb.Id).Interface.Any(parameter => parameter.Name == "TargetSpeedEdited")
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforePendingRemove;
+            removeMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            var removeDiscardDialogReopened = _pendingEditorDialog?.Visible == true;
+            _pendingEditorDialog?.EmitSignal(ConfirmationDialog.SignalName.CustomAction, "discard");
+            _pendingEditorDialog?.Hide();
+            await Frames();
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+            var afterDiscardedRemove = LadderEditorProjectJson.Save(_ladderDocument);
+            var removeDiscardDeletesOriginal = !globalDb.Interface.Any(parameter => parameter.Name == "TargetSpeedEdited")
+                && !_pendingEditorForms.Any(form => form.HasPending());
+            Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var removeUndoExact = LadderEditorProjectJson.Save(_ladderDocument) == beforePendingRemove;
+            Find<Button>("LadderRedo").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var removeRedoExact = LadderEditorProjectJson.Save(_ladderDocument) == afterDiscardedRemove;
+            Find<Button>("LadderUndo").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var removeCleanupUndoExact = LadderEditorProjectJson.Save(_ladderDocument) == beforePendingRemove;
+            globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
+            var removeResolvesPending = removeWaitsForResolution && removeCancelKeepsDraft
+                && removeDiscardDialogReopened && removeDiscardDeletesOriginal && removeUndoExact && removeRedoExact && removeCleanupUndoExact;
+            globalGate.Set("remove-resolves-pending-form", removeResolvesPending,
+                $"waits={removeWaitsForResolution} cancelKeepsDraft={removeCancelKeepsDraft} discardDialog={removeDiscardDialogReopened} removed={removeDiscardDeletesOriginal} undo={removeUndoExact} redo={removeRedoExact} cleanup={removeCleanupUndoExact}");
+
+            globalGate.Set("cancel-member-form", cancelMemberIsAtomic,
+                $"serializedUnchanged={cancelMemberSerializedUnchanged} noPending={cancelMemberNoPendingForm} cleared={cancelMemberFormCleared} undoUnchanged={cancelMemberUndoUnchanged}");
+            globalGate.Set("form-context-labels", formContextLabels,
+                $"initialDb={globalMemberLabelsOnEntry} fb={fbMemberLabels} returnedDb={globalMemberLabelsAfterReturn}");
+            globalGate.Set("member-editor-route", memberEditorRouteVisible && memberEditorOpened && projectTreeRestored,
+                $"visible={memberEditorRouteVisible} opened={memberEditorOpened} widened={openedDockWidth}/{expectedMemberDockWidth} from=240 restored={projectTreeRestored}:{restoredDockWidth}/240 "
+                + $"openTab={memberEditorTab} openButton={memberEditorButtonText} dock={projectDock.Visible} interface={memberEditorTreeVisible} "
+                + $"fits={removeMemberButtonFitsDock} split={projectSplit.Size.X} removeEnd={memberEditorRemoveEnd} dockEnd={memberEditorDockEnd}");
+            globalGate.Set("declaration-grid-actions", directGridActions && removeResolvesPending,
+                $"addOpensDraft={directAddOpened} addIsAtomic={directAddIsDraftOnly} editLoadsSelection={directEditLoaded} removeResolvesDraft={removeResolvesPending}");
+            globalGate.Set("edit-selection-block-scoped", selectionLoadedBeforeSwitch && editSelectionClearedOnSwitch,
+                $"loadedBeforeSwitch={selectionLoadedBeforeSwitch} clearedOnSwitch={editSelectionClearedOnSwitch} section={editSection.GetItemText(editSection.Selected)}");
+            globalGate.Set("block-switch-does-not-mutate", otherDbUnchangedOnSwitch,
+                $"serializedUnchanged={otherDbUnchangedOnSwitch} secondDb={secondGlobalDb.Name}");
             globalGate.Set("lad-network-rejected", ladRejected, $"rungs={rungCount}->{globalDb.Rungs.Count}");
             globalGate.Set("excluded-from-executable-targets", executableExcluded, $"call={Excluded(callTargets)} task={Excluded(taskTargets)} entry={_ladderDocument.EntryBlockId != globalDb.Id}");
             globalGate.Finish();
@@ -372,13 +885,51 @@ public partial class SimulatorShell
             second.TimerInstanceDataBlock = new LadderInstanceDataBlock(732, "Structured_Timer_DB");
             Refresh(); await Frames();
             var instanceRow = FindMetadata(tree.GetRoot(), "instance-db:731");
+            var instanceRowName = instanceRow?.GetText(0) ?? "<missing>";
             var parentIsBlocks = instanceRow?.GetParent()?.GetMetadata(0).AsString() == "blocks";
             await SelectOnly("instance-db:731");
             var selectionClosed = !instanceDbDocument.IsVisibleInTree();
             await Activate("instance-db:731");
             var exactDefinition = instanceDbDocument.IsVisibleInTree()
-                && instanceDbDocument.Text.Contains("Structured_Count_DB", StringComparison.Ordinal)
-                && instanceDbDocument.Text.Contains("DB731", StringComparison.Ordinal);
+                && instanceDbHeading.Text.Contains("Structured_Count_DB", StringComparison.Ordinal)
+                && instanceDbHeading.Text.Contains("DB731", StringComparison.Ordinal)
+                && instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetFirstChild()?.GetText(0) == "Q";
+            TreeItem? FindInstanceMember(string sectionName, string memberName)
+            {
+                for (var section = instanceDbDeclarations.GetRoot()?.GetFirstChild(); section is not null; section = section.GetNext())
+                {
+                    if (section.GetText(0) != sectionName) continue;
+                    for (var member = section.GetFirstChild(); member is not null; member = member.GetNext())
+                        if (member.GetText(0) == memberName) return member;
+                }
+                return null;
+            }
+            var counterQ = FindInstanceMember("STATIC", "Q");
+            var counterCv = FindInstanceMember("STATIC", "CV");
+            var counterMembersRendered = counterQ?.GetText(1) == "BOOL" && counterCv?.GetText(1) == "DINT";
+            await Activate("instance-db:732");
+            var timerQ = FindInstanceMember("STATIC", "Q");
+            var timerEt = FindInstanceMember("STATIC", "ET");
+            var timerPt = FindInstanceMember("STATIC", "PT");
+            var timerIn = FindInstanceMember("STATIC", "IN");
+            TreeItem? FindInstanceSection(string sectionName)
+            {
+                for (var section = instanceDbDeclarations.GetRoot()?.GetFirstChild(); section is not null; section = section.GetNext())
+                    if (section.GetText(0) == sectionName) return section;
+                return null;
+            }
+            var timerStaticSection = FindInstanceSection("STATIC");
+            var timerMemberCount = 0;
+            for (var member = timerStaticSection?.GetFirstChild(); member is not null; member = member.GetNext())
+                timerMemberCount++;
+            var timerMembersRendered = instanceDbHeading.Text.Contains("Structured_Timer_DB", StringComparison.Ordinal)
+                && timerPt?.GetText(1) == "TIME" && timerEt?.GetText(1) == "TIME"
+                && timerIn?.GetText(1) == "BOOL" && timerQ?.GetText(1) == "BOOL"
+                && timerStaticSection?.GetFirstChild()?.GetText(0) == "PT"
+                && timerPt?.GetNext()?.GetText(0) == "ET"
+                && timerEt?.GetNext()?.GetText(0) == "IN"
+                && timerIn?.GetNext()?.GetText(0) == "Q"
+                && timerQ?.GetNext() is null && timerMemberCount == 4;
             var saveLoad = LadderEditorProjectJson.Load(LadderEditorProjectJson.Save(_ladderDocument)).Document;
             var dbs = _ladderDocument.Blocks.SelectMany(block => block.Rungs)
                 .SelectMany(rung => new[] { rung.TimerInstanceDataBlock, rung.CounterInstanceDataBlock })
@@ -387,17 +938,74 @@ public partial class SimulatorShell
                 && dbs.Select(db => db.Name).Distinct(StringComparer.Ordinal).Count() == dbs.Length
                 && saveLoad?.Blocks.SelectMany(block => block.Rungs)
                     .Any(rung => rung.CounterInstanceDataBlock?.Number == 731 && rung.CounterInstanceDataBlock.Name == "Structured_Count_DB") == true;
+            var fbFixture = _ladderDocument.AddBlock("StructuredInstanceFB", LadderBlockType.FunctionBlock);
+            _ladderDocument.AddInterfaceParameter(fbFixture.Id, "Enable", PlcVariableType.Bool,
+                LadderInterfaceSection.Input, false, comment: "FB default enable");
+            _ladderDocument.AddInterfaceParameter(fbFixture.Id, "AtPosition", PlcVariableType.Bool,
+                LadderInterfaceSection.Output, true, comment: "Position feedback");
+            _ladderDocument.AddInterfaceParameter(fbFixture.Id, "ActualPosition", PlcVariableType.Real,
+                LadderInterfaceSection.Static, 12.5, comment: "Measured position");
+            _ladderDocument.AddInterfaceParameter(fbFixture.Id, "TemporaryScratch", PlcVariableType.Real,
+                LadderInterfaceSection.Temp, 0.0, comment: "Invocation-local scratch");
+            _ladderDocument.Instances.Add(new LadderInstance("structured_axis", "StructuredAxis", fbFixture.Id,
+                new LadderInstanceDataBlock(733, "StructuredAxis_DB")));
+            Refresh(); await Frames();
+            await Activate("instance-db:733");
+            var fbEnable = FindInstanceMember("INPUT", "Enable");
+            var fbAtPosition = FindInstanceMember("OUTPUT", "AtPosition");
+            var fbActualPosition = FindInstanceMember("STATIC", "ActualPosition");
+            var fbMembersRendered = instanceDbDocument.IsVisibleInTree()
+                && instanceDbDeclarations.GetColumnTitle(2) == "DEFAULT VALUE"
+                && instanceDbDeclarations.GetColumnTitle(3) == "START VALUE"
+                && fbEnable?.GetText(0) == "Enable"
+                && fbEnable.GetText(1) == "BOOL"
+                && fbEnable.GetText(2) == "FALSE"
+                && fbEnable.GetText(3) == fbEnable.GetText(2)
+                && fbEnable.GetTooltipText(3).Contains("Inherited FB default", StringComparison.Ordinal)
+                && fbEnable.GetText(5) == "FB default enable"
+                && fbAtPosition?.GetText(1) == "BOOL" && fbAtPosition.GetText(2) == "TRUE"
+                && fbAtPosition.GetText(3) == "TRUE" && fbAtPosition.GetText(5) == "Position feedback"
+                && fbActualPosition?.GetText(1) == "REAL" && fbActualPosition.GetText(2) == "12.5"
+                && fbActualPosition.GetText(3) == "12.5" && fbActualPosition.GetText(5) == "Measured position"
+                && instanceDbBoundary.Text.Contains("per-instance start/comment/retain overrides", StringComparison.Ordinal)
+                && instanceDbBoundary.Text.Contains("power-cycle retention", StringComparison.Ordinal)
+                && instanceDbBoundary.Text.Contains("standard-access offsets", StringComparison.Ordinal)
+                && instanceDbBoundary.Text.Contains("monitor/snapshots", StringComparison.Ordinal)
+                && instanceDbBoundary.Text.Contains("HMI attributes", StringComparison.Ordinal)
+                && instanceDbBoundary.Text.Contains("supervision", StringComparison.Ordinal);
+            var fbDefaultValue = fbEnable?.GetText(2) ?? "<missing>";
+            var fbStartValue = fbEnable?.GetText(3) ?? "<missing>";
+            var fbOutputDefault = fbAtPosition?.GetText(2) ?? "<missing>";
+            var fbOutputStart = fbAtPosition?.GetText(3) ?? "<missing>";
+            var fbStaticDefault = fbActualPosition?.GetText(2) ?? "<missing>";
+            var fbStaticStart = fbActualPosition?.GetText(3) ?? "<missing>";
+            var tempSectionRendered = false;
+            for (var section = instanceDbDeclarations.GetRoot()?.GetFirstChild(); section is not null; section = section.GetNext())
+                tempSectionRendered |= section.GetText(0) == "TEMP";
+            var tempOnlyFb = _ladderDocument.AddBlock("StructuredTempOnlyFB", LadderBlockType.FunctionBlock);
+            _ladderDocument.AddInterfaceParameter(tempOnlyFb.Id, "TemporaryScratch", PlcVariableType.Real,
+                LadderInterfaceSection.Temp, 0.0, comment: "Invocation-local scratch");
+            _ladderDocument.Instances.Add(new LadderInstance("structured_temp_only", "StructuredTempOnly", tempOnlyFb.Id,
+                new LadderInstanceDataBlock(734, "StructuredTempOnly_DB")));
+            Refresh(); await Frames();
+            await Activate("instance-db:734");
+            var tempOnlyEmptyState = instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetText(0)
+                == "No declared FB interface members.";
             var readonlyDefinition = instanceDbDocument.IsVisibleInTree()
                 && !globalDbDocument.IsVisibleInTree() && !canvas.IsVisibleInTree()
-                && instanceDbDocument.SelectionEnabled;
+                && instanceDbBoundary.Text.StartsWith("Read-only offline instance view", StringComparison.Ordinal)
+                && exactDefinition && counterMembersRendered && timerMembersRendered
+                && fbMembersRendered && !tempSectionRendered && tempOnlyEmptyState;
             await Activate($"program:{ownerIndex}");
             var ownerReturned = canvas.IsVisibleInTree()
                 && title.Text.Contains(_ladderDocument.Blocks[ownerIndex].Name, StringComparison.Ordinal)
-                && !title.Text.Contains("Structured_Count_DB", StringComparison.Ordinal);
-            instanceGate.Set("row-under-program-blocks", parentIsBlocks, $"row={instanceRow?.GetText(0)}");
+                && !title.Text.Contains("Structured_Count_DB", StringComparison.Ordinal)
+                && !title.Text.Contains("StructuredAxis_DB", StringComparison.Ordinal);
+            instanceGate.Set("row-under-program-blocks", parentIsBlocks, $"row={instanceRowName}");
             instanceGate.Set("selection-versus-definition", selectionClosed && exactDefinition, $"selectionClosed={selectionClosed} exactDefinition={exactDefinition}");
             instanceGate.Set("identity-is-unique-and-persistent", identityUnique, $"instances={dbs.Length} saveLoad={saveLoad is not null}");
-            instanceGate.Set("definition-is-read-only", readonlyDefinition, $"instance={instanceDbDocument.IsVisibleInTree()} globalDb={globalDbDocument.IsVisibleInTree()} ladder={canvas.IsVisibleInTree()}");
+            instanceGate.Set("definition-is-read-only", readonlyDefinition,
+                $"instance={instanceDbDocument.IsVisibleInTree()} globalDb={globalDbDocument.IsVisibleInTree()} ladder={canvas.IsVisibleInTree()} input={fbDefaultValue}/{fbStartValue} output={fbOutputDefault}/{fbOutputStart} static={fbStaticDefault}/{fbStaticStart} counter={counterMembersRendered} timer={timerMembersRendered} tempSection={tempSectionRendered} tempOnlyEmpty={tempOnlyEmptyState}");
             instanceGate.Set("owner-return-restores-editor", ownerReturned, $"title={title.Text} ladder={canvas.IsVisibleInTree()}");
             instanceGate.Finish();
             _ladderDocument.RestoreSnapshot(instanceFixture); Refresh(); await Frames();
@@ -503,7 +1111,8 @@ public partial class SimulatorShell
 
         var passed = gates.Count == 9
             && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 9
-            && gates.All(gate => gate.Status == "passed" && gate.Assertions.Count == 5
+            && gates.All(gate => gate.Status == "passed"
+                && gate.Assertions.Count == ProjectTreeRequirements[gate.GateId].Count()
                 && gate.Assertions.All(assertion => assertion.Passed && assertion.Status == "passed"));
         var completed = DateTimeOffset.UtcNow.ToString("O");
         var artifact = new

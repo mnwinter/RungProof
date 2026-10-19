@@ -287,7 +287,10 @@ public sealed partial class LadderEditorDocument
 
     public EditableBlock AddBlock(string name, LadderBlockType? blockType = null)
     {
-        var normalizedName = ValidateUniqueName(name, Blocks.Select(block => block.Name), "Block/routine");
+        var normalizedName = ValidateUniqueName(name, Blocks.Select(block => block.Name), "Block/routine",
+            StringComparison.OrdinalIgnoreCase);
+        if (Tags.Any(tag => tag.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Block/routine name '{normalizedName}' conflicts with a PLC tag.");
         var type = blockType ?? (Blocks.Count == 0 ? LadderBlockType.OrganizationBlock : LadderBlockType.Function);
         var block = new EditableBlock(NewId("block"), normalizedName, type);
         Blocks.Add(block);
@@ -315,7 +318,11 @@ public sealed partial class LadderEditorDocument
             ?? throw new InvalidOperationException($"Block '{blockId}' does not exist.");
         if (block.BlockType == LadderBlockType.DataBlock && section != LadderInterfaceSection.Static)
             throw new InvalidOperationException("Global DB declarations use static storage; Input, Output, InOut, and Temp are code-block interface sections.");
-        var normalizedName = ValidateUniqueName(name, block.Interface.Select(parameter => parameter.Name), "Interface parameter");
+        var normalizedName = ValidateUniqueName(
+            name,
+            block.Interface.Select(parameter => parameter.Name),
+            "Interface parameter",
+            block.BlockType == LadderBlockType.DataBlock ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         var value = initialValue ?? type switch
         {
             PlcVariableType.Bool => false,
@@ -326,7 +333,7 @@ public sealed partial class LadderEditorDocument
             _ => 0L,
         };
         var parameter = new LadderInterfaceParameter(normalizedName, type, section, value, dataType,
-            Retain: retain, Comment: comment.Trim());
+            Id: "formal-" + Guid.NewGuid().ToString("N"), Retain: retain, Comment: comment.Trim());
         block.Interface.Add(parameter);
         return parameter;
     }
@@ -343,10 +350,14 @@ public sealed partial class LadderEditorDocument
     {
         var block = Blocks.FirstOrDefault(candidate => candidate.Id.Equals(blockId, StringComparison.Ordinal))
             ?? throw new InvalidOperationException($"Block/routine '{blockId}' does not exist.");
-        block.Name = ValidateUniqueName(
+        var normalizedName = ValidateUniqueName(
             name,
             Blocks.Where(candidate => !ReferenceEquals(candidate, block)).Select(candidate => candidate.Name),
-            "Block/routine");
+            "Block/routine",
+            StringComparison.OrdinalIgnoreCase);
+        if (Tags.Any(tag => tag.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Block/routine name '{normalizedName}' conflicts with a PLC tag.");
+        block.Name = normalizedName;
         return block;
     }
 
@@ -463,7 +474,7 @@ public sealed partial class LadderEditorDocument
 
     public string AddTagTable(string name)
     {
-        var normalizedName = ValidateUniqueName(name, TagTables, "Tag table");
+        var normalizedName = ValidateUniqueName(name, TagTables, "Tag table", StringComparison.OrdinalIgnoreCase);
         TagTables.Add(normalizedName);
         return normalizedName;
     }
@@ -471,8 +482,9 @@ public sealed partial class LadderEditorDocument
     public PlcVariable AddAggregateTag(string name, PlcVariableRole role, PlcVariableType type, PlcAggregateSchema schema, object initialValue, string binding = "", string tagTable = "Default tag table", string address = "", string comment = "")
     {
         if (!PlcAggregates.IsAggregate(type)) throw new ArgumentException("Aggregate tag requires STRUCT or ARRAY.");
-        EnsureTagTable(tagTable);
-        var tag = new PlcVariable(name.Trim(), type, role, initialValue, binding.Trim(), schema, TagTable: tagTable,
+        var normalizedName = ValidateCpuSymbolName(name);
+        var canonicalTagTable = EnsureTagTable(tagTable);
+        var tag = new PlcVariable(normalizedName, type, role, initialValue, binding.Trim(), schema, TagTable: canonicalTagTable,
             Address: address.Trim(), Comment: comment.Trim());
         PlcAggregates.Expand(Tags.Append(tag).ToArray());
         Tags.Add(tag); return tag;
@@ -495,19 +507,21 @@ public sealed partial class LadderEditorDocument
         if (members is not null) members = Array.AsReadOnly(members.ToArray());
         var normalizedInitialValue = initialValue ?? (type == PlcVariableType.Enum ? members![0] : InitialValue(type));
         ValidateInitialValue(type, normalizedInitialValue);
-        EnsureTagTable(tagTable);
-        var tag = new PlcVariable(name.Trim(), type, role, normalizedInitialValue, binding.Trim(), EnumMembers: members,
-            TagTable: tagTable, Address: address.Trim(), Comment: comment.Trim());
+        var normalizedName = ValidateCpuSymbolName(name);
+        var canonicalTagTable = EnsureTagTable(tagTable);
+        var tag = new PlcVariable(normalizedName, type, role, normalizedInitialValue, binding.Trim(), EnumMembers: members,
+            TagTable: canonicalTagTable, Address: address.Trim(), Comment: comment.Trim());
         if (PlcTextValues.IsText(type) && !PlcTextValues.IsValid(tag, normalizedInitialValue))
             throw new InvalidOperationException("Invalid STRING value or ENUM domain/member.");
         Tags.Add(tag);
         return tag;
     }
 
-    private void EnsureTagTable(string tagTable)
+    private string EnsureTagTable(string tagTable)
     {
         if (string.IsNullOrWhiteSpace(tagTable)) throw new InvalidOperationException("A tag table name is required.");
-        if (!TagTables.Contains(tagTable, StringComparer.Ordinal)) AddTagTable(tagTable);
+        var existingTable = TagTables.FirstOrDefault(existing => existing.Equals(tagTable, StringComparison.OrdinalIgnoreCase));
+        return existingTable ?? AddTagTable(tagTable);
     }
 
     public PlcVariable UpdateTag(
@@ -524,11 +538,7 @@ public sealed partial class LadderEditorDocument
     {
         var index = Tags.FindIndex(tag => tag.Name.Equals(currentName, StringComparison.Ordinal));
         if (index < 0) throw new InvalidOperationException($"Tag '{currentName}' does not exist.");
-        var normalizedName = newName.Trim();
-        if (normalizedName.Length == 0) throw new InvalidOperationException("Tag name cannot be empty.");
-        if (Tags.Where((_, tagIndex) => tagIndex != index)
-            .Any(tag => tag.Name.Equals(normalizedName, StringComparison.Ordinal)))
-            throw new InvalidOperationException($"Tag '{normalizedName}' already exists.");
+        var normalizedName = ValidateCpuSymbolName(newName, index);
         if (type is PlcVariableType.Timer or PlcVariableType.Counter)
         {
             role = PlcVariableRole.Memory;
@@ -1501,11 +1511,30 @@ public sealed partial class LadderEditorDocument
     private static string NewStableId(string owner, string suffix) => $"{owner}-{suffix}";
 
     private static string ValidateUniqueName(string name, IEnumerable<string> existingNames, string objectKind)
+        => ValidateUniqueName(name, existingNames, objectKind, StringComparison.Ordinal);
+
+    private static string ValidateUniqueName(
+        string name,
+        IEnumerable<string> existingNames,
+        string objectKind,
+        StringComparison comparison)
     {
         var normalized = name.Trim();
         if (normalized.Length == 0) throw new InvalidOperationException($"{objectKind} name cannot be empty.");
-        if (existingNames.Any(existing => existing.Equals(normalized, StringComparison.Ordinal)))
+        if (existingNames.Any(existing => existing.Equals(normalized, comparison)))
             throw new InvalidOperationException($"{objectKind} name '{normalized}' already exists.");
+        return normalized;
+    }
+
+    private string ValidateCpuSymbolName(string name, int excludedTagIndex = -1)
+    {
+        var normalized = name.Trim();
+        if (normalized.Length == 0) throw new InvalidOperationException("Tag name cannot be empty.");
+        if (Tags.Where((_, index) => index != excludedTagIndex)
+            .Any(tag => tag.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Tag '{normalized}' already exists; PLC tag names are case-insensitive across tag tables.");
+        if (Blocks.Any(block => block.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Tag name '{normalized}' conflicts with a block/routine name.");
         return normalized;
     }
 

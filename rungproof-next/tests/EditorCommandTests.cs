@@ -78,6 +78,7 @@ internal static partial class Program
         {
             var d = LadderEditorDocument.CreateConveyorExample(); var h = new LadderEditorHistory();
             var initialBlocks = d.Blocks.Count;
+            d.AddTag("OccupiedName", PlcVariableRole.Memory);
             var target = EditorTarget.CaptureProject(d);
             False(LadderEditorCommands.Execute(d, h, new(EditorCommandId.CreateBlock, target, Creation: new(" ", LadderBlockType.FunctionBlock))).Applied);
             False(h.CanUndo); Equal(initialBlocks, d.Blocks.Count);
@@ -85,6 +86,13 @@ internal static partial class Program
             Equal("Mixer", d.Blocks[^1].Name); Equal(LadderBlockType.FunctionBlock, d.Blocks[^1].BlockType);
             target = EditorTarget.CaptureProject(d);
             False(LadderEditorCommands.Execute(d, h, new(EditorCommandId.CreateBlock, target, Creation: new("Mixer"))).Applied);
+            Equal(initialBlocks + 1, d.Blocks.Count);
+            target = EditorTarget.CaptureProject(d);
+            var blockConflict = new EditorCommandRequest(EditorCommandId.CreateBlock, target,
+                Creation: new("occupiedname", LadderBlockType.FunctionBlock));
+            False(LadderEditorCommands.CanExecute(d, blockConflict, false, out var conflictReason));
+            Equal("block-name-conflicts-with-plc-tag", conflictReason);
+            False(LadderEditorCommands.Execute(d, h, blockConflict).Applied);
             Equal(initialBlocks + 1, d.Blocks.Count);
             True(h.Undo(d, out _)); Equal(initialBlocks, d.Blocks.Count); False(h.CanUndo);
             target = EditorTarget.CaptureProject(d);

@@ -7238,3 +7238,403 @@ and block-type validation. All 16 non-catalog local gates are now
 `automated-pass`. This does not change vendor status: no installed-TIA or live
 PLC execution occurred, no same-state vendor comparison is bound, and overall
 TIA parity remains **OPEN**.
+
+## 2026-10-18 instance DB declaration layout correction
+
+The latest user screenshot exposed a concrete layout mismatch: generated FB
+instance DBs opened as a paragraph list instead of a declaration table. The
+current view now uses a central six-column declaration grid (`Name`, `Data
+type`, `Default value`, `Start value`, `Retain`, `Comment`) with Input, Output,
+InOut, and Static sections. TEMP locals are excluded because they do not belong
+to the instance DB. It identifies the assigned instance and
+FB above the table. Siemens V21 documents that FB defaults seed the generated
+instance DB's start values; when no instance-specific value is supplied, the
+default is used at startup. The renderer therefore shows the inherited value
+in both `Default value` and `Start value`, with the start value visually muted
+and a tooltip identifying it as inherited. The model still does not support
+editing and persisting a per-instance override, so the read-only boundary says
+so explicitly. See Siemens V21's [data block declaration table](https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/structure-of-the-declaration-table-for-data-blocks)
+and [start-value rules](https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/defining-start-values/basic-information-on-start-values).
+
+The dedicated project-tree gate now also constructs an FB-backed instance and
+checks section/member rows, the separate Default/Start columns, the inherited
+start value and its disclosure, the comment, absence of TEMP locals, read-only
+disclosure, and return to the owner. That exact
+`tia.project-tree.instance-db-contract` gate passed. A
+normal-renderer capture at `.tools/instance-db-table-review.png` was visually
+inspected for grouping, contrast, and column fit. Build passed with zero
+warnings/errors; the controller/editor suite passed 372/372; and
+`--verify-app-shell` passed for 77 scenes and five demos.
+
+The first full `--verify-tia-project-tree-gates` run exposed a stale pointer-
+verifier assertion: it looked for the DB name in the subtitle from the former
+text-only document. The production view put the DB name in its new heading.
+After updating that assertion, the full verifier passed all 9 gates and 45
+assertions, including physical pointer-injected activation, creation,
+navigation, CALL drag/drop, Undo/Redo, and the instance-DB table. This is
+Godot viewport input evidence, not OS-level human interaction or installed-TIA
+evidence. A separate CUA retry could not bind to the running RungProof window:
+the session exposed no native apps and has no `listApps`/`listWindows` API. The
+capture is a local renderer artifact, not a manual screen-control walkthrough
+or installed-TIA comparison.
+
+Independent source review also confirmed the existing limits: Global DB is a
+five-column supported subset; instance DB start-value overrides, online monitor
+values, offsets and extended DB attributes are absent; PLC tag tables omit
+TIA's User/System constants views; and block metadata remains narrower than
+TIA. Keep those items in the partial/open scope. Overall main-screen and
+property-management parity remains **OPEN**.
+
+## 2026-10-18 Global DB edit isolation and property requirements
+
+The failed Global DB edit assertion was first traced to the verifier selecting
+one child too deep in a hidden-root declaration tree. Correcting the row lookup
+made the edit path executable and exposed a separate production risk found by
+independent code review: the selected declaration was stored only as an array
+index, so changing the active block could leave an edit form that targeted the
+same row number in another block. The form now records its owning block and
+declaration name, clears selection on block changes, and rejects stale targets.
+The gate selects an existing declaration, edits Name/Start/Retain/Comment,
+checks exact Undo/Redo, selects that declaration again, activates a second DB
+with a declaration at the same row index, and proves the second DB declaration
+remains byte-identical after an Apply attempt. Switching into a DB also leaves
+the disabled declaration-section selector on `STATIC`.
+
+The first rerun then found that the suite aggregator still required exactly five
+assertions per gate. It now checks each gate against its declared requirement
+count, so adding coverage does not produce a false top-level failure. Build
+passed with zero warnings/errors. The current
+`--verify-tia-project-tree-gates` artifact passes 9/9 gates and 47/47
+assertions, with `externalTia=false` and `livePlc=false`. The no-reselection
+Apply attempt is a no-op and the selector remains `STATIC`. Godot still logs
+renderer/ObjectDB leak warnings during headless shutdown; the command exits 0
+and the structured evidence is passing, but those shutdown warnings remain.
+
+`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md` now defines the full main-workbench,
+property-editor, DB, PLC-tag/constants, watch-table, interaction, and matched
+TIA V21 acceptance scope. The batch plan orders the implementation lanes and
+the external evidence gates. Current local gaps remain expanded Global DB
+columns/access modes, per-instance start overrides and online monitor values,
+PLC User/System constants and tag attributes, watch-table addresses/display
+formats/modify values, full screen coverage across every supported property
+surface, and matched installed-TIA V21 captures. Overall parity remains
+**OPEN**.
+
+## 2026-10-18 Global DB screen route and OS-level walkthrough
+
+The CUA native-window integration remains unavailable: its inventory exposes
+no native applications and its runtime has no native app/window discovery
+methods. Under the user's explicit authorization, a temporary loopback browser
+bridge now mirrors the Godot window using `PrintWindow` and sends targeted
+window messages for clicks and keys. CUA Chrome can use the live screen through
+that page. This is an input/screen bridge to the native app, not a browser build
+of RungProof; the listener binds only to `127.0.0.1` and the helper is stored in
+ignored `.tools`.
+
+The walkthrough exposed a production navigation defect: Global DB told users to
+use the Project inspector, but Siemens mode hides the Project tabs, so the
+existing member form had no discoverable route. The DB screen now has an
+`EDIT MEMBERS` action that switches the left dock to `Project objects`, expands
+that dock to a usable width, and changes to `PROJECT TREE` for the return action.
+The route captures the live splitter position when the dock is visible (falling
+back to its saved position when collapsed), then restores that exact width on
+return. An independent code review confirmed this path has no remaining
+actionable defect. The offline project-tree gate starts at 240 px, verifies the
+member form is visible after widening to 280 px or more, and verifies the exact
+240 px width is restored.
+
+On the live desktop, I created a Global DB through the corrected creation
+dialog, opened the member form, added `WalkthroughFlag : BOOL := FALSE`, selected
+it, changed its comment and Retain value, and returned to the tree. The DB grid
+showed the resulting declaration and updated values. A fresh visible Windows
+walkthrough also created a DB, opened the member form at its widened dock width,
+and returned to the declaration grid with the original dock width restored.
+The browser bridge was then used from CUA to open the member form, enter
+`CUAProbe2`, add it, and verify that it appeared in the central DB grid. This
+confirms an actual browser-mediated screen-control path despite the missing
+native CUA app API. The gate passes
+9/9 gates and 48/48 assertions; the virtual-controller suite passes 372/372;
+the app-shell verifier passes 77 scenes, 3 groups, and 5 demos. The normal
+renderer, OS mouse walkthrough, and browser-mediated CUA walkthrough are
+distinct evidence. The scratch session is unsaved and remains open for
+inspection.
+
+The Global DB gate's `fields-persist` result means an edit renders and survives
+the gate's in-memory Undo/Redo snapshots. It does not yet cover duplicate
+declaration rejection or a project-file save/reopen cycle, both required by
+PROP-03; treat the gate as partial for those criteria. A reviewer reported a
+355 px width fixture, but the current checked-in gate source sets and verifies
+a 240 px starting/restored width, so the existing 240 px audit description
+matches the source.
+
+The creation dialog received a fixed geometry and DB-specific resize behavior
+after the screen walkthrough showed the action row below the window. The
+independent reviewer caught a reopen sizing edge case and a centering concern;
+the code resets its size on each open and recenters on type change. The current
+live DB screen visibly fits its OK/Cancel actions. Small-window and high-DPI
+limits still need viewport-relative verification. No matched installed-TIA
+capture was made; overall parity remains **OPEN**.
+
+The browser bridge was subsequently used to exercise the visible main-screen
+controls in the offline Conveyor Inspection Cell. Return to Scene, built-in
+Run/Stop, conveyor Start, simulated E-stop, blocked Start while E-stop was
+latched, and E-stop Reset all produced visible status/history or point changes.
+The E-stop changed `estop_ok` false, prevented a machine Start, and reset to
+true while leaving the built-in controller stopped. This confirms the local
+scene action flow only; it does not prove the ladder program owns these
+decisions, safety-rated behavior, or installed-TIA parity. The final stopped
+capture is `.tools/cua-walkthrough-main-controls.png`. The broad property and
+watch-table walkthrough remains open.
+
+The live screen walkthrough then used the Project Tree to select Watch table 1
+and double-click it. A single selection left DB1 active; the double-click
+opened the watch-table workspace, and selecting `start_command` highlighted
+the row without changing its value. The screen exposes Symbol, Type, Value,
+Role, Quality/State, and Scene Binding; address/display-format/modify-value
+controls were not exercised. The screenshot is `.tools/cua-walkthrough-watch-table.png`.
+
+On 2026-10-18, the temporary bridge was reconnected after the earlier CUA
+native-app attempts failed. Its image reported `connected · 1616×939`; clicks
+on the built-in Run and Stop controls visibly changed the offline runtime
+between RUNNING and STOPPED while the scan advanced. Clicking `+ TABLE` opened
+the named-table dialog, and Escape canceled it without committing. The symbol
+selector was opened and `stop_command` selected, but the available screenshots
+disagreed on whether the table contained four or five symbols. Therefore the
+`+ SYMBOL` attempt and count are inconclusive; no exact row set is accepted.
+An independent screen-control agent separately confirmed Return to Scene,
+Logic Editor, DB1 → Edit Members, and opening/canceling the Add Watch Table
+dialog. Default tag table was already open as a tab. Project Tree
+collapse/expand and splitter resizing remain unverified because some
+coordinate clicks selected adjacent rows/properties. The agent made no field
+edits and did not use Save/Load. These observations verify a local bridge input
+route and visible responses, but do not repair native CUA app discovery or
+prove installed-TIA behavior. Persistent project mutation remains untested.
+
+The post-walkthrough screen then showed an empty active watch table. The Undo
+status identified `ADD WATCH TABLE`; applying Undo restored a table showing
+four symbols. This indicates that a table-creation action was committed during
+the coordinate walkthrough despite the agent's interpretation that Escape had
+canceled the dialog. The active table/count do not match earlier screenshots,
+so the scratch table state is inconclusive. Nothing was saved to the project.
+
+The local bridge helper was then revised to serialize input and screenshot
+refresh, remove duplicate click dispatch from browser pointer down/up, and
+provide an explicit drag gesture. PowerShell parsing passed. Through the
+restarted bridge, Run/Stop again visibly toggled the offline runtime. The
+Global DB `EDIT MEMBERS` and `PROJECT TREE` actions were visibly exercised in
+both directions. Enter opened the Default tag table; its Name, Address,
+Comment, Type, Role, Initial, and Binding columns and selected-tag properties
+were visible. The Add new tag table dialog was opened and its visible Cancel
+button clicked; it closed without creating an item.
+
+A screen drag widened the Project Tree dock by roughly 60 px, and the reverse
+drag returned it to approximately the starting width. This confirms splitter
+input and response in the running app; restoration after a resize performed
+inside the DB member-editor route remains open. No property field was edited
+and no Save/Load was used. Current scratch session remains unsaved, DB1 remains
+open, the tag-table tab is active, the runtime is stopped, and PLC status is
+disconnected. Exact Watch-table symbol count stays inconclusive because the
+walkthrough screenshots disagreed; current visible UI reports four.
+
+The user-directed CUA workaround is now enacted for the current workstation
+session: Chrome reads a loopback-only bridge page that mirrors the Godot
+window and forwards window messages. This bypasses the empty native-app
+inventory without changing RungProof's network exposure. Return to Scene and
+Logic Editor were visibly navigated in both directions. The browser bridge
+requires coordinate values to be entered and verified in one step, then
+clicked in a later step; combining fill and click sometimes dispatched the
+previous target. Scene-panel hit coordinates also differed from the apparent
+image-relative location, so a click is accepted as evidence only when the
+resulting history/point/runtime state changes.
+
+During this live check, the simulator E-stop visibly set `estop_ok` false,
+blocked Start until explicit E-stop reset, then reset to true. The local
+controller was started and stopped; the final state is STOPPED, E-stop reset,
+PLC DISCONNECTED, and the project remains UNSAVED. A scene action was logged
+as `conveyor_run` and cartons appeared at a different position while the
+visible PLC→Simulator table showed `conveyor_run BOOL False`. The observation
+was not synchronized to a scan/output capture, so it does not prove an
+ownership bypass or stale display. Independent source tracing found that the
+table reads current runtime points, virtual outputs are mapped and committed
+before its state refresh, and conveyor-cell motion requires
+`conveyor_run && estop_ok`. The history message means the command request was
+accepted; cartons may have moved while the output was true and stopped before
+the screenshot. A separate source caveat remains: `RunDefault()` directly
+sets `conveyor_run` true for generic conveyor scenes. No evidence ties that
+entry point to this named command. Keep the ownership question open until a
+synchronized scan/output/point/carton-position capture resolves it. No fields
+were edited and no Save/Load was used. The bridge remains temporary,
+local-only, and tied to the active workstation session.
+
+The independent screen-control agent retried the full visible route through
+the same bridge. It confirmed both Logic Editor↔Scene navigation, DB1→Edit
+Members and return, the Default tag table, and Add Watch Table followed by
+Cancel. Runtime Run, Stop, E-stop, and reset each produced visible history or
+point changes, but some required a second click and the agent reported that
+repeats could land on neighboring controls. It therefore did not claim
+Project Tree collapse/expand, splitter resize, or its final Return-to-Scene
+attempt. Final observed safety state was STOPPED, `estop_ok=true`, PLC
+DISCONNECTED, and UNSAVED; the editor was left visible after a canceled watch
+dialog. Do not treat repeated clicks as a general workaround until the target
+and state are rechecked, because duplicate actions may toggle state twice.
+
+## 2026-10-18 CUA session workaround and IEC timer DB schema
+
+The native-app inventory still returns no applications, but the browser
+inventory exposes the active Chrome tab `RungProof CUA Screen Bridge`. Reusing
+that existing session-local bridge returned a live 1616×939 screenshot of the
+running Godot window and a clickable browser control surface. This resolves the
+walkthrough exposure blocker for this workstation/session; it does not add a
+native-app API or change RungProof's network exposure. The browser bridge
+session must remain available while screen-control work continues.
+
+Review against Siemens STEP 7 V21 found the timer instance DB renderer showed
+only `Q` and `ET`. The V21 IEC_TIMER system type declares `PT`, `ET`, `IN`, and
+`Q`. The renderer now lists all four in that order, and the existing
+`tia.project-tree.instance-db-contract` gate checks their types and row order.
+The instance-view footer now names omitted capabilities: per-instance start
+overrides, standard-access offsets, monitor/snapshot values, HMI attributes,
+setpoints, and supervision. Siemens docs: [declaration table](https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/structure-of-the-declaration-table-for-data-blocks)
+and [system data types](https://docs.tia.siemens.cloud/r/en-us/v21/data-types/system-data-types/system-data-types).
+
+Independent code review found three coverage/reporting gaps. The focused gate
+now asserts exactly four IEC timer rows, first/last member, sequence, and types;
+asserts every capability named by the read-only footer; and describes timer /
+counter checks as member schema only because the offline renderer does not
+model their start values or Retain state. V21 documentation confirms the
+IEC_TIMER members and TIME types, but does not establish that TIA groups the
+members beneath `STATIC`; the current view's grouping stays a pending matched
+screen comparison.
+
+The previously unavailable screen-control route is confirmed active: CUA's
+native-app inventory remains empty, but Chrome exposes the current
+`RungProof CUA Screen Bridge` tab. Reusing it returned the running application
+at 1616×939. The earlier native-window attempt failed at CUA surface discovery,
+not because the app was closed or because user authorization was missing.
+
+After the IEC_TIMER declaration correction, the normal renderer was launched
+with `--app-shell --shell-view=ladder --capture-instance-db-definition` and
+captured `.tools/instance-db-table-review-cua-fix.png`. Visual inspection at
+1600×900 confirms the X_Axis_DB heading and owner, six declaration columns,
+Input/Output/Static grouping, inherited default/start values, comments, and the
+read-only capability boundary are visible and unclipped. The focused
+`--verify-tia-project-tree-gates` run passed 9 gates / 48 assertions, including
+PT/ET/IN/Q type and order. `--verify-app-shell` passed for 77 scenes, 5 demos,
+and 295 assets. These are RungProof implementation/renderer checks; no matched
+installed-TIA capture is available, so visual parity remains open.
+
+The independent screen agent's final pass confirms the bridge control surface
+remains available, but reports unreliable placement for typed pointer targets:
+attempted tree collapse/expand, splitter resize, and scene-nav coordinates hit
+other controls and were not accepted as proof. The browser page exposes the
+screen image at CSS origin (152,45), size 1616×939, while the bridge's x/y
+fields accept image-local coordinates. This coordinate-origin difference is a
+likely source of the misses; direct typed targets must be derived from the
+image bounds and verified after each action. A single semantic route from Scene
+back to Logic Editor was confirmed with the bridge button. The session was left
+UNSAVED, STOPPED, PLC DISCONNECTED; no Save/Load or declaration/tag edits were
+made. Do not treat tree/splitter interaction as verified until a correct
+image-local click or resize produces a visible state change.
+
+The independent code review confirmed the timer member schema and found no
+remaining actionable issue in the correction. IEC timer/counter value and
+retentivity behavior remain unmodeled, and exact IEC DB grouping remains open
+pending matched TIA evidence.
+
+## 2026-10-18 follow-up: live scene prerequisite and splitter interaction
+
+The active CUA screen-control route is Chrome → the existing local-only
+`RungProof CUA Screen Bridge`; native-app enumeration remains empty. A direct
+screen click on the Conveyor Inspection Cell Start/Stop action while the local
+runtime was STOPPED produced the visible event/workspace message `Action
+blocked · Run the controller before issuing a machine command`. The local
+point table remained `conveyor_run = FALSE`, `estop_ok = TRUE`. This resolves
+the reported dead-button symptom for this stopped/offline state: the scene
+command is live but requires the controller to be running. It does not prove
+that ladder logic owns the action. A prior independent screen walkthrough
+separately verified offline Run/Stop and simulated E-stop latch/reset. Runtime
+was left STOPPED, PLC DISCONNECTED, with E-stop reset; no physical PLC or
+safety-rated behavior was exercised.
+
+A targeted Project Tree splitter drag from its measured grab strip widened the
+dock by about 60 px; the reverse drag restored the prior width. The first drag
+missed the grab strip, and later uncalibrated clicks selected nearby rows; only
+the visible successful resize/reversal counts. Collapse/reopen remains
+unverified. The current browser bridge provides a workaround for this
+workstation's missing native CUA surface, not a portable native-window API.
+Property-form acceptance remains incomplete, and the current-screen tests do
+not change the existing UNSAVED project state or establish installed-TIA V21
+parity.
+
+## 2026-10-18: CUA bridge recovery and transactional DB member form
+
+The previous CUA block was caused by binding the wrong session: native app
+enumeration returned no window, the Chrome extension tab was already owned by
+another CUA session, and the current task's separate local bridge key returned
+403. A fresh in-app browser tab using the existing authorized local bridge
+connected to the running Godot window at 1616×939. This restores a practical
+screen-control route on this workstation without establishing general native
+window discovery.
+
+The independent screen agent verified Run/Stop, Conveyor Start, simulated
+E-stop and reset, controller Reset, Scene/Logic Editor navigation, Project
+Tree collapse/reopen and splitter resize/reversal, DB member navigation,
+existing tag selection, and Add Tag Table / Add Watch Table cancellation. The
+final state was STOPPED, `estop_ok=true`, `conveyor_run=false`, PLC disconnected,
+scan 0, and project UNSAVED. Tag/watch counts remained 5/4 after cancellation.
+No member/tag data was edited and no Save/Load was used. These observations
+cover the offline simulator UI/model only.
+
+Read-only code review found an unsaved Global DB member draft could be cleared
+by New without applying, discarding, or canceling, and its action labels said
+parameter. It also found the labels/defaults could remain stale on initial DB
+entry and DB↔FB navigation. New now uses the common pending-form resolver;
+DB actions use member-specific wording and the form resets against its owner
+block. The gate exercises Cancel-preserves-draft and Discard-clears-draft.
+The member form now has an explicit Cancel action and type-aware initial-value
+defaults for a new declaration when its type changes. A fresh normal-renderer
+capture at `.tools/instance-db-table-review-db101.png` shows `X_Axis_DB [DB101]`
+assigned to `FB_AxisDrive [FB]` with a six-column grouped declaration grid. This
+matches the current implementation, while the earlier attached text-only
+“Interface storage” image does not; the live CUA walkthrough was on a Global DB,
+so it did not establish the instance view by direct interaction. The project
+tree gate now passes 9 gates / 52 assertions. The build
+passed with 0 warnings/errors, app-shell verification
+passed for 77 scenes / 5 demos / 295 assets, and virtual-controller tests pass
+372/372. A follow-up review of this patch is pending. TIA V21 matched screen
+evidence, remaining DB/tag/watch property workflows, and a lower-level direct
+scene-action E-stop invariant review are still open.
+
+### Screen-control route clarification
+
+A fresh CUA inventory still returned no bindable native app, but it exposed the
+existing Chrome extension tab titled `RungProof CUA Screen Bridge`. Binding that
+Chrome tab—not the ChatGPT in-app browser tab—showed the connected native-window
+mirror at 1616×939. A coordinate click through the bridge visibly opened the
+Project Objects member editor from the Global DB view. This establishes that
+the previous walkthrough failure was a session/browser-target selection issue,
+not proof that RungProof was absent or that screen control is impossible. The
+currently open app is an older, UNSAVED build and still shows the pre-Cancel
+member form; it was left open and unsaved. This bridge proves this workstation's
+input route only. It does not prove the new source revision's form behavior,
+installed-TIA parity, or PLC/safety behavior.
+
+The follow-up review then found that a Retain-only checkbox toggle did not mark
+the member form dirty and that ENUM's blank start value could not pass its
+declaration parser. Both are fixed: checkbox toggles now participate in pending
+form resolution, and choosing ENUM seeds `Value1` in both the member domain and
+initial value when no domain exists (or selects the first existing member).
+The production-path sweep now checks both cases and passes 9 gates / 57
+assertions. The live older app remains untouched; these UI handlers are verified
+through the current-source gate only.
+
+The same review then identified a Global DB validation gap when changing an
+ENUM's domain after seeding its first member. The form now follows the first
+domain member while the start value is untouched, validates identifier count,
+uniqueness, and start-value membership before committing, and leaves document
+and Undo state unchanged on invalid input. The gate covers a valid domain edit,
+Undo, and invalid-domain rejection. Latest project-tree result: 9 gates / 57
+assertions; editor-control registry total: 16 gates / 93 assertions.
+The independent follow-up review found no remaining P1/P2 issue in this member-
+form flow. This is a scoped code review, not a claim that the remaining TIA
+property-management work or other application paths have no defects.

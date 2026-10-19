@@ -859,16 +859,24 @@ public partial class SimulatorShell : CanvasLayer
 
     public void PrepareInstanceDbDefinitionCapture()
     {
-        if (_ladderDocument.Rungs.Count == 0)
-            throw new InvalidOperationException("The ladder document has no network for the instance-DB capture fixture.");
-
-        // Capture-only project data: expose a deterministic IEC counter instance through
-        // the same project-tree activation route used by an operator. The authored project
-        // and its saved baseline are not written by this process.
-        var rung = _ladderDocument.Rungs[0];
-        rung.IsCounter = true;
-        rung.CounterVariable = "Pallet_Count";
-        rung.CounterInstanceDataBlock = new LadderInstanceDataBlock(123, "Pallet_Count_DB");
+        // Capture-only project data: show an FB-generated instance DB with
+        // interface sections and defaults through the same tree activation route
+        // used by an operator. The authored project and saved baseline are not written.
+        var axis = _ladderDocument.AddBlock("FB_AxisDrive", LadderBlockType.FunctionBlock);
+        _ladderDocument.AddInterfaceParameter(axis.Id, "Enable", PlcVariableType.Bool,
+            LadderInterfaceSection.Input, false, comment: "Axis permission");
+        _ladderDocument.AddInterfaceParameter(axis.Id, "PositiveRequest", PlcVariableType.Bool,
+            LadderInterfaceSection.Input, false, comment: "Positive direction request");
+        _ladderDocument.AddInterfaceParameter(axis.Id, "NegativeRequest", PlcVariableType.Bool,
+            LadderInterfaceSection.Input, false, comment: "Negative direction request");
+        _ladderDocument.AddInterfaceParameter(axis.Id, "PositiveCommand", PlcVariableType.Bool,
+            LadderInterfaceSection.Output, false, comment: "Positive drive command");
+        _ladderDocument.AddInterfaceParameter(axis.Id, "NegativeCommand", PlcVariableType.Bool,
+            LadderInterfaceSection.Output, false, comment: "Negative drive command");
+        _ladderDocument.AddInterfaceParameter(axis.Id, "ActualPosition", PlcVariableType.Real,
+            LadderInterfaceSection.Static, 0.0, comment: "Measured position");
+        _ladderDocument.Instances.Add(new LadderInstance("db_layout_axis", "X_Axis", axis.Id,
+            new LadderInstanceDataBlock(101, "X_Axis_DB")));
         foreach (var refresh in _ladderEditorRefreshers) refresh();
 
         const string treePath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree";
@@ -878,7 +886,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             for (var current = item; current is not null; current = current.GetNext())
             {
-                if (current.GetMetadata(0).AsString() == "instance-db:123") return current;
+                if (current.GetMetadata(0).AsString() == "instance-db:101") return current;
                 if (FindInstanceDb(current.GetFirstChild()) is { } child) return child;
             }
             return null;
@@ -5030,28 +5038,47 @@ public partial class SimulatorShell : CanvasLayer
         editorDocumentScroll.AddChild(editorDocumentTabs);
         var editorDocumentButtonGroup = new ButtonGroup { AllowUnpress = false };
         var editorDocumentButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+        var editorDocumentItems = new Dictionary<string, HBoxContainer>(StringComparer.Ordinal);
+        var nextEditorDocumentIndex = 0;
         var editorTagDocuments = new Dictionary<string, string?>(StringComparer.Ordinal);
         var editorInstanceDbDocuments = new Dictionary<string, int>(StringComparer.Ordinal);
-        var activeEditorDocumentKey = "block:0";
+        string BlockDocumentKey(string blockId) => EditorDocumentIdentity.ForBlock(blockId);
+        bool TryResolveBlockDocument(string key, out int blockIndex) =>
+            EditorDocumentIdentity.TryResolveBlockIndex(document, key, out blockIndex);
+        var initialBlockIndex = Math.Clamp(document.ActiveBlockIndex, 0, Math.Max(0, document.Blocks.Count - 1));
+        var activeEditorDocumentKey = document.Blocks.Count > 0
+            ? BlockDocumentKey(document.Blocks[initialBlockIndex].Id)
+            : string.Empty;
         void AddEditorDocumentTab(string key, string title)
         {
             if (!siemens) return;
+            var tabTitle = title.EndsWith(" ✕", StringComparison.Ordinal) ? title[..^2].TrimEnd() : title;
             if (editorDocumentButtons.TryGetValue(key, out var existing))
             {
-                existing.Text = title;
+                existing.Text = tabTitle;
+                existing.TooltipText = "Activate this document.";
                 return;
             }
+            var itemIndex = nextEditorDocumentIndex++;
+            var item = new HBoxContainer
+            {
+                Name = $"EditorDocumentItem_{itemIndex}",
+                CustomMinimumSize = new Vector2(250, 32),
+                SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin,
+            };
+            item.SetMeta("editorDocumentKey", key);
             var tab = new Button
             {
-                Name = $"EditorDocument_{editorDocumentButtons.Count}",
-                Text = title,
+                Name = $"EditorDocument_{itemIndex}",
+                Text = tabTitle,
                 ToggleMode = true,
                 ButtonGroup = editorDocumentButtonGroup,
                 FocusMode = Control.FocusModeEnum.All,
-                CustomMinimumSize = new Vector2(250, 32),
-                SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin,
-                TooltipText = title,
+                CustomMinimumSize = new Vector2(222, 32),
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                TooltipText = "Activate this document.",
             };
+            tab.SetMeta("editorDocumentKey", key);
             tab.AddThemeColorOverride("font_color", new Color("263943"));
             tab.AddThemeColorOverride("font_hover_color", new Color("263943"));
             tab.AddThemeColorOverride("font_pressed_color", new Color("1d343e"));
@@ -5060,8 +5087,25 @@ public partial class SimulatorShell : CanvasLayer
             tab.AddThemeStyleboxOverride("hover", BoxStyle(new Color("eaf0f3"), new Color("708690")));
             tab.AddThemeStyleboxOverride("pressed", BoxStyle(new Color("f8f9fa"), new Color("607983")));
             tab.Pressed += () => ResolvePendingEditorForms(() => ActivateEditorDocument(key));
+            var closeTab = new Button
+            {
+                Name = $"EditorDocumentClose_{itemIndex}",
+                Text = "×",
+                CustomMinimumSize = new Vector2(28, 32),
+                FocusMode = Control.FocusModeEnum.All,
+                TooltipText = "Close this editor tab. The project object and saved data are unchanged.",
+            };
+            closeTab.AddThemeColorOverride("font_color", new Color("263943"));
+            closeTab.AddThemeColorOverride("font_hover_color", new Color("d64545"));
+            closeTab.AddThemeFontSizeOverride("font_size", 13);
+            closeTab.AddThemeStyleboxOverride("normal", BoxStyle(new Color("d8dee2"), new Color("9aa7ad")));
+            closeTab.AddThemeStyleboxOverride("hover", BoxStyle(new Color("fdebec"), new Color("d64545")));
+            closeTab.Pressed += () => ResolvePendingEditorForms(() => CloseEditorDocument(key));
+            item.AddChild(tab);
+            item.AddChild(closeTab);
             editorDocumentButtons.Add(key, tab);
-            editorDocumentTabs.AddChild(tab);
+            editorDocumentItems.Add(key, item);
+            editorDocumentTabs.AddChild(item);
         }
         center.AddChild(editorDocumentHost);
         var editorTab = PanelContainer("EditorTab", new Color("d9dde0"), new Color("9aa7ad"));
@@ -5238,9 +5282,14 @@ public partial class SimulatorShell : CanvasLayer
             CustomMinimumSize = new Vector2(100, 30),
         };
         var interfaceEnumMembers = new LineEdit { Name = "InterfaceEnumMembers", PlaceholderText = "ENUM members, comma separated", CustomMinimumSize = new Vector2(180, 30) };
-        var interfaceRetain = new CheckBox { Name = "InterfaceRetain", Text = "RETAIN", TooltipText = "Retain this optimized-access global DB member through a supported power transition." };
+        var interfaceRetain = new CheckBox { Name = "InterfaceRetain", Text = "RETAIN", TooltipText = "Stores the RETAIN declaration attribute for this optimized-access Global DB member. The offline runtime does not model power-cycle retention." };
         var interfaceComment = new LineEdit { Name = "InterfaceComment", PlaceholderText = "comment", CustomMinimumSize = new Vector2(180, 30) };
-        var addInterface = ToolbarButton("AddInterface", "+ PARAMETER", new Color("4d6674"), 120);
+        var addInterface = ToolbarButton("AddInterface", "+ PARAMETER", new Color("4d6674"), 130);
+        var newInterface = ToolbarButton("NewInterface", "NEW", new Color("536771"), 105);
+        newInterface.TooltipText = "Start a new declaration. Pending form changes must be applied, discarded, or canceled first.";
+        var cancelInterface = ToolbarButton("CancelInterface", "CANCEL", new Color("536771"), 100);
+        cancelInterface.TooltipText = "Discard the current member form draft and return to a blank declaration form.";
+        cancelInterface.Disabled = true;
         var removeInterface = ToolbarButton("RemoveInterface", "REMOVE", new Color("8a4d55"), 90);
         var interfaceTable = new Tree
         {
@@ -5295,6 +5344,12 @@ public partial class SimulatorShell : CanvasLayer
         };
         var selectedTaskIndex = 0;
         var selectedTagIndex = -1;
+        var selectedInterfaceIndex = -1;
+        var interfaceInitialValueEdited = false;
+        string? interfaceFormOwnerBlockId = null;
+        string? selectedInterfaceBlockId = null;
+        string? selectedInterfaceParameterId = null;
+        string? selectedInterfaceParameterName = null;
         string? activeTagTableName = "Default tag table";
         Button? applyTagEdit = null;
         Button? deleteTag = null;
@@ -5337,7 +5392,9 @@ public partial class SimulatorShell : CanvasLayer
         ConfigureSelectableList(tagList);
         tagList.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
         var tagName = new LineEdit { Name = "NewTagName", PlaceholderText = "new_bool_tag" };
-        var tagAddress = new LineEdit { Name = "TagAddress", PlaceholderText = siemens ? "%I0.0 or DB1.DBX0.0" : "optional controller address" };
+        var tagAddress = new LineEdit { Name = "TagAddress", PlaceholderText = siemens ? "%I0.0 or %DB1.DBX0.0" : "optional controller address" };
+        if (siemens)
+            tagAddress.TooltipText = "Optional S7-1500 address metadata. Supported editor subset: BOOL I/Q/M bit or DBX; INT IW/MW/DBW; DINT, REAL, or TIME ID/MD/DBD. This does not map addresses to hardware or enable PLC I/O.";
         var tagComment = new LineEdit { Name = "TagComment", PlaceholderText = "Tag comment" };
         var tagType = new OptionButton { Name = "NewTagType" };
         tagType.AddItem("BOOL");
@@ -5692,6 +5749,21 @@ public partial class SimulatorShell : CanvasLayer
         bool propertyDirty = false;
         bool tagFormDirty = false, blockFormDirty = false, taskFormDirty = false, interfaceFormDirty = false, loadingFormControls = false;
         long tagFormRevision = 0, blockFormRevision = 0, taskFormRevision = 0, interfaceFormRevision = 0;
+        Tree? globalDbDeclarations = null;
+        void UpdateGlobalDbDeclarationGridEditability()
+        {
+            var firstMember = globalDbDeclarations?.GetRoot()?.GetFirstChild();
+            if (firstMember is null) return;
+
+            var canEdit = !(propertyDirty || tagFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty);
+            for (var member = firstMember; member is not null; member = member.GetNext())
+            {
+                var startValueEditable = Enum.TryParse<PlcVariableType>(member.GetText(1), true, out var type)
+                    && type is not (PlcVariableType.Timer or PlcVariableType.Counter);
+                for (var column = 0; column < globalDbDeclarations!.Columns; column++)
+                    member.SetEditable(column, canEdit && (column != 2 || startValueEditable));
+            }
+        }
         bool CurrentForm(long revision) { if (revision == document.Revision) return true; output.Text = "[color=#d17a00]This form is stale.[/color] Discard it and reopen the target before applying."; return false; }
         string propertyNetworkId = "", propertyNodeId = "";
         bool propertyOutput = false;
@@ -5821,6 +5893,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             if (refreshingEditor || propertyEdit is null) return;
             propertyDirty = true; propertyStatus.Text = "Pending edit · Apply commits all fields; Cancel discards";
+            UpdateGlobalDbDeclarationGridEditability();
         }
         void OpenInstructionProperties()
         {
@@ -5908,6 +5981,15 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = $"[color=#d64545]Tag definition rejected.[/color] {Escape(error.Message)}";
                 return false;
             }
+        }
+
+        bool ValidateSiemensTagAddress(string? excludedTagName, PlcVariableType type, PlcVariableRole role)
+        {
+            if (!siemens || SiemensPlcTagAddress.TryValidate(tagAddress.Text, type, role,
+                    document.Tags, excludedTagName, out var addressError)) return true;
+            output.Text = $"[color=#d64545]Tag definition rejected.[/color] {Escape(addressError)}";
+            tagAddress.GrabFocus();
+            return false;
         }
 
         string SelectedTagBinding() => tagBinding.Selected >= 0
@@ -6023,15 +6105,16 @@ public partial class SimulatorShell : CanvasLayer
         }
 
         Label? interfaceHeading = null;
+        Label? interfaceExecutionNote = null;
         RichTextLabel? blockInterfaceSummary = null;
         VBoxContainer? globalDbDocument = null;
         RichTextLabel? globalDbHeading = null;
-        Tree? globalDbDeclarations = null;
         Action? restoreActiveEditorDocumentBody = null;
 
         Action? refreshTreeActions = null;
         void RefreshEditor()
         {
+            UpdateGlobalDbDeclarationGridEditability();
             if (propertyDirty || tagFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty) return;
             refreshingEditor = true;
             document.EnsureInstanceDataBlocks();
@@ -6053,13 +6136,66 @@ public partial class SimulatorShell : CanvasLayer
                 _ => "FC",
             };
             editorTabTitle.Text = siemens
-                ? $"{(projectDirty ? "* " : string.Empty)}{activeBlockName} [{activeBlockCode}{activeBlockOrdinal + 1}]  —  {projectFileName}  ✕"
-                : $"{(projectDirty ? "* " : string.Empty)}MainProgram — {activeBlockName} [LAD]  —  {projectFileName}  ✕";
+                ? $"{(projectDirty ? "* " : string.Empty)}{activeBlockName} [{activeBlockCode}{activeBlockOrdinal + 1}]  —  {projectFileName}"
+                : $"{(projectDirty ? "* " : string.Empty)}MainProgram — {activeBlockName} [LAD]  —  {projectFileName}";
             editorTabTitle.TooltipText = projectDirty
                 ? $"Unsaved project changes · {projectFileName}"
                 : $"Project is saved · {projectFileName}";
-            if (siemens && activeEditorDocumentKey.StartsWith("block:", StringComparison.Ordinal))
-                AddEditorDocumentTab($"block:{activeBlockOrdinal}", editorTabTitle.Text);
+            if (siemens)
+            {
+                // Block tabs identify declarations by stable ID. Keep tabs for
+                // deleted blocks disabled so Undo can restore the same tab
+                // without allowing it to target a shifted ordinal.
+                foreach (var (key, tab) in editorDocumentButtons)
+                {
+                    if (!key.StartsWith("block:", StringComparison.Ordinal)) continue;
+                    if (!TryResolveBlockDocument(key, out var tabBlockIndex))
+                    {
+                        tab.Disabled = true;
+                        tab.Text = "[Deleted block]";
+                        tab.TooltipText = "This block was deleted. Undo restores this tab's original block identity.";
+                        continue;
+                    }
+
+                    var tabBlock = document.Blocks[tabBlockIndex];
+                    var tabBlockCode = tabBlock.BlockType switch
+                    {
+                        LadderBlockType.OrganizationBlock => "OB",
+                        LadderBlockType.FunctionBlock => "FB",
+                        LadderBlockType.DataBlock => "DB",
+                        _ => "FC",
+                    };
+                    tab.Disabled = false;
+                    tab.Text = $"{tabBlock.Name} [{tabBlockCode}{tabBlockIndex + 1}]";
+                    tab.TooltipText = $"{tabBlock.Name} · {tabBlock.BlockType} · stable block identity";
+                }
+
+                foreach (var (key, tableName) in editorTagDocuments)
+                {
+                    if (!editorDocumentButtons.TryGetValue(key, out var tagTab)) continue;
+                    var tagDocumentName = tableName ?? "Show all tags";
+                    tagTab.Text = $"{(projectDirty ? "* " : string.Empty)}{tagDocumentName} — {projectFileName}";
+                    tagTab.TooltipText = $"{(tableName is null ? "All PLC tags" : $"PLC tag table · {tableName}")} · "
+                        + (projectDirty ? "Unsaved project changes. " : "Project is saved. ")
+                        + "Use the close button beside this tab to close it.";
+                }
+
+                if (activeEditorDocumentKey.StartsWith("block:", StringComparison.Ordinal)
+                    && !TryResolveBlockDocument(activeEditorDocumentKey, out _)
+                    && document.Blocks.Count > 0)
+                {
+                    activeEditorDocumentKey = BlockDocumentKey(document.Blocks[activeBlockOrdinal].Id);
+                    SetEditorDocumentBody(activeEditorDocumentKey);
+                }
+
+                if (TryResolveBlockDocument(activeEditorDocumentKey, out var activeTabBlockIndex))
+                {
+                    var activeTabKey = BlockDocumentKey(document.Blocks[activeTabBlockIndex].Id);
+                    AddEditorDocumentTab(activeTabKey, editorTabTitle.Text);
+                    editorDocumentButtons[activeTabKey].Disabled = false;
+                    editorDocumentButtons[activeTabKey].ButtonPressed = true;
+                }
+            }
             while (blockItems.Count < document.Blocks.Count)
             {
                 var index = blockItems.Count;
@@ -6157,16 +6293,20 @@ public partial class SimulatorShell : CanvasLayer
                     _ => 2,
                 } : 0);
                 interfaceSection.Disabled = siemens && activeBlock.BlockType == LadderBlockType.DataBlock;
+                interfaceSection.Visible = !siemens || activeBlock.BlockType != LadderBlockType.DataBlock;
                 interfaceRetain.Visible = siemens && activeBlock.BlockType == LadderBlockType.DataBlock;
                 interfaceComment.Visible = siemens && activeBlock.BlockType == LadderBlockType.DataBlock;
                 if (interfaceSection.Disabled)
                     interfaceSection.Select((int)LadderInterfaceSection.Static);
+                if (!StringComparer.Ordinal.Equals(interfaceFormOwnerBlockId, activeBlock.Id))
+                    ResetInterfaceForm();
                 interfaceTable.Clear();
                 var interfaceRoot = interfaceTable.CreateItem();
                 foreach (var parameter in activeBlock.Interface)
                 {
                     var row = interfaceTable.CreateItem(interfaceRoot);
                     row.SetText(0, parameter.Name);
+                    row.SetMetadata(0, parameter.Id);
                     row.SetText(1, parameter.Section.ToString().ToUpperInvariant());
                     row.SetText(2, parameter.Type.ToString().ToUpperInvariant());
                     row.SetText(3, FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type, PlcVariableRole.Memory, parameter.InitialValue)));
@@ -6175,8 +6315,22 @@ public partial class SimulatorShell : CanvasLayer
                 }
                 interfaceTable.Visible = siemens || activeBlock.Interface.Count > 0;
                 interfaceHeading!.Text = siemens
-                    ? $"{activeBlock.BlockType switch { LadderBlockType.OrganizationBlock => "OB", LadderBlockType.FunctionBlock => "FB", LadderBlockType.Function => "FC", LadderBlockType.DataBlock => "DB", _ => "BLOCK" }} INTERFACE"
+                    ? activeBlock.BlockType == LadderBlockType.DataBlock
+                        ? "GLOBAL DB DECLARATIONS"
+                        : $"{activeBlock.BlockType switch { LadderBlockType.OrganizationBlock => "OB", LadderBlockType.FunctionBlock => "FB", LadderBlockType.Function => "FC", _ => "BLOCK" }} INTERFACE"
                     : "ROUTINE PARAMETERS";
+                interfaceExecutionNote!.Text = activeBlock.BlockType switch
+                {
+                    LadderBlockType.DataBlock => "Optimized-access Global DB subset: supported scalar members only.",
+                    LadderBlockType.FunctionBlock => "FB Static also supports IEC TIMER/COUNTER; TEMP is invocation-local.",
+                    _ => "Supported scalar parameters; typed execution bindings are an offline subset.",
+                };
+                interfaceExecutionNote.TooltipText = activeBlock.BlockType switch
+                {
+                    LadderBlockType.DataBlock => "Global DB declarations use static storage. This offline subset does not model standard-access offsets, nested structures, or arrays.",
+                    LadderBlockType.FunctionBlock => "FB Static storage belongs to the chosen instance. TEMP locals are invocation-local and are not stored in an instance DB.",
+                    _ => "Legacy mode keeps descriptive declarations. Explicit parameterized mode executes typed Input/Output/InOut bindings in the offline simulator.",
+                };
                 var interfaceText = activeBlock.Interface.Count == 0
                     ? (activeBlock.BlockType == LadderBlockType.DataBlock ? "[b]DB DATA[/b]  ·  no members declared" : "[b]BLOCK INTERFACE[/b]  ·  no parameters declared")
                     : string.Join("    ", activeBlock.Interface.Select(parameter =>
@@ -6194,12 +6348,20 @@ public partial class SimulatorShell : CanvasLayer
                     {
                         var row = globalDbDeclarations.CreateItem(declarationRoot);
                         row.SetText(0, declaration.Name);
+                        row.SetMetadata(0, declaration.Id);
+                        row.SetMetadata(1, declaration.Name);
+                        row.SetMetadata(2, activeBlock.Id);
                         row.SetText(1, declaration.Type.ToString().ToUpperInvariant());
                         row.SetText(2, FormatTagInitialValue(new PlcVariable(
                             declaration.Name, declaration.Type, PlcVariableRole.Memory, declaration.InitialValue)));
-                        row.SetText(3, declaration.Retain ? "YES" : "NO");
+                        row.SetCellMode(3, TreeItem.TreeCellMode.Check);
+                        row.SetChecked(3, declaration.Retain);
                         row.SetText(4, declaration.Comment);
+                        for (var column = 0; column < globalDbDeclarations.Columns; column++)
+                            row.SetEditable(column, column != 2
+                                || declaration.Type is not (PlcVariableType.Timer or PlcVariableType.Counter));
                     }
+                    UpdateGlobalDbDeclarationGridEditability();
                 }
             }
             while (taskItems.Count < document.Tasks.Count)
@@ -6508,6 +6670,7 @@ public partial class SimulatorShell : CanvasLayer
             undoEdit.TooltipText = _ladderHistory.CanUndo ? $"Undo {_ladderHistory.UndoDescription}" : "Nothing to undo";
             redoEdit.TooltipText = _ladderHistory.CanRedo ? $"Redo {_ladderHistory.RedoDescription}" : "Nothing to redo";
             refreshingEditor = false;
+            RestoreInterfaceSelection();
             if (instructionPropertiesPopup.Visible) UpdateInstructionPropertyVisibility();
             RefreshWatchTable(_virtualSnapshot);
             refreshTreeActions?.Invoke();
@@ -7418,21 +7581,61 @@ public partial class SimulatorShell : CanvasLayer
             projectTabs.AddChild(hiddenTagDock);
         }
         else projectTabs.AddChild(tagScroll);
-        var instanceDbDocument = new RichTextLabel
+        var instanceDbDocument = new VBoxContainer
         {
             Name = "InstanceDbDocument",
-            BbcodeEnabled = true,
-            FitContent = false,
-            ScrollActive = true,
-            SelectionEnabled = true,
             Visible = false,
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
             CustomMinimumSize = new Vector2(0, 260),
         };
-        instanceDbDocument.AddThemeColorOverride("default_color", new Color("263943"));
-        instanceDbDocument.AddThemeFontSizeOverride("normal_font_size", 13);
-        instanceDbDocument.AddThemeStyleboxOverride("normal", BoxStyle(new Color("f5f7f8"), new Color("9aa7ad")));
+        instanceDbDocument.AddThemeConstantOverride("separation", 8);
+        var instanceDbHeading = new Label { Name = "InstanceDbHeading", Text = "Instance data block", AutowrapMode = TextServer.AutowrapMode.WordSmart };
+        instanceDbHeading.AddThemeColorOverride("font_color", new Color("dce8ed"));
+        instanceDbHeading.AddThemeFontSizeOverride("font_size", 20);
+        instanceDbDocument.AddChild(instanceDbHeading);
+        var instanceDbSubtitle = new Label { Name = "InstanceDbSubtitle", Text = "Generated from the assigned FB or IEC instruction · offline definition" };
+        instanceDbSubtitle.AddThemeColorOverride("font_color", new Color("aebcc2"));
+        instanceDbDocument.AddChild(instanceDbSubtitle);
+        var instanceDbDeclarations = new Tree
+        {
+            Name = "InstanceDbDeclarations",
+            Columns = 6,
+            HideRoot = true,
+            ColumnTitlesVisible = true,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+            CustomMinimumSize = new Vector2(0, 220),
+        };
+        instanceDbDeclarations.SetColumnTitle(0, "NAME");
+        instanceDbDeclarations.SetColumnTitle(1, "DATA TYPE");
+        instanceDbDeclarations.SetColumnTitle(2, "DEFAULT VALUE");
+        instanceDbDeclarations.SetColumnTitle(3, "START VALUE");
+        instanceDbDeclarations.SetColumnTitle(4, "RETAIN");
+        instanceDbDeclarations.SetColumnTitle(5, "COMMENT");
+        instanceDbDeclarations.SetColumnExpand(0, false);
+        instanceDbDeclarations.SetColumnCustomMinimumWidth(0, 205);
+        instanceDbDeclarations.SetColumnExpand(1, false);
+        instanceDbDeclarations.SetColumnCustomMinimumWidth(1, 105);
+        instanceDbDeclarations.SetColumnExpand(2, false);
+        instanceDbDeclarations.SetColumnCustomMinimumWidth(2, 125);
+        instanceDbDeclarations.SetColumnExpand(3, false);
+        instanceDbDeclarations.SetColumnCustomMinimumWidth(3, 125);
+        instanceDbDeclarations.SetColumnExpand(4, false);
+        instanceDbDeclarations.SetColumnCustomMinimumWidth(4, 80);
+        instanceDbDeclarations.SetColumnExpand(5, true);
+        instanceDbDeclarations.SetColumnCustomMinimumWidth(5, 220);
+        instanceDbDeclarations.AddThemeColorOverride("font_color", new Color("263943"));
+        instanceDbDeclarations.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
+        instanceDbDocument.AddChild(instanceDbDeclarations);
+        var instanceDbBoundary = new Label
+        {
+            Name = "InstanceDbBoundary",
+            Text = "Read-only offline instance view. No per-instance start/comment/retain overrides; power-cycle retention, standard-access offsets, monitor/snapshots, HMI attributes or supervision are not modeled.",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+        };
+        instanceDbBoundary.AddThemeColorOverride("font_color", new Color("aebcc2"));
+        instanceDbDocument.AddChild(instanceDbBoundary);
         center.AddChild(instanceDbDocument);
         globalDbDocument = new VBoxContainer
         {
@@ -7442,6 +7645,9 @@ public partial class SimulatorShell : CanvasLayer
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
         };
         globalDbDocument.AddThemeConstantOverride("separation", 8);
+        var globalDbEditorPreviousDockWidth = 0;
+        var globalDbHeader = new HBoxContainer { Name = "GlobalDbHeader" };
+        globalDbHeader.AddThemeConstantOverride("separation", 8);
         globalDbHeading = new RichTextLabel
         {
             Name = "GlobalDbHeading",
@@ -7450,7 +7656,57 @@ public partial class SimulatorShell : CanvasLayer
             CustomMinimumSize = new Vector2(0, 62),
         };
         globalDbHeading.AddThemeColorOverride("default_color", new Color("dce8ed"));
-        globalDbDocument.AddChild(globalDbHeading);
+        globalDbHeading.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        globalDbHeader.AddChild(globalDbHeading);
+        var globalDbAddMember = ToolbarButton("GlobalDbAddMember", "+ MEMBER", new Color("1f8a58"), 104);
+        globalDbAddMember.TooltipText = "Add a declaration to this Global DB.";
+        var globalDbEditMember = ToolbarButton("GlobalDbEditMember", "EDIT", new Color("4d6674"), 68);
+        globalDbEditMember.TooltipText = "Edit the selected Global DB declaration.";
+        var globalDbRemoveMember = ToolbarButton("GlobalDbRemoveMember", "REMOVE", new Color("8a4d55"), 88);
+        globalDbRemoveMember.TooltipText = "Remove the selected Global DB declaration.";
+        globalDbHeader.AddChild(globalDbAddMember);
+        globalDbHeader.AddChild(globalDbEditMember);
+        globalDbHeader.AddChild(globalDbRemoveMember);
+        var editGlobalDbMembers = ToolbarButton("EditGlobalDbMembers", "EDIT MEMBERS", new Color("4d6674"), 130);
+        editGlobalDbMembers.TooltipText = "Open the project member editor or return to the project tree.";
+        editGlobalDbMembers.Pressed += () =>
+        {
+            var showMemberEditor = projectTabs.CurrentTab != 2;
+            // Capture the live splitter position before ShowProjectDock can
+            // reopen a collapsed dock. The cached value is only authoritative
+            // when the dock is hidden; while visible, the user may have dragged
+            // the divider since the cache was last updated.
+            var currentDockWidth = work.SplitOffsets.Length > 0
+                ? work.SplitOffsets[0]
+                : projectDockSplitOffset;
+            var dockWasVisible = projectPanel.Visible;
+            if (showMemberEditor)
+            {
+                globalDbEditorPreviousDockWidth = dockWasVisible
+                    ? currentDockWidth
+                    : projectDockSplitOffset;
+            }
+
+            ShowProjectDock();
+            projectTabs.CurrentTab = showMemberEditor ? 2 : 0;
+            if (showMemberEditor)
+            {
+                projectDockSplitOffset = Math.Min(600, Math.Max(560, (int)root.Size.X / 3));
+            }
+            else if (globalDbEditorPreviousDockWidth > 0)
+            {
+                projectDockSplitOffset = globalDbEditorPreviousDockWidth;
+                globalDbEditorPreviousDockWidth = 0;
+            }
+            work.SplitOffsets = [projectDockSplitOffset];
+            projectHeading.Text = showMemberEditor ? "Project objects" : "Project tree";
+            editGlobalDbMembers.Text = showMemberEditor ? "PROJECT TREE" : "EDIT MEMBERS";
+            output.Text = showMemberEditor
+                ? "Global DB member editor active. Add, select, apply, and remove declarations in Project objects."
+                : "Project tree active. Select a program block or data block.";
+        };
+        globalDbHeader.AddChild(editGlobalDbMembers);
+        globalDbDocument.AddChild(globalDbHeader);
         globalDbDeclarations = new Tree
         {
             Name = "GlobalDbDeclarations",
@@ -7466,24 +7722,143 @@ public partial class SimulatorShell : CanvasLayer
         globalDbDeclarations.SetColumnTitle(2, "START VALUE");
         globalDbDeclarations.SetColumnTitle(3, "RETAIN");
         globalDbDeclarations.SetColumnTitle(4, "COMMENT");
+        globalDbDeclarations.SetColumnExpand(0, true);
+        globalDbDeclarations.SetColumnExpand(1, true);
+        globalDbDeclarations.SetColumnExpand(2, true);
+        globalDbDeclarations.SetColumnExpand(3, false);
+        globalDbDeclarations.SetColumnExpand(4, true);
+        globalDbDeclarations.SetColumnCustomMinimumWidth(0, 150);
+        globalDbDeclarations.SetColumnCustomMinimumWidth(1, 145);
+        globalDbDeclarations.SetColumnCustomMinimumWidth(2, 150);
+        globalDbDeclarations.SetColumnCustomMinimumWidth(3, 92);
+        globalDbDeclarations.SetColumnCustomMinimumWidth(4, 180);
         globalDbDeclarations.AddThemeColorOverride("font_color", new Color("263943"));
         globalDbDeclarations.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
+        globalDbDeclarations.ItemEdited += () =>
+        {
+            if (refreshingEditor || document.Blocks.Count == 0) return;
+            var row = globalDbDeclarations.GetEdited();
+            if (row is null) return;
+
+            var ownerId = row.GetMetadata(2).AsString();
+            var memberId = row.GetMetadata(0).AsString();
+            var owner = document.Blocks.FirstOrDefault(block =>
+                StringComparer.Ordinal.Equals(block.Id, ownerId) && block.BlockType == LadderBlockType.DataBlock);
+            var memberName = row.GetMetadata(1).AsString();
+            var memberIndex = owner?.Interface.FindIndex(parameter =>
+                !string.IsNullOrWhiteSpace(memberId)
+                    ? StringComparer.Ordinal.Equals(parameter.Id, memberId)
+                    : StringComparer.Ordinal.Equals(parameter.Name, memberName)) ?? -1;
+            if (owner is null || memberIndex < 0)
+            {
+                output.Text = "[color=#d64545]Global DB edit rejected.[/color] This declaration no longer exists. Refresh the block and try again.";
+                RefreshEditor();
+                return;
+            }
+
+            var existing = owner.Interface[memberIndex];
+            var column = globalDbDeclarations.GetEditedColumn();
+            var name = column == 0 ? row.GetText(0).Trim() : existing.Name;
+            var type = existing.Type;
+            if (column == 1 && (!Enum.TryParse(row.GetText(1).Trim(), true, out type)
+                || !Enum.IsDefined(type) || type is PlcVariableType.Struct or PlcVariableType.Array or PlcVariableType.Time))
+            {
+                output.Text = "[color=#d64545]Global DB edit rejected.[/color] Use a supported scalar data type (BOOL, INT, DINT, REAL, TIMER, COUNTER, STRING, or ENUM).";
+                RefreshEditor();
+                return;
+            }
+
+            if (name.Length == 0 || owner.Interface.Where((_, index) => index != memberIndex)
+                .Any(parameter => parameter.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            {
+                output.Text = "[color=#d64545]Global DB edit rejected.[/color] Declaration names must be non-empty and unique without regard to letter case.";
+                RefreshEditor();
+                return;
+            }
+
+            var typeChanged = column == 1 && type != existing.Type;
+            var initialValue = existing.InitialValue;
+            if (column == 2 || typeChanged)
+            {
+                var initialText = column == 2 ? row.GetText(2) : FormatTagInitialValue(new PlcVariable(
+                    existing.Name, existing.Type, PlcVariableRole.Memory, existing.InitialValue));
+                if (typeChanged && type is PlcVariableType.Timer or PlcVariableType.Counter)
+                {
+                    initialValue = type == PlcVariableType.Timer ? TimeSpan.Zero : 0L;
+                }
+                else
+                {
+                    if (typeChanged
+                        && !LadderEditorDocument.TryParseInitialValue(type, initialText, out _, out _))
+                    {
+                        initialText = InterfaceInitialDefault(type switch
+                        {
+                            PlcVariableType.Int => 1,
+                            PlcVariableType.DInt => 2,
+                            PlcVariableType.Real => 3,
+                            PlcVariableType.Timer => 4,
+                            PlcVariableType.Counter => 5,
+                            PlcVariableType.String => 6,
+                            PlcVariableType.Enum => 7,
+                            _ => 0,
+                        });
+                    }
+                    if (!LadderEditorDocument.TryParseInitialValue(type, initialText, out initialValue, out var initialError))
+                    {
+                        output.Text = $"[color=#d64545]Global DB edit rejected.[/color] {Escape(initialError)}";
+                        RefreshEditor();
+                        return;
+                    }
+                }
+            }
+            var enumMembers = type == PlcVariableType.Enum ? existing.EnumMembers : null;
+            if (type == PlcVariableType.Enum && existing.Type != PlcVariableType.Enum)
+            {
+                output.Text = "[color=#d64545]Global DB edit rejected.[/color] Create or edit the ENUM member domain in Edit Members before changing this declaration to ENUM.";
+                RefreshEditor();
+                return;
+            }
+            if (type == PlcVariableType.Enum
+                && (!PlcTextValues.IsValidDomain(enumMembers)
+                    || initialValue is not string enumValue
+                    || !enumMembers!.Contains(enumValue, StringComparer.Ordinal)))
+            {
+                output.Text = "[color=#d64545]Global DB edit rejected.[/color] ENUM declarations need valid members; use Edit Members for the enum domain.";
+                RefreshEditor();
+                return;
+            }
+
+            var updated = existing with
+            {
+                Name = name,
+                Type = type,
+                InitialValue = initialValue,
+                Retain = column == 3 ? row.IsChecked(3) : existing.Retain,
+                Comment = column == 4 ? row.GetText(4) : existing.Comment,
+            };
+            if (!BeginEdit($"Edit Global DB {new[] { "name", "data type", "start value", "retentivity", "comment" }[Math.Clamp(column, 0, 4)]}"))
+            {
+                RefreshEditor();
+                return;
+            }
+            owner.Interface[memberIndex] = updated;
+            RefreshEditor();
+            output.Text = $"[color=#18864b]Global DB declaration updated.[/color] {Escape(updated.Name)} · {updated.Type.ToString().ToUpperInvariant()}.";
+        };
         globalDbDocument.AddChild(globalDbDeclarations);
         var globalDbBoundary = Inspector("GlobalDbBoundary");
         globalDbBoundary.FitContent = true;
         globalDbBoundary.AddThemeColorOverride("default_color", new Color("607983"));
-        globalDbBoundary.Text = "Editable optimized-access global DB declaration subset. Use the Project inspector to add/remove members. Monitoring, snapshots, offsets, access-mode selection, ARRAY DB, PLC/system-type DB, and manual instance-DB creation are not modeled.";
+        globalDbBoundary.Text = "Editable optimized-access Global DB declaration subset. Edit Name, Data type, Start value, Retain, and Comment directly in the table; use + Member or Remove for row management. Monitoring, snapshots, offsets, access-mode selection, ARRAY DB, PLC/system-type DB, and manual instance-DB creation are not modeled.";
         globalDbDocument.AddChild(globalDbBoundary);
         center.AddChild(globalDbDocument);
         void SetEditorDocumentBody(string key)
         {
             activeEditorDocumentKey = key;
             var showGlobalDb = false;
-            if (siemens && key.StartsWith("block:", StringComparison.Ordinal)
-                && int.TryParse(key.AsSpan("block:".Length), out var dbBlockIndex)
-                && dbBlockIndex >= 0 && dbBlockIndex < document.Blocks.Count)
+            if (siemens && TryResolveBlockDocument(key, out var dbBlockIndex))
                 showGlobalDb = document.Blocks[dbBlockIndex].BlockType == LadderBlockType.DataBlock;
-            var showBlockEditor = !siemens || key.StartsWith("block:", StringComparison.Ordinal) && !showGlobalDb;
+            var showBlockEditor = !siemens || TryResolveBlockDocument(key, out _) && !showGlobalDb;
             foreach (var child in center.GetChildren().OfType<Control>())
             {
                 if (child == editorDocumentHost) child.Visible = true;
@@ -7492,6 +7867,44 @@ public partial class SimulatorShell : CanvasLayer
                 else if (child == globalDbDocument) child.Visible = showGlobalDb;
                 else child.Visible = showBlockEditor;
             }
+        }
+        void CloseEditorDocument(string key)
+        {
+            if (!editorDocumentButtons.Remove(key, out _) || !editorDocumentItems.Remove(key, out var item)) return;
+            var wasActive = StringComparer.Ordinal.Equals(activeEditorDocumentKey, key);
+            var orderedKeys = editorDocumentTabs.GetChildren()
+                .OfType<HBoxContainer>()
+                .Select(tabItem => tabItem.GetMeta("editorDocumentKey").AsString())
+                .Where(candidate => !string.IsNullOrEmpty(candidate))
+                .ToArray();
+            var tabIndex = Array.IndexOf(orderedKeys, key);
+            editorTagDocuments.Remove(key);
+            editorInstanceDbDocuments.Remove(key);
+            editorDocumentTabs.RemoveChild(item);
+            item.QueueFree();
+            if (!wasActive) return;
+
+            bool IsOpenDocument(string candidate) => editorDocumentButtons.ContainsKey(candidate)
+                && (TryResolveBlockDocument(candidate, out _)
+                    || editorTagDocuments.ContainsKey(candidate)
+                    || editorInstanceDbDocuments.ContainsKey(candidate));
+            string? fallbackKey = null;
+            for (var index = Math.Min(tabIndex - 1, orderedKeys.Length - 1); index >= 0; index--)
+            {
+                if (orderedKeys[index] != key && IsOpenDocument(orderedKeys[index]))
+                {
+                    fallbackKey = orderedKeys[index];
+                    break;
+                }
+            }
+            for (var index = Math.Max(tabIndex + 1, 0); fallbackKey is null && index < orderedKeys.Length; index++)
+            {
+                if (orderedKeys[index] != key && IsOpenDocument(orderedKeys[index]))
+                    fallbackKey = orderedKeys[index];
+            }
+            if (fallbackKey is not null) ActivateEditorDocument(fallbackKey);
+            else SetEditorDocumentBody(string.Empty);
+            output.Text = "Editor tab closed. The project object and its saved data are unchanged.";
         }
         restoreActiveEditorDocumentBody = () => SetEditorDocumentBody(activeEditorDocumentKey);
         void OpenInstanceDbDocument(int dbNumber)
@@ -7509,32 +7922,81 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = $"[color=#d64545]Instance DB %DB{dbNumber} is no longer present in the current project.[/color]";
                 return;
             }
-            var title = $"{db.Name} [DB{db.Number}]  —  Instance data block  ✕";
+            var title = $"{db.Name} [DB{db.Number}]  —  Instance data block";
             AddEditorDocumentTab(key, title);
             editorInstanceDbDocuments[key] = dbNumber;
-            var text = new StringBuilder();
-            text.AppendLine($"[font_size=20][b]{Escape(db.Name)} [DB{db.Number}][/b][/font_size]");
-            text.AppendLine("[color=#607983]Instance data block · offline project definition[/color]\n");
+            instanceDbHeading.Text = $"{db.Name} [DB{db.Number}]";
+            instanceDbSubtitle.Text = "Instance data block · offline project definition";
+            instanceDbDeclarations.Clear();
+            var declarationRoot = instanceDbDeclarations.CreateItem();
             if (assignedInstance is not null)
             {
                 var block = document.Blocks.FirstOrDefault(candidate => candidate.Id == assignedInstance.BlockId);
-                text.AppendLine($"[b]Assigned instance[/b]  {Escape(assignedInstance.Name)}");
-                text.AppendLine($"[b]Block type[/b]  {Escape(block?.Name ?? assignedInstance.BlockId)} [FB]");
-                text.AppendLine("\n[b]Interface storage[/b]");
-                if (block is null || block.Interface.Count == 0) text.AppendLine("No declared FB interface members.");
-                else foreach (var parameter in block.Interface)
-                    text.AppendLine($"{parameter.Section.ToString().ToUpperInvariant(),-8}  {Escape(parameter.Name)} : {parameter.Type.ToString().ToUpperInvariant()}  := {Escape(FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type, PlcVariableRole.Memory, parameter.InitialValue)))}");
+                instanceDbSubtitle.Text = $"Assigned instance {assignedInstance.Name} · {block?.Name ?? assignedInstance.BlockId} [FB] · offline project definition";
+                var interfaceMembers = block?.Interface ?? [];
+                foreach (var section in Enum.GetValues<LadderInterfaceSection>())
+                {
+                    // TEMP is invocation-local storage and does not belong to an instance DB.
+                    if (section == LadderInterfaceSection.Temp) continue;
+                    var members = interfaceMembers.Where(parameter => parameter.Section == section).ToArray();
+                    if (members.Length == 0) continue;
+                    var sectionRow = instanceDbDeclarations.CreateItem(declarationRoot);
+                    sectionRow.SetText(0, section.ToString().ToUpperInvariant());
+                    sectionRow.SetSelectable(0, false);
+                    foreach (var parameter in members)
+                    {
+                        var memberRow = instanceDbDeclarations.CreateItem(sectionRow);
+                        memberRow.SetText(0, parameter.Name);
+                        memberRow.SetText(1, string.IsNullOrWhiteSpace(parameter.DataType) ? parameter.Type.ToString().ToUpperInvariant() : parameter.DataType);
+                        var inheritedValue = FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type, PlcVariableRole.Memory, parameter.InitialValue));
+                        memberRow.SetText(2, inheritedValue);
+                        // Siemens initializes a newly generated instance DB's start value
+                        // from the FB default. Show that inherited value in both columns;
+                        // do not imply that RungProof supports a per-instance override.
+                        memberRow.SetText(3, inheritedValue);
+                        memberRow.SetCustomColor(3, new Color("78878d"));
+                        memberRow.SetTooltipText(3, "Inherited FB default. Per-instance start-value overrides are not modeled.");
+                        memberRow.SetText(4, parameter.Retain ? "YES" : "NO");
+                        memberRow.SetText(5, parameter.Comment);
+                        memberRow.SetSelectable(0, false);
+                    }
+                    sectionRow.Collapsed = false;
+                }
+                if (!interfaceMembers.Any(parameter => parameter.Section != LadderInterfaceSection.Temp))
+                {
+                    var emptyRow = instanceDbDeclarations.CreateItem(declarationRoot);
+                    emptyRow.SetText(0, "No declared FB interface members.");
+                    emptyRow.SetSelectable(0, false);
+                }
             }
             else if (instructionOwner is not null)
             {
                 var rung = instructionOwner.rung;
                 var timer = rung.IsTimer || rung.IsTimerReset;
-                text.AppendLine($"[b]Instruction instance[/b]  {Escape(timer ? rung.TimerVariable : rung.CounterVariable)}");
-                text.AppendLine($"[b]Data type[/b]  {(timer ? "IEC_TIMER" : "IEC_COUNTER")}");
-                text.AppendLine($"[b]Used by[/b]  {Escape(instructionOwner.block.Name)} · Network {instructionOwner.rungIndex + 1}");
-                text.AppendLine("\n[color=#607983]Members are owned by the assigned IEC instruction. Edit the instruction properties to change this single-instance DB assignment.[/color]");
+                instanceDbSubtitle.Text = $"Instruction instance { (timer ? rung.TimerVariable : rung.CounterVariable) } · {instructionOwner.block.Name} · Network {instructionOwner.rungIndex + 1} · offline definition";
+                var sectionRow = instanceDbDeclarations.CreateItem(declarationRoot);
+                sectionRow.SetText(0, "STATIC");
+                sectionRow.SetSelectable(0, false);
+                // TIA's IEC_TIMER system type declares PT, ET, IN, and Q.
+                // Keep the declaration table schema complete even though this
+                // offline model does not expose live monitor values.
+                var memberNames = timer
+                    ? new[] { ("PT", "TIME"), ("ET", "TIME"), ("IN", "BOOL"), ("Q", "BOOL") }
+                    : new[] { ("Q", "BOOL"), ("CV", "DINT") };
+                foreach (var (memberName, memberType) in memberNames)
+                {
+                    var memberRow = instanceDbDeclarations.CreateItem(sectionRow);
+                    memberRow.SetText(0, memberName);
+                    memberRow.SetText(1, memberType);
+                    memberRow.SetText(2, "");
+                    memberRow.SetText(3, "");
+                    memberRow.SetText(4, "NO");
+                    memberRow.SetText(5, "");
+                    memberRow.SetSelectable(0, false);
+                }
+                sectionRow.Collapsed = false;
             }
-            instanceDbDocument.Text = text.ToString();
+            declarationRoot.Collapsed = false;
             SetEditorDocumentBody(key);
             editorDocumentButtons[key].ButtonPressed = true;
             editorTabTitle.Text = $"{db.Name} [DB{db.Number}]";
@@ -7555,7 +8017,7 @@ public partial class SimulatorShell : CanvasLayer
             var projectFileName = _ladderProjectPath is null
                 ? "Untitled.rpproj.json"
                 : System.IO.Path.GetFileName(_ladderProjectPath);
-            var tagTitle = $"{(LadderEditorProjectJson.HasUnsavedChanges(document, _ladderSavedProjectJson) ? "* " : string.Empty)}{tableName ?? "Show all tags"} — {projectFileName}  ✕";
+            var tagTitle = $"{(LadderEditorProjectJson.HasUnsavedChanges(document, _ladderSavedProjectJson) ? "* " : string.Empty)}{tableName ?? "Show all tags"} — {projectFileName}";
             AddEditorDocumentTab(key, tagTitle);
             activeTagTableName = tableName;
             selectedTagIndex = selectedIndex >= 0 && selectedIndex < document.Tags.Count ? selectedIndex : -1;
@@ -7585,9 +8047,7 @@ public partial class SimulatorShell : CanvasLayer
         void ActivateEditorDocument(string key)
         {
             if (!siemens) return;
-            if (key.StartsWith("block:", StringComparison.Ordinal)
-                && int.TryParse(key.AsSpan("block:".Length), out var blockIndex)
-                && blockIndex >= 0 && blockIndex < document.Blocks.Count)
+            if (TryResolveBlockDocument(key, out var blockIndex))
             {
                 var alreadyActive = blockIndex == document.ActiveBlockIndex;
                 SwitchEditorBlock(blockIndex, restoreView: true);
@@ -7638,7 +8098,7 @@ public partial class SimulatorShell : CanvasLayer
         interfaceHeading = Heading(siemens ? "FB / FC INTERFACE" : "ROUTINE PARAMETERS", 11, new Color("344851"));
         interfaceHeading.Name = "BlockInterfaceHeading";
         projectPage.AddChild(interfaceHeading);
-        var interfaceExecutionNote = Heading("Supported scalar parameters; FB Static also TIMER/COUNTER.", 11, new Color("344851"));
+        interfaceExecutionNote = Heading("Supported scalar parameters; FB Static also TIMER/COUNTER.", 11, new Color("344851"));
         interfaceExecutionNote.Name = "InterfaceExecutionNote";
         interfaceExecutionNote.ClipText = true;
         interfaceExecutionNote.TooltipText = "Legacy mode keeps descriptive declarations. Explicit parameterized mode executes typed Input/Output/InOut bindings; FB Static storage belongs to the chosen instance.";
@@ -7658,6 +8118,8 @@ public partial class SimulatorShell : CanvasLayer
         var interfaceCommands = new HBoxContainer { Name = "InterfaceCommands" };
         interfaceCommands.AddThemeConstantOverride("separation", 4);
         interfaceCommands.AddChild(addInterface);
+        interfaceCommands.AddChild(newInterface);
+        interfaceCommands.AddChild(cancelInterface);
         interfaceCommands.AddChild(removeInterface);
         projectPage.AddChild(interfaceCommands);
         projectPage.AddChild(interfaceTable);
@@ -7871,6 +8333,7 @@ public partial class SimulatorShell : CanvasLayer
             deleteTag!.Disabled = false;
             output.Text = $"[color=#18864b]{Escape(tag.Name)} selected.[/color] Edit its definition or inspect references before deletion.";
             loadingFormControls = false; tagFormDirty = false;
+            UpdateGlobalDbDeclarationGridEditability();
         }
         bool restoringTagSelection = false;
         void RestoreTagSelection()
@@ -7906,14 +8369,9 @@ public partial class SimulatorShell : CanvasLayer
             if (selectedTagIndex < 0 || selectedTagIndex >= document.Tags.Count || string.IsNullOrWhiteSpace(tagName.Text)) return;
             var current = document.Tags[selectedTagIndex];
             var normalizedName = tagName.Text.Trim();
-            if (document.Tags.Where((_, index) => index != selectedTagIndex)
-                .Any(tag => tag.Name.Equals(normalizedName, StringComparison.Ordinal)))
-            {
-                output.Text = $"[color=#d64545]Tag update rejected.[/color] {Escape(normalizedName)} already exists.";
-                return;
-            }
             var type = SelectedTagType();
             var role = SelectedTagRole(type);
+            if (!ValidateSiemensTagAddress(current.Name, type, role)) return;
             if (!TryReadTagInitialValue(type, out var initialValue)) return;
             var schema = PlcAggregates.IsAggregate(type) && aggregateTagEditor.TryRead(type, out var editedSchema, out _, out _) ? editedSchema : null;
             var binding = type is PlcVariableType.Timer or PlcVariableType.Counter ? string.Empty : SelectedTagBinding();
@@ -8988,7 +9446,16 @@ public partial class SimulatorShell : CanvasLayer
         addFloor.Pressed += () => SelectNumericOperation(LadderNumericOperationKind.Floor);
         ConfirmationDialog NamedCreationDialog(string nodeName, string title, Func<string, string> create, out LineEdit nameField, out Label errorField, Control? details = null)
         {
-            var dialog = new ConfirmationDialog { Name = nodeName, Title = title, DialogHideOnOk = false, MinSize = new Vector2I(430, details is null ? 190 : 250), Exclusive = true };
+            var dialog = new ConfirmationDialog
+            {
+                Name = nodeName,
+                Title = title,
+                DialogHideOnOk = false,
+                MinSize = new Vector2I(430, 190),
+                MaxSize = new Vector2I(560, details is null ? 190 : 340),
+                Size = new Vector2I(430, 190),
+                Exclusive = true,
+            };
             var body = new VBoxContainer { OffsetLeft = 16, OffsetTop = 12, OffsetRight = -16, OffsetBottom = -48 };
             body.SetAnchorsPreset(Control.LayoutPreset.FullRect);
             var name = new LineEdit { Name = "CreationName", PlaceholderText = "Enter a unique name" };
@@ -9074,14 +9541,20 @@ public partial class SimulatorShell : CanvasLayer
             if (blockCreationTarget is null) return "Creation target expired. Open the form again.";
             pendingBlockType = blockTypeChoices.First(choice => blockTypeButtons[choice.Item1].ButtonPressed).Item1;
             var request = new EditorCommandRequest(EditorCommandId.CreateBlock, blockCreationTarget, Creation: new(name, pendingBlockType));
-            if (!LadderEditorCommands.CanExecute(document, request, ChallengeMutationLocked, out var reason)) return reason;
+            if (!LadderEditorCommands.CanExecute(document, request, ChallengeMutationLocked, out var reason))
+                return reason switch
+                {
+                    "duplicate-name" => "A block with this name already exists.",
+                    "block-name-conflicts-with-plc-tag" => "This name is already used by a PLC tag.",
+                    _ => reason,
+                };
             if (!BeginEdit("Create program block", recordHistory: false)) return "Editing unavailable.";
             blockViewMemory.Remember(document.Id, document.Blocks[document.ActiveBlockIndex].Id,
                 canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical));
             var result = LadderEditorCommands.Execute(document, _ladderHistory, request, ChallengeMutationLocked);
             if (!result.Applied) return result.Reason;
             selectedRung = 0; selectedBranch = -1; selectedContact = -1; selectedInsertionIndex = -1; selectedOutput = false;
-            activeEditorDocumentKey = $"block:{document.ActiveBlockIndex}";
+            activeEditorDocumentKey = BlockDocumentKey(document.Blocks[document.ActiveBlockIndex].Id);
             RefreshEditor(); blockItems[^1].Select(0); organization.ScrollToItem(blockItems[^1]);
             output.Text = $"[color=#18864b]Block created.[/color] {Escape(document.Blocks[^1].Name)} · {pendingBlockType}";
             return string.Empty;
@@ -9094,6 +9567,8 @@ public partial class SimulatorShell : CanvasLayer
                 var keepGeneratedName = blockCreationName.Text == suggestedBlockName;
                 pendingBlockType = type;
                 dataBlockTypeDetails.Visible = type == LadderBlockType.DataBlock;
+                blockCreation.Size = new Vector2I(430, dataBlockTypeDetails.Visible ? 340 : 190);
+                if (blockCreation.Visible) blockCreation.PopupCentered();
                 if (keepGeneratedName)
                     blockCreationName.Text = suggestedBlockName = UniqueDefault(BlockTypePrefix(type), document.Blocks.Select(item => item.Name));
             };
@@ -9104,6 +9579,7 @@ public partial class SimulatorShell : CanvasLayer
             pendingBlockType = siemens ? LadderBlockType.FunctionBlock : LadderBlockType.Function;
             foreach (var (type, button) in blockTypeButtons) button.SetPressedNoSignal(type == pendingBlockType);
             dataBlockTypeDetails.Visible = false;
+            blockCreation.Size = new Vector2I(430, 190);
             blockCreationTarget = EditorTarget.CaptureProject(document);
             blockCreationName.Text = suggestedBlockName = UniqueDefault(BlockTypePrefix(pendingBlockType), document.Blocks.Select(item => item.Name));
             blockCreationError.Text = string.Empty;
@@ -9187,11 +9663,15 @@ public partial class SimulatorShell : CanvasLayer
             var normalizedName = blockName.Text.Trim();
             if (normalizedName.Length == 0
                 || document.Blocks.Where((_, index) => index != document.ActiveBlockIndex)
-                    .Any(block => block.Name.Equals(normalizedName, StringComparison.Ordinal)))
+                    .Any(block => block.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
             {
                 output.Text = $"[color=#d64545]Rename blocked.[/color] Enter a non-empty, unique {(siemens ? "block" : "routine")} name.";
                 return;
             }
+            var preview = new LadderEditorDocument(); preview.RestoreSnapshot(document.CaptureSnapshot());
+            try { preview.RenameBlock(document.Blocks[document.ActiveBlockIndex].Id, normalizedName); }
+            catch (InvalidOperationException exception)
+            { output.Text = $"[color=#d64545]Rename blocked.[/color] {Escape(exception.Message)}"; return; }
             if (!BeginEdit(siemens ? "Rename program block" : "Rename routine")) return;
             var block = document.RenameBlock(document.Blocks[document.ActiveBlockIndex].Id, normalizedName);
             blockFormDirty = false; RefreshEditor();
@@ -9218,13 +9698,218 @@ public partial class SimulatorShell : CanvasLayer
             blockItems[document.ActiveBlockIndex].Select(0);
             output.Text = $"[color=#18864b]{(siemens ? "Block" : "Routine")} deleted.[/color] {Escape(block.Name)} had no task or CALL/JSR references.";
         };
+        void ResetInterfaceForm()
+        {
+            selectedInterfaceIndex = -1;
+            selectedInterfaceBlockId = null;
+            selectedInterfaceParameterId = null;
+            selectedInterfaceParameterName = null;
+            interfaceFormDirty = false;
+            loadingFormControls = true;
+            interfaceName.Clear();
+            var activeBlock = document.Blocks.Count > 0
+                ? document.Blocks[Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1)]
+                : null;
+            interfaceFormOwnerBlockId = activeBlock?.Id;
+            var activeBlockIsGlobalDb = activeBlock?.BlockType == LadderBlockType.DataBlock;
+            interfaceSection.Select((int)(activeBlockIsGlobalDb
+                ? LadderInterfaceSection.Static
+                : LadderInterfaceSection.Input));
+            interfaceType.Select(0);
+            interfaceInitial.Text = "FALSE";
+            interfaceInitialValueEdited = false;
+            interfaceEnumMembers.Clear();
+            interfaceRetain.ButtonPressed = false;
+            interfaceComment.Clear();
+            addInterface.Text = activeBlockIsGlobalDb ? "+ MEMBER" : "+ PARAMETER";
+            newInterface.Text = activeBlockIsGlobalDb ? "NEW MEMBER" : "NEW";
+            cancelInterface.Disabled = true;
+            loadingFormControls = false;
+            UpdateGlobalDbDeclarationGridEditability();
+        }
+
+        static string InterfaceInitialDefault(int typeIndex) => typeIndex switch
+        {
+            1 or 2 or 3 or 5 => "0",
+            4 => "T#0ms",
+            6 => string.Empty,
+            7 => "Value1",
+            _ => "FALSE",
+        };
+
+        void LoadInterfaceForm(int index)
+        {
+            var block = document.Blocks.Count > 0 ? document.Blocks[document.ActiveBlockIndex] : null;
+            if (block is null || index < 0 || index >= block.Interface.Count) return;
+            var parameter = block.Interface[index];
+            loadingFormControls = true;
+            selectedInterfaceIndex = index;
+            selectedInterfaceBlockId = block.Id;
+            selectedInterfaceParameterId = parameter.Id;
+            interfaceFormOwnerBlockId = block.Id;
+            selectedInterfaceParameterName = parameter.Name;
+            interfaceName.Text = parameter.Name;
+            interfaceType.Select(parameter.Type switch
+            {
+                PlcVariableType.Int => 1,
+                PlcVariableType.DInt => 2,
+                PlcVariableType.Real => 3,
+                PlcVariableType.Timer => 4,
+                PlcVariableType.Counter => 5,
+                PlcVariableType.String => 6,
+                PlcVariableType.Enum => 7,
+                _ => 0,
+            });
+            interfaceSection.Select((int)parameter.Section);
+            interfaceInitial.Text = FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type,
+                PlcVariableRole.Memory, parameter.InitialValue));
+            interfaceInitialValueEdited = false;
+            interfaceEnumMembers.Text = string.Join(",", parameter.EnumMembers ?? []);
+            interfaceRetain.ButtonPressed = parameter.Retain;
+            interfaceComment.Text = parameter.Comment;
+            addInterface.Text = block.BlockType == LadderBlockType.DataBlock ? "APPLY MEMBER" : "APPLY EDIT";
+            cancelInterface.Disabled = false;
+            interfaceFormRevision = document.Revision;
+            interfaceFormDirty = false;
+            loadingFormControls = false;
+            UpdateGlobalDbDeclarationGridEditability();
+        }
+
+        int FindSelectedInterfaceIndex(EditableBlock block)
+        {
+            // Declaration identity survives member rename and row movement.
+            // Old project files without IDs retain the name/index fallback.
+            var selectedId = selectedInterfaceParameterId;
+            if (!string.IsNullOrWhiteSpace(selectedId))
+            {
+                for (var index = 0; index < block.Interface.Count; index++)
+                    if (StringComparer.Ordinal.Equals(block.Interface[index].Id, selectedId)) return index;
+                return -1;
+            }
+            var selectedName = selectedInterfaceParameterName;
+            if (!string.IsNullOrWhiteSpace(selectedName))
+                for (var index = 0; index < block.Interface.Count; index++)
+                    if (StringComparer.Ordinal.Equals(block.Interface[index].Name, selectedName)) return index;
+            return selectedInterfaceIndex >= 0 && selectedInterfaceIndex < block.Interface.Count
+                ? selectedInterfaceIndex : -1;
+        }
+
+        bool restoringInterfaceSelection = false;
+        void SelectInterfaceTreeRow(int index)
+        {
+            var row = interfaceTable.GetRoot()?.GetFirstChild();
+            for (var current = 0; row is not null && current < index; current++) row = row.GetNext();
+            row?.Select(0);
+        }
+
+        void RestoreInterfaceSelection()
+        {
+            restoringInterfaceSelection = true;
+            try
+            {
+                if (document.Blocks.Count > 0)
+                {
+                    var activeBlock = document.Blocks[Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1)];
+                    if (StringComparer.Ordinal.Equals(selectedInterfaceBlockId, activeBlock.Id))
+                        selectedInterfaceIndex = FindSelectedInterfaceIndex(activeBlock);
+                }
+                if (selectedInterfaceIndex >= 0) SelectInterfaceTreeRow(selectedInterfaceIndex);
+                else interfaceTable.DeselectAll();
+            }
+            finally { restoringInterfaceSelection = false; }
+        }
+
+        interfaceTable.ItemSelected += () =>
+        {
+            if (refreshingEditor || restoringInterfaceSelection) return;
+            var targetIndex = interfaceTable.GetSelected()?.GetIndex() ?? -1;
+            ResolvePendingEditorForms(() =>
+            {
+                LoadInterfaceForm(targetIndex);
+                RestoreInterfaceSelection();
+            }, RestoreInterfaceSelection);
+        };
+
+        newInterface.Pressed += () => ResolvePendingEditorForms(() =>
+        {
+            ResetInterfaceForm();
+            interfaceTable.DeselectAll();
+        }, RestoreInterfaceSelection);
+        cancelInterface.Pressed += () =>
+        {
+            DiscardInterface();
+            interfaceTable.DeselectAll();
+            output.Text = "[color=#607983]Member edit canceled.[/color] No declaration changes were applied.";
+        };
+        interfaceType.ItemSelected += index =>
+        {
+            if (loadingFormControls) return;
+            // Keep the initial value valid when the declaration's type changes.
+            // Preserve an operator-entered value; only replace the untouched
+            // form default with the new type's valid default.
+            loadingFormControls = true;
+            if ((int)index == 7)
+            {
+                var members = interfaceEnumMembers.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (members.Length == 0)
+                {
+                    var firstMember = interfaceInitialValueEdited && !string.IsNullOrWhiteSpace(interfaceInitial.Text)
+                        ? interfaceInitial.Text.Trim()
+                        : "Value1";
+                    interfaceEnumMembers.Text = firstMember;
+                    members = [firstMember];
+                }
+                if (!interfaceInitialValueEdited) interfaceInitial.Text = members[0];
+            }
+            else if (!interfaceInitialValueEdited) interfaceInitial.Text = InterfaceInitialDefault((int)index);
+            loadingFormControls = false;
+        };
+        interfaceInitial.TextChanged += _ =>
+        {
+            if (!loadingFormControls) interfaceInitialValueEdited = true;
+        };
+        interfaceEnumMembers.TextChanged += _ =>
+        {
+            if (loadingFormControls || interfaceInitialValueEdited || interfaceType.Selected != 7) return;
+            var firstMember = interfaceEnumMembers.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .FirstOrDefault() ?? string.Empty;
+            loadingFormControls = true;
+            interfaceInitial.Text = firstMember;
+            loadingFormControls = false;
+        };
+
         addInterface.Pressed += () =>
         {
             if (interfaceFormDirty && !CurrentForm(interfaceFormRevision)) return;
             if (!siemens || document.Blocks.Count == 0 || string.IsNullOrWhiteSpace(interfaceName.Text)) return;
             var activeBlock = document.Blocks[document.ActiveBlockIndex];
+            var isEditing = selectedInterfaceIndex >= 0;
+            if (isEditing && (!StringComparer.Ordinal.Equals(selectedInterfaceBlockId, activeBlock.Id)
+                || (string.IsNullOrWhiteSpace(selectedInterfaceParameterId)
+                    && string.IsNullOrWhiteSpace(selectedInterfaceParameterName))))
+            {
+                output.Text = "[color=#d64545]Declaration edit rejected.[/color] The selected row belongs to a different block. Select the declaration again.";
+                ResetInterfaceForm();
+                return;
+            }
+            var editIndex = isEditing
+                ? FindSelectedInterfaceIndex(activeBlock)
+                : -1;
+            if (isEditing && editIndex < 0)
+            {
+                output.Text = "[color=#d64545]Declaration edit rejected.[/color] The selected declaration no longer exists. Select the declaration again.";
+                ResetInterfaceForm();
+                return;
+            }
+            var existing = editIndex >= 0 && editIndex < activeBlock.Interface.Count
+                ? activeBlock.Interface[editIndex]
+                : null;
             var parameterName = interfaceName.Text.Trim();
-            if (activeBlock.Interface.Any(parameter => parameter.Name.Equals(parameterName, StringComparison.Ordinal)))
+            if (activeBlock.Interface.Where((_, index) => index != editIndex)
+                .Any(parameter => parameter.Name.Equals(parameterName,
+                    activeBlock.BlockType == LadderBlockType.DataBlock
+                        ? StringComparison.OrdinalIgnoreCase
+                        : StringComparison.Ordinal)))
             {
                 output.Text = $"[color=#d64545]Interface parameter rejected.[/color] {Escape(parameterName)} already exists.";
                 return;
@@ -9249,22 +9934,30 @@ public partial class SimulatorShell : CanvasLayer
                 ? LadderInterfaceSection.Static
                 : (LadderInterfaceSection)Math.Clamp(interfaceSection.Selected, 0, 4);
             var domain = type == PlcVariableType.Enum ? interfaceEnumMembers.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) : null;
+            if (type == PlcVariableType.Enum
+                && (!PlcTextValues.IsValidDomain(domain)
+                    || initial is not string enumInitial
+                    || !domain!.Contains(enumInitial, StringComparer.Ordinal)))
+            {
+                output.Text = "[color=#d64545]Interface parameter rejected.[/color] ENUM members must be 1–32 distinct identifiers, and the initial value must be one of them.";
+                return;
+            }
             var stagedFormal = new LadderInterfaceParameter(parameterName, type, section, initial,
-                Id: "formal-" + Guid.NewGuid().ToString("N"), EnumMembers: domain,
+                DataType: existing?.Type == type ? existing.DataType : string.Empty,
+                Id: !string.IsNullOrWhiteSpace(existing?.Id) ? existing.Id : "formal-" + Guid.NewGuid().ToString("N"), EnumMembers: domain,
                 Retain: activeBlock.BlockType == LadderBlockType.DataBlock && interfaceRetain.ButtonPressed,
                 Comment: activeBlock.BlockType == LadderBlockType.DataBlock ? interfaceComment.Text.Trim() : string.Empty);
             if (activeBlock.SemanticMode == LadderSemanticMode.Parameterized && LadderCallAuthoring.ValidateFormal(activeBlock.BlockType, stagedFormal) is { } invalidFormal)
             { output.Text = "[color=#d64545]Interface parameter rejected.[/color] " + Escape(invalidFormal); return; }
             // Reject form errors before history/monitor state changes.
-            if (!BeginEdit("Add block interface parameter")) return;
+            if (!BeginEdit(existing is null ? "Add block interface parameter" : "Update block interface parameter")) return;
             try
             {
-                activeBlock.Interface.Add(stagedFormal);
-                interfaceFormDirty = false;
-                loadingFormControls = true; interfaceName.Clear();
-                interfaceInitial.Text = "0"; interfaceRetain.ButtonPressed = false; interfaceComment.Clear(); loadingFormControls = false; interfaceFormDirty = false;
+                if (existing is null) activeBlock.Interface.Add(stagedFormal);
+                else activeBlock.Interface[editIndex] = stagedFormal;
+                ResetInterfaceForm();
                 RefreshEditor();
-                output.Text = $"[color=#18864b]Declaration added.[/color] {Escape(parameterName)} · {type}. {activeBlock.SemanticMode} scope.";
+                output.Text = $"[color=#18864b]Declaration {(existing is null ? "added" : "updated")}.[/color] {Escape(parameterName)} · {type}. {activeBlock.SemanticMode} scope.";
             }
             catch (InvalidOperationException exception)
             {
@@ -9274,12 +9967,107 @@ public partial class SimulatorShell : CanvasLayer
         removeInterface.Pressed += () =>
         {
             if (!siemens || document.Blocks.Count == 0) return;
-            var selected = interfaceTable.GetSelected();
-            if (selected is null) return;
-            var index = selected.GetIndex();
-            if (!BeginEdit("Remove block interface parameter")) return;
-            document.RemoveInterfaceParameter(document.Blocks[document.ActiveBlockIndex].Id, index);
-            RefreshEditor();
+            var selectedBlock = document.Blocks[document.ActiveBlockIndex];
+            if (!StringComparer.Ordinal.Equals(selectedInterfaceBlockId, selectedBlock.Id)
+                || (string.IsNullOrWhiteSpace(selectedInterfaceParameterId)
+                    && string.IsNullOrWhiteSpace(selectedInterfaceParameterName))) return;
+            var selectedIndex = FindSelectedInterfaceIndex(selectedBlock);
+            if (selectedIndex < 0) return;
+            var targetBlockId = selectedBlock.Id;
+            var targetParameterId = selectedBlock.Interface[selectedIndex].Id;
+
+            // Resolve the selected member's draft before removing it. A valid
+            // Apply may rename the member, so prefer its stable ID and retain
+            // the captured row as a legacy fallback for declarations without IDs.
+            ResolvePendingEditorForms(() =>
+            {
+                var activeBlock = document.Blocks.FirstOrDefault(block => StringComparer.Ordinal.Equals(block.Id, targetBlockId));
+                if (activeBlock is null) return;
+                var index = !string.IsNullOrWhiteSpace(targetParameterId)
+                    ? activeBlock.Interface.FindIndex(parameter => StringComparer.Ordinal.Equals(parameter.Id, targetParameterId))
+                    : selectedIndex < activeBlock.Interface.Count ? selectedIndex : -1;
+                if (index < 0) return;
+                if (!BeginEdit("Remove block interface parameter")) return;
+                document.RemoveInterfaceParameter(activeBlock.Id, index);
+                ResetInterfaceForm();
+                RefreshEditor();
+            }, RestoreInterfaceSelection);
+        };
+        globalDbAddMember.Pressed += () => ResolvePendingEditorForms(() =>
+        {
+            if (projectTabs.CurrentTab != 2) editGlobalDbMembers.EmitSignal(BaseButton.SignalName.Pressed);
+            else ShowProjectDock();
+            ResetInterfaceForm();
+            interfaceTable.DeselectAll();
+            output.Text = "New Global DB declaration. Enter the supported properties, then apply or cancel.";
+        }, RestoreInterfaceSelection);
+        globalDbEditMember.Pressed += () =>
+        {
+            var selectedRow = globalDbDeclarations?.GetSelected();
+            if (selectedRow is null || document.Blocks.Count == 0)
+            {
+                output.Text = "Select a Global DB declaration before choosing Edit.";
+                return;
+            }
+            var targetBlockId = document.Blocks[document.ActiveBlockIndex].Id;
+            var targetIdentity = selectedRow.GetMetadata(0).AsString();
+            var targetName = selectedRow.GetMetadata(1).AsString();
+            var targetRowIndex = selectedRow.GetIndex();
+            ResolvePendingEditorForms(() =>
+            {
+                var owner = document.Blocks.FirstOrDefault(block => StringComparer.Ordinal.Equals(block.Id, targetBlockId));
+                var index = owner?.Interface.FindIndex(parameter =>
+                    !string.IsNullOrWhiteSpace(targetIdentity)
+                        ? StringComparer.Ordinal.Equals(parameter.Id, targetIdentity)
+                        : StringComparer.Ordinal.Equals(parameter.Name, targetName)) ?? -1;
+                if (index < 0 && string.IsNullOrWhiteSpace(targetIdentity)
+                    && owner is not null && targetRowIndex < owner.Interface.Count)
+                    index = targetRowIndex;
+                if (owner is null || owner.BlockType != LadderBlockType.DataBlock || index < 0)
+                {
+                    output.Text = "The selected declaration is no longer present in this Global DB. Select it again.";
+                    return;
+                }
+                if (projectTabs.CurrentTab != 2) editGlobalDbMembers.EmitSignal(BaseButton.SignalName.Pressed);
+                else ShowProjectDock();
+                selectedInterfaceBlockId = owner.Id;
+                SelectInterfaceTreeRow(index);
+                LoadInterfaceForm(index);
+                output.Text = $"Editing Global DB member {Escape(owner.Interface[index].Name)}. Apply or cancel the pending change.";
+            }, RestoreInterfaceSelection);
+        };
+        globalDbRemoveMember.Pressed += () =>
+        {
+            var selectedRow = globalDbDeclarations?.GetSelected();
+            if (selectedRow is null || document.Blocks.Count == 0)
+            {
+                output.Text = "Select a Global DB declaration before choosing Remove.";
+                return;
+            }
+            var targetBlockId = document.Blocks[document.ActiveBlockIndex].Id;
+            var targetIdentity = selectedRow.GetMetadata(0).AsString();
+            var targetName = selectedRow.GetMetadata(1).AsString();
+            var targetRowIndex = selectedRow.GetIndex();
+            ResolvePendingEditorForms(() =>
+            {
+                var owner = document.Blocks.FirstOrDefault(block => StringComparer.Ordinal.Equals(block.Id, targetBlockId));
+                var index = owner?.Interface.FindIndex(parameter =>
+                    !string.IsNullOrWhiteSpace(targetIdentity)
+                        ? StringComparer.Ordinal.Equals(parameter.Id, targetIdentity)
+                        : StringComparer.Ordinal.Equals(parameter.Name, targetName)) ?? -1;
+                if (index < 0 && string.IsNullOrWhiteSpace(targetIdentity)
+                    && owner is not null && targetRowIndex < owner.Interface.Count)
+                    index = targetRowIndex;
+                if (owner is null || owner.BlockType != LadderBlockType.DataBlock || index < 0)
+                {
+                    output.Text = "The selected declaration is no longer present in this Global DB. Select it again.";
+                    return;
+                }
+                selectedInterfaceBlockId = owner.Id;
+                SelectInterfaceTreeRow(index);
+                LoadInterfaceForm(index);
+                removeInterface.EmitSignal(BaseButton.SignalName.Pressed);
+            }, RestoreInterfaceSelection);
         };
         addCall.Pressed += () =>
         {
@@ -9398,6 +10186,7 @@ public partial class SimulatorShell : CanvasLayer
             var targetIndex = document.Blocks.FindIndex(block => block.Id == task.EntryBlock);
             if (targetIndex >= 0) taskTarget.Select(targetIndex);
             loadingFormControls = false; taskFormDirty = false;
+            UpdateGlobalDbDeclarationGridEditability();
         }
         EditorTarget? taskCreationTarget = null;
         EditorNamedCreation? pendingTaskCreation = null;
@@ -9737,9 +10526,8 @@ public partial class SimulatorShell : CanvasLayer
             { output.Text = "[color=#d64545]Tag definition rejected.[/color] Enter a non-empty tag name."; tagName.GrabFocus(); return; }
             var type = SelectedTagType();
             var role = SelectedTagRole(type);
+            if (!ValidateSiemensTagAddress(null, type, role)) return;
             if (!TryReadTagInitialValue(type, out var initialValue)) return;
-            if (document.Tags.Any(tag => tag.Name == tagName.Text.Trim()))
-            { output.Text = "[color=#d64545]Tag definition rejected.[/color] Tag name already exists."; return; }
             var schema = PlcAggregates.IsAggregate(type) && aggregateTagEditor.TryRead(type, out var newSchema, out _, out _) ? newSchema : null;
             var binding = type is PlcVariableType.Timer or PlcVariableType.Counter ? string.Empty : SelectedTagBinding();
             PlcVariable AddDefinition(LadderEditorDocument target) => schema is not null
@@ -9772,17 +10560,47 @@ public partial class SimulatorShell : CanvasLayer
 
         void WatchPending(Control control, Action mark)
         {
-            void Changed() { if (!refreshingEditor && !loadingFormControls) mark(); }
+            void Changed()
+            {
+                if (refreshingEditor || loadingFormControls) return;
+                mark();
+                UpdateGlobalDbDeclarationGridEditability();
+            }
             if (control is LineEdit text) text.TextChanged += _ => Changed();
             else if (control is OptionButton option) option.ItemSelected += _ => Changed();
             else if (control is SpinBox number) number.ValueChanged += _ => Changed();
+            else if (control is CheckBox checkBox) checkBox.Toggled += _ => Changed();
         }
         foreach (var field in new Control[] { tagName, tagAddress, tagComment, tagInitialValue, tagEnumMembers, tagType, tagRole, tagBinding }) WatchPending(field, () => { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; });
-        aggregateTagEditor.PendingChanged += () => { if (!refreshingEditor && !loadingFormControls) { if (!tagFormDirty) tagFormRevision = document.Revision; tagFormDirty = true; } };
+        aggregateTagEditor.PendingChanged += () =>
+        {
+            if (refreshingEditor || loadingFormControls) return;
+            if (!tagFormDirty) tagFormRevision = document.Revision;
+            tagFormDirty = true;
+            UpdateGlobalDbDeclarationGridEditability();
+        };
         foreach (var field in new Control[] { blockName, blockTypeSelector }) WatchPending(field, () => { if (!blockFormDirty) blockFormRevision = document.Revision; blockFormDirty = true; });
         foreach (var field in new Control[] { taskName, taskKind, taskPeriod, taskPriority, taskTarget }) WatchPending(field, () => { if (!taskFormDirty) taskFormRevision = document.Revision; taskFormDirty = true; });
-        foreach (var field in new Control[] { interfaceName, interfaceType, interfaceSection, interfaceInitial, interfaceEnumMembers, interfaceRetain, interfaceComment }) WatchPending(field, () => { if (!interfaceFormDirty) interfaceFormRevision = document.Revision; interfaceFormDirty = true; });
-        void DiscardTag() { tagFormDirty = false; if (selectedTagIndex >= 0) LoadTagControls(); else { loadingFormControls = true; tagName.Clear(); tagAddress.Clear(); tagComment.Clear(); tagInitialValue.Text = "FALSE"; aggregateTagEditor.Load(SelectedTagType()); loadingFormControls = false; } }
+        foreach (var field in new Control[] { interfaceName, interfaceType, interfaceSection, interfaceInitial, interfaceEnumMembers, interfaceRetain, interfaceComment }) WatchPending(field, () =>
+        {
+            if (!interfaceFormDirty) interfaceFormRevision = document.Revision;
+            interfaceFormDirty = true;
+            cancelInterface.Disabled = false;
+            UpdateGlobalDbDeclarationGridEditability();
+        });
+        void DiscardTag()
+        {
+            tagFormDirty = false;
+            if (selectedTagIndex >= 0) LoadTagControls();
+            else
+            {
+                loadingFormControls = true;
+                tagName.Clear(); tagAddress.Clear(); tagComment.Clear(); tagInitialValue.Text = "FALSE";
+                aggregateTagEditor.Load(SelectedTagType());
+                loadingFormControls = false;
+                UpdateGlobalDbDeclarationGridEditability();
+            }
+        }
         void DiscardBlock()
         {
             // Restore this form independently: a sibling draft may legitimately suppress
@@ -9806,8 +10624,17 @@ public partial class SimulatorShell : CanvasLayer
             finally { loadingFormControls = wasLoading; }
             RefreshEditor();
         }
-        void DiscardTask() { taskFormDirty = false; LoadTaskControls(selectedTaskIndex); }
-        void DiscardInterface() { interfaceFormDirty = false; loadingFormControls = true; interfaceName.Clear(); interfaceInitial.Text = "0"; interfaceEnumMembers.Clear(); interfaceRetain.ButtonPressed = false; interfaceComment.Clear(); loadingFormControls = false; }
+        void DiscardTask()
+        {
+            taskFormDirty = false;
+            LoadTaskControls(selectedTaskIndex);
+            UpdateGlobalDbDeclarationGridEditability();
+        }
+        void DiscardInterface()
+        {
+            ResetInterfaceForm();
+            interfaceTable.DeselectAll();
+        }
         _pendingEditorForms.Add(new(() => tagFormDirty, () => { (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed); return !tagFormDirty; }, DiscardTag));
         _pendingEditorForms.Add(new(() => blockFormDirty, () => { applyBlock.EmitSignal(BaseButton.SignalName.Pressed); return !blockFormDirty; }, DiscardBlock));
         _pendingEditorForms.Add(new(() => taskFormDirty, () => { applyTask.EmitSignal(BaseButton.SignalName.Pressed); return !taskFormDirty; }, DiscardTask));
@@ -10432,7 +11259,7 @@ public partial class SimulatorShell : CanvasLayer
                 LadderBlockType.DataBlock => "DB",
                 _ => "FC",
             };
-            var key = $"block:{blockIndex}";
+            var key = BlockDocumentKey(block.Id);
             AddEditorDocumentTab(key, $"{block.Name} [{blockCode}{blockIndex + 1}]");
             ActivateEditorDocument(key);
             blockItems[blockIndex].Select(0);
@@ -10512,8 +11339,10 @@ public partial class SimulatorShell : CanvasLayer
         RefreshTagBindingOptions(SelectedTagType(), SelectedTagRole(SelectedTagType()), string.Empty);
         if (siemens)
         {
-            AddEditorDocumentTab("block:0", $"{document.Blocks[0].Name} [OB1]");
-            editorDocumentButtons["block:0"].ButtonPressed = true;
+            var initialBlock = document.Blocks[0];
+            var initialBlockKey = BlockDocumentKey(initialBlock.Id);
+            AddEditorDocumentTab(initialBlockKey, $"{initialBlock.Name} [OB1]");
+            editorDocumentButtons[initialBlockKey].ButtonPressed = true;
         }
         _ladderEditorRefreshers.Add(RefreshEditor);
         _ladderSceneDiagnosticResetters.Add(() =>
@@ -13769,7 +14598,7 @@ public partial class SimulatorShell : CanvasLayer
                         projectTree.EmitSignal(Tree.SignalName.ItemActivated);
                         var allTagsOpenedCentrally = centralTagDocument.Visible
                             && tiaEditorTabTitle.Text == "Show all tags";
-                        GetNode<Button>($"{editorRoot}/EditorDocumentsHost/EditorDocumentsScroll/EditorDocuments/EditorDocument_0")
+                        GetNode<Button>($"{editorRoot}/EditorDocumentsHost/EditorDocumentsScroll/EditorDocuments/EditorDocumentItem_0/EditorDocument_0")
                             .EmitSignal(BaseButton.SignalName.Pressed);
                         var ladderTabRestored = _ladderDocument.ActiveBlockIndex == 0 && !centralTagDocument.Visible;
                         tiaProjectDocumentNavigationWorked = singleClickStayedInTree

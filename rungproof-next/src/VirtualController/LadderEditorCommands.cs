@@ -72,9 +72,18 @@ public static class LadderEditorCommands
             reason = "name-required";
             if (creation is null || string.IsNullOrWhiteSpace(creation.Name)) return false;
             var name = creation.Name.Trim();
-            reason = "duplicate-name";
-            if (request.CommandId == EditorCommandId.CreateBlock
-                ? document.Blocks.Any(item => item.Name == name) : document.Tasks.Any(item => item.Name == name)) return false;
+            if (request.CommandId == EditorCommandId.CreateBlock)
+            {
+                reason = "duplicate-name";
+                if (document.Blocks.Any(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase))) return false;
+                reason = "block-name-conflicts-with-plc-tag";
+                if (document.Tags.Any(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase))) return false;
+            }
+            else
+            {
+                reason = "duplicate-name";
+                if (document.Tasks.Any(item => item.Name == name)) return false;
+            }
             if (request.CommandId == EditorCommandId.CreateTask && !document.Blocks.Any(item => item.Id == creation.EntryBlock))
             { reason = "missing-entry-block"; return false; }
             reason = string.Empty; return true;

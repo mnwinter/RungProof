@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (81 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 16 local gates (93 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -578,7 +578,7 @@
       "implementationStatus": "bounded-subset",
       "localStatus": "automated-pass",
       "vendorStatus": "not-assessed",
-      "behavior": "A supported optimized-access Global DB appears under Program blocks and activates a declaration document with scalar Name, Data type, Start value, Retain, and Comment fields. It has no LAD networks and cannot be a CALL, task, or program-entry target.",
+      "behavior": "A supported optimized-access Global DB appears under Program blocks and activates a declaration document with scalar Name, Data type, Start value, Retain, and Comment fields. DB member actions use member-specific labels and DB defaults, including on initial DB entry and after switching between DB and FB documents. The DB screen exposes an Edit members action that opens the Project objects member form at a usable dock width and a Project tree return action. Existing declarations can be selected and transactionally edited; starting a new member resolves any pending form through Apply, Discard, or Cancel. Selection is scoped to its owning block and persistent member ID, with a legacy name/index fallback only for declarations without IDs. It has no LAD networks and cannot be a CALL, task, or program-entry target.",
       "implementationPaths": [
         "src/App/SimulatorShell.cs",
         "src/App/SimulatorShell.EditorCommandReview.cs",
@@ -590,7 +590,9 @@
       "documentationPaths": [
         "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
       ],
-      "officialSources": [],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/structure-of-the-declaration-table-for-data-blocks"
+      ],
       "nonQualifyingBroadCommandIds": [
         "ladder-editor",
         "project-tree-pointer"
@@ -602,6 +604,15 @@
         "the Global DB row appears under Program blocks",
         "activation opens declarations and not a LAD canvas",
         "Name, Data type, Start value, Retain, and Comment persist",
+        "starting a new member resolves the pending form without silently discarding or mutating it",
+        "changing a new member type seeds a valid initial value, including an ENUM value that belongs to its member domain",
+        "editing an ENUM domain reseeds untouched initial values; valid domains apply and invalid domains are rejected atomically",
+        "a Retain-only edit is pending, cancelable, and resolved before navigation",
+        "initial DB entry and DB-to-FB-to-DB navigation refresh member labels and defaults",
+        "the DB action opens the visible member form at widened dock width and returns to the tree at the exact prior dock width",
+        "a selected declaration remains selected by persistent member ID after same-DB row insertion and edits the same member",
+        "declaration selection is cleared when activation changes the owning block",
+        "switching blocks leaves the other DB declaration byte-identical",
         "LAD network insertion is rejected",
         "CALL, task, and program-entry target selection excludes the DB"
       ],
@@ -619,7 +630,7 @@
       "implementationStatus": "bounded-subset",
       "localStatus": "automated-pass",
       "vendorStatus": "not-assessed",
-      "behavior": "Generated FB, timer, and counter instance DB identities appear under Program blocks, activate a read-only definition document, preserve unique DB number/name identity, and return cleanly to the owning block without a stale title.",
+      "behavior": "Generated FB, timer, and counter instance DB identities appear under Program blocks, activate a read-only definition document, display inherited FB defaults as effective start values, preserve unique DB number/name identity, and return cleanly to the owning block without a stale title.",
       "implementationPaths": [
         "src/App/SimulatorShell.cs",
         "src/App/SimulatorShell.ProjectTreePointerReview.cs",
@@ -632,7 +643,10 @@
       "documentationPaths": [
         "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
       ],
-      "officialSources": [],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/structure-of-the-declaration-table-for-data-blocks",
+        "https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/defining-start-values/basic-information-on-start-values"
+      ],
       "nonQualifyingBroadCommandIds": [
         "project-tree-pointer",
         "ladder-editor"
@@ -644,10 +658,11 @@
         "the generated instance DB row appears under Program blocks",
         "selection does not open and activation opens the exact definition",
         "DB number and symbolic name are unique and persist",
-        "the definition is not editable as a Global DB or LAD block",
+        "the read-only instance table renders inherited defaults as start values for FB Input, Output, Static and IEC timer/counter members, excludes TEMP locals, and discloses unsupported overrides",
         "returning to the owner restores the correct block title and canvas"
       ],
       "limitations": [
+        "Per-instance start-value overrides, online monitor values, offsets, and extended DB attributes are not modeled.",
         "Manual instance DB creation, multi-instance storage, and parameter-instance storage are unsupported."
       ]
     },
@@ -799,13 +814,13 @@
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-parity-full-contract-v6-artifacts/tia-project-tree-gates.json",
+      "path": ".tools/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "2F9AA28EA11C3EEAFF165F0F2048B08D30C5B96E611209E57FE2263BC7FBFECF",
+      "sha256": "A6D5B3C7AD320A37F81095D6382609BB80A7FC7B8F8021E85E7F9E0F5B6508D1",
       "status": "passed",
       "gateCount": 9,
-      "assertionCount": 45,
+      "assertionCount": 62,
       "externalTia": false,
       "livePlc": false
     }
