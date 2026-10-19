@@ -840,8 +840,12 @@ public partial class SimulatorShell
             // Exercise the same editable-cell path used by the operator, then
             // prove one accepted commit is a single exact history transaction.
             _ladderHistory.Clear();
+            var inlineOriginalJson = LadderEditorProjectJson.Save(_ladderDocument);
+            var inlineOriginalDocument = LadderEditorProjectJson.Load(inlineOriginalJson).Document;
+            globalDb.Interface.Add(new LadderInterfaceParameter("DuplicateGuard", PlcVariableType.Bool,
+                LadderInterfaceSection.Static, false, Id: "gate-inline-duplicate-guard"));
+            Refresh(); await Frames();
             var beforeInlineComment = LadderEditorProjectJson.Save(_ladderDocument);
-            var inlineBaselineDocument = LadderEditorProjectJson.Load(beforeInlineComment).Document;
             var inlineCommentCommitted = await EditGlobalDeclarationCell(targetSpeedId, 4, "Inline comment");
             var afterInlineComment = LadderEditorProjectJson.Save(_ladderDocument);
             var inlineCommentValue = globalDb.Interface.Single(parameter => parameter.Id == targetSpeedId).Comment;
@@ -851,23 +855,42 @@ public partial class SimulatorShell
                 && LadderEditorProjectJson.Save(_ladderDocument) == afterInlineComment;
             var inlineCommentSavedLoaded = LadderEditorProjectJson.Load(afterInlineComment) is { IsReadable: true, Document: not null } inlineCommentLoaded
                 && LadderEditorProjectJson.Save(inlineCommentLoaded.Document) == afterInlineComment;
+
+            var historyBeforeInlineReject = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
+            var beforeDuplicateInlineName = LadderEditorProjectJson.Save(_ladderDocument);
+            var duplicateInlineSubmitted = await EditGlobalDeclarationCell(targetSpeedId, 0, "duplicateguard");
+            var duplicateInlineRejected = duplicateInlineSubmitted
+                && output.Text.Contains("Global DB edit rejected", StringComparison.Ordinal)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeDuplicateInlineName
+                && FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId)?.GetText(0) == "TargetSpeed"
+                && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == historyBeforeInlineReject;
+            var beforeBlankInlineName = LadderEditorProjectJson.Save(_ladderDocument);
+            var blankInlineSubmitted = await EditGlobalDeclarationCell(targetSpeedId, 0, "   ");
+            var blankInlineRejected = blankInlineSubmitted
+                && output.Text.Contains("Global DB edit rejected", StringComparison.Ordinal)
+                && LadderEditorProjectJson.Save(_ladderDocument) == beforeBlankInlineName
+                && FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId)?.GetText(0) == "TargetSpeed"
+                && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == historyBeforeInlineReject;
             var inlineCommentTransaction = inlineCommentCommitted && inlineCommentValue == "Inline comment"
-                && inlineCommentUndo && inlineCommentRedo && inlineCommentSavedLoaded;
+                && inlineCommentUndo && inlineCommentRedo && inlineCommentSavedLoaded
+                && duplicateInlineRejected && blankInlineRejected;
             // Restore the fixture before the existing side-form transaction
             // checks; the new inline case owns and clears its history entries.
             var inlineCommentCleanup = TryUndoLadderEdit(out _)
                 && LadderEditorProjectJson.Save(_ladderDocument) == beforeInlineComment;
-            if (!inlineCommentCleanup && inlineBaselineDocument is not null)
+            if (inlineOriginalDocument is not null)
             {
-                _ladderDocument.RestoreSnapshot(inlineBaselineDocument.CaptureSnapshot());
-                inlineCommentCleanup = LadderEditorProjectJson.Save(_ladderDocument) == beforeInlineComment;
+                _ladderDocument.RestoreSnapshot(inlineOriginalDocument.CaptureSnapshot());
+                inlineCommentCleanup = inlineCommentCleanup
+                    && LadderEditorProjectJson.Save(_ladderDocument) == inlineOriginalJson;
             }
             _ladderHistory.Clear();
             Refresh(); await Frames();
             globalDb = _ladderDocument.Blocks.First(block => block.Id == globalDb.Id);
             declaration = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
             var inlineCommentRestored = globalDb.Interface.Single(parameter => parameter.Id == targetSpeedId).Comment == "Retained speed"
-                && declaration?.GetText(4) == "Retained speed" && inlineCommentCleanup;
+                && declaration?.GetText(4) == "Retained speed" && inlineCommentCleanup
+                && !globalDb.Interface.Any(parameter => parameter.Id == "gate-inline-duplicate-guard");
             inlineGridFieldsEditable = inlineGridFieldsEditable && inlineCommentTransaction && inlineCommentRestored;
             var memberEditorButton = Find<Button>("EditGlobalDbMembers");
             var addMemberAction = Find<Button>("GlobalDbAddMember");
@@ -1127,7 +1150,7 @@ public partial class SimulatorShell
             globalGate.Set("fields-persist", fieldPersisted && declarationEditLifecycle,
                 $"original={originalDeclarationText} selected={selectedDeclarationLoaded} edited={declarationEdited} undo={declarationUndoExact} redo={declarationRedoExact}");
             globalGate.Set("declaration-grid-inline-edit", inlineGridFieldsEditable,
-                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)} committed={inlineCommentCommitted} value={inlineCommentValue} undo={inlineCommentUndo} redo={inlineCommentRedo} saveLoad={inlineCommentSavedLoaded} restored={inlineCommentRestored}");
+                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)} committed={inlineCommentCommitted} value={inlineCommentValue} undo={inlineCommentUndo} redo={inlineCommentRedo} saveLoad={inlineCommentSavedLoaded} duplicateRejected={duplicateInlineRejected} blankRejected={blankInlineRejected} restored={inlineCommentRestored}");
             globalGate.Set("pending-form-blocks-inline-edit", inlineGridBlockedByMemberDraft,
                 $"pendingForms={pendingFormCountDuringGridCheck} editable={pendingDraftCellEditability}");
             globalGate.Set("member-draft-cancel-restores-inline-edit", inlineGridRestoredAfterMemberCancel,

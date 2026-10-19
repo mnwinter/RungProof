@@ -119,10 +119,12 @@ that move without ladder-owned outputs.
   model and schema change; they cannot be completed as a layout-only fix.
 - Global DB authoring and JSON loading now apply the same case-insensitive
   member-name rule; blank and duplicate names and non-Static members are
-  rejected by the loader. The remaining Global DB evidence gaps are duplicate
-  rejection through the visible UI and Save/Load/Save. Tag-table lifecycle
-  remains add-only; watch tables support add/remove but not rename, duplicate,
-  or reorder.
+  rejected by the loader. The production Tree-editor gate now exercises blank
+  and case-insensitive duplicate-name rejection and verifies that the model,
+  displayed cell, and history remain unchanged. Manual screen proof of these
+  rejection messages and visible project Save/Load/Save remain open. Tag-table
+  lifecycle remains add-only; watch tables support add/remove but not rename,
+  duplicate, or reorder.
 - The latest review/walkthrough are separate evidence streams. A visible
   browser-mirrored screen proves RungProof click behavior only; it does not
   establish installed-TIA parity, live PLC behavior, safety-rated behavior, or
@@ -744,7 +746,7 @@ a safety-rated circuit or installed-TIA parity.
 
 | Area | Current evidence | Acceptance still open |
 | --- | --- | --- |
-| Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit a Comment edit through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. A fresh scratch screen pass visibly applied Data Type, Start Value, Retain, and Comment changes, then undid and redid them. | Invalid and duplicate inline edits, atomic rejection feedback, Name-cell commit, and a project-file Save/Load/Save cycle through the visible workflow. |
+| Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. A fresh scratch screen pass visibly applied Data Type, Start Value, Retain, and Comment changes, then undid and redid them. | Visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
 | Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
 | Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
 | PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, and Undo/Redo. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. | Tag Cancel remains unverified by screen control. User/System constants and tag-to-operand drag remain unsupported. |
@@ -785,13 +787,16 @@ editor-control gate (7/7 gates, 36/36 assertions), project-tree gate (11/11,
 These results are local and offline (`externalTia=false`, `livePlc=false`); they
 do not establish installed TIA V21 parity.
 
-The latest complete interaction rerun also passes 15/15 commands. The Global DB
-project-tree gate now selects an editable declaration cell, starts the native
-Tree editor, submits text through its focused LineEdit, and verifies that the
-production ItemEdited handler commits the Comment. Its 11 project-tree gates
-and 75 assertions pass; exact Undo/Redo and a JSON serializer round trip pass
-for that commit. The isolated fixture is undone and has a deserialized fallback
-for cleanup so a failed history assertion cannot contaminate later gate cases.
+The latest complete interaction rerun before the additional inline-rejection
+cases passed 15/15 commands. The updated targeted project-tree gate selects an
+editable declaration cell, starts the native Tree editor, submits text through
+its focused LineEdit, and verifies that the production ItemEdited handler
+commits the Comment. It also submits blank and case-insensitive duplicate
+names, verifying rejection, unchanged serialized model/history, and refreshed
+cell text. All 11 project-tree gates and 75 assertions pass, including exact
+Undo/Redo and a JSON serializer round trip for the accepted comment. The
+isolated fixture is undone and has a deserialized fallback for cleanup so a
+failed history assertion cannot contaminate later gate cases.
 
 A separate scratch screen-control pass visibly changed `FirstFlag` from
 BOOL/FALSE to INT/0, set Retain and Comment, applied the edit, then visibly
