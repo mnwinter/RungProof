@@ -281,7 +281,7 @@ class _TkSceneViewer:
 
         root = tk.Tk()
         self._root = root
-        root.title("Siemens PLC Visual Simulator")
+        root.title("RungProof")
         root.geometry("1100x720")
         root.minsize(780, 520)
         root.configure(bg=self._BACKGROUND)
@@ -291,7 +291,7 @@ class _TkSceneViewer:
         header.pack(fill="x")
         tk.Label(
             header,
-            text="PLC VISUAL SIMULATOR",
+            text="RUNGPROOF",
             bg=self._PANEL,
             fg=self._TEXT,
             font=("Segoe UI", 18, "bold"),
