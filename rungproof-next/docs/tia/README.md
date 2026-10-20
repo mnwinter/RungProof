@@ -139,10 +139,10 @@ vendor status independently.
 ## Editor-control registry
 
 `editor-control-evidence-registry.json` separately inventories seven LAD editor
-gates and twelve project-tree gates outside the 50-key instruction catalog. The
-declared `tia-editor-control-gate-sweep` now passes 7/7 gates and 36/36
-assertions; the current focused `tia-project-tree-gate-sweep` passes 12/12 gates
-and 82/82 assertions.
+gates and fourteen project-tree gates outside the 50-key instruction catalog.
+The declared `tia-editor-control-gate-sweep` passes 7/7 gates and 36/36
+assertions; the current focused `tia-project-tree-gate-sweep` passes 14/14 gates
+and 100/100 assertions.
 The full-profile runner validates the exact gate-ID sets, required per-gate
 identity fields, passing assertion arrays, and fixed `externalTia=false` and
 `livePlc=false` boundaries before accepting either artifact. The latest

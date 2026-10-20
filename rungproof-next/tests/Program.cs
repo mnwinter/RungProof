@@ -225,7 +225,7 @@ internal static partial class Program
         Test("instruction help catalog has unique complete entries", TestInstructionHelpCatalog);
         Test("TIA evidence matrix covers every catalog key and state gate", TestTiaEvidenceMatrixCoverage);
         Test("TIA evidence registry separates local and vendor state for every catalog key", TestTiaEvidenceRegistryCoverage);
-        Test("TIA editor-control registry binds exact structured evidence for all 20 non-catalog gates", TestTiaEditorControlEvidenceRegistry);
+        Test("TIA editor-control registry binds exact structured evidence for all 21 non-catalog gates", TestTiaEditorControlEvidenceRegistry);
         Test("TIA local run evidence binds exact local gate coverage", TestTiaLocalRunEvidenceRecord);
         Test("TIA renderer visual review is hash-bound and covers every Siemens-facing key", TestTiaRendererVisualReviewRecord);
         Test("TIA unselected renderer visual review is hash-bound and covers every Siemens-facing key", TestTiaRendererUnselectedVisualReviewRecord);
@@ -4924,11 +4924,12 @@ internal static partial class Program
             "tia.project-tree.instance-db-contract", "tia.project-tree.call-drag-drop",
             "tia.project-tree.watch-table-delete", "tia.project-tree.watch-symbol-remove",
             "tia.project-tree.watch-stale-symbol-visible", "tia.project-tree.tag-detail-view",
+            "tia.project-tree.user-constant-validation",
         };
         var gates = root.GetProperty("gates").EnumerateArray().ToArray();
         var ids = gates.Select(gate => gate.GetProperty("id").GetString()!).ToArray();
-        Require(gates.Length == 20 && ids.Distinct(StringComparer.Ordinal).Count() == 20,
-            "TIA editor-control registry must contain exactly 20 unique gates.");
+        Require(gates.Length == 21 && ids.Distinct(StringComparer.Ordinal).Count() == 21,
+            "TIA editor-control registry must contain exactly 21 unique gates.");
         Require(gates.Where(gate => gate.GetProperty("group").GetString() == "editor")
                 .Select(gate => gate.GetProperty("id").GetString()!).ToHashSet(StringComparer.Ordinal)
                 .SetEquals(expectedEditor)
@@ -5109,8 +5110,8 @@ internal static partial class Program
             && editorControlAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && !editorControlAssertions.GetProperty("externalTia").GetBoolean()
             && !editorControlAssertions.GetProperty("livePlc").GetBoolean()
-            && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 11
-            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 75
+            && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 14
+            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 100
             && projectTreeAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && projectTreeAssertions.GetProperty("nativePointerGeometry").GetBoolean()
             && !projectTreeAssertions.GetProperty("externalTia").GetBoolean()
@@ -5264,7 +5265,7 @@ internal static partial class Program
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36,
                 Status: "historical-pass", CurrentSource: false),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 12, Assertions: 84,
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 14, Assertions: 100,
                 Status: "passed", CurrentSource: true),
         })
         {

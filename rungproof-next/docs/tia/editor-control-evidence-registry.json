@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 20 local gates (124 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 21 local gates (136 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -71,10 +71,11 @@
         "tia.project-tree.watch-table-delete",
         "tia.project-tree.watch-symbol-remove",
         "tia.project-tree.watch-stale-symbol-visible",
-        "tia.project-tree.tag-detail-view"
+        "tia.project-tree.tag-detail-view",
+        "tia.project-tree.user-constant-validation"
       ],
-      "runnerExpectation": "Add this command to the interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 only after it writes and validates the declared artifact. The runner command must attach exactly these thirteen gateIds.",
-      "resultExpectation": "The artifact must contain exactly thirteen unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
+      "runnerExpectation": "The interaction and full profiles in tools/Invoke-TiaParitySuite.ps1 attach exactly these fourteen gate IDs.",
+      "resultExpectation": "The artifact must contain exactly fourteen unique gate results, reject missing or extra IDs, and fail the process if any required assertion is absent or false.",
       "latestArtifactId": "artifact.tia-project-tree-gate-sweep.v1"
     }
   ],
@@ -914,6 +915,46 @@
       "limitations": [
         "The local gate does not perform a physical pointer drag and does not establish installed-TIA visual parity."
       ]
+    },
+    {
+      "sequence": 20,
+      "id": "tia.project-tree.user-constant-validation",
+      "group": "project-tree",
+      "key": "user-constant-validation",
+      "title": "User constant name validation and cancel",
+      "implementationStatus": "present",
+      "localStatus": "automated-pass",
+      "vendorStatus": "source-only",
+      "behavior": "The User constant property form reports an invalid name inline, clears stale feedback when corrected, and Cancel discards the invalid draft without changing project data.",
+      "implementationPaths": [
+        "src/App/SimulatorShell.cs",
+        "src/App/SimulatorShell.TiaProjectTreeGateSweep.cs"
+      ],
+      "testPaths": [
+        "tests/Program.cs"
+      ],
+      "documentationPaths": [
+        "docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md",
+        "docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md"
+      ],
+      "officialSources": [
+        "https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/declaring-global-constants/rules-for-global-user-constants",
+        "https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/structure-of-the-plc-tag-tables"
+      ],
+      "nonQualifyingBroadCommandIds": [
+        "ladder-editor"
+      ],
+      "evidenceArtifactIds": [
+        "artifact.tia-project-tree-gate-sweep.v1"
+      ],
+      "requiredAssertions": [
+        "an invalid User constant name displays inline validation and does not mutate the project",
+        "editing the invalid name clears stale validation feedback",
+        "Cancel closes the invalid draft without changing the project"
+      ],
+      "limitations": [
+        "The structured gate verifies local form behavior only; screen-control behavior and installed-TIA visual parity are tracked separately."
+      ]
     }
   ],
   "unsupportedDocumented": [
@@ -934,29 +975,29 @@
     {
       "id": "artifact.tia-editor-control-gate-sweep.v1",
       "commandId": "tia-editor-control-gate-sweep",
-      "path": ".tools/tia-project-tree-enter-rerun/tia-parity-interaction-20261019-192857-artifacts/tia-editor-control-gates.json",
+      "path": ".tools/tia-editor-control-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "C7C58CB36BAF032D52EBC4B3FEBFD9170478E3F8E4F8338660567FF92E4DD9F2",
+      "sha256": "AD379EC9A962ECF1504B8385C20AD8015060B372AED16FC27D5D1086096FD855",
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
-      "sourceRevision": "sha256:555AC9648D1C680F9330B511597687F587CCD270C50B4113D43188DBB3B396B6",
-      "currentSource": true,
+      "sourceRevision": "sha256:D35D49F85560DA8DBAC1916329D80ABDA362975FFD7909D0C3460F07B44C7197",
+      "currentSource": false,
       "externalTia": false,
       "livePlc": false
     },
     {
       "id": "artifact.tia-project-tree-gate-sweep.v1",
       "commandId": "tia-project-tree-gate-sweep",
-      "path": ".tools/tia-project-tree-enter-rerun/tia-parity-interaction-20261019-192857-artifacts/tia-project-tree-gates.json",
+      "path": ".tools/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "87753840A8EA6F774C848DE7593158953899855DF8941FB32AD5F16175D09BF6",
+      "sha256": "109B3F56F27CEA38144A4799428AFB538F4A4A002EA952EC66F17B11AB3AB12D",
       "status": "passed",
-      "gateCount": 13,
-      "assertionCount": 88,
-      "sourceRevision": "sha256:555AC9648D1C680F9330B511597687F587CCD270C50B4113D43188DBB3B396B6",
+      "gateCount": 14,
+      "assertionCount": 100,
+      "sourceRevision": "sha256:E6B57E823CAE0C3F99D6720189E65E8AC89763FF56465E8C9D0B819FD38E7CF9",
       "currentSource": true,
       "externalTia": false,
       "livePlc": false
