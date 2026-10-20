@@ -1335,7 +1335,18 @@ member table. Toolbar Undo removed the row and Redo restored it; a final Undo
 left the scratch DB without the test row. These interactions demonstrate the
 current RungProof behavior; they do not establish installed-TIA V21 parity.
 
-Demo 5 DB101/DB102 screens were not reached because loading a project was
-outside these bounded passes. Runtime stayed STOPPED and PLC DISCONNECTED; no
-Save, Load, Run, or Connect action occurred. Each scratch app, bridge, and
-listener was closed.
+This focused DB1 member pass did not load Demo 5 or re-exercise DB101/DB102.
+The earlier current-source walkthrough recorded both DB screens at 1600×900,
+including their assigned FB, grouped INPUT/OUTPUT members, and six-column
+tables; that remains RungProof screen evidence, not matched TIA evidence.
+Runtime stayed STOPPED and PLC DISCONNECTED; no Save, Load, Run, or Connect
+action occurred in this focused pass. Each scratch app, bridge, and listener
+was closed.
+
+A later independent screen-control retry attempted **Add new block** and
+**File** from the visible OB workspace. The bridge acknowledged input delivery,
+but fresh captures showed no corresponding UI transition, so the agent stopped
+without treating delivery status as a successful click. It did not reach any DB
+or property workflow and does not overturn the earlier calibrated DB1 member
+evidence. No Save, Load, Run, or PLC connection occurred; the retry's app,
+bridge, tab, and listener were closed.

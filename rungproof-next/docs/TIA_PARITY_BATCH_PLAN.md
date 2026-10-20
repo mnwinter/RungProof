@@ -36,6 +36,14 @@ the GUI/property exit criteria are closed.
 | Installed TIA V21 comparison | Open | Capture matched project objects and states using the controlled installed-TIA capture pack. |
 | Demo sequence and ladder-owned safety logic | Deferred until GUI/property work closes | Implement and verify the demo requirements only after the preceding GUI/property gates pass. |
 
+An independent screen-control retry after the latest calibrated DB1 pass tried
+**Add new block** and **File** from the OB workspace. The bridge acknowledged
+input delivery, but fresh captures showed no UI transition, so the agent stopped
+without reaching DB or property actions. This retry is inconclusive input
+evidence; it does not overturn the earlier calibrated DB1 member interactions.
+The app, bridge, tab, and listener were closed without Save, Load, Run, or PLC
+connection.
+
 ## Work lanes
 
 | Lane | Batch | Exit condition | Boundary |
