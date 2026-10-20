@@ -253,9 +253,11 @@ that move without ladder-owned outputs.
   project` picker. A separate code review found that File → Save Workspace As
   incorrectly invoked the fixed last-workspace save path. The menu now opens the
   existing workspace destination picker. The zero-warning build, 395-case
-  offline suite, and headless app-shell verifier pass; a visible click check of
-  this File-menu route is pending. No file was selected or saved during the
-  earlier Project menu inspection.
+  offline suite, and headless app-shell verifier pass. A 1600×900 screen pass
+  visibly opened the File menu, but the bridge returned `Failed to fetch` when
+  dispatching the selection click, so the destination picker was not reached.
+  No path was selected or saved. The exact disposable app and bridge were
+  stopped afterward; the bridge tab and listener were closed.
 - Independent source review also confirmed two declared feature gaps: User
   constants can be authored and persisted but are not currently exported into
   the executable program or resolved by the ladder operand insertion path;
