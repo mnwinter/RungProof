@@ -198,6 +198,7 @@ public partial class SimulatorShell : CanvasLayer
     private bool _ladderMonitorMatchesLoadedProgram;
     private readonly List<Action> _ladderEditorRefreshers = [];
     private Action? _restoreActiveWatchTableTreeRow;
+    private Action? _clearWatchValidationFeedback;
     private Func<string>? _getActiveTiaEditorDocumentKey;
     private Action<string, string>? _ensureTiaEditorDocumentTab;
     private Action<IReadOnlyList<string>>? _orderTiaEditorDocumentTabs;
@@ -4596,6 +4597,8 @@ public partial class SimulatorShell : CanvasLayer
         foreach (var resetDocuments in _ladderEditorProjectReplacementResetters) resetDocuments();
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         RefreshLadderMonitorMatch();
+        _clearWatchValidationFeedback?.Invoke();
+        foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
         if (!TryBuildCurrentLadderProgram(out var program, out var issues))
         {
             SetVirtualControllerValidation(issues);
@@ -7425,6 +7428,14 @@ public partial class SimulatorShell : CanvasLayer
         watchStatus.Name = "WatchStatus";
         watchStatus.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         watchHeader.AddChild(watchStatus);
+        var watchFeedback = new Label
+        {
+            Name = "WatchValidationFeedback",
+            Visible = false,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+        };
+        watchFeedback.AddThemeColorOverride("font_color", new Color("b42318"));
         var addWatchTable = ToolbarButton("AddWatchTable", "+ TABLE", accent, 72);
         var removeWatchTable = ToolbarButton("RemoveWatchTable", "− TABLE", new Color("8a4d55"), 72);
         var renameWatchTable = ToolbarButton("RenameWatchTable", "RENAME", new Color("4d6674"), 72);
@@ -7442,6 +7453,7 @@ public partial class SimulatorShell : CanvasLayer
         watchHeader.AddChild(moveWatchTableDown);
         watchHeader.AddChild(removeWatchTable);
         watchPage.AddChild(watchHeader);
+        watchPage.AddChild(watchFeedback);
         var watchSymbolHeader = new HBoxContainer { Name = "WatchSymbolActions" };
         watchSymbolHeader.AddThemeConstantOverride("separation", 4);
         var watchSymbol = new OptionButton { Name = "WatchSymbol", CustomMinimumSize = new Vector2(180, 30) };
@@ -7510,6 +7522,7 @@ public partial class SimulatorShell : CanvasLayer
         Tree? watchDocumentTable = null;
         Label? watchDocumentTitle = null;
         Label? watchDocumentStatus = null;
+        Label? watchDocumentFeedback = null;
         var watchDocumentRows = new List<TreeItem>();
         string[] watchDocumentRowNames = [];
         if (siemens)
@@ -7539,6 +7552,15 @@ public partial class SimulatorShell : CanvasLayer
             };
             watchDocumentStatus.AddThemeColorOverride("font_color", new Color("4f6874"));
             watchDocument.AddChild(watchDocumentStatus);
+            watchDocumentFeedback = new Label
+            {
+                Name = "WatchTableDocumentFeedback",
+                Visible = false,
+                AutowrapMode = TextServer.AutowrapMode.WordSmart,
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            };
+            watchDocumentFeedback.AddThemeColorOverride("font_color", new Color("b42318"));
+            watchDocument.AddChild(watchDocumentFeedback);
             watchDocumentTable = new Tree
             {
                 Name = "WatchTableDocumentGrid",
@@ -7585,6 +7607,8 @@ public partial class SimulatorShell : CanvasLayer
         string[] watchRowNames = [];
         string[] watchTableNames = [];
         var refreshingWatchTableSelector = false;
+        string? watchValidationFeedback = null;
+        _clearWatchValidationFeedback = () => watchValidationFeedback = null;
         var watchRows = new List<TreeItem>();
         var watchModifySelection = new HashSet<string>(StringComparer.Ordinal);
         PlcVariable[] watchVariablesCache = [];
@@ -7859,8 +7883,22 @@ public partial class SimulatorShell : CanvasLayer
                     ? $"{tablePrefix}{rows.Length} ROW(S) · EDIT DIFFERS FROM LOADED PROGRAM · SIMULATOR ONLY"
                     : $"{tablePrefix}{rows.Length} ROW(S) · {snapshot.State.ToString().ToUpperInvariant()} · SCAN {snapshot.ScanNumber} · SIMULATOR ONLY";
             watchStatus.AddThemeColorOverride("font_color",
-                snapshot is not null && _ladderMonitorMatchesLoadedProgram ? new Color("18864b") : new Color("b36c16"));
-            if (watchDocumentStatus is not null) watchDocumentStatus.Text = watchStatus.Text;
+                snapshot is not null && _ladderMonitorMatchesLoadedProgram
+                    ? new Color("18864b")
+                    : new Color("b36c16"));
+            watchFeedback.Text = watchValidationFeedback is null
+                ? string.Empty
+                : $"REJECTED: {watchValidationFeedback}";
+            watchFeedback.Visible = watchValidationFeedback is not null;
+            if (watchDocumentStatus is not null)
+                watchDocumentStatus.Text = watchStatus.Text;
+            if (watchDocumentFeedback is not null)
+            {
+                watchDocumentFeedback.Text = watchValidationFeedback is null
+                    ? string.Empty
+                    : $"REJECTED: {watchValidationFeedback}";
+                watchDocumentFeedback.Visible = watchValidationFeedback is not null;
+            }
         }
 
         void RefreshWatchMetadataEditors()
@@ -7883,7 +7921,14 @@ public partial class SimulatorShell : CanvasLayer
 
         void RefreshWatchTableAfterRejectedEdit(string message)
         {
+            watchValidationFeedback = message;
             output.Text = $"[color=#d64545]Watch-table edit rejected.[/color] {Escape(message)}";
+            RefreshWatchMetadataEditors();
+        }
+
+        void RefreshWatchMetadataEditorsAfterAcceptedAction()
+        {
+            watchValidationFeedback = null;
             RefreshWatchMetadataEditors();
         }
 
@@ -7900,6 +7945,11 @@ public partial class SimulatorShell : CanvasLayer
                 var key = WatchModifyKey(row);
                 if (edited.IsChecked(5)) watchModifySelection.Add(key);
                 else watchModifySelection.Remove(key);
+                if (watchValidationFeedback is not null)
+                {
+                    watchValidationFeedback = null;
+                    RefreshWatchMetadataEditors();
+                }
                 return;
             }
 
@@ -7935,12 +7985,18 @@ public partial class SimulatorShell : CanvasLayer
                 updatedComment = edited.GetText(6);
             else return;
 
-            if (updatedFormat == row.DisplayFormat && updatedModify == row.ModifyValue && updatedComment == row.Comment) return;
+            if (updatedFormat == row.DisplayFormat && updatedModify == row.ModifyValue && updatedComment == row.Comment)
+            {
+                if (watchValidationFeedback is not null)
+                    RefreshWatchMetadataEditorsAfterAcceptedAction();
+                return;
+            }
             if (!BeginProjectMetadataEdit("Edit watch-table row"))
             {
                 RefreshWatchMetadataEditors();
                 return;
             }
+            watchValidationFeedback = null;
             row.DisplayFormat = updatedFormat;
             row.ModifyValue = updatedModify;
             row.Comment = updatedComment;
@@ -7975,7 +8031,7 @@ public partial class SimulatorShell : CanvasLayer
             if (document.WatchVariables.Contains(name, StringComparer.Ordinal)) return;
             if (!BeginProjectMetadataEdit("Add watch-table symbol")) return;
             document.ActiveWatchTable.Rows.Add(new EditableWatchRow(name));
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
         };
         addWatchAddress.Pressed += () =>
         {
@@ -7999,7 +8055,7 @@ public partial class SimulatorShell : CanvasLayer
             if (!BeginProjectMetadataEdit("Add absolute watch address")) return;
             document.ActiveWatchTable.Rows.Add(new EditableWatchRow(address, WatchReferenceKind.AbsoluteAddress));
             watchAddress.Clear();
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
         };
         removeWatch.Pressed += () =>
         {
@@ -8008,7 +8064,7 @@ public partial class SimulatorShell : CanvasLayer
             if (index < 0 || !BeginProjectMetadataEdit("Remove watch-table row")) return;
             document.ActiveWatchTable.Rows.RemoveAt(index);
             watchModifySelection.Remove(id);
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
         };
         void MoveWatchRow(int offset)
         {
@@ -8021,7 +8077,7 @@ public partial class SimulatorShell : CanvasLayer
             var row = rows[index];
             rows.RemoveAt(index);
             rows.Insert(destination, row);
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
             output.Text = $"[color=#18864b]Watch-table row moved.[/color] {Escape(row.Reference)}";
         }
         moveWatchRowUp.Pressed += () => MoveWatchRow(-1);
@@ -8083,6 +8139,8 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = "[color=#d64545]SIM MODIFY rejected.[/color] The offline runtime rejected the complete edit batch; no partial edit was applied.";
                 return;
             }
+            watchValidationFeedback = null;
+            RefreshWatchMetadataEditors();
             output.Text = "[color=#18864b]SIM MODIFY applied to the offline simulator only.[/color] No physical PLC was written.";
         };
         addAllWatch.Pressed += () =>
@@ -8094,14 +8152,14 @@ public partial class SimulatorShell : CanvasLayer
                 .Where(name => !document.WatchVariables.Contains(name, StringComparer.Ordinal)).ToArray();
             if (missing.Length == 0 || !BeginProjectMetadataEdit("Add all watch-table symbols")) return;
             document.WatchVariables.AddRange(missing);
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
         };
         clearWatch.Pressed += () =>
         {
             if (document.ActiveWatchTable.Rows.Count == 0 || !BeginProjectMetadataEdit("Clear watch table")) return;
             document.ActiveWatchTable.Rows.Clear();
             watchModifySelection.Clear();
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
         };
         addWatchTable.Pressed += () => openWatchTableCreation();
         renameWatchTable.Pressed += () => openWatchTableRename();
@@ -8115,7 +8173,7 @@ public partial class SimulatorShell : CanvasLayer
             // Change the active editor identity before refreshing. Otherwise
             // refresh restores the source table tab and silently reselects it.
             openWatchTableDocumentForMutation(duplicate);
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
             SelectActiveWatchTableTreeRow();
             output.Text = $"[color=#18864b]Watch table duplicated.[/color] {Escape(duplicate.Name)}";
         };
@@ -8126,7 +8184,7 @@ public partial class SimulatorShell : CanvasLayer
             if (document.WatchTables.Count <= 1 || !BeginProjectMetadataEdit("Delete watch table")) return;
             var removedName = document.ActiveWatchTable.Name;
             document.RemoveActiveWatchTable();
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
             SelectActiveWatchTableTreeRow();
             output.Text = $"[color=#18864b]Watch table deleted.[/color] {Escape(removedName)}";
         };
@@ -8138,7 +8196,7 @@ public partial class SimulatorShell : CanvasLayer
             if (destination < 0 || destination >= document.WatchTables.Count) return;
             if (!BeginProjectMetadataEdit("Reorder watch tables")) return;
             if (!document.MoveActiveWatchTable(offset)) return;
-            RefreshWatchMetadataEditors();
+            RefreshWatchMetadataEditorsAfterAcceptedAction();
             SelectActiveWatchTableTreeRow();
             output.Text = $"[color=#18864b]Watch table order updated.[/color] {Escape(document.ActiveWatchTable.Name)}";
         }
@@ -9492,6 +9550,7 @@ public partial class SimulatorShell : CanvasLayer
         void OpenWatchTableDocument(EditableWatchTable watchTable)
         {
             if (!siemens) return;
+            watchValidationFeedback = null;
             var tableIndex = document.WatchTables.FindIndex(table => table.Id.Equals(watchTable.Id, StringComparison.Ordinal));
             if (tableIndex < 0) return;
             var key = EditorDocumentIdentity.ForWatchTable(watchTable);
@@ -11343,7 +11402,7 @@ public partial class SimulatorShell : CanvasLayer
                 var oldName = document.ActiveWatchTable.Name;
                 document.RenameActiveWatchTable(normalizedName);
                 RefreshEditor();
-                RefreshWatchMetadataEditors();
+                RefreshWatchMetadataEditorsAfterAcceptedAction();
                 SelectActiveWatchTableTreeRow();
                 output.Text = $"[color=#18864b]Watch table renamed.[/color] {Escape(oldName)} → {Escape(normalizedName)}";
                 return string.Empty;
@@ -12877,6 +12936,8 @@ public partial class SimulatorShell : CanvasLayer
                 selectedOutput = false;
                 foreach (var refresh in _ladderEditorRefreshers) refresh();
                 RefreshLadderMonitorMatch();
+                _clearWatchValidationFeedback?.Invoke();
+                foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
                 _ladderWorkspaceStatus.Text = "NEW PROJECT · NOT VERIFIED · VERIFY + LOAD REQUIRED";
                 _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("f1aa5b"));
                 output.Text = "[color=#18864b]New offline Ladder project created.[/color] Add logic, then Verify + Load.";
@@ -13766,6 +13827,7 @@ public partial class SimulatorShell : CanvasLayer
         if (ChallengeMutationLocked || !_ladderHistory.CanUndo) return false;
         ChallengeDraftChanged?.Invoke();
         if (!_ladderHistory.Undo(_ladderDocument, out description)) return false;
+        _clearWatchValidationFeedback?.Invoke();
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
         _restoreActiveWatchTableTreeRow?.Invoke();
@@ -13781,6 +13843,7 @@ public partial class SimulatorShell : CanvasLayer
         if (ChallengeMutationLocked || !_ladderHistory.CanRedo) return false;
         ChallengeDraftChanged?.Invoke();
         if (!_ladderHistory.Redo(_ladderDocument, out description)) return false;
+        _clearWatchValidationFeedback?.Invoke();
         foreach (var refresh in _ladderEditorRefreshers) refresh();
         foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
         _restoreActiveWatchTableTreeRow?.Invoke();
