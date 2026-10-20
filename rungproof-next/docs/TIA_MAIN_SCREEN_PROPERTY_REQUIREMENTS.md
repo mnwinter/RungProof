@@ -59,6 +59,17 @@ Evidence must remain separated:
   distinguishes per-tag Retain under optimized access from centralized retain
   behavior under standard access. Do not present the current Retain checkbox as
   proof that power-cycle retention is implemented by the offline runtime.
+- Siemens V21 displays block interfaces in a table by default, and an FB's
+  interface defines the generated instance DB structure. The [instance DB
+  declaration table reference](https://docs.tia.siemens.cloud/r/en-us/v21/programming-data-blocks/structure-of-the-declaration-table-for-data-blocks)
+  distinguishes inherited Default value from instance Start value; inherited
+  values cannot be edited directly, Monitor value appears only with an online
+  connection, and other columns depend on CPU/access mode. The [block-interface
+  overview](https://docs.tia.siemens.cloud/r/en-us/v21/declaring-the-block-interface/overview-of-the-block-interface)
+  defines Input, Output, InOut, Static, Temp, and Constant sections; Temp and
+  Constant declarations are not stored in an instance DB. Use the simulator's
+  read-only status to disclose unsupported per-instance overrides and live
+  columns, while preserving the section hierarchy and inherited values.
 - Siemens V21's [PLC tag table reference](https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/structure-of-the-plc-tag-tables)
   includes Tags and User constants tabs in tag tables, plus a System constants
   tab in Default and All tags. System constants are read-only hardware
@@ -1304,3 +1315,19 @@ suite passed 383/383. A full interaction-profile rerun passed its build, test,
 and early UI gates, then stalled in the TIA edit sweep after scene load without
 further output; that process was stopped and is not reported as a full-profile
 pass. The focused current-source project-tree gate passed independently.
+
+### Current-source DB creation screen follow-up — 2026-10-20
+
+A fresh disposable screen-control session double-clicked **Add new block**;
+Enter alone left the tree row selected. The visible creation dialog allowed an
+unsaved Global DB `DB1` to be created. Its document showed the Name, Data Type,
+Start Value, Retain, and Comment declaration grid and disclosed the supported
+optimized-access offline subset. No Save, Load, Run, or Connect action occurred.
+
+One precise click on **+ MEMBER** produced no visible response in this pass, so
+the action is NOT VERIFIED and requires a focused retry. This does not erase
+the earlier screen-control evidence for member editing, cancel, apply, and
+remove; those were separate interactions. Demo 5 DB101/DB102 screens were not
+reached because loading a project was outside this bounded pass. Runtime stayed
+STOPPED and PLC DISCONNECTED; the scratch app, bridge, and listener were closed.
+This is current RungProof UI evidence only, not installed-TIA V21 comparison.
