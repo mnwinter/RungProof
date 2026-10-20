@@ -23,7 +23,7 @@ Godot/NuGet caches. See `docs/DEVELOPMENT_SETUP.md` for the required tool layout
 Current review commands and evidence boundaries are documented throughout this
 README and the files under [`docs/`](docs/).
 The catalog contains 77 scenes in three groups, including five authored demos,
-and 294 runtime assets. Candidate/training inclusion does not establish
+and 295 runtime assets. Candidate/training inclusion does not establish
 production quality approval. Older phase descriptions below record the
 original milestones; use the review matrix for current verification boundaries.
 

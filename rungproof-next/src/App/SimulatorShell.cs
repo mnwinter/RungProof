@@ -925,7 +925,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             for (var current = item; current is not null; current = current.GetNext())
             {
-                if (current.GetMetadata(0).AsString() == $"watch-table:{tableIndex}") return current;
+                if (current.GetMetadata(0).AsString() == EditorDocumentIdentity.ForWatchTable(_ladderDocument.WatchTables[tableIndex])) return current;
                 if (FindWatchTable(current.GetFirstChild()) is { } child) return child;
             }
             return null;
@@ -6617,7 +6617,7 @@ public partial class SimulatorShell : CanvasLayer
                 {
                     var table = document.WatchTables[index];
                     watchTableItems[index].SetText(0, $"{table.Name} [{table.Variables.Count}]");
-                    watchTableItems[index].SetMetadata(0, $"watch-table:{index}");
+                    watchTableItems[index].SetMetadata(0, EditorDocumentIdentity.ForWatchTable(table));
                     watchTableItems[index].SetTooltipText(0, $"{table.Variables.Count} watched symbol(s). Double-click to open.");
                     watchTableItems[index].Visible = true;
                 }
@@ -12825,9 +12825,7 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = $"Instance DB %DB{dbNumber} selected. Double-click to open its definition.";
                 return;
             }
-            if (kind.StartsWith("watch-table:", StringComparison.Ordinal)
-                && int.TryParse(kind.AsSpan("watch-table:".Length), out var watchIndex)
-                && watchIndex >= 0 && watchIndex < document.WatchTables.Count)
+            if (EditorDocumentIdentity.TryResolveWatchTableIndex(document, kind, out var watchIndex))
             {
                 output.Text = $"{Escape(document.WatchTables[watchIndex].Name)} selected. Double-click to open it in the watch-table workspace.";
                 return;
@@ -13123,11 +13121,17 @@ public partial class SimulatorShell : CanvasLayer
                 ResolvePendingEditorForms(() => OpenTagDocument(tableName.Length == 0 ? null : tableName));
                 return;
             }
-            if (siemens && kind.StartsWith("watch-table:", StringComparison.Ordinal)
-                && int.TryParse(kind.AsSpan("watch-table:".Length), out var watchIndex)
-                && watchIndex >= 0 && watchIndex < document.WatchTables.Count)
+            if (siemens && EditorDocumentIdentity.TryResolveWatchTableIndex(document, kind, out _))
             {
-                ResolvePendingEditorForms(() => OpenWatchTableDocument(document.WatchTables[watchIndex]));
+                ResolvePendingEditorForms(() =>
+                {
+                    if (!EditorDocumentIdentity.TryResolveWatchTableIndex(document, kind, out var resolvedWatchIndex))
+                    {
+                        output.Text = "The selected watch table is no longer available.";
+                        return;
+                    }
+                    OpenWatchTableDocument(document.WatchTables[resolvedWatchIndex]);
+                });
                 return;
             }
             if (kind is not ("add-block" or "add-tag-table" or "add-watch-table")) return;

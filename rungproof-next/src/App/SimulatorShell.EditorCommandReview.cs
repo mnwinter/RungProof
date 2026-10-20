@@ -68,7 +68,7 @@ public partial class SimulatorShell
 
             _ladderDocument.AddAggregateTag("motor_state", PlcVariableRole.Memory, PlcVariableType.Struct,
                 new PlcAggregateSchema([new PlcAggregateField("ready", PlcVariableType.Bool, "Motor permission is satisfied")]),
-                new Dictionary<string, object> { ["ready"] = true }, address: "%MB10", comment: "Motor control state");
+                new Dictionary<string, object> { ["ready"] = true }, address: "%M10.0", comment: "Motor control state");
             var representationExpectations = new Dictionary<TiaOperandRepresentation, string[]>()
             {
                 [TiaOperandRepresentation.Symbolic] = ["start_command"],
@@ -418,7 +418,8 @@ public partial class SimulatorShell
                 && _ladderDocument.WatchVariables.SequenceEqual(["start_command"], StringComparer.Ordinal)
                 && persistedWatchTables.Document?.WatchTables.Count == watchTablesBeforeCreate + 1
                 && persistedWatchTables.Document.WatchTables[^1].Name == "Commissioning");
-            var firstWatchTableRow = FindTreeItem(projectTree.GetRoot(), "watch-table:0")
+            var defaultWatchTableKey = EditorDocumentIdentity.ForWatchTable(_ladderDocument.WatchTables[0]);
+            var firstWatchTableRow = FindTreeItem(projectTree.GetRoot(), defaultWatchTableKey)
                 ?? throw new InvalidOperationException("Default watch table row missing");
             firstWatchTableRow.Select(0);
             projectTree.EmitSignal(Tree.SignalName.ItemSelected);
@@ -428,7 +429,8 @@ public partial class SimulatorShell
             Require("TiaWatchTableActivationSelectsIndependently", _ladderDocument.ActiveWatchTableIndex == 0
                 && Find<OptionButton>("WatchTableSelector").Selected == 0);
             var sourceWatchTableIndex = _ladderDocument.WatchTables.Count - 1;
-            var sourceWatchTableRow = FindTreeItem(projectTree.GetRoot(), $"watch-table:{sourceWatchTableIndex}")
+            var sourceWatchTableKey = EditorDocumentIdentity.ForWatchTable(_ladderDocument.WatchTables[sourceWatchTableIndex]);
+            var sourceWatchTableRow = FindTreeItem(projectTree.GetRoot(), sourceWatchTableKey)
                 ?? throw new InvalidOperationException("Commissioning watch table row missing before copy");
             sourceWatchTableRow.Select(0);
             projectTree.EmitSignal(Tree.SignalName.ItemSelected);
@@ -444,7 +446,9 @@ public partial class SimulatorShell
             copyWatchTableButton.EmitSignal(BaseButton.SignalName.Pressed);
             Refresh();
             var copyWatchTableIndex = _ladderDocument.WatchTables.Count - 1;
-            var copyWatchTableRow = FindTreeItem(projectTree.GetRoot(), $"watch-table:{copyWatchTableIndex}");
+            var copyWatchTableId = _ladderDocument.WatchTables[copyWatchTableIndex].Id;
+            var copyWatchTableKey = EditorDocumentIdentity.ForWatchTable(copyWatchTableId);
+            var copyWatchTableRow = FindTreeItem(projectTree.GetRoot(), copyWatchTableKey);
             var copyWatchCountPassed = _ladderDocument.WatchTables.Count == watchTablesBeforeCreate + 2;
             var copyWatchNamePassed = _ladderDocument.ActiveWatchTable.Name == "Commissioning Copy";
             var copyWatchMembershipPassed = _ladderDocument.WatchVariables.SequenceEqual(["start_command"], StringComparer.Ordinal);
@@ -455,7 +459,7 @@ public partial class SimulatorShell
                 copyWatchCountPassed && copyWatchNamePassed && copyWatchMembershipPassed
                 && copyWatchSelectorIndex == copyWatchTableIndex
                 && copyWatchTableRow is not null
-                && copyWatchTreeSelection == $"watch-table:{copyWatchTableIndex}");
+                && copyWatchTreeSelection == copyWatchTableKey);
 
             Find<Button>("RenameWatchTable").EmitSignal(BaseButton.SignalName.Pressed);
             var renameWatchTableDialog = Find<ConfirmationDialog>("RenameWatchTableDialog");
@@ -474,26 +478,64 @@ public partial class SimulatorShell
             Require("TiaWatchTableRenameCommitsAndKeepsSelection",
                 _ladderDocument.ActiveWatchTable.Name == "Commissioning QA"
                 && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex
-                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex}");
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == copyWatchTableKey);
 
             Find<Button>("MoveWatchTableUp").EmitSignal(BaseButton.SignalName.Pressed);
             Refresh();
             Require("TiaWatchTableMoveUpChangesActiveSelection",
                 _ladderDocument.ActiveWatchTableIndex == copyWatchTableIndex - 1
                 && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex - 1
-                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex - 1}");
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == copyWatchTableKey);
+            projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            Require("TiaWatchTableTreeActivationResolvesStableIdentityAfterReorder",
+                _ladderDocument.ActiveWatchTable.Id == copyWatchTableId
+                && EditorDocumentIdentity.ForWatchTable(_ladderDocument.ActiveWatchTable) == copyWatchTableKey);
             var watchMoveUndoWorked = TryUndoLadderEdit(out var watchMoveUndoDescription);
             var watchMoveUndoSelector = Find<OptionButton>("WatchTableSelector").Selected;
             var watchMoveUndoTree = projectTree.GetSelected()?.GetMetadata(0).AsString() ?? "<none>";
             Require($"TiaWatchTableMoveUndoRestoresActiveSelection [undo={watchMoveUndoWorked}:{watchMoveUndoDescription} active={_ladderDocument.ActiveWatchTableIndex} selector={watchMoveUndoSelector} tree={watchMoveUndoTree}]",
                 _ladderDocument.ActiveWatchTableIndex == copyWatchTableIndex
                 && watchMoveUndoSelector == copyWatchTableIndex
-                && watchMoveUndoTree == $"watch-table:{copyWatchTableIndex}");
+                && watchMoveUndoTree == copyWatchTableKey);
             TryRedoLadderEdit(out _);
             Require("TiaWatchTableMoveRedoRestoresActiveSelection",
                 _ladderDocument.ActiveWatchTableIndex == copyWatchTableIndex - 1
                 && Find<OptionButton>("WatchTableSelector").Selected == copyWatchTableIndex - 1
-                && projectTree.GetSelected()?.GetMetadata(0).AsString() == $"watch-table:{copyWatchTableIndex - 1}");
+                && projectTree.GetSelected()?.GetMetadata(0).AsString() == copyWatchTableKey);
+
+            Find<Button>("RemoveWatchTable").EmitSignal(BaseButton.SignalName.Pressed);
+            Refresh();
+            Require("TiaWatchTableTreeActivationRejectsDeletedStableIdentity",
+                !EditorDocumentIdentity.TryResolveWatchTableIndex(_ladderDocument, copyWatchTableKey, out _)
+                && FindTreeItem(projectTree.GetRoot(), copyWatchTableKey) is null);
+            var survivingWatchTable = _ladderDocument.WatchTables[0];
+            var survivingWatchTableKey = EditorDocumentIdentity.ForWatchTable(survivingWatchTable);
+            var survivingWatchTableRow = FindTreeItem(projectTree.GetRoot(), survivingWatchTableKey)
+                ?? throw new InvalidOperationException("Surviving watch table row missing after delete");
+            survivingWatchTableRow.Select(0);
+            projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            Require("TiaWatchTableTreeActivationDoesNotRetargetDeletedIdentity",
+                _ladderDocument.ActiveWatchTable.Id == survivingWatchTable.Id
+                && _ladderDocument.ActiveWatchTable.Id != copyWatchTableId);
+            TryUndoLadderEdit(out _); Refresh();
+            var restoredCopyWatchRow = FindTreeItem(projectTree.GetRoot(), copyWatchTableKey)
+                ?? throw new InvalidOperationException("Undo did not restore the deleted watch table row");
+            restoredCopyWatchRow.Select(0);
+            projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            Require("TiaWatchTableTreeActivationRestoresDeletedStableIdentityOnUndo",
+                EditorDocumentIdentity.TryResolveWatchTableIndex(_ladderDocument, copyWatchTableKey, out _)
+                && _ladderDocument.ActiveWatchTable.Id == copyWatchTableId);
+            TryRedoLadderEdit(out _); Refresh();
+            Require("TiaWatchTableTreeActivationKeepsDeletedIdentityStaleOnRedo",
+                !EditorDocumentIdentity.TryResolveWatchTableIndex(_ladderDocument, copyWatchTableKey, out _)
+                && FindTreeItem(projectTree.GetRoot(), copyWatchTableKey) is null);
+            TryUndoLadderEdit(out _); Refresh();
+            restoredCopyWatchRow = FindTreeItem(projectTree.GetRoot(), copyWatchTableKey)
+                ?? throw new InvalidOperationException("Undo did not restore the watch table after redo");
+            restoredCopyWatchRow.Select(0);
+            projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            Require("TiaWatchTableDeleteUndoReturnsToPriorFixture",
+                _ladderDocument.ActiveWatchTable.Id == copyWatchTableId);
 
             var watchTableBoundarySelector = Find<OptionButton>("WatchTableSelector");
             watchTableBoundarySelector.Select(0);

@@ -35,6 +35,17 @@ coding agent continuing RungProof development. It routes to focused references
 for the project map, controls and live-PLC boundaries, Siemens TIA evidence,
 and verification. Keep it aligned when those governing contracts change.
 
+## Siemens TIA Portal V21 UI parity
+
+The current main-screen and property-management acceptance ledger is
+`rungproof-next/docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md`; the active
+execution order and status dashboard is
+`rungproof-next/docs/TIA_PARITY_BATCH_PLAN.md`. Keep local source, automated
+gate, screen-control, and installed-TIA V21 evidence distinct. UI/property
+parity remains in progress, installed-TIA visual matching is unverified, and
+Demo 1–5 ladder-logic remediation stays deferred until the GUI/property gates
+are closed or each gap has an explicit accepted disposition.
+
 ## Verification boundary
 
 Successful build, unit-test, and headless Godot checks prove only the local

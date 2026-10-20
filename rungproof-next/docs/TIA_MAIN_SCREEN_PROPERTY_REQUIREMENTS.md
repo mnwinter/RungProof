@@ -112,13 +112,22 @@ that move without ladder-owned outputs.
 
 ### Current-source follow-up — 2026-10-20
 
+- The normal-renderer TIA editor-control sweep was rerun after the stable
+  watch-table identity change. It remains failed at 6/7 gates and 33/36
+  assertions (`externalTia=false`, `livePlc=false`). The console still reports
+  `TiaTagTableCreateAndPersist` failing even after its Boolean fixture address
+  was corrected from unsupported `%MB10` to `%M10.0`; the result artifact also
+  lists output copy/paste/delete isolation and route-convergence assertions as
+  failed. This run is a blocker signal, not a pass. The tag-table persistence
+  verifier and output-delete route results need separate diagnosis before the
+  gate can close.
 - A rerun of the project-tree gate found that refreshing after watch-table
   Undo/Redo could overwrite the history-restored active table index with the
   currently open tab's index. The refresh now updates tab presentation without
   mutating the selected table. The focused gate passes 14/14 gates and 100/100
   assertions, including watch-table Create/Undo/Redo and exact serialized state
   restoration. The current build succeeds with 0 warnings/errors and the
-  virtual-controller suite passes 394/394. The latest app-shell and project-tree
+  virtual-controller suite passes 395/395. The latest app-shell and project-tree
   verifier results remain local offline evidence; Godot reports renderer/ObjectDB
   RID leaks at verifier shutdown.
 - Independent code review found two structural issues. Watch rows still store
@@ -145,6 +154,16 @@ that move without ladder-owned outputs.
   Tags selection versus double-click activation. The table-selector refresh
   after a table rename remains unverified. No project was saved or loaded;
   runtime remained STOPPED and PLC DISCONNECTED.
+- A separate current-source screen walkthrough launched the ladder shell at
+  1600×900 with runtime STOPPED and PLC DISCONNECTED. It visibly verified
+  Show All Tags selection versus activation, the Tags and User Constants views,
+  Add draft/Cancel, valid Add/Apply, Edit/Cancel preserving selection, and Delete
+  removing the selected constant. Undo restore, System Constants, Save Workspace
+  As, tag-table management, Global DB actions, Watch interactions, and instance
+  DB layout were not reached because calibrated clicks did not produce a visible
+  transition; this is input-path uncertainty, not evidence those product actions
+  fail. No project was saved/loaded and no PLC action was used. The exact app,
+  bridge, tab, and listener were closed.
 - Schema 9 now stores stable watch-row IDs, symbolic or absolute-address
   references, display format, modify value, and comment. The editor renders an
   eight-column watch grid and wires row creation/removal/reorder, Add All, Clear,
@@ -166,7 +185,10 @@ that move without ladder-owned outputs.
   confirming a feedback gap. Invalid `%I0.8` was not entered because a confirmed
   Add Address click did not open its editor in this pass; Monitor and SIM MODIFY
   remained unavailable while PROGRAM NOT LOADED. No project was saved or loaded,
-  and the exact app/bridge/tab/listener were closed.
+  and the exact app/bridge/tab/listener were closed. A separate 1600×900 pass
+  later reported a visible red rejection label for an unsupported format, so
+  the feedback result conflicts and remains unresolved pending a current-source
+  retest; see the batch plan.
 - A separate scratch-only screen pass created an unsaved Global DB and visibly
   confirmed the five columns Name, Data Type, Start Value, Retain, and Comment,
   plus its optimized-access subset disclosure. The title/subtitle were readable

@@ -29,7 +29,7 @@ the GUI/property exit criteria are closed.
 
 | Order | Status | Exit condition |
 | --- | --- | --- |
-| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Partial | Current-source screen control opened Watch table 1 and verified Clear, Add Symbol, Add Address, row reorder/remove, Add All, Undo/Redo, and supported `Bool` formatting. A fresh 1600×900 pass confirmed unsupported BOOL display formats revert to Auto and produce a separate red rejection label while `PROGRAM NOT LOADED` status stays normal. The latest calibrated screen pass visibly rejected invalid `%I0.8` at five rows, accepted `%IX0.0` as an unresolved sixth row, and rejected duplicate alias `%I0.0` while keeping six rows. A loaded offline Watch pass edited `start_command` to `TRUE`, selected its MODIFY checkbox, and confirmed SIM MODIFY changed the monitor value from FALSE to TRUE while STOPPED and no physical PLC was connected. Global DB and Demo 5 instance DB layouts were inspected. Project → Save As opened the `Save offline Ladder project` picker; a source review then found and fixed File → Save Workspace As routing to the fixed last-workspace path instead of its destination picker. The fix passes the zero-warning build, 395-case offline suite, and headless app-shell verifier. A 1600×900 walkthrough visibly opened File but the bridge returned `Failed to fetch` on the selection click, so the picker was not reached and this route is not visually verified. No path was selected or saved. Global DB row actions and disk Save/Load, staged-form Apply/Discard/Cancel during save/load, running-scan Monitor behavior, PLC-tag/User-constant interactions, and remaining project Open actions still need visible walkthroughs. One brief upper-pane `PROGRAM LOADED` caption conflicted with the lower Watch status and remains unverified. Source/headless verification proves valid same-scene Open preserves the running program and scan, Verify + Load replaces it, unknown/mismatched source scenes are rejected before mutation, and a dirty cached target-scene draft survives rejection. |
+| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Partial | Current-source screen control opened Watch table 1 and verified Clear, Add Symbol, Add Address, row reorder/remove, Add All, Undo/Redo, and supported `Bool` formatting. Unsupported display-format feedback is unresolved: one 1600×900 pass saw a separate red rejection label, while a later focused pass reported Auto fallback without visible validation text. The latest calibrated screen pass visibly rejected invalid `%I0.8` at five rows, accepted `%IX0.0` as an unresolved sixth row, and rejected duplicate alias `%I0.0` while keeping six rows. A loaded offline Watch pass edited `start_command` to `TRUE`, selected its MODIFY checkbox, and confirmed SIM MODIFY changed the monitor value from FALSE to TRUE while STOPPED and no physical PLC was connected. Global DB and Demo 5 instance DB layouts were inspected. Project → Save As opened the `Save offline Ladder project` picker; a source review then found and fixed File → Save Workspace As routing to the fixed last-workspace path instead of its destination picker. The fix passes the zero-warning build, 395-case offline suite, and headless app-shell verifier. A 1600×900 walkthrough visibly opened File but the bridge returned `Failed to fetch` on the selection click, so the picker was not reached and this route is not visually verified. No path was selected or saved. Global DB row actions and disk Save/Load, staged-form Apply/Discard/Cancel during save/load, running-scan Monitor behavior, PLC tag-table management, System constants, User-constant Undo, and remaining project Open actions still need visible walkthroughs. A current screen pass verified User-constant Add/Apply/Cancel/Edit/Delete but did not reach those remaining paths because clicks produced no visible transition. One brief upper-pane `PROGRAM LOADED` caption conflicted with the lower Watch status and remains unverified. Source/headless verification proves valid same-scene Open preserves the running program and scan, Verify + Load replaces it, unknown/mismatched source scenes are rejected before mutation, and a dirty cached target-scene draft survives rejection. |
 | Tag-reference lifecycle integrity | Fixed in source; local regression suite passes | Symbolic CALL actuals block referenced-tag deletion and follow rename, including aggregate leaves, while literals, discards, stable IDs, and unresolved references remain unchanged. |
 | Remaining declared property features | Partial | Tag-table add/rename/empty-delete, watch-table lifecycle, and member/tag transactions already have source coverage. Remaining work includes block and tag-table duplication; typed User constants; a hardware-sourced, read-only System constants view when project metadata exists; physical tag-to-operand drag; and screen verification of Watch-table persistence. Watch monitor/modify was visibly exercised with an offline program loaded and no physical PLC. Keep undeveloped behavior disclosed. |
 | Instance DB presentation and semantics | Layout locally verified; editing remains read-only | Pair the six-column grouped table with installed TIA V21; add overrides only as a complete identity, validation, persistence, history, and runtime-initialization slice. |
@@ -406,6 +406,10 @@ It owns the detailed requirements and dependencies below.
 
 ## Current property-management batch result
 
+The detailed checkpoint below is historical; its 9-gate / 48-assertion counts
+are superseded by the later current-source result in
+`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md` (14 gates / 100 assertions).
+
 The project-tree gate previously reported Global DB `fields-persist` as failed
 because its test looked one child too far into a `HideRoot` declaration Tree.
 The gate now selects the actual row. This exposed a real production risk: a
@@ -422,12 +426,14 @@ is active. Local Windows mouse/keyboard input verified creating a DB, adding a
 BOOL member, editing its comment and Retain state, and returning to the tree.
 This is local app behavior, not installed-TIA comparison.
 
-The current local gaps are Watch table address/display-format/modify-value
-editing, PLC User/System constants and tag attributes, expanded Global DB
-columns/access modes, per-instance DB overrides/online values, full screen
-coverage across all supported property surfaces, and matched installed-TIA V21
-captures. Track these by the
-requirement IDs in the linked acceptance ledger, not as isolated fixes.
+The remaining local gaps are Watch-table Save/Load persistence and
+running-scan Monitor verification; User constants as executable LAD operands
+and physical tag-to-operand drag; block and tag-table duplication; full screen
+coverage for property validation, history, and project persistence; the
+instance DB Comment column at constrained widths; and matched installed-TIA
+V21 captures. Track these by the requirement IDs in the linked acceptance
+ledger, not as isolated fixes. The Watch display-format feedback observation
+also needs a current-source screen retest before it can be marked resolved.
 
 ## External blockers
 

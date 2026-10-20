@@ -297,6 +297,23 @@ internal static partial class Program
         True(migratedRoundTrip.IsReadable);
         Equal(string.Join(",", migrated.Document.WatchTables.Select(table => table.Id)),
             string.Join(",", migratedRoundTrip.Document!.WatchTables.Select(table => table.Id)));
+
+        document.SelectWatchTable(1);
+        var removedId = document.ActiveWatchTable.Id;
+        var staleKey = EditorDocumentIdentity.ForWatchTable(removedId);
+        history.Execute(document, "Remove watch table for identity check", () => True(document.RemoveActiveWatchTable()));
+        False(EditorDocumentIdentity.TryResolveWatchTableIndex(document, staleKey, out _));
+        True(history.Undo(document, out _));
+        True(EditorDocumentIdentity.TryResolveWatchTableIndex(document, staleKey, out var restoredIndex));
+        Equal(1, restoredIndex);
+        True(history.Redo(document, out _));
+        False(EditorDocumentIdentity.TryResolveWatchTableIndex(document, staleKey, out _));
+        var replacement = document.AddWatchTable("Replacement watch");
+        Equal(1, document.WatchTables.Count - 1);
+        False(EditorDocumentIdentity.TryResolveWatchTableIndex(document, staleKey, out _));
+        True(EditorDocumentIdentity.TryResolveWatchTableIndex(document,
+            EditorDocumentIdentity.ForWatchTable(replacement), out var replacementIndex));
+        Equal(1, replacementIndex);
     }
 
     private static void OpenBranchStatePersistsButCannotExportExecutableProgram()

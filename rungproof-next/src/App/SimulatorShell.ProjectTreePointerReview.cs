@@ -164,7 +164,8 @@ public partial class SimulatorShell
         await OpenProgramFixture();
         bottomPanel.Hide();
         await Frame();
-        var watchTableObject = await VerifyObject("watch-table:0",
+        var watchTableKey = EditorDocumentIdentity.ForWatchTable(_ladderDocument.WatchTables[0]);
+        var watchTableObject = await VerifyObject(watchTableKey,
             () => !bottomPanel.Visible && _ladderDocument.ActiveBlockIndex == 1,
             () => bottomPanel.Visible && bottomTabs.CurrentTab == 2
                 && _ladderDocument.ActiveWatchTableIndex == 0);
@@ -280,7 +281,9 @@ public partial class SimulatorShell
         var watchTableMutation = await VerifyProjectTreeCreation(
             "add-watch-table", "CreateWatchTableDialog", "AuditWatchTable99",
             () => _ladderDocument.WatchTables.Any(table => table.Name == "AuditWatchTable99"),
-            () => FindMetadata(projectTree.GetRoot(), $"watch-table:{watchCountBeforeMutation}")?.GetText(0)
+            () => _ladderDocument.WatchTables.Count == watchCountBeforeMutation + 1
+                && _ladderDocument.WatchTables.FirstOrDefault(table => table.Name == "AuditWatchTable99") is { } createdWatchTable
+                && FindMetadata(projectTree.GetRoot(), EditorDocumentIdentity.ForWatchTable(createdWatchTable))?.GetText(0)
                 .Contains("AuditWatchTable99", StringComparison.Ordinal) == true);
         var projectTreeMutations = blockMutation && tagTableMutation && watchTableMutation;
         GD.Print($"TIA_PROJECT_TREE_MUTATION_MATRIX_VERIFY {(projectTreeMutations ? "PASS" : "FAIL")} "

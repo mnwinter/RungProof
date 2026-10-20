@@ -454,7 +454,12 @@ public partial class SimulatorShell
             // The broad route physically checks click selection, double-click,
             // object/command activation, and returning from an instance DB.
             var activation = Gate("tia.project-tree.activation-semantics");
-            var activationRows = new[] { "program:0", "tag-table:", "tag-table:Default tag table", "watch-table:0", "add-block", "add-tag-table", "add-watch-table" };
+            var activationRows = new[]
+            {
+                "program:0", "tag-table:", "tag-table:Default tag table",
+                EditorDocumentIdentity.ForWatchTable(_ladderDocument.WatchTables[0]),
+                "add-block", "add-tag-table", "add-watch-table",
+            };
             var rowsPresent = activationRows.All(metadata => FindMetadata(tree.GetRoot(), metadata) is not null);
             // Focused Enter is already routed through the production Tree in the
             // editor-command verifier; prove it here on every command kind.
@@ -1034,7 +1039,7 @@ public partial class SimulatorShell
             Refresh();
             await Frames();
             var watchProjectTree = Find<Tree>("ProjectTree");
-            var secondWatchTreeRow = FindMetadata(watchProjectTree.GetRoot(), $"watch-table:{_ladderDocument.WatchTables.IndexOf(secondWatch)}");
+            var secondWatchTreeRow = FindMetadata(watchProjectTree.GetRoot(), EditorDocumentIdentity.ForWatchTable(secondWatch));
             if (secondWatchTreeRow is not null)
             {
                 secondWatchTreeRow.Select(0);

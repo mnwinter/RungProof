@@ -72,10 +72,14 @@ demo ownership, external-PLC, and commissioning boundaries.
 Read [references/tia-evidence.md](references/tia-evidence.md) before any TIA
 fidelity, LAD instruction, project-tree, online-state, or parity task.
 
-Use `rungproof-next/docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md` as the acceptance
-ledger and `rungproof-next/docs/TIA_PORTAL_PARITY_AUDIT.md` for detailed
-rationale and recorded evidence. Re-check current cells; never carry a past
-PASS to changed code without rerunning its evidence.
+For main-screen and property-management parity, use
+`rungproof-next/docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md` as the acceptance
+ledger and `rungproof-next/docs/TIA_PARITY_BATCH_PLAN.md` for the current work
+order/status. For LAD instruction semantics, use
+`rungproof-next/docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md`. Use
+`rungproof-next/docs/TIA_PORTAL_PARITY_AUDIT.md` for detailed rationale and
+recorded evidence. Re-check current cells; never carry a past PASS to changed
+code without rerunning its evidence.
 
 Official Siemens documentation establishes semantics and supported forms.
 RungProof captures establish RungProof behavior. Matched installed-TIA captures
