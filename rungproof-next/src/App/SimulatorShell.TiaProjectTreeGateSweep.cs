@@ -342,7 +342,9 @@ public partial class SimulatorShell
                 ?? throw new InvalidOperationException("TIA central tag document is unavailable.");
             var globalDbDocument = Find<Control>("GlobalDbDocument");
             var globalDbHeading = Find<RichTextLabel>("GlobalDbHeading");
-            var globalDbDeclarations = Find<Tree>("GlobalDbDeclarations");
+            var globalDbDeclarations = GetNodeOrNull<Tree>(projectWorkbenchPath
+                + "/EditorAndTasks/EditorAndInspector/ProgramEditor/GlobalDbDocument/GlobalDbDeclarations")
+                ?? throw new InvalidOperationException("TIA Global DB declaration grid is unavailable.");
             var instanceDbDocument = Find<VBoxContainer>("InstanceDbDocument");
             var instanceDbHeading = Find<Label>("InstanceDbHeading");
             var instanceDbDeclarations = Find<Tree>("InstanceDbDeclarations");
@@ -1226,7 +1228,9 @@ public partial class SimulatorShell
             var globalDbLabelHasNoInventedNumber = globalRowName == "StructuredGlobalData [DB]"
                 && title.Text.Contains("StructuredGlobalData [DB]", StringComparison.Ordinal)
                 && !title.Text.Contains("[DB2]", StringComparison.Ordinal);
-            var applyDeclaration = Find<Button>("AddInterface");
+            var applyDeclaration = GetNodeOrNull<Button>(projectWorkbenchPath
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/InterfaceCommands/AddInterface")
+                ?? throw new InvalidOperationException("TIA member Apply control is unavailable.");
             var newMemberButton = Find<Button>("NewInterface");
             var editSection = Find<OptionButton>("InterfaceSection");
             var editRetain = Find<CheckBox>("InterfaceRetain");
@@ -1396,9 +1400,14 @@ public partial class SimulatorShell
             var memberEditorButton = GetNodeOrNull<Button>(
                 projectWorkbenchPath + "/EditorAndTasks/EditorAndInspector/ProgramEditor/GlobalDbDocument/GlobalDbHeader/EditGlobalDbMembers")
                 ?? throw new InvalidOperationException("TIA Global DB member editor route is unavailable.");
-            var addMemberAction = Find<Button>("GlobalDbAddMember");
-            var editMemberAction = Find<Button>("GlobalDbEditMember");
-            var removeMemberAction = Find<Button>("GlobalDbRemoveMember");
+            var globalDbHeaderPath = projectWorkbenchPath
+                + "/EditorAndTasks/EditorAndInspector/ProgramEditor/GlobalDbDocument/GlobalDbHeader";
+            var addMemberAction = GetNodeOrNull<Button>(globalDbHeaderPath + "/GlobalDbAddMember")
+                ?? throw new InvalidOperationException("TIA Global DB Add Member control is unavailable.");
+            var editMemberAction = GetNodeOrNull<Button>(globalDbHeaderPath + "/GlobalDbEditMember")
+                ?? throw new InvalidOperationException("TIA Global DB Edit control is unavailable.");
+            var removeMemberAction = GetNodeOrNull<Button>(globalDbHeaderPath + "/GlobalDbRemoveMember")
+                ?? throw new InvalidOperationException("TIA Global DB Remove control is unavailable.");
             var projectTabs = originalProjectTabs
                 ?? throw new InvalidOperationException("TIA project tabs are unavailable.");
             // Resolve these layout controls from the TIA tab's full path. The
@@ -1413,15 +1422,48 @@ public partial class SimulatorShell
             var memberProjectTreeShortcut = GetNodeOrNull<Button>(
                 projectWorkbenchPath + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/ProjectTreeShortcutSlot/ShowProjectTree")
                 ?? throw new InvalidOperationException("TIA Project Tree shortcut is unavailable.");
+            var cancelMemberButton = GetNodeOrNull<Button>(projectWorkbenchPath
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/InterfaceCommands/CancelInterface")
+                ?? throw new InvalidOperationException("TIA Global DB member Cancel control is unavailable.");
+            await Activate($"program:{globalIndex}");
+            if (!globalDbDocument.IsVisibleInTree() || !addMemberAction.IsVisibleInTree())
+                throw new InvalidOperationException("The TIA Global DB declaration document must be visibly active before testing + MEMBER.");
+            cancelMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            await Activate($"program:{globalIndex}");
+            if (!addMemberAction.IsVisibleInTree() || !projectDock.IsVisibleInTree())
+                throw new InvalidOperationException("The TIA Global DB Add Member test requires a visible, clean declaration grid.");
+            var directAddPreDetail = $"tab={projectTabs.CurrentTab} dbVisible={globalDbDocument.IsVisibleInTree()} buttonVisible={addMemberAction.IsVisibleInTree()} disabled={addMemberAction.Disabled} buttonText={addMemberAction.Text} activeKey={_getActiveTiaEditorDocumentKey?.Invoke()} pending={_pendingEditorForms.Any(form => form.HasPending())} dialog={_pendingEditorDialog?.Visible} status={output.Text}";
             var directAddBefore = LadderEditorProjectJson.Save(_ladderDocument);
             addMemberAction.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
-            var directAddOpened = projectTabs.CurrentTab == 2 && applyDeclaration.Text == "+ MEMBER"
-                && Find<LineEdit>("InterfaceName").Text.Length == 0;
+            var directAddPostDetail = $"tab={projectTabs.CurrentTab} dbVisible={globalDbDocument.IsVisibleInTree()} buttonVisible={addMemberAction.IsVisibleInTree()} disabled={addMemberAction.Disabled} activeKey={_getActiveTiaEditorDocumentKey?.Invoke()} pending={_pendingEditorForms.Any(form => form.HasPending())} dialog={_pendingEditorDialog?.Visible} status={output.Text}";
+            var projectObjectsRoot = projectWorkbenchPath
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/ProjectObjectScroll/ObjectContent";
+            var directAddName = GetNodeOrNull<LineEdit>(projectObjectsRoot + "/InterfaceFields/InterfaceName")
+                ?? throw new InvalidOperationException("TIA Global DB member Name field is unavailable.");
+            var directAddTree = GetNodeOrNull<Tree>(projectObjectsRoot + "/BlockInterface")
+                ?? throw new InvalidOperationException("TIA Global DB member declaration table is unavailable.");
+            var directAddButton = GetNodeOrNull<Button>(projectWorkbenchPath
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/InterfaceCommands/AddInterface")
+                ?? throw new InvalidOperationException("TIA Global DB Apply Member control is unavailable.");
+            var directAddHeading = GetNodeOrNull<Label>(projectWorkbenchPath
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/ProjectTreeHeading")?.Text
+                ?? "<missing>";
+            var directAddStatus = output.Text;
+            var directAddVisibleState = projectTabs.CurrentTab == 2
+                && projectDock.IsVisibleInTree()
+                && directAddHeading == "Project objects"
+                && directAddTree.IsVisibleInTree()
+                && directAddName.IsVisibleInTree()
+                && directAddButton.IsVisibleInTree()
+                && directAddStatus.Contains("New Global DB declaration", StringComparison.OrdinalIgnoreCase);
+            var directAddOpened = directAddVisibleState && directAddButton.Text == "+ MEMBER"
+                && directAddName.Text.Length == 0;
             var beforeEmptyMemberApply = LadderEditorProjectJson.Save(_ladderDocument);
             var undoBeforeEmptyMemberApply = _ladderHistory.CanUndo;
-            var emptyMemberName = Find<LineEdit>("InterfaceName");
-            applyDeclaration.EmitSignal(BaseButton.SignalName.Pressed);
+            var emptyMemberName = directAddName;
+            directAddButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var emptyMemberFeedback = output.Text.Contains("non-empty declaration name", StringComparison.OrdinalIgnoreCase);
             var emptyMemberFocused = emptyMemberName.HasFocus();
@@ -1429,7 +1471,7 @@ public partial class SimulatorShell
             var emptyMemberUndoUnchanged = _ladderHistory.CanUndo == undoBeforeEmptyMemberApply;
             var emptyMemberRejected = emptyMemberFeedback && emptyMemberFocused
                 && emptyMemberDocumentUnchanged && emptyMemberUndoUnchanged;
-            Find<Button>("CancelInterface").EmitSignal(BaseButton.SignalName.Pressed);
+            cancelMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var directAddIsDraftOnly = LadderEditorProjectJson.Save(_ladderDocument) == directAddBefore
                 && !_pendingEditorForms.Any(form => form.HasPending());
@@ -1442,7 +1484,7 @@ public partial class SimulatorShell
             await Frames();
             var directEditLoaded = projectTabs.CurrentTab == 2 && applyDeclaration.Text == "APPLY MEMBER"
                 && Find<LineEdit>("InterfaceName").Text == "TargetSpeed";
-            Find<Button>("CancelInterface").EmitSignal(BaseButton.SignalName.Pressed);
+            cancelMemberButton.EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             var directGridActions = addMemberAction.IsVisibleInTree() && editMemberAction.IsVisibleInTree()
                 && removeMemberAction.IsVisibleInTree() && directAddOpened && directAddIsDraftOnly && directEditLoaded;
@@ -1959,7 +2001,7 @@ public partial class SimulatorShell
                 + $"split={projectSplit.Size.X}");
             globalGate.Set("tree-return-reopens-global-db", globalDbReopenedAfterTree, globalDbReopenDetail);
             globalGate.Set("declaration-grid-actions", directGridActions && removeResolvesPending,
-                $"addOpensDraft={directAddOpened} addIsAtomic={directAddIsDraftOnly} editLoadsSelection={directEditLoaded} removeResolvesDraft={removeResolvesPending}");
+                $"addOpensDraft={directAddOpened} addVisibleState={directAddVisibleState}[tab={projectTabs.CurrentTab} dock={projectDock.IsVisibleInTree()} heading={directAddHeading} tree={directAddTree.IsVisibleInTree()} name={directAddName.IsVisibleInTree()} apply={directAddButton.IsVisibleInTree()} status={output.Text}] pre=[{directAddPreDetail}] post=[{directAddPostDetail}] addIsAtomic={directAddIsDraftOnly} editLoadsSelection={directEditLoaded} removeResolvesDraft={removeResolvesPending}");
             globalGate.Set("edit-selection-block-scoped", selectionLoadedBeforeSwitch && editSelectionClearedOnSwitch,
                 $"loadedBeforeSwitch={selectionLoadedBeforeSwitch} clearedOnSwitch={editSelectionClearedOnSwitch} section={editSection.GetItemText(editSection.Selected)}");
             globalGate.Set("block-switch-does-not-mutate", otherDbUnchangedOnSwitch,

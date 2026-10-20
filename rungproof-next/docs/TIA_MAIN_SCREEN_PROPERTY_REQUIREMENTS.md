@@ -1324,10 +1324,18 @@ unsaved Global DB `DB1` to be created. Its document showed the Name, Data Type,
 Start Value, Retain, and Comment declaration grid and disclosed the supported
 optimized-access offline subset. No Save, Load, Run, or Connect action occurred.
 
-One precise click on **+ MEMBER** produced no visible response in this pass, so
-the action is NOT VERIFIED and requires a focused retry. This does not erase
-the earlier screen-control evidence for member editing, cancel, apply, and
-remove; those were separate interactions. Demo 5 DB101/DB102 screens were not
-reached because loading a project was outside this bounded pass. Runtime stayed
-STOPPED and PLC DISCONNECTED; the scratch app, bridge, and listener were closed.
-This is current RungProof UI evidence only, not installed-TIA V21 comparison.
+The earlier bridge attempts mixed browser-page coordinates with displayed
+image-local coordinates, so an HTTP 200 did not mean the intended control had
+been clicked. After calibrating the bridge's image-local coordinate fields, the
+screen pass visibly opened **+ MEMBER** and showed the Project objects dock,
+blank Name field, declaration table, and Apply control. It typed `cancel_probe`
+and canceled the form, then typed `applied_probe` and applied it as `BOOL` with
+start value `FALSE`. The row appeared in both the DB declaration grid and the
+member table. Toolbar Undo removed the row and Redo restored it; a final Undo
+left the scratch DB without the test row. These interactions demonstrate the
+current RungProof behavior; they do not establish installed-TIA V21 parity.
+
+Demo 5 DB101/DB102 screens were not reached because loading a project was
+outside these bounded passes. Runtime stayed STOPPED and PLC DISCONNECTED; no
+Save, Load, Run, or Connect action occurred. Each scratch app, bridge, and
+listener was closed.

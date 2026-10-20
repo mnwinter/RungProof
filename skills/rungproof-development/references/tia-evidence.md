@@ -30,9 +30,13 @@ For a disposable normal-renderer screen-control pass, use the supported
 `--app-shell --shell-view=ladder` launch when the startup acknowledgement blocks
 input. This opens the Ladder workspace without changing the user's safety-notice
 setting. Pin any local screen bridge to that exact process ID, use fresh
-screenshots to calibrate natural image coordinates, and confirm each visible
-state change before recording a click as successful. Close the exact test
-process, bridge, tab, and listener afterward.
+screenshots to calibrate the displayed image bounds and pixel-to-screen scale,
+and keep image-local coordinates separate from browser-page coordinates. An
+HTTP success response proves input delivery only; confirm the exact row
+selection, heading, dialog, or form transition before recording a click as
+successful. If a nearby control activates, stop and recalibrate rather than
+inferring that the intended action is broken. Close the exact test process,
+bridge, tab, and listener afterward.
 
 ## Instruction change trace
 
