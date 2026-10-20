@@ -39,6 +39,18 @@ public sealed record PlcVariable(
     string Comment = ""
 );
 
+/// <summary>
+/// A PLC-wide symbolic constant declared in a tag table. Constants are editor
+/// metadata only; they are never mutable runtime tags or PLC I/O points.
+/// </summary>
+public sealed record PlcUserConstant(
+    string Id,
+    string Name,
+    PlcVariableType Type,
+    string Value,
+    string TagTable,
+    string Comment = "");
+
 public enum LadderNodeKind
 {
     Contact,

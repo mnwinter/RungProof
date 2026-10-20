@@ -6,7 +6,7 @@ using System.Linq;
 namespace RungProof.Next.VirtualController;
 
 public enum ControllerCompletion { NoExecution, Completed, Aborted, PublicationFailed }
-public enum ControllerPublicationKind { Loaded, Reset, Run, Stop, Pause, ForceChanged, ScanCompleted, ScanAborted, PublicationFailed }
+public enum ControllerPublicationKind { Loaded, Reset, Run, Stop, Pause, ForceChanged, ValueModified, ScanCompleted, ScanAborted, PublicationFailed }
 public enum InstructionWriteDisposition { NotApplicable, SkippedDisabled, WrittenChanged, WrittenSameValue, StateUpdatedChanged, StateUpdatedSameValue, RetainedNoWrite, FailedNoWrite, FailedClearedDestination, FailedInvalidValueWritten, FailedErrorValueWritten }
 public enum ObservationUnavailableReason { None, NoProgramLoaded, DraftMismatch, InvalidDraft, NoExecutionYet, NotEvaluatedThisScan, ActionDisabled, PartialScanNotReached, ObservationCapacityExceeded, ContextNotCaptured, HistoryEvicted, OperandMissing, UnsupportedRuntimeBinding, NotApplicable, CaptureFault }
 [Flags] public enum ControllerPhaseCompletion { None=0, InputSampled=1, ProgramExecuted=2, OutputsCommitted=4, PlantAdvanced=8, PostPlantSampled=16 }

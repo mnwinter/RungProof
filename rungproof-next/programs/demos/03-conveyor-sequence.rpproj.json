@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 9,
   "kind": "rungproof-ladder-project",
   "id": "demo-3-conveyor-sequence",
   "name": "Conveyor_Sequence_Main",
@@ -355,8 +355,65 @@
     "seal_in",
     "conveyor_running"
   ],
+  "watchTables": [
+    {
+      "id": "default-watch-table-1",
+      "name": "Watch table 1",
+      "variables": [
+        "start_command",
+        "stop_command",
+        "simulated_photoeye",
+        "seal_in",
+        "conveyor_running"
+      ],
+      "rows": [
+        {
+          "id": "demo-3-conveyor-sequence-watch-1-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "start_command",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-3-conveyor-sequence-watch-1-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "stop_command",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-3-conveyor-sequence-watch-1-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "simulated_photoeye",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-3-conveyor-sequence-watch-1-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "seal_in",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-3-conveyor-sequence-watch-1-row-5",
+          "referenceKind": "Symbolic",
+          "reference": "conveyor_running",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
   "instances": [],
   "tagTables": [
     "Default tag table"
-  ]
+  ],
+  "userConstants": []
 }

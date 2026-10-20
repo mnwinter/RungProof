@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 9,
   "kind": "rungproof-ladder-project",
   "id": "demo-2-delayed-lamp",
   "name": "Delayed_Lamp_Main",
@@ -224,8 +224,47 @@
     "delay_timer",
     "delayed_lamp"
   ],
+  "watchTables": [
+    {
+      "id": "default-watch-table-1",
+      "name": "Watch table 1",
+      "variables": [
+        "timer_request",
+        "delay_timer",
+        "delayed_lamp"
+      ],
+      "rows": [
+        {
+          "id": "demo-2-delayed-lamp-watch-1-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "timer_request",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-2-delayed-lamp-watch-1-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "delay_timer",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-2-delayed-lamp-watch-1-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "delayed_lamp",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
   "instances": [],
   "tagTables": [
     "Default tag table"
-  ]
+  ],
+  "userConstants": []
 }

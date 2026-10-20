@@ -105,6 +105,12 @@ public partial class SimulatorShell
                 ("return-restores-project-tree", "the detail-view return action restores the project tree without changing project content"),
                 ("project-tree-shortcut-restores-tree", "a pointer click on the project-dock TREE shortcut returns to the project tree without activating Add Block"),
             ],
+            ["tia.project-tree.user-constant-validation"] =
+            [
+                ("invalid-name-has-inline-feedback", "an invalid User constant name displays inline validation and does not mutate the project"),
+                ("correcting-name-clears-feedback", "editing the invalid name clears stale validation feedback"),
+                ("cancel-discards-invalid-draft", "Cancel closes the invalid draft without changing the project"),
+            ],
             ["tia.project-tree.create-block"] =
             [
                 ("selection-versus-dialog", "selection does not open the dialog and activation does"),
@@ -130,6 +136,8 @@ public partial class SimulatorShell
                 ("selection-versus-dialog", "selection does not open the dialog and activation does"),
                 ("invalid-is-atomic", "blank and case-insensitive duplicate names are rejected without history mutation"),
                 ("valid-create-persists", "valid creation persists with independent symbols and exact tree row"),
+                ("central-document-body", "opening a watch table shows its title and rows in the central editor body, and reactivation updates that body"),
+                ("stable-editor-documents", "each watch table has a distinct stable editor tab that reactivates its exact table after reordering"),
                 ("undo-redo-exact", "Undo removes and Redo restores the exact table"),
                 ("navigation-is-clean", "selecting another table is navigation rather than a content edit"),
             ],
@@ -138,6 +146,7 @@ public partial class SimulatorShell
                 ("row-under-program-blocks", "the Global DB row appears under Program blocks"),
                 ("block-number-not-inferred-from-row-order", "Global DB tree and document labels do not derive DB numbers from block order"),
                 ("activation-opens-declarations", "activation opens declarations and not a LAD canvas"),
+                ("tree-return-reopens-global-db", "after returning from Global DB member editing to the project tree, reopening the same DB restores its declaration document"),
                 ("empty-member-name-rejected", "applying a blank member name shows validation, focuses Name, and leaves the DB and Undo history unchanged"),
                 ("fields-persist", "Name, Data type, Start value, Retain, and Comment persist"),
                 ("declaration-grid-inline-edit", "all five Global DB fields render as editable cells, with Retain shown as a checkbox"),
@@ -169,6 +178,9 @@ public partial class SimulatorShell
                 ("definition-is-read-only", "the read-only instance table renders inherited defaults for FB Input, Output, and Static members, renders modeled IEC timer/counter member names and types, excludes TEMP locals, and discloses unsupported properties"),
                 ("focused-enter-opens-selected-db", "with the exact instance DB row selected and Project Tree focused, Enter opens that DB and reports the focus state before activation"),
                 ("declaration-grid-reflows-live", "the open instance DB grid changes column widths and font size across narrow and wide window resizes in both directions"),
+                ("owner-identity-survives-reassignment", "an open FB instance DB tab follows its stable owner after DB reassignment and cannot retarget a new owner that reuses the old number"),
+                ("close-active-instance-db-skips-deleted-tabs", "closing an active instance DB selects a live document and never falls back to tabs whose FB owner was deleted"),
+                ("deleted-timer-counter-db-tabs-excluded-from-fallback", "deleted IEC timer and counter rung owners remain disabled and are skipped when the active instance DB tab closes"),
                 ("owner-return-restores-editor", "returning to the owner restores the correct block title and canvas"),
             ],
             ["tia.project-tree.call-drag-drop"] =
@@ -329,6 +341,7 @@ public partial class SimulatorShell
             var tagDocument = GetNodeOrNull<ScrollContainer>(editorRoot + "/PLC tags")
                 ?? throw new InvalidOperationException("TIA central tag document is unavailable.");
             var globalDbDocument = Find<Control>("GlobalDbDocument");
+            var globalDbHeading = Find<RichTextLabel>("GlobalDbHeading");
             var globalDbDeclarations = Find<Tree>("GlobalDbDeclarations");
             var instanceDbDocument = Find<VBoxContainer>("InstanceDbDocument");
             var instanceDbHeading = Find<Label>("InstanceDbHeading");
@@ -744,6 +757,9 @@ public partial class SimulatorShell
                     .Select(instance => instance.InstanceDataBlock?.Number)
                     .FirstOrDefault(number => number.HasValue)
                     ?? throw new InvalidOperationException("Project-replacement gate requires an instance DB.");
+                var staleInstanceId = _ladderDocument.Instances
+                    .First(instance => instance.InstanceDataBlock?.Number == staleDbNumber).Id;
+                var staleDbDocumentKey = EditorDocumentIdentity.ForInstanceDb($"fb:{staleInstanceId}");
                 await Activate("tag-table:Default tag table");
                 await Activate($"instance-db:{staleDbNumber}");
                 var staleBlockIndex = _ladderDocument.Blocks.FindIndex(block => block.Id == staleBlock.Id);
@@ -756,7 +772,7 @@ public partial class SimulatorShell
                     .ToArray();
                 var previousInitialId = _ladderDocument.Blocks[0].Id;
                 var staleDocumentsWereOpen = beforeReplacementKeys.Contains("tags:Default tag table", StringComparer.Ordinal)
-                    && beforeReplacementKeys.Contains($"instance-db:{staleDbNumber}", StringComparer.Ordinal)
+                    && beforeReplacementKeys.Contains(staleDbDocumentKey, StringComparer.Ordinal)
                     && beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(previousInitialId), StringComparer.Ordinal)
                     && beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(staleBlock.Id), StringComparer.Ordinal);
 
@@ -802,7 +818,7 @@ public partial class SimulatorShell
                 var projectLocalIdCollision = beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(previousInitialId), StringComparer.Ordinal)
                     && beforeReplacementKeys.Contains(EditorDocumentIdentity.ForBlock(staleBlock.Id), StringComparer.Ordinal)
                     && replacementMainId == previousInitialId && replacementHelperId == staleBlock.Id;
-                var projectLocalDbNumberCollision = beforeReplacementKeys.Contains($"instance-db:{staleDbNumber}", StringComparer.Ordinal)
+                var projectLocalDbNumberCollision = beforeReplacementKeys.Contains(staleDbDocumentKey, StringComparer.Ordinal)
                     && replacementOpened
                     && _ladderDocument.Instances.Any(instance => instance.InstanceDataBlock?.Number == staleDbNumber);
                 replacementTabsPassed = staleDocumentsWereOpen && replacementOpened && exactNewDocumentSelected
@@ -950,6 +966,38 @@ public partial class SimulatorShell
                 $"enabled={emptyDeleteEnabled} deleted={emptyTableDeleted} undo={deleteEmptyUndo} redo={deleteEmptyRedo}");
             tagGate.Finish();
 
+            var userConstantGate = Gate("tia.project-tree.user-constant-validation");
+            var userConstantBaseline = LadderEditorProjectJson.Save(_ladderDocument);
+            await Activate("tag-table:Default tag table");
+            Find<Button>("UserConstantsTab").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            Find<Button>("AddUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+            var userConstantName = Find<LineEdit>("UserConstantName");
+            var userConstantValidation = Find<Label>("UserConstantValidationMessage");
+            userConstantName.Text = "invalid\"constant";
+            Find<Button>("ApplyUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var invalidUserConstantFeedback = userConstantValidation.Visible
+                && userConstantValidation.Text.Length > 0
+                && LadderEditorProjectJson.Save(_ladderDocument) == userConstantBaseline;
+            userConstantGate.Set("invalid-name-has-inline-feedback", invalidUserConstantFeedback,
+                $"visible={userConstantValidation.Visible} message={userConstantValidation.Text} unchanged={LadderEditorProjectJson.Save(_ladderDocument) == userConstantBaseline}");
+
+            userConstantName.Text = "GateConstant";
+            userConstantName.EmitSignal(LineEdit.SignalName.TextChanged, userConstantName.Text);
+            await Frames();
+            var userConstantFeedbackCleared = !userConstantValidation.Visible
+                && userConstantValidation.Text.Length == 0;
+            userConstantGate.Set("correcting-name-clears-feedback", userConstantFeedbackCleared,
+                $"visible={userConstantValidation.Visible} messageLength={userConstantValidation.Text.Length}");
+            Find<Button>("CancelUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var userConstantCancelAtomic = !Find<Control>("UserConstantForm").Visible
+                && LadderEditorProjectJson.Save(_ladderDocument) == userConstantBaseline;
+            userConstantGate.Set("cancel-discards-invalid-draft", userConstantCancelAtomic,
+                $"formClosed={!Find<Control>("UserConstantForm").Visible} unchanged={LadderEditorProjectJson.Save(_ladderDocument) == userConstantBaseline}");
+            userConstantGate.Finish();
+
             var watchGate = Gate("tia.project-tree.create-watch-table");
             var watchSnapshot = _ladderDocument.CaptureSnapshot();
             _ladderHistory.Clear();
@@ -962,21 +1010,79 @@ public partial class SimulatorShell
             createWatchDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
             await Frames();
             var watchAfterCreate = LadderEditorProjectJson.Save(_ladderDocument);
+            var watchDocument = Find<Control>("WatchTableDocument");
+            var watchDocumentGrid = Find<Tree>("WatchTableDocumentGrid");
+            var watchDocumentTitle = Find<Label>("WatchTableDocumentTitle");
+            var editorTabTitle = Find<Label>("EditorTabTitle");
+            var centralWatchDocumentOpened = watchDocument.IsVisibleInTree()
+                && !canvas.IsVisibleInTree()
+                && watchDocumentTitle.Text == _ladderDocument.ActiveWatchTable.Name
+                && editorTabTitle.Text.Contains(_ladderDocument.ActiveWatchTable.Name, StringComparison.Ordinal)
+                && watchDocumentGrid.GetRoot()?.GetChildCount() == _ladderDocument.ActiveWatchTable.Variables.Count;
             var createdWatch = !_ladderDocument.WatchTables[0].Variables.Contains("structured-only", StringComparer.Ordinal)
                 && _ladderDocument.WatchTables.Any(table => table.Name == "Structured Watch")
                 && _ladderDocument.ActiveWatchTable.Name == "Structured Watch";
+            var firstWatch = _ladderDocument.ActiveWatchTable;
+            var firstWatchId = firstWatch.Id;
+            var firstWatchKey = EditorDocumentIdentity.ForWatchTable(firstWatch);
+            var firstWatchTab = CaptureEditorDocumentTabs().Any(tab => tab.Key == firstWatchKey);
+            var watchCreateUndo = TryUndoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == watchBeforeCreate;
+            var watchCreateRedo = TryRedoLadderEdit(out _)
+                && LadderEditorProjectJson.Save(_ladderDocument) == watchAfterCreate;
+            var secondWatch = _ladderDocument.AddWatchTable("Navigation Watch");
+            Refresh();
+            await Frames();
+            var watchProjectTree = Find<Tree>("ProjectTree");
+            var secondWatchTreeRow = FindMetadata(watchProjectTree.GetRoot(), $"watch-table:{_ladderDocument.WatchTables.IndexOf(secondWatch)}");
+            if (secondWatchTreeRow is not null)
+            {
+                secondWatchTreeRow.Select(0);
+                watchProjectTree.EmitSignal(Tree.SignalName.ItemActivated);
+                await Frames();
+            }
+            var secondWatchKey = EditorDocumentIdentity.ForWatchTable(secondWatch);
+            var watchTabsBeforeReorder = CaptureEditorDocumentTabs();
+            var bothWatchDocumentsOpen = firstWatchTab
+                && watchTabsBeforeReorder.Any(tab => tab.Key == firstWatchKey)
+                && watchTabsBeforeReorder.Any(tab => tab.Key == secondWatchKey)
+                && string.Equals(_getActiveTiaEditorDocumentKey?.Invoke(), secondWatchKey, StringComparison.Ordinal);
+            _ladderDocument.SelectWatchTable(_ladderDocument.WatchTables.IndexOf(secondWatch));
+            var watchReordered = _ladderDocument.MoveActiveWatchTable(-1);
+            Refresh();
+            var watchDocumentTabs = Find<HBoxContainer>("EditorDocuments");
+            var firstWatchItem = watchDocumentTabs.GetChildren().OfType<HBoxContainer>()
+                .FirstOrDefault(item => item.GetMeta("editorDocumentKey").AsString() == firstWatchKey);
+            if (firstWatchItem?.GetChild(0) is Button firstWatchButton)
+            {
+                firstWatchButton.EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+            }
+            var firstWatchReactivated = _ladderDocument.ActiveWatchTable.Id == firstWatchId
+                && string.Equals(_getActiveTiaEditorDocumentKey?.Invoke(), firstWatchKey, StringComparison.Ordinal);
+            var secondWatchItem = watchDocumentTabs.GetChildren().OfType<HBoxContainer>()
+                .FirstOrDefault(item => item.GetMeta("editorDocumentKey").AsString() == secondWatchKey);
+            if (secondWatchItem?.GetChild(0) is Button secondWatchButton)
+            {
+                secondWatchButton.EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
+            }
+            var secondWatchReactivated = _ladderDocument.ActiveWatchTable.Id == secondWatch.Id
+                && string.Equals(_getActiveTiaEditorDocumentKey?.Invoke(), secondWatchKey, StringComparison.Ordinal)
+                && watchDocument.IsVisibleInTree()
+                && watchDocumentTitle.Text == secondWatch.Name
+                && editorTabTitle.Text.Contains(secondWatch.Name, StringComparison.Ordinal)
+                && watchDocumentGrid.GetRoot()?.GetChildCount() == secondWatch.Variables.Count;
+            var stableWatchDocuments = bothWatchDocumentsOpen && watchReordered && firstWatchReactivated && secondWatchReactivated;
+            var watchBeforeDuplicate = LadderEditorProjectJson.Save(_ladderDocument);
             createWatchDialog.PopupCentered();
             createWatchName.Text = "structured WATCH";
             createWatchDialog.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
             await Frames();
             var duplicateRejected = createWatchDialog.Visible
                 && createWatchError.Text.Contains("already exists", StringComparison.OrdinalIgnoreCase)
-                && LadderEditorProjectJson.Save(_ladderDocument) == watchAfterCreate;
+                && LadderEditorProjectJson.Save(_ladderDocument) == watchBeforeDuplicate;
             createWatchDialog.Hide();
-            var watchCreateUndo = TryUndoLadderEdit(out _)
-                && LadderEditorProjectJson.Save(_ladderDocument) == watchBeforeCreate;
-            var watchCreateRedo = TryRedoLadderEdit(out _)
-                && LadderEditorProjectJson.Save(_ladderDocument) == watchAfterCreate;
             var watchCreateSavedLoaded = LadderEditorProjectJson.Load(watchAfterCreate) is { IsReadable: true, Document: not null } watchLoaded
                 && LadderEditorProjectJson.Save(watchLoaded.Document) == watchAfterCreate;
             var watchNavBefore = LadderEditorProjectJson.Save(_ladderDocument);
@@ -986,6 +1092,10 @@ public partial class SimulatorShell
             watchGate.Set("selection-versus-dialog", broadPass, "physical selection/double-click dialog route");
             watchGate.Set("invalid-is-atomic", broadPass && duplicateRejected, $"physical={broadPass} caseInsensitiveDuplicateRejected={duplicateRejected}");
             watchGate.Set("valid-create-persists", broadPass && createdWatch && watchCreateSavedLoaded, $"physical={broadPass} created={createdWatch} saveLoad={watchCreateSavedLoaded}");
+            watchGate.Set("central-document-body", centralWatchDocumentOpened && secondWatchReactivated,
+                $"firstVisible={centralWatchDocumentOpened} title={watchDocumentTitle.Text} activeTab={editorTabTitle.Text} rows={watchDocumentGrid.GetRoot()?.GetChildCount() ?? 0} expected={_ladderDocument.ActiveWatchTable.Variables.Count}");
+            watchGate.Set("stable-editor-documents", stableWatchDocuments,
+                $"bothOpen={bothWatchDocumentsOpen} reordered={watchReordered} firstReactivated={firstWatchReactivated} secondReactivated={secondWatchReactivated}");
             watchGate.Set("undo-redo-exact", watchCreateUndo && watchCreateRedo, $"undo={watchCreateUndo} redo={watchCreateRedo}");
             watchGate.Set("navigation-is-clean", watchNavClean, "serialized project content unchanged by active-table selection");
             watchGate.Finish();
@@ -1004,13 +1114,14 @@ public partial class SimulatorShell
             _ladderDocument.SelectWatchTable(activeWatchIndex);
             Refresh(); await Frames();
             var watchRows = Find<Tree>("WatchTable");
+            var firstWatchRowId = activeWatch.Rows.First(row => row.Reference == watchSymbols[0]).Id;
             var selectedWatchRow = watchRows.GetRoot()?.GetFirstChild();
-            while (selectedWatchRow is not null && selectedWatchRow.GetMetadata(0).AsString() != watchSymbols[0])
+            while (selectedWatchRow is not null && selectedWatchRow.GetMetadata(0).AsString() != firstWatchRowId)
                 selectedWatchRow = selectedWatchRow.GetNext();
             selectedWatchRow?.Select(0);
             watchRows.EmitSignal(Tree.SignalName.ItemSelected);
             await Frames();
-            var selectedWatchSymbol = watchRows.GetSelected()?.GetMetadata(0).AsString() == watchSymbols[0];
+            var selectedWatchSymbol = watchRows.GetSelected()?.GetMetadata(0).AsString() == firstWatchRowId;
             var beforeWatchSymbolRemove = LadderEditorProjectJson.Save(_ladderDocument);
             _ladderHistory.Clear();
             Find<Button>("RemoveWatchSymbol").EmitSignal(BaseButton.SignalName.Pressed);
@@ -1023,8 +1134,8 @@ public partial class SimulatorShell
                 && activeWatchAfterRemove.Variables.SequenceEqual([watchSymbols[1]], StringComparer.Ordinal)
                 && otherWatchAfterRemove.Variables.SequenceEqual([watchSymbols[0]], StringComparer.Ordinal)
                 && _ladderDocument.WatchTables.Count == watchRemoveFixture.WatchTables!.Count + 2
-                && Find<Label>("WatchStatus").Text.Contains("1 SYMBOL(S)", StringComparison.Ordinal)
-                && watchRows.GetRoot()?.GetFirstChild()?.GetMetadata(0).AsString() == watchSymbols[1];
+                && Find<Label>("WatchStatus").Text.Contains("1 ROW(S)", StringComparison.Ordinal)
+                && watchRows.GetRoot()?.GetFirstChild()?.GetMetadata(0).AsString() == activeWatchAfterRemove.Rows[0].Id;
             var watchRemovalStatus = Find<Label>("WatchStatus").Text;
             var undoWatchSymbolRemove = TryUndoLadderEdit(out _)
                 && LadderEditorProjectJson.Save(_ladderDocument) == beforeWatchSymbolRemove
@@ -1059,19 +1170,20 @@ public partial class SimulatorShell
             var staleWatchTree = Find<Tree>("WatchTable");
             var staleWatchRow = staleWatchTree.GetRoot()?.GetFirstChild();
             var staleWatchRowName = staleWatchRow?.GetText(0) ?? "<missing>";
-            var staleWatchRowType = staleWatchRow?.GetText(1) ?? "<missing>";
+            var staleWatchRowType = staleWatchRow?.GetText(3) ?? "<missing>";
             var staleWatchStatus = Find<Label>("WatchStatus").Text;
             var staleWatchVisible = staleWatchRow is not null
-                && staleWatchRow.GetMetadata(0).AsString() == staleWatchSymbol
-                && staleWatchRow.GetText(1) == "UNRESOLVED"
-                && staleWatchRow.GetText(4) == "UNRESOLVED SYMBOL"
-                && staleWatchStatus.Contains("1 SYMBOL(S)", StringComparison.Ordinal);
+                && _ladderDocument.ActiveWatchTable.Rows.Any(row => row.Id == staleWatchRow.GetMetadata(0).AsString()
+                    && row.Reference == staleWatchSymbol)
+                && staleWatchRow.GetText(3) == "UNRESOLVED"
+                && staleWatchStatus.Contains("1 ROW(S)", StringComparison.Ordinal);
             var staleWatchJson = LadderEditorProjectJson.Save(_ladderDocument);
             var staleWatchLoaded = LadderEditorProjectJson.Load(staleWatchJson);
             var staleWatchRoundTrip = staleWatchLoaded.IsReadable
                 && staleWatchLoaded.Document?.WatchVariables.SequenceEqual([staleWatchSymbol], StringComparer.Ordinal) == true;
             staleWatchRow?.Select(0);
             staleWatchTree.EmitSignal(Tree.SignalName.ItemSelected);
+            await Frames();
             var beforeStaleWatchRemove = LadderEditorProjectJson.Save(_ladderDocument);
             _ladderHistory.Clear();
             Find<Button>("RemoveWatchSymbol").EmitSignal(BaseButton.SignalName.Pressed);
@@ -1079,7 +1191,7 @@ public partial class SimulatorShell
             var afterStaleWatchRemove = LadderEditorProjectJson.Save(_ladderDocument);
             var staleWatchRemoved = !_ladderDocument.WatchVariables.Contains(staleWatchSymbol, StringComparer.Ordinal)
                 && staleWatchTree.GetRoot()?.GetFirstChild() is null
-                && Find<Label>("WatchStatus").Text.Contains("0 SYMBOL(S)", StringComparison.Ordinal);
+                && Find<Label>("WatchStatus").Text.Contains("0 ROW(S)", StringComparison.Ordinal);
             var staleWatchUndo = TryUndoLadderEdit(out _)
                 && LadderEditorProjectJson.Save(_ladderDocument) == beforeStaleWatchRemove;
             var staleWatchRedo = TryRedoLadderEdit(out _)
@@ -1406,12 +1518,27 @@ public partial class SimulatorShell
                 && projectDock.Visible && wideRestoredDockWidth == 240
                 && Math.Abs(wideRestoredActualDockWidth - wideBaselineMemberDockWidth) <= 1;
             var projectTreeRestored = narrowTreeRestored && wideTreeRestored;
+            var ownerBlockIndex = _ladderDocument.Blocks.FindIndex(block => block.BlockType == LadderBlockType.OrganizationBlock);
+            if (ownerBlockIndex < 0)
+                throw new InvalidOperationException("Global DB reopen gate requires an organization block to switch away to.");
+            await Activate($"program:{ownerBlockIndex}");
+            var switchedAwayFromGlobalDb = canvas.IsVisibleInTree() && !globalDbDocument.IsVisibleInTree();
+            await Activate($"program:{_ladderDocument.Blocks.FindIndex(block => block.Id == globalDb.Id)}");
+            var globalDbReopenKey = EditorDocumentIdentity.ForBlock(globalDb.Id);
+            var globalDbReopenedAfterTree = switchedAwayFromGlobalDb && globalDbDocument.IsVisibleInTree()
+                && globalDbDeclarations.IsVisibleInTree()
+                && !canvas.IsVisibleInTree()
+                && globalDbHeading.Text.Contains(globalDb.Name, StringComparison.Ordinal)
+                && string.Equals(_getActiveTiaEditorDocumentKey?.Invoke(), globalDbReopenKey, StringComparison.Ordinal)
+                && Find<Label>("EditorTabTitle").Text.Contains(globalDb.Name, StringComparison.Ordinal);
+            var globalDbReopenDetail = $"switchedAway={switchedAwayFromGlobalDb} visible={globalDbDocument.IsVisibleInTree()} declarations={globalDbDeclarations.IsVisibleInTree()} ladder={canvas.IsVisibleInTree()} heading={globalDbHeading.Text} active={_getActiveTiaEditorDocumentKey?.Invoke()} title={Find<Label>("EditorTabTitle").Text}";
             GetWindow().Size = originalWindowSize;
             await Frames(4);
             // Keep the gate isolated from the shell state expected by later
             // assertions and restore the splitter value that preceded setup.
             projectSplit.SplitOffsets = [priorDockWidth];
             await Frames();
+            declaration = FindMetadata(globalDbDeclarations.GetRoot(), targetSpeedId);
             var originalDeclarationText = declaration is null ? "<missing>"
                 : $"{declaration.GetText(0)}/{declaration.GetText(1)}/{declaration.GetText(2)}/{declaration.GetText(3)}/{declaration.GetText(4)}";
             var declarationsTable = Find<Tree>("BlockInterface");
@@ -1790,6 +1917,7 @@ public partial class SimulatorShell
                 + $"wideRequested={wideRequestedDockWidth}/{wideExpectedDockWidth} wideActual={wideActualDockWidth} wideActionsFit={wideActionsFitDock}[{wideActionBounds}] wideOpened={wideMemberEditorOpened} wideRestored={wideTreeRestored}:{wideRestoredDockWidth}/240 actual={wideRestoredActualDockWidth}/{wideBaselineMemberDockWidth} "
                 + $"openTab={memberEditorTab} openButton={memberEditorButtonText} dock={projectDock.Visible} interface={memberEditorTreeVisible} "
                 + $"split={projectSplit.Size.X}");
+            globalGate.Set("tree-return-reopens-global-db", globalDbReopenedAfterTree, globalDbReopenDetail);
             globalGate.Set("declaration-grid-actions", directGridActions && removeResolvesPending,
                 $"addOpensDraft={directAddOpened} addIsAtomic={directAddIsDraftOnly} editLoadsSelection={directEditLoaded} removeResolvesDraft={removeResolvesPending}");
             globalGate.Set("edit-selection-block-scoped", selectionLoadedBeforeSwitch && editSelectionClearedOnSwitch,
@@ -1833,6 +1961,7 @@ public partial class SimulatorShell
             await Frames();
             var instanceEnterFocusBefore = GetViewport().GuiGetFocusOwner()?.GetPath().ToString() ?? "<none>";
             var instanceEnterSelectedBefore = tree.GetSelected()?.GetMetadata(0).AsString() ?? "<none>";
+            var counterInstanceDocumentKey = EditorDocumentIdentity.ForInstanceDb($"counter:{firstRung.Id}");
             var instanceEnterPendingBefore = _pendingEditorDialog?.Visible ?? false;
             var instanceEnterWasClosedBefore = !instanceDbDocument.IsVisibleInTree();
             GetViewport().PushInput(new InputEventKey
@@ -1853,7 +1982,8 @@ public partial class SimulatorShell
                 && instanceDbHeading.Text.Contains("Structured_Count_DB", StringComparison.Ordinal)
                 && instanceDbHeading.Text.Contains("DB731", StringComparison.Ordinal);
             var instanceEnterFocusAfter = GetViewport().GuiGetFocusOwner()?.GetPath().ToString() ?? "<none>";
-            var instanceEnterOpenedByKey = instanceEnterSelectedBefore == "instance-db:731"
+            var instanceEnterOpenedByKey = _getActiveTiaEditorDocumentKey?.Invoke() == counterInstanceDocumentKey
+                && instanceEnterSelectedBefore == "instance-db:731"
                 && instanceEnterFocusBefore == tree.GetPath().ToString()
                 && !instanceEnterPendingBefore && instanceEnterWasClosedBefore && instanceEnterOpenedExact;
             TreeItem? FindInstanceMember(string sectionName, string memberName)
@@ -1992,11 +2122,78 @@ public partial class SimulatorShell
             await Activate("instance-db:734");
             var tempOnlyEmptyState = instanceDbDeclarations.GetRoot()?.GetFirstChild()?.GetText(0)
                 == "No declared FB interface members.";
+            await Activate("instance-db:733");
+            var structuredAxisInstanceIndex = _ladderDocument.Instances.FindIndex(instance => instance.Id == "structured_axis");
+            var structuredAxisInstance = _ladderDocument.Instances[structuredAxisInstanceIndex];
+            var structuredAxisDocumentKey = EditorDocumentIdentity.ForInstanceDb($"fb:{structuredAxisInstance.Id}");
+            var ownerKeyWasStable = _getActiveTiaEditorDocumentKey?.Invoke() == structuredAxisDocumentKey;
+            _ladderDocument.Instances[structuredAxisInstanceIndex] = structuredAxisInstance with
+            {
+                InstanceDataBlock = new LadderInstanceDataBlock(735, "StructuredAxis_Reassigned_DB"),
+            };
+            Refresh(); await Frames();
+            var tabFollowsReassignment = _getActiveTiaEditorDocumentKey?.Invoke() == structuredAxisDocumentKey
+                && instanceDbHeading.Text.Contains("StructuredAxis_Reassigned_DB", StringComparison.Ordinal)
+                && instanceDbHeading.Text.Contains("DB735", StringComparison.Ordinal);
+            var replacementOwnerBlock = _ladderDocument.AddBlock("StructuredReusedNumberFB", LadderBlockType.FunctionBlock);
+            const string replacementOwnerId = "structured_reused_number";
+            _ladderDocument.Instances.Add(new LadderInstance(replacementOwnerId, "StructuredReusedNumber",
+                replacementOwnerBlock.Id, new LadderInstanceDataBlock(733, "StructuredReusedNumber_DB")));
+            Refresh(); await Frames();
+            var reusedNumberDidNotRetarget = _getActiveTiaEditorDocumentKey?.Invoke() == structuredAxisDocumentKey
+                && instanceDbHeading.Text.Contains("StructuredAxis_Reassigned_DB", StringComparison.Ordinal);
+            _ladderDocument.Instances.RemoveAll(instance => instance.Id == structuredAxisInstance.Id);
+            Refresh(); await Frames();
+            var documentsAfterOwnerRemoval = Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                .FirstOrDefault(item => item.GetMeta("editorDocumentKey").AsString() == structuredAxisDocumentKey);
+            var staleOwnerTabDisabled = documentsAfterOwnerRemoval?.GetChild(0) is Button staleOwnerButton
+                && staleOwnerButton.Disabled && staleOwnerButton.Text == "[Deleted instance DB]";
+            await Activate("instance-db:733");
+            var replacementOwnerKey = EditorDocumentIdentity.ForInstanceDb($"fb:{replacementOwnerId}");
+            var replacementNumberOpensNewOwner = _getActiveTiaEditorDocumentKey?.Invoke() == replacementOwnerKey
+                && instanceDbHeading.Text.Contains("StructuredReusedNumber_DB", StringComparison.Ordinal)
+                && instanceDbHeading.Text.Contains("DB733", StringComparison.Ordinal);
+            _ladderDocument.Instances.RemoveAll(instance => instance.Id == "structured_temp_only");
+            Refresh(); await Frames();
             var readonlyDefinition = instanceDbDocument.IsVisibleInTree()
                 && !globalDbDocument.IsVisibleInTree() && !canvas.IsVisibleInTree()
                 && instanceDbBoundary.Text.StartsWith("Read-only offline instance view", StringComparison.Ordinal)
                 && exactDefinition && counterMembersRendered && timerMembersRendered
                 && fbMembersRendered && !tempSectionRendered && tempOnlyEmptyState;
+            var replacementTabItem = Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                .FirstOrDefault(item => item.GetMeta("editorDocumentKey").AsString() == replacementOwnerKey);
+            var timerInstanceDocumentKey = EditorDocumentIdentity.ForInstanceDb($"timer:{second.Id}");
+            var counterRungIndex = _ladderDocument.Rungs.FindIndex(rung => rung.Id == firstRung.Id);
+            var timerRungIndex = _ladderDocument.Rungs.FindIndex(rung => rung.Id == second.Id);
+            if (counterRungIndex >= 0) _ladderDocument.RemoveRung(counterRungIndex);
+            timerRungIndex = _ladderDocument.Rungs.FindIndex(rung => rung.Id == second.Id);
+            if (timerRungIndex >= 0) _ladderDocument.RemoveRung(timerRungIndex);
+            Refresh(); await Frames();
+            bool IsDisabled(string key) => Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                .FirstOrDefault(item => item.GetMeta("editorDocumentKey").AsString() == key)?.GetChild(0) is Button tab && tab.Disabled;
+            var deletedTimerTabDisabled = IsDisabled(timerInstanceDocumentKey);
+            var deletedCounterTabDisabled = IsDisabled(counterInstanceDocumentKey);
+            if (replacementTabItem?.GetChild(1) is Button closeReplacementTab)
+                closeReplacementTab.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var activeAfterClose = _getActiveTiaEditorDocumentKey?.Invoke() ?? string.Empty;
+            var activeFallbackItem = Find<Control>("EditorDocuments").GetChildren().OfType<HBoxContainer>()
+                .FirstOrDefault(item => item.GetMeta("editorDocumentKey").AsString() == activeAfterClose);
+            var activeFallbackButton = activeFallbackItem?.GetChild(0) as Button;
+            var staleTabsExcluded = activeAfterClose != structuredAxisDocumentKey
+                && activeAfterClose != EditorDocumentIdentity.ForInstanceDb("fb:structured_temp_only");
+            var closeSkipsDeletedOwners = activeAfterClose.Length > 0
+                && activeAfterClose != replacementOwnerKey
+                && staleTabsExcluded
+                && activeFallbackButton is { Disabled: false, ButtonPressed: true }
+                && (canvas.IsVisibleInTree() || instanceDbDocument.IsVisibleInTree()
+                    || globalDbDocument.IsVisibleInTree() || watchDocument.IsVisibleInTree());
+            var deletedInstructionOwnersSkipped = deletedTimerTabDisabled && deletedCounterTabDisabled
+                && activeAfterClose != timerInstanceDocumentKey && activeAfterClose != counterInstanceDocumentKey
+                && activeAfterClose != structuredAxisDocumentKey
+                && activeFallbackButton is { Disabled: false, ButtonPressed: true };
+            var ownerIdentitySurvivesReassignment = ownerKeyWasStable && tabFollowsReassignment
+                && reusedNumberDidNotRetarget && staleOwnerTabDisabled && replacementNumberOpensNewOwner;
             await Activate($"program:{ownerIndex}");
             var ownerReturned = canvas.IsVisibleInTree()
                 && title.Text.Contains(_ladderDocument.Blocks[ownerIndex].Name, StringComparison.Ordinal)
@@ -2011,6 +2208,12 @@ public partial class SimulatorShell
                 $"instance={instanceDbDocument.IsVisibleInTree()} globalDb={globalDbDocument.IsVisibleInTree()} ladder={canvas.IsVisibleInTree()} input={fbDefaultValue}/{fbStartValue} output={fbOutputDefault}/{fbOutputStart} static={fbStaticDefault}/{fbStaticStart} counter={counterMembersRendered} timer={timerMembersRendered} tempSection={tempSectionRendered} tempOnlyEmpty={tempOnlyEmptyState}");
             instanceGate.Set("declaration-grid-reflows-live", responsiveGridReflows,
                 $"wide={instanceDbWidePane}px/{instanceDbWideFont}px-font/{string.Join(',', instanceDbWideWidths)} compact={instanceDbCompactPane}px/{instanceDbCompactFont}px-font/{string.Join(',', instanceDbCompactWidths)} wideAgain={instanceDbWideAgainPane}px/{instanceDbWideAgainFont}px-font/{string.Join(',', instanceDbWideAgainWidths)} compactAgain={instanceDbCompactAgainPane}px/{instanceDbCompactAgainFont}px-font/{string.Join(',', instanceDbCompactAgainWidths)}");
+            instanceGate.Set("owner-identity-survives-reassignment", ownerIdentitySurvivesReassignment,
+                $"stable={ownerKeyWasStable} follows={tabFollowsReassignment} noRetarget={reusedNumberDidNotRetarget} staleDisabled={staleOwnerTabDisabled} newOwnerOpens={replacementNumberOpensNewOwner}");
+            instanceGate.Set("close-active-instance-db-skips-deleted-tabs", closeSkipsDeletedOwners,
+                $"activeAfterClose={activeAfterClose} staleOwnerTabsExcluded={staleTabsExcluded} fallbackEnabled={activeFallbackButton is { Disabled: false, ButtonPressed: true }} bodyVisible={canvas.IsVisibleInTree() || instanceDbDocument.IsVisibleInTree() || globalDbDocument.IsVisibleInTree() || watchDocument.IsVisibleInTree()}");
+            instanceGate.Set("deleted-timer-counter-db-tabs-excluded-from-fallback", deletedInstructionOwnersSkipped,
+                $"timerTabDisabled={deletedTimerTabDisabled} counterTabDisabled={deletedCounterTabDisabled} activeAfterClose={activeAfterClose} timerKey={timerInstanceDocumentKey} counterKey={counterInstanceDocumentKey}");
             instanceGate.Set("owner-return-restores-editor", ownerReturned, $"title={title.Text} ladder={canvas.IsVisibleInTree()}");
             instanceGate.Finish();
             _ladderDocument.RestoreSnapshot(instanceFixture); Refresh(); await Frames();
@@ -2212,8 +2415,9 @@ public partial class SimulatorShell
             $"gateTabs={gateEditorDocumentTabs.Length} restored={gateEditorViewRestored} liveTabs={liveEditorDocumentTabs.Length} restored={liveEditorViewRestored} active={liveActiveEditorDocumentKey}->{_getActiveTiaEditorDocumentKey?.Invoke()} heading={liveActiveEditorHeading}->{Find<Label>("EditorTabTitle").Text} allTagsRoute={allTagsDocumentRouteWorks}");
         activationGateAfterCleanup.Finish();
 
-        var passed = gates.Count == 13
-            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == 13
+        var expectedGateCount = ProjectTreeRequirements.Count;
+        var passed = gates.Count == expectedGateCount
+            && gates.Select(gate => gate.GateId).Distinct(StringComparer.Ordinal).Count() == expectedGateCount
             && gates.All(gate => gate.Status == "passed"
                 && gate.Assertions.Count == ProjectTreeRequirements[gate.GateId].Count()
                 && gate.Assertions.All(assertion => assertion.Passed && assertion.Status == "passed"));

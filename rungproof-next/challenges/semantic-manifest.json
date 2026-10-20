@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "identityFormat": "RP-CANON-1",
   "engineRevision": "conveyor-engine-v1",
-  "engineSha256": "059b0580cd44af4a39aca23b13ff35bdb6b9503d27c193bb902df13e745dc8df",
+  "engineSha256": "0d13627eb5fd37bb0cf1eb0b10ef0ef09e5e4f6d02efd226def4e6927f48f017",
   "evaluatorRevision": "conveyor-evaluator-v1",
   "evaluatorSha256": "bbadd6d76ea00444aeda273c762c09222eaf2127e083b390bcd236d8c87f9461",
   "generatorSha256": "45cb58c54eecb1384022b7cce05277ef9ef50dc696c9f6736956909792550751",
@@ -78,9 +78,9 @@
       "sha256": "4416d05ba0d401f0be9f6800b2234b257f706470335bfef422aff5344f01892f"
     },
     {
-      "byteLength": 27300,
+      "byteLength": 28290,
       "relativePath": "src/VirtualController/AuthoredDemoLadderPrograms.cs",
-      "sha256": "f9ce3588ba52a956fb2a150076cc5a78bce02766d92029a4702f4ddea6e299f4"
+      "sha256": "6e0a527d029abf84cf2412fff3cf44fc3b05fd377479d832e32e124ec549e211"
     },
     {
       "byteLength": 7609,
@@ -103,6 +103,11 @@
       "sha256": "d9c18a12ffe4d74b67552ec4e11e97c50601282b8c1b39a3d7f836fd4278b8a4"
     },
     {
+      "byteLength": 4326,
+      "relativePath": "src/VirtualController/EditableWatchRow.cs",
+      "sha256": "dbdb02a561c0da2b188e08fbbed3a14b92cef0e08282a05742f7f8a31a997015"
+    },
+    {
       "byteLength": 2529,
       "relativePath": "src/VirtualController/EditorDiagnosticTarget.cs",
       "sha256": "5b97b813e9993f5d82b3328fd03bb3586dfd6c69703b578691fdb258cc4d7125"
@@ -118,9 +123,9 @@
       "sha256": "f651aedf5b0c4dbafb5f8726ac001327af0a69ce0c1aba0ec15685c252ba0bf9"
     },
     {
-      "byteLength": 12696,
+      "byteLength": 12711,
       "relativePath": "src/VirtualController/InstructionObservation.cs",
-      "sha256": "aa99a2bc5a49e818077167e5e2aba741996505709295381a60ba4c2811bbe778"
+      "sha256": "bc43c8651f1fd4aa1d5ec1ac55b31a07f39b244a9113b5fa1b7566d7142fa3e2"
     },
     {
       "byteLength": 11987,
@@ -158,19 +163,19 @@
       "sha256": "5c57fdeea1e2e4f07e150f83a5f66c7a66c9b6fa902e7d72de87f7b132f96958"
     },
     {
-      "byteLength": 86624,
+      "byteLength": 98056,
       "relativePath": "src/VirtualController/LadderEditorDocument.cs",
-      "sha256": "8a9976474ee5a7be8c4e0d210f9247ac3c889e25b2c71169485bedf53cb3aaaf"
+      "sha256": "e0c2cd5734eaaccd5e00a4605138f2d79f2851a7f634378c92ffd390f99234f1"
     },
     {
-      "byteLength": 10575,
+      "byteLength": 12250,
       "relativePath": "src/VirtualController/LadderEditorHistory.cs",
-      "sha256": "2b373a7a0409f0e8b8e552270efbb4fbb3291e889473ca85d10e6a92ef40b962"
+      "sha256": "65e1c66a4dff8107783c2619d4e6d96fe3e0374b38d0518fd0750aa735ed2a61"
     },
     {
-      "byteLength": 41618,
+      "byteLength": 49690,
       "relativePath": "src/VirtualController/LadderEditorProjectJson.cs",
-      "sha256": "b1df2f02266087b384daa3f3b2ffed8cfcd2b684344560a718d1b4810b3b6427"
+      "sha256": "756e5d02b4042eb3997d7e7f08859e2acfd858c74a82f22799818917a5d24d15"
     },
     {
       "byteLength": 3222,
@@ -188,9 +193,9 @@
       "sha256": "be5f6bfd617a5a9409a424a12b83f948edf68693df6dcc292913daa113da64ff"
     },
     {
-      "byteLength": 26776,
+      "byteLength": 27120,
       "relativePath": "src/VirtualController/LadderProgram.cs",
-      "sha256": "ea7407780c909b7fe881f9a2ad36f0a21881315a4c5fb396478f8acd6bc60f18"
+      "sha256": "b840296974ff1087f08546fe533328f87d8aedd825805c78119777b8d0ac2f92"
     },
     {
       "byteLength": 3967,
@@ -268,9 +273,9 @@
       "sha256": "a67c03a238a4296235bbc4dc78444b46fd184379302f7bebb3dbdeddd24e0eda"
     },
     {
-      "byteLength": 6430,
+      "byteLength": 9522,
       "relativePath": "src/VirtualController/SiemensPlcTagAddress.cs",
-      "sha256": "6652ed046887c40660fbce5afb39e10fd627452cd59931b80c56cb7b1a56f056"
+      "sha256": "107e08deebaa3e0f3dc35310a79ded480b6ea51918cd5e5a1b967bf3a5b15a1f"
     },
     {
       "byteLength": 679,
@@ -288,9 +293,9 @@
       "sha256": "bcd0fdbb646d689901c66b32ac518b1191508c79de5529270578ca281893580d"
     },
     {
-      "byteLength": 78251,
+      "byteLength": 82277,
       "relativePath": "src/VirtualController/VirtualControllerRuntime.cs",
-      "sha256": "6cfbe5723e2be3de2b7a0ef430de5b4258982c76c4ec7caf18f7db297bb3c2d5"
+      "sha256": "dfc72d1e766ac9f7c6a2fa281622e13bb436f37f89ce2285d3b28d53a4a5c3ea"
     },
     {
       "byteLength": 1480,
@@ -298,9 +303,14 @@
       "sha256": "c5d64e4b7f553bb660a3f2e2f9424cc322307a14d0f9fcf56092ca5083cc2f17"
     },
     {
-      "byteLength": 22146,
+      "byteLength": 22682,
       "relativePath": "src/VirtualController/VirtualControllerSession.cs",
-      "sha256": "67a7cfe05d021f4e3b3b054ec7086933d88f07847136ebaa6806e41d28f86d97"
+      "sha256": "4b537bbeba2d949c0ce554964fb41a539fa4a28a379546a53868a2037686e702"
+    },
+    {
+      "byteLength": 2477,
+      "relativePath": "src/VirtualController/WatchTableDisplayFormat.cs",
+      "sha256": "26e2d2ac727994acb83ec88dff0f31a76914db28f2469250ee41a09c0027681c"
     }
   ],
   "evaluatorInputs": [

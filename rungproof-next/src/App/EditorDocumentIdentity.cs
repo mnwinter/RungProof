@@ -11,6 +11,8 @@ namespace RungProof.Next.App;
 public static class EditorDocumentIdentity
 {
     private const string BlockPrefix = "block:";
+    private const string InstanceDbPrefix = "instance-db:";
+    private const string WatchTablePrefix = "watch-table:";
 
     public static string ForBlock(EditableBlock block)
     {
@@ -35,5 +37,36 @@ public static class EditorDocumentIdentity
         if (blockId.Length == 0) return false;
         blockIndex = document.Blocks.FindIndex(block => block.Id.Equals(blockId, StringComparison.Ordinal));
         return blockIndex >= 0;
+    }
+
+    public static string ForInstanceDb(string ownerIdentity)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(ownerIdentity);
+        return InstanceDbPrefix + ownerIdentity;
+    }
+
+    public static string ForWatchTable(EditableWatchTable watchTable)
+    {
+        ArgumentNullException.ThrowIfNull(watchTable);
+        return ForWatchTable(watchTable.Id);
+    }
+
+    public static string ForWatchTable(string watchTableId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(watchTableId);
+        return WatchTablePrefix + watchTableId;
+    }
+
+    public static bool TryResolveWatchTableIndex(LadderEditorDocument document, string key, out int watchTableIndex)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(key);
+        watchTableIndex = -1;
+        if (!key.StartsWith(WatchTablePrefix, StringComparison.Ordinal)) return false;
+
+        var watchTableId = key[WatchTablePrefix.Length..];
+        if (watchTableId.Length == 0) return false;
+        watchTableIndex = document.WatchTables.FindIndex(table => table.Id.Equals(watchTableId, StringComparison.Ordinal));
+        return watchTableIndex >= 0;
     }
 }

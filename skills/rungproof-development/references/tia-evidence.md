@@ -2,10 +2,14 @@
 
 ## Authority and claim rule
 
-Start every Siemens-facing task with
+For TIA Portal main-screen or property-management parity, start with
+`rungproof-next/docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md`; it owns the
+current scope, requirement statuses, and work order. For LAD instruction or
+programming semantics, start with
 `rungproof-next/docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md`. Use
-`TIA_PORTAL_PARITY_AUDIT.md` for the linked Siemens sources, detailed history,
-and exact verifier/capture routes.
+`TIA_PORTAL_PARITY_AUDIT.md` for linked Siemens sources, detailed history, and
+exact verifier/capture routes. Treat dated chronology in these documents as
+historical unless the current-state section confirms it.
 
 Evidence has separate jobs:
 

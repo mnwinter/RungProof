@@ -165,6 +165,80 @@ public sealed partial class VirtualControllerRuntime
         return CreateSnapshot();
     }
 
+    /// <summary>
+    /// Applies a one-shot value edit to the offline runtime image. The value
+    /// is visible immediately, can be superseded by the next scan, is never
+    /// stored in the editor project, and is not a force or PLC write.
+    /// </summary>
+    public VirtualControllerSnapshot ModifyVariable(string variableName, object value)
+    {
+        return ModifyVariables([(variableName, value)]);
+    }
+
+    /// <summary>
+    /// Validates a complete watch-table edit batch before changing the offline
+    /// image, so a blocked row cannot leave earlier selected rows partially
+    /// modified.
+    /// </summary>
+    public VirtualControllerSnapshot ModifyVariables(IReadOnlyList<(string VariableName, object Value)> edits)
+    {
+        ArgumentNullException.ThrowIfNull(edits);
+        if (edits.Count == 0) throw new ArgumentException("At least one simulator modify target is required.", nameof(edits));
+
+        var validated = new List<(PlcVariable Variable, object Value)>(edits.Count);
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (variableName, value) in edits)
+        {
+            if (!names.Add(variableName))
+                throw new ArgumentException($"Simulator modify target '{variableName}' appears more than once.", nameof(edits));
+            if (!_program.Variables.TryGetValue(variableName, out var variable))
+                throw new ArgumentException($"Unknown simulator modify target '{variableName}'.", nameof(edits));
+            if (_forces.ContainsKey(variableName))
+                throw new InvalidOperationException($"'{variableName}' is simulator-forced. Clear the force before modifying its current value.");
+            if (variable.Role == PlcVariableRole.Output && State != VirtualControllerState.Running)
+                throw new InvalidOperationException($"Output '{variableName}' cannot be modified while the simulator is STOPPED; Stop keeps outputs de-energized.");
+
+            var valid = variable.Type switch
+            {
+                PlcVariableType.Bool => value is bool,
+                PlcVariableType.Int => value is int intValue && intValue is >= short.MinValue and <= short.MaxValue,
+                PlcVariableType.DInt => value is int,
+                PlcVariableType.Real => value is double real && double.IsFinite(real) && Math.Abs(real) <= float.MaxValue,
+                PlcVariableType.Time => value is TimeSpan duration && duration >= TimeSpan.Zero && duration.TotalMilliseconds <= int.MaxValue,
+                PlcVariableType.String or PlcVariableType.Enum => PlcTextValues.IsValid(variable, value),
+                _ => false,
+            };
+            if (!valid)
+                throw new InvalidOperationException(
+                    $"Value is not valid for simulator modify target '{variableName}' ({variable.Type.ToString().ToUpperInvariant()}).");
+            validated.Add((variable, value));
+        }
+
+        foreach (var (variable, value) in validated)
+        {
+            switch (variable.Type)
+            {
+                case PlcVariableType.Bool:
+                    _values[variable.Name] = (bool)value;
+                    if (variable.Role == PlcVariableRole.Input) _unforcedBoolInputs[variable.Name] = (bool)value;
+                    break;
+                case PlcVariableType.Int:
+                case PlcVariableType.DInt:
+                case PlcVariableType.Real:
+                    _numericValues[variable.Name] = NormalizeNumeric(variable.Type, Convert.ToDouble(value, CultureInfo.InvariantCulture));
+                    break;
+                case PlcVariableType.Time:
+                    _numericValues[variable.Name] = NormalizeNumeric(variable.Type, ((TimeSpan)value).TotalMilliseconds);
+                    break;
+                case PlcVariableType.String:
+                case PlcVariableType.Enum:
+                    _textValues[variable.Name] = (string)value;
+                    break;
+            }
+        }
+        return CreateSnapshot();
+    }
+
     public VirtualControllerSnapshot RemoveForce(string variableName)
     {
         if (_forces.Remove(variableName, out var force) && force.Role == PlcVariableRole.Input)

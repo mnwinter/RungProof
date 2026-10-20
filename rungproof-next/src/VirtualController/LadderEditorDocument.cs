@@ -193,13 +193,62 @@ public sealed class EditableTask
 
 public sealed class EditableWatchTable
 {
+    private const string DefaultId = "default-watch-table-1";
+    public string Id { get; }
     public string Name { get; set; }
-    public List<string> Variables { get; } = [];
+    public List<EditableWatchRow> Rows { get; } = [];
+    public EditableWatchVariableList Variables { get; }
 
-    public EditableWatchTable(string name, IEnumerable<string>? variables = null)
+    public EditableWatchTable(string name, IEnumerable<string>? variables = null, string? id = null)
     {
+        Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString("N") : id;
         Name = name;
+        Variables = new EditableWatchVariableList(this);
         if (variables is not null) Variables.AddRange(variables);
+    }
+
+    public static EditableWatchTable CreateDefault(IEnumerable<string>? variables = null) =>
+        new("Watch table 1", variables, DefaultId);
+
+    internal void ValidateRows()
+        => ValidateRows(null);
+
+    internal void ValidateRows(IReadOnlyList<PlcVariable>? variables)
+    {
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        var references = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var row in Rows)
+        {
+            if (row is null || string.IsNullOrWhiteSpace(row.Id)
+                || string.IsNullOrWhiteSpace(row.Reference)
+                || string.IsNullOrWhiteSpace(row.DisplayFormat)
+                || !Enum.IsDefined(row.ReferenceKind))
+                throw new ArgumentException($"Watch table '{Name}' contains a row with missing or invalid required fields.");
+            if (!ids.Add(row.Id))
+                throw new ArgumentException($"Watch table '{Name}' contains duplicate row identity '{row.Id}'.");
+            var reference = row.Reference.Trim();
+            var key = row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
+                ? "address:" + reference.TrimStart('%').ToUpperInvariant()
+                : "symbol:" + reference;
+            if (!references.Add(key))
+                throw new ArgumentException($"Watch table '{Name}' contains duplicate reference '{row.Reference}'.");
+            if (row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
+                && !SiemensPlcTagAddress.TryValidateWatchAddress(reference, out var error))
+                throw new ArgumentException($"Watch table '{Name}' contains invalid absolute address: {error}");
+            if (variables is not null)
+            {
+                var variable = row.ReferenceKind == WatchReferenceKind.Symbolic
+                    ? variables.FirstOrDefault(tag => tag.Name.Equals(reference, StringComparison.Ordinal))
+                    : variables.FirstOrDefault(tag => !string.IsNullOrWhiteSpace(tag.Address)
+                        && SiemensPlcTagAddress.IsPersistedS7AddressCandidate(tag.Address)
+                        && tag.Address.Trim().TrimStart('%').Equals(reference.TrimStart('%'), StringComparison.OrdinalIgnoreCase)
+                        && SiemensPlcTagAddress.TryValidateWatchAddress(reference, tag.Type, tag.Role, out _));
+                if (!WatchTableDisplayFormat.IsValid(variable?.Type, row.DisplayFormat))
+                    throw new ArgumentException(variable is null
+                        ? $"Watch table '{Name}' row '{row.Id}' uses a display format other than Auto for an unresolved reference."
+                        : $"Watch table '{Name}' row '{row.Id}' uses display format '{row.DisplayFormat}' which is not valid for {variable.Type.ToString().ToUpperInvariant()}.");
+            }
+        }
     }
 }
 
@@ -216,6 +265,7 @@ public sealed partial class LadderEditorDocument
     public string SourceSceneId { get; set; } = string.Empty;
     public TimeSpan ScanPeriod { get; set; } = TimeSpan.FromMilliseconds(20);
     public List<PlcVariable> Tags { get; } = [];
+    public List<PlcUserConstant> UserConstants { get; } = [];
     public List<string> TagTables { get; } = ["Default tag table"];
     public List<LadderInstance> Instances { get; } = [];
     public List<EditableBlock> Blocks { get; } = [];
@@ -224,7 +274,7 @@ public sealed partial class LadderEditorDocument
     public int ActiveWatchTableIndex { get; private set; }
     public EditableWatchTable ActiveWatchTable => WatchTables[Math.Clamp(ActiveWatchTableIndex, 0, WatchTables.Count - 1)];
     // Compatibility surface for existing single-table projects and callers.
-    public List<string> WatchVariables => ActiveWatchTable.Variables;
+    public EditableWatchVariableList WatchVariables => ActiveWatchTable.Variables;
     public IEnumerable<string> AllWatchVariables => WatchTables.SelectMany(table => table.Variables).Distinct(StringComparer.Ordinal);
     public int ActiveBlockIndex { get; private set; }
     public string EntryBlockId { get; set; } = string.Empty;
@@ -244,13 +294,14 @@ public sealed partial class LadderEditorDocument
         SourceSceneId = string.Empty;
         ScanPeriod = scanPeriod;
         Tags.Clear();
+        UserConstants.Clear();
         TagTables.Clear();
         TagTables.Add("Default tag table");
         Instances.Clear();
         Blocks.Clear();
         Tasks.Clear();
         WatchTables.Clear();
-        WatchTables.Add(new EditableWatchTable("Watch table 1"));
+        WatchTables.Add(EditableWatchTable.CreateDefault());
         ActiveWatchTableIndex = 0;
         ActiveBlockIndex = 0;
         EntryBlockId = string.Empty;
@@ -302,7 +353,8 @@ public sealed partial class LadderEditorDocument
         var name = baseName;
         for (var suffix = 2; WatchTables.Any(table => table.Name.Equals(name, StringComparison.OrdinalIgnoreCase)); suffix++)
             name = $"{baseName} {suffix}";
-        var copy = new EditableWatchTable(name, source.Variables);
+        var copy = new EditableWatchTable(name);
+        copy.Rows.AddRange(source.Rows.Select(row => row.Duplicate()));
         WatchTables.Insert(ActiveWatchTableIndex + 1, copy);
         ActiveWatchTableIndex++;
         return copy;
@@ -325,6 +377,8 @@ public sealed partial class LadderEditorDocument
             StringComparison.OrdinalIgnoreCase);
         if (Tags.Any(tag => tag.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
             throw new InvalidOperationException($"Block/routine name '{normalizedName}' conflicts with a PLC tag.");
+        if (UserConstants.Any(constant => constant.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Block/routine name '{normalizedName}' conflicts with a PLC user constant.");
         var type = blockType ?? (Blocks.Count == 0 ? LadderBlockType.OrganizationBlock : LadderBlockType.Function);
         var block = new EditableBlock(NewId("block"), normalizedName, type);
         Blocks.Add(block);
@@ -391,6 +445,8 @@ public sealed partial class LadderEditorDocument
             StringComparison.OrdinalIgnoreCase);
         if (Tags.Any(tag => tag.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
             throw new InvalidOperationException($"Block/routine name '{normalizedName}' conflicts with a PLC tag.");
+        if (UserConstants.Any(constant => constant.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Block/routine name '{normalizedName}' conflicts with a PLC user constant.");
         block.Name = normalizedName;
         return block;
     }
@@ -565,6 +621,9 @@ public sealed partial class LadderEditorDocument
         for (var tagIndex = 0; tagIndex < Tags.Count; tagIndex++)
             if (Tags[tagIndex].TagTable.Equals(oldName, StringComparison.OrdinalIgnoreCase))
                 Tags[tagIndex] = Tags[tagIndex] with { TagTable = normalized };
+        for (var constantIndex = 0; constantIndex < UserConstants.Count; constantIndex++)
+            if (UserConstants[constantIndex].TagTable.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                UserConstants[constantIndex] = UserConstants[constantIndex] with { TagTable = normalized };
         return normalized;
     }
 
@@ -589,10 +648,155 @@ public sealed partial class LadderEditorDocument
             reason = $"PLC tag table '{existingName}' is not empty.";
             return false;
         }
+        if (UserConstants.Any(constant => constant.TagTable.Equals(existingName, StringComparison.OrdinalIgnoreCase)))
+        {
+            reason = $"PLC tag table '{existingName}' is not empty.";
+            return false;
+        }
         TagTables.RemoveAt(index);
         reason = string.Empty;
         return true;
     }
+
+    public PlcUserConstant AddUserConstant(
+        string name,
+        PlcVariableType type,
+        string value,
+        string tagTable = "Default tag table",
+        string comment = "")
+    {
+        var normalizedName = ValidateCpuConstantName(name);
+        if (!IsSupportedUserConstantType(type))
+            throw new InvalidOperationException("User constants support BOOL, INT, DINT, REAL, TIME, and STRING in this offline subset.");
+        if (!TryParseInitialValue(type, value, out _, out var error))
+            throw new InvalidOperationException(error);
+        var canonicalTable = EnsureTagTable(tagTable);
+        var constant = new PlcUserConstant(Guid.NewGuid().ToString("N"), normalizedName, type, value, canonicalTable, comment.Trim());
+        UserConstants.Add(constant);
+        return constant;
+    }
+
+    public PlcUserConstant UpdateUserConstant(
+        string constantId,
+        string name,
+        PlcVariableType type,
+        string value,
+        string comment,
+        string? tagTable = null)
+    {
+        var index = UserConstants.FindIndex(constant => constant.Id.Equals(constantId, StringComparison.Ordinal));
+        if (index < 0) throw new InvalidOperationException($"PLC user constant '{constantId}' does not exist.");
+        var current = UserConstants[index];
+        var normalizedName = ValidateCpuConstantName(name, constantId);
+        if (!IsSupportedUserConstantType(type))
+            throw new InvalidOperationException("User constants support BOOL, INT, DINT, REAL, TIME, and STRING in this offline subset.");
+        if (!TryParseInitialValue(type, value, out _, out var error))
+            throw new InvalidOperationException(error);
+        var requestedTable = string.IsNullOrWhiteSpace(tagTable) ? current.TagTable : tagTable.Trim();
+        var canonicalTable = TagTables.FirstOrDefault(table =>
+            table.Equals(requestedTable, StringComparison.OrdinalIgnoreCase))
+            ?? throw new InvalidOperationException($"PLC tag table '{requestedTable}' does not exist.");
+        var updated = current with
+        {
+            Name = normalizedName,
+            Type = type,
+            Value = value,
+            TagTable = canonicalTable,
+            Comment = comment.Trim(),
+        };
+        UserConstants[index] = updated;
+        return updated;
+    }
+
+    public bool RemoveUserConstant(string constantId)
+    {
+        var index = UserConstants.FindIndex(constant => constant.Id.Equals(constantId, StringComparison.Ordinal));
+        if (index < 0) return false;
+        UserConstants.RemoveAt(index);
+        return true;
+    }
+
+    public static bool IsSupportedUserConstantType(PlcVariableType type) => type is
+        PlcVariableType.Bool or PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real
+            or PlcVariableType.Time or PlcVariableType.String;
+
+    public static bool TryValidateUserConstants(
+        IEnumerable<PlcUserConstant?>? constants,
+        IEnumerable<PlcVariable>? tags,
+        IEnumerable<EditableBlock>? blocks,
+        IEnumerable<string?>? tagTables,
+        out string error)
+    {
+        error = string.Empty;
+        var items = (constants ?? []).ToArray();
+        var tableNames = new HashSet<string>((tagTables ?? []).Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name!.Trim()), StringComparer.OrdinalIgnoreCase);
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        var reserved = new HashSet<string>((tags ?? []).Select(tag => tag.Name), StringComparer.OrdinalIgnoreCase);
+        reserved.UnionWith((blocks ?? []).Select(block => block.Name));
+        foreach (var constant in items)
+        {
+            if (constant is null)
+            {
+                error = "PLC user constants must not contain null entries.";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(constant.Id) || !ids.Add(constant.Id))
+            {
+                error = "PLC user-constant IDs must be nonempty and unique.";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(constant.Name) || constant.Name != constant.Name.Trim()
+                || constant.Name.Contains('"'))
+            {
+                error = "PLC user-constant names must be nonempty, trimmed, and must not contain quotation marks.";
+                return false;
+            }
+            if (!names.Add(constant.Name) || !reserved.Add(constant.Name))
+            {
+                error = $"PLC user-constant name '{constant.Name}' conflicts with a PLC tag, block, or another constant; names are case-insensitive and CPU-wide.";
+                return false;
+            }
+            if (!tableNames.Contains(constant.TagTable))
+            {
+                error = $"PLC user constant '{constant.Name}' references missing tag table '{constant.TagTable}'.";
+                return false;
+            }
+            if (!IsSupportedUserConstantType(constant.Type))
+            {
+                error = $"PLC user constant '{constant.Name}' uses an unsupported type '{constant.Type}'.";
+                return false;
+            }
+            if (!TryParseInitialValue(constant.Type, constant.Value, out _, out var valueError))
+            {
+                error = $"PLC user constant '{constant.Name}' has an invalid value: {valueError}";
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private string ValidateCpuConstantName(string name, string? excludedConstantId = null)
+    {
+        var normalized = name.Trim();
+        if (normalized.Length == 0 || normalized.Contains('"'))
+            throw new InvalidOperationException("PLC user-constant name cannot be empty or contain quotation marks.");
+        // TIA Portal keeps a duplicate declaration and appends a sequential
+        // suffix. Apply that rule across the CPU-wide namespace (tags, blocks,
+        // and user constants) rather than rejecting the declaration.
+        var requestedName = normalized;
+        var suffix = 0;
+        while (CpuNameIsAssigned(normalized, excludedConstantId))
+            normalized = $"{requestedName}({++suffix})";
+        return normalized;
+    }
+
+    private bool CpuNameIsAssigned(string name, string? excludedConstantId) =>
+        Tags.Any(tag => tag.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+        || Blocks.Any(block => block.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+        || UserConstants.Any(constant => constant.Id != excludedConstantId
+            && constant.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>Moves a tag by its stable global identity (or its legacy name when it has no ID).</summary>
     public PlcVariable MoveTag(string tagIdentity, string targetTableName)
@@ -1622,8 +1826,11 @@ public sealed partial class LadderEditorDocument
         }
         Id = program.Id; Name = program.Name; ScanPeriod = program.ScanPeriod;
         Tags.Clear(); Tags.AddRange(program.Variables);
+        // Constants are editor metadata and are not part of LadderProgram yet.
+        // Replacing from an external executable program must not retain stale declarations.
+        UserConstants.Clear();
         Instances.Clear(); Instances.AddRange(program.Instances ?? []);
-        WatchTables.Clear(); WatchTables.Add(new EditableWatchTable("Watch table 1", program.WatchVariables)); ActiveWatchTableIndex = 0;
+        WatchTables.Clear(); WatchTables.Add(EditableWatchTable.CreateDefault(program.WatchVariables)); ActiveWatchTableIndex = 0;
         Blocks.Clear(); Blocks.AddRange(newBlocks); Tasks.Clear(); _nextId = 1;
         EnsureInstanceDataBlocks();
         EntryBlockId = string.IsNullOrWhiteSpace(program.EntryBlock) ? Blocks[0].Id : program.EntryBlock;
@@ -1714,6 +1921,8 @@ public sealed partial class LadderEditorDocument
             throw new InvalidOperationException($"Tag '{normalized}' already exists; PLC tag names are case-insensitive across tag tables.");
         if (Blocks.Any(block => block.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
             throw new InvalidOperationException($"Tag name '{normalized}' conflicts with a block/routine name.");
+        if (UserConstants.Any(constant => constant.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Tag name '{normalized}' conflicts with a PLC user constant.");
         return normalized;
     }
 

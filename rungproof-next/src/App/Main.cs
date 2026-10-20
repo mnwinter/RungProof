@@ -658,6 +658,7 @@ public partial class Main : Node3D
         _simulatorShell.VirtualForceRequested += ApplyVirtualForce;
         _simulatorShell.VirtualForceRemoveRequested += RemoveVirtualForce;
         _simulatorShell.VirtualForceClearRequested += ClearVirtualForces;
+        _simulatorShell.VirtualWatchModifyRequested += ModifyVirtualWatchValue;
         _simulatorShell.VirtualStartRequested += () => PulseVirtualInput("operator.start", "start_command");
         _simulatorShell.VirtualStopRequested += () => PulseVirtualInput("operator.stop", "stop_command");
         AddChild(_simulatorShell);
@@ -1350,6 +1351,29 @@ public partial class Main : Node3D
         catch (Exception exception) when (exception is ArgumentException or InvalidOperationException)
         {
             _simulatorShell.SetVirtualControllerForceError(exception.Message);
+        }
+    }
+
+    private bool ModifyVirtualWatchValue(IReadOnlyList<(string VariableName, object Value)> edits)
+    {
+        if (_virtualController is null || _simulatorShell is null) return false;
+        if (_virtualController.IsPaused)
+        {
+            _simulatorShell.SetWorkspaceStatus("SIM MODIFY blocked · resume or stop the offline runtime before changing a value", true);
+            return false;
+        }
+        try
+        {
+            var snapshot = _virtualController.ModifyVariables(edits);
+            RetireRepeatCycleTrial("Watch-table value modified; Reset is required before repeating the cycle.");
+            CommitVirtualControllerSnapshot(snapshot);
+            GD.Print($"VIRTUAL_WATCH_MODIFY count={edits.Count} scope=offline-simulator transport=none");
+            return true;
+        }
+        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException)
+        {
+            _simulatorShell.SetWorkspaceStatus($"SIM MODIFY blocked · {exception.Message}", true);
+            return false;
         }
     }
 

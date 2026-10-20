@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
+using RungProof.Next.App;
 using RungProof.Next.VirtualController;
 
 internal static partial class Program
 {
     private static void RegisterEditorMigrationTests()
     {
-        Test("EditorSchema6WritesAndReadsLegacyDemos", EditorSchema6WritesAndReadsLegacyDemos);
+        Test("CurrentEditorSchemaWritesAndReadsLegacyDemos", CurrentEditorSchemaWritesAndReadsLegacyDemos);
+        Test("UserConstantsValidatePersistAndUndo", UserConstantsValidatePersistAndUndo);
+        Test("WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration", WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration);
         Test("OpenBranchStatePersistsButCannotExportExecutableProgram", OpenBranchStatePersistsButCannotExportExecutableProgram);
         Test("TagTablesPersistAndLegacyTagsUseDefaultTable", TagTablesPersistAndLegacyTagsUseDefaultTable);
         Test("TagTableOperationsPreserveIdentityAndHistory", TagTableOperationsPreserveIdentityAndHistory);
@@ -149,9 +152,9 @@ internal static partial class Program
         True(LadderEditorProjectJson.HasUnsavedChanges(document, saved));
     }
 
-    private static void EditorSchema6WritesAndReadsLegacyDemos()
+    private static void CurrentEditorSchemaWritesAndReadsLegacyDemos()
     {
-        Equal(6, LadderEditorProjectJson.SchemaVersion);
+        Equal(9, LadderEditorProjectJson.SchemaVersion);
         var files = Directory.GetFiles(Path.Combine(FindProjectRoot(), "tests", "fixtures", "editor-migration"), "*.rpproj.json");
         Equal(5, files.Length);
         foreach (var file in files)
@@ -161,14 +164,138 @@ internal static partial class Program
             if (!first.IsReadable) throw new InvalidOperationException(string.Join("; ", first.Issues.Select(issue => $"{issue.Code} {issue.Path}: {issue.Message}")));
             Equal(File.ReadAllText(file + ".v1-ir.json"), LadderProgramJson.Save(first.Document!.BuildProgram() with { SchemaVersion = 1 }));
             var written = LadderEditorProjectJson.Save(first.Document!);
-            Equal(6, JsonNode.Parse(written)!["schemaVersion"]!.GetValue<int>());
+            Equal(9, JsonNode.Parse(written)!["schemaVersion"]!.GetValue<int>());
             var reopened = LadderEditorProjectJson.Load(written);
             True(reopened.IsReadable);
+            Equal(string.Join(",", first.Document.WatchTables.Select(table => table.Id)),
+                string.Join(",", reopened.Document!.WatchTables.Select(table => table.Id)));
             Equal(LadderProgramJson.Save(first.Document!.BuildProgram()), LadderProgramJson.Save(reopened.Document!.BuildProgram()));
             Equal(first.Document.SourceSceneId, reopened.Document.SourceSceneId);
             Equal(string.Join(",", first.Document.WatchVariables), string.Join(",", reopened.Document.WatchVariables));
             Equal(original, File.ReadAllText(file));
         }
+    }
+
+    private static void UserConstantsValidatePersistAndUndo()
+    {
+        var document = new LadderEditorDocument();
+        document.AddBlock("Main");
+        document.AddTag("run_request", PlcVariableRole.Input);
+        var customTable = document.AddTagTable("Machine constants");
+        var history = new LadderEditorHistory();
+
+        PlcUserConstant added = null!;
+        history.Execute(document, "Add user constant", () =>
+            added = document.AddUserConstant("MaxTravel", PlcVariableType.DInt, "1250", customTable, "Travel limit"));
+        Equal("MaxTravel", added.Name);
+        Equal(customTable, added.TagTable);
+        True(history.Undo(document, out _));
+        Equal(0, document.UserConstants.Count);
+        True(history.Redo(document, out _));
+        Equal(added.Id, document.UserConstants.Single().Id);
+        history.Execute(document, "Rename user-constant table", () =>
+            document.RenameTagTable(customTable, "Machine limits"));
+        Equal("Machine limits", document.UserConstants.Single().TagTable);
+        False(document.TryRemoveTagTable("Machine limits", out _));
+        True(history.Undo(document, out _));
+        Equal(customTable, document.UserConstants.Single().TagTable);
+        True(history.Redo(document, out _));
+        history.Execute(document, "Move user constant", () =>
+            document.UpdateUserConstant(added.Id, added.Name, added.Type, added.Value, added.Comment, "machine limits"));
+        Equal("Machine limits", document.UserConstants.Single().TagTable);
+
+        var saved = LadderEditorProjectJson.Save(document);
+        Equal(9, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
+        var reopened = LadderEditorProjectJson.Load(saved);
+        True(reopened.IsReadable);
+        Equal(saved, LadderEditorProjectJson.Save(reopened.Document!));
+        Equal("1250", reopened.Document!.UserConstants.Single().Value);
+
+        // Schema 7 predates constants; old projects migrate with an empty collection.
+        var legacy = JsonNode.Parse(saved)!;
+        legacy["schemaVersion"] = 7;
+        legacy.AsObject().Remove("userConstants");
+        var migrated = LadderEditorProjectJson.Load(legacy.ToJsonString());
+        True(migrated.IsReadable);
+        Equal(0, migrated.Document!.UserConstants.Count);
+
+        var duplicateTagName = document.AddUserConstant("RUN_REQUEST", PlcVariableType.Bool, "TRUE");
+        Equal("RUN_REQUEST(1)", duplicateTagName.Name);
+        var duplicateConstantName = document.AddUserConstant("run_request", PlcVariableType.Bool, "FALSE");
+        Equal("run_request(2)", duplicateConstantName.Name);
+        var duplicateBlockName = document.AddUserConstant("Main", PlcVariableType.Bool, "FALSE");
+        Equal("Main(1)", duplicateBlockName.Name);
+        var editedDuplicate = document.AddUserConstant("Mode", PlcVariableType.Bool, "FALSE");
+        var renamedDuplicate = document.UpdateUserConstant(editedDuplicate.Id, "Main", PlcVariableType.Bool, "TRUE", "");
+        Equal("Main(2)", renamedDuplicate.Name);
+        var specialCharacters = document.AddUserConstant("Flow rate - A", PlcVariableType.Real, "1.5");
+        Equal("Flow rate - A", specialCharacters.Name);
+        var quotedNameRejected = false;
+        try { document.AddUserConstant("bad\"name", PlcVariableType.Bool, "FALSE"); }
+        catch (InvalidOperationException) { quotedNameRejected = true; }
+        True(quotedNameRejected);
+        var invalidTypeRejected = false;
+        try { document.AddUserConstant("Unsupported", PlcVariableType.Enum, "Stopped"); }
+        catch (InvalidOperationException) { invalidTypeRejected = true; }
+        True(invalidTypeRejected);
+
+        var differentlyCasedTable = JsonNode.Parse(saved)!;
+        differentlyCasedTable["userConstants"]![0]!["tagTable"] = "machine limits";
+        var canonicalized = LadderEditorProjectJson.Load(differentlyCasedTable.ToJsonString());
+        True(canonicalized.IsReadable);
+        Equal("Machine limits", canonicalized.Document!.UserConstants.Single().TagTable);
+
+        var replace = new LadderEditorDocument();
+        replace.AddUserConstant("Stale", PlcVariableType.Bool, "FALSE");
+        replace.ReplaceFromProgram(document.BuildProgram());
+        Equal(0, replace.UserConstants.Count);
+    }
+
+    private static void WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration()
+    {
+        var document = new LadderEditorDocument();
+        document.AddBlock("Main");
+        var originalId = document.ActiveWatchTable.Id;
+        var second = document.AddWatchTable("Second watch");
+        var secondId = second.Id;
+        True(originalId.Length > 0 && secondId.Length > 0 && originalId != secondId);
+        Equal("watch-table:" + secondId, EditorDocumentIdentity.ForWatchTable(second));
+        True(EditorDocumentIdentity.TryResolveWatchTableIndex(document, "watch-table:" + secondId, out var secondIndex));
+        Equal(1, secondIndex);
+
+        var history = new LadderEditorHistory();
+        history.Execute(document, "Rename watch table", () => document.RenameActiveWatchTable("Renamed watch"));
+        Equal(secondId, document.WatchTables[1].Id);
+        True(history.Undo(document, out _));
+        Equal(secondId, document.WatchTables[1].Id);
+        True(history.Redo(document, out _));
+        Equal(secondId, document.WatchTables[1].Id);
+        True(document.MoveActiveWatchTable(-1));
+        True(EditorDocumentIdentity.TryResolveWatchTableIndex(document, "watch-table:" + secondId, out secondIndex));
+        Equal(0, secondIndex);
+
+        var saved = LadderEditorProjectJson.Save(document);
+        var reopened = LadderEditorProjectJson.Load(saved);
+        if (!reopened.IsReadable)
+            throw new InvalidOperationException(string.Join("; ", reopened.Issues.Select(issue => $"{issue.Code} {issue.Path}: {issue.Message}")));
+        Equal(string.Join(",", document.WatchTables.Select(table => table.Id)),
+            string.Join(",", reopened.Document!.WatchTables.Select(table => table.Id)));
+        Equal(saved, LadderEditorProjectJson.Save(reopened.Document));
+
+        // Schema 6 projects had names and symbols but no stable watch-table ID.
+        // Migration assigns deterministic per-project-order identities once.
+        var legacy = JsonNode.Parse(saved)!;
+        legacy["schemaVersion"] = 6;
+        foreach (var table in legacy["watchTables"]!.AsArray()) table!.AsObject().Remove("id");
+        var migrated = LadderEditorProjectJson.Load(legacy.ToJsonString());
+        True(migrated.IsReadable);
+        True(migrated.Document!.WatchTables.All(table => !string.IsNullOrWhiteSpace(table.Id)));
+        Equal(migrated.Document.WatchTables.Count,
+            migrated.Document.WatchTables.Select(table => table.Id).Distinct(StringComparer.Ordinal).Count());
+        var migratedRoundTrip = LadderEditorProjectJson.Load(LadderEditorProjectJson.Save(migrated.Document));
+        True(migratedRoundTrip.IsReadable);
+        Equal(string.Join(",", migrated.Document.WatchTables.Select(table => table.Id)),
+            string.Join(",", migratedRoundTrip.Document!.WatchTables.Select(table => table.Id)));
     }
 
     private static void OpenBranchStatePersistsButCannotExportExecutableProgram()
@@ -187,7 +314,7 @@ internal static partial class Program
                 new("template", LadderNodeKind.Contact, "start_command")));
         True(insert.Applied);
         var saved = LadderEditorProjectJson.Save(document);
-        Equal(6, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
+        Equal(9, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
         True(saved.Contains("\"openEnd\": true", StringComparison.Ordinal));
         var loaded = LadderEditorProjectJson.Load(saved);
         True(loaded.IsReadable);

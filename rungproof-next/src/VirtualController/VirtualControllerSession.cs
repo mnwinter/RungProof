@@ -146,6 +146,20 @@ public sealed class VirtualControllerSession
         return snapshot;
     }
 
+    public VirtualControllerSnapshot ModifyVariable(string variableName, object value)
+    {
+        return ModifyVariables([(variableName, value)]);
+    }
+
+    public VirtualControllerSnapshot ModifyVariables(IReadOnlyList<(string VariableName, object Value)> edits)
+    {
+        var snapshot = _runtime.ModifyVariables(edits);
+        _lifecycleGeneration++;
+        var publication = PublishLifecycle(ControllerPublicationKind.ValueModified, snapshot);
+        NotifySnapshot(snapshot, publication);
+        return snapshot;
+    }
+
     public VirtualControllerSnapshot RemoveForce(string variableName)
     {
         var snapshot = _runtime.RemoveForce(variableName);

@@ -1,6 +1,6 @@
 # TIA Portal V21 main-screen and property-management requirements
 
-Updated: 2026-10-19
+Updated: 2026-10-20
 
 ## Purpose and evidence boundary
 
@@ -110,7 +110,65 @@ that move without ladder-owned outputs.
 
 ## Current state and known open items
 
-### Latest review snapshot — 2026-10-19
+### Current-source follow-up — 2026-10-20
+
+- A rerun of the project-tree gate found that refreshing after watch-table
+  Undo/Redo could overwrite the history-restored active table index with the
+  currently open tab's index. The refresh now updates tab presentation without
+  mutating the selected table. The focused gate passes 14/14 gates and 100/100
+  assertions, including watch-table Create/Undo/Redo and exact serialized state
+  restoration. The current build succeeds with 0 warnings/errors and the
+  virtual-controller suite passes 393/393. The latest app-shell and project-tree
+  verifier results remain local offline evidence; Godot reports renderer/ObjectDB
+  RID leaks at verifier shutdown.
+- Independent code review found two structural issues. Watch rows still store
+  symbols only (PROP-08). Persisted Siemens-shaped tag addresses also bypassed
+  validation on project load; the loader now rejects invalid syntax, type/role
+  mismatches, and overlaps for `%` and unprefixed `DB<number>.DB...` addresses,
+  while preserving other opaque address metadata for the shared project format.
+  Focused tests cover the boundary, including ambiguous unprefixed I/O metadata.
+- Siemens V21 assigns a sequential suffix to duplicate global
+  constant names, so create/edit now appends `(1)`, `(2)`, etc. across the
+  CPU-wide tag/block/constant namespace. The validation tests cover case
+  collisions, suffix progression, punctuation, and rejected quotation marks.
+- The read-only review also found that table renames could leave a clean
+  constant form's table selector stale, and that Cancel cleared the selected
+  constant ID while leaving its row visibly selected. The editor now refreshes
+  table options after project refreshes and preserves an existing row selection
+  after Cancel. A pre-fix screen-control pass reached both tabs, confirmed the
+  System constants hardware-unavailable message, created `DemoConstant`, and
+  opened/canceled Edit once; on a later attempt Edit/Delete appeared disabled.
+  That evidence prompted the selection fix and is not a pass for the current
+  source. A fresh current-source screen walkthrough now confirms Add/Apply,
+  invalid-name feedback and clearing, Edit/Cancel selection, existing table
+  membership, System constants' hardware-unavailable disclosure, and Show All
+  Tags selection versus double-click activation. The table-selector refresh
+  after a table rename remains unverified. No project was saved or loaded;
+  runtime remained STOPPED and PLC DISCONNECTED.
+- Schema 9 now stores stable watch-row IDs, symbolic or absolute-address
+  references, display format, modify value, and comment. The editor renders an
+  eight-column watch grid and wires row creation/removal/reorder, Add All, Clear,
+  format selection, monitor display, and simulator-only batch modify. Migration
+  and runtime tests cover legacy schemas, address/type validation, atomic batch
+  writes, STOP-state output rejection, numeric formatting, and undo/redo.
+- The latest normal-renderer screen-control attempt opened the startup notice and
+  Logic Editor but did not reach the Watch or DB views: its click landed below the
+  Watch table row. Save Workspace As displayed `Existing file is not a supported
+  integrated project; choose a new Save As path.` No project was saved, no demo
+  fixture was changed, and runtime stayed STOPPED with PLC DISCONNECTED. This is
+  a failed/incomplete interaction attempt, not evidence that those controls work
+  or fail.
+- Current code evidence: build succeeded with 0 warnings/errors; the
+  virtual-controller suite passed 393/393; the focused project-tree sweep passed
+  14/14 gates and 100/100 assertions; and app-shell verification passed. These
+  results are offline evidence only. Screen-control verification of the new Watch
+  row actions, matched installed-TIA Portal V21 comparison, normal-renderer
+  property review, constants as LAD operands, physical tag-to-operand drag, and
+  table-selector refresh after rename remain open. A code review also found a
+  valid S7 alias issue: `%I0.0` and `%IX0.0` describe the same bit span but are not
+  yet canonicalized during watch lookup/duplicate detection.
+
+### Prior review snapshot — 2026-10-19 (historical; superseded by the current-source follow-up above)
 
 - Open-project execution boundary is fixed in source. A valid same-scene Open
   restores the authoring document without raising the controller-load event;
@@ -141,9 +199,10 @@ that move without ladder-owned outputs.
   Siemens-specific diagnostics only at a vendor-aware boundary. Studio 5000
   needs its own validator after its address rules are established. TIMER,
   COUNTER, and aggregate tag-address policies also need explicit treatment.
-- Watch entries remain persisted as symbol strings. Absolute addresses,
-  display formats, and simulator-only modify values require a watch-entry
-  model and schema change; they cannot be completed as a layout-only fix.
+- At this 2026-10-19 snapshot, watch entries were persisted as symbol strings.
+  Schema 9 subsequently added authored watch rows with addresses, display
+  formats, simulator-only modify values, and comments; see the current-source
+  follow-up above for implementation scope and remaining interaction evidence.
 - Global DB authoring and JSON loading now apply the same case-insensitive
   member-name rule; blank and duplicate names and non-Static members are
   rejected by the loader. The production Tree-editor gate now exercises blank
@@ -207,8 +266,9 @@ that move without ladder-owned outputs.
   and visibly confirmed its owner title and grouped six-column declaration
   grid. This is local simulator UI evidence, not installed-TIA parity.
 - PLC tag views omit User/System constants and several TIA attributes.
-- Watch rows omit address editing, display-format selection, and a modify-value
-  workflow.
+- At this snapshot, Watch rows omitted address editing, display-format
+  selection, and modify values. The current-source follow-up above supersedes
+  this status; current screen-control and matched-TIA acceptance remain open.
 - The Global DB declaration grid now has direct Add/Edit/Remove commands and
   an inspected current-source normal-renderer capture at
   `.tools/global-db-direct-actions-v1.png`. The property form remains the
@@ -782,8 +842,8 @@ a safety-rated circuit or installed-TIA parity.
 | Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. An earlier scratch-screen checkpoint visibly applied Data Type, Start Value, Retain, and Comment changes and undid/redid them; it predates the current-source check below. | Current-source visible Start Value commit and physical Undo/Redo, visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
 | Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
 | Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
-| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. A fresh scratch screen pass edited a tag comment and visibly confirmed Apply, Undo, Redo, Save, and reopen persistence. A separate scratch pass clicked Cancel on a tag edit and confirmed the original blank Comment was restored; pending-edit prompts appeared through View, tag rail, Tools, and Add Tag navigation. The current-source walkthrough opened a disposable tag draft; Cancel in its pending-edits prompt kept the draft, while Discard restored the default draft and left the table at five tags. | Visible Add Tag Apply/creation and a form-level Cancel that discards the draft remain unverified. User/System constants remain unsupported. Physical pointer drag from the new detail table to a LAD operand remains unverified; the source gate verifies payload identity and production-handler behavior. |
-| Watch tables | Gates cover table deletion and symbol removal, survivor isolation, Undo/Redo, Save/Load, and stale unresolved-symbol visibility/removal. A current-source screen walk opened Watch table 1, visibly removed a selected row (5→4), cleared (4→0), used Add All (0→5), and replayed the changes through Undo/Redo before restoring five rows. | Adding a new nonduplicate symbol remains unverified by screen control. Address-based rows, display formats, simulator-safe modify values, and row reorder remain unsupported. |
+| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. Earlier scratch passes visibly verified tag-comment Apply/Undo/Redo/Save/reopen, form Cancel, and pending-edit prompts. User constants have source-level create/edit/delete, validation, table membership, persistence, undo, invalid-feedback, and cancel coverage. A current-source screen walkthrough is not completed: it did not reach these views. System constants disclose that device metadata is unavailable in this offline project. | Current-source visible Add Tag Apply/creation and form Cancel; current-source User constant interactions; physical pointer drag from the new detail table to a LAD operand; and matched installed-TIA comparison remain open. |
+| Watch tables | Schema 9 and source gates cover stable row identity, symbolic and absolute-address references, type-valid display formats, comment/modify values, Add/Remove/Reorder/Add All/Clear, monitoring, simulator-only atomic modification, output STOP rejection, migration, persistence, and Undo/Redo. The current-source screen-control attempt did not reach the Watch view because its click missed the project-tree row. | Screen-control verification of each new row action, display/validation feedback, Save/Load, and current-source Undo/Redo remains open. Resolve equivalent S7 address aliases before accepting duplicate detection and address lookup. Matched installed-TIA comparison remains open. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
 ### 2026-10-19: property transaction review update
@@ -865,12 +925,13 @@ touching the user's open process or project.
 
 ### Work order
 
-1. Finish the screen-control matrix for Global DB transactions, tag properties,
-   and Watch Add/Remove/Clear; verify selected-row targeting, validation,
-   Undo/Redo, and project Save/Load without saving over the user's project.
-2. Implement remaining property scope: User/System constants when sourced
-   metadata exists, tag-to-operand drag, and Watch address/format/modify
-   behavior behind an explicit simulator-only write boundary.
+1. Finish the current-source screen-control matrix for Global DB transactions,
+   tag properties, User constants, and Watch row actions. Verify selected-row
+   targeting, validation, Undo/Redo, and Save/Load on disposable projects only.
+2. Fix and test canonical S7 address alias resolution/duplicate detection.
+   Keep System constants limited to sourced device metadata, and verify the
+   physical tag-to-operand drag. Watch address/format/modify code exists, but
+   its current-source pointer interaction and visual feedback remain unverified.
 3. Keep instance DB overrides read-only until their storage and runtime
    semantics can be implemented end to end; compare the current layout against
    matched TIA V21 captures.

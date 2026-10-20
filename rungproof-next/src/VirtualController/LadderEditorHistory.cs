@@ -23,7 +23,8 @@ public sealed record LadderEditorSnapshot(
     int NextId, IReadOnlyList<LadderInstance>? Instances = null,
     IReadOnlyList<string>? TagTables = null,
     IReadOnlyList<EditableWatchTable>? WatchTables = null,
-    int ActiveWatchTableIndex = 0);
+    int ActiveWatchTableIndex = 0,
+    IReadOnlyList<PlcUserConstant>? UserConstants = null);
 
 public sealed class LadderEditorHistory
 {
@@ -112,7 +113,11 @@ public sealed class LadderEditorHistory
 
 public sealed partial class LadderEditorDocument
 {
-    public LadderEditorSnapshot CaptureSnapshot() => new(
+    public LadderEditorSnapshot CaptureSnapshot()
+    {
+        var watchVariables = WatchVariablesFor(Tags);
+        foreach (var table in WatchTables) table.ValidateRows(watchVariables);
+        return new(
         Id,
         Name,
         SourceSceneId,
@@ -124,12 +129,17 @@ public sealed partial class LadderEditorDocument
         ActiveBlockIndex,
         EntryBlockId,
         _nextId, Instances.ToArray(), TagTables.ToArray(),
-        WatchTables.Select(table => new EditableWatchTable(table.Name, table.Variables)).ToArray(),
-        ActiveWatchTableIndex);
+        WatchTables.Select(CloneWatchTable).ToArray(),
+        ActiveWatchTableIndex,
+        UserConstants.ToArray());
+    }
 
     public void RestoreSnapshot(LadderEditorSnapshot snapshot)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
+        var snapshotWatchVariables = WatchVariablesFor(snapshot.Tags);
+        foreach (var table in snapshot.WatchTables ?? [])
+            table.ValidateRows(snapshotWatchVariables);
         if (!LadderEditorDocument.TryValidateTagTableNames(snapshot.TagTables, out var tagTableError))
             throw new ArgumentException(tagTableError, nameof(snapshot));
 
@@ -140,6 +150,9 @@ public sealed partial class LadderEditorDocument
         foreach (var tagTable in snapshot.Tags.Select(tag => string.IsNullOrWhiteSpace(tag.TagTable)
                      ? "Default tag table" : tag.TagTable.Trim()).Distinct(StringComparer.OrdinalIgnoreCase))
             if (!restoredTagTables.Contains(tagTable, StringComparer.OrdinalIgnoreCase)) restoredTagTables.Add(tagTable);
+        if (!LadderEditorDocument.TryValidateUserConstants(snapshot.UserConstants, snapshot.Tags,
+                snapshot.Blocks, restoredTagTables, out var constantError))
+            throw new ArgumentException(constantError, nameof(snapshot));
 
         InvalidateCommandTargets();
         Id = snapshot.Id;
@@ -148,6 +161,13 @@ public sealed partial class LadderEditorDocument
         ScanPeriod = snapshot.ScanPeriod;
         Tags.Clear();
         Tags.AddRange(snapshot.Tags);
+        UserConstants.Clear();
+        foreach (var constant in snapshot.UserConstants ?? [])
+        {
+            var canonicalTable = restoredTagTables.First(name =>
+                name.Equals(constant.TagTable, StringComparison.OrdinalIgnoreCase));
+            UserConstants.Add(constant with { TagTable = canonicalTable });
+        }
         TagTables.Clear();
         TagTables.AddRange(restoredTagTables);
         for (var tagIndex = 0; tagIndex < Tags.Count; tagIndex++)
@@ -166,12 +186,35 @@ public sealed partial class LadderEditorDocument
         Tasks.AddRange(snapshot.Tasks.Select(CloneTask));
         WatchTables.Clear();
         if (snapshot.WatchTables is { Count: > 0 })
-            WatchTables.AddRange(snapshot.WatchTables.Select(table => new EditableWatchTable(table.Name, table.Variables)));
-        else WatchTables.Add(new EditableWatchTable("Watch table 1", snapshot.WatchVariables));
+            WatchTables.AddRange(snapshot.WatchTables.Select(CloneWatchTable));
+        else WatchTables.Add(EditableWatchTable.CreateDefault(snapshot.WatchVariables));
         ActiveWatchTableIndex = Math.Clamp(snapshot.ActiveWatchTableIndex, 0, WatchTables.Count - 1);
         ActiveBlockIndex = snapshot.ActiveBlockIndex;
         EntryBlockId = snapshot.EntryBlockId;
         _nextId = snapshot.NextId;
+    }
+
+    private static EditableWatchTable CloneWatchTable(EditableWatchTable source)
+    {
+        var table = new EditableWatchTable(source.Name, id: source.Id);
+        table.Rows.AddRange(source.Rows.Select(row => row.Clone()));
+        return table;
+    }
+
+    private static IReadOnlyList<PlcVariable> WatchVariablesFor(IReadOnlyList<PlcVariable> tags)
+    {
+        var variables = new List<PlcVariable>();
+        foreach (var tag in tags)
+        {
+            if (!PlcAggregates.IsAggregate(tag.Type))
+            {
+                variables.Add(tag);
+                continue;
+            }
+            try { variables.AddRange(PlcAggregates.Expand([tag])); }
+            catch (ArgumentException) { }
+        }
+        return variables;
     }
 
     private static EditableBlock CloneBlock(EditableBlock source)

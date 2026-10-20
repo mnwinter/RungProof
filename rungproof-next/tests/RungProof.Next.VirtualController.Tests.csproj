@@ -18,6 +18,7 @@
     <Compile Include="ObservationLifecycleTests.cs" />
     <Compile Include="RecursiveEditorTests.cs" />
     <Compile Include="EditorMigrationTests.cs" />
+    <Compile Include="WatchRowTests.cs" />
     <Compile Include="ParameterizedCallTests.cs" />
     <Compile Include="ParameterizedCallAcceptanceTests.cs" />
     <Compile Include="ParameterizedCallContractRegressionTests.cs" />

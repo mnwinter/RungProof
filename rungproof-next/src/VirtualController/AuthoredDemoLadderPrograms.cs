@@ -34,6 +34,27 @@ public static class AuthoredDemoLadderPrograms
             "lab-11-13-xy-palletizing" => CreateIntegratedPalletizer(),
             _ => null!,
         };
+        if (document is not null)
+        {
+            // Authored demo projects are compared with their checked-in JSON
+            // fixtures. Give their watch rows deterministic identities so a
+            // schema migration or a new process does not create false drift.
+            for (var tableIndex = 0; tableIndex < document.WatchTables.Count; tableIndex++)
+            {
+                var table = document.WatchTables[tableIndex];
+                for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
+                {
+                    var row = table.Rows[rowIndex];
+                    table.Rows[rowIndex] = new EditableWatchRow(
+                        row.Reference,
+                        row.ReferenceKind,
+                        row.DisplayFormat,
+                        row.ModifyValue,
+                        row.Comment,
+                        $"{document.Id}-watch-{tableIndex + 1}-row-{rowIndex + 1}");
+                }
+            }
+        }
         return document is not null;
     }
 

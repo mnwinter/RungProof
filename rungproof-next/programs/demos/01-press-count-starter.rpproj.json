@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 9,
   "kind": "rungproof-ladder-project",
   "id": "demo-1-press-count",
   "name": "Press_Count_Main",
@@ -237,8 +237,47 @@
     "press_count",
     "threshold_lamp"
   ],
+  "watchTables": [
+    {
+      "id": "default-watch-table-1",
+      "name": "Watch table 1",
+      "variables": [
+        "pulse_received",
+        "press_count",
+        "threshold_lamp"
+      ],
+      "rows": [
+        {
+          "id": "demo-1-press-count-watch-1-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "pulse_received",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-1-press-count-watch-1-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "press_count",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-1-press-count-watch-1-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "threshold_lamp",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
   "instances": [],
   "tagTables": [
     "Default tag table"
-  ]
+  ],
+  "userConstants": []
 }

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 9,
   "kind": "rungproof-ladder-project",
   "id": "demo-4-batch-process",
   "name": "Batch_Process_Main",
@@ -667,8 +667,74 @@
     "pallet_count",
     "pallet_count_valid"
   ],
+  "watchTables": [
+    {
+      "id": "default-watch-table-1",
+      "name": "Watch table 1",
+      "variables": [
+        "pallet_detected",
+        "pallet_type_valid",
+        "count_request",
+        "batch_count",
+        "pallet_count",
+        "pallet_count_valid"
+      ],
+      "rows": [
+        {
+          "id": "demo-4-batch-process-watch-1-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "pallet_detected",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-4-batch-process-watch-1-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "pallet_type_valid",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-4-batch-process-watch-1-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "count_request",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-4-batch-process-watch-1-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "batch_count",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-4-batch-process-watch-1-row-5",
+          "referenceKind": "Symbolic",
+          "reference": "pallet_count",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-4-batch-process-watch-1-row-6",
+          "referenceKind": "Symbolic",
+          "reference": "pallet_count_valid",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
   "instances": [],
   "tagTables": [
     "Default tag table"
-  ]
+  ],
+  "userConstants": []
 }

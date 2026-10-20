@@ -283,6 +283,7 @@ public partial class SimulatorShell : CanvasLayer
     public event Action<string, bool>? VirtualForceRequested;
     public event Action<string>? VirtualForceRemoveRequested;
     public event Action? VirtualForceClearRequested;
+    public event Func<IReadOnlyList<(string VariableName, object Value)>, bool>? VirtualWatchModifyRequested;
     public event Action? VirtualStartRequested;
     public event Action? VirtualStopRequested;
     public event Action<string>? ProductViewChanged;
@@ -5202,7 +5203,8 @@ public partial class SimulatorShell : CanvasLayer
         var editorDocumentItems = new Dictionary<string, HBoxContainer>(StringComparer.Ordinal);
         var nextEditorDocumentIndex = 0;
         var editorTagDocuments = new Dictionary<string, string?>(StringComparer.Ordinal);
-        var editorInstanceDbDocuments = new Dictionary<string, int>(StringComparer.Ordinal);
+        var editorInstanceDbDocuments = new Dictionary<string, string>(StringComparer.Ordinal);
+        var editorWatchTableDocuments = new Dictionary<string, string>(StringComparer.Ordinal);
         string BlockDocumentKey(string blockId) => EditorDocumentIdentity.ForBlock(blockId);
         bool TryResolveBlockDocument(string key, out int blockIndex) =>
             EditorDocumentIdentity.TryResolveBlockIndex(document, key, out blockIndex);
@@ -5923,15 +5925,16 @@ public partial class SimulatorShell : CanvasLayer
 
         LadderEditTransaction? propertyEdit = null;
         bool propertyDirty = false;
-        bool tagFormDirty = false, blockFormDirty = false, taskFormDirty = false, interfaceFormDirty = false, loadingFormControls = false;
-        long tagFormRevision = 0, blockFormRevision = 0, taskFormRevision = 0, interfaceFormRevision = 0;
+        bool tagFormDirty = false, userConstantFormDirty = false, blockFormDirty = false, taskFormDirty = false, interfaceFormDirty = false, loadingFormControls = false;
+        long tagFormRevision = 0, userConstantFormRevision = 0, blockFormRevision = 0, taskFormRevision = 0, interfaceFormRevision = 0;
+        string? selectedUserConstantId = null;
         Tree? globalDbDeclarations = null;
         void UpdateGlobalDbDeclarationGridEditability()
         {
             var firstMember = globalDbDeclarations?.GetRoot()?.GetFirstChild();
             if (firstMember is null) return;
 
-            var canEdit = !(propertyDirty || tagFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty);
+            var canEdit = !(propertyDirty || tagFormDirty || userConstantFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty);
             for (var member = firstMember; member is not null; member = member.GetNext())
             {
                 var startValueEditable = Enum.TryParse<PlcVariableType>(member.GetText(1), true, out var type)
@@ -6290,6 +6293,10 @@ public partial class SimulatorShell : CanvasLayer
         Label? interfaceHeading = null;
         Label? interfaceExecutionNote = null;
         Label? tagTableContextHeading = null;
+        Action? refreshUserConstants = null;
+        Action? loadUserConstantForm = null;
+        Action? discardUserConstantForm = null;
+        Action? refreshEditorAfterInitialization = null;
         Button? renameTagTableAction = null;
         Button? removeTagTableAction = null;
         RichTextLabel? blockInterfaceSummary = null;
@@ -6330,10 +6337,11 @@ public partial class SimulatorShell : CanvasLayer
                 && !activeTagTableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase)
                 && document.TagTables.Contains(activeTagTableName, StringComparer.OrdinalIgnoreCase);
             if (renameTagTableAction is not null)
-                renameTagTableAction.Disabled = !isUserTable || tagFormDirty || ChallengeMutationLocked;
+                renameTagTableAction.Disabled = !isUserTable || tagFormDirty || userConstantFormDirty || ChallengeMutationLocked;
             if (removeTagTableAction is not null)
-                removeTagTableAction.Disabled = !isUserTable || tagFormDirty || ChallengeMutationLocked
-                    || document.Tags.Any(tag => tag.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase));
+                removeTagTableAction.Disabled = !isUserTable || tagFormDirty || userConstantFormDirty || ChallengeMutationLocked
+                    || document.Tags.Any(tag => tag.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase))
+                    || document.UserConstants.Any(constant => constant.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase));
         }
 
         Action? refreshTreeActions = null;
@@ -6372,10 +6380,11 @@ public partial class SimulatorShell : CanvasLayer
         void RefreshEditor()
         {
             UpdateGlobalDbDeclarationGridEditability();
-            if (propertyDirty || tagFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty) return;
+            if (propertyDirty || tagFormDirty || userConstantFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty) return;
             ReconcileTagTableEditorState();
             refreshingEditor = true;
             RefreshTagTableEditorControls();
+            refreshUserConstants?.Invoke();
             document.EnsureInstanceDataBlocks();
             var activeBlockName = document.Blocks.Count > 0
                 ? document.Blocks[Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1)].Name
@@ -6439,6 +6448,42 @@ public partial class SimulatorShell : CanvasLayer
                         + "Use the close button beside this tab to close it.";
                 }
 
+                foreach (var (key, watchTableId) in editorWatchTableDocuments)
+                {
+                    if (!editorDocumentButtons.TryGetValue(key, out var watchTab)) continue;
+                    var watchTableIndex = document.WatchTables.FindIndex(table => table.Id.Equals(watchTableId, StringComparison.Ordinal));
+                    if (watchTableIndex < 0)
+                    {
+                        watchTab.Disabled = true;
+                        watchTab.Text = "[Deleted watch table]";
+                        watchTab.TooltipText = "This watch table was deleted. Undo restores its original identity and tab.";
+                        continue;
+                    }
+
+                    var watchTable = document.WatchTables[watchTableIndex];
+                    watchTab.Disabled = false;
+                    watchTab.Text = $"{(projectDirty ? "* " : string.Empty)}{watchTable.Name} — {projectFileName}";
+                    watchTab.TooltipText = $"Watch table · {watchTable.Name} · stable table identity. Values are simulator-only.";
+                }
+
+                foreach (var (key, ownerLocator) in editorInstanceDbDocuments)
+                {
+                    if (!editorDocumentButtons.TryGetValue(key, out var instanceDbTab)) continue;
+                    var owner = ResolveInstanceDbOwner(ownerLocator);
+                    if (owner?.DataBlock is null)
+                    {
+                        instanceDbTab.Disabled = true;
+                        instanceDbTab.Text = "[Deleted instance DB]";
+                        instanceDbTab.TooltipText = "This FB or IEC instance no longer exists. The tab will not retarget another DB.";
+                        continue;
+                    }
+
+                    var instanceDb = owner.Value.DataBlock;
+                    instanceDbTab.Disabled = false;
+                    instanceDbTab.Text = $"{(projectDirty ? "* " : string.Empty)}{instanceDb.Name} [DB{instanceDb.Number}] — {projectFileName}";
+                    instanceDbTab.TooltipText = $"Instance DB · stable owner {ownerLocator} · offline project definition.";
+                }
+
                 if (activeEditorDocumentKey.StartsWith("block:", StringComparison.Ordinal)
                     && !TryResolveBlockDocument(activeEditorDocumentKey, out _)
                     && document.Blocks.Count > 0)
@@ -6453,6 +6498,39 @@ public partial class SimulatorShell : CanvasLayer
                     AddEditorDocumentTab(activeTabKey, editorTabTitle.Text);
                     editorDocumentButtons[activeTabKey].Disabled = false;
                     editorDocumentButtons[activeTabKey].ButtonPressed = true;
+                }
+                else if (editorInstanceDbDocuments.TryGetValue(activeEditorDocumentKey, out var activeInstanceDbOwner))
+                {
+                    if (ResolveInstanceDbOwner(activeInstanceDbOwner)?.DataBlock is not null)
+                        OpenInstanceDbDocumentByOwner(activeInstanceDbOwner);
+                    else if (document.Blocks.Count > 0)
+                    {
+                        activeEditorDocumentKey = BlockDocumentKey(document.Blocks[activeBlockOrdinal].Id);
+                        SetEditorDocumentBody(activeEditorDocumentKey);
+                    }
+                }
+                else if (editorWatchTableDocuments.TryGetValue(activeEditorDocumentKey, out var activeWatchTableId))
+                {
+                    var activeWatchTableIndex = document.WatchTables.FindIndex(table => table.Id.Equals(activeWatchTableId, StringComparison.Ordinal));
+                    if (activeWatchTableIndex >= 0)
+                    {
+                        var activeWatchTable = document.WatchTables[activeWatchTableIndex];
+                        editorDocumentButtons[activeEditorDocumentKey].Disabled = false;
+                        editorDocumentButtons[activeEditorDocumentKey].ButtonPressed = true;
+                        editorTabTitle.Text = $"{(projectDirty ? "* " : string.Empty)}{activeWatchTable.Name} — {projectFileName}";
+                        editorTabTitle.TooltipText = $"Watch table · {activeWatchTable.Name}. Values and simulated force status are offline simulator state.";
+                    }
+                    else if (FindOpenEditorDocumentFallback(activeEditorDocumentKey) is { } fallbackWatchDocument
+                        && editorWatchTableDocuments.TryGetValue(fallbackWatchDocument, out var fallbackWatchTableId)
+                        && document.WatchTables.FirstOrDefault(table => table.Id.Equals(fallbackWatchTableId, StringComparison.Ordinal)) is { } fallbackWatchTable)
+                    {
+                        OpenWatchTableDocument(fallbackWatchTable);
+                    }
+                    else if (document.Blocks.Count > 0)
+                    {
+                        activeEditorDocumentKey = BlockDocumentKey(document.Blocks[activeBlockOrdinal].Id);
+                        SetEditorDocumentBody(activeEditorDocumentKey);
+                    }
                 }
             }
             while (blockItems.Count < document.Blocks.Count)
@@ -6516,9 +6594,10 @@ public partial class SimulatorShell : CanvasLayer
                 {
                     var tableName = document.TagTables[index];
                     var count = document.Tags.Count(tag => tag.TagTable.Equals(tableName, StringComparison.Ordinal));
-                    tagTableItems[index].SetText(0, $"{tableName} [{count}]");
+                    var constantCount = document.UserConstants.Count(constant => constant.TagTable.Equals(tableName, StringComparison.Ordinal));
+                    tagTableItems[index].SetText(0, $"{tableName} [{count} tags · {constantCount} constants]");
                     tagTableItems[index].SetMetadata(0, $"tag-table:{tableName}");
-                    tagTableItems[index].SetTooltipText(0, $"{count} PLC tag(s) in {tableName}.");
+                    tagTableItems[index].SetTooltipText(0, $"{count} PLC tag(s) and {constantCount} user constant(s) in {tableName}.");
                     tagTableItems[index].Visible = true;
                 }
                 for (var index = document.TagTables.Count; index < tagTableItems.Count; index++)
@@ -7368,18 +7447,30 @@ public partial class SimulatorShell : CanvasLayer
         var watchSymbol = new OptionButton { Name = "WatchSymbol", CustomMinimumSize = new Vector2(180, 30) };
         watchSymbolHeader.AddChild(watchSymbol);
         var addWatch = ToolbarButton("AddWatchSymbol", "+ SYMBOL", accent, 82);
-        var removeWatch = ToolbarButton("RemoveWatchSymbol", "REMOVE", new Color("8a4d55"), 82);
-        var addAllWatch = ToolbarButton("AddAllWatchSymbols", "ADD ALL", new Color("4d6674"), 82);
-        var clearWatch = ToolbarButton("ClearWatchSymbols", "CLEAR", new Color("637985"), 72);
+        var watchAddress = new LineEdit { Name = "WatchAbsoluteAddress", PlaceholderText = "Absolute address", CustomMinimumSize = new Vector2(145, 30), ClearButtonEnabled = true };
+        var addWatchAddress = ToolbarButton("AddWatchAddress", "+ ADDRESS", new Color("4d6674"), 92);
+        var removeWatch = ToolbarButton("RemoveWatchSymbol", "REMOVE", new Color("8a4d55"), 72);
+        var moveWatchRowUp = ToolbarButton("MoveWatchRowUp", "↑ ROW", new Color("4d6674"), 60);
+        var moveWatchRowDown = ToolbarButton("MoveWatchRowDown", "↓ ROW", new Color("4d6674"), 60);
+        var addAllWatch = ToolbarButton("AddAllWatchSymbols", "ADD ALL", new Color("4d6674"), 72);
+        var clearWatch = ToolbarButton("ClearWatchSymbols", "CLEAR", new Color("637985"), 58);
+        var modifyWatch = ToolbarButton("ModifyWatchValues", "SIM MODIFY", new Color("a66b20"), 96);
+        modifyWatch.TooltipText = "Apply selected Modify values to the offline simulator snapshot only. Never writes to a physical PLC.";
         watchSymbolHeader.AddChild(addWatch);
+        watchAddress.Visible = addWatchAddress.Visible = siemens;
+        watchSymbolHeader.AddChild(watchAddress);
+        watchSymbolHeader.AddChild(addWatchAddress);
         watchSymbolHeader.AddChild(removeWatch);
+        watchSymbolHeader.AddChild(moveWatchRowUp);
+        watchSymbolHeader.AddChild(moveWatchRowDown);
         watchSymbolHeader.AddChild(addAllWatch);
         watchSymbolHeader.AddChild(clearWatch);
+        watchSymbolHeader.AddChild(modifyWatch);
         watchPage.AddChild(watchSymbolHeader);
         var watchTable = new Tree
         {
             Name = "WatchTable",
-            Columns = 6,
+            Columns = 8,
             ColumnTitlesVisible = true,
             HideRoot = true,
             AllowReselect = true,
@@ -7387,17 +7478,27 @@ public partial class SimulatorShell : CanvasLayer
         };
         foreach (var (column, title) in new[]
                  {
-                     (0, "SYMBOL"), (1, "TYPE"), (2, "VALUE"),
-                     (3, "ROLE"), (4, "QUALITY / STATE"), (5, "SCENE BINDING"),
+                     (0, "NAME"), (1, "ADDRESS"), (2, "DISPLAY FORMAT"),
+                     (3, "MONITOR VALUE"), (4, "MODIFY VALUE"), (5, "MODIFY"),
+                     (6, "COMMENT"), (7, "TAG COMMENT"),
                  })
             watchTable.SetColumnTitle(column, title);
         watchTable.SetColumnExpand(0, true);
-        watchTable.SetColumnExpand(1, false);
-        watchTable.SetColumnCustomMinimumWidth(1, 75);
+        watchTable.SetColumnCustomMinimumWidth(0, 115);
+        watchTable.SetColumnExpand(1, true);
+        watchTable.SetColumnCustomMinimumWidth(1, 100);
         watchTable.SetColumnExpand(2, true);
-        watchTable.SetColumnExpand(3, false);
-        watchTable.SetColumnCustomMinimumWidth(3, 80);
+        watchTable.SetColumnCustomMinimumWidth(2, 100);
+        watchTable.SetColumnExpand(3, true);
+        watchTable.SetColumnCustomMinimumWidth(3, 95);
         watchTable.SetColumnExpand(4, true);
+        watchTable.SetColumnCustomMinimumWidth(4, 95);
+        watchTable.SetColumnExpand(5, false);
+        watchTable.SetColumnCustomMinimumWidth(5, 56);
+        watchTable.SetColumnExpand(6, true);
+        watchTable.SetColumnCustomMinimumWidth(6, 110);
+        watchTable.SetColumnExpand(7, true);
+        watchTable.SetColumnCustomMinimumWidth(7, 110);
         watchTable.SetColumnExpand(5, true);
         watchTable.AddThemeColorOverride("font_color", new Color("263943"));
         ConfigureSelectableList(watchTable);
@@ -7405,13 +7506,89 @@ public partial class SimulatorShell : CanvasLayer
         watchPage.AddChild(watchTable);
         watchTable.CustomMinimumSize = new Vector2(0, 66);
         AddInspectorPage(watchPage);
+        VBoxContainer? watchDocument = null;
+        Tree? watchDocumentTable = null;
+        Label? watchDocumentTitle = null;
+        Label? watchDocumentStatus = null;
+        var watchDocumentRows = new List<TreeItem>();
+        string[] watchDocumentRowNames = [];
+        if (siemens)
+        {
+            watchDocument = new VBoxContainer
+            {
+                Name = "WatchTableDocument",
+                Visible = false,
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+            };
+            watchDocument.AddThemeConstantOverride("separation", 6);
+            watchDocumentTitle = new Label
+            {
+                Name = "WatchTableDocumentTitle",
+                Text = "Watch table",
+                AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            };
+            watchDocumentTitle.AddThemeColorOverride("font_color", new Color("202b31"));
+            watchDocumentTitle.AddThemeFontSizeOverride("font_size", 20);
+            watchDocument.AddChild(watchDocumentTitle);
+            watchDocumentStatus = new Label
+            {
+                Name = "WatchTableDocumentStatus",
+                Text = "Offline simulator values · no PLC connection",
+                AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            };
+            watchDocumentStatus.AddThemeColorOverride("font_color", new Color("4f6874"));
+            watchDocument.AddChild(watchDocumentStatus);
+            watchDocumentTable = new Tree
+            {
+                Name = "WatchTableDocumentGrid",
+                Columns = 8,
+                ColumnTitlesVisible = true,
+                HideRoot = true,
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+                CustomMinimumSize = new Vector2(0, 220),
+            };
+            foreach (var (column, title) in new[]
+                     {
+                         (0, "NAME"), (1, "ADDRESS"), (2, "DISPLAY FORMAT"),
+                         (3, "MONITOR VALUE"), (4, "MODIFY VALUE"), (5, "MODIFY"),
+                         (6, "COMMENT"), (7, "TAG COMMENT"),
+                     })
+                watchDocumentTable.SetColumnTitle(column, title);
+            watchDocumentTable.SetColumnExpand(0, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(0, 115);
+            watchDocumentTable.SetColumnExpand(1, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(1, 100);
+            watchDocumentTable.SetColumnExpand(2, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(2, 100);
+            watchDocumentTable.SetColumnExpand(3, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(3, 95);
+            watchDocumentTable.SetColumnExpand(4, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(4, 95);
+            watchDocumentTable.SetColumnExpand(5, false);
+            watchDocumentTable.SetColumnCustomMinimumWidth(5, 56);
+            watchDocumentTable.SetColumnExpand(6, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(6, 110);
+            watchDocumentTable.SetColumnExpand(7, true);
+            watchDocumentTable.SetColumnCustomMinimumWidth(7, 110);
+            watchDocumentTable.AddThemeColorOverride("font_color", new Color("263943"));
+            ConfigureSelectableList(watchDocumentTable);
+            watchDocumentTable.AddThemeStyleboxOverride("panel", BoxStyle(new Color("ffffff"), new Color("b7c0c5")));
+            watchDocument.AddChild(watchDocumentTable);
+            center.AddChild(watchDocument);
+        }
         bottomTabs.CurrentTab = 1;
         bottomTabs.SetDeferred("current_tab", 1);
 
         string[] watchTagNames = [];
         string[] watchRowNames = [];
         string[] watchTableNames = [];
+        var refreshingWatchTableSelector = false;
         var watchRows = new List<TreeItem>();
+        var watchModifySelection = new HashSet<string>(StringComparer.Ordinal);
+        PlcVariable[] watchVariablesCache = [];
+        string WatchModifyKey(EditableWatchRow row) => $"{document.ActiveWatchTable.Id}:{row.Id}";
         Action openWatchTableCreation = () => { };
         Action openWatchTableRename = () => { };
 
@@ -7426,7 +7603,7 @@ public partial class SimulatorShell : CanvasLayer
             if (variable.Type is PlcVariableType.Int or PlcVariableType.DInt or PlcVariableType.Real)
                 return snapshot.NumericVariables.TryGetValue(variable.Name, out var numeric)
                     ? variable.Type == PlcVariableType.Real
-                        ? numeric.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture)
+                        ? WatchTableDisplayFormat.FormatReal(numeric, "Auto")
                         : numeric.ToString("0", System.Globalization.CultureInfo.InvariantCulture)
                     : "—";
             if (variable.Type == PlcVariableType.Time && snapshot.NumericVariables.TryGetValue(variable.Name, out var milliseconds))
@@ -7438,12 +7615,122 @@ public partial class SimulatorShell : CanvasLayer
             return "—";
         }
 
+        string NormalizeWatchAddress(string address) =>
+            (address ?? string.Empty).Trim().TrimStart('%').ToUpperInvariant();
+
+        PlcVariable? ResolveWatchVariable(EditableWatchRow row)
+        {
+            if (row.ReferenceKind == WatchReferenceKind.Symbolic)
+                return watchVariablesCache.FirstOrDefault(tag => tag.Name.Equals(row.Reference, StringComparison.Ordinal));
+            var matches = watchVariablesCache.Where(tag => !string.IsNullOrWhiteSpace(tag.Address)
+                && SiemensPlcTagAddress.IsPersistedS7AddressCandidate(tag.Address)
+                && NormalizeWatchAddress(tag.Address).Equals(NormalizeWatchAddress(row.Reference), StringComparison.Ordinal))
+                .Where(tag => SiemensPlcTagAddress.TryValidateWatchAddress(row.Reference, tag.Type, tag.Role, out _))
+                .Take(2).ToArray();
+            // Absolute references are only meaningful in this offline model
+            // when they exactly identify one declared tag. Never infer a DB
+            // member from a byte offset or alias a partial address span.
+            return matches.Length == 1 ? matches[0] : null;
+        }
+
+        string[] WatchDisplayFormats(PlcVariable? variable) =>
+            WatchTableDisplayFormat.ForType(variable?.Type).ToArray();
+
+        string FormatWatchValue(EditableWatchRow row, PlcVariable variable, VirtualControllerSnapshot snapshot)
+        {
+            var format = row.DisplayFormat.Trim();
+            if (format.Equals("Binary", StringComparison.OrdinalIgnoreCase)) format = "Bin";
+            if (format.Equals("Signed decimal", StringComparison.OrdinalIgnoreCase)) format = "Dec+/-";
+            if (format.Equals("Auto", StringComparison.OrdinalIgnoreCase)) return WatchValue(variable, snapshot);
+            if (variable.Type == PlcVariableType.Bool && snapshot.Variables.TryGetValue(variable.Name, out var boolean))
+            {
+                if (format.Equals("Bool", StringComparison.OrdinalIgnoreCase)) return boolean ? "TRUE" : "FALSE";
+                var bit = boolean ? 1 : 0;
+                return format.Equals("Hex", StringComparison.OrdinalIgnoreCase) ? $"16#{bit:X}" : bit.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+            if (variable.Type is PlcVariableType.Int or PlcVariableType.DInt
+                && snapshot.NumericVariables.TryGetValue(variable.Name, out var number))
+            {
+                var integer = checked((long)Math.Truncate(number));
+                return WatchTableDisplayFormat.FormatInteger(integer, variable.Type, format);
+            }
+            if (variable.Type == PlcVariableType.Real && snapshot.NumericVariables.TryGetValue(variable.Name, out var real))
+                return WatchTableDisplayFormat.FormatReal(real, format);
+            if (variable.Type == PlcVariableType.Time && snapshot.NumericVariables.TryGetValue(variable.Name, out var milliseconds))
+            {
+                var value = (long)Math.Truncate(milliseconds);
+                return format.ToUpperInvariant() switch
+                {
+                    "TIMER" => LadderTimeLiteral.Format(TimeSpan.FromMilliseconds(milliseconds)),
+                    "HEX" => $"16#{unchecked((uint)value):X8}",
+                    "BIN" => Convert.ToString(unchecked((uint)value), 2),
+                    "DEC" or "DEC+/-" => value.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    _ => WatchValue(variable, snapshot),
+                };
+            }
+            if ((variable.Type == PlcVariableType.String || variable.Type == PlcVariableType.Enum)
+                && snapshot.TextVariables.TryGetValue(variable.Name, out var textValue))
+                return textValue;
+            return WatchValue(variable, snapshot);
+        }
+
+        bool TryParseWatchModifyValue(PlcVariable variable, string text, out object value, out string error)
+        {
+            var source = text;
+            text = text.Trim();
+            value = false;
+            error = string.Empty;
+            switch (variable.Type)
+            {
+                case PlcVariableType.Bool:
+                    if (bool.TryParse(text, out var boolean)) { value = boolean; return true; }
+                    if (text == "1") { value = true; return true; }
+                    if (text == "0") { value = false; return true; }
+                    error = "BOOL Modify value must be TRUE/FALSE or 1/0.";
+                    return false;
+                case PlcVariableType.Int:
+                    if (short.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var integer))
+                    { value = (int)integer; return true; }
+                    error = "INT Modify value must be a signed 16-bit integer.";
+                    return false;
+                case PlcVariableType.DInt:
+                    if (int.TryParse(text, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var dInteger))
+                    { value = dInteger; return true; }
+                    error = "DINT Modify value must be a signed 32-bit integer.";
+                    return false;
+                case PlcVariableType.Real:
+                    if (double.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var real)
+                        && double.IsFinite(real) && Math.Abs(real) <= float.MaxValue)
+                    { value = real; return true; }
+                    error = "REAL Modify value must be a finite single-precision number.";
+                    return false;
+                case PlcVariableType.Time:
+                    if (LadderTimeLiteral.TryParse(text, out var duration)) { value = duration; return true; }
+                    error = "TIME Modify value must use a supported T# duration literal.";
+                    return false;
+                case PlcVariableType.String:
+                    if (PlcTextValues.IsValid(variable, source))
+                    { value = source; return true; }
+                    error = $"STRING Modify value must be {PlcTextValues.MaximumLength} characters or fewer.";
+                    return false;
+                case PlcVariableType.Enum:
+                    if (variable.EnumMembers?.Contains(text, StringComparer.Ordinal) == true)
+                    { value = text; return true; }
+                    error = "ENUM Modify value must match one of the declared members.";
+                    return false;
+                default:
+                    error = $"{variable.Type.ToString().ToUpperInvariant()} Modify values are not supported by the offline watch-table simulator.";
+                    return false;
+            }
+        }
+
         void RefreshWatchTable(VirtualControllerSnapshot? snapshot)
         {
             // Scan publication changes values, not the controls' identity.
             // Clearing each scan loses selection and disrupts an open symbol
             // menu or a Remove click between mouse-down and mouse-up.
-            var watchVariables = AggregateWatchVariables(document.Tags).ToArray();
+            watchVariablesCache = AggregateWatchVariables(document.Tags).ToArray();
+            var watchVariables = watchVariablesCache;
             var currentTableNames = document.WatchTables.Select(table => table.Name).ToArray();
             if (!watchTableNames.SequenceEqual(currentTableNames, StringComparer.Ordinal))
             {
@@ -7451,7 +7738,10 @@ public partial class SimulatorShell : CanvasLayer
                 foreach (var tableName in currentTableNames) watchTableSelector.AddItem(tableName);
                 watchTableNames = currentTableNames;
             }
+            refreshingWatchTableSelector = true;
             watchTableSelector.Select(document.ActiveWatchTableIndex);
+            refreshingWatchTableSelector = false;
+            modifyWatch.Disabled = snapshot is null || !_ladderMonitorMatchesLoadedProgram;
             removeWatchTable.Disabled = document.WatchTables.Count <= 1;
             moveWatchTableUp.Disabled = document.ActiveWatchTableIndex <= 0;
             moveWatchTableDown.Disabled = document.ActiveWatchTableIndex >= document.WatchTables.Count - 1;
@@ -7465,13 +7755,14 @@ public partial class SimulatorShell : CanvasLayer
                 if (selectedIndex >= 0) watchSymbol.Select(selectedIndex);
                 watchTagNames = tagNames;
             }
-            // Keep unresolved persisted entries visible. Silently filtering them
-            // out makes the status count disagree with the grid and leaves the
-            // operator without a way to select and remove a stale symbol.
-            var rows = document.WatchVariables
-                .Select(name => (Name: name, Variable: watchVariables.FirstOrDefault(tag => tag.Name == name)))
+            // Keep unresolved references visible so stale symbols and absolute
+            // addresses without an exact declared-tag match can be corrected.
+            var rows = document.ActiveWatchTable.Rows
+                .Select(row => (Row: row, Variable: ResolveWatchVariable(row)))
                 .ToArray();
-            var rowNames = rows.Select(row => row.Name).ToArray();
+            var rowNames = rows.Select(entry => entry.Row.Id).ToArray();
+            watchModifySelection.IntersectWith(rows.Select(entry => WatchModifyKey(entry.Row)));
+            RefreshWatchRowActionState();
             if (watchTable.GetRoot() is null || !watchRowNames.SequenceEqual(rowNames, StringComparer.Ordinal))
             {
                 var selectedName = watchTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
@@ -7482,7 +7773,11 @@ public partial class SimulatorShell : CanvasLayer
                 {
                     var item = watchTable.CreateItem(rootItem);
                     item.SetMetadata(0, name);
-                    item.SetText(0, name);
+                    item.SetCellMode(5, TreeItem.TreeCellMode.Check);
+                    item.SetEditable(5, true);
+                    item.SetEditable(2, true);
+                    item.SetEditable(4, true);
+                    item.SetEditable(6, true);
                     if (name == selectedName) item.Select(0);
                     watchRows.Add(item);
                 }
@@ -7490,36 +7785,88 @@ public partial class SimulatorShell : CanvasLayer
             }
             for (var index = 0; index < rows.Length; index++)
             {
-                var (name, variable) = rows[index];
+                var (row, variable) = rows[index];
                 var item = watchRows[index];
+                item.SetText(0, row.ReferenceKind == WatchReferenceKind.Symbolic ? row.Reference : string.Empty);
+                item.SetText(1, row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
+                    ? row.Reference
+                    : variable is null || string.IsNullOrWhiteSpace(variable.Address) ? "—" : variable.Address);
+                item.SetText(2, row.DisplayFormat);
+                item.SetText(4, row.ModifyValue ?? string.Empty);
+                item.SetCellMode(5, TreeItem.TreeCellMode.Check);
+                item.SetChecked(5, watchModifySelection.Contains(WatchModifyKey(row)));
+                item.SetEditable(5, true);
+                item.SetEditable(2, true);
+                item.SetEditable(4, true);
+                item.SetEditable(6, true);
+                item.SetText(6, row.Comment);
+                item.SetText(7, variable?.Comment ?? string.Empty);
                 if (variable is null)
                 {
-                    item.SetText(1, "UNRESOLVED");
-                    item.SetText(2, "—");
-                    item.SetText(3, "—");
-                    item.SetText(4, "UNRESOLVED SYMBOL");
-                    item.SetText(5, "—");
-                    item.SetTooltipText(0, "This saved watch entry does not match a current PLC tag. Select it and use Remove to clear the stale entry.");
+                    item.SetText(3, "UNRESOLVED");
+                    item.SetCustomColor(3, new Color("b36c16"));
+                    item.SetTooltipText(1, row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
+                        ? "No single declared PLC tag exactly matches this absolute address. Runtime value and simulator modification are unavailable for an unmapped address."
+                        : "This saved symbolic watch entry does not match a current PLC tag. Runtime value and simulator modification are unavailable until it is repaired.");
+                    item.SetTooltipText(3, "UNRESOLVED · simulator does not infer addresses or partial DB spans.");
                     continue;
                 }
-                item.SetText(1, variable.Type.ToString().ToUpperInvariant());
                 var current = snapshot is not null && _ladderMonitorMatchesLoadedProgram;
-                item.SetText(2, current ? WatchValue(variable, snapshot!) : "—");
-                item.SetText(3, variable.Role.ToString().ToUpperInvariant());
-                var force = snapshot?.Forces.GetValueOrDefault(name);
-                item.SetText(4, !current ? snapshot is null ? "NOT LOADED" : "STALE EDIT"
-                    : force is not null ? $"SIM FORCE {force.Value.ToString().ToUpperInvariant()}"
-                    : snapshot!.State == VirtualControllerState.Running ? $"GOOD · SCAN {snapshot.ScanNumber}" : "GOOD · STOPPED");
-                item.SetText(5, string.IsNullOrWhiteSpace(variable.Binding) ? "—" : variable.Binding);
+                item.SetText(3, current ? FormatWatchValue(row, variable, snapshot!) : "—");
+                var force = snapshot?.Forces.GetValueOrDefault(variable.Name);
+                item.SetTooltipText(3, !current ? snapshot is null ? "No simulator program loaded." : "Editor differs from the loaded simulator program."
+                    : force is not null ? $"SIM FORCE {force.Value.ToString().ToUpperInvariant()} · offline only"
+                    : snapshot!.State == VirtualControllerState.Running ? $"SIMULATOR VALUE · SCAN {snapshot.ScanNumber} · offline only"
+                    : "SIMULATOR VALUE · STOPPED · offline only");
+                item.SetTooltipText(7, string.IsNullOrWhiteSpace(variable.Comment) ? "No PLC tag comment." : variable.Comment);
+            }
+            if (watchDocument is not null && watchDocumentTable is not null)
+            {
+                watchDocumentTitle!.Text = document.ActiveWatchTable.Name;
+                watchDocumentStatus!.Text = watchStatus.Text;
+                if (watchDocumentTable.GetRoot() is null
+                    || !watchDocumentRowNames.SequenceEqual(rowNames, StringComparer.Ordinal))
+                {
+                    var selectedName = watchDocumentTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
+                    watchDocumentTable.Clear();
+                    watchDocumentRows.Clear();
+                    var rootItem = watchDocumentTable.CreateItem();
+                    foreach (var name in rowNames)
+                    {
+                        var item = watchDocumentTable.CreateItem(rootItem);
+                        item.SetMetadata(0, name);
+                        item.SetCellMode(5, TreeItem.TreeCellMode.Check);
+                        item.SetEditable(2, true);
+                        item.SetEditable(4, true);
+                        item.SetEditable(6, true);
+                        if (name == selectedName) item.Select(0);
+                        watchDocumentRows.Add(item);
+                    }
+                    watchDocumentRowNames = rowNames;
+                }
+                for (var index = 0; index < rows.Length; index++)
+                    for (var column = 0; column < watchTable.Columns; column++)
+                    {
+                        watchDocumentRows[index].SetText(column, watchRows[index].GetText(column));
+                        if (column == 5)
+                        {
+                            watchDocumentRows[index].SetCellMode(5, TreeItem.TreeCellMode.Check);
+                            watchDocumentRows[index].SetEditable(5, true);
+                            watchDocumentRows[index].SetChecked(5, watchRows[index].IsChecked(5));
+                        }
+                        if (column is 2 or 4 or 6) watchDocumentRows[index].SetEditable(column, true);
+                        watchDocumentRows[index].SetTooltipText(column, watchRows[index].GetTooltipText(column));
+                    }
             }
             var tablePrefix = $"{document.ActiveWatchTable.Name} · ";
             watchStatus.Text = snapshot is null
-                ? $"{tablePrefix}{document.WatchVariables.Count} SYMBOL(S) · PROGRAM NOT LOADED"
+                ? $"{tablePrefix}{rows.Length} ROW(S) · PROGRAM NOT LOADED"
                 : !_ladderMonitorMatchesLoadedProgram
-                    ? $"{tablePrefix}{document.WatchVariables.Count} SYMBOL(S) · EDIT DIFFERS FROM LOADED PROGRAM"
-                    : $"{tablePrefix}{document.WatchVariables.Count} SYMBOL(S) · {snapshot.State.ToString().ToUpperInvariant()} · SCAN {snapshot.ScanNumber} · SIMULATOR ONLY";
+                    ? $"{tablePrefix}{rows.Length} ROW(S) · EDIT DIFFERS FROM LOADED PROGRAM · SIMULATOR ONLY"
+                    : $"{tablePrefix}{rows.Length} ROW(S) · {snapshot.State.ToString().ToUpperInvariant()} · SCAN {snapshot.ScanNumber} · SIMULATOR ONLY";
             watchStatus.AddThemeColorOverride("font_color",
                 snapshot is not null && _ladderMonitorMatchesLoadedProgram ? new Color("18864b") : new Color("b36c16"));
+            if (watchDocumentStatus is not null) watchDocumentStatus.Text = watchStatus.Text;
         }
 
         void RefreshWatchMetadataEditors()
@@ -7540,22 +7887,204 @@ public partial class SimulatorShell : CanvasLayer
         }
         if (siemens) _restoreActiveWatchTableTreeRow = SelectActiveWatchTableTreeRow;
 
+        void RefreshWatchTableAfterRejectedEdit(string message)
+        {
+            output.Text = $"[color=#d64545]Watch-table edit rejected.[/color] {Escape(message)}";
+            RefreshWatchMetadataEditors();
+        }
+
+        void WatchCellEdited(Tree grid)
+        {
+            var edited = grid.GetEdited();
+            if (edited is null) return;
+            var id = edited.GetMetadata(0).AsString();
+            var row = document.ActiveWatchTable.Rows.FirstOrDefault(candidate => candidate.Id == id);
+            if (row is null) return;
+            var column = grid.GetEditedColumn();
+            if (column == 5)
+            {
+                var key = WatchModifyKey(row);
+                if (edited.IsChecked(5)) watchModifySelection.Add(key);
+                else watchModifySelection.Remove(key);
+                return;
+            }
+
+            var variable = ResolveWatchVariable(row);
+            var updatedFormat = row.DisplayFormat;
+            var updatedModify = row.ModifyValue;
+            var updatedComment = row.Comment;
+            if (column == 2)
+            {
+                updatedFormat = edited.GetText(2).Trim();
+                if (updatedFormat.Equals("Binary", StringComparison.OrdinalIgnoreCase)) updatedFormat = "Bin";
+                if (updatedFormat.Equals("Signed decimal", StringComparison.OrdinalIgnoreCase)) updatedFormat = "Dec+/-";
+                if (!WatchDisplayFormats(variable).Contains(updatedFormat, StringComparer.OrdinalIgnoreCase))
+                {
+                    RefreshWatchTableAfterRejectedEdit(variable is null
+                        ? "An unresolved reference can only use Auto display format."
+                        : $"{updatedFormat} is not a supported format for {variable.Type.ToString().ToUpperInvariant()}.");
+                    return;
+                }
+            }
+            else if (column == 4)
+            {
+                var candidate = edited.GetText(4);
+                updatedModify = string.IsNullOrWhiteSpace(candidate) ? null : candidate;
+                if (updatedModify is not null && variable is not null
+                    && !TryParseWatchModifyValue(variable, updatedModify, out _, out var modifyError))
+                {
+                    RefreshWatchTableAfterRejectedEdit(modifyError);
+                    return;
+                }
+            }
+            else if (column == 6)
+                updatedComment = edited.GetText(6);
+            else return;
+
+            if (updatedFormat == row.DisplayFormat && updatedModify == row.ModifyValue && updatedComment == row.Comment) return;
+            if (!BeginProjectMetadataEdit("Edit watch-table row"))
+            {
+                RefreshWatchMetadataEditors();
+                return;
+            }
+            row.DisplayFormat = updatedFormat;
+            row.ModifyValue = updatedModify;
+            row.Comment = updatedComment;
+            RefreshWatchMetadataEditors();
+        }
+        watchTable.ItemEdited += () => WatchCellEdited(watchTable);
+        if (watchDocumentTable is not null)
+            watchDocumentTable.ItemEdited += () => WatchCellEdited(watchDocumentTable);
+
+        string SelectedWatchRowId()
+        {
+            var selected = watchDocumentTable?.GetSelected() ?? watchTable.GetSelected();
+            return selected?.GetMetadata(0).AsString() ?? string.Empty;
+        }
+
+        void RefreshWatchRowActionState()
+        {
+            var rows = document.ActiveWatchTable.Rows;
+            var index = rows.FindIndex(row => row.Id == SelectedWatchRowId());
+            removeWatch.Disabled = rows.Count == 0 || index < 0;
+            moveWatchRowUp.Disabled = index <= 0;
+            moveWatchRowDown.Disabled = index < 0 || index >= rows.Count - 1;
+        }
+
+        watchTable.ItemSelected += RefreshWatchRowActionState;
+        if (watchDocumentTable is not null) watchDocumentTable.ItemSelected += RefreshWatchRowActionState;
+
         addWatch.Pressed += () =>
         {
             if (watchSymbol.Selected < 0) return;
             var name = watchSymbol.GetItemText(watchSymbol.Selected);
             if (document.WatchVariables.Contains(name, StringComparer.Ordinal)) return;
             if (!BeginProjectMetadataEdit("Add watch-table symbol")) return;
-            document.WatchVariables.Add(name);
+            document.ActiveWatchTable.Rows.Add(new EditableWatchRow(name));
+            RefreshWatchMetadataEditors();
+        };
+        addWatchAddress.Pressed += () =>
+        {
+            var address = watchAddress.Text.Trim();
+            if (!SiemensPlcTagAddress.TryValidateWatchAddress(address, out var addressError))
+            {
+                output.Text = $"[color=#d64545]Absolute watch address rejected.[/color] {Escape(addressError)}";
+                return;
+            }
+            if (document.ActiveWatchTable.Rows.Any(row => row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
+                    && NormalizeWatchAddress(row.Reference).Equals(NormalizeWatchAddress(address), StringComparison.Ordinal)))
+            {
+                output.Text = "[color=#d64545]Absolute watch address rejected.[/color] That address is already in the active table.";
+                return;
+            }
+            if (!BeginProjectMetadataEdit("Add absolute watch address")) return;
+            document.ActiveWatchTable.Rows.Add(new EditableWatchRow(address, WatchReferenceKind.AbsoluteAddress));
+            watchAddress.Clear();
             RefreshWatchMetadataEditors();
         };
         removeWatch.Pressed += () =>
         {
-            var selected = watchTable.GetSelected();
-            var name = selected?.GetMetadata(0).AsString() ?? string.Empty;
-            if (name.Length == 0 || !BeginProjectMetadataEdit("Remove watch-table symbol")) return;
-            document.WatchVariables.RemoveAll(item => item.Equals(name, StringComparison.Ordinal));
+            var id = SelectedWatchRowId();
+            var index = document.ActiveWatchTable.Rows.FindIndex(row => row.Id == id);
+            if (index < 0 || !BeginProjectMetadataEdit("Remove watch-table row")) return;
+            document.ActiveWatchTable.Rows.RemoveAt(index);
+            watchModifySelection.Remove(id);
             RefreshWatchMetadataEditors();
+        };
+        void MoveWatchRow(int offset)
+        {
+            var id = SelectedWatchRowId();
+            var rows = document.ActiveWatchTable.Rows;
+            var index = rows.FindIndex(row => row.Id == id);
+            var destination = index + offset;
+            if (index < 0 || destination < 0 || destination >= rows.Count) return;
+            if (!BeginProjectMetadataEdit("Reorder watch-table rows")) return;
+            var row = rows[index];
+            rows.RemoveAt(index);
+            rows.Insert(destination, row);
+            RefreshWatchMetadataEditors();
+            output.Text = $"[color=#18864b]Watch-table row moved.[/color] {Escape(row.Reference)}";
+        }
+        moveWatchRowUp.Pressed += () => MoveWatchRow(-1);
+        moveWatchRowDown.Pressed += () => MoveWatchRow(1);
+        modifyWatch.Pressed += () =>
+        {
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            if (_virtualSnapshot is null || !_ladderMonitorMatchesLoadedProgram)
+            {
+                output.Text = "[color=#d64545]SIM MODIFY unavailable.[/color] Verify + Load the current offline project first.";
+                return;
+            }
+            var selectedRows = document.ActiveWatchTable.Rows
+                .Where(row => watchModifySelection.Contains(WatchModifyKey(row))).ToArray();
+            if (selectedRows.Length == 0)
+            {
+                output.Text = "Select at least one row in the MODIFY column.";
+                return;
+            }
+            var modifyRequests = new List<(string Name, object Value)>();
+            foreach (var row in selectedRows)
+            {
+                var variable = ResolveWatchVariable(row);
+                if (variable is null)
+                {
+                    output.Text = $"[color=#d64545]SIM MODIFY unavailable.[/color] '{Escape(row.Reference)}' does not exactly match one declared PLC tag.";
+                    return;
+                }
+                if (_virtualSnapshot!.Forces.ContainsKey(variable.Name))
+                {
+                    output.Text = $"[color=#d64545]SIM MODIFY rejected.[/color] Clear the active simulator force on {Escape(variable.Name)} first.";
+                    return;
+                }
+                if (variable.Role == PlcVariableRole.Output && _virtualSnapshot.State != VirtualControllerState.Running)
+                {
+                    output.Text = $"[color=#d64545]SIM MODIFY rejected.[/color] Output {Escape(variable.Name)} can only be changed while the offline simulator is RUNNING.";
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(row.ModifyValue))
+                {
+                    output.Text = $"[color=#d64545]SIM MODIFY rejected.[/color] Enter a Modify value for {Escape(variable.Name)}.";
+                    return;
+                }
+                if (!TryParseWatchModifyValue(variable, row.ModifyValue, out var parsedValue, out var modifyError))
+                {
+                    output.Text = $"[color=#d64545]SIM MODIFY rejected.[/color] {Escape(modifyError)}";
+                    return;
+                }
+                modifyRequests.Add((variable.Name, parsedValue));
+            }
+            if (VirtualWatchModifyRequested is null)
+            {
+                output.Text = "[color=#d64545]SIM MODIFY unavailable.[/color] The offline simulator is not attached.";
+                return;
+            }
+            if (!VirtualWatchModifyRequested.Invoke(modifyRequests.Select(request =>
+                    (VariableName: request.Name, Value: request.Value)).ToArray()))
+            {
+                output.Text = "[color=#d64545]SIM MODIFY rejected.[/color] The offline runtime rejected the complete edit batch; no partial edit was applied.";
+                return;
+            }
+            output.Text = "[color=#18864b]SIM MODIFY applied to the offline simulator only.[/color] No physical PLC was written.";
         };
         addAllWatch.Pressed += () =>
         {
@@ -7570,27 +8099,23 @@ public partial class SimulatorShell : CanvasLayer
         };
         clearWatch.Pressed += () =>
         {
-            if (document.WatchVariables.Count == 0 || !BeginProjectMetadataEdit("Clear watch table")) return;
-            document.WatchVariables.Clear();
+            if (document.ActiveWatchTable.Rows.Count == 0 || !BeginProjectMetadataEdit("Clear watch table")) return;
+            document.ActiveWatchTable.Rows.Clear();
+            watchModifySelection.Clear();
             RefreshWatchMetadataEditors();
-        };
-        watchTableSelector.ItemSelected += index =>
-        {
-            document.SelectWatchTable((int)index);
-            RefreshWatchTable(_virtualSnapshot);
-            if (siemens && document.ActiveWatchTableIndex < watchTableItems.Count)
-            {
-                watchTableItems[document.ActiveWatchTableIndex].Select(0);
-                organization.ScrollToItem(watchTableItems[document.ActiveWatchTableIndex]);
-            }
         };
         addWatchTable.Pressed += () => openWatchTableCreation();
         renameWatchTable.Pressed += () => openWatchTableRename();
+        Action<EditableWatchTable> openWatchTableDocumentForMutation = _ =>
+            throw new InvalidOperationException("Watch-table editor is not initialized yet.");
         duplicateWatchTable.Pressed += () =>
         {
             if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
             if (!BeginProjectMetadataEdit("Duplicate watch table")) return;
             var duplicate = document.DuplicateActiveWatchTable();
+            // Change the active editor identity before refreshing. Otherwise
+            // refresh restores the source table tab and silently reselects it.
+            openWatchTableDocumentForMutation(duplicate);
             RefreshWatchMetadataEditors();
             SelectActiveWatchTableTreeRow();
             output.Text = $"[color=#18864b]Watch table duplicated.[/color] {Escape(duplicate.Name)}";
@@ -7940,6 +8465,396 @@ public partial class SimulatorShell : CanvasLayer
         tagEditActions.AddChild(cancelTagEdit);
         tagEditActions.AddChild(deleteTag);
         tagPage.AddChild(tagEditActions);
+        // TIA tag documents expose Tags, User constants, and System constants
+        // as separate views. Keep the existing tag form intact as the Tags view.
+        var tagDefinitionsView = new VBoxContainer { Name = "TagDefinitionsView", SizeFlagsVertical = Control.SizeFlags.ExpandFill };
+        foreach (var existingChild in tagPage.GetChildren().ToArray())
+        {
+            tagPage.RemoveChild(existingChild);
+            tagDefinitionsView.AddChild(existingChild);
+        }
+        var tagDeclarationTabs = new HBoxContainer { Name = "TagDeclarationTabs" };
+        tagDeclarationTabs.AddThemeConstantOverride("separation", 5);
+        var tagDefinitionsTab = ToolbarButton("TagDefinitionsTab", "TAGS", new Color("4d6674"), 90);
+        var userConstantsTab = ToolbarButton("UserConstantsTab", "USER CONSTANTS", new Color("4d6674"), 150);
+        var systemConstantsTab = ToolbarButton("SystemConstantsTab", "SYSTEM CONSTANTS", new Color("4d6674"), 165);
+        tagDefinitionsTab.ToggleMode = userConstantsTab.ToggleMode = systemConstantsTab.ToggleMode = true;
+        tagDefinitionsTab.ButtonPressed = true;
+        tagDeclarationTabs.AddChild(tagDefinitionsTab);
+        tagDeclarationTabs.AddChild(userConstantsTab);
+        tagDeclarationTabs.AddChild(systemConstantsTab);
+        tagPage.AddChild(tagDeclarationTabs);
+        tagPage.AddChild(tagDefinitionsView);
+
+        var userConstantsView = new VBoxContainer
+        {
+            Name = "UserConstantsView",
+            Visible = false,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+        };
+        var userConstantsGrid = new Tree
+        {
+            Name = "UserConstantsGrid",
+            Columns = 4,
+            HideRoot = true,
+            ColumnTitlesVisible = true,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+            CustomMinimumSize = new Vector2(0, 180),
+        };
+        userConstantsGrid.SetColumnTitle(0, "NAME");
+        userConstantsGrid.SetColumnTitle(1, "DATA TYPE");
+        userConstantsGrid.SetColumnTitle(2, "VALUE");
+        userConstantsGrid.SetColumnTitle(3, "COMMENT");
+        var userConstantsActions = new HBoxContainer { Name = "UserConstantsActions" };
+        var addUserConstant = ToolbarButton("AddUserConstant", "+ CONSTANT", accent, 130);
+        var editUserConstant = ToolbarButton("EditUserConstant", "EDIT", new Color("4d6674"), 80);
+        var removeUserConstant = ToolbarButton("RemoveUserConstant", "DELETE", new Color("8a4d55"), 90);
+        editUserConstant.Disabled = true;
+        removeUserConstant.Disabled = true;
+        userConstantsActions.AddChild(addUserConstant);
+        userConstantsActions.AddChild(editUserConstant);
+        userConstantsActions.AddChild(removeUserConstant);
+        var userConstantName = new LineEdit { Name = "UserConstantName", PlaceholderText = "Symbolic constant name", ClearButtonEnabled = true };
+        var userConstantTable = new OptionButton { Name = "UserConstantTable" };
+        var userConstantType = new OptionButton { Name = "UserConstantType" };
+        foreach (var (type, label) in new[]
+                 {
+                     (PlcVariableType.Bool, "Bool"), (PlcVariableType.Int, "Int"), (PlcVariableType.DInt, "DInt"),
+                     (PlcVariableType.Real, "Real"), (PlcVariableType.Time, "Time"), (PlcVariableType.String, "String"),
+                 })
+        {
+            userConstantType.AddItem(label);
+            userConstantType.SetItemMetadata(userConstantType.ItemCount - 1, (int)type);
+        }
+        var userConstantValue = new LineEdit { Name = "UserConstantValue", PlaceholderText = "Fixed value", ClearButtonEnabled = true };
+        var userConstantComment = new LineEdit { Name = "UserConstantComment", PlaceholderText = "Comment", ClearButtonEnabled = true };
+        var userConstantForm = new VBoxContainer { Name = "UserConstantForm", Visible = false };
+        var userConstantValidation = new Label
+        {
+            Name = "UserConstantValidationMessage",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            Visible = false,
+        };
+        userConstantValidation.AddThemeColorOverride("font_color", new Color("d64545"));
+        userConstantForm.AddChild(TagFieldRow("UserConstantNameRow", "NAME", userConstantName));
+        userConstantForm.AddChild(TagFieldRow("UserConstantTableRow", "TAG TABLE", userConstantTable));
+        userConstantForm.AddChild(TagFieldRow("UserConstantTypeRow", "DATA TYPE", userConstantType));
+        userConstantForm.AddChild(TagFieldRow("UserConstantValueRow", "VALUE", userConstantValue));
+        userConstantForm.AddChild(TagFieldRow("UserConstantCommentRow", "COMMENT", userConstantComment));
+        userConstantForm.AddChild(userConstantValidation);
+        var userConstantEditActions = new HBoxContainer { Name = "UserConstantEditActions" };
+        var applyUserConstant = ToolbarButton("ApplyUserConstant", "APPLY", accent, 95);
+        var cancelUserConstant = ToolbarButton("CancelUserConstant", "CANCEL", new Color("4d6674"), 95);
+        applyUserConstant.Disabled = true;
+        cancelUserConstant.Disabled = true;
+        userConstantEditActions.AddChild(applyUserConstant);
+        userConstantEditActions.AddChild(cancelUserConstant);
+        var userConstantScope = new Label
+        {
+            Name = "UserConstantScope",
+            Text = "User constants are offline declarations. Supported types: BOOL, INT, DINT, REAL, TIME, STRING.",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+        };
+        userConstantScope.AddThemeColorOverride("font_color", new Color("637780"));
+        userConstantsView.AddChild(userConstantsGrid);
+        userConstantsView.AddChild(userConstantsActions);
+        userConstantsView.AddChild(userConstantForm);
+        userConstantsView.AddChild(userConstantEditActions);
+        userConstantsView.AddChild(userConstantScope);
+        tagPage.AddChild(userConstantsView);
+
+        var systemConstantsView = new VBoxContainer
+        {
+            Name = "SystemConstantsView",
+            Visible = false,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+        };
+        var systemConstantsGrid = new Tree
+        {
+            Name = "SystemConstantsGrid",
+            Columns = 3,
+            HideRoot = true,
+            ColumnTitlesVisible = true,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+        };
+        systemConstantsGrid.SetColumnTitle(0, "NAME");
+        systemConstantsGrid.SetColumnTitle(1, "VALUE");
+        systemConstantsGrid.SetColumnTitle(2, "COMMENT");
+        var systemConstantsScope = new Label
+        {
+            Name = "SystemConstantsScope",
+            Text = "No hardware configuration is modeled in this offline project. TIA system constants are generated from configured hardware and are read-only.",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+        };
+        systemConstantsScope.AddThemeColorOverride("font_color", new Color("637780"));
+        systemConstantsView.AddChild(systemConstantsGrid);
+        systemConstantsView.AddChild(systemConstantsScope);
+        tagPage.AddChild(systemConstantsView);
+        var userConstantFormEditing = false;
+        var refreshingUserConstantsGrid = false;
+        void SetTagDeclarationView(int index)
+        {
+            ResolvePendingEditorForms(() =>
+            {
+                if (index != 1 && userConstantFormEditing && !userConstantFormDirty)
+                    discardUserConstantForm?.Invoke();
+                tagDefinitionsView.Visible = index == 0;
+                userConstantsView.Visible = index == 1;
+                systemConstantsView.Visible = index == 2;
+                tagDefinitionsTab.ButtonPressed = index == 0;
+                userConstantsTab.ButtonPressed = index == 1;
+                systemConstantsTab.ButtonPressed = index == 2;
+                if (index == 1) refreshUserConstants?.Invoke();
+            });
+        }
+        void RefreshUserConstantTableOptions()
+        {
+            var currentTableNames = document.TagTables.ToArray();
+            var optionsMatch = userConstantTable.ItemCount == currentTableNames.Length
+                && Enumerable.Range(0, userConstantTable.ItemCount)
+                    .Select(userConstantTable.GetItemText)
+                    .SequenceEqual(currentTableNames, StringComparer.Ordinal);
+            if (optionsMatch) return;
+
+            var selectedConstant = selectedUserConstantId is null
+                ? null
+                : document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
+            var selectedName = selectedConstant?.TagTable;
+            if (selectedName is null && userConstantTable.Selected >= 0)
+            {
+                var previousName = userConstantTable.GetItemText(userConstantTable.Selected);
+                if (currentTableNames.Contains(previousName, StringComparer.OrdinalIgnoreCase))
+                    selectedName = previousName;
+            }
+            if (selectedName is null && activeTagTableName is not null
+                && currentTableNames.Contains(activeTagTableName, StringComparer.OrdinalIgnoreCase))
+                selectedName = activeTagTableName;
+            selectedName ??= currentTableNames.FirstOrDefault(name =>
+                name.Equals("Default tag table", StringComparison.OrdinalIgnoreCase));
+
+            var priorLoading = loadingFormControls;
+            loadingFormControls = true;
+            try
+            {
+                userConstantTable.Clear();
+                foreach (var tableName in currentTableNames) userConstantTable.AddItem(tableName);
+                var selectedIndex = Array.FindIndex(currentTableNames, name =>
+                    name.Equals(selectedName, StringComparison.OrdinalIgnoreCase));
+                if (selectedIndex >= 0) userConstantTable.Select(selectedIndex);
+            }
+            finally { loadingFormControls = priorLoading; }
+        }
+        refreshUserConstants = () =>
+        {
+            // Tag-table renames update constant membership in the model. Keep
+            // an open form's selector aligned with those canonical names.
+            RefreshUserConstantTableOptions();
+            var visibleConstants = document.UserConstants
+                .Where(constant => activeTagTableName is null
+                    || constant.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            refreshingUserConstantsGrid = true;
+            try
+            {
+            userConstantsGrid.Clear();
+            var rootItem = userConstantsGrid.CreateItem();
+            foreach (var constant in visibleConstants)
+            {
+                var row = userConstantsGrid.CreateItem(rootItem);
+                row.SetText(0, constant.Name);
+                row.SetText(1, constant.Type.ToString().ToUpperInvariant());
+                row.SetText(2, constant.Value);
+                row.SetText(3, constant.Comment);
+                row.SetMetadata(0, constant.Id);
+                row.SetTooltipText(0, $"{constant.Name} · {constant.Type} · {constant.Value}\n{constant.Comment}");
+                if (constant.Id == selectedUserConstantId) row.Select(0);
+            }
+            rootItem.Collapsed = false;
+            }
+            finally { refreshingUserConstantsGrid = false; }
+            var hasSelection = selectedUserConstantId is not null
+                && visibleConstants.Any(constant => constant.Id == selectedUserConstantId);
+            editUserConstant.Disabled = !hasSelection || ChallengeMutationLocked || userConstantFormDirty;
+            removeUserConstant.Disabled = !hasSelection || ChallengeMutationLocked || userConstantFormDirty;
+            addUserConstant.Disabled = ChallengeMutationLocked || userConstantFormDirty;
+            applyUserConstant.Disabled = !userConstantFormEditing || !userConstantFormDirty || ChallengeMutationLocked;
+            cancelUserConstant.Disabled = !userConstantFormEditing;
+            systemConstantsTab.Disabled = activeTagTableName is not null
+                && !activeTagTableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase);
+        };
+        loadUserConstantForm = () =>
+        {
+            var constant = selectedUserConstantId is null
+                ? null
+                : document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
+            var priorLoading = loadingFormControls;
+            loadingFormControls = true;
+            try
+            {
+                userConstantName.Text = constant?.Name ?? string.Empty;
+                var currentTableNames = document.TagTables.ToArray();
+                userConstantTable.Clear();
+                foreach (var tableName in currentTableNames) userConstantTable.AddItem(tableName);
+                var selectedTableName = constant?.TagTable ?? activeTagTableName ?? "Default tag table";
+                var selectedTableIndex = Array.FindIndex(currentTableNames, tableName =>
+                    tableName.Equals(selectedTableName, StringComparison.OrdinalIgnoreCase));
+                userConstantTable.Select(Math.Max(0, selectedTableIndex));
+                var selectedType = constant?.Type ?? PlcVariableType.Bool;
+                var typeIndex = Enumerable.Range(0, userConstantType.ItemCount)
+                    .FirstOrDefault(index => userConstantType.GetItemMetadata(index).AsInt32() == (int)selectedType, -1);
+                userConstantType.Select(Math.Max(0, typeIndex));
+                userConstantValue.Text = constant?.Value ?? "FALSE";
+                userConstantComment.Text = constant?.Comment ?? string.Empty;
+                userConstantValidation.Text = string.Empty;
+                userConstantValidation.Visible = false;
+                userConstantForm.Visible = userConstantFormEditing;
+                userConstantFormDirty = false;
+                userConstantFormRevision = document.Revision;
+            }
+            finally { loadingFormControls = priorLoading; }
+            refreshUserConstants?.Invoke();
+        };
+        discardUserConstantForm = () =>
+        {
+            userConstantFormDirty = false;
+            userConstantFormEditing = false;
+            userConstantValidation.Text = string.Empty;
+            userConstantValidation.Visible = false;
+            // Keep an existing row selected after Cancel so Edit/Delete remain
+            // enabled without requiring an artificial second row-selection.
+            // New drafts already have a null ID and remain unselected.
+            userConstantForm.Visible = false;
+            refreshUserConstants?.Invoke();
+        };
+        tagDefinitionsTab.Pressed += () => SetTagDeclarationView(0);
+        userConstantsTab.Pressed += () => SetTagDeclarationView(1);
+        systemConstantsTab.Pressed += () =>
+        {
+            if (!systemConstantsTab.Disabled) SetTagDeclarationView(2);
+        };
+        userConstantsGrid.ItemSelected += () =>
+        {
+            if (refreshingUserConstantsGrid) return;
+            var row = userConstantsGrid.GetSelected();
+            if (row is null) return;
+            var id = row.GetMetadata(0).AsString();
+            ResolvePendingEditorForms(() =>
+            {
+                selectedUserConstantId = id;
+                userConstantFormEditing = false;
+                userConstantForm.Visible = false;
+                refreshUserConstants?.Invoke();
+            });
+        };
+        addUserConstant.Pressed += () =>
+        {
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            selectedUserConstantId = null;
+            userConstantFormEditing = true;
+            loadUserConstantForm?.Invoke();
+            userConstantName.GrabFocus();
+        };
+        editUserConstant.Pressed += () =>
+        {
+            var row = userConstantsGrid.GetSelected();
+            if (row is null) return;
+            selectedUserConstantId = row.GetMetadata(0).AsString();
+            userConstantFormEditing = true;
+            loadUserConstantForm?.Invoke();
+            userConstantName.GrabFocus();
+        };
+        removeUserConstant.Pressed += () =>
+        {
+            if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
+            if (selectedUserConstantId is null) return;
+            var constant = document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
+            if (constant is null || !BeginProjectMetadataEdit("Delete PLC user constant")) return;
+            document.RemoveUserConstant(constant.Id);
+            selectedUserConstantId = null;
+            userConstantFormEditing = false;
+            userConstantFormDirty = false;
+            userConstantForm.Visible = false;
+            refreshEditorAfterInitialization?.Invoke();
+            output.Text = $"[color=#18864b]PLC user constant deleted.[/color] {Escape(constant.Name)}.";
+        };
+        applyUserConstant.Pressed += () =>
+        {
+            if (userConstantFormDirty && !CurrentForm(userConstantFormRevision)) return;
+            if (!userConstantFormEditing) return;
+            userConstantValidation.Text = string.Empty;
+            userConstantValidation.Visible = false;
+            var name = userConstantName.Text.Trim();
+            if (name.Length == 0)
+            {
+                userConstantValidation.Text = "Enter a symbolic name.";
+                userConstantValidation.Visible = true;
+                output.Text = "[color=#d64545]User constant rejected.[/color] Enter a symbolic name.";
+                userConstantName.GrabFocus();
+                return;
+            }
+            if (userConstantType.Selected < 0) return;
+            if (userConstantTable.Selected < 0) return;
+            var type = (PlcVariableType)userConstantType.GetItemMetadata(userConstantType.Selected).AsInt32();
+            var tableName = userConstantTable.GetItemText(userConstantTable.Selected);
+            try
+            {
+                var preview = new LadderEditorDocument();
+                preview.RestoreSnapshot(document.CaptureSnapshot());
+                if (selectedUserConstantId is null)
+                    preview.AddUserConstant(name, type, userConstantValue.Text, tableName, userConstantComment.Text);
+                else
+                    preview.UpdateUserConstant(selectedUserConstantId, name, type, userConstantValue.Text, userConstantComment.Text, tableName);
+                if (!BeginProjectMetadataEdit(selectedUserConstantId is null ? "Add PLC user constant" : "Update PLC user constant")) return;
+                var updated = selectedUserConstantId is null
+                    ? document.AddUserConstant(name, type, userConstantValue.Text, tableName, userConstantComment.Text)
+                    : document.UpdateUserConstant(selectedUserConstantId, name, type, userConstantValue.Text, userConstantComment.Text, tableName);
+                selectedUserConstantId = updated.Id;
+                userConstantFormDirty = false;
+                userConstantFormEditing = false;
+                userConstantForm.Visible = false;
+                refreshEditorAfterInitialization?.Invoke();
+                output.Text = $"[color=#18864b]PLC user constant saved.[/color] {Escape(updated.Name)} · {updated.Type} · offline declaration.";
+            }
+            catch (InvalidOperationException error)
+            {
+                userConstantValidation.Text = error.Message;
+                userConstantValidation.Visible = true;
+                output.Text = $"[color=#d64545]User constant rejected.[/color] {Escape(error.Message)}";
+            }
+        };
+        cancelUserConstant.Pressed += () =>
+        {
+            discardUserConstantForm?.Invoke();
+            output.Text = "PLC user-constant changes discarded. No project data or history was changed.";
+        };
+        foreach (var control in new Control[] { userConstantName, userConstantTable, userConstantType, userConstantValue, userConstantComment })
+        {
+            void MarkUserConstantPending()
+            {
+                if (refreshingEditor || loadingFormControls || !userConstantFormEditing) return;
+                userConstantValidation.Text = string.Empty;
+                userConstantValidation.Visible = false;
+                if (!userConstantFormDirty) userConstantFormRevision = document.Revision;
+                userConstantFormDirty = true;
+                refreshUserConstants?.Invoke();
+            }
+            if (control is LineEdit text) text.TextChanged += _ => MarkUserConstantPending();
+            else if (control is OptionButton option) option.ItemSelected += _ => MarkUserConstantPending();
+            control.GuiInput += input =>
+            {
+                if (input is InputEventKey { Pressed: true, Keycode: Key.Escape })
+                {
+                    discardUserConstantForm?.Invoke();
+                    control.AcceptEvent();
+                }
+            };
+        }
+        userConstantName.TextSubmitted += _ => applyUserConstant.EmitSignal(BaseButton.SignalName.Pressed);
+        userConstantValue.TextSubmitted += _ => applyUserConstant.EmitSignal(BaseButton.SignalName.Pressed);
         var tagScroll = new ScrollContainer
         {
             Name = siemens ? "PLC tags" : "Controller Tags",
@@ -8278,6 +9193,7 @@ public partial class SimulatorShell : CanvasLayer
             var showGlobalDb = false;
             if (siemens && TryResolveBlockDocument(key, out var dbBlockIndex))
                 showGlobalDb = document.Blocks[dbBlockIndex].BlockType == LadderBlockType.DataBlock;
+            var showWatchTable = siemens && key.StartsWith("watch-table:", StringComparison.Ordinal);
             var showBlockEditor = !siemens || TryResolveBlockDocument(key, out _) && !showGlobalDb;
             foreach (var child in center.GetChildren().OfType<Control>())
             {
@@ -8285,75 +9201,154 @@ public partial class SimulatorShell : CanvasLayer
                 else if (child == tagScroll) child.Visible = key.StartsWith("tags:", StringComparison.Ordinal);
                 else if (child == instanceDbDocument) child.Visible = key.StartsWith("instance-db:", StringComparison.Ordinal);
                 else if (child == globalDbDocument) child.Visible = showGlobalDb;
+                else if (child == watchDocument) child.Visible = showWatchTable;
                 else child.Visible = showBlockEditor;
             }
         }
-        void CloseEditorDocument(string key)
+        bool IsOpenEditorDocument(string candidate) => editorDocumentButtons.ContainsKey(candidate)
+            && (TryResolveBlockDocument(candidate, out _)
+                || editorTagDocuments.ContainsKey(candidate)
+                || editorInstanceDbDocuments.TryGetValue(candidate, out var ownerLocator)
+                    && ResolveInstanceDbOwner(ownerLocator) is not null
+                || editorWatchTableDocuments.ContainsKey(candidate)
+                    && EditorDocumentIdentity.TryResolveWatchTableIndex(document, candidate, out _));
+
+        string? FindOpenEditorDocumentFallback(string excludedKey)
         {
-            if (!editorDocumentButtons.Remove(key, out _) || !editorDocumentItems.Remove(key, out var item)) return;
-            var wasActive = StringComparer.Ordinal.Equals(activeEditorDocumentKey, key);
             var orderedKeys = editorDocumentTabs.GetChildren()
                 .OfType<HBoxContainer>()
                 .Select(tabItem => tabItem.GetMeta("editorDocumentKey").AsString())
                 .Where(candidate => !string.IsNullOrEmpty(candidate))
                 .ToArray();
-            var tabIndex = Array.IndexOf(orderedKeys, key);
+            var tabIndex = Array.IndexOf(orderedKeys, excludedKey);
+            for (var index = Math.Min(tabIndex - 1, orderedKeys.Length - 1); index >= 0; index--)
+                if (orderedKeys[index] != excludedKey && IsOpenEditorDocument(orderedKeys[index]))
+                    return orderedKeys[index];
+            for (var index = Math.Max(tabIndex + 1, 0); index < orderedKeys.Length; index++)
+                if (orderedKeys[index] != excludedKey && IsOpenEditorDocument(orderedKeys[index]))
+                    return orderedKeys[index];
+            return null;
+        }
+
+        void CloseEditorDocument(string key)
+        {
+            if (!editorDocumentButtons.Remove(key, out _) || !editorDocumentItems.Remove(key, out var item)) return;
+            var wasActive = StringComparer.Ordinal.Equals(activeEditorDocumentKey, key);
             editorTagDocuments.Remove(key);
             editorInstanceDbDocuments.Remove(key);
+            editorWatchTableDocuments.Remove(key);
             editorDocumentTabs.RemoveChild(item);
             item.QueueFree();
             if (!wasActive) return;
 
-            bool IsOpenDocument(string candidate) => editorDocumentButtons.ContainsKey(candidate)
-                && (TryResolveBlockDocument(candidate, out _)
-                    || editorTagDocuments.ContainsKey(candidate)
-                    || editorInstanceDbDocuments.ContainsKey(candidate));
-            string? fallbackKey = null;
-            for (var index = Math.Min(tabIndex - 1, orderedKeys.Length - 1); index >= 0; index--)
-            {
-                if (orderedKeys[index] != key && IsOpenDocument(orderedKeys[index]))
-                {
-                    fallbackKey = orderedKeys[index];
-                    break;
-                }
-            }
-            for (var index = Math.Max(tabIndex + 1, 0); fallbackKey is null && index < orderedKeys.Length; index++)
-            {
-                if (orderedKeys[index] != key && IsOpenDocument(orderedKeys[index]))
-                    fallbackKey = orderedKeys[index];
-            }
+            var fallbackKey = FindOpenEditorDocumentFallback(key);
             if (fallbackKey is not null) ActivateEditorDocument(fallbackKey);
             else SetEditorDocumentBody(string.Empty);
             output.Text = "Editor tab closed. The project object and its saved data are unchanged.";
         }
         restoreActiveEditorDocumentBody = () => SetEditorDocumentBody(activeEditorDocumentKey);
+        string? FindInstanceDbOwnerLocator(int dbNumber)
+        {
+            var assignedInstance = document.Instances.FirstOrDefault(instance => instance.InstanceDataBlock?.Number == dbNumber);
+            if (assignedInstance is not null) return $"fb:{assignedInstance.Id}";
+
+            // Prefer the timer/counter instruction over its reset/load
+            // companion so a stable instruction ID owns the editor tab.
+            foreach (var block in document.Blocks)
+            foreach (var rung in block.Rungs)
+            {
+                if (rung.IsTimer && rung.TimerInstanceDataBlock?.Number == dbNumber)
+                    return $"timer:{rung.Id}";
+                if (rung.IsCounter && rung.CounterInstanceDataBlock?.Number == dbNumber)
+                    return $"counter:{rung.Id}";
+            }
+            foreach (var block in document.Blocks)
+            foreach (var rung in block.Rungs)
+            {
+                if ((rung.IsTimerReset || rung.IsTimer) && rung.TimerInstanceDataBlock?.Number == dbNumber)
+                    return $"timer:{rung.Id}";
+                if ((rung.IsCounterReset || rung.IsCounterLoad || rung.IsCounter) && rung.CounterInstanceDataBlock?.Number == dbNumber)
+                    return $"counter:{rung.Id}";
+            }
+            return null;
+        }
+
+        (LadderInstance? Instance, EditableBlock? InstanceBlock, EditableRung? Rung,
+            EditableBlock? InstructionBlock, int RungIndex, LadderInstanceDataBlock? DataBlock)?
+            ResolveInstanceDbOwner(string ownerLocator)
+        {
+            var separator = ownerLocator.IndexOf(':');
+            if (separator <= 0 || separator >= ownerLocator.Length - 1) return null;
+            var kind = ownerLocator[..separator];
+            var id = ownerLocator[(separator + 1)..];
+            if (kind == "fb")
+            {
+                var instance = document.Instances.FirstOrDefault(candidate => candidate.Id == id);
+                if (instance?.InstanceDataBlock is null) return null;
+                return (instance, document.Blocks.FirstOrDefault(block => block.Id == instance.BlockId),
+                    null, null, -1, instance.InstanceDataBlock);
+            }
+
+            foreach (var block in document.Blocks)
+            for (var index = 0; index < block.Rungs.Count; index++)
+            {
+                var rung = block.Rungs[index];
+                var db = kind switch
+                {
+                    "timer" when rung.Id == id && (rung.IsTimer || rung.IsTimerReset) => rung.TimerInstanceDataBlock,
+                    "counter" when rung.Id == id && (rung.IsCounter || rung.IsCounterReset || rung.IsCounterLoad) => rung.CounterInstanceDataBlock,
+                    _ => null,
+                };
+                if (db is not null) return (null, null, rung, block, index, db);
+            }
+            return null;
+        }
+
         void OpenInstanceDbDocument(int dbNumber)
         {
             if (!siemens) return;
-            var key = $"instance-db:{dbNumber}";
-            var assignedInstance = document.Instances.FirstOrDefault(instance => instance.InstanceDataBlock?.Number == dbNumber);
-            var instructionOwner = document.Blocks.SelectMany((block, blockIndex) => block.Rungs.Select((rung, rungIndex) =>
-                    new { block, blockIndex, rung, rungIndex,
-                        db = rung.IsTimer || rung.IsTimerReset ? rung.TimerInstanceDataBlock : rung.CounterInstanceDataBlock }))
-                .FirstOrDefault(owner => owner.db?.Number == dbNumber);
-            var db = assignedInstance?.InstanceDataBlock ?? instructionOwner?.db;
-            if (db is null)
+            var ownerLocator = FindInstanceDbOwnerLocator(dbNumber);
+            if (ownerLocator is null)
             {
                 output.Text = $"[color=#d64545]Instance DB %DB{dbNumber} is no longer present in the current project.[/color]";
                 return;
             }
+            OpenInstanceDbDocumentByOwner(ownerLocator);
+        }
+
+        void OpenInstanceDbDocumentByOwner(string ownerLocator)
+        {
+            if (!siemens) return;
+            var key = EditorDocumentIdentity.ForInstanceDb(ownerLocator);
+            var owner = ResolveInstanceDbOwner(ownerLocator);
+            if (owner is null)
+            {
+                if (editorDocumentButtons.TryGetValue(key, out var staleTab))
+                {
+                    staleTab.Disabled = true;
+                    staleTab.Text = "[Deleted instance DB]";
+                    staleTab.TooltipText = "This FB or IEC instance no longer exists. The tab will not retarget another DB.";
+                }
+                output.Text = "[color=#d64545]This instance DB owner is no longer present in the current project.[/color]";
+                return;
+            }
+            var assignedInstance = owner.Value.Instance;
+            var instanceBlock = owner.Value.InstanceBlock;
+            var instructionRung = owner.Value.Rung;
+            var instructionBlock = owner.Value.InstructionBlock;
+            var instructionRungIndex = owner.Value.RungIndex;
+            var db = owner.Value.DataBlock!;
             var title = $"{db.Name} [DB{db.Number}]  —  Instance data block";
             AddEditorDocumentTab(key, title);
-            editorInstanceDbDocuments[key] = dbNumber;
+            editorInstanceDbDocuments[key] = ownerLocator;
             instanceDbHeading.Text = $"{db.Name} [DB{db.Number}]";
             instanceDbSubtitle.Text = "Instance data block · offline project definition";
             instanceDbDeclarations.Clear();
             var declarationRoot = instanceDbDeclarations.CreateItem();
             if (assignedInstance is not null)
             {
-                var block = document.Blocks.FirstOrDefault(candidate => candidate.Id == assignedInstance.BlockId);
-                instanceDbSubtitle.Text = $"Assigned instance {assignedInstance.Name} · {block?.Name ?? assignedInstance.BlockId} [FB] · offline project definition";
-                var interfaceMembers = block?.Interface ?? [];
+                instanceDbSubtitle.Text = $"Assigned instance {assignedInstance.Name} · {instanceBlock?.Name ?? assignedInstance.BlockId} [FB] · offline project definition";
+                var interfaceMembers = instanceBlock?.Interface ?? [];
                 foreach (var section in Enum.GetValues<LadderInterfaceSection>())
                 {
                     // TEMP is invocation-local storage and does not belong to an instance DB.
@@ -8392,11 +9387,11 @@ public partial class SimulatorShell : CanvasLayer
                     emptyRow.SetSelectable(0, false);
                 }
             }
-            else if (instructionOwner is not null)
+            else if (instructionRung is not null && instructionBlock is not null)
             {
-                var rung = instructionOwner.rung;
+                var rung = instructionRung;
                 var timer = rung.IsTimer || rung.IsTimerReset;
-                instanceDbSubtitle.Text = $"Instruction instance { (timer ? rung.TimerVariable : rung.CounterVariable) } · {instructionOwner.block.Name} · Network {instructionOwner.rungIndex + 1} · offline definition";
+                instanceDbSubtitle.Text = $"Instruction instance { (timer ? rung.TimerVariable : rung.CounterVariable) } · {instructionBlock.Name} · Network {instructionRungIndex + 1} · offline definition";
                 var sectionRow = instanceDbDeclarations.CreateItem(declarationRoot);
                 sectionRow.SetText(0, "STATIC");
                 sectionRow.SetSelectable(0, false);
@@ -8474,9 +9469,67 @@ public partial class SimulatorShell : CanvasLayer
                 ? $"Showing all {document.Tags.Count} PLC tags."
                 : $"[color=#18864b]Tag table open.[/color] {Escape(tableName)} · {document.Tags.Count(tag => tag.TagTable.Equals(tableName, StringComparison.Ordinal))} tag(s).";
         }
+        void OpenWatchTableDocument(EditableWatchTable watchTable)
+        {
+            if (!siemens) return;
+            var tableIndex = document.WatchTables.FindIndex(table => table.Id.Equals(watchTable.Id, StringComparison.Ordinal));
+            if (tableIndex < 0) return;
+            var key = EditorDocumentIdentity.ForWatchTable(watchTable);
+            editorWatchTableDocuments[key] = watchTable.Id;
+            document.SelectWatchTable(tableIndex);
+            var projectFileName = _ladderProjectPath is null
+                ? "Untitled.rpproj.json"
+                : System.IO.Path.GetFileName(_ladderProjectPath);
+            var dirtyPrefix = LadderEditorProjectJson.HasUnsavedChanges(document, _ladderSavedProjectJson) ? "* " : string.Empty;
+            AddEditorDocumentTab(key, $"{dirtyPrefix}{watchTable.Name} — {projectFileName}");
+            SetEditorDocumentBody(key);
+            ShowBottomDock();
+            bottomPanel.Visible = true;
+            reopenBottomDock.Visible = false;
+            bottomTabs.CurrentTab = 2;
+            RefreshWatchTable(_virtualSnapshot);
+            SelectActiveWatchTableTreeRow();
+            editorDocumentButtons[key].ButtonPressed = true;
+            editorTabTitle.Text = $"{dirtyPrefix}{watchTable.Name} — {projectFileName}";
+            editorTabTitle.TooltipText = $"Watch table · {watchTable.Name}. Values and simulated force status are offline simulator state.";
+            output.Text = $"[color=#18864b]Watch table opened.[/color] {Escape(watchTable.Name)} · {watchTable.Variables.Count} symbol(s).";
+        }
+        openWatchTableDocumentForMutation = OpenWatchTableDocument;
+        watchTableSelector.ItemSelected += index =>
+        {
+            if (refreshingWatchTableSelector || index < 0 || index >= document.WatchTables.Count) return;
+            if (!siemens)
+            {
+                document.SelectWatchTable((int)index);
+                RefreshWatchTable(_virtualSnapshot);
+                return;
+            }
+            if (document.ActiveWatchTableIndex == index) return;
+            ResolvePendingEditorForms(() =>
+            {
+                if (index >= document.WatchTables.Count) return;
+                OpenWatchTableDocument(document.WatchTables[(int)index]);
+                RefreshWatchTable(_virtualSnapshot);
+                if (document.ActiveWatchTableIndex < watchTableItems.Count)
+                {
+                    watchTableItems[document.ActiveWatchTableIndex].Select(0);
+                    organization.ScrollToItem(watchTableItems[document.ActiveWatchTableIndex]);
+                }
+            });
+        };
         void ActivateEditorDocument(string key)
         {
             if (!siemens) return;
+            if (!IsOpenEditorDocument(key))
+            {
+                var fallbackKey = FindOpenEditorDocumentFallback(key);
+                if (fallbackKey is not null)
+                    ActivateEditorDocument(fallbackKey);
+                else
+                    SetEditorDocumentBody(string.Empty);
+                output.Text = "[color=#d64545]This editor document is no longer available. Select another open document.[/color]";
+                return;
+            }
             if (TryResolveBlockDocument(key, out var blockIndex))
             {
                 var alreadyActive = blockIndex == document.ActiveBlockIndex;
@@ -8491,8 +9544,11 @@ public partial class SimulatorShell : CanvasLayer
             }
             if (editorTagDocuments.TryGetValue(key, out var tableName))
                 OpenTagDocument(tableName);
-            else if (editorInstanceDbDocuments.TryGetValue(key, out var dbNumber))
-                OpenInstanceDbDocument(dbNumber);
+            else if (editorInstanceDbDocuments.TryGetValue(key, out var ownerLocator))
+                OpenInstanceDbDocumentByOwner(ownerLocator);
+            else if (editorWatchTableDocuments.ContainsKey(key)
+                && EditorDocumentIdentity.TryResolveWatchTableIndex(document, key, out var watchTableIndex))
+                OpenWatchTableDocument(document.WatchTables[watchTableIndex]);
         }
         if (siemens)
         {
@@ -8505,10 +9561,16 @@ public partial class SimulatorShell : CanvasLayer
                     var tableName = key["tags:".Length..];
                     editorTagDocuments[key] = tableName.Length == 0 ? null : tableName;
                 }
-                else if (key.StartsWith("instance-db:", StringComparison.Ordinal)
-                    && int.TryParse(key.AsSpan("instance-db:".Length), out var dbNumber))
+                else if (key.StartsWith("instance-db:", StringComparison.Ordinal))
                 {
-                    editorInstanceDbDocuments[key] = dbNumber;
+                    var ownerLocator = key["instance-db:".Length..];
+                    if (!ownerLocator.Contains(':') && int.TryParse(ownerLocator, out var legacyDbNumber))
+                        ownerLocator = FindInstanceDbOwnerLocator(legacyDbNumber) ?? string.Empty;
+                    if (!string.IsNullOrEmpty(ownerLocator)) editorInstanceDbDocuments[key] = ownerLocator;
+                }
+                else if (EditorDocumentIdentity.TryResolveWatchTableIndex(document, key, out var watchTableIndex))
+                {
+                    editorWatchTableDocuments[key] = document.WatchTables[watchTableIndex].Id;
                 }
             };
             _orderTiaEditorDocumentTabs = keys =>
@@ -10224,14 +11286,15 @@ public partial class SimulatorShell : CanvasLayer
             if (!BeginProjectMetadataEdit("Add watch table")) return "Editing unavailable.";
             try
             {
-                document.AddWatchTable(normalizedName);
+                var createdWatchTable = document.AddWatchTable(normalizedName);
                 RefreshEditor();
                 ShowBottomDock();
                 bottomPanel.Visible = true;
                 reopenBottomDock.Visible = false;
                 bottomTabs.CurrentTab = 2;
+                OpenWatchTableDocument(createdWatchTable);
                 SelectActiveWatchTableTreeRow();
-                output.Text = $"[color=#18864b]Watch table created.[/color] {Escape(document.ActiveWatchTable.Name)} · add symbols to this table.";
+                output.Text = $"[color=#18864b]Watch table created.[/color] {Escape(createdWatchTable.Name)} · add symbols to this table.";
                 return string.Empty;
             }
             catch (InvalidOperationException exception) { return exception.Message; }
@@ -11282,6 +12345,14 @@ public partial class SimulatorShell : CanvasLayer
             output.Text = "Schedule changes discarded. No project data or history was changed.";
         };
         _pendingEditorForms.Add(new(() => tagFormDirty, () => { (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed); return !tagFormDirty; }, DiscardTag));
+        _pendingEditorForms.Add(new(
+            () => userConstantFormDirty,
+            () =>
+            {
+                applyUserConstant.EmitSignal(BaseButton.SignalName.Pressed);
+                return !userConstantFormDirty;
+            },
+            () => discardUserConstantForm?.Invoke()));
         _pendingEditorForms.Add(new(() => blockFormDirty, () => { applyBlock.EmitSignal(BaseButton.SignalName.Pressed); return !blockFormDirty; }, DiscardBlock));
         _pendingEditorForms.Add(new(() => taskFormDirty, () => { applyTask.EmitSignal(BaseButton.SignalName.Pressed); return !taskFormDirty; }, DiscardTask));
         _pendingEditorForms.Add(new(() => interfaceFormDirty, () => { addInterface.EmitSignal(BaseButton.SignalName.Pressed); return !interfaceFormDirty; }, DiscardInterface));
@@ -11971,13 +13042,7 @@ public partial class SimulatorShell : CanvasLayer
                 && int.TryParse(kind.AsSpan("watch-table:".Length), out var watchIndex)
                 && watchIndex >= 0 && watchIndex < document.WatchTables.Count)
             {
-                document.SelectWatchTable(watchIndex);
-                ShowBottomDock();
-                bottomPanel.Visible = true;
-                reopenBottomDock.Visible = false;
-                bottomTabs.CurrentTab = 2;
-                RefreshWatchTable(_virtualSnapshot);
-                output.Text = $"[color=#18864b]Watch table opened.[/color] {Escape(document.ActiveWatchTable.Name)} · {document.WatchVariables.Count} symbol(s).";
+                ResolvePendingEditorForms(() => OpenWatchTableDocument(document.WatchTables[watchIndex]));
                 return;
             }
             if (kind is not ("add-block" or "add-tag-table" or "add-watch-table")) return;
@@ -12031,6 +13096,7 @@ public partial class SimulatorShell : CanvasLayer
             editorDocumentItems.Clear();
             editorTagDocuments.Clear();
             editorInstanceDbDocuments.Clear();
+            editorWatchTableDocuments.Clear();
             activeTagTableName = null;
             selectedTagIndex = -1;
 
@@ -12063,6 +13129,7 @@ public partial class SimulatorShell : CanvasLayer
         });
         _ladderWatchRefreshers.Add(RefreshWatchTable);
         _ladderValidationRefreshers.Add(issues => ShowValidationIssues(issues, openDock: true));
+        refreshEditorAfterInitialization = RefreshEditor;
         RefreshEditor();
         static void AddVisibleSplitGrip(SplitContainer split, string text)
         {

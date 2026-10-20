@@ -49,6 +49,7 @@ internal static partial class Program
         RegisterObservationLifecycleTests();
         RegisterRecursiveEditorTests();
         RegisterEditorMigrationTests();
+        RegisterWatchRowTests();
         RegisterParameterizedCallTests();
         RegisterParameterizedCallAcceptanceTests();
         RegisterParameterizedCallContractRegressionTests();
@@ -111,6 +112,7 @@ internal static partial class Program
         Test("new project reset clears all prior engineering state", TestNewProjectReset);
         Test("typed tag initial values parse persist and initialize runtime", TestTagInitialValues);
         Test("S7-1500 PLC tag addresses validate type, role, range, and overlap", TestSiemensPlcTagAddresses);
+        Test("editor project load validates persisted Siemens tag addresses", TestEditableProjectTagAddressValidation);
         Test("watch table persists and follows tag lifecycle", TestWatchTablePersistence);
         Test("watch table validates symbols and participates in undo", TestWatchTableValidationAndUndo);
         Test("named watch tables persist independently and follow tag lifecycle", TestNamedWatchTables);
@@ -1313,6 +1315,76 @@ internal static partial class Program
         True(SiemensPlcTagAddress.TryValidate("%MW0", PlcVariableType.Int,
                 PlcVariableRole.Memory, [occupied], "existing", out _),
             "Editing a declaration must not conflict with its own existing address.");
+    }
+
+    private static void TestEditableProjectTagAddressValidation()
+    {
+        static string WithAddresses(LadderEditorDocument document, params (string Name, string Address)[] addresses)
+        {
+            var root = JsonNode.Parse(LadderEditorProjectJson.Save(document))!;
+            var tags = root["tags"]!.AsArray();
+            foreach (var (name, address) in addresses)
+            {
+                var tag = tags.Single(node => node!["name"]!.GetValue<string>() == name)!;
+                tag["address"] = address;
+            }
+            return root.ToJsonString();
+        }
+
+        var emptyAddresses = LadderEditorProjectJson.Load(LadderEditorProjectJson.Save(
+            LadderEditorDocument.CreateConveyorExample()));
+        True(emptyAddresses.IsReadable, "Empty addresses remain valid for symbolic/offline tags.");
+
+        var document = LadderEditorDocument.CreateConveyorExample();
+        var valid = LadderEditorProjectJson.Load(WithAddresses(document,
+            ("start_command", "%I0.0"),
+            ("stop_command", "%I0.1"),
+            ("seal_in", "%M0.0"),
+            ("conveyor_running", "%Q0.0")));
+        True(valid.IsReadable && valid.Document is not null,
+            "Valid, nonoverlapping Siemens-shaped persisted addresses should load.");
+        Equal("%I0.0", valid.Document!.Tags.Single(tag => tag.Name == "start_command").Address);
+
+        var opaqueUnprefixedIo = LadderEditorProjectJson.Load(WithAddresses(document,
+            ("start_command", "I0.0"), ("stop_command", "%I0.0")));
+        True(opaqueUnprefixedIo.IsReadable && opaqueUnprefixedIo.Document is not null,
+            "Opaque unprefixed I/O metadata must not participate in Siemens address overlap checks.");
+        Equal("I0.0", opaqueUnprefixedIo.Document!.Tags.Single(tag => tag.Name == "start_command").Address);
+
+        var invalidSyntax = LadderEditorProjectJson.Load(WithAddresses(document, ("start_command", "%I0.8")));
+        False(invalidSyntax.IsReadable);
+        True(invalidSyntax.Document is null);
+        True(invalidSyntax.Issues.Any(issue => issue.Path == "$.tags[0].address"
+            && issue.Message.Contains("supported S7-1500", StringComparison.Ordinal)));
+
+        var wrongRole = LadderEditorProjectJson.Load(WithAddresses(document, ("start_command", "%Q0.0")));
+        False(wrongRole.IsReadable);
+        True(wrongRole.Issues.Any(issue => issue.Path == "$.tags[0].address"
+            && issue.Message.Contains("inconsistent", StringComparison.Ordinal)));
+
+        document.AddTag("state_word", PlcVariableRole.Memory, type: PlcVariableType.Int);
+        var overlap = LadderEditorProjectJson.Load(WithAddresses(document,
+            ("seal_in", "%M0.0"), ("state_word", "%MW0")));
+        False(overlap.IsReadable);
+        True(overlap.Issues.Any(issue => issue.Path == "$.tags[5].address"
+            && issue.Message.Contains("overlaps", StringComparison.Ordinal)));
+
+        var unprefixedDb = LadderEditorProjectJson.Load(WithAddresses(document,
+            ("seal_in", "DB12.DBX0.7")));
+        True(unprefixedDb.IsReadable,
+            "The documented unprefixed DB address form is still validated as Siemens syntax.");
+        var invalidUnprefixedDb = LadderEditorProjectJson.Load(WithAddresses(document,
+            ("seal_in", "DB12.DBX0.8")));
+        False(invalidUnprefixedDb.IsReadable);
+        True(invalidUnprefixedDb.Issues.Any(issue => issue.Path == "$.tags[3].address"));
+
+        var rockwell = LadderEditorDocument.CreateConveyorExample();
+        rockwell.AddTag("rockwell_input", PlcVariableRole.Input);
+        var opaqueAddress = WithAddresses(rockwell, ("rockwell_input", "Local:1:I.Data.0"));
+        var opaqueLoaded = LadderEditorProjectJson.Load(opaqueAddress);
+        True(opaqueLoaded.IsReadable && opaqueLoaded.Document is not null,
+            "Opaque non-Siemens controller address metadata must remain readable.");
+        Equal("Local:1:I.Data.0", opaqueLoaded.Document!.Tags.Single(tag => tag.Name == "rockwell_input").Address);
     }
 
     private static void TestWatchTablePersistence()

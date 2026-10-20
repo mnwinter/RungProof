@@ -16,8 +16,23 @@ public static class SiemensPlcTagAddress
     private static readonly Regex AddressPattern = new(
         @"^(?:%?)(?:(?<dbArea>DB)(?<dbNumber>[0-9]+)\.(?<dbKind>DBX|DBW|DBD)(?<dbByte>[0-9]+)(?:\.(?<dbBit>[0-7]))?|(?<area>[IQM])(?<kind>[BWD]?)(?<byte>[0-9]+)(?:\.(?<bit>[0-7]))?)$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    private static readonly Regex UnprefixedDbAddressCandidate = new(
+        @"^DB[0-9]+\.DB",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
     private readonly record struct AddressSpan(string Area, int DbNumber, long StartBit, long LengthBits);
+
+    /// <summary>
+    /// Identifies persisted addresses that the shared editor project format
+    /// can safely treat as Siemens metadata. Non-prefixed DB addresses are
+    /// included because they are documented in the Siemens tag editor; other
+    /// unprefixed addresses remain opaque for the shared Rockwell project path.
+    /// </summary>
+    internal static bool IsPersistedS7AddressCandidate(string? address)
+    {
+        var value = address?.Trim() ?? string.Empty;
+        return value.StartsWith('%') || UnprefixedDbAddressCandidate.IsMatch(value);
+    }
 
     /// <summary>
     /// Validates syntax, the supported PLC type and role, S7-1500 process-image
@@ -58,6 +73,60 @@ public static class SiemensPlcTagAddress
         error = string.Empty;
         return true;
     }
+
+    /// <summary>
+    /// Validates an absolute address used by an offline watch row against the
+    /// scalar S7-1500 address subset modeled by RungProof. A valid address does
+    /// not imply that a runtime value exists; the simulator resolves only an
+    /// exact match to one declared tag.
+    /// </summary>
+    public static bool TryValidateWatchAddress(string? address, out string error)
+    {
+        var value = address?.Trim() ?? string.Empty;
+        var match = AddressPattern.Match(value);
+        if (!match.Success)
+        {
+            error = $"'{value}' is not a supported S7-1500 absolute watch address.";
+            return false;
+        }
+
+        var isDb = match.Groups["dbArea"].Success;
+        var area = isDb ? "DB" : match.Groups["area"].Value.ToUpperInvariant();
+        var kind = isDb ? match.Groups["dbKind"].Value[^1].ToString().ToUpperInvariant()
+            : match.Groups["kind"].Value.ToUpperInvariant();
+        var bitAddress = isDb
+            ? match.Groups["dbBit"].Success
+            : match.Groups["bit"].Success;
+        if (!isDb && bitAddress && kind.Length == 0) kind = "X";
+        var type = kind switch
+        {
+            "X" when bitAddress => PlcVariableType.Bool,
+            "W" when !bitAddress => PlcVariableType.Int,
+            // DINT/REAL/TIME share the same 32-bit address form. Runtime
+            // resolution still requires one exact typed tag declaration.
+            "D" when !bitAddress => PlcVariableType.DInt,
+            _ => (PlcVariableType?)null,
+        };
+        if (type is null)
+        {
+            error = $"'{value}' uses an address width or bit form outside the modeled BOOL/INT/DINT/REAL/TIME subset.";
+            return false;
+        }
+        var role = area switch
+        {
+            "I" => PlcVariableRole.Input,
+            "Q" => PlcVariableRole.Output,
+            _ => PlcVariableRole.Memory,
+        };
+        return TryValidate(value, type.Value, role, Array.Empty<PlcVariable>(), null, out error);
+    }
+
+    /// <summary>Checks an absolute address against a declared watch tag's type and ownership.</summary>
+    public static bool TryValidateWatchAddress(
+        string? address,
+        PlcVariableType type,
+        PlcVariableRole role,
+        out string error) => TryParse(address, type, role, out _, out error);
 
     private static bool TryParse(
         string? address,

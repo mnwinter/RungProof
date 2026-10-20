@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 9,
   "kind": "rungproof-ladder-project",
   "id": "demo-5-integrated-palletizer",
   "name": "Palletizing_Cell_Main",
@@ -5334,7 +5334,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.positiverequest",
@@ -5343,7 +5345,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.negativerequest",
@@ -5352,7 +5356,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.positivelimit",
@@ -5361,7 +5367,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.negativelimit",
@@ -5370,7 +5378,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.positivecommand",
@@ -5379,7 +5389,9 @@
           "type": "Bool",
           "section": "Output",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.negativecommand",
@@ -5388,7 +5400,9 @@
           "type": "Bool",
           "section": "Output",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_axisdrive.fault",
@@ -5397,7 +5411,9 @@
           "type": "Bool",
           "section": "Output",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         }
       ],
       "rungs": [
@@ -5726,7 +5742,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_vacuumgripper.pickrequest",
@@ -5735,7 +5753,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_vacuumgripper.atpickup",
@@ -5744,7 +5764,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_vacuumgripper.atplace",
@@ -5753,7 +5775,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_vacuumgripper.attached",
@@ -5762,7 +5786,9 @@
           "type": "Bool",
           "section": "Input",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_vacuumgripper.vacuumcommand",
@@ -5771,7 +5797,9 @@
           "type": "Bool",
           "section": "Output",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         },
         {
           "id": "fb_vacuumgripper.fault",
@@ -5780,7 +5808,9 @@
           "type": "Bool",
           "section": "Output",
           "initial": false,
-          "dataType": ""
+          "dataType": "",
+          "retain": false,
+          "comment": ""
         }
       ],
       "rungs": [
@@ -6017,6 +6047,197 @@
     "cycle_count",
     "layer_complete"
   ],
+  "watchTables": [
+    {
+      "id": "default-watch-table-1",
+      "name": "Watch table 1",
+      "variables": [
+        "system_enable",
+        "safety_trip",
+        "machine_run",
+        "sequence_step",
+        "pallet_position_valid",
+        "carton_at_pick",
+        "gantry_home",
+        "gantry_x_encoder_counts",
+        "gantry_y_encoder_counts",
+        "gantry_z_encoder_counts",
+        "gantry_x_positive",
+        "gantry_x_negative",
+        "gantry_y_positive",
+        "gantry_y_negative",
+        "gantry_z_positive",
+        "gantry_z_negative",
+        "vacuum_pick",
+        "placed_cartons",
+        "cycle_count",
+        "layer_complete"
+      ],
+      "rows": [
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "system_enable",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "safety_trip",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "machine_run",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "sequence_step",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-5",
+          "referenceKind": "Symbolic",
+          "reference": "pallet_position_valid",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-6",
+          "referenceKind": "Symbolic",
+          "reference": "carton_at_pick",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-7",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_home",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-8",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_x_encoder_counts",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-9",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_y_encoder_counts",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-10",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_z_encoder_counts",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-11",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_x_positive",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-12",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_x_negative",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-13",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_y_positive",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-14",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_y_negative",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-15",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_z_positive",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-16",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_z_negative",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-17",
+          "referenceKind": "Symbolic",
+          "reference": "vacuum_pick",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-18",
+          "referenceKind": "Symbolic",
+          "reference": "placed_cartons",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-19",
+          "referenceKind": "Symbolic",
+          "reference": "cycle_count",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-20",
+          "referenceKind": "Symbolic",
+          "reference": "layer_complete",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
   "instances": [
     {
       "id": "instance-x_axis",
@@ -6057,5 +6278,6 @@
   ],
   "tagTables": [
     "Default tag table"
-  ]
+  ],
+  "userConstants": []
 }

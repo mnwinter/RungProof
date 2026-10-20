@@ -23,7 +23,7 @@ public sealed record LadderEditorProjectLoadResult(
 /// </summary>
 public static class LadderEditorProjectJson
 {
-    public const int SchemaVersion = 6;
+    public const int SchemaVersion = 9;
     public const string Kind = "rungproof-ladder-project";
 
     private static readonly JsonSerializerOptions Options = new()
@@ -79,14 +79,33 @@ public static class LadderEditorProjectJson
                 ?? snapshot.WatchVariables).ToList(),
             WatchTables = (snapshot.WatchTables ?? []).Select(table => new WatchTableDto
             {
+                Id = table.Id,
                 Name = table.Name,
                 Variables = table.Variables.ToList(),
+                Rows = table.Rows.Select(row => new WatchRowDto
+                {
+                    Id = row.Id,
+                    ReferenceKind = row.ReferenceKind.ToString(),
+                    Reference = row.Reference,
+                    DisplayFormat = row.DisplayFormat,
+                    ModifyValue = row.ModifyValue,
+                    Comment = row.Comment,
+                }).ToList(),
             }).ToList(),
             // Selecting a watch table is navigation, like selecting a block.
             // Preserve it in a saved file without marking the project content dirty.
             ActiveWatchTableIndex = contentOnly ? 0 : snapshot.ActiveWatchTableIndex,
             Instances = (snapshot.Instances ?? []).ToList(),
             TagTables = (snapshot.TagTables ?? ["Default tag table"]).ToList(),
+            UserConstants = (snapshot.UserConstants ?? []).Select(constant => new UserConstantDto
+            {
+                Id = constant.Id,
+                Name = constant.Name,
+                DataType = constant.Type.ToString(),
+                Value = constant.Value,
+                TagTable = constant.TagTable,
+                Comment = constant.Comment,
+            }).ToList(),
         };
         return JsonSerializer.Serialize(dto, Options);
     }
@@ -98,7 +117,7 @@ public static class LadderEditorProjectJson
             var dto = JsonSerializer.Deserialize<ProjectDto>(json, Options);
             if (dto is null)
                 return Invalid("Project document must be a JSON object.");
-            if (dto.SchemaVersion is not (1 or 2 or 3 or 4 or 5 or SchemaVersion))
+            if (dto.SchemaVersion is < 1 or > SchemaVersion)
                 return Invalid($"Unsupported editor project schemaVersion '{dto.SchemaVersion}'.");
             if (!string.Equals(dto.Kind, Kind, StringComparison.Ordinal))
                 return Invalid($"Unsupported project kind '{dto.Kind}'.");
@@ -107,6 +126,8 @@ public static class LadderEditorProjectJson
             if (dto.TagTables is not null
                 && !LadderEditorDocument.TryValidateTagTableNames(dto.TagTables, out var tagTableError))
                 return Invalid(tagTableError);
+            if (dto.SchemaVersion >= 8 && dto.UserConstants is null)
+                return Invalid("Schema 8 or later requires userConstants.");
             if (dto.SchemaVersion >= 5 && dto.WatchTables is null)
                 return Invalid("Schema 5 requires watchTables.");
             if (dto.Blocks.Count == 0)
@@ -117,13 +138,56 @@ public static class LadderEditorProjectJson
                 || dto.Blocks.Any(block => block is null) || dto.WatchVariables.Any(name => name is null)
                 || dto.Instances.Any(instance => instance is null || instance.Id is null || instance.Name is null || instance.BlockId is null))
                 return Invalid("Editor project collections must not contain null entries.");
-            if (dto.WatchTables?.Any(table => table is null || table.Name is null || table.Variables is null
-                    || table.Variables.Any(name => name is null)) == true)
-                return Invalid("Watch tables and their symbols must not contain null entries.");
+            if (dto.UserConstants?.Any(constant => constant is null) == true)
+                return Invalid("PLC user constants must not contain null entries.");
+            if (dto.WatchTables?.Any(table => table is null || table.Name is null
+                    || (dto.SchemaVersion < 9 && (table.Variables is null || table.Variables.Any(name => name is null)))
+                    || (dto.SchemaVersion >= 9 && (table.Rows is null || table.Rows.Any(row => row is null)))) == true)
+                return Invalid(dto.SchemaVersion >= 9
+                    ? "Watch tables and their rows must not contain null entries."
+                    : "Watch tables and their symbols must not contain null entries.");
+            if (dto.SchemaVersion >= 7 && dto.WatchTables?.Any(table => string.IsNullOrWhiteSpace(table.Id)) == true)
+                return Invalid("Schema 7 requires a stable ID for every watch table.");
+            if (dto.SchemaVersion >= 7 && dto.WatchTables is not null
+                && dto.WatchTables.GroupBy(table => table.Id, StringComparer.Ordinal).Any(group => group.Count() > 1))
+                return Invalid("Watch-table IDs must be unique.");
             if (dto.WatchTables is { Count: > 0 } && (dto.WatchTables.Any(table => string.IsNullOrWhiteSpace(table.Name))
-                    || dto.WatchTables.GroupBy(table => table.Name, StringComparer.OrdinalIgnoreCase).Any(group => group.Count() > 1)
-                    || dto.WatchTables.Any(table => table.Variables!.GroupBy(name => name, StringComparer.Ordinal).Any(group => group.Count() > 1))))
-                return Invalid("Watch-table names must be nonempty and unique; symbols must be unique within each table.");
+                    || dto.WatchTables.GroupBy(table => table.Name, StringComparer.OrdinalIgnoreCase).Any(group => group.Count() > 1)))
+                return Invalid("Watch-table names must be nonempty and unique.");
+            if (dto.WatchTables is { Count: > 0 } && dto.SchemaVersion < 9
+                && dto.WatchTables.Any(table => table.Variables!.GroupBy(name => name, StringComparer.Ordinal).Any(group => group.Count() > 1)))
+                return Invalid("Watch-table symbols must be unique within each table.");
+            if (dto.WatchTables is { Count: > 0 } && dto.SchemaVersion >= 9)
+            {
+                foreach (var table in dto.WatchTables)
+                {
+                    var rows = table.Rows!;
+                    if (rows.Any(row => string.IsNullOrWhiteSpace(row.Id)
+                            || string.IsNullOrWhiteSpace(row.Reference)
+                            || string.IsNullOrWhiteSpace(row.DisplayFormat)
+                            || string.IsNullOrWhiteSpace(row.ReferenceKind)))
+                        return Invalid("Watch-table rows require an ID, reference kind, reference, and display format.");
+                    if (rows.GroupBy(row => row.Id ?? string.Empty, StringComparer.Ordinal).Any(group => group.Count() > 1))
+                        return Invalid("Watch-table row IDs must be unique within each table.");
+                    var symbolicReferences = new HashSet<string>(StringComparer.Ordinal);
+                    var absoluteReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var row in rows)
+                    {
+                        if (!Enum.TryParse<WatchReferenceKind>(row.ReferenceKind, true, out var referenceKind)
+                            || !Enum.IsDefined(referenceKind))
+                            return Invalid($"Watch-table row '{row.Id}' has unknown reference kind '{row.ReferenceKind}'.");
+                        var reference = row.Reference!.Trim();
+                        var isUnique = referenceKind == WatchReferenceKind.AbsoluteAddress
+                            ? absoluteReferences.Add(reference.TrimStart('%'))
+                            : symbolicReferences.Add(reference);
+                        if (!isUnique)
+                            return Invalid("Watch-table references must be unique within each table.");
+                        if (referenceKind == WatchReferenceKind.AbsoluteAddress
+                            && !SiemensPlcTagAddress.TryValidateWatchAddress(reference, out var addressError))
+                            return Invalid($"Watch-table row '{row.Id}' has an invalid absolute address: {addressError}");
+                    }
+                }
+            }
             if (dto.Blocks.Any(block => block.Rungs is null || block.Interface is null
                     || block.Rungs.Any(rung => rung is null) || block.Interface.Any(parameter => parameter is null))
                 || dto.Blocks.SelectMany(block => block.Rungs).Any(rung => rung.Branches is null
@@ -152,6 +216,22 @@ public static class LadderEditorProjectJson
 
             var issues = new List<LadderValidationIssue>();
             var tags = dto.Tags.Select((tag, index) => ParseTag(tag, index, issues)).ToArray();
+            for (var index = 0; index < tags.Length; index++)
+            {
+                var tag = tags[index];
+                // The editor project format is shared by TIA and Rockwell
+                // workspaces and does not persist a vendor selector. Validate
+                // only recognizable Siemens absolute-address forms here;
+                // preserve opaque non-Siemens address metadata unchanged.
+                if (!SiemensPlcTagAddress.IsPersistedS7AddressCandidate(tag.Address)) continue;
+                if (!SiemensPlcTagAddress.TryValidate(tag.Address, tag.Type, tag.Role,
+                        tags.Take(index).Where(existing =>
+                            SiemensPlcTagAddress.IsPersistedS7AddressCandidate(existing.Address)),
+                        null, out var addressError))
+                {
+                    issues.Add(new("EPJ001", $"$.tags[{index}].address", addressError));
+                }
+            }
             var blocks = dto.Blocks.Select((block, index) => ParseBlock(block, index, issues, dto.SchemaVersion)).ToArray();
             ValidateGlobalDbDeclarations(blocks, issues);
             var tasks = dto.Tasks.Select((task, index) => ParseTask(task, index, issues)).ToArray();
@@ -165,8 +245,17 @@ public static class LadderEditorProjectJson
             var activeBlockIndex = Math.Clamp(dto.ActiveBlockIndex, 0, blocks.Length - 1);
             var nextId = Math.Max(Math.Max(1, dto.NextId), NextAvailableStableId(blocks, tasks));
             var watchTables = dto.SchemaVersion >= 5 && dto.WatchTables is { Count: > 0 }
-                ? dto.WatchTables.Select(table => new EditableWatchTable(table.Name!, table.Variables!)).ToArray()
-                : [new EditableWatchTable("Watch table 1", dto.WatchVariables)];
+                ? dto.WatchTables.Select((table, index) =>
+                {
+                    var restored = new EditableWatchTable(table.Name!, id: dto.SchemaVersion >= 7
+                        ? table.Id : $"legacy-watch-table-{index + 1}");
+                    if (dto.SchemaVersion >= 9)
+                        restored.Rows.AddRange(table.Rows!.Select((row, rowIndex) => ParseWatchRow(row, index, rowIndex)));
+                    else
+                        restored.Variables.AddRange(table.Variables!);
+                    return restored;
+                }).ToArray()
+                : [EditableWatchTable.CreateDefault(dto.WatchVariables)];
             var snapshot = new LadderEditorSnapshot(
                 dto.Id ?? string.Empty,
                 dto.Name ?? string.Empty,
@@ -184,7 +273,8 @@ public static class LadderEditorProjectJson
                         .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name.Trim())
                         .Distinct(StringComparer.OrdinalIgnoreCase))
                         .Distinct(StringComparer.OrdinalIgnoreCase).ToArray(),
-                watchTables, Math.Clamp(dto.ActiveWatchTableIndex, 0, watchTables.Length - 1));
+                watchTables, Math.Clamp(dto.ActiveWatchTableIndex, 0, watchTables.Length - 1),
+                (dto.UserConstants ?? []).Select((constant, index) => ParseUserConstant(constant, index)).ToArray());
             var document = new LadderEditorDocument();
             document.RestoreSnapshot(snapshot);
             return new(document, []) { SourceSchemaVersion = dto.SchemaVersion };
@@ -197,6 +287,28 @@ public static class LadderEditorProjectJson
         {
             return Invalid($"Unreadable editor project: {exception.Message}");
         }
+    }
+
+    private static PlcUserConstant ParseUserConstant(UserConstantDto dto, int index)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Id) || string.IsNullOrWhiteSpace(dto.Name)
+            || string.IsNullOrWhiteSpace(dto.DataType) || dto.Value is null || string.IsNullOrWhiteSpace(dto.TagTable))
+            throw new ArgumentException($"PLC user constant at index {index} is missing required fields.");
+        if (!Enum.TryParse<PlcVariableType>(dto.DataType, true, out var type) || !Enum.IsDefined(type))
+            throw new ArgumentException($"PLC user constant '{dto.Name}' has unknown data type '{dto.DataType}'.");
+        return new PlcUserConstant(dto.Id, dto.Name, type, dto.Value, dto.TagTable, dto.Comment ?? string.Empty);
+    }
+
+    private static EditableWatchRow ParseWatchRow(WatchRowDto dto, int tableIndex, int rowIndex)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Id) || string.IsNullOrWhiteSpace(dto.Reference)
+            || string.IsNullOrWhiteSpace(dto.ReferenceKind))
+            throw new ArgumentException($"Watch-table row {rowIndex} in table {tableIndex} is missing required fields.");
+        if (!Enum.TryParse<WatchReferenceKind>(dto.ReferenceKind, true, out var referenceKind)
+            || !Enum.IsDefined(referenceKind))
+            throw new ArgumentException($"Watch-table row '{dto.Id}' has unknown reference kind '{dto.ReferenceKind}'.");
+        return new EditableWatchRow(dto.Reference, referenceKind, dto.DisplayFormat ?? "Auto",
+            dto.ModifyValue, dto.Comment ?? string.Empty, dto.Id);
     }
 
     private static void ValidateIdentities(EditableBlock[] blocks, EditableTask[] tasks)
@@ -632,12 +744,35 @@ public static class LadderEditorProjectJson
         public int ActiveWatchTableIndex { get; set; }
         public List<LadderInstance> Instances { get; set; } = [];
         public List<string>? TagTables { get; set; }
+        public List<UserConstantDto>? UserConstants { get; set; }
+    }
+
+    private sealed class UserConstantDto
+    {
+        public string? Id { get; set; }
+        public string? Name { get; set; }
+        public string? DataType { get; set; }
+        public string? Value { get; set; }
+        public string? TagTable { get; set; }
+        public string? Comment { get; set; }
     }
 
     private sealed class WatchTableDto
     {
+        public string? Id { get; set; }
         public string? Name { get; set; }
         public List<string>? Variables { get; set; }
+        public List<WatchRowDto>? Rows { get; set; }
+    }
+
+    private sealed class WatchRowDto
+    {
+        public string? Id { get; set; }
+        public string? ReferenceKind { get; set; }
+        public string? Reference { get; set; }
+        public string? DisplayFormat { get; set; }
+        public string? ModifyValue { get; set; }
+        public string? Comment { get; set; }
     }
 
     private sealed class TagDto
