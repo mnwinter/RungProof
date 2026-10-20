@@ -213,8 +213,16 @@ that move without ladder-owned outputs.
   DISCONNECTED. The test was unsaved scratch state; no project/demo was saved,
   no simulator or PLC controls were used, and the exact app, bridge, and test
   tabs were closed. This closes only the local screen-control address-input and
-  validation check; monitor/modify, persistence, and installed-TIA comparison
-  remain open.
+  validation check.
+- A follow-up screen-control pass opened Online → Verify + Load offline, then
+  opened Watch table 1 with the offline runtime STOPPED and no physical PLC.
+  The `start_command` row accepted `TRUE` in Modify Value, its MODIFY checkbox
+  selected it, and SIM MODIFY changed its visible Monitor Value from FALSE to
+  TRUE. The status continued to identify the stopped offline simulator. This
+  verifies the local monitor/modify UI path only; save/load persistence,
+  running-scan monitor behavior, and installed-TIA comparison remain open. The
+  test was unsaved scratch state; no project/demo was saved or physical PLC
+  accessed, and the exact app, bridge, and test tab were closed.
 - Current code evidence: build succeeded with 0 warnings/errors; the
   virtual-controller suite passed 394/394; the focused project-tree sweep passed
   14/14 gates and 100/100 assertions; and app-shell verification passed. These
