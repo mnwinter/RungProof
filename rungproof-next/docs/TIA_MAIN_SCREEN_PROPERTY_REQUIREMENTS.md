@@ -249,11 +249,13 @@ that move without ladder-owned outputs.
   tag-table list from the imported tags instead of retaining stale tables.
   Build and the 395-case offline suite pass. The screen walkthrough has not yet
   verified staged-form Apply/Discard/Cancel through these entry points.
-- On the rebuilt current source, the Project menu's Save As command opened the
-  visible `Save offline Ladder project` picker with the expected default project
-  filename. No file was selected or saved; the disposable app and bridge were
-  stopped after inspection. This verifies menu routing and dialog presentation,
-  not disk persistence or a staged-form prompt.
+- On the rebuilt source, Project → Save As opened the `Save offline Ladder
+  project` picker. A separate code review found that File → Save Workspace As
+  incorrectly invoked the fixed last-workspace save path. The menu now opens the
+  existing workspace destination picker. The zero-warning build, 395-case
+  offline suite, and headless app-shell verifier pass; a visible click check of
+  this File-menu route is pending. No file was selected or saved during the
+  earlier Project menu inspection.
 - Independent source review also confirmed two declared feature gaps: User
   constants can be authored and persisted but are not currently exported into
   the executable program or resolved by the ladder operand insertion path;

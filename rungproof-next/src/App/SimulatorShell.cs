@@ -241,7 +241,6 @@ public partial class SimulatorShell : CanvasLayer
     /// </summary>
     public event Action<AssetDefinition>? AssetPreviewRequested;
     public event Action? AssetPreviewClosed;
-    public event Action? SaveWorkspaceRequested;
     public event Action? LoadWorkspaceRequested;
     public event Action? CreateFiniteBeltWorkspaceRequested;
     public event Action? CreateFiniteRollerWorkspaceRequested;
@@ -1724,7 +1723,7 @@ public partial class SimulatorShell : CanvasLayer
         file.GetPopup().AddItem("New finite pallet roller workspace", 5);
         file.GetPopup().IdPressed += id =>
         {
-            if (id == 0) SaveWorkspaceRequested?.Invoke();
+            if (id == 0) ShowWorkspaceSaveDialog();
             if (id == 1) LoadWorkspaceRequested?.Invoke();
             if (id == 2)
             {

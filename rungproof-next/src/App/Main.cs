@@ -586,7 +586,6 @@ public partial class Main : Node3D
         _simulatorShell.AssetPlacementRequested += asset => PlaceAsset(asset);
         _simulatorShell.AssetPreviewRequested += OpenAssetPreview;
         _simulatorShell.AssetPreviewClosed += CloseAssetPreview;
-        _simulatorShell.SaveWorkspaceRequested += SaveWorkspace;
         _simulatorShell.LoadWorkspaceRequested += LoadWorkspace;
         _simulatorShell.SaveWorkspaceToPathRequested += SaveWorkspaceToPath;
         _simulatorShell.LoadWorkspaceFromPathRequested += LoadWorkspaceFromPath;
