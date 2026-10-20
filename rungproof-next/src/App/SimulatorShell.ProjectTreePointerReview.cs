@@ -237,20 +237,33 @@ public partial class SimulatorShell
                 created = !dialog.Visible && appliedJson != baselineJson
                     && objectExists() && treeRowExists() && _ladderHistory.CanUndo;
 
-                undoExact = TryUndoLadderEdit(out _)
-                    && LadderEditorProjectJson.Save(_ladderDocument) == baselineJson
-                    && !_ladderHistory.CanUndo && !objectExists();
+                var undoInvoked = TryUndoLadderEdit(out var undoDescription);
+                // Opening the newly created tag-table document is navigation;
+                // undo can select a valid fallback block, which changes the
+                // serialized ActiveBlockIndex without changing project content.
+                var undoContentMatches = !LadderEditorProjectJson.HasUnsavedChanges(_ladderDocument, baselineJson);
+                var undoHistoryEmpty = !_ladderHistory.CanUndo;
+                var undoObjectAbsent = !objectExists();
+                var undoTreeRowAbsent = !treeRowExists();
+                undoExact = undoInvoked && undoContentMatches && undoHistoryEmpty && undoObjectAbsent && undoTreeRowAbsent;
                 await Frame(); await Frame();
 
-                redoExact = TryRedoLadderEdit(out _)
-                    && LadderEditorProjectJson.Save(_ladderDocument) == appliedJson
-                    && objectExists() && treeRowExists();
+                var redoInvoked = TryRedoLadderEdit(out _);
+                var redoContentMatches = !LadderEditorProjectJson.HasUnsavedChanges(_ladderDocument, appliedJson);
+                var redoObjectPresent = objectExists();
+                var redoTreeRowPresent = treeRowExists();
+                redoExact = redoInvoked && redoContentMatches && redoObjectPresent && redoTreeRowPresent;
                 await Frame(); await Frame();
 
-                cleanupExact = TryUndoLadderEdit(out _)
-                    && LadderEditorProjectJson.Save(_ladderDocument) == baselineJson
-                    && !_ladderHistory.CanUndo && !objectExists();
+                var cleanupUndoInvoked = TryUndoLadderEdit(out _);
+                var cleanupContentMatches = !LadderEditorProjectJson.HasUnsavedChanges(_ladderDocument, baselineJson);
+                var cleanupHistoryEmpty = !_ladderHistory.CanUndo;
+                var cleanupObjectAbsent = !objectExists();
+                var cleanupTreeRowAbsent = !treeRowExists();
+                cleanupExact = cleanupUndoInvoked && cleanupContentMatches && cleanupHistoryEmpty && cleanupObjectAbsent && cleanupTreeRowAbsent;
                 await Frame(); await Frame();
+                if (!undoExact || !redoExact || !cleanupExact)
+                    GD.Print($"TIA_PROJECT_TREE_MUTATION_TRACE name={validName} undoCall={undoInvoked} undoDescription={undoDescription} undoContent={undoContentMatches} undoCanUndo={!undoHistoryEmpty} undoObjectAbsent={undoObjectAbsent} undoTreeAbsent={undoTreeRowAbsent} redoCall={redoInvoked} redoContent={redoContentMatches} redoObject={redoObjectPresent} redoTree={redoTreeRowPresent} cleanupCall={cleanupUndoInvoked} cleanupContent={cleanupContentMatches} cleanupCanUndo={!cleanupHistoryEmpty} cleanupObjectAbsent={cleanupObjectAbsent} cleanupTreeAbsent={cleanupTreeRowAbsent}");
             }
             finally
             {
@@ -271,20 +284,20 @@ public partial class SimulatorShell
         var blockMutation = await VerifyProjectTreeCreation(
             "add-block", "CreateBlockDialog", "AuditFB99",
             () => _ladderDocument.Blocks.Any(block => block.Name == "AuditFB99"),
-            () => FindMetadata(projectTree.GetRoot(), $"program:{blockCountBeforeMutation}")?.GetText(0)
-                .Contains("AuditFB99", StringComparison.Ordinal) == true);
+            () => FindMetadata(projectTree.GetRoot(), $"program:{blockCountBeforeMutation}") is { Visible: true } blockRow
+                && blockRow.GetText(0).Contains("AuditFB99", StringComparison.Ordinal));
         var tagTableMutation = await VerifyProjectTreeCreation(
             "add-tag-table", "CreateTagTableDialog", "AuditTagTable99",
             () => _ladderDocument.TagTables.Contains("AuditTagTable99", StringComparer.Ordinal),
-            () => FindMetadata(projectTree.GetRoot(), "tag-table:AuditTagTable99") is not null);
+            () => FindMetadata(projectTree.GetRoot(), "tag-table:AuditTagTable99") is { Visible: true });
         var watchCountBeforeMutation = _ladderDocument.WatchTables.Count;
         var watchTableMutation = await VerifyProjectTreeCreation(
             "add-watch-table", "CreateWatchTableDialog", "AuditWatchTable99",
             () => _ladderDocument.WatchTables.Any(table => table.Name == "AuditWatchTable99"),
             () => _ladderDocument.WatchTables.Count == watchCountBeforeMutation + 1
                 && _ladderDocument.WatchTables.FirstOrDefault(table => table.Name == "AuditWatchTable99") is { } createdWatchTable
-                && FindMetadata(projectTree.GetRoot(), EditorDocumentIdentity.ForWatchTable(createdWatchTable))?.GetText(0)
-                .Contains("AuditWatchTable99", StringComparison.Ordinal) == true);
+                && FindMetadata(projectTree.GetRoot(), EditorDocumentIdentity.ForWatchTable(createdWatchTable)) is { Visible: true } watchTableRow
+                && watchTableRow.GetText(0).Contains("AuditWatchTable99", StringComparison.Ordinal));
         var projectTreeMutations = blockMutation && tagTableMutation && watchTableMutation;
         GD.Print($"TIA_PROJECT_TREE_MUTATION_MATRIX_VERIFY {(projectTreeMutations ? "PASS" : "FAIL")} "
             + $"block={blockMutation} tagTable={tagTableMutation} watchTable={watchTableMutation}");

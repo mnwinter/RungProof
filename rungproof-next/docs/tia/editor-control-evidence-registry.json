@@ -32,7 +32,7 @@
       "A unit-test or native-verifier log that combines unrelated controls without an exact gate record.",
       "Source presence, documentation prose, or an unreviewed screenshot by itself."
     ],
-    "currentAssessment": "Exact structured production-path artifacts pass all 21 local gates (136 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
+    "currentAssessment": "Exact structured production-path artifacts pass all 21 local gates (139 assertions). These artifacts remain offline-only and do not establish installed-TIA, import/export, or live-PLC parity."
   },
   "structuredSweepContracts": [
     {
@@ -950,7 +950,10 @@
       "requiredAssertions": [
         "an invalid User constant name displays inline validation and does not mutate the project",
         "editing the invalid name clears stale validation feedback",
-        "Cancel closes the invalid draft without changing the project"
+        "Cancel closes the invalid draft without changing the project",
+        "changing a new User constant type updates its untouched value draft to a compatible default",
+        "every supported User constant type receives a value accepted by its type validator",
+        "editing a User constant reduces table expansion and shows Apply/Cancel in place of the table actions and help note"
       ],
       "limitations": [
         "The structured gate verifies local form behavior only; screen-control behavior and installed-TIA visual parity are tracked separately."
@@ -978,12 +981,12 @@
       "path": ".tools/tia-editor-control-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "AD379EC9A962ECF1504B8385C20AD8015060B372AED16FC27D5D1086096FD855",
+      "sha256": "D92900287E0C28F31C1DA9EC6FA499FB9D085A360D7288B7C3EA19320D3B690E",
       "status": "passed",
       "gateCount": 7,
       "assertionCount": 36,
-      "sourceRevision": "sha256:D35D49F85560DA8DBAC1916329D80ABDA362975FFD7909D0C3460F07B44C7197",
-      "currentSource": false,
+      "sourceRevision": "sha256:CED5E686748BCE8FA6EA8FA4FC411096786065878C340DA52609FE41C83811D0",
+      "currentSource": true,
       "externalTia": false,
       "livePlc": false
     },
@@ -993,11 +996,11 @@
       "path": ".tools/tia-project-tree-gates.json",
       "kind": "json",
       "durability": "ephemeral-local",
-      "sha256": "109B3F56F27CEA38144A4799428AFB538F4A4A002EA952EC66F17B11AB3AB12D",
+      "sha256": "A5C450DBBF35FDA64F1A40EBF94E7A5D878A86D7337A8E4BA94F66875D93B76B",
       "status": "passed",
       "gateCount": 14,
-      "assertionCount": 100,
-      "sourceRevision": "sha256:E6B57E823CAE0C3F99D6720189E65E8AC89763FF56465E8C9D0B819FD38E7CF9",
+      "assertionCount": 103,
+      "sourceRevision": "sha256:CED5E686748BCE8FA6EA8FA4FC411096786065878C340DA52609FE41C83811D0",
       "currentSource": true,
       "externalTia": false,
       "livePlc": false

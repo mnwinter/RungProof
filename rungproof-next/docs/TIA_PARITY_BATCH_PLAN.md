@@ -29,7 +29,7 @@ the GUI/property exit criteria are closed.
 
 | Order | Status | Exit condition |
 | --- | --- | --- |
-| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Partial | **Latest evidence (2026-10-20):** normal-renderer `--verify-ladder-editor` and editor command routes pass; editor-control sweep passes 7/7 gates and 36/36 assertions. The focused project-tree gate passes 14/14 gates and 100/100 assertions, including the now-visible `+ MEMBER` editor route. Screen control rejected invalid `%I0.8`, preserved the five-row Watch table, opened/canceled Save Workspace As, exercised User Constants Undo/Redo, and showed the System Constants hardware-unavailable disclosure. A fresh native-input pass created, renamed, and deleted an empty custom table; Delete returned to Default without a confirmation dialog. User Constants opened with its declaration grid and controls. A measured-image-local screen pass created an unsaved DB1, visibly opened `+ MEMBER` to Project objects, typed and canceled `cancel_probe`, applied `applied_probe` as BOOL/FALSE, then verified Undo removes and Redo restores the row; a final Undo left the scratch DB without that row. Earlier missed clicks were coordinate-mapping failures, not evidence of a broken product action. This member-edit pass did not reopen Demo 5 DB101/DB102; a prior fresh screen pass recorded their six-column grouped layout. Runtime remained STOPPED and PLC DISCONNECTED; no project Save, Load, Run, or Connect occurred. **Still partial:** installed TIA V21 pairing, complete User Constants CRUD, disk Save/Load and staged-form prompts, running-scan Monitor behavior, tag-to-operand drag, and unresolved display-format feedback. Prior walkthroughs remain evidence for Watch row reorder/remove, Add All, supported `Bool` format, invalid-address feedback, and simulator-only modify while offline; unsupported-format feedback remains unresolved. Source and offline gates cover valid same-scene Open preserving the running program/scan, Verify + Load replacing it, and rejecting unknown/mismatched scenes before mutation. |
+| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Partial | **Latest evidence (2026-10-20):** the fresh normal-renderer `interaction` profile passed all 15 commands; controller/editor tests and all interaction gates passed, including editor-control 7/7 (36 assertions) and project-tree 14/14 (103 assertions). Artifacts are recorded in `docs/tia/tia-local-run-evidence.json` and remain local/offline. Source gates verify User Constants type-compatible defaults and compact edit layout. A separate current-source screen pass at 1600×900 exercised User Constants Add, opening Edit on an existing INT=0 constant, Cancel, Delete, Undo, and Redo; Apply/Cancel were visible in the viewport. That pass did not apply edited values, so full User Constants CRUD is still open. Screen control also rejected invalid `%I0.8`, preserved the five-row Watch table, opened/canceled Save Workspace As, exercised User Constants Undo/Redo, and showed the System Constants hardware-unavailable disclosure. A fresh native-input pass created, renamed, and deleted an empty custom table; Delete returned to Default without confirmation. A measured-image-local DB pass opened `+ MEMBER`, canceled `cancel_probe`, applied `applied_probe` as BOOL/FALSE, and verified Undo/Redo; a final Undo left the scratch DB without that row. Prior fresh screen passes recorded Demo 5 DB101/DB102's six-column grouped layout and the visible custom-table lifecycle. **Still partial:** installed TIA V21 pairing, applying an edit to an existing User Constant, disk Save/Load and staged-form prompts, running-scan Monitor behavior, physical tag-to-operand drag, and unresolved display-format feedback. Watch row reorder/remove, Add All, supported `Bool` format, invalid-address feedback, and simulator-only modify while offline were previously observed; unsupported-format feedback remains unresolved. Source and offline gates cover valid same-scene Open preserving the running program/scan, Verify + Load replacing it, and rejecting unknown/mismatched scenes before mutation. Runtime remained STOPPED and PLC DISCONNECTED in the referenced scratch screen sessions; no Save, Load, Run, or Connect action was used except the previously recorded explicit Save Workspace As cancel check. |
 | Tag-reference lifecycle integrity | Fixed in source; local regression suite passes | Symbolic CALL actuals block referenced-tag deletion and follow rename, including aggregate leaves, while literals, discards, stable IDs, and unresolved references remain unchanged. |
 | Remaining declared property features | Partial | Tag-table add/rename/empty-delete, watch-table lifecycle, and member/tag transactions already have source coverage. Remaining work includes block and tag-table duplication; visible User Constants create/edit/delete verification and using constants as executable LAD operands; a hardware-sourced, read-only System constants view when project metadata exists; physical tag-to-operand drag; and screen verification of Watch-table persistence. Watch monitor/modify was visibly exercised with an offline program loaded and no physical PLC. Keep undeveloped behavior disclosed. |
 | Instance DB presentation and semantics | Layout locally verified; editing remains read-only | Pair the six-column grouped table with installed TIA V21; add overrides only as a complete identity, validation, persistence, history, and runtime-initialization slice. |
@@ -428,7 +428,7 @@ It owns the detailed requirements and dependencies below.
 
 The detailed checkpoint below is historical; its 9-gate / 48-assertion counts
 are superseded by the later current-source result in
-`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md` (14 gates / 100 assertions).
+`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md` (14 gates / 103 assertions).
 
 The project-tree gate previously reported Global DB `fields-persist` as failed
 because its test looked one child too far into a `HideRoot` declaration Tree.
@@ -582,11 +582,13 @@ verify Add/Edit/Remove/Apply/Undo/Redo or the member-editor TREE return. The
 scratch project stayed unsaved and PLC-disconnected; its app and bridge were
 closed afterward.
 
-The latest attempt to rerun the entire interaction profile passed build, tests,
-editor transactions, ladder editor, aggregate properties, CALL authoring,
-operand placement, project-tree pointer, empty-box, renderer, and monitor gates,
-then stalled in the TIA edit sweep after scene load with no further output. That
-single verifier process was stopped; its result is not counted as a full-profile
-pass. The focused current-source project-tree gate above passed separately.
-Matched installed-TIA V21 comparison, remaining screen-control coverage, and
-ladder-owned demo remediation remain open.
+The 2026-10-20 current-source `interaction` profile completed successfully in
+265 seconds with all 15 commands passing. It passed build, controller/editor
+tests, editor transactions, ladder editor, motor aggregates, CALL authoring,
+operand placement, project-tree pointer mutations, empty-box behavior,
+renderer, monitor, edit, editor-control, project-tree, and view-state gates.
+The structured project-tree artifact records 14 gates / 103 assertions and the
+editor-control artifact records 7 gates / 36 assertions; both are current-source
+offline evidence. Earlier stalled runs remain historical and are superseded by
+this completed run. Matched installed-TIA V21 comparison, remaining
+screen-control coverage, and ladder-owned demo remediation remain open.

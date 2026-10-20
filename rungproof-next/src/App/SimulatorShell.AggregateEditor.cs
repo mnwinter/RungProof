@@ -120,13 +120,13 @@ public partial class SimulatorShell
             }
             finally { ioParser.Free(); }
             var watch = Widget<Tree>("WatchTable");
-            string WatchText(string symbol)
+            string WatchText(string symbol, int column = 2)
             {
-                for (var item = watch.GetRoot()?.GetFirstChild(); item is not null; item = item.GetNext()) if (item.GetMetadata(0).AsString() == symbol) return item.GetText(2);
+                for (var item = watch.GetRoot()?.GetFirstChild(); item is not null; item = item.GetNext()) if (item.GetText(0) == symbol) return item.GetText(column);
                 return "MISSING";
             }
-            Check(WatchText("qa_struct_renamed").Contains("ready=TRUE", StringComparison.Ordinal) && WatchText("qa_struct_renamed").Contains("value=42.25", StringComparison.Ordinal), "aggregate_root_watch_shows_actual_members");
-            Check(WatchText("qa_struct_renamed.ready") == "TRUE" && WatchText("qa_struct_renamed.value") == "42.25" && WatchText("qa_array_ui[9]") == "TRUE", "typed_bool_numeric_element_watches_show_actual_scan_values");
+            Check(WatchText("qa_struct_renamed", 3).Contains("ready=TRUE", StringComparison.Ordinal) && WatchText("qa_struct_renamed", 3).Contains("value=42.25", StringComparison.Ordinal), "aggregate_root_watch_shows_actual_members");
+            Check(WatchText("qa_struct_renamed.ready", 3) == "TRUE" && WatchText("qa_struct_renamed.value", 3) == "42.25" && WatchText("qa_array_ui[9]", 3) == "TRUE", "typed_bool_numeric_element_watches_show_actual_scan_values");
             Check(_virtualControllerVariables.Text.Contains("value=42.25", StringComparison.Ordinal), "aggregate_monitor_never_falls_through_to_false_boolean");
 
             var clearWatchButton = Widget<Button>("ClearWatchSymbols");
@@ -154,8 +154,9 @@ public partial class SimulatorShell
                 .Select(index => watchSymbolPicker.GetItemText(index)).ToArray();
             var watchGridSymbols = new List<string>();
             for (var watchRow = watch.GetRoot()?.GetFirstChild(); watchRow is not null; watchRow = watchRow.GetNext())
-                watchGridSymbols.Add(watchRow.GetMetadata(0).AsString());
-            var addAllMatchesPicker = offeredWatchSymbols.SequenceEqual(watchGridSymbols, StringComparer.Ordinal)
+                watchGridSymbols.Add(watchRow.GetText(0));
+            var addAllMatchesPicker = new HashSet<string>(offeredWatchSymbols, StringComparer.Ordinal)
+                    .SetEquals(watchGridSymbols)
                 && offeredWatchSymbols.Contains("qa_struct_renamed.ready", StringComparer.Ordinal)
                 && offeredWatchSymbols.Contains("qa_array_ui[9]", StringComparer.Ordinal);
             var addAllUndo = TryUndoLadderEdit(out _)

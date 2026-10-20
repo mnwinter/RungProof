@@ -84,7 +84,7 @@
       "status": "passed",
       "stableAssertions": {
         "gateIds": 14,
-        "assertions": 100,
+        "assertions": 103,
         "structuredPerGateResults": true,
         "nativePointerGeometry": true,
         "externalTia": false,
@@ -186,20 +186,20 @@
     "durability": "ephemeral-local"
   },
   "editorControlArtifact": {
-    "path": ".tools/tia-parity-interaction-final/tia-parity-interaction-20261019-082254-artifacts/tia-editor-control-gates.json",
-    "sha256": "3903E669625C7DB35564FE17CC8D16EEC59F3E46AFCDEB1AC4DB0CC951107147",
-    "status": "historical-pass",
+    "path": ".tools/tia-editor-control-gates.json",
+    "sha256": "D92900287E0C28F31C1DA9EC6FA499FB9D085A360D7288B7C3EA19320D3B690E",
+    "status": "passed",
     "gateCount": 7,
     "assertionCount": 36,
-    "currentSource": false,
+    "currentSource": true,
     "durability": "ephemeral-local"
   },
   "projectTreeArtifact": {
     "path": ".tools/tia-project-tree-gates.json",
-    "sha256": "109B3F56F27CEA38144A4799428AFB538F4A4A002EA952EC66F17B11AB3AB12D",
+    "sha256": "A5C450DBBF35FDA64F1A40EBF94E7A5D878A86D7337A8E4BA94F66875D93B76B",
     "status": "passed",
     "gateCount": 14,
-    "assertionCount": 100,
+    "assertionCount": 103,
     "currentSource": true,
     "durability": "ephemeral-local"
   },
@@ -232,5 +232,17 @@
     "The 18 editor/project-tree control gates are exact structured local checks, but they do not execute or visually compare an installed TIA Portal instance.",
     "No installed TIA Portal or live PLC execution occurred.",
     "The source run and PNG bundle remain local and untracked; hashes prove identity, not durable availability."
-  ]
+  ],
+  "latestInteractionRun": {
+    "path": ".tools/tia-parity-suite/tia-parity-interaction-20261020-112848.json",
+    "sha256": "07A63D1259F367E4942FFAC9147BABDB949E249A010B89A9799C0E367BB7F6FA",
+    "status": "passed",
+    "commandCount": 15,
+    "profile": "interaction",
+    "completedUtc": "2026-10-20T04:33:13.7084644-07:00",
+    "offlineOnly": true,
+    "installedTiaExecuted": false,
+    "livePlcExecuted": false,
+    "durability": "ephemeral-local"
+  }
 }

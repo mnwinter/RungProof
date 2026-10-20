@@ -8666,6 +8666,31 @@ public partial class SimulatorShell : CanvasLayer
         tagPage.AddChild(systemConstantsView);
         var userConstantFormEditing = false;
         var refreshingUserConstantsGrid = false;
+        var userConstantValueUsesTypeDefault = false;
+        var updatingUserConstantTypeDefault = false;
+        void UpdateUserConstantFormLayout()
+        {
+            // Keep Apply/Cancel in view while editing. The expandable table can
+            // otherwise consume the tag pane's height and push the form footer
+            // behind the diagnostics area on common window sizes.
+            userConstantsActions.Visible = !userConstantFormEditing;
+            userConstantsGrid.SizeFlagsVertical = userConstantFormEditing
+                ? Control.SizeFlags.Fill
+                : Control.SizeFlags.ExpandFill;
+            userConstantsGrid.CustomMinimumSize = new Vector2(0, userConstantFormEditing ? 100 : 180);
+            userConstantEditActions.Visible = userConstantFormEditing;
+            userConstantScope.Visible = !userConstantFormEditing;
+        }
+        UpdateUserConstantFormLayout();
+        static string DefaultUserConstantValue(PlcVariableType type) => type switch
+        {
+            PlcVariableType.Bool => "FALSE",
+            PlcVariableType.Int or PlcVariableType.DInt => "0",
+            PlcVariableType.Real => "0.0",
+            PlcVariableType.Time => "T#1ms",
+            PlcVariableType.String => string.Empty,
+            _ => string.Empty,
+        };
         void SetTagDeclarationView(int index)
         {
             ResolvePendingEditorForms(() =>
@@ -8777,7 +8802,8 @@ public partial class SimulatorShell : CanvasLayer
                 var typeIndex = Enumerable.Range(0, userConstantType.ItemCount)
                     .FirstOrDefault(index => userConstantType.GetItemMetadata(index).AsInt32() == (int)selectedType, -1);
                 userConstantType.Select(Math.Max(0, typeIndex));
-                userConstantValue.Text = constant?.Value ?? "FALSE";
+                userConstantValueUsesTypeDefault = constant is null;
+                userConstantValue.Text = constant?.Value ?? DefaultUserConstantValue(selectedType);
                 userConstantComment.Text = constant?.Comment ?? string.Empty;
                 userConstantValidation.Text = string.Empty;
                 userConstantValidation.Visible = false;
@@ -8786,6 +8812,7 @@ public partial class SimulatorShell : CanvasLayer
                 userConstantFormRevision = document.Revision;
             }
             finally { loadingFormControls = priorLoading; }
+            UpdateUserConstantFormLayout();
             refreshUserConstants?.Invoke();
         };
         discardUserConstantForm = () =>
@@ -8798,6 +8825,7 @@ public partial class SimulatorShell : CanvasLayer
             // enabled without requiring an artificial second row-selection.
             // New drafts already have a null ID and remain unselected.
             userConstantForm.Visible = false;
+            UpdateUserConstantFormLayout();
             refreshUserConstants?.Invoke();
         };
         tagDefinitionsTab.Pressed += () => SetTagDeclarationView(0);
@@ -8817,6 +8845,7 @@ public partial class SimulatorShell : CanvasLayer
                 selectedUserConstantId = id;
                 userConstantFormEditing = false;
                 userConstantForm.Visible = false;
+                UpdateUserConstantFormLayout();
                 refreshUserConstants?.Invoke();
             });
         };
@@ -8848,6 +8877,7 @@ public partial class SimulatorShell : CanvasLayer
             userConstantFormEditing = false;
             userConstantFormDirty = false;
             userConstantForm.Visible = false;
+            UpdateUserConstantFormLayout();
             refreshEditorAfterInitialization?.Invoke();
             output.Text = $"[color=#18864b]PLC user constant deleted.[/color] {Escape(constant.Name)}.";
         };
@@ -8886,6 +8916,7 @@ public partial class SimulatorShell : CanvasLayer
                 userConstantFormDirty = false;
                 userConstantFormEditing = false;
                 userConstantForm.Visible = false;
+                UpdateUserConstantFormLayout();
                 refreshEditorAfterInitialization?.Invoke();
                 output.Text = $"[color=#18864b]PLC user constant saved.[/color] {Escape(updated.Name)} · {updated.Type} · offline declaration.";
             }
@@ -8913,7 +8944,23 @@ public partial class SimulatorShell : CanvasLayer
                 refreshUserConstants?.Invoke();
             }
             if (control is LineEdit text) text.TextChanged += _ => MarkUserConstantPending();
-            else if (control is OptionButton option) option.ItemSelected += _ => MarkUserConstantPending();
+            else if (control is OptionButton option) option.ItemSelected += _ =>
+            {
+                if (ReferenceEquals(option, userConstantType) && userConstantValueUsesTypeDefault
+                    && option.Selected >= 0)
+                {
+                    var selectedType = (PlcVariableType)option.GetItemMetadata(option.Selected).AsInt32();
+                    updatingUserConstantTypeDefault = true;
+                    userConstantValue.Text = DefaultUserConstantValue(selectedType);
+                    updatingUserConstantTypeDefault = false;
+                }
+                MarkUserConstantPending();
+            };
+            if (ReferenceEquals(control, userConstantValue))
+                userConstantValue.TextChanged += _ =>
+                {
+                    if (!updatingUserConstantTypeDefault) userConstantValueUsesTypeDefault = false;
+                };
             control.GuiInput += input =>
             {
                 if (input is InputEventKey { Pressed: true, Keycode: Key.Escape })

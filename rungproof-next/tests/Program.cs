@@ -5111,7 +5111,7 @@ internal static partial class Program
             && !editorControlAssertions.GetProperty("externalTia").GetBoolean()
             && !editorControlAssertions.GetProperty("livePlc").GetBoolean()
             && projectTreeAssertions.GetProperty("gateIds").GetInt32() == 14
-            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 100
+            && projectTreeAssertions.GetProperty("assertions").GetInt32() == 103
             && projectTreeAssertions.GetProperty("structuredPerGateResults").GetBoolean()
             && projectTreeAssertions.GetProperty("nativePointerGeometry").GetBoolean()
             && !projectTreeAssertions.GetProperty("externalTia").GetBoolean()
@@ -5265,7 +5265,7 @@ internal static partial class Program
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36,
                 Status: "historical-pass", CurrentSource: false),
-            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 14, Assertions: 100,
+            (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 14, Assertions: 103,
                 Status: "passed", CurrentSource: true),
         })
         {

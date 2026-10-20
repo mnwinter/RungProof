@@ -43,10 +43,19 @@ afterward. Current screen-control evidence also covers creating, renaming, and
 deleting an empty custom PLC tag table; showing/selecting a tag row; opening the
 User Constants grid and controls; and Global DB member Add, Cancel, Undo/Redo,
 and selected-row Remove. The empty-table delete returned to Default without a
-confirmation dialog. Do not infer a staged tag Add/Cancel/Apply transaction,
-full User Constants CRUD, non-empty-table deletion, Save/Load, or
-tag-to-operand drag from those results; the 2026-10-20 acceptance ledger lists
-the still-open routes.
+confirmation dialog. A current-source 1600×900 screen pass confirmed the
+compact User Constants edit layout keeps Apply/Cancel visible and exercised
+Add, opening Edit on an existing INT=0 constant, Cancel, Delete, Undo, and
+Redo. It did not apply changed values to an existing constant, so full User
+Constants CRUD remains open. The focused 14-gate/103-assertion production-path
+sweep also checks type-compatible defaults and layout control state. A
+separate tag-form pass applied an edit to bound `start_command`, then Undo
+restored its original name. Clicking Delete Unused Tag on that bound tag
+produced no visible change; the control's enabled state was unavailable to the
+screen bridge, so this does not establish a defect or deletion behavior for an
+unbound tag. Do not infer a staged PLC-tag Add/Cancel/Apply transaction,
+unbound-tag deletion, non-empty-table deletion, Save/Load, or tag-to-operand
+drag from these results; the acceptance ledger lists the still-open routes.
 
 ## Instruction change trace
 

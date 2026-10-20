@@ -110,6 +110,9 @@ public partial class SimulatorShell
                 ("invalid-name-has-inline-feedback", "an invalid User constant name displays inline validation and does not mutate the project"),
                 ("correcting-name-clears-feedback", "editing the invalid name clears stale validation feedback"),
                 ("cancel-discards-invalid-draft", "Cancel closes the invalid draft without changing the project"),
+                ("type-change-selects-compatible-default", "changing a new User constant type updates its untouched value draft to a compatible default"),
+                ("type-defaults-parse-for-supported-types", "every supported User constant type receives a value accepted by its type validator"),
+                ("editing-layout-keeps-form-actions-prioritized", "editing a User constant reduces table expansion and shows Apply/Cancel in place of the table actions and help note"),
             ],
             ["tia.project-tree.create-block"] =
             [
@@ -979,6 +982,54 @@ public partial class SimulatorShell
             Find<Button>("UserConstantsTab").EmitSignal(BaseButton.SignalName.Pressed);
             await Frames();
             Find<Button>("AddUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+            var userConstantsGrid = Find<Tree>("UserConstantsGrid");
+            var userConstantsActions = Find<HBoxContainer>("UserConstantsActions");
+            var userConstantEditActions = Find<HBoxContainer>("UserConstantEditActions");
+            var userConstantForm = Find<VBoxContainer>("UserConstantForm");
+            var applyUserConstant = Find<Button>("ApplyUserConstant");
+            var cancelUserConstant = Find<Button>("CancelUserConstant");
+            var userConstantScope = Find<Label>("UserConstantScope");
+            var formActionsPrioritized = userConstantForm.Visible
+                && userConstantForm.IsVisibleInTree()
+                && applyUserConstant.Visible
+                && cancelUserConstant.Visible
+                && userConstantEditActions.Visible
+                && !userConstantsActions.Visible
+                && !userConstantScope.Visible
+                && userConstantsGrid.SizeFlagsVertical == Control.SizeFlags.Fill
+                && userConstantsGrid.CustomMinimumSize.Y == 100;
+            userConstantGate.Set("editing-layout-keeps-form-actions-prioritized", formActionsPrioritized,
+                $"formVisible={userConstantForm.IsVisibleInTree()} apply={applyUserConstant.Visible} cancel={cancelUserConstant.Visible} tableActions={userConstantsActions.Visible} scope={userConstantScope.Visible} gridMinHeight={userConstantsGrid.CustomMinimumSize.Y}");
+            var userConstantType = Find<OptionButton>("UserConstantType");
+            var userConstantValue = Find<LineEdit>("UserConstantValue");
+            var typeDefaults = new (PlcVariableType Type, string Value)[]
+            {
+                (PlcVariableType.Bool, "FALSE"),
+                (PlcVariableType.Int, "0"),
+                (PlcVariableType.DInt, "0"),
+                (PlcVariableType.Real, "0.0"),
+                (PlcVariableType.Time, "T#1ms"),
+                (PlcVariableType.String, string.Empty),
+            };
+            var typeDefaultsMatch = true;
+            var typeDefaultsParse = true;
+            foreach (var (type, expectedValue) in typeDefaults)
+            {
+                var typeIndex = Enumerable.Range(0, userConstantType.ItemCount)
+                    .Single(index => userConstantType.GetItemMetadata(index).AsInt32() == (int)type);
+                userConstantType.Select(typeIndex);
+                userConstantType.EmitSignal(OptionButton.SignalName.ItemSelected, (long)typeIndex);
+                await Frames();
+                typeDefaultsMatch &= userConstantValue.Text == expectedValue;
+                typeDefaultsParse &= LadderEditorDocument.TryParseInitialValue(type, userConstantValue.Text, out _, out _);
+            }
+            userConstantType.Select(0);
+            userConstantType.EmitSignal(OptionButton.SignalName.ItemSelected, 0L);
+            await Frames();
+            userConstantGate.Set("type-change-selects-compatible-default", typeDefaultsMatch,
+                $"allSix={typeDefaultsMatch} finalBool={userConstantValue.Text == "FALSE"}");
+            userConstantGate.Set("type-defaults-parse-for-supported-types", typeDefaultsParse,
+                $"allSix={typeDefaultsParse}");
             var userConstantName = Find<LineEdit>("UserConstantName");
             var userConstantValidation = Find<Label>("UserConstantValidationMessage");
             userConstantName.Text = "invalid\"constant";

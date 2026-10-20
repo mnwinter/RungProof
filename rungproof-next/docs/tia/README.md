@@ -142,11 +142,12 @@ vendor status independently.
 gates and fourteen project-tree gates outside the 50-key instruction catalog.
 The declared `tia-editor-control-gate-sweep` passes 7/7 gates and 36/36
 assertions; the current focused `tia-project-tree-gate-sweep` passes 14/14 gates
-and 100/100 assertions.
+and 103/103 assertions.
 The full-profile runner validates the exact gate-ID sets, required per-gate
 identity fields, passing assertion arrays, and fixed `externalTia=false` and
 `livePlc=false` boundaries before accepting either artifact. The latest
-project-tree artifact is current-source proof; the editor-control artifact is
-explicitly marked historical because a newer full interaction run did not pass
-all commands. Vendor status remains independent and requires an official source
-or matched installed-TIA evidence as defined by each gate.
+2026-10-20 interaction profile passed all 15 commands. Its project-tree and
+editor-control artifacts are both current-source evidence; they remain
+ephemeral local artifacts and do not establish installed-TIA parity. Vendor
+status remains independent and requires an official source or matched
+installed-TIA evidence as defined by each gate.

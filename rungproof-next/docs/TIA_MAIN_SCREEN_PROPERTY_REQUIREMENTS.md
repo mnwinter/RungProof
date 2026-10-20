@@ -41,7 +41,7 @@ Evidence must remain separated:
 | PROP-04 | Global DB presentation must distinguish the supported scalar optimized-access subset from TIA's configurable declaration columns and access modes. Show the supported Name, Data type, Start value, Retain, and Comment fields with usable widths. | RungProof renderer capture at matching zoom; capability and omitted-column disclosure; V21 reference comparison. Do not display offsets for optimized access or imply unsupported standard access. |
 | PROP-05 | FB instance DB declarations show assigned FB, Input/Output/InOut/Static members, inherited default/start values, Retain metadata, comments, and generated IEC timer/counter members. TEMP locals are excluded. IEC_TIMER includes PT, ET, IN, and Q. | Gate covers FB sections, inherited values, IEC PT/ET/IN/Q and counter Q/CV, no TEMP, Save/Load identity, and clear read-only/override disclosure. |
 | PROP-06 | Per-instance start, comment, and Retain overrides, power-cycle retention behavior, and online Monitor values are either implemented end-to-end or visibly disclosed as unsupported. | If implemented, verify value storage, precedence, persistence, inheritance update behavior, Undo/Redo, and offline/online distinction. Otherwise keep them explicitly out of the supported feature set. |
-| PROP-07 | PLC tag management supports the declared subset without suggesting that omitted TIA constants/attributes exist. The complete parity target includes PLC tags, User constants, and the Default/All-tags System constants view. | Add typed rows/tabs, validation, duplicate handling, addressing, comments, table membership, drag-to-operand, persistence, and undo. System constants must be read-only hardware metadata, not invented. |
+| PROP-07 | PLC tag management supports the declared subset without suggesting that omitted TIA constants/attributes exist. The complete parity target includes PLC tags, User constants, and the Default/All-tags System constants view. | Add typed rows/tabs, validation, duplicate handling, addressing, comments, table membership, drag-to-operand, persistence, and undo. Resolve global User constants as immutable symbolic inputs; reject them in writable output positions. System constants must be read-only hardware metadata, not invented. |
 | PROP-08 | Watch tables support symbolic or absolute-address entries, type-valid display formats, live monitor values, and simulator-safe modify values. | Verify row add/remove/reorder, display-format rendering, value entry/type validation, simulator-only modification, quality/status, Save/Load, and Undo/Redo. Never imply the action writes to a physical PLC. |
 | PROP-09 | Create/remove/rename/duplicate and navigation actions are consistent across blocks, tag tables, and watch tables. | Invalid names are rejected atomically; valid operations persist; one Undo/Redo restores exact serialized states and selection. |
 
@@ -84,6 +84,13 @@ Evidence must remain separated:
   are restricted by data type. Implement only the RungProof S7-1500 subset;
   preserve a clear simulator-only boundary for any Modify control and never
   route it to the external PLC transport.
+- Siemens V21's [global user-constant declaration workflow](https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/declaring-global-constants/declaring-global-constants)
+  defines Name, Data type, Value, and optional Comment fields; its [user-constant
+  rules](https://docs.tia.siemens.cloud/r/en-us/v21/declaring-plc-tags/declaring-global-constants/rules-for-global-user-constants)
+  require CPU-wide case-insensitive unique names and typed fixed values.
+  Siemens V21's [constant-use reference](https://docs.tia.siemens.cloud/r/en-us/v21/programming-basics/using-and-addressing-operands/constants/examples-of-using-constants)
+  says constants may replace tags at instruction inputs and cannot be written.
+  Keep this distinction when constants are later connected to executable LAD.
 - Compare the same editor object, declaration/member set, zoom, selection,
   display settings, and online state. Record monitor/modify state separately.
 - Match hierarchy, table columns, row grouping, selection feedback, editor tabs,
@@ -136,6 +143,19 @@ that move without ladder-owned outputs.
   transport was constructed and no connection was attempted. These are local
   offline/rendered checks, not installed TIA or PLC evidence. Godot still emits
   renderer/ObjectDB RID leak warnings when the verifier exits.
+- The 2026-10-20 normal-renderer `interaction` profile passed all 15 commands,
+  including build, controller/editor tests, aggregate properties, edit,
+  editor-control, project-tree, and view-state gates. The current project-tree
+  artifact records 14 gates / 103 assertions; the current editor-control
+  artifact records 7 gates / 36 assertions. The separate screen pass confirmed
+  the compact User Constants form keeps Apply/Cancel visible at 1600×900 and
+  exercised Add, Edit-open, Cancel, Delete, Undo, and Redo. It did not Apply an
+  edited value. A separate PLC-tag screen pass applied a changed name to bound
+  `start_command` and Undo restored the original name; Delete Unused Tag showed
+  no visible response on that referenced tag, and the bridge could not report
+  whether the control was disabled. This does not prove deletion behavior for
+  an unbound tag. Both screen sessions stayed STOPPED and DISCONNECTED and
+  avoided project Save/Load, Run, and Connect. Evidence remains RungProof-local.
 - The latest screen-control pass used visible-image pointer events to bypass
   Windows foreground activation failure. It visibly rejected `%I0.8` with a
   red Watch-table message and preserved the five-row count. The earlier pass in
@@ -172,7 +192,7 @@ that move without ladder-owned outputs.
 - A rerun of the project-tree gate found that refreshing after watch-table
   Undo/Redo could overwrite the history-restored active table index with the
   currently open tab's index. The refresh now updates tab presentation without
-  mutating the selected table. The focused gate passes 14/14 gates and 100/100
+  mutating the selected table. The focused gate passes 14/14 gates and 103/103
   assertions, including watch-table Create/Undo/Redo and exact serialized state
   restoration. The current build succeeds with 0 warnings/errors and the
   virtual-controller suite passes 395/395. The latest app-shell and project-tree
@@ -254,7 +274,7 @@ that move without ladder-owned outputs.
   font size 10 and widths 147/131/149/62/153 at 1000×900; at 1600×900 it
   measures 1264 px with font size 12 and widths 281/276/281/92/311. Both
   layouts repeat identically after resizing back and forth. The gate passes
-  14/14 gates and 100/100 assertions. An independent source review found no
+  14/14 gates and 103/103 assertions. An independent source review found no
   selection, history, or persistence regression. This establishes local
   renderer behavior only, not installed-TIA parity.
 - A read-only current-source pass then loaded Demo 5 from the Scenario menu with
@@ -302,7 +322,7 @@ that move without ladder-owned outputs.
 - Current code evidence: after the save/load and tag-table review fixes below,
   build succeeded with 0 warnings/errors and the virtual-controller suite passed
   395/395; the focused project-tree sweep passed
-  14/14 gates and 100/100 assertions; and app-shell verification passed (Godot
+  14/14 gates and 103/103 assertions; and app-shell verification passed (Godot
   still reports renderer/ObjectDB RID leaks at shutdown). These results are
   offline evidence only. Remaining screen-control verification of
   Watch persistence/Save/Load and running-scan monitoring, Global DB project
@@ -1015,7 +1035,7 @@ a safety-rated circuit or installed-TIA parity.
 | Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. An earlier scratch-screen checkpoint visibly applied Data Type, Start Value, Retain, and Comment changes and undid/redid them; it predates the current-source check below. | Current-source visible Start Value commit and physical Undo/Redo, visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
 | Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, exclusion from executable targets, and measured narrow/wide responsive columns. A current screen pass showed the five supported columns, optimized-access subset disclosure, member Add/Cancel/Apply/Undo/Redo, and selected-row Remove with a surviving row on an unsaved scratch DB. | Visible project Save/Load and the helper note's contrast remain open for the next visual QA pass. |
 | Instance DB | A current-source screen-control pass loaded Demo 5 read-only and opened DB101 and DB102 at 1600×900. Both showed their assigned FB, grouped INPUT/OUTPUT members, and the six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
-| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. Screen control verified custom-table create/rename/delete, a visible tag row and selection, and opening the User Constants grid with its controls. Earlier scratch passes visibly verified tag-comment Apply/Undo/Redo/Save/reopen, form Cancel, and pending-edit prompts. User constants have source-level create/edit/delete, validation, table membership, persistence, undo, invalid-feedback, and cancel coverage. System constants disclose that device metadata is unavailable in this offline project. | Current-source visible Add Tag Apply/creation and form Cancel; User constant create/edit/delete transactions; physical pointer drag from the detail table to a LAD operand; and matched installed-TIA comparison remain open. |
+| PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. Screen control verified custom-table create/rename/delete, a visible tag row and selection, User Constants grid and controls, and a current-source Apply/Undo of the bound `start_command` name. Delete Unused Tag produced no visible change for that referenced tag; the bridge could not read the button's enabled state, so unbound deletion remains unverified. Earlier scratch passes visibly verified tag-comment Apply/Undo/Redo/Save/reopen, form Cancel, and pending-edit prompts. User constants have source-level create/edit/delete, validation, table membership, persistence, undo, invalid-feedback, and cancel coverage; current-source screen control verified Add, Edit-open, Cancel, Delete, Undo, and Redo but did not apply edited values. System constants disclose that device metadata is unavailable in this offline project. | Current-source visible PLC-tag Add/Apply creation and unbound-tag deletion; applying an edit to an existing User Constant; physical pointer drag from the detail table to a LAD operand; and matched installed-TIA comparison remain open. |
 | Watch tables | Schema 9 and source gates cover stable row identity, symbolic and absolute-address references, type-valid display formats, comment/modify values, Add/Remove/Reorder/Add All/Clear, monitoring, simulator-only atomic modification, output STOP rejection, migration, persistence, and Undo/Redo. Current-source screen control opened Watch table 1, cleared five rows to zero, added `start_command` and `%IX0.0`, and verified row reorder/remove/Add All with Undo/Redo. `Bool` format was accepted. A fresh 1600×900 screen pass entered `UnsupportedFmt` for the resolved BOOL row, confirmed the value reverted to `Auto`, and visibly confirmed a separate red rejection label in both Watch views while the normal `PROGRAM NOT LOADED` status remained unchanged. The latest pass used calibrated native client coordinates: invalid `%I0.8` showed visible rejection at five rows; valid `%IX0.0` added an unresolved sixth row; and duplicate alias `%I0.0` showed visible rejection with six rows unchanged. Runtime remained STOPPED and PLC DISCONNECTED. The validation label clears on accepted edits/actions, Undo/Redo, and project replacement. | Monitor and SIM MODIFY while an offline program is loaded and Save/Load remain open. A brief upper-pane `PROGRAM LOADED` caption conflicted with the lower Watch `PROGRAM NOT LOADED` status; the source of that stale display is unverified. Monitor/Modify were disabled while PROGRAM NOT LOADED. Equivalent S7 aliases are canonicalized in source and covered by tests. Matched installed-TIA comparison remains open. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
