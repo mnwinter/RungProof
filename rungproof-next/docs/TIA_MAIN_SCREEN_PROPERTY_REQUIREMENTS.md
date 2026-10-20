@@ -151,13 +151,20 @@ that move without ladder-owned outputs.
   format selection, monitor display, and simulator-only batch modify. Migration
   and runtime tests cover legacy schemas, address/type validation, atomic batch
   writes, STOP-state output rejection, numeric formatting, and undo/redo.
-- The latest normal-renderer screen-control attempt opened the startup notice and
-  Logic Editor but did not reach the Watch or DB views: its click landed below the
-  Watch table row. Save Workspace As displayed `Existing file is not a supported
-  integrated project; choose a new Save As path.` No project was saved, no demo
-  fixture was changed, and runtime stayed STOPPED with PLC DISCONNECTED. This is
-  a failed/incomplete interaction attempt, not evidence that those controls work
-  or fail.
+- The latest normal-renderer screen-control pass calibrated the bridge, dismissed
+  the startup notice, and opened Logic Editor with image-pointer down/up input.
+  An initial double-click/Enter attempt did not open the Watch workspace, but a
+  follow-up used one correctly timed double-click at calibrated native client
+  coordinates and opened `Watch table 1 — Untitled.rpproj.json`; the screenshot
+  showed its five rows and Diagnostics/Watch controls. A broader screen-control
+  retry then stopped at an unresponsive startup modal: Continue, its close icon,
+  another double-click, and Escape did not dismiss it despite input delivery to
+  the foreground window. The agent closed its isolated app, bridge, tab, and
+  verified the listener closed. Watch row actions and DB properties were not
+  reached in that retry; this is an input-path blocker, not evidence those
+  functions pass or fail. Save Workspace As displayed `Existing file is not a
+  supported integrated project; choose a new Save As path.` No project was saved,
+  no demo fixture was changed, and runtime stayed STOPPED with PLC DISCONNECTED.
 - Current code evidence: build succeeded with 0 warnings/errors; the
   virtual-controller suite passed 394/394; the focused project-tree sweep passed
   14/14 gates and 100/100 assertions; and app-shell verification passed. These
@@ -847,7 +854,7 @@ a safety-rated circuit or installed-TIA parity.
 | Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
 | Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
 | PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. Earlier scratch passes visibly verified tag-comment Apply/Undo/Redo/Save/reopen, form Cancel, and pending-edit prompts. User constants have source-level create/edit/delete, validation, table membership, persistence, undo, invalid-feedback, and cancel coverage. A current-source screen walkthrough is not completed: it did not reach these views. System constants disclose that device metadata is unavailable in this offline project. | Current-source visible Add Tag Apply/creation and form Cancel; current-source User constant interactions; physical pointer drag from the new detail table to a LAD operand; and matched installed-TIA comparison remain open. |
-| Watch tables | Schema 9 and source gates cover stable row identity, symbolic and absolute-address references, type-valid display formats, comment/modify values, Add/Remove/Reorder/Add All/Clear, monitoring, simulator-only atomic modification, output STOP rejection, migration, persistence, and Undo/Redo. The current-source screen-control attempt did not reach the Watch view because its click missed the project-tree row. | Screen-control verification of each new row action, display/validation feedback, Save/Load, and current-source Undo/Redo remains open. Resolve equivalent S7 address aliases before accepting duplicate detection and address lookup. Matched installed-TIA comparison remains open. |
+| Watch tables | Schema 9 and source gates cover stable row identity, symbolic and absolute-address references, type-valid display formats, comment/modify values, Add/Remove/Reorder/Add All/Clear, monitoring, simulator-only atomic modification, output STOP rejection, migration, persistence, and Undo/Redo. A correctly timed, calibrated current-source double-click opened Watch table 1 and showed its five rows and diagnostics/watch controls. | The current source opens the table on one calibrated pass, but a fresh broader screen pass was blocked by an unresponsive startup modal before table actions. Exercise row actions, display/validation feedback, Save/Load, and current-source Undo/Redo after resolving that bridge/modal input path. Equivalent S7 aliases are canonicalized in source and covered by tests. Matched installed-TIA comparison remains open. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
 ### 2026-10-19: property transaction review update
