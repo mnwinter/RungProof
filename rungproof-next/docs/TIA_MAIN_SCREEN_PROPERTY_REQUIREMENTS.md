@@ -113,14 +113,16 @@ that move without ladder-owned outputs.
 ### Current-source follow-up — 2026-10-20
 
 - The normal-renderer TIA editor-control sweep was rerun after the stable
-  watch-table identity change. It remains failed at 6/7 gates and 33/36
-  assertions (`externalTia=false`, `livePlc=false`). The console still reports
-  `TiaTagTableCreateAndPersist` failing even after its Boolean fixture address
-  was corrected from unsupported `%MB10` to `%M10.0`; the result artifact also
-  lists output copy/paste/delete isolation and route-convergence assertions as
-  failed. This run is a blocker signal, not a pass. The tag-table persistence
-  verifier and output-delete route results need separate diagnosis before the
-  gate can close.
+- The first normal-renderer TIA editor-control rerun after the stable watch
+  table identity change failed before completing the command-route assertions.
+  Its tag-table persistence fixture used a scalar memory address on a `STRUCT`
+  aggregate. The fixture now leaves the aggregate address blank, matching the
+  supported model. A fresh rerun passes 7/7 gates and 36/36 assertions, including
+  tag-table Save/Load, output copy/paste isolation, all nine output-delete routes,
+  and exact Undo/Redo restoration. This is rendered RungProof evidence only;
+  no installed TIA or live PLC participated. The separate `--verify-ladder-editor`
+  inventory still fails `bindingBrowser=False` while its other listed entries
+  pass, so the broad shell inventory remains open.
 - A rerun of the project-tree gate found that refreshing after watch-table
   Undo/Redo could overwrite the history-restored active table index with the
   currently open tab's index. The refresh now updates tab presentation without
@@ -164,6 +166,12 @@ that move without ladder-owned outputs.
   transition; this is input-path uncertainty, not evidence those product actions
   fail. No project was saved/loaded and no PLC action was used. The exact app,
   bridge, tab, and listener were closed.
+- A subsequent screen-control retry could not exercise any requested control:
+  the bridge reported it could not activate RungProof and did not send mouse
+  input. Undo/Redo, System Constants, Save Workspace As, tag-table management,
+  Global DB, Watch, and instance DB are therefore not reached in that retry,
+  rather than product failures. The exact app, bridge, tab, and listener were
+  closed, with no project or PLC action.
 - Schema 9 now stores stable watch-row IDs, symbolic or absolute-address
   references, display format, modify value, and comment. The editor renders an
   eight-column watch grid and wires row creation/removal/reorder, Add All, Clear,

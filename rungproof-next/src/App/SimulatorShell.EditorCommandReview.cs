@@ -68,7 +68,7 @@ public partial class SimulatorShell
 
             _ladderDocument.AddAggregateTag("motor_state", PlcVariableRole.Memory, PlcVariableType.Struct,
                 new PlcAggregateSchema([new PlcAggregateField("ready", PlcVariableType.Bool, "Motor permission is satisfied")]),
-                new Dictionary<string, object> { ["ready"] = true }, address: "%M10.0", comment: "Motor control state");
+                new Dictionary<string, object> { ["ready"] = true }, comment: "Motor control state");
             var representationExpectations = new Dictionary<TiaOperandRepresentation, string[]>()
             {
                 [TiaOperandRepresentation.Symbolic] = ["start_command"],
