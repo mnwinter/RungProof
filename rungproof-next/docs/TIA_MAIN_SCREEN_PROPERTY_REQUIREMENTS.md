@@ -159,6 +159,10 @@ that move without ladder-owned outputs.
   unresolved while no program was loaded. Invalid-address feedback and the
   remaining display/monitor/modify/reorder/save-load actions are still open.
   No project was saved or loaded and no runtime or PLC control was used.
+- A separate scratch-only screen pass created an unsaved Global DB and visibly
+  confirmed the five columns Name, Data Type, Start Value, Retain, and Comment,
+  plus its optimized-access subset disclosure. The title/subtitle were readable
+  on the dark header; the explanatory note looked dimmer. No project was saved.
 - Independent review found the Global DB declaration table's fixed 717 px
   minimum widths could overflow a narrow editor. It now switches to a compact
   five-column layout below 760 px, with the Comment column taking remaining
@@ -169,6 +173,14 @@ that move without ladder-owned outputs.
   14/14 gates and 100/100 assertions. An independent source review found no
   selection, history, or persistence regression. This establishes local
   renderer behavior only, not installed-TIA parity.
+- A read-only current-source pass then loaded Demo 5 from the Scenario menu with
+  no save/discard prompt. At 1600×900, DB101 `X_Axis_DB` and DB102 `Y_Axis_DB`
+  each displayed their assigned `FB_AxisDrive` instance, grouped INPUT/OUTPUT
+  rows, and Name / Data Type / Default Value / Start Value / Retain / Comment
+  columns. The pages stated that they are offline project definitions. Runtime
+  remained STOPPED and PLC DISCONNECTED; the demo was not edited or saved. This
+  closes the local screen-layout check for those two instance DBs, not their
+  matched installed-TIA comparison.
 - The latest normal-renderer screen-control pass calibrated the bridge, dismissed
   the startup notice, and opened Logic Editor with image-pointer down/up input.
   An initial double-click/Enter attempt did not open the Watch workspace, but a
@@ -187,10 +199,11 @@ that move without ladder-owned outputs.
   virtual-controller suite passed 394/394; the focused project-tree sweep passed
   14/14 gates and 100/100 assertions; and app-shell verification passed. These
   results are offline evidence only. Remaining screen-control verification of
-  Watch validation/monitor/modify/reorder/Save/Load, Global/Instance DB page
-  layouts, matched installed-TIA Portal V21 comparison, normal-renderer
-  property review, constants as LAD operands, physical tag-to-operand drag, and
-  table-selector refresh after rename remain open. The follow-up code review
+  Watch validation/monitor/modify/reorder/Save/Load, Global DB selected-row
+  removal and project Save/Load, the Global DB helper-note contrast, matched
+  installed-TIA Portal V21 comparison, constants as LAD operands, physical
+  tag-to-operand drag, and table-selector refresh after rename remain open. The
+  follow-up code review
   found and fixed an S7 alias issue: `%I0.0` and `%IX0.0` now resolve to the same
   parsed bit span for watch lookup and duplicate checks. Regression coverage
   verifies alias acceptance, equivalent-span identity, declared-tag resolution,
@@ -870,10 +883,10 @@ a safety-rated circuit or installed-TIA parity.
 | Area | Current evidence | Acceptance still open |
 | --- | --- | --- |
 | Global DB inline cells | The project-tree gate uses `Tree.EditSelected()` and the focused cell editor to commit Comment through the production handler, then checks exact Undo/Redo and JSON Save/Load/Save. It also submits blank and case-insensitive duplicate names through that same editor and checks rejection feedback, unchanged model/history, and restored cell text. An earlier scratch-screen checkpoint visibly applied Data Type, Start Value, Retain, and Comment changes and undid/redid them; it predates the current-source check below. | Current-source visible Start Value commit and physical Undo/Redo, visible Name-cell commit, visible invalid/duplicate rejection, and a project-file Save/Load/Save cycle through the screen. |
-| Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, and exclusion from executable targets. A fresh screen pass visibly applied an edit and added a second member. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. |
-| Instance DB | A fresh-build screen-control pass reopened Demo 5 and confirmed DB101 and DB102 each show the assigned FB, grouped interface rows, and six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. The older paragraph-style screen was stale. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
+| Global DB actions | Gates cover Add/Edit/Remove, stable declaration identity, survivor isolation, Undo/Redo, pending-form handling, exclusion from executable targets, and measured narrow/wide responsive columns. A current screen pass showed the five supported columns and optimized-access subset disclosure on an unsaved scratch DB. | Selected-row Remove with another visible declaration surviving, and visible project Save/Load. The helper note's contrast should be reviewed in the next visual QA pass. |
+| Instance DB | A current-source screen-control pass loaded Demo 5 read-only and opened DB101 and DB102 at 1600×900. Both showed their assigned FB, grouped INPUT/OUTPUT members, and the six-column Name / Data Type / Default Value / Start Value / Retain / Comment table. Start Value remains read-only; unsupported instance overrides, retentivity, and monitoring are disclosed. | Matched TIA V21 comparison remains open. Keep overrides read-only until identity, validation, persistence, history, and runtime initialization are implemented together. |
 | PLC tags and tag tables | Source gates cover tag-table membership assignment, create/rename/empty-delete, persistence, Undo/Redo, and the tag-operand payload/validation/apply/Undo/Redo path. The PLC tags folder opens a detail table alongside the open LAD document; a visible TREE shortcut returns from project objects, and the established project-tree, tag-dock, and project-object tab indices stay stable. The TREE and Add Block controls reserve separate layout slots so a return click cannot activate Add Block. Earlier scratch passes visibly verified tag-comment Apply/Undo/Redo/Save/reopen, form Cancel, and pending-edit prompts. User constants have source-level create/edit/delete, validation, table membership, persistence, undo, invalid-feedback, and cancel coverage. A current-source screen walkthrough is not completed: it did not reach these views. System constants disclose that device metadata is unavailable in this offline project. | Current-source visible Add Tag Apply/creation and form Cancel; current-source User constant interactions; physical pointer drag from the new detail table to a LAD operand; and matched installed-TIA comparison remain open. |
-| Watch tables | Schema 9 and source gates cover stable row identity, symbolic and absolute-address references, type-valid display formats, comment/modify values, Add/Remove/Reorder/Add All/Clear, monitoring, simulator-only atomic modification, output STOP rejection, migration, persistence, and Undo/Redo. A correctly timed, calibrated current-source double-click opened Watch table 1 and showed its five rows and diagnostics/watch controls. | The current source opens the table on one calibrated pass, but a fresh broader screen pass was blocked by an unresponsive startup modal before table actions. Exercise row actions, display/validation feedback, Save/Load, and current-source Undo/Redo after resolving that bridge/modal input path. Equivalent S7 aliases are canonicalized in source and covered by tests. Matched installed-TIA comparison remains open. |
+| Watch tables | Schema 9 and source gates cover stable row identity, symbolic and absolute-address references, type-valid display formats, comment/modify values, Add/Remove/Reorder/Add All/Clear, monitoring, simulator-only atomic modification, output STOP rejection, migration, persistence, and Undo/Redo. Current-source screen control opened Watch table 1, visibly cleared five rows to zero, added `start_command` with Add Symbol, and added `%IX0.0` as an unresolved row with Add Address. | Invalid-address feedback, format selection, monitor/modify, reorder/remove, Add All, Undo/Redo, and Save/Load remain open for screen control. Equivalent S7 aliases are canonicalized in source and covered by tests. Matched installed-TIA comparison remains open. |
 | Visual TIA parity | RungProof renderer and screen-control captures establish only RungProof appearance and behavior. | Matched installed TIA V21 captures for the same project object, zoom, selection, and online state. Overall parity remains OPEN. |
 
 ### 2026-10-19: property transaction review update
