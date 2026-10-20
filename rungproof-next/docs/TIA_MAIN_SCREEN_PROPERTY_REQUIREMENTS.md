@@ -1376,4 +1376,3 @@ The session stayed STOPPED and PLC DISCONNECTED. No project Save/Load, Run, or
 PLC connection occurred; the app, bridge, browser tab, and listener were closed
 and checked absent. At that point, the other tag, watch, save/load, and
 matched-TIA interactions remained open.
-
