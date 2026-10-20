@@ -410,10 +410,14 @@ It owns the detailed requirements and dependencies below.
    findings, then exercise each visible navigation, declaration, tag,
    watch-table, and property function with screen control. CUA has no native
    window discovery API, so a session-only loopback browser bridge now mirrors
-   the Godot window and forwards browser input to it. CUA has verified Global
-   DB creation, member-editor navigation, text entry, Add, and DB grid update;
-   the broader walkthrough remains incomplete. The bridge is local-only and is
-   not a browser build of RungProof.
+   the Godot window and forwards browser input to it. Screen control has
+   verified Global DB creation/member editing and custom tag-table creation,
+   rename, tag-row display, and selection. In that tag-table pass, User
+   Constants did not visibly transition; a separate prior pass did exercise
+   User Constants Undo/Redo. Custom-table deletion, staged tag-form
+   Cancel/Apply, Save/Load, tag-to-operand drag, and broader walkthrough
+   coverage remain open. The bridge is local-only and is not a browser build
+   of RungProof.
 7. **Installed TIA V21 comparison:** execute the controlled capture pack and
    pair by exact screen/object/state/settings. Do not claim a visual match from
    RungProof captures or automated gates.

@@ -39,7 +39,12 @@ inferring that the intended action is broken. On Windows, a bridge's synthetic
 `WM_LBUTTONDBLCLK` message may only highlight a Godot tree row; use a native OS
 double-click input for tree activation and verify the resulting dialog in a
 fresh capture. Close the exact test process, bridge, tab, and listener
-afterward.
+afterward. Current screen-control evidence also covers creating and renaming a
+custom PLC tag table, showing/selecting a tag row, and Global DB member Add,
+Cancel, Undo/Redo, and Remove. Do not infer staged tag-form transaction,
+complete User Constants CRUD, tag-table deletion, Save/Load, or tag-to-operand
+drag from those results; the 2026-10-20 acceptance-ledger entry lists the
+still-open routes.
 
 ## Instruction change trace
 

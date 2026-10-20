@@ -1368,3 +1368,20 @@ The session stayed STOPPED and PLC DISCONNECTED. No project Save/Load, Run, or
 PLC connection occurred; the app, bridge, browser tab, and listener were closed
 and checked absent. Other tag, watch, save/load, and matched-TIA interactions
 remain open.
+
+### Tag-table screen follow-up — 2026-10-20
+
+A separate fresh disposable screen-control session used native Windows input to
+open **Add new tag table**, create `ScratchTable`, and rename it to
+`ScratchRenamed`; the tree, active tab, and editor visibly followed the rename.
+The tag editor then showed a `ScratchTag` row with BOOL, MEMO, and FALSE values,
+and selecting the row visibly highlighted it. This records screen-visible
+RungProof behavior; a staged tag-form Cancel/Apply transaction was not proved.
+
+In this session, selecting User Constants did not visibly transition.
+Tag-table deletion, Save/Load, pending-form navigation prompts, physical
+tag-to-LAD-operand drag, and Watch Monitor/SIM MODIFY were not reached. Runtime
+remained STOPPED and PLC DISCONNECTED. No project Save/Load, Run, or PLC action
+occurred; the disposable app, bridge, tab, and listener were closed and verified
+absent. User Constants CRUD and the unreached routes remain open, as does
+matched installed-TIA V21 comparison.
