@@ -1243,6 +1243,40 @@ public partial class SimulatorShell
             var inlineGridFieldsEditable = declaration is not null
                 && Enumerable.Range(0, globalDbDeclarations.Columns).All(declaration.IsEditable)
                 && declaration.GetCellMode(3) == TreeItem.TreeCellMode.Check;
+            int[] GlobalDbWidths() => Enumerable.Range(0, 5)
+                .Select(globalDbDeclarations.GetColumnWidth).ToArray();
+            var globalDbOriginalWindowSize = GetWindow().Size;
+            GetWindow().Size = new Vector2I(1000, 900);
+            await Frames(6);
+            var globalDbCompactPane = globalDbDeclarations.Size.X;
+            var globalDbCompactFont = globalDbDeclarations.GetThemeFontSize("font_size");
+            var globalDbCompactWidths = GlobalDbWidths();
+            GetWindow().Size = new Vector2I(1600, 900);
+            await Frames(6);
+            var globalDbWidePane = globalDbDeclarations.Size.X;
+            var globalDbWideFont = globalDbDeclarations.GetThemeFontSize("font_size");
+            var globalDbWideWidths = GlobalDbWidths();
+            GetWindow().Size = new Vector2I(1000, 900);
+            await Frames(6);
+            var globalDbCompactAgainFont = globalDbDeclarations.GetThemeFontSize("font_size");
+            var globalDbCompactAgainWidths = GlobalDbWidths();
+            GetWindow().Size = new Vector2I(1600, 900);
+            await Frames(6);
+            var globalDbWideAgainFont = globalDbDeclarations.GetThemeFontSize("font_size");
+            var globalDbWideAgainWidths = GlobalDbWidths();
+            var globalDbResponsiveGrid = globalDbCompactPane < 760
+                && globalDbCompactFont == 10
+                && globalDbCompactWidths.Sum() <= globalDbCompactPane
+                && globalDbCompactWidths[4] >= 100
+                && globalDbWidePane >= 760
+                && globalDbWideFont == 12
+                && globalDbWideWidths.Sum() <= globalDbWidePane
+                && globalDbCompactAgainFont == globalDbCompactFont
+                && globalDbWideAgainFont == globalDbWideFont
+                && globalDbCompactAgainWidths.SequenceEqual(globalDbCompactWidths)
+                && globalDbWideAgainWidths.SequenceEqual(globalDbWideWidths);
+            GetWindow().Size = globalDbOriginalWindowSize;
+            await Frames(6);
             LineEdit? FindFocusedTreeEditor()
             {
                 var pending = new Stack<Node>();
@@ -1352,7 +1386,8 @@ public partial class SimulatorShell
             var inlineCommentRestored = globalDb.Interface.Single(parameter => parameter.Id == targetSpeedId).Comment == "Retained speed"
                 && declaration?.GetText(4) == "Retained speed" && inlineCommentCleanup
                 && !globalDb.Interface.Any(parameter => parameter.Id == "gate-inline-duplicate-guard");
-            inlineGridFieldsEditable = inlineGridFieldsEditable && inlineCommentTransaction && inlineCommentRestored;
+            inlineGridFieldsEditable = inlineGridFieldsEditable && globalDbResponsiveGrid
+                && inlineCommentTransaction && inlineCommentRestored;
             var memberEditorButton = GetNodeOrNull<Button>(
                 projectWorkbenchPath + "/EditorAndTasks/EditorAndInspector/ProgramEditor/GlobalDbDocument/GlobalDbHeader/EditGlobalDbMembers")
                 ?? throw new InvalidOperationException("TIA Global DB member editor route is unavailable.");
@@ -1709,7 +1744,7 @@ public partial class SimulatorShell
             globalGate.Set("fields-persist", fieldPersisted && declarationEditLifecycle,
                 $"original={originalDeclarationText} selected={selectedDeclarationLoaded} edited={declarationEdited} undo={declarationUndoExact} redo={declarationRedoExact}");
             globalGate.Set("declaration-grid-inline-edit", inlineGridFieldsEditable,
-                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)} committed={inlineCommentCommitted} value={inlineCommentValue} undo={inlineCommentUndo} redo={inlineCommentRedo} saveLoad={inlineCommentSavedLoaded} duplicateRejected={duplicateInlineRejected} blankRejected={blankInlineRejected} restored={inlineCommentRestored}");
+                $"editable={currentGridEditability} retainMode={currentGridDeclaration?.GetCellMode(3)} responsive={globalDbResponsiveGrid} narrow={globalDbCompactPane}/{globalDbCompactFont}/{string.Join(',', globalDbCompactWidths)} repeat={globalDbCompactAgainFont}/{globalDbCompactAgainWidths.SequenceEqual(globalDbCompactWidths)} wide={globalDbWidePane}/{globalDbWideFont}/{string.Join(',', globalDbWideWidths)} repeat={globalDbWideAgainFont}/{globalDbWideAgainWidths.SequenceEqual(globalDbWideWidths)} committed={inlineCommentCommitted} value={inlineCommentValue} undo={inlineCommentUndo} redo={inlineCommentRedo} saveLoad={inlineCommentSavedLoaded} duplicateRejected={duplicateInlineRejected} blankRejected={blankInlineRejected} restored={inlineCommentRestored}");
             globalGate.Set("start-value-undo-redo-refreshes-grid", startValueUndoRedoMatches,
                 $"commit={startValueCommitMatches} undo={startValueUndoMatches} redo={startValueRedoMatches} cleanup={startValueCleanupMatches}");
             globalGate.Set("pending-form-blocks-inline-edit", inlineGridBlockedByMemberDraft,

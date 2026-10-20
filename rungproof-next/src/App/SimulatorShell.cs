@@ -9056,16 +9056,37 @@ public partial class SimulatorShell : CanvasLayer
         globalDbDeclarations.SetColumnTitle(2, "START VALUE");
         globalDbDeclarations.SetColumnTitle(3, "RETAIN");
         globalDbDeclarations.SetColumnTitle(4, "COMMENT");
-        globalDbDeclarations.SetColumnExpand(0, true);
-        globalDbDeclarations.SetColumnExpand(1, true);
-        globalDbDeclarations.SetColumnExpand(2, true);
-        globalDbDeclarations.SetColumnExpand(3, false);
-        globalDbDeclarations.SetColumnExpand(4, true);
-        globalDbDeclarations.SetColumnCustomMinimumWidth(0, 150);
-        globalDbDeclarations.SetColumnCustomMinimumWidth(1, 145);
-        globalDbDeclarations.SetColumnCustomMinimumWidth(2, 150);
-        globalDbDeclarations.SetColumnCustomMinimumWidth(3, 92);
-        globalDbDeclarations.SetColumnCustomMinimumWidth(4, 180);
+        void ApplyGlobalDbColumnLayout()
+        {
+            // Keep the declaration grid readable when the project tree and
+            // narrow workbench leave less than the preferred 717 px. Let the
+            // Comment column absorb remaining width in both layouts.
+            var compact = globalDbDeclarations.Size.X < 760;
+            var minimumWidths = compact
+                ? new[] { 94, 78, 96, 62, 100 }
+                : new[] { 150, 145, 150, 92, 180 };
+            for (var column = 0; column < minimumWidths.Length; column++)
+            {
+                globalDbDeclarations.SetColumnExpand(column, column is 0 or 1 or 2 or 4);
+                globalDbDeclarations.SetColumnCustomMinimumWidth(column, minimumWidths[column]);
+            }
+            globalDbDeclarations.AddThemeFontSizeOverride("font_size", compact ? 10 : 12);
+        }
+        var globalDbLayoutUpdateQueued = false;
+        void QueueGlobalDbColumnLayout()
+        {
+            if (globalDbLayoutUpdateQueued) return;
+            globalDbLayoutUpdateQueued = true;
+            Callable.From(() => Callable.From(() =>
+            {
+                globalDbLayoutUpdateQueued = false;
+                if (GodotObject.IsInstanceValid(globalDbDeclarations))
+                    ApplyGlobalDbColumnLayout();
+            }).CallDeferred()).CallDeferred();
+        }
+        globalDbDeclarations.Resized += QueueGlobalDbColumnLayout;
+        root.Resized += QueueGlobalDbColumnLayout;
+        Callable.From(ApplyGlobalDbColumnLayout).CallDeferred();
         globalDbDeclarations.AddThemeColorOverride("font_color", new Color("263943"));
         globalDbDeclarations.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
         globalDbDeclarations.ItemEdited += () =>

@@ -118,7 +118,7 @@ that move without ladder-owned outputs.
   mutating the selected table. The focused gate passes 14/14 gates and 100/100
   assertions, including watch-table Create/Undo/Redo and exact serialized state
   restoration. The current build succeeds with 0 warnings/errors and the
-  virtual-controller suite passes 393/393. The latest app-shell and project-tree
+  virtual-controller suite passes 394/394. The latest app-shell and project-tree
   verifier results remain local offline evidence; Godot reports renderer/ObjectDB
   RID leaks at verifier shutdown.
 - Independent code review found two structural issues. Watch rows still store
@@ -151,6 +151,24 @@ that move without ladder-owned outputs.
   format selection, monitor display, and simulator-only batch modify. Migration
   and runtime tests cover legacy schemas, address/type validation, atomic batch
   writes, STOP-state output rejection, numeric formatting, and undo/redo.
+- A fresh current-source screen-control pass used the supported
+  `--app-shell --shell-view=ladder` route to bypass the startup acknowledgement;
+  the UI opened at 1600×900 with runtime STOPPED and PLC DISCONNECTED. The agent
+  opened Watch table 1, visibly cleared five rows to zero, added `start_command`
+  with Add Symbol, and added `%IX0.0` with Add Address; the latter rendered as
+  unresolved while no program was loaded. Invalid-address feedback and the
+  remaining display/monitor/modify/reorder/save-load actions are still open.
+  No project was saved or loaded and no runtime or PLC control was used.
+- Independent review found the Global DB declaration table's fixed 717 px
+  minimum widths could overflow a narrow editor. It now switches to a compact
+  five-column layout below 760 px, with the Comment column taking remaining
+  width. The current normal-renderer project-tree gate measures 664 px with
+  font size 10 and widths 147/131/149/62/153 at 1000×900; at 1600×900 it
+  measures 1264 px with font size 12 and widths 281/276/281/92/311. Both
+  layouts repeat identically after resizing back and forth. The gate passes
+  14/14 gates and 100/100 assertions. An independent source review found no
+  selection, history, or persistence regression. This establishes local
+  renderer behavior only, not installed-TIA parity.
 - The latest normal-renderer screen-control pass calibrated the bridge, dismissed
   the startup notice, and opened Logic Editor with image-pointer down/up input.
   An initial double-click/Enter attempt did not open the Watch workspace, but a
@@ -160,16 +178,17 @@ that move without ladder-owned outputs.
   retry then stopped at an unresponsive startup modal: Continue, its close icon,
   another double-click, and Escape did not dismiss it despite input delivery to
   the foreground window. The agent closed its isolated app, bridge, tab, and
-  verified the listener closed. Watch row actions and DB properties were not
-  reached in that retry; this is an input-path blocker, not evidence those
-  functions pass or fail. Save Workspace As displayed `Existing file is not a
+  verified the listener closed. The retry is superseded for Watch interaction by
+  the supported ladder-shell pass above; DB properties were not reached in that
+  retry. Save Workspace As displayed `Existing file is not a
   supported integrated project; choose a new Save As path.` No project was saved,
   no demo fixture was changed, and runtime stayed STOPPED with PLC DISCONNECTED.
 - Current code evidence: build succeeded with 0 warnings/errors; the
   virtual-controller suite passed 394/394; the focused project-tree sweep passed
   14/14 gates and 100/100 assertions; and app-shell verification passed. These
-  results are offline evidence only. Screen-control verification of the new Watch
-  row actions, matched installed-TIA Portal V21 comparison, normal-renderer
+  results are offline evidence only. Remaining screen-control verification of
+  Watch validation/monitor/modify/reorder/Save/Load, Global/Instance DB page
+  layouts, matched installed-TIA Portal V21 comparison, normal-renderer
   property review, constants as LAD operands, physical tag-to-operand drag, and
   table-selector refresh after rename remain open. The follow-up code review
   found and fixed an S7 alias issue: `%I0.0` and `%IX0.0` now resolve to the same

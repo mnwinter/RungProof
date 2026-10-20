@@ -26,6 +26,14 @@ Do not use a RungProof screenshot as TIA evidence. Do not use documentation as
 proof that the UI paints or edits correctly. If installed TIA is unavailable,
 leave matched-comparison criteria OPEN and say so.
 
+For a disposable normal-renderer screen-control pass, use the supported
+`--app-shell --shell-view=ladder` launch when the startup acknowledgement blocks
+input. This opens the Ladder workspace without changing the user's safety-notice
+setting. Pin any local screen bridge to that exact process ID, use fresh
+screenshots to calibrate natural image coordinates, and confirm each visible
+state change before recording a click as successful. Close the exact test
+process, bridge, tab, and listener afterward.
+
 ## Instruction change trace
 
 For an instruction or editor workflow, inspect all affected layers:
