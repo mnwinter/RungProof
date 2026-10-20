@@ -149,6 +149,14 @@ that move without ladder-owned outputs.
   DISCONNECTED. The exact walkthrough app, bridge helper, browser tab, and
   port-18809 listener were closed and verified absent. Screen evidence is
   RungProof behavior only; it does not establish installed-TIA parity.
+- A later fresh native-input session created and renamed a custom tag table,
+  displayed a `ScratchTag` BOOL/MEMO/FALSE row, and visibly selected it. In
+  that session the User Constants tab did not transition. Staged tag-form
+  Cancel/Apply, custom-table deletion, pending-form navigation prompts,
+  Save/Load, physical tag-to-operand drag, and Watch Monitor/SIM MODIFY were
+  not reached. The scratch app, bridge, tab, and listener were closed and
+  verified absent; no project Save/Load, Run, or PLC action occurred. This is
+  screen-visible RungProof behavior only.
 - The first normal-renderer TIA editor-control rerun after the stable watch
   table identity change failed before completing the command-route assertions.
   Its tag-table persistence fixture used a scalar memory address on a `STRUCT`
@@ -1366,22 +1374,6 @@ installed-TIA V21 parity.
 
 The session stayed STOPPED and PLC DISCONNECTED. No project Save/Load, Run, or
 PLC connection occurred; the app, bridge, browser tab, and listener were closed
-and checked absent. Other tag, watch, save/load, and matched-TIA interactions
-remain open.
+and checked absent. At that point, the other tag, watch, save/load, and
+matched-TIA interactions remained open.
 
-### Tag-table screen follow-up — 2026-10-20
-
-A separate fresh disposable screen-control session used native Windows input to
-open **Add new tag table**, create `ScratchTable`, and rename it to
-`ScratchRenamed`; the tree, active tab, and editor visibly followed the rename.
-The tag editor then showed a `ScratchTag` row with BOOL, MEMO, and FALSE values,
-and selecting the row visibly highlighted it. This records screen-visible
-RungProof behavior; a staged tag-form Cancel/Apply transaction was not proved.
-
-In this session, selecting User Constants did not visibly transition.
-Tag-table deletion, Save/Load, pending-form navigation prompts, physical
-tag-to-LAD-operand drag, and Watch Monitor/SIM MODIFY were not reached. Runtime
-remained STOPPED and PLC DISCONNECTED. No project Save/Load, Run, or PLC action
-occurred; the disposable app, bridge, tab, and listener were closed and verified
-absent. User Constants CRUD and the unreached routes remain open, as does
-matched installed-TIA V21 comparison.
