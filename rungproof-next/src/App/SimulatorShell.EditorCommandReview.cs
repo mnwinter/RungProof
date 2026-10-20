@@ -662,7 +662,7 @@ public partial class SimulatorShell
             TreeItem? Search(TreeItem? row)
             {
                 for (; row is not null; row = row.GetNext())
-                { if (row.GetMetadata(0).AsString() == "verify_drive.Ready") return row; var child = Search(row.GetFirstChild()); if (child is not null) return child; }
+                { if (row.GetText(0) == "verify_drive.Ready") return row; var child = Search(row.GetFirstChild()); if (child is not null) return child; }
                 return null;
             }
             var watchMember = Search(watch.GetRoot()); watchMember?.Select(0);

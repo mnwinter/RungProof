@@ -112,7 +112,32 @@ that move without ladder-owned outputs.
 
 ### Current-source follow-up — 2026-10-20
 
-- The normal-renderer TIA editor-control sweep was rerun after the stable
+- A current-source run now passes `--verify-ladder-editor`, including its
+  interaction inventory, editor command-route sweep, and normal-renderer TIA
+  editor-control sweep (7/7 gates, 36/36 assertions). Earlier failures came
+  from verifier lookups that ignored nested `TagDefinitionsView`/tree rows and
+  from checks reading watch format/metadata columns as values/symbols. Fixes
+  make tree-row selection recursive, assert the requested tag row is selected,
+  and read watch symbol/value from their rendered columns. The review also
+  found and fixed a product defect: watch-row activation used its stable row ID
+  as the tag symbol, preventing aggregate-member navigation. The latest
+  virtual-controller suite passes 395/395; the output confirms no real PLC
+  transport was constructed and no connection was attempted. These are local
+  offline/rendered checks, not installed TIA or PLC evidence. Godot still emits
+  renderer/ObjectDB RID leak warnings when the verifier exits.
+- The latest screen-control pass used visible-image pointer events to bypass
+  Windows foreground activation failure. It visibly rejected `%I0.8` with a
+  red Watch-table message and preserved the five-row count. The earlier pass in
+  this same walkthrough verified Save Workspace As opens and cancels, User
+  Constants Undo/Redo, the System Constants hardware-unavailable disclosure,
+  and tag-table create/rename. On the latest Default tag table view,
+  `DELETE EMPTY TABLE` was dim/disabled; deleting an empty custom table was not
+  reached. Global DB declaration actions and the instance DB grouped layout
+  were also not reached because visible tree activation did not open those
+  views. No project was saved or loaded; runtime stayed STOPPED and PLC
+  DISCONNECTED. The exact walkthrough app, bridge helper, browser tab, and
+  port-18809 listener were closed and verified absent. Screen evidence is
+  RungProof behavior only; it does not establish installed-TIA parity.
 - The first normal-renderer TIA editor-control rerun after the stable watch
   table identity change failed before completing the command-route assertions.
   Its tag-table persistence fixture used a scalar memory address on a `STRUCT`
@@ -120,9 +145,7 @@ that move without ladder-owned outputs.
   supported model. A fresh rerun passes 7/7 gates and 36/36 assertions, including
   tag-table Save/Load, output copy/paste isolation, all nine output-delete routes,
   and exact Undo/Redo restoration. This is rendered RungProof evidence only;
-  no installed TIA or live PLC participated. The separate `--verify-ladder-editor`
-  inventory still fails `bindingBrowser=False` while its other listed entries
-  pass, so the broad shell inventory remains open.
+  no installed TIA or live PLC participated.
 - A rerun of the project-tree gate found that refreshing after watch-table
   Undo/Redo could overwrite the history-restored active table index with the
   currently open tab's index. The refresh now updates tab presentation without

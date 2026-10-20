@@ -22,17 +22,26 @@ public partial class SimulatorShell : CanvasLayer
 {
     private static TreeItem? FindIndexedTreeRow(Tree tree, int index)
     {
-        var root = tree.GetRoot();
-        for (var row = root?.GetFirstChild(); row is not null; row = row.GetNext())
+        TreeItem? Find(TreeItem? row)
         {
-            if (row.GetMetadata(0).AsString() == $"tag:{index}") return row;
+            for (var current = row; current is not null; current = current.GetNext())
+            {
+                if (current.GetMetadata(0).AsString() == $"tag:{index}") return current;
+                var nested = Find(current.GetFirstChild());
+                if (nested is not null) return nested;
+            }
+            return null;
         }
-        return null;
+
+        return Find(tree.GetRoot()?.GetFirstChild());
     }
 
-    private static void SelectIndexedTreeRow(Tree tree, int index)
+    private static bool SelectIndexedTreeRow(Tree tree, int index)
     {
-        FindIndexedTreeRow(tree, index)?.Select(0);
+        var row = FindIndexedTreeRow(tree, index);
+        if (row is null) return false;
+        row.Select(0);
+        return SelectedTreeRowIndex(tree) == index;
     }
 
     private static int SelectedTreeRowIndex(Tree tree)
@@ -13144,7 +13153,9 @@ public partial class SimulatorShell : CanvasLayer
         };
         watchTable.ItemActivated += () =>
         {
-            var name = watchTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
+            // Column zero is the user's watch reference. Metadata zero is a
+            // stable row ID used to preserve row identity across scans.
+            var name = watchTable.GetSelected()?.GetText(0) ?? string.Empty;
             var index = document.Tags.FindIndex(tag => name == tag.Name || name.StartsWith(tag.Name + ".", StringComparison.Ordinal) || name.StartsWith(tag.Name + "[", StringComparison.Ordinal));
             if (index < 0) return;
             if (siemens) ResolvePendingEditorForms(() =>
@@ -14425,15 +14436,16 @@ public partial class SimulatorShell : CanvasLayer
         var toolRail = GetNodeOrNull<VBoxContainer>($"{toolRoot}/ToolTabsHost/ToolTabRail");
         var projectTabs = GetNodeOrNull<TabContainer>(projectTabsRoot);
         var tagPageRoot = $"{editorRoot}/PLC tags/TagContent";
+        var tagDefinitionsRoot = $"{tagPageRoot}/TagDefinitionsView";
         var verifyAndLoad = GetNodeOrNull<Button>($"{tagPageRoot}/ValidateAndLoadButton");
-        var editorTagList = GetNodeOrNull<Tree>($"{tagPageRoot}/TagTable");
-        var editorTagName = GetNodeOrNull<LineEdit>($"{tagPageRoot}/TagNameRow/NewTagName");
-        var editorTagInitialValue = GetNodeOrNull<LineEdit>($"{tagPageRoot}/TagInitialValueRow/TagInitialValue");
-        var editorTagBinding = GetNodeOrNull<OptionButton>($"{tagPageRoot}/TagBindingRow/NewTagBinding");
-        var editorTagBindingStatus = GetNodeOrNull<Label>($"{tagPageRoot}/TagBindingStatus");
-        var addTagButton = GetNodeOrNull<Button>($"{tagPageRoot}/AddTag");
-        var applyTagButton = GetNodeOrNull<Button>($"{tagPageRoot}/TagEditActions/ApplyTagEdit");
-        var deleteTagButton = GetNodeOrNull<Button>($"{tagPageRoot}/TagEditActions/DeleteTag");
+        var editorTagList = GetNodeOrNull<Tree>($"{tagDefinitionsRoot}/TagTable");
+        var editorTagName = GetNodeOrNull<LineEdit>($"{tagDefinitionsRoot}/TagNameRow/NewTagName");
+        var editorTagInitialValue = GetNodeOrNull<LineEdit>($"{tagDefinitionsRoot}/TagInitialValueRow/TagInitialValue");
+        var editorTagBinding = GetNodeOrNull<OptionButton>($"{tagDefinitionsRoot}/TagBindingRow/NewTagBinding");
+        var editorTagBindingStatus = GetNodeOrNull<Label>($"{tagDefinitionsRoot}/TagBindingStatus");
+        var addTagButton = GetNodeOrNull<Button>($"{tagDefinitionsRoot}/AddTag");
+        var applyTagButton = GetNodeOrNull<Button>($"{tagDefinitionsRoot}/TagEditActions/ApplyTagEdit");
+        var deleteTagButton = GetNodeOrNull<Button>($"{tagDefinitionsRoot}/TagEditActions/DeleteTag");
         var helpSelector = GetNodeOrNull<OptionButton>($"{toolRoot}/ToolTabsHost/ToolTabs/Instruction help/HelpInstructionSelector");
         var helpDetails = GetNodeOrNull<RichTextLabel>($"{toolRoot}/ToolTabsHost/ToolTabs/Instruction help/InstructionHelpDetails");
         var openHelp = GetNodeOrNull<Button>($"{editorRoot}/InstructionToolbarChrome/InstructionToolbar/Selection/OpenInstructionHelp");
@@ -14837,15 +14849,17 @@ public partial class SimulatorShell : CanvasLayer
         bool BindingChoiceExists(string binding) => Enumerable.Range(0, editorTagBinding.ItemCount)
             .Any(index => editorTagBinding.GetItemMetadata(index).AsString() == binding);
         var simulatorInputTagIndex = _ladderDocument.Tags.FindIndex(tag => tag.Name == "simulated_photoeye");
-        SelectIndexedTreeRow(editorTagList, simulatorInputTagIndex);
-        editorTagList.EmitSignal(Tree.SignalName.ItemSelected);
-        var inputBindingBrowserWorked = BindingChoiceExists(simulatorInputPoint.Name)
+        var inputTagSelected = SelectIndexedTreeRow(editorTagList, simulatorInputTagIndex);
+        if (inputTagSelected) editorTagList.EmitSignal(Tree.SignalName.ItemSelected);
+        var inputBindingBrowserWorked = inputTagSelected
+            && BindingChoiceExists(simulatorInputPoint.Name)
             && !BindingChoiceExists(simulatorOutputPoint.Name)
             && editorTagBindingStatus.Text.Contains("PC", StringComparison.Ordinal);
         var simulatorOutputTagIndex = _ladderDocument.Tags.FindIndex(tag => tag.Name == "conveyor_running");
-        SelectIndexedTreeRow(editorTagList, simulatorOutputTagIndex);
-        editorTagList.EmitSignal(Tree.SignalName.ItemSelected);
-        var outputBindingBrowserWorked = BindingChoiceExists(simulatorOutputPoint.Name)
+        var outputTagSelected = SelectIndexedTreeRow(editorTagList, simulatorOutputTagIndex);
+        if (outputTagSelected) editorTagList.EmitSignal(Tree.SignalName.ItemSelected);
+        var outputBindingBrowserWorked = outputTagSelected
+            && BindingChoiceExists(simulatorOutputPoint.Name)
             && !BindingChoiceExists(simulatorInputPoint.Name)
             && editorTagBindingStatus.Text.Contains("PLC", StringComparison.Ordinal);
         var bindingBrowserWorked = inputBindingBrowserWorked && outputBindingBrowserWorked;
@@ -16396,12 +16410,20 @@ public partial class SimulatorShell : CanvasLayer
                 && editorCanvas.IsElementEnergized(firstContact.Id)
                 && editorCanvas.IsElementEnergized($"{_ladderDocument.Rungs[0].Id}-coil");
             bottomTabs.CurrentTab = 2;
-            var startWatch = watchTable.GetRoot()?.GetFirstChild();
-            while (startWatch is not null && startWatch.GetMetadata(0).AsString() != "start_command")
-                startWatch = startWatch.GetNext();
+            TreeItem? FindWatchRowBySymbol(TreeItem? item)
+            {
+                for (var current = item; current is not null; current = current.GetNext())
+                {
+                    if (current.GetText(0) == "start_command") return current;
+                    var nested = FindWatchRowBySymbol(current.GetFirstChild());
+                    if (nested is not null) return nested;
+                }
+                return null;
+            }
+            var startWatch = FindWatchRowBySymbol(watchTable.GetRoot());
             watchTableWorked = startWatch is not null
-                && startWatch.GetText(2) == "TRUE"
-                && startWatch.GetText(4).Contains("GOOD · SCAN", StringComparison.Ordinal)
+                && startWatch.GetText(3) == "TRUE"
+                && startWatch.GetTooltipText(3).Contains("SCAN", StringComparison.Ordinal)
                 && watchStatus.Text.Contains("SIMULATOR ONLY", StringComparison.Ordinal);
             if (startWatch is not null)
             {
@@ -16413,8 +16435,11 @@ public partial class SimulatorShell : CanvasLayer
                         ["stop_command"] = false,
                         ["simulated_photoeye"] = false,
                     }));
-                watchStableAcrossScans = ReferenceEquals(watchTable.GetSelected(), startWatch)
-                    && startWatch.GetText(2) == "FALSE";
+                var watchSelectionStableAcrossScans = ReferenceEquals(watchTable.GetSelected(), startWatch)
+                    && watchTable.GetSelected()?.GetMetadata(0).AsString() == startWatch.GetMetadata(0).AsString();
+                var watchValueUpdatedToFalse = startWatch.GetText(3) == "FALSE";
+                watchStableAcrossScans = watchSelectionStableAcrossScans && watchValueUpdatedToFalse;
+                GD.Print($"WATCH_REFRESH_DETAIL selectionStable={watchSelectionStableAcrossScans} selected={watchTable.GetSelected()?.GetMetadata(0).AsString()} valueUpdated={watchValueUpdatedToFalse} value={startWatch.GetText(3)} tooltip={startWatch.GetTooltipText(3)}");
                 UpdateVirtualController(monitorSnapshot);
             }
             GD.Print($"WATCH_REFRESH_VERIFY stableSelectedRowAndUpdatedValue={watchStableAcrossScans}");
@@ -16542,7 +16567,7 @@ public partial class SimulatorShell : CanvasLayer
                             && doubleClickOpenedTable
                             && allTagsOpenedCentrally
                             && ladderTabRestored;
-                        GD.Print($"TIA_PROJECT_DOCUMENT_INPUT_DETAIL single={singleClickStayedInTree} physicalEnter={enterOpenedBlock} activation={activationOpenedBlock} tableSingle={singleClickStayedInBlock} tableActivation={doubleClickOpenedTable} allTags={allTagsOpenedCentrally} ladderTab={ladderTabRestored} focus={projectTree.HasFocus()}");
+                        GD.Print($"TIA_PROJECT_DOCUMENT_INPUT_DETAIL single={singleClickStayedInTree} physicalEnter={enterOpenedBlock} activation={activationOpenedBlock} tableSingle={singleClickStayedInBlock} tableActivation={doubleClickOpenedTable} allTags={allTagsOpenedCentrally} ladderTab={ladderTabRestored}");
                     }
                 }
             }
