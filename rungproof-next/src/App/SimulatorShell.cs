@@ -7332,13 +7332,13 @@ public partial class SimulatorShell : CanvasLayer
         dockStyle.ContentMarginTop = dockStyle.ContentMarginBottom = 2;
         bottomPanel.AddThemeStyleboxOverride("panel", dockStyle);
         bottomPanel.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
-        bottomPanel.TooltipText = "Drag the divider above this dock to resize Error List, Output, and Watch data.";
         var bottomBody = new VBoxContainer { Name = "InspectorOutputBody" };
         bottomBody.AddThemeConstantOverride("separation", 2);
         bottomPanel.AddChild(bottomBody);
         var bottomTitle = new HBoxContainer { Name = "InspectorOutputTitle" };
         var bottomHeading = Heading(siemens ? "Diagnostics / Watch" : "Output / Errors / Watch", 12, new Color("263943"));
         bottomHeading.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        bottomHeading.TooltipText = "Drag the divider above this dock to resize Error List, Output, and Watch data.";
         bottomTitle.AddChild(bottomHeading);
         var collapseBottomDock = ToolbarButton("CollapseBottomDock", "▼", new Color("637985"), 32);
         collapseBottomDock.CustomMinimumSize = new Vector2(32, 24);
@@ -7459,8 +7459,9 @@ public partial class SimulatorShell : CanvasLayer
         var watchSymbol = new OptionButton { Name = "WatchSymbol", CustomMinimumSize = new Vector2(180, 30) };
         watchSymbolHeader.AddChild(watchSymbol);
         var addWatch = ToolbarButton("AddWatchSymbol", "+ SYMBOL", accent, 82);
-        var watchAddress = new LineEdit { Name = "WatchAbsoluteAddress", PlaceholderText = "Absolute address", CustomMinimumSize = new Vector2(145, 30), ClearButtonEnabled = true };
+        var watchAddress = new LineEdit { Name = "WatchAbsoluteAddress", PlaceholderText = "Absolute address", TooltipText = "Enter a supported absolute S7 address for the active Watch table.", CustomMinimumSize = new Vector2(145, 30), ClearButtonEnabled = true };
         var addWatchAddress = ToolbarButton("AddWatchAddress", "+ ADDRESS", new Color("4d6674"), 92);
+        addWatchAddress.TooltipText = "Add the absolute address to the active Watch table.";
         var removeWatch = ToolbarButton("RemoveWatchSymbol", "REMOVE", new Color("8a4d55"), 72);
         var moveWatchRowUp = ToolbarButton("MoveWatchRowUp", "↑ ROW", new Color("4d6674"), 60);
         var moveWatchRowDown = ToolbarButton("MoveWatchRowDown", "↓ ROW", new Color("4d6674"), 60);
@@ -8038,7 +8039,7 @@ public partial class SimulatorShell : CanvasLayer
             var address = watchAddress.Text.Trim();
             if (!SiemensPlcTagAddress.TryValidateWatchAddress(address, out var addressError))
             {
-                output.Text = $"[color=#d64545]Absolute watch address rejected.[/color] {Escape(addressError)}";
+                RefreshWatchTableAfterRejectedEdit($"Absolute watch address rejected. {addressError}");
                 return;
             }
             var newAddressIdentity = SiemensPlcTagAddress.TryGetWatchAddressIdentity(address, out var identity)
@@ -8049,7 +8050,7 @@ public partial class SimulatorShell : CanvasLayer
                         ? existingIdentity
                         : row.Reference.Trim().TrimStart('%').ToUpperInvariant()) == newAddressIdentity))
             {
-                output.Text = "[color=#d64545]Absolute watch address rejected.[/color] That address is already in the active table.";
+                RefreshWatchTableAfterRejectedEdit("Absolute watch address rejected. That address is already in the active table.");
                 return;
             }
             if (!BeginProjectMetadataEdit("Add absolute watch address")) return;
