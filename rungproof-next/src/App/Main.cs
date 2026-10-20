@@ -4295,6 +4295,16 @@ public partial class Main : Node3D
 
     private void LoadWorkspaceFromPath(string path)
     {
+        if (_simulatorShell is null)
+        {
+            LoadWorkspaceFromPathCore(path);
+            return;
+        }
+        _simulatorShell.ResolveIntegratedProjectReplacement(() => LoadWorkspaceFromPathCore(path));
+    }
+
+    private void LoadWorkspaceFromPathCore(string path)
+    {
         if (_candidateCatalog is null || _sceneCatalog is null || _mainCamera is null)
         {
             const string message = "Load failed: project catalogs are unavailable.";
@@ -4308,7 +4318,7 @@ public partial class Main : Node3D
             // or editor replacement. Legacy standalone workspace files remain readable.
             var bundle=WorkspaceProjectBundleRepository.LoadIfBundle(path,_candidateCatalog,_sceneCatalog);
             var document = bundle?.Workspace??WorkspaceRepository.Load(_candidateCatalog, _sceneCatalog, path);
-            if (!GuardWorkspaceReplacement(() => LoadWorkspaceFromPath(path))) return;
+            if (!GuardWorkspaceReplacement(() => LoadWorkspaceFromPathCore(path))) return;
             var rollback=CaptureWorkspaceReplacementRollback();
             try
             {

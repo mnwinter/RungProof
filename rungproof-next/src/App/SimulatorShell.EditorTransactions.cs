@@ -17,6 +17,10 @@ public partial class SimulatorShell
     public void ResolveIntegratedProjectSave(Action save, Action? cancelled = null)
         => ResolvePendingEditorForms(save, cancelled);
 
+    /// <summary>Integrated workspace replacement must resolve staged ladder forms before replacing the project.</summary>
+    public void ResolveIntegratedProjectReplacement(Action replace, Action? cancelled = null)
+        => ResolvePendingEditorForms(replace, cancelled);
+
     /// <summary>Navigation and Save share the same explicit resolution; cancellation never invokes continuation.</summary>
     private void ResolvePendingEditorForms(Action continuation, Action? navigationCancelled = null)
     {

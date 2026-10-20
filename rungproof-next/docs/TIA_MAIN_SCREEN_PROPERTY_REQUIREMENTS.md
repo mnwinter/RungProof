@@ -223,10 +223,12 @@ that move without ladder-owned outputs.
   running-scan monitor behavior, and installed-TIA comparison remain open. The
   test was unsaved scratch state; no project/demo was saved or physical PLC
   accessed, and the exact app, bridge, and test tab were closed.
-- Current code evidence: build succeeded with 0 warnings/errors; the
-  virtual-controller suite passed 394/394; the focused project-tree sweep passed
-  14/14 gates and 100/100 assertions; and app-shell verification passed. These
-  results are offline evidence only. Remaining screen-control verification of
+- Current code evidence: after the save/load and tag-table review fixes below,
+  build succeeded with 0 warnings/errors and the virtual-controller suite passed
+  395/395; the focused project-tree sweep passed
+  14/14 gates and 100/100 assertions; and app-shell verification passed (Godot
+  still reports renderer/ObjectDB RID leaks at shutdown). These results are
+  offline evidence only. Remaining screen-control verification of
   Watch persistence/Save/Load and running-scan monitoring, Global DB
   selected-row removal and project Save/Load, the Global DB helper-note
   contrast, matched installed-TIA Portal V21 comparison, constants as LAD
@@ -239,6 +241,25 @@ that move without ladder-owned outputs.
   distinct adjacent bits, and duplicate rejection during snapshot capture and
   JSON load. An independent follow-up review found no actionable issue in this
   fix.
+- A follow-up source review found and fixed four data-loss/error paths in the
+  current working tree: Ladder toolbar SAVE now uses the pending-form resolver;
+  workspace Open and Load Last Workspace resolve staged forms before replacing
+  the project; Save reports invalid or unreadable target failures in the normal
+  status area; and replacing a document from an executable program rebuilds its
+  tag-table list from the imported tags instead of retaining stale tables.
+  Build and the 395-case offline suite pass. The screen walkthrough has not yet
+  verified staged-form Apply/Discard/Cancel through these entry points.
+- On the rebuilt current source, the Project menu's Save As command opened the
+  visible `Save offline Ladder project` picker with the expected default project
+  filename. No file was selected or saved; the disposable app and bridge were
+  stopped after inspection. This verifies menu routing and dialog presentation,
+  not disk persistence or a staged-form prompt.
+- Independent source review also confirmed two declared feature gaps: User
+  constants can be authored and persisted but are not currently exported into
+  the executable program or resolved by the ladder operand insertion path;
+  block and tag-table duplication actions are not implemented. Keep these open
+  under PROP-07/09; do not imply they work from their existing create/edit
+  controls.
 
 ### Prior review snapshot — 2026-10-19 (historical; superseded by the current-source follow-up above)
 

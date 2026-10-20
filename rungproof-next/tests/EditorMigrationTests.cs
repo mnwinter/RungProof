@@ -15,6 +15,7 @@ internal static partial class Program
         Test("WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration", WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration);
         Test("OpenBranchStatePersistsButCannotExportExecutableProgram", OpenBranchStatePersistsButCannotExportExecutableProgram);
         Test("TagTablesPersistAndLegacyTagsUseDefaultTable", TagTablesPersistAndLegacyTagsUseDefaultTable);
+        Test("ReplacingProgramRebuildsTagTableDeclarations", ReplacingProgramRebuildsTagTableDeclarations);
         Test("TagTableOperationsPreserveIdentityAndHistory", TagTableOperationsPreserveIdentityAndHistory);
         Test("TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic", TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic);
         Test("HierarchicalAggregateCommentsPersist", HierarchicalAggregateCommentsPersist);
@@ -365,6 +366,20 @@ internal static partial class Program
         Equal("Default tag table", migrated.Document.Tags.Single(tag => tag.Name == "counter_enable").TagTable);
         Equal("%M0.1", migrated.Document.Tags.Single(tag => tag.Name == "counter_enable").Address);
         Equal("Counter permission", migrated.Document.Tags.Single(tag => tag.Name == "counter_enable").Comment);
+    }
+
+    private static void ReplacingProgramRebuildsTagTableDeclarations()
+    {
+        var document = new LadderEditorDocument();
+        document.AddTagTable("Stale empty table");
+        var imported = new LadderEditorDocument();
+        imported.AddTag("start", PlcVariableRole.Input, tagTable: "Inputs");
+        imported.AddTagTable("Unused imported table");
+
+        document.ReplaceFromProgram(imported.BuildProgram());
+
+        Equal("Default tag table,Inputs", string.Join(",", document.TagTables));
+        Equal("Inputs", document.Tags.Single(tag => tag.Name == "start").TagTable);
     }
 
     private static void TagTableOperationsPreserveIdentityAndHistory()

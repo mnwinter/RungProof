@@ -2070,7 +2070,7 @@ public partial class SimulatorShell : CanvasLayer
         var load = ToolbarButton("LoadButton", "LOAD", new Color("3d5868"), 60);
         save.Pressed += () =>
         {
-            if (IsLadderView) _ladderSaveDialog.PopupCenteredRatio(0.72f);
+            if (IsLadderView) ShowLadderSaveDialog();
             else ShowWorkspaceSaveDialog();
         };
         load.Pressed += () =>
@@ -4462,7 +4462,11 @@ public partial class SimulatorShell : CanvasLayer
             message = $"PROJECT SAVED · {System.IO.Path.GetFileName(path)} · WORK IN PROGRESS PRESERVED";
             return true;
         }
-        catch (Exception exception) when (exception is System.IO.IOException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is System.IO.IOException
+            or System.IO.InvalidDataException
+            or UnauthorizedAccessException
+            or ArgumentException
+            or NotSupportedException)
         {
             message = "PROJECT SAVE FAILED · " + exception.Message.ToUpperInvariant();
             return false;

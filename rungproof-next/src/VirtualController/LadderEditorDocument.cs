@@ -1825,6 +1825,12 @@ public sealed partial class LadderEditorDocument
         }
         Id = program.Id; Name = program.Name; ScanPeriod = program.ScanPeriod;
         Tags.Clear(); Tags.AddRange(program.Variables);
+        TagTables.Clear();
+        TagTables.Add("Default tag table");
+        foreach (var tagTable in Tags.Select(tag => string.IsNullOrWhiteSpace(tag.TagTable)
+                     ? "Default tag table" : tag.TagTable.Trim())
+                 .Distinct(StringComparer.OrdinalIgnoreCase))
+            if (!TagTables.Contains(tagTable, StringComparer.OrdinalIgnoreCase)) TagTables.Add(tagTable);
         // Constants are editor metadata and are not part of LadderProgram yet.
         // Replacing from an external executable program must not retain stale declarations.
         UserConstants.Clear();
