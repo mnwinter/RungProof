@@ -228,7 +228,9 @@ public sealed class EditableWatchTable
                 throw new ArgumentException($"Watch table '{Name}' contains duplicate row identity '{row.Id}'.");
             var reference = row.Reference.Trim();
             var key = row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
-                ? "address:" + reference.TrimStart('%').ToUpperInvariant()
+                ? "address:" + (SiemensPlcTagAddress.TryGetWatchAddressIdentity(reference, out var addressIdentity)
+                    ? addressIdentity
+                    : reference.TrimStart('%').ToUpperInvariant())
                 : "symbol:" + reference;
             if (!references.Add(key))
                 throw new ArgumentException($"Watch table '{Name}' contains duplicate reference '{row.Reference}'.");
@@ -239,10 +241,7 @@ public sealed class EditableWatchTable
             {
                 var variable = row.ReferenceKind == WatchReferenceKind.Symbolic
                     ? variables.FirstOrDefault(tag => tag.Name.Equals(reference, StringComparison.Ordinal))
-                    : variables.FirstOrDefault(tag => !string.IsNullOrWhiteSpace(tag.Address)
-                        && SiemensPlcTagAddress.IsPersistedS7AddressCandidate(tag.Address)
-                        && tag.Address.Trim().TrimStart('%').Equals(reference.TrimStart('%'), StringComparison.OrdinalIgnoreCase)
-                        && SiemensPlcTagAddress.TryValidateWatchAddress(reference, tag.Type, tag.Role, out _));
+                    : variables.FirstOrDefault(tag => SiemensPlcTagAddress.MatchesWatchTagAddress(reference, tag));
                 if (!WatchTableDisplayFormat.IsValid(variable?.Type, row.DisplayFormat))
                     throw new ArgumentException(variable is null
                         ? $"Watch table '{Name}' row '{row.Id}' uses a display format other than Auto for an unresolved reference."

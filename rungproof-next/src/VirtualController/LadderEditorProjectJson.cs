@@ -170,15 +170,18 @@ public static class LadderEditorProjectJson
                     if (rows.GroupBy(row => row.Id ?? string.Empty, StringComparer.Ordinal).Any(group => group.Count() > 1))
                         return Invalid("Watch-table row IDs must be unique within each table.");
                     var symbolicReferences = new HashSet<string>(StringComparer.Ordinal);
-                    var absoluteReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    var absoluteReferences = new HashSet<string>(StringComparer.Ordinal);
                     foreach (var row in rows)
                     {
                         if (!Enum.TryParse<WatchReferenceKind>(row.ReferenceKind, true, out var referenceKind)
                             || !Enum.IsDefined(referenceKind))
                             return Invalid($"Watch-table row '{row.Id}' has unknown reference kind '{row.ReferenceKind}'.");
                         var reference = row.Reference!.Trim();
+                        var absoluteIdentity = SiemensPlcTagAddress.TryGetWatchAddressIdentity(reference, out var identity)
+                            ? identity
+                            : reference.TrimStart('%').ToUpperInvariant();
                         var isUnique = referenceKind == WatchReferenceKind.AbsoluteAddress
-                            ? absoluteReferences.Add(reference.TrimStart('%'))
+                            ? absoluteReferences.Add(absoluteIdentity)
                             : symbolicReferences.Add(reference);
                         if (!isUnique)
                             return Invalid("Watch-table references must be unique within each table.");

@@ -7615,17 +7615,11 @@ public partial class SimulatorShell : CanvasLayer
             return "—";
         }
 
-        string NormalizeWatchAddress(string address) =>
-            (address ?? string.Empty).Trim().TrimStart('%').ToUpperInvariant();
-
         PlcVariable? ResolveWatchVariable(EditableWatchRow row)
         {
             if (row.ReferenceKind == WatchReferenceKind.Symbolic)
                 return watchVariablesCache.FirstOrDefault(tag => tag.Name.Equals(row.Reference, StringComparison.Ordinal));
-            var matches = watchVariablesCache.Where(tag => !string.IsNullOrWhiteSpace(tag.Address)
-                && SiemensPlcTagAddress.IsPersistedS7AddressCandidate(tag.Address)
-                && NormalizeWatchAddress(tag.Address).Equals(NormalizeWatchAddress(row.Reference), StringComparison.Ordinal))
-                .Where(tag => SiemensPlcTagAddress.TryValidateWatchAddress(row.Reference, tag.Type, tag.Role, out _))
+            var matches = watchVariablesCache.Where(tag => SiemensPlcTagAddress.MatchesWatchTagAddress(row.Reference, tag))
                 .Take(2).ToArray();
             // Absolute references are only meaningful in this offline model
             // when they exactly identify one declared tag. Never infer a DB
@@ -7991,8 +7985,13 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = $"[color=#d64545]Absolute watch address rejected.[/color] {Escape(addressError)}";
                 return;
             }
+            var newAddressIdentity = SiemensPlcTagAddress.TryGetWatchAddressIdentity(address, out var identity)
+                ? identity
+                : address.Trim().TrimStart('%').ToUpperInvariant();
             if (document.ActiveWatchTable.Rows.Any(row => row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
-                    && NormalizeWatchAddress(row.Reference).Equals(NormalizeWatchAddress(address), StringComparison.Ordinal)))
+                    && (SiemensPlcTagAddress.TryGetWatchAddressIdentity(row.Reference, out var existingIdentity)
+                        ? existingIdentity
+                        : row.Reference.Trim().TrimStart('%').ToUpperInvariant()) == newAddressIdentity))
             {
                 output.Text = "[color=#d64545]Absolute watch address rejected.[/color] That address is already in the active table.";
                 return;

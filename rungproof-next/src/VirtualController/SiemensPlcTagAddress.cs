@@ -14,7 +14,7 @@ namespace RungProof.Next.VirtualController;
 public static class SiemensPlcTagAddress
 {
     private static readonly Regex AddressPattern = new(
-        @"^(?:%?)(?:(?<dbArea>DB)(?<dbNumber>[0-9]+)\.(?<dbKind>DBX|DBW|DBD)(?<dbByte>[0-9]+)(?:\.(?<dbBit>[0-7]))?|(?<area>[IQM])(?<kind>[BWD]?)(?<byte>[0-9]+)(?:\.(?<bit>[0-7]))?)$",
+        @"^(?:%?)(?:(?<dbArea>DB)(?<dbNumber>[0-9]+)\.(?<dbKind>DBX|DBW|DBD)(?<dbByte>[0-9]+)(?:\.(?<dbBit>[0-7]))?|(?<area>[IQM])(?<kind>[BXWD]?)(?<byte>[0-9]+)(?:\.(?<bit>[0-7]))?)$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
     private static readonly Regex UnprefixedDbAddressCandidate = new(
         @"^DB[0-9]+\.DB",
@@ -82,6 +82,49 @@ public static class SiemensPlcTagAddress
     /// </summary>
     public static bool TryValidateWatchAddress(string? address, out string error)
     {
+        return TryParseWatchAddress(address, out _, out error);
+    }
+
+    /// <summary>Returns a canonical identity for a valid address in the supported watch subset.</summary>
+    internal static bool TryGetWatchAddressIdentity(string? address, out string identity)
+    {
+        if (!TryParseWatchAddress(address, out var span, out _))
+        {
+            identity = string.Empty;
+            return false;
+        }
+        identity = Identity(span);
+        return true;
+    }
+
+    /// <summary>Returns a canonical identity for a typed, role-checked tag address.</summary>
+    internal static bool TryGetTypedAddressIdentity(
+        string? address,
+        PlcVariableType type,
+        PlcVariableRole role,
+        out string identity)
+    {
+        if (!TryParse(address, type, role, out var span, out _))
+        {
+            identity = string.Empty;
+            return false;
+        }
+        identity = Identity(span);
+        return true;
+    }
+
+    /// <summary>Tests whether an absolute watch address exactly identifies the declared tag span.</summary>
+    internal static bool MatchesWatchTagAddress(string? watchAddress, PlcVariable tag)
+    {
+        return IsPersistedS7AddressCandidate(tag.Address)
+            && TryGetWatchAddressIdentity(watchAddress, out var watchIdentity)
+            && TryGetTypedAddressIdentity(tag.Address, tag.Type, tag.Role, out var tagIdentity)
+            && string.Equals(watchIdentity, tagIdentity, StringComparison.Ordinal);
+    }
+
+    private static bool TryParseWatchAddress(string? address, out AddressSpan span, out string error)
+    {
+        span = default;
         var value = address?.Trim() ?? string.Empty;
         var match = AddressPattern.Match(value);
         if (!match.Success)
@@ -118,8 +161,14 @@ public static class SiemensPlcTagAddress
             "Q" => PlcVariableRole.Output,
             _ => PlcVariableRole.Memory,
         };
-        return TryValidate(value, type.Value, role, Array.Empty<PlcVariable>(), null, out error);
+        return TryParse(value, type.Value, role, out span, out error);
     }
+
+    private static string Identity(AddressSpan span) => string.Concat(
+        span.Area, ":",
+        span.DbNumber.ToString(CultureInfo.InvariantCulture), ":",
+        span.StartBit.ToString(CultureInfo.InvariantCulture), ":",
+        span.LengthBits.ToString(CultureInfo.InvariantCulture));
 
     /// <summary>Checks an absolute address against a declared watch tag's type and ownership.</summary>
     public static bool TryValidateWatchAddress(

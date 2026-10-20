@@ -159,14 +159,18 @@ that move without ladder-owned outputs.
   a failed/incomplete interaction attempt, not evidence that those controls work
   or fail.
 - Current code evidence: build succeeded with 0 warnings/errors; the
-  virtual-controller suite passed 393/393; the focused project-tree sweep passed
+  virtual-controller suite passed 394/394; the focused project-tree sweep passed
   14/14 gates and 100/100 assertions; and app-shell verification passed. These
   results are offline evidence only. Screen-control verification of the new Watch
   row actions, matched installed-TIA Portal V21 comparison, normal-renderer
   property review, constants as LAD operands, physical tag-to-operand drag, and
-  table-selector refresh after rename remain open. A code review also found a
-  valid S7 alias issue: `%I0.0` and `%IX0.0` describe the same bit span but are not
-  yet canonicalized during watch lookup/duplicate detection.
+  table-selector refresh after rename remain open. The follow-up code review
+  found and fixed an S7 alias issue: `%I0.0` and `%IX0.0` now resolve to the same
+  parsed bit span for watch lookup and duplicate checks. Regression coverage
+  verifies alias acceptance, equivalent-span identity, declared-tag resolution,
+  distinct adjacent bits, and duplicate rejection during snapshot capture and
+  JSON load. An independent follow-up review found no actionable issue in this
+  fix.
 
 ### Prior review snapshot — 2026-10-19 (historical; superseded by the current-source follow-up above)
 

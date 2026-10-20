@@ -12,6 +12,7 @@ internal static partial class Program
         Test("watch rows migrate schema 8 and legacy watchVariables", WatchRowLegacyMigration);
         Test("watch row history deep-clones and reorders authored rows", WatchRowHistoryRoundTrip);
         Test("watch rows reject duplicate aliases and invalid absolute addresses", WatchRowInvalidMetadata);
+        Test("S7 watch address aliases resolve and deduplicate by bit span", WatchAddressAliasesUseCanonicalSpan);
         Test("watch display formats validate by type and preserve numeric width", WatchDisplayFormatsByType);
         Test("simulator watch modify updates typed runtime values without force", WatchRowRuntimeModify);
     }
@@ -231,6 +232,54 @@ internal static partial class Program
         Equal("0000000000000001", WatchTableDisplayFormat.FormatInteger(1, PlcVariableType.Int, "Bin"));
         Equal("0.0001", WatchTableDisplayFormat.FormatReal(0.0001, "Auto"));
         Equal("1.23456", WatchTableDisplayFormat.FormatReal(1.23456, "Floating-point number"));
+    }
+
+    private static void WatchAddressAliasesUseCanonicalSpan()
+    {
+        True(SiemensPlcTagAddress.TryValidateWatchAddress("%I0.0", out _));
+        True(SiemensPlcTagAddress.TryValidateWatchAddress("%IX0.0", out _));
+        True(SiemensPlcTagAddress.TryGetWatchAddressIdentity("%I0.0", out var inferredIdentity));
+        True(SiemensPlcTagAddress.TryGetWatchAddressIdentity("%IX0.0", out var explicitIdentity));
+        Equal(inferredIdentity, explicitIdentity);
+        True(SiemensPlcTagAddress.TryGetWatchAddressIdentity("%I0.1", out var adjacentIdentity));
+        False(inferredIdentity == adjacentIdentity, "An adjacent input bit must remain a distinct address.");
+
+        var inputTag = new PlcVariable("input_bit", PlcVariableType.Bool, PlcVariableRole.Input, false, Address: "%IX0.0");
+        True(SiemensPlcTagAddress.MatchesWatchTagAddress("%I0.0", inputTag),
+            "An inferred-X watch address must resolve to the equivalent explicitly typed tag address.");
+        False(SiemensPlcTagAddress.MatchesWatchTagAddress("%I0.1", inputTag));
+
+        var resolvedDocument = LadderEditorDocument.CreateConveyorExample();
+        var startTagIndex = resolvedDocument.Tags.FindIndex(tag => tag.Name == "start_command");
+        resolvedDocument.Tags[startTagIndex] = resolvedDocument.Tags[startTagIndex] with { Address = "%IX0.0" };
+        resolvedDocument.ActiveWatchTable.Rows.Clear();
+        resolvedDocument.ActiveWatchTable.Rows.Add(new EditableWatchRow("%I0.0",
+            WatchReferenceKind.AbsoluteAddress, "Bool"));
+        True(LadderEditorProjectJson.Load(LadderEditorProjectJson.Save(resolvedDocument)).IsReadable,
+            "A valid alias must resolve to its declared type so type-specific display formats remain valid.");
+
+        var document = LadderEditorDocument.CreateConveyorExample();
+        document.ActiveWatchTable.Rows.Clear();
+        document.ActiveWatchTable.Rows.Add(new EditableWatchRow("%I0.0", WatchReferenceKind.AbsoluteAddress));
+        document.ActiveWatchTable.Rows.Add(new EditableWatchRow("%IX0.0", WatchReferenceKind.AbsoluteAddress));
+        var snapshotRejected = false;
+        try { _ = document.CaptureSnapshot(); }
+        catch (ArgumentException) { snapshotRejected = true; }
+        True(snapshotRejected, "Equivalent address spellings must not enter a document snapshot as duplicate rows.");
+
+        var jsonDocument = LadderEditorDocument.CreateConveyorExample();
+        jsonDocument.ActiveWatchTable.Rows.Clear();
+        jsonDocument.ActiveWatchTable.Rows.Add(new EditableWatchRow("%I0.0", WatchReferenceKind.AbsoluteAddress));
+        var duplicateJson = JsonNode.Parse(LadderEditorProjectJson.Save(jsonDocument))!;
+        duplicateJson["watchTables"]![0]!["rows"]!.AsArray().Add(new JsonObject
+        {
+            ["id"] = "explicit-x-alias",
+            ["referenceKind"] = "AbsoluteAddress",
+            ["reference"] = "%IX0.0",
+            ["displayFormat"] = "Auto",
+        });
+        False(LadderEditorProjectJson.Load(duplicateJson.ToJsonString()).IsReadable,
+            "Equivalent address spellings must be rejected as duplicate rows during JSON loading.");
     }
 
     private static void WatchRowRuntimeModify()
