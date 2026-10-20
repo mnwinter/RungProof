@@ -35,8 +35,11 @@ and keep image-local coordinates separate from browser-page coordinates. An
 HTTP success response proves input delivery only; confirm the exact row
 selection, heading, dialog, or form transition before recording a click as
 successful. If a nearby control activates, stop and recalibrate rather than
-inferring that the intended action is broken. Close the exact test process,
-bridge, tab, and listener afterward.
+inferring that the intended action is broken. On Windows, a bridge's synthetic
+`WM_LBUTTONDBLCLK` message may only highlight a Godot tree row; use a native OS
+double-click input for tree activation and verify the resulting dialog in a
+fresh capture. Close the exact test process, bridge, tab, and listener
+afterward.
 
 ## Instruction change trace
 

@@ -44,6 +44,14 @@ evidence; it does not overturn the earlier calibrated DB1 member interactions.
 The app, bridge, tab, and listener were closed without Save, Load, Run, or PLC
 connection.
 
+A subsequent native-input pass found that the helper's synthetic double-click
+only selected the tree row; a real Windows double-click opened the block dialog.
+The disposable DB member screen visibly confirmed Cancel, Apply, Undo, Redo, and
+selected-row Remove with a surviving `KeepFlag` declaration. This confirms
+RungProof-side behavior only. Tag/table and User constants controls, project
+Save/Load and staged prompts, running-scan Monitor, and installed-TIA V21
+pairing remain open.
+
 ## Work lanes
 
 | Lane | Batch | Exit condition | Boundary |

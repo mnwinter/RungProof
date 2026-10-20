@@ -1350,3 +1350,21 @@ without treating delivery status as a successful click. It did not reach any DB
 or property workflow and does not overturn the earlier calibrated DB1 member
 evidence. No Save, Load, Run, or PLC connection occurred; the retry's app,
 bridge, tab, and listener were closed.
+
+### Native OS input follow-up — 2026-10-20
+
+The bridge's synthetic double-click selected the **Add new block** row but did
+not activate it. A real Windows mouse double-click at the measured image-local
+row center opened the **Create program block** dialog. In a disposable unsaved
+session, selecting DB and Global DB created `FB1ScratchDB`; **+ MEMBER** opened
+the visible member form. Native keyboard input entered `TestFlag`; Cancel
+cleared it. Applying the same BOOL/FALSE member showed it in both the DB grid
+and STATIC list. Undo removed the row and Redo restored it. A second member,
+`KeepFlag`, was applied; selecting `TestFlag` and using Remove left only
+`KeepFlag` in the grid. This verifies the RungProof interaction path, not
+installed-TIA V21 parity.
+
+The session stayed STOPPED and PLC DISCONNECTED. No project Save/Load, Run, or
+PLC connection occurred; the app, bridge, browser tab, and listener were closed
+and checked absent. Other tag, watch, save/load, and matched-TIA interactions
+remain open.
