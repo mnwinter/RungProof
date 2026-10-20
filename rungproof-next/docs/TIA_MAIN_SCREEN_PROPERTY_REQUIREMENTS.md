@@ -227,10 +227,11 @@ that move without ladder-owned outputs.
   virtual-controller suite passed 394/394; the focused project-tree sweep passed
   14/14 gates and 100/100 assertions; and app-shell verification passed. These
   results are offline evidence only. Remaining screen-control verification of
-  Watch monitor/modify/reorder/Save/Load, Global DB selected-row
-  removal and project Save/Load, the Global DB helper-note contrast, matched
-  installed-TIA Portal V21 comparison, constants as LAD operands, physical
-  tag-to-operand drag, and table-selector refresh after rename remain open. The
+  Watch persistence/Save/Load and running-scan monitoring, Global DB
+  selected-row removal and project Save/Load, the Global DB helper-note
+  contrast, matched installed-TIA Portal V21 comparison, constants as LAD
+  operands, physical tag-to-operand drag, and table-selector refresh after
+  rename remain open. The
   follow-up code review
   found and fixed an S7 alias issue: `%I0.0` and `%IX0.0` now resolve to the same
   parsed bit span for watch lookup and duplicate checks. Regression coverage
