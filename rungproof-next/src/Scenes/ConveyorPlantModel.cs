@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RungProof.Next.Scenes;
 
@@ -10,6 +12,8 @@ public sealed class ConveyorPlantModel
 {
     private readonly double _length, _speed, _objectLength, _photoeyePosition, _minimumPhotoeyeOn, _strokeTime, _transferPosition;
     private readonly double? _reloadDelay;
+    private readonly double[] _cartonHeightSequenceM;
+    private int _cartonHeightIndex;
     private double _photoeyeHold, _reloadElapsed;
     public double? LeadingEdge { get; private set; }
     public bool ObjectPresent => LeadingEdge.HasValue;
@@ -19,10 +23,14 @@ public sealed class ConveyorPlantModel
     public bool PusherRetracted => PusherPosition <= 1e-9;
     public long Completed { get; private set; }
     public bool ObjectTransferred { get; private set; }
+    public bool ObjectPassedMainLine { get; private set; }
+    public bool ObjectLoaded { get; private set; }
+    public double CurrentCartonHeightM { get; private set; }
     public string State { get; private set; } = "stopped_loaded";
 
     public ConveyorPlantModel(double length, double speed, double objectLength, double photoeyePosition,
-        double minimumPhotoeyeOn = 0.1, double strokeTime = 0.3, double transferPosition = 0.8, double? reloadDelay = null)
+        double minimumPhotoeyeOn = 0.1, double strokeTime = 0.3, double transferPosition = 0.8,
+        double? reloadDelay = null, IReadOnlyList<double>? cartonHeightSequenceM = null)
     {
         foreach (var number in new[] { length, speed, objectLength, photoeyePosition, minimumPhotoeyeOn, strokeTime, transferPosition })
             if (!double.IsFinite(number)) throw new ArgumentException("Conveyor plant parameters must be finite.");
@@ -30,6 +38,9 @@ public sealed class ConveyorPlantModel
             || photoeyePosition > length || minimumPhotoeyeOn < 0 || strokeTime <= 0 || transferPosition <= 0
             || transferPosition > 1 || (reloadDelay.HasValue && (!double.IsFinite(reloadDelay.Value) || reloadDelay < 0.05 || reloadDelay > 3600)))
             throw new ArgumentException("Conveyor plant parameters are outside their declared ranges.");
+        _cartonHeightSequenceM = cartonHeightSequenceM?.ToArray() ?? [];
+        if (_cartonHeightSequenceM.Any(height => !double.IsFinite(height) || height <= 0 || height > 10))
+            throw new ArgumentException("Carton height sequence must contain finite heights from 0 to 10 m.", nameof(cartonHeightSequenceM));
         (_length, _speed, _objectLength, _photoeyePosition, _minimumPhotoeyeOn, _strokeTime, _transferPosition, _reloadDelay) =
             (length, speed, objectLength, photoeyePosition, minimumPhotoeyeOn, strokeTime, transferPosition, reloadDelay);
         Reset();
@@ -38,9 +49,13 @@ public sealed class ConveyorPlantModel
     public void Reset()
     {
         LeadingEdge = 0;
+        _cartonHeightIndex = 0;
+        CurrentCartonHeightM = _cartonHeightSequenceM.Length == 0 ? 0.72 : _cartonHeightSequenceM[0];
         PusherPosition = 0;
         Completed = 0;
         ObjectTransferred = false;
+        ObjectPassedMainLine = false;
+        ObjectLoaded = true;
         _photoeyeHold = _reloadElapsed = 0;
         RefreshPhotoeye(0, false);
         State = "stopped_loaded";
@@ -50,6 +65,8 @@ public sealed class ConveyorPlantModel
     {
         if (!double.IsFinite(seconds) || seconds < 0) throw new ArgumentException("Plant step must be finite and non-negative.");
         ObjectTransferred = false;
+        ObjectPassedMainLine = false;
+        ObjectLoaded = false;
         var previousStroke = PusherPosition;
         if (hasPusher) PusherPosition = Math.Clamp(PusherPosition + (pusherExtend ? 1 : -1) * seconds / _strokeTime, 0, 1);
         var crossedPhotoeye = false;
@@ -57,7 +74,12 @@ public sealed class ConveyorPlantModel
         {
             var current = previous + _speed * seconds;
             crossedPhotoeye = current >= _photoeyePosition && previous - _objectLength <= _photoeyePosition;
-            if (current - _objectLength >= _length) { LeadingEdge = null; Completed++; }
+            if (current - _objectLength >= _length)
+            {
+                LeadingEdge = null;
+                Completed++;
+                ObjectPassedMainLine = true;
+            }
             else LeadingEdge = current;
         }
         RefreshPhotoeye(seconds, crossedPhotoeye);
@@ -76,6 +98,12 @@ public sealed class ConveyorPlantModel
         if (_reloadDelay.HasValue && !ObjectPresent && PusherRetracted && _reloadElapsed + 1e-9 >= _reloadDelay.Value)
         {
             LeadingEdge = 0;
+            if (_cartonHeightSequenceM.Length > 0)
+            {
+                _cartonHeightIndex = (_cartonHeightIndex + 1) % _cartonHeightSequenceM.Length;
+                CurrentCartonHeightM = _cartonHeightSequenceM[_cartonHeightIndex];
+            }
+            ObjectLoaded = true;
             _reloadElapsed = 0;
             RefreshPhotoeye(0, false);
         }

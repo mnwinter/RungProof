@@ -19,20 +19,70 @@ public partial class DemoEnvironmentPresentation
         if(kind==0)return false;
         var reserve=b;if(OperatorAccessBounds is Aabb a)reserve=reserve.Merge(new Aabb(a.Position-Position,a.Size));
         var c=reserve.GetCenter();var w=MathF.Max(8,reserve.Size.X+4.6f);var dep=MathF.Max(6,reserve.Size.Z+4.6f);
-        var h=kind switch {1=>3.2f,2=>4.1f,3=>4.0f,4=>3.8f,5=>3.5f,6=>3.8f,7=>3.2f,8=>3.3f,_=>3.6f};
+        // Demo 3 is an enclosed sorting cell. Its walls must remain above the
+        // operator camera and continue beyond the shot; the previous 3.6 m
+        // wall exposed the cutaway set boundary behind the machine.
+        var h=kind switch {1=>3.2f,2=>4.1f,3=>4.0f,4=>3.8f,5=>3.5f,6=>3.8f,7=>3.2f,8=>3.3f,9=>7.5f,_=>3.6f};
         var x=c.X+sx*w/2;var z=c.Z+sz*dep/2;
-        string wallHex=kind switch {1=>"#D5D5C3",2=>"#BDB7A4",3=>"#AAB4A8",4=>"#CBBFA5",5=>"#CACDC4",6=>"#C1B6A1",7=>"#CBBDAA",8=>"#CDC5AE",_=>"#BAA391"};
+        // Demo 3's authored conveyor-entry wall and the generated room shell
+        // are one building envelope.  Giving the shell a separate brown
+        // fallback finish produced a hard vertical seam that made the entry
+        // wall read as a short freestanding movie-set panel.
+        string wallHex=kind switch {1=>"#D5D5C3",2=>"#BDB7A4",3=>"#AAB4A8",4=>"#CBBFA5",5=>"#CACDC4",6=>"#C1B6A1",7=>"#CBBDAA",8=>"#CDC5AE",9=>d.WallHex,_=>"#BAA391"};
         string frameHex=kind switch {1=>"#6E9084",2=>"#778A8C",3=>"#647267",4=>"#957657",5=>"#668583",6=>"#778571",7=>"#A37A64",8=>"#7F8867",_=>"#6B8389"};
         var wall=EnvironmentDetailedSurface(wallHex,"paint");var frame=EnvironmentDetailedSurface(frameHex,"paint");
         var floor=EnvironmentDetailedSurface(kind==1?"#A5AEA2":kind==7?"#AEA58F":"#9FA39C",kind==1||kind==7?"paint":"concrete");
         var timber=EnvironmentDetailedSurface("#B18F60","wood");var stainless=EnvironmentDetailedSurface("#BEC5C0","metal");
         var paper=EnvironmentDetailedSurface("#E3D9BE","cardboard");
         if(GetNodeOrNull<MeshInstance3D>("CatalogContinuousGround") is {} old)old.Visible=false;
-        Box(architecture,"WholeLocationFoundation",new Vector3(w+4,.12f,dep+4),new Vector3(c.X,-.065f,c.Z),floor);
+        Box(architecture,"WholeLocationFoundation",
+            kind==9?new Vector3(w+36,.12f,dep+36):new Vector3(w+4,.12f,dep+4),
+            new Vector3(c.X,-.065f,c.Z),floor);
+        if(kind==9)
+        {
+            // Demo 3 is an enclosed production room, not a short theatrical
+            // backdrop.  Carry the room envelope well past the operator camera
+            // so neither a wall end nor the empty world outside the building can
+            // enter the normal lesson shot.
+            Box(architecture,"SortingCellContinuousCeiling",new Vector3(w+36,.22f,dep+36),
+                new Vector3(c.X,h+.11f,c.Z),wall);
+            // Close the two camera-side boundaries beyond the camera position.
+            // They are intentionally outside the normal framing, but make this
+            // a real four-wall room instead of relying on an invisible cutaway.
+            Box(architecture,"SortingCellCameraSideWall",new Vector3(.18f,h,dep+36),
+                new Vector3(c.X-sx*(w*.5f+15),h*.5f,c.Z),wall);
+            Box(architecture,"SortingCellFrontWall",new Vector3(w+36,h,.18f),
+                new Vector3(c.X,h*.5f,c.Z-sz*(dep*.5f+15)),wall);
+            var highBay=(StandardMaterial3D)EnvironmentDetailedSurface("#F4F1E6","paint").Duplicate();
+            highBay.EmissionEnabled=true;
+            highBay.Emission=new Color("F4F1E6").SrgbToLinear();
+            highBay.EmissionEnergyMultiplier=1.25f;
+            foreach(var offset in new[]
+            {
+                new Vector3(-w*.22f,0,-dep*.16f), new Vector3(w*.22f,0,-dep*.16f),
+                new Vector3(-w*.22f,0,dep*.16f), new Vector3(w*.22f,0,dep*.16f),
+            })
+            {
+                Box(architecture,"SortingCellHighBayLuminaire",new Vector3(1.65f,.08f,.42f),
+                    new Vector3(c.X+offset.X,h-.08f,c.Z+offset.Z),highBay);
+                architecture.AddChild(new OmniLight3D
+                {
+                    Name="SortingCellHighBayLight",
+                    Position=new Vector3(c.X+offset.X,h-.28f,c.Z+offset.Z),
+                    LightColor=new Color("F4EAD4"),
+                    LightEnergy=.72f,
+                    OmniRange=11f,
+                    ShadowEnabled=true,
+                });
+            }
+        }
         Node3D Face(string name,Vector3 at,float yaw=0)
         {var n=new Node3D{Name=name,Position=at,RotationDegrees=new Vector3(0,yaw,0)};architecture.AddChild(n);return n;}
         var rear=Face("PurposeConnectedRear",new Vector3(c.X,0,z));
-        var sideLen=kind is 1 or 4?MathF.Min(dep,4.8f):kind is 5 or 6 or 9?MathF.Min(dep,4.5f):dep;
+        // Keep deliberately short service returns for the other open bays,
+        // but Demo 3 needs the complete room-depth return so its end is never
+        // visible beside the material-entry wall.
+        var sideLen=kind is 1 or 4?MathF.Min(dep,4.8f):kind is 5 or 6?MathF.Min(dep,4.5f):kind==9?dep+30:dep;
         var side=Face("PurposeConnectedSide",new Vector3(x,0,z-sz*sideLen/2),90);
         void Wall(Node3D n,float len,float height,List<Rect2> holes,bool glass=false)=>ArtWall(n,len,height,.18f,wall,holes,glass);
         void Cap(Node3D n,float len,float height)=>Box(n,"WallBearingCap",new Vector3(len+.18f,.22f,.30f),new Vector3(0,height-.11f,0),frame);
@@ -133,7 +183,7 @@ public partial class DemoEnvironmentPresentation
                 IndustrialMaterialWall(rear,w,h,rh,.95f+(kind==4?.25f:0),
                     EnvironmentDetailedSurface(kind==2?"#84918D":"#82998E","paint"),
                     EnvironmentDetailedSurface(kind==2?"#BEC8C7":"#CFD2C7",kind==2?"metal":"paint"));
-            else Wall(rear,w,h,rh,true);
+            else Wall(rear,kind==9?w+30:w,h,rh,true);
             Wall(side,sideLen,h,sh,kind!=1);Cap(rear,w,h);Cap(side,sideLen,h);
             if(kind==4)
                 foreach(var pierX in new[]{-w*.08f,w*.12f})

@@ -14,6 +14,8 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `raise_request` | `BOOL` | **PC** | `False` |
+| `lower_request` | `BOOL` | **PC** | `False` |
 | `lift_up` | `BOOL` | **PLC** | `False` |
 | `lift_down` | `BOOL` | **PLC** | `False` |
 | `top_limit` | `BOOL` | **PC** | `False` |
@@ -25,10 +27,12 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Raise to work height` | `start` | `raise` |
-| `Lower to load height` | `start` | `lower` |
+| `Raise to work height` | `start` | Loaded controller: pulse `raise_request` (legacy preview: `raise`) |
+| `Lower to load height` | `start` | Loaded controller: pulse `lower_request` (legacy preview: `lower`) |
 | `Stop lift` | `stop` | `` |
 | `Reset lift` | `reset` | `` |
+
+With a loaded ladder controller, each Start action pulses the named PC-owned BOOL request binding; the learner program decides actuator commands. A legacy preview sequence name does not imply that the loaded controller automatically executes that sequence.
 
 ## Equipment bindings
 
@@ -77,3 +81,4 @@ Independent raise and lower commands move a scissor lift between modeled bottom 
 ### Expected observations
 
 - Raise stops at the top limit; lower stops at the bottom limit; opposed outputs are never on together.
+

@@ -1,0 +1,1 @@
+[{"wait": 3.2, "capture": "lab507-r3-waits-path"}, {"click": [638, 565], "wait": 0.3, "capture": "lab507-r3-idle-repeat"}, {"click": [694, 534], "wait": 0.2, "capture": "lab507-r3-repeat-amber"}, {"wait": 1.4, "capture": "lab507-r3-repeat-walk"}, {"wait": 2.2, "capture": "lab507-r3-repeat-hand"}, {"wait": 3.3, "capture": "lab507-r3-repeat-idle"}]

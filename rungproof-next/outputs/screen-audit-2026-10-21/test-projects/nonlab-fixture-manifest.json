@@ -1,0 +1,26 @@
+{
+  "purpose": "Static learner test inputs; JSON syntax only checked, no compiler/runtime/API execution",
+  "entries": [
+    {
+      "file": "fixture-conveyor-cell-normal.rpproj.json",
+      "sourceSceneId": "conveyor-cell",
+      "sha256": "8790e2502f2205646598275001bc8fe41815495778bd808e7049fe7150499ddf",
+      "status": "NOT_UI_LOADED_OR_VALIDATED",
+      "networks": 1
+    },
+    {
+      "file": "fixture-scene-1-conveyor-stop-normal.rpproj.json",
+      "sourceSceneId": "scene-1-conveyor-stop",
+      "sha256": "7ea22bfcefa2cede6a86b3c5001199a65c7ed0a2087c4ed01ac9de063118adf3",
+      "status": "NOT_UI_LOADED_OR_VALIDATED",
+      "networks": 1
+    },
+    {
+      "file": "fixture-tank-radar-normal.rpproj.json",
+      "sourceSceneId": "tank-radar",
+      "sha256": "503435e7cc3d4216402bf8d3d7d1a98cfe6196a930c6d38c47f769f222fab136",
+      "status": "NOT_UI_LOADED_OR_VALIDATED",
+      "networks": 2
+    }
+  ]
+}

@@ -55,24 +55,167 @@ public partial class SimulatorShell : CanvasLayer
     private readonly SceneCatalogDocument _sceneCatalog;
     private readonly IReadOnlyList<SceneCatalogEntry> _orderedScenes;
     private readonly List<SceneCatalogEntry?> _scenarioBrowserRows = [];
-    private static readonly (string Label, string SceneId)[] AuthoredDemos =
+    private sealed record CurriculumDemo(
+        string Label,
+        string SceneId,
+        string Objective,
+        string Exercise,
+        string ActionHint,
+        string PlcFocus,
+        string[] TracePoints,
+        string Troubleshooting,
+        string CompletionPoint,
+        double CompletionTarget,
+        string CompletionQualifierPoint,
+        string CompletionText);
+    private sealed record CurriculumPassEvidence(
+        string ProofValue,
+        long ScanNumber,
+        string TraceSnapshot,
+        string RecoveryProof);
+    private enum CurriculumRecoveryStage
+    {
+        None,
+        FirstCycleComplete,
+        StopRequested,
+        StopObserved,
+        StopRestartObserved,
+        ResetRequested,
+        ResetObserved,
+        RequestCleared,
+        RestartObserved,
+        TripRequested,
+        TripObserved,
+        TripCleared,
+        PostTripResetRequested,
+        PostTripResetObserved,
+        PostTripRestartObserved,
+        OverloadRequested,
+        OverloadObserved,
+        OverloadCleared,
+        PermissiveRemoved,
+        PermissiveLossObserved,
+        PermissiveRestored,
+        SecondResetRequested,
+        SecondResetObserved,
+    }
+
+    private static readonly CurriculumDemo[] AuthoredDemos =
     [
-        ("Demo 1 - Press Count Starter", "lab-4-01-press-count-lamp"),
-        ("Demo 2 - Delayed Lamp Timer", "lab-5-01-delayed-lamp"),
-        ("Demo 3 - Conveyor Sequence", "scene-1-conveyor-stop"),
-        ("Demo 4 - Batch Process Blocks", "lab-9-11-pallet-counting"),
-        ("Demo 5 - Integrated Palletizing Cell Multi-FB/FC", "lab-11-13-xy-palletizing"),
+        new(
+            "Demo 1 - Press Count Starter",
+            "lab-4-01-press-count-lamp",
+            "Count distinct press events and turn on the threshold lamp at three.",
+            "1. The curriculum opens this authored lesson with its local scan running; use App Run only after a manual App Stop.\n2. Press PULSE three separate times; watch COUNT follow the CTU and the threshold lamp turn on at three.\n3. Compare App Stop/Run, then press machine RESET and repeat.",
+            "Press and release PULSE for three distinct edges; watch COUNT advance to 3 and the threshold lamp turn ON.",
+            "Rising-edge detection, CTU preset 3, publishing press_count.ACC, and an output coil.",
+            ["pulse_received", "press_count", "press_count_value", "reset_pressed", "threshold_lamp"],
+            "Count stays at 0: confirm the app scan is RUNNING, release PULSE between presses, and confirm RESET is not held. Count reaches 3 but the lamp stays off: trace CTU.Q to threshold_lamp in Logic.",
+            "threshold_lamp", 1, "", "Threshold lamp is ON after the third distinct press."),
+        new(
+            "Demo 2 - Delayed Lamp Timer",
+            "lab-5-01-delayed-lamp",
+            "Delay an output for two seconds while a request remains true.",
+            "1. The curriculum opens this authored lesson with its local scan running; use App Run only after a manual App Stop.\n2. Turn REQUEST ON; watch ELAPSED MS reach 2000 before the lamp turns on, then turn REQUEST OFF.\n3. Exercise machine STOP and RESET; return REQUEST OFF before a fresh start.",
+            "Turn REQUEST ON and hold it for the full two-second TON interval; watch ELAPSED MS follow ET until Q and the delayed lamp turn ON.",
+            "TON timing, ET conversion to delay_elapsed_ms, done status, and output reset behavior.",
+            ["timer_request", "timer_armed", "delay_timer", "delay_elapsed_ms", "machine_stop", "reset_pressed", "delayed_lamp"],
+            "ET stays at 0: confirm the app scan is RUNNING, REQUEST is held ON, and machine STOP/RESET are released. ET repeatedly clears: trace the TON enable path and reset conditions.",
+            "delayed_lamp", 1, "", "Delayed lamp is ON after the full maintained delay."),
+        new(
+            "Demo 3 - Height Sorting Pusher Cell",
+            "scene-2-conveyor-pusher",
+            "Route cartons from measured height with a 600 mm inclusive boundary.",
+            "1. The curriculum opens this authored lesson with its local scan running; turn ENABLE ON and press machine START.\n2. Observe the fixed 420, 820, and 600 mm cartons reach their destinations.\n3. Exercise STOP, simulated trip, and overload; clear the cause, RESET, then issue a fresh START.",
+            "Turn ENABLE ON, keep trip and overload OFF, press RESET, then press START and observe all three cartons complete.",
+            "PLC-owned run state, comparisons, interlocks, conveyor FB, and pusher FB.",
+            ["machine_run", "carton_height_mm", "divert_latched", "conveyor_running", "pusher_extend", "parts_completed"],
+            "No carton movement: confirm ENABLE is ON, trip and overload are OFF, then press RESET followed by a fresh START. No divert: compare measured height with 600 mm and inspect pusher retracted/extended feedback.",
+            "parts_completed", 3, "", "Three cartons completed: 420 mm, 820 mm, and the 600 mm boundary case."),
+        new(
+            "Demo 4 - Batch Process Blocks",
+            "lab-9-11-pallet-counting",
+            "Validate product events and complete a five-item batch.",
+            "1. The curriculum opens this authored lesson with its local scan running; press machine START.\n2. Turn TYPE VALID and COUNT REQUEST ON; press NEW PALLET once for each of five events.\n3. Prove invalid events do not count, exercise machine STOP, then RESET and count the first valid event of a second batch.",
+            "Press START, turn TYPE VALID and COUNT REQUEST ON, then press NEW PALLET five times; after passing, use machine RESET and prove a fresh event starts batch two at 1.",
+            "Parameterized FB/FC calls, Static CTU state in DB101, typed I/O, and edge qualification.",
+            ["machine_running", "pallet_detected", "pallet_type_valid", "count_request", "batch_count_value", "pallet_count_valid"],
+            "Count does not advance: machine START must be accepted and TYPE VALID plus COUNT REQUEST must already be ON before NEW PALLET is pressed. Count reaches 5 without passing: inspect pallet_count_valid.",
+            "pallet_count", 5, "pallet_count_valid", "The first batch reached five with valid output ON, then RESET and a fresh qualified event started batch two at COUNT 1."),
+        new(
+            "Demo 5 - Integrated Palletizer",
+            "lab-11-13-xy-palletizing",
+            "Run a PLC-owned four-carton pick-and-place sequence from measured feedback.",
+            "1. The curriculum opens this authored lesson with its local scan running; keep ENABLE and PALLET ON, then press machine START.\n2. Follow STEP, X CNT, Y CNT, and Z CNT through pickup, transfer, release, home, and four PLACED cartons.\n3. Exercise STOP, simulated trip, and pallet-permissive loss; clear the cause, RESET, issue a fresh START, and complete a second four-carton layer.",
+            "Keep ENABLE and PALLET ON with trip OFF, press RESET and START, follow STEP plus X/Y/Z through four placements, then Reset and repeat a second layer.",
+            "Main sequence state plus X/Y/Z axis, gripper, measured encoder feedback, and FB instances in DB101-DB107.",
+            ["machine_run", "sequence_step_value", "gantry_x_encoder_counts", "gantry_y_encoder_counts", "gantry_z_encoder_counts", "vacuum_pick", "placed_cartons", "layer_complete"],
+            "Sequence will not start: confirm ENABLE and PALLET are ON, trip is OFF, then RESET and issue a fresh START. Sequence stalls: compare the STEP display with encoder counts, at_pickup, at_place, and carton_attached feedback.",
+            "placed_cartons", 4, "layer_complete", "The first four-carton layer completed, then RESET and a fresh START completed a second four-carton layer."),
     ];
+    private static readonly string[] CurriculumStepLabels = ["COUNT", "TIMER", "SORT", "BATCH", "CELL"];
+    private const string CurriculumGuideBody =
+        "1 COUNT — PULSE → CTU → COUNT display → threshold lamp\n" +
+        "2 TIMER — REQUEST → TON → ELAPSED MS display → delayed lamp\n" +
+        "3 SORT — HEIGHT MM compare → conveyor/pusher FBs → DONE display\n" +
+        "4 BATCH — qualified PALLET edges → FB/FC + DB101 → COUNT/valid lamp\n" +
+        "5 CELL — PLC-owned sequence → X/Y/Z CNT feedback → PLACED/layer complete\n\n" +
+        "For each lesson:\n" +
+        "1. Open a numbered demo; its authored local program is validated, loaded, and started automatically.\n" +
+        "2. Operate the lesson's machine controls; APP RUN/STOP/RESET control the local scan and do not press its PLC inputs.\n" +
+        "3. Follow the machine displays, live trace, ladder, and watch table until the proof condition passes.\n" +
+        "4. Inspect the captured pass trace, repeat the lesson, or continue to the first unfinished demo.\n\n" +
+        "All evidence is local virtual-controller evidence, not installed-TIA, live-PLC, or safety validation.";
     private readonly IReadOnlyList<DiagnosticIssue> _diagnostics;
     private readonly IGuardedRuntimeClient _connection;
     private readonly List<AssetDefinition> _filteredAssets = [];
     private SceneSimulationRuntime? _runtime;
     private SceneDefinition? _activeScene;
     private readonly List<string> _operatorEvents = [];
+    private readonly HashSet<string> _completedCurriculumScenes = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, CurriculumPassEvidence> _curriculumPassEvidence = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, CurriculumRecoveryStage> _curriculumRecoveryStages = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, (Button Button, string Point, string Type, string Label, Color Color)> _operatorActionButtons =
+        new(StringComparer.Ordinal);
     private RichTextLabel? _operatorEventHistory;
+    private Button? _operatorCopyEventLog;
+    private Button? _operatorClearEventLog;
     private AssetDefinition? _selectedAsset;
 
     private ItemList _sceneList = null!;
+    private Label _curriculumProgress = null!;
+    private ProgressBar _curriculumProgressBar = null!;
+    private RichTextLabel _curriculumStatusBoard = null!;
+    private Label _curriculumLessonProgressLabel = null!;
+    private ProgressBar _curriculumLessonProgressBar = null!;
+    private RichTextLabel _curriculumPhaseRail = null!;
+    private RichTextLabel _curriculumSummary = null!;
+    private Button _curriculumPrevious = null!;
+    private Button _curriculumOpenLogic = null!;
+    private Button _curriculumOpenGuide = null!;
+    private Button _curriculumOpenSplit = null!;
+    private Button _curriculumOpenMonitor = null!;
+    private Button _curriculumDoNext = null!;
+    private Button _curriculumNext = null!;
+    private Button _curriculumRestartDemo = null!;
+    private Button _curriculumResetProgress = null!;
+    private Button _curriculumPreviewResults = null!;
+    private Button _curriculumCopyResults = null!;
+    private Button _curriculumSaveResults = null!;
+    private readonly List<Button> _curriculumStepButtons = [];
+    private HBoxContainer _operatorCurriculumStepRail = null!;
+    private readonly List<Button> _operatorCurriculumStepButtons = [];
+    private Button _operatorPreviousDemo = null!;
+    private Button _operatorNextDemo = null!;
+    private Button _operatorRestartDemo = null!;
+    private Button _operatorPreviewResults = null!;
+    private Button _operatorCopyResults = null!;
+    private Button _operatorSaveResults = null!;
+    private Button _operatorDoNext = null!;
+    private Button _operatorOpenLogic = null!;
+    private Button _operatorOpenGuide = null!;
+    private Button _operatorOpenSplit = null!;
+    private Button _operatorOpenMonitor = null!;
     private ItemList _assetList = null!;
     private LineEdit _assetSearch = null!;
     private RichTextLabel _inspector = null!;
@@ -96,7 +239,10 @@ public partial class SimulatorShell : CanvasLayer
     private bool _pointsCollapsed;
     private bool _pointsCollapsedBeforeEditor;
     private bool _compactDockDefaultsApplied;
-    private int _tiaProjectDockSplitOffset = 280;
+    // Installed TIA Portal V17 uses a compact project tree (about 15% of the
+    // full workbench at the captured desktop size). Keep RungProof close to
+    // that proportion while leaving enough room for the tree indentation.
+    private int _tiaProjectDockSplitOffset = 250;
     private int _studio5000ProjectDockSplitOffset = 280;
     private string _activeSceneName = "Loading project…";
     private ItemList _diagnosticList = null!;
@@ -107,10 +253,18 @@ public partial class SimulatorShell : CanvasLayer
     private Label _diagnosticSummary = null!;
     private Label _workspaceStatus = null!;
     private Label _transportScene = null!;
+    private Button _transportCurriculum = null!;
     private Label _transportScope = null!;
     private Label _operatorInputHeading = null!;
     private Label _operatorOutputHeading = null!;
     private RichTextLabel _operatorSceneSummary = null!;
+    private Label _operatorLessonProgressLabel = null!;
+    private ProgressBar _operatorLessonProgressBar = null!;
+    private RichTextLabel _operatorCurriculumPhaseRail = null!;
+    private Label _operatorPlaybackState = null!;
+    private Button _operatorRunSimulator = null!;
+    private Button _operatorStopSimulator = null!;
+    private ScrollContainer _operatorConsoleScroll = null!;
     private RichTextLabel _operatorRuntimeSummary = null!;
     private string _sceneInspectorText = string.Empty;
     private RichTextLabel _operatorEquipment = null!;
@@ -126,6 +280,9 @@ public partial class SimulatorShell : CanvasLayer
     private Button _returnFromAssetPreview = null!;
     private AcceptDialog _assetHelpDialog = null!;
     private RichTextLabel _assetHelpContent = null!;
+    private AcceptDialog _machineGuideDialog = null!;
+    private RichTextLabel _machineGuideContent = null!;
+    private Button _machineGuideDoNext = null!;
     private TabContainer _leftTabs = null!;
     private TabContainer _inspectorTabs = null!;
     private ItemList _operatorSceneList = null!;
@@ -171,6 +328,13 @@ public partial class SimulatorShell : CanvasLayer
     private CheckBox _centroidPivot = null!;
     private string? _pivotGroupId;
     private AcceptDialog _simulatorModeDialog = null!;
+    private AcceptDialog _curriculumGuideDialog = null!;
+    private Button _curriculumGuideResume = null!;
+    private Button _curriculumGuideStartFresh = null!;
+    private ConfirmationDialog _curriculumResetConfirmation = null!;
+    private FileDialog? _curriculumResultsSaveDialog;
+    private AcceptDialog? _curriculumResultsPreviewDialog;
+    private RichTextLabel? _curriculumResultsPreviewContent;
     private AcceptDialog _workspaceFeedbackDialog = null!;
     private Label _virtualControllerStatus = null!;
     private RichTextLabel _virtualControllerLadder = null!;
@@ -206,8 +370,29 @@ public partial class SimulatorShell : CanvasLayer
     private EditorClipboard? _ladderCommandClipboard;
     private bool _ladderMonitorMatchesLoadedProgram;
     private readonly List<Action> _ladderEditorRefreshers = [];
+    private Action? _curriculumVerifyAndLoad;
     private Action? _restoreActiveWatchTableTreeRow;
     private Action? _clearWatchValidationFeedback;
+    private Action? _openFirstWatchRowPropertiesForReview;
+    private Action? _showWatchFormatRejectionForReview;
+    private bool _tagDragReviewCaptureArmed;
+    private bool _demo1ActiveCaptureRunning;
+    private bool _demo1ActiveCapturePrepared;
+    private bool _demo2ActiveCaptureRunning;
+    private bool _demo2ActiveCapturePrepared;
+    private bool _demo3ActiveCaptureRunning;
+    private bool _demo3ActiveCapturePrepared;
+    private bool _demo4ActiveCaptureRunning;
+    private bool _demo4ActiveCapturePrepared;
+    private bool _demo5ActiveCaptureRunning;
+    private bool _demo5ActiveCapturePrepared;
+    private bool _fiveDemoActiveCaptureRunning;
+    private bool _fiveDemoActiveCapturePrepared;
+    private bool _globalDbTransactionReviewRunning;
+    private bool _globalDbTransactionReviewPrepared;
+    private Action? _openFirstInterfaceDeclarationPropertiesForReview;
+    private Action? _openFirstTaskSchedulePropertiesForReview;
+    private Action? _openFirstUserConstantPropertiesForReview;
     private Func<string>? _getActiveTiaEditorDocumentKey;
     private Action<string, string>? _ensureTiaEditorDocumentTab;
     private Action<IReadOnlyList<string>>? _orderTiaEditorDocumentTabs;
@@ -237,9 +422,15 @@ public partial class SimulatorShell : CanvasLayer
     private bool _externalMode;
     private CheckButton _mcpUiEnabled = null!;
     private CheckButton _showSafetyNotices = null!;
+    private OptionButton _interfaceScaleSelector = null!;
+    private PopupMenu _viewPopup = null!;
+    private string _interfaceScaleSetting = "auto";
+    private int _resolvedInterfaceScalePercent = 100;
+    private bool _applyingInterfaceScale;
     private PopupMenu _toolsPopup = null!;
     private const int McpToggleMenuId = 100;
     private const int ApplicationSettingsMenuId = 101;
+    private const int InterfaceScaleMenuBaseId = 120;
     private const string SettingsPath = "user://rungproof-settings.json";
 
     public event Action<string>? SceneRequested;
@@ -322,6 +513,9 @@ public partial class SimulatorShell : CanvasLayer
 
     public override void _Ready()
     {
+        var settings = LoadApplicationSettings();
+        _interfaceScaleSetting = settings.InterfaceScale;
+        ApplyInterfaceScale(_interfaceScaleSetting, persist: false);
         BuildInterface();
         PopulateScenes();
         FilterAssets(string.Empty);
@@ -412,6 +606,8 @@ public partial class SimulatorShell : CanvasLayer
         _activeScene = scene;
         _deviceTraceScene=string.Empty; // Same source ID can attach a different explicit workspace preset.
         SelectActiveScenarioRow();
+        RefreshCurriculumRows();
+        RefreshCurriculumPanel();
         _activeSceneName = ScenarioDisplayName(scene);
         _runtime = runtime;
         _runtime.StateChanged += RefreshRuntimeState;
@@ -450,11 +646,58 @@ public partial class SimulatorShell : CanvasLayer
         if (_sceneLadderDrafts.TryGetValue(SceneDraftCacheKey(scene), out var draft))
         {
             _ladderDocument.RestoreSnapshot(draft.Document);
-            _ladderSavedProjectJson = draft.SavedJson;
+            var restoredJson = LadderEditorProjectJson.Save(_ladderDocument);
+            try
+            {
+                SceneLadderProject.EnsureSceneIoTable(_ladderDocument, ScenePoints(),
+                    _runtime?.Points ?? new Dictionary<string, object?>(), out _);
+            }
+            catch (SceneIoTableConflictException exception)
+            {
+                // Reject the cached migration without modifying its document or
+                // hiding the duplicate binding from the author.
+                _ladderDocument.RestoreSnapshot(draft.Document);
+                _ladderSavedProjectJson = draft.SavedJson;
+                _ladderProjectPath = draft.ProjectPath;
+                _ladderHistory = draft.History;
+                _ladderWorkspaceStatus.Text = "SCENE DRAFT MIGRATION BLOCKED · DUPLICATE SCENE I/O BINDING";
+                _ladderWorkspaceStatus.TooltipText = exception.Message;
+                RefreshLadderMonitorMatch();
+                return;
+            }
+            var migratedJson = LadderEditorProjectJson.Save(_ladderDocument);
+            var savedBaselineJson = draft.SavedJson;
+            if (!string.IsNullOrWhiteSpace(draft.SavedJson))
+            {
+                var savedBaseline = LadderEditorProjectJson.Load(draft.SavedJson);
+                if (savedBaseline.IsReadable && savedBaseline.Document is not null)
+                {
+                    try
+                    {
+                        SceneLadderProject.EnsureSceneIoTable(savedBaseline.Document, ScenePoints(),
+                            _runtime?.Points ?? new Dictionary<string, object?>(), out _);
+                        savedBaselineJson = LadderEditorProjectJson.Save(savedBaseline.Document);
+                    }
+                    catch (SceneIoTableConflictException)
+                    {
+                        // Preserve a conflicting saved baseline; current edits
+                        // remain dirty until that saved copy is explicitly repaired.
+                    }
+                }
+            }
+            var migrated = !string.Equals(restoredJson, migratedJson, StringComparison.Ordinal)
+                || !string.Equals(draft.SavedJson, savedBaselineJson, StringComparison.Ordinal);
+            // Rebase current and saved snapshots independently. This removes
+            // schema migration from undo without marking pre-existing user edits clean.
+            _ladderSavedProjectJson = savedBaselineJson;
             _ladderProjectPath = draft.ProjectPath;
-            _ladderHistory = draft.History;
-            _ladderWorkspaceStatus.Text = "SCENE DRAFT RESTORED · VERIFY + LOAD BEFORE RUN";
-            _ladderWorkspaceStatus.TooltipText = "The scene's exact offline draft and edit history were restored. Save to retain it after exit.";
+            _ladderHistory = migrated ? new LadderEditorHistory(150) : draft.History;
+            _ladderWorkspaceStatus.Text = migrated
+                ? "SCENE DRAFT RESTORED · SCENEIO MIGRATED · VERIFY + LOAD BEFORE RUN"
+                : "SCENE DRAFT RESTORED · VERIFY + LOAD BEFORE RUN";
+            _ladderWorkspaceStatus.TooltipText = migrated
+                ? "The restored draft was normalized to the active scene's SceneIO contract. Verify and load before running."
+                : "The scene's exact offline draft and edit history were restored. Save to retain it after exit.";
             RefreshLadderMonitorMatch();
             return;
         }
@@ -472,6 +715,8 @@ public partial class SimulatorShell : CanvasLayer
         // Align only a fresh template. Restoring a draft must never rewrite
         // bindings the user has deliberately edited.
         if (scene.Id == "conveyor-cell") AlignDefaultConveyorBindings(scene);
+        SceneLadderProject.EnsureSceneIoTable(_ladderDocument, ScenePoints(),
+            _runtime?.Points ?? new Dictionary<string, object?>(), out unsupported);
         _ladderSavedProjectJson = LadderEditorProjectJson.Save(_ladderDocument);
         _ladderProjectPath = null;
         _ladderHistory = new LadderEditorHistory(150);
@@ -489,14 +734,19 @@ public partial class SimulatorShell : CanvasLayer
                     _ => "BLOCK",
                 }));
             _ladderWorkspaceStatus.Text = authored
-                ? $"AUTHORED LADDER LOADED · {blockSummary}"
+                ? $"AUTHORED LADDER READY · VERIFY + LOAD · {blockSummary}"
                 : scene.Id == "conveyor-cell" ? "CONVEYOR LADDER READY · VERIFY + LOAD"
                 : unsupported.Count > 0 ? $"EXERCISE · {unsupported.Count} UNSUPPORTED I/O TYPES · LADDER REQUIRED"
                 : "EXERCISE · SCENE TAGS READY · ADD LADDER NETWORKS BEFORE RUN";
             _ladderWorkspaceStatus.TooltipText = unsupported.Count > 0
                 ? "Offline ladder cannot bind: " + string.Join(", ", unsupported.Select(point => $"{point.Name} [{point.Type}]"))
-                : "Demos contain reference programs. Other labs are exercises with their declared scene tags.";
-            _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+                : authored
+                    ? "The authored reference program is open in the editor only. Choose Verify + Load before the offline controller can monitor or execute it."
+                    : "Scene tags are ready for authoring. Verify + Load is required before the offline controller can monitor or execute the draft.";
+            // A fresh editor draft is not a loaded controller. Keep the status
+            // amber until Verify + Load succeeds so the editor header cannot
+            // contradict Watch's PROGRAM NOT LOADED state.
+            _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("f1aa5b"));
         }
     }
 
@@ -637,7 +887,7 @@ public partial class SimulatorShell : CanvasLayer
         if (scenarioMenu is null
             || scenarioMenu.Text != "Scenario"
             || scenarioPopup is null
-            || scenarioPopup.GetItemText(0) != "Scenario Browser"
+            || scenarioPopup.GetItemText(0) != "Five-Demo Curriculum & Scenarios"
             || demoMenuItems != AuthoredDemos.Length
             || !demoMenuOrder.SequenceEqual(expectedDemoOrder, StringComparer.Ordinal)
             || groupMenuItems != 3
@@ -683,6 +933,13 @@ public partial class SimulatorShell : CanvasLayer
             }
             if (demoDocument.SourceSceneId != demo.SceneId)
                 errors.Add($"authored ladder scene mismatch: {demo.Label} -> {demoDocument.SourceSceneId}");
+            var demoSceneEntry = _sceneCatalog.Scenes.FirstOrDefault(scene => scene.Id == demo.SceneId);
+            if (demoSceneEntry is not null)
+            {
+                var demoScene = SceneCatalogLoader.LoadScene(demoSceneEntry);
+                SceneLadderProject.EnsureSceneIoTable(demoDocument, ScenePoints(demoScene),
+                    SceneInitialValues(demoScene), out _);
+            }
             var compile = LadderCompiler.Compile(demoDocument.BuildProgram());
             if (!compile.IsValid)
                 errors.Add($"authored ladder invalid: {demo.Label} ({string.Join(", ", compile.Issues.Select(issue => issue.Code))})");
@@ -692,9 +949,9 @@ public partial class SimulatorShell : CanvasLayer
                 || LadderEditorProjectJson.Save(saved.Document) != LadderEditorProjectJson.Save(demoDocument))
                 errors.Add($"saved demo project differs from Demo menu: {savedPath}");
         }
-        if (_productView != "operator" || !_leftDock.Visible || !_rightDock.Visible
-            || !_diagnosticsDock.Visible || !_transportDock.Visible)
-            errors.Add("original operator-console layout is not the visible default");
+        if (_productView != "operator" || !_leftDock.Visible || _rightDock.Visible
+            || _diagnosticsDock.Visible || !_transportDock.Visible)
+            errors.Add("compact operator-console layout is not the visible default");
         result = errors.Count == 0
             ? $"scenes={scenarioRows} groups=3 demos={AuthoredDemos.Length} assets={_assetList.ItemCount} diagnostics={_diagnostics.Count} connection={_connection.State.ToString().ToUpperInvariant()}"
             : string.Join("; ", errors);
@@ -709,15 +966,20 @@ public partial class SimulatorShell : CanvasLayer
         var left = _leftDock.GetGlobalRect();
         var right = _rightDock.GetGlobalRect();
         var diagnostics = _diagnosticsDock.GetGlobalRect();
-        var centerWidth = right.Position.X - left.End.X;
-        var centerHeight = diagnostics.Position.Y - toolbar.End.Y;
+        var transport = _transportDock.GetGlobalRect();
+        var centerRight = _rightDock.Visible ? right.Position.X : viewport.End.X;
+        var centerBottom = _diagnosticsDock.Visible ? diagnostics.Position.Y : transport.Position.Y;
+        var centerWidth = centerRight - left.End.X;
+        var centerHeight = centerBottom - toolbar.End.Y;
         if (viewport.Size.X < 1200 || viewport.Size.Y < 675)
             errors.Add($"logical viewport too small: {viewport.Size.X:0}x{viewport.Size.Y:0}");
-        if (toolbar.End.Y > left.Position.Y + 4.0f || toolbar.End.Y > right.Position.Y + 4.0f)
+        if (toolbar.End.Y > left.Position.Y + 4.0f
+            || (_rightDock.Visible && toolbar.End.Y > right.Position.Y + 4.0f))
             errors.Add($"toolbar overlaps side docks: toolbarEnd={toolbar.End.Y:0.##} sideTop={left.Position.Y:0.##}");
-        if (left.End.Y > diagnostics.Position.Y + 4.0f || right.End.Y > diagnostics.Position.Y + 4.0f)
+        if (_diagnosticsDock.Visible
+            && (left.End.Y > diagnostics.Position.Y + 4.0f || right.End.Y > diagnostics.Position.Y + 4.0f))
             errors.Add($"side dock overlaps diagnostics: sideEnd={left.End.Y:0.##} diagnosticsTop={diagnostics.Position.Y:0.##}");
-        if (left.End.X > right.Position.X)
+        if (_rightDock.Visible && left.End.X > right.Position.X)
             errors.Add("left and right docks overlap");
         if (centerWidth < 480 || centerHeight < 420)
             errors.Add($"3D viewport aperture is too small: {centerWidth:0}x{centerHeight:0}");
@@ -840,13 +1102,13 @@ public partial class SimulatorShell : CanvasLayer
         }
         if (_productView == "operator")
         {
+            var viewport = GetViewport().GetVisibleRect();
             var operatorLeft = _leftDock.GetGlobalRect();
-            var operatorRight = _rightDock.GetGlobalRect();
-            var operatorDiagnostics = _diagnosticsDock.GetGlobalRect();
+            var operatorTransport = _transportDock.GetGlobalRect();
             return new Rect2(
                 new Vector2(operatorLeft.End.X, toolbar.End.Y),
-                new Vector2(operatorRight.Position.X - operatorLeft.End.X,
-                    operatorDiagnostics.Position.Y - toolbar.End.Y)
+                new Vector2(viewport.End.X - operatorLeft.End.X,
+                    operatorTransport.Position.Y - toolbar.End.Y)
             );
         }
         var left = _leftDock.GetGlobalRect();
@@ -880,21 +1142,34 @@ public partial class SimulatorShell : CanvasLayer
         // Capture-only project data: show an FB-generated instance DB with
         // interface sections and defaults through the same tree activation route
         // used by an operator. The authored project and saved baseline are not written.
-        var axis = _ladderDocument.AddBlock("FB_AxisDrive", LadderBlockType.FunctionBlock);
-        _ladderDocument.AddInterfaceParameter(axis.Id, "Enable", PlcVariableType.Bool,
-            LadderInterfaceSection.Input, false, comment: "Axis permission");
-        _ladderDocument.AddInterfaceParameter(axis.Id, "PositiveRequest", PlcVariableType.Bool,
-            LadderInterfaceSection.Input, false, comment: "Positive direction request");
-        _ladderDocument.AddInterfaceParameter(axis.Id, "NegativeRequest", PlcVariableType.Bool,
-            LadderInterfaceSection.Input, false, comment: "Negative direction request");
-        _ladderDocument.AddInterfaceParameter(axis.Id, "PositiveCommand", PlcVariableType.Bool,
-            LadderInterfaceSection.Output, false, comment: "Positive drive command");
-        _ladderDocument.AddInterfaceParameter(axis.Id, "NegativeCommand", PlcVariableType.Bool,
-            LadderInterfaceSection.Output, false, comment: "Negative drive command");
-        _ladderDocument.AddInterfaceParameter(axis.Id, "ActualPosition", PlcVariableType.Real,
-            LadderInterfaceSection.Static, 0.0, comment: "Measured position");
-        _ladderDocument.Instances.Add(new LadderInstance("db_layout_axis", "X_Axis", axis.Id,
-            new LadderInstanceDataBlock(101, "X_Axis_DB")));
+        const string reviewInstanceId = "db_layout_axis";
+        var existingInstance = _ladderDocument.Instances.FirstOrDefault(instance => instance.Id == reviewInstanceId);
+        EditableBlock axis;
+        if (existingInstance is not null)
+        {
+            axis = _ladderDocument.Blocks.First(block => block.Id == existingInstance.BlockId);
+        }
+        else
+        {
+            var blockName = _ladderDocument.Blocks.Any(block => block.Name == "FB_AxisDrive")
+                ? "FB_AxisDrive_Review"
+                : "FB_AxisDrive";
+            axis = _ladderDocument.AddBlock(blockName, LadderBlockType.FunctionBlock);
+            _ladderDocument.AddInterfaceParameter(axis.Id, "Enable", PlcVariableType.Bool,
+                LadderInterfaceSection.Input, false, comment: "Axis permission");
+            _ladderDocument.AddInterfaceParameter(axis.Id, "PositiveRequest", PlcVariableType.Bool,
+                LadderInterfaceSection.Input, false, comment: "Positive direction request");
+            _ladderDocument.AddInterfaceParameter(axis.Id, "NegativeRequest", PlcVariableType.Bool,
+                LadderInterfaceSection.Input, false, comment: "Negative direction request");
+            _ladderDocument.AddInterfaceParameter(axis.Id, "PositiveCommand", PlcVariableType.Bool,
+                LadderInterfaceSection.Output, false, comment: "Positive drive command");
+            _ladderDocument.AddInterfaceParameter(axis.Id, "NegativeCommand", PlcVariableType.Bool,
+                LadderInterfaceSection.Output, false, comment: "Negative drive command");
+            _ladderDocument.AddInterfaceParameter(axis.Id, "ActualPosition", PlcVariableType.Real,
+                LadderInterfaceSection.Static, 0.0, comment: "Measured position");
+            _ladderDocument.Instances.Add(new LadderInstance(reviewInstanceId, "X_Axis", axis.Id,
+                new LadderInstanceDataBlock(101, "X_Axis_DB")));
+        }
         foreach (var refresh in _ladderEditorRefreshers) refresh();
 
         const string treePath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree";
@@ -913,6 +1188,92 @@ public partial class SimulatorShell : CanvasLayer
             ?? throw new InvalidOperationException("The capture IEC instance DB was not added to the TIA project tree.");
         instanceDb.Select(0);
         projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+    }
+
+    public void PrepareInstanceDbMemberPropertiesCapture()
+    {
+        PrepareInstanceDbDefinitionCapture();
+        Callable.From(() =>
+        {
+            Callable.From(() =>
+            {
+                var properties = FindChild("InstanceDbMemberProperties", true, false) as Button;
+                properties?.EmitSignal(BaseButton.SignalName.Pressed);
+            }).CallDeferred();
+        }).CallDeferred();
+    }
+
+    public void PrepareInterfaceDeclarationPropertiesCapture()
+    {
+        PrepareInstanceDbDefinitionCapture();
+        var reviewInstance = _ladderDocument.Instances.FirstOrDefault(instance => instance.Id == "db_layout_axis");
+        var reviewBlockIndex = reviewInstance is null
+            ? -1
+            : _ladderDocument.Blocks.FindIndex(block => block.Id == reviewInstance.BlockId);
+        if (reviewBlockIndex >= 0)
+        {
+            _ladderDocument.SelectBlock(reviewBlockIndex);
+            foreach (var refresh in _ladderEditorRefreshers) refresh();
+        }
+        Callable.From(() => Callable.From(() => _openFirstInterfaceDeclarationPropertiesForReview?.Invoke())
+            .CallDeferred()).CallDeferred();
+    }
+
+    public void PrepareTaskSchedulePropertiesCapture()
+    {
+        Callable.From(() => Callable.From(() => _openFirstTaskSchedulePropertiesForReview?.Invoke())
+            .CallDeferred()).CallDeferred();
+    }
+
+    public void PrepareUserConstantPropertiesCapture()
+    {
+        const string reviewName = "ReviewSpeedLimit";
+        if (!_ladderDocument.UserConstants.Any(constant => constant.Name.Equals(reviewName, StringComparison.Ordinal)))
+            _ladderDocument.AddUserConstant(reviewName, PlcVariableType.DInt, "120", "Default tag table",
+                "Offline training limit");
+        foreach (var refresh in _ladderEditorRefreshers) refresh();
+        Callable.From(() => Callable.From(() => _openFirstUserConstantPropertiesForReview?.Invoke())
+            .CallDeferred()).CallDeferred();
+    }
+
+    public void PrepareSystemConstantDetailCapture()
+    {
+        const string reviewId = "review-hardware-device";
+        if (!_ladderDocument.SystemConstants.Any(constant => constant.Id.Equals(reviewId, StringComparison.Ordinal)))
+            _ladderDocument.SystemConstants.Add(new PlcSystemConstant(
+                reviewId, "ConfiguredCpu", "HW_DEVICE", "257",
+                "PLC_1 / Rack 0 / Slot 1", "Configured CPU hardware identifier"));
+        foreach (var refresh in _ladderEditorRefreshers) refresh();
+        Callable.From(() =>
+        {
+            var projectTree = FindChild("ProjectTree", true, false) as Tree;
+            TreeItem? FindDefaultTagTable(TreeItem? first)
+            {
+                for (var item = first; item is not null; item = item.GetNext())
+                {
+                    if (item.GetMetadata(0).AsString() == "tag-table:Default tag table") return item;
+                    var nested = FindDefaultTagTable(item.GetFirstChild());
+                    if (nested is not null) return nested;
+                }
+                return null;
+            }
+            var table = FindDefaultTagTable(projectTree?.GetRoot());
+            if (projectTree is null || table is null) return;
+            table.Select(0);
+            projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            Callable.From(() =>
+            {
+                (FindChild("SystemConstantsTab", true, false) as Button)
+                    ?.EmitSignal(BaseButton.SignalName.Pressed);
+                var grid = FindChild("SystemConstantsGrid", true, false) as Tree;
+                var row = grid?.GetRoot()?.GetFirstChild();
+                if (grid is not null && row is not null)
+                {
+                    row.Select(0);
+                    grid.EmitSignal(Tree.SignalName.ItemSelected);
+                }
+            }).CallDeferred();
+        }).CallDeferred();
     }
 
     public void PrepareNamedWatchTableCapture()
@@ -950,11 +1311,434 @@ public partial class SimulatorShell : CanvasLayer
         var tabs = FindChild("InspectorOutputTabs", true, false) as TabContainer;
         if (bottomPanel is null || reopenBottom is null || tabs is null)
             throw new InvalidOperationException("The watch-table bottom workspace is unavailable for capture.");
-        bottomPanel.Show();
-        reopenBottom.Hide();
-        tabs.CurrentTab = 2;
+        // The selected Watch table is an editor document. Keep diagnostics
+        // collapsed so a second, clipped Watch surface does not compete with it.
+        bottomPanel.Hide();
+        reopenBottom.Show();
         if (bottomPanel.GetParent() is SplitContainer split)
-            split.SplitOffsets = [260];
+            split.SplitOffsets = [Math.Max(0, (int)split.Size.Y - (int)reopenBottom.CustomMinimumSize.Y)];
+    }
+
+    public void PrepareWatchRowPropertiesCapture()
+    {
+        PrepareNamedWatchTableCapture();
+        Callable.From(() => Callable.From(() => _openFirstWatchRowPropertiesForReview?.Invoke())
+            .CallDeferred()).CallDeferred();
+    }
+
+    public void PrepareWatchFormatFeedbackCapture()
+    {
+        PrepareNamedWatchTableCapture();
+        // Opening the Watch document itself completes across deferred layout
+        // passes and clears stale row feedback. Apply the review-only rejected
+        // edit after that navigation settles so the capture shows the same
+        // persistent message an operator sees after an invalid cell commit.
+        Callable.From(() => Callable.From(() => Callable.From(() => Callable.From(() =>
+            _showWatchFormatRejectionForReview?.Invoke()).CallDeferred())
+            .CallDeferred()).CallDeferred()).CallDeferred();
+    }
+
+    public void PrepareRunningWatchCapture()
+    {
+        // Exercise the same Verify + Load and Run handlers used by the visible
+        // workbench. Reopen the Watch document after loading because editor
+        // refresh preserves project metadata but may restore the active block.
+        Callable.From(() =>
+        {
+            _curriculumVerifyAndLoad?.Invoke();
+            Callable.From(() =>
+            {
+                RunRequested?.Invoke();
+                Callable.From(PrepareNamedWatchTableCapture).CallDeferred();
+            }).CallDeferred();
+        }).CallDeferred();
+    }
+
+    public void PrepareWatchPersistenceCapture()
+    {
+        const string tableName = "Commissioning";
+        var table = _ladderDocument.WatchTables.FirstOrDefault(candidate => candidate.Name == tableName);
+        if (table is null)
+        {
+            table = _ladderDocument.AddWatchTable(tableName);
+            foreach (var symbol in new[] { "start_command", "stop_command", "simulated_photoeye", "seal_in", "conveyor_running" })
+                if (_ladderDocument.Tags.Any(tag => tag.Name == symbol)) table.Variables.Add(symbol);
+        }
+        if (table.Rows.Count == 0)
+            throw new InvalidOperationException("The Watch persistence review requires at least one resolved row.");
+
+        // Give the saved row unmistakable authored metadata so this route proves
+        // more than the table name. Runtime monitor quality remains intentionally
+        // outside the project file.
+        table.Rows[0].DisplayFormat = "Bool";
+        table.Rows[0].ModifyValue = "TRUE";
+        table.Rows[0].Comment = "Persisted after disk reopen";
+        _ladderDocument.SelectWatchTable(_ladderDocument.WatchTables.IndexOf(table));
+        var expectedTableId = table.Id;
+        var expectedRowIds = table.Rows.Select(row => row.Id).ToArray();
+
+        var reviewDirectory = System.IO.Path.Combine(OS.GetUserDataDir(), "review-projects");
+        System.IO.Directory.CreateDirectory(reviewDirectory);
+        var path = System.IO.Path.Combine(reviewDirectory, "watch-table-persistence-review.rpproj.json");
+        if (!TrySaveLadderProject(path, out var saveMessage))
+            throw new InvalidOperationException(saveMessage);
+
+        // Deliberately destroy the in-memory Watch content after Save. Reopening
+        // must recover the table, stable identities, format, modify value, and
+        // comment from the file-backed project through the production Open path.
+        table.Name = "Transient replacement";
+        table.Rows.Clear();
+        if (!TryOpenLadderProject(path, out var openMessage))
+            throw new InvalidOperationException(openMessage);
+
+        var reopened = _ladderDocument.WatchTables.FirstOrDefault(candidate => candidate.Id == expectedTableId);
+        var persisted = reopened is not null
+            && reopened.Name == tableName
+            && reopened.Rows.Select(row => row.Id).SequenceEqual(expectedRowIds)
+            && reopened.Rows[0].DisplayFormat == "Bool"
+            && reopened.Rows[0].ModifyValue == "TRUE"
+            && reopened.Rows[0].Comment == "Persisted after disk reopen";
+        if (!persisted)
+            throw new InvalidOperationException("The Watch table did not survive the file-backed Save/Open cycle exactly.");
+
+        PrepareNamedWatchTableCapture();
+        _ladderWorkspaceStatus.Text = $"WATCH TABLE REOPENED FROM DISK · {tableName.ToUpperInvariant()} · {reopened!.Rows.Count} ROWS · IDENTITIES PRESERVED";
+        _ladderWorkspaceStatus.TooltipText = $"{saveMessage}\n{openMessage}\n{path}";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+    }
+
+    public void PrepareProjectDuplicationCapture()
+    {
+        const string treePath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree";
+        var projectTree = GetNodeOrNull<Tree>(treePath)
+            ?? throw new InvalidOperationException("The TIA project tree is unavailable for duplication review.");
+
+        static IEnumerable<TreeItem> Walk(TreeItem? first)
+        {
+            for (var item = first; item is not null; item = item.GetNext())
+            {
+                yield return item;
+                foreach (var child in Walk(item.GetFirstChild())) yield return child;
+            }
+        }
+        TreeItem FindByMetadata(string metadata) => Walk(projectTree.GetRoot())
+            .FirstOrDefault(item => item.GetMetadata(0).AsString() == metadata)
+            ?? throw new InvalidOperationException($"Project object '{metadata}' is unavailable.");
+
+        var sourceBlock = _ladderDocument.Blocks.FirstOrDefault(block => block.BlockType == LadderBlockType.FunctionBlock)
+            ?? _ladderDocument.Blocks.FirstOrDefault(block => block.BlockType == LadderBlockType.Function)
+            ?? throw new InvalidOperationException("The duplication review requires a reusable program block.");
+        var sourceBlockId = sourceBlock.Id;
+        var sourceInterfaceIds = sourceBlock.Interface.Select(parameter => parameter.Id).ToHashSet(StringComparer.Ordinal);
+        var sourceRungIds = sourceBlock.Rungs.Select(rung => rung.Id).ToHashSet(StringComparer.Ordinal);
+        _ladderDocument.SelectBlock(_ladderDocument.Blocks.IndexOf(sourceBlock));
+        foreach (var refresh in _ladderEditorRefreshers) refresh();
+        var copiedBlockName = sourceBlock.Name + " Copy";
+        var copiedBlock = _ladderDocument.Blocks.FirstOrDefault(block => block.Name == copiedBlockName);
+        if (copiedBlock is null)
+        {
+            var duplicateBlock = FindChild("DuplicateBlock", true, false) as Button
+                ?? throw new InvalidOperationException("The production Duplicate Block action is unavailable.");
+            duplicateBlock.EmitSignal(BaseButton.SignalName.Pressed);
+            copiedBlock = _ladderDocument.Blocks.Single(block => block.Name == copiedBlockName);
+        }
+        var blockIdentitySafe = copiedBlock.Id != sourceBlockId
+            && !copiedBlock.Interface.Any(parameter => sourceInterfaceIds.Contains(parameter.Id))
+            && !copiedBlock.Rungs.Any(rung => sourceRungIds.Contains(rung.Id));
+        if (!blockIdentitySafe)
+            throw new InvalidOperationException("The duplicated block reused a stable source identity.");
+
+        var sourceTableName = "Default tag table";
+        var sourceTags = _ladderDocument.Tags.Where(tag => tag.TagTable == sourceTableName).ToArray();
+        var sourceSymbols = sourceTags.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var defaultTable = FindByMetadata("tag-table:" + sourceTableName);
+        defaultTable.GetParent()?.SetCollapsed(false);
+        defaultTable.Select(0);
+        projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+        var copiedTableName = sourceTableName + " Copy";
+        if (!_ladderDocument.TagTables.Contains(copiedTableName, StringComparer.Ordinal))
+        {
+            var duplicateTagTable = FindChild("DuplicateTagTable", true, false) as Button
+                ?? throw new InvalidOperationException("The production Duplicate Tag Table action is unavailable.");
+            if (duplicateTagTable.Disabled)
+                throw new InvalidOperationException("The Default tag table was not eligible for duplication.");
+            duplicateTagTable.EmitSignal(BaseButton.SignalName.Pressed);
+        }
+        var copiedTags = _ladderDocument.Tags.Where(tag => tag.TagTable == copiedTableName).ToArray();
+        var tagCopySafe = copiedTags.Length == sourceTags.Length
+            && copiedTags.All(tag => !sourceSymbols.Contains(tag.Name)
+                && string.IsNullOrWhiteSpace(tag.Address)
+                && string.IsNullOrWhiteSpace(tag.Binding));
+        if (!tagCopySafe)
+            throw new InvalidOperationException("The duplicated tag table retained a source symbol, address, or scene binding.");
+
+        // Leave the project tree readable: show both copied object rows without
+        // expanding every unrelated project branch.
+        foreach (var item in Walk(projectTree.GetRoot())) item.SetCollapsed(true);
+        foreach (var metadata in new[] { "controller", "blocks", "tags" })
+        {
+            foreach (var item in Walk(projectTree.GetRoot()).Where(item => item.GetMetadata(0).AsString() == metadata))
+            {
+                item.SetCollapsed(false);
+                for (var parent = item.GetParent(); parent is not null; parent = parent.GetParent()) parent.SetCollapsed(false);
+            }
+        }
+        var copiedTableItem = FindByMetadata("tag-table:" + copiedTableName);
+        copiedTableItem.Select(0);
+        projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+        _ladderWorkspaceStatus.Text = $"DUPLICATION COMPLETE · {copiedBlock.Name.ToUpperInvariant()} · {copiedTableName.ToUpperInvariant()} · NEW IDS · ADDRESSES/BINDINGS CLEARED";
+        _ladderWorkspaceStatus.TooltipText = "Both copies were created through the visible production actions. Existing calls/tasks still target the source block; copied tag declarations are independent offline symbols.";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+    }
+
+    public void PreparePendingTagReplacementCapture()
+    {
+        if (_pendingEditorDialog?.Visible == true) return;
+        const string treePath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree";
+        var projectTree = GetNodeOrNull<Tree>(treePath)
+            ?? throw new InvalidOperationException("The TIA project tree is unavailable for pending-form review.");
+        static TreeItem? Find(TreeItem? first, string metadata)
+        {
+            for (var item = first; item is not null; item = item.GetNext())
+            {
+                if (item.GetMetadata(0).AsString() == metadata) return item;
+                if (Find(item.GetFirstChild(), metadata) is { } child) return child;
+            }
+            return null;
+        }
+        var tableItem = Find(projectTree.GetRoot(), "tag-table:Default tag table")
+            ?? throw new InvalidOperationException("The Default tag table is unavailable.");
+        tableItem.GetParent()?.SetCollapsed(false);
+        tableItem.Select(0);
+        projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+
+        var edit = FindChild("EditTag", true, false) as Button
+            ?? throw new InvalidOperationException("The production PLC-tag Edit action is unavailable.");
+        if (edit.Disabled) throw new InvalidOperationException("No editable PLC tag was selected.");
+        edit.EmitSignal(BaseButton.SignalName.Pressed);
+        var comment = FindChild("TagComment", true, false) as LineEdit
+            ?? throw new InvalidOperationException("The PLC-tag Comment field is unavailable.");
+        comment.Text += " · pending project replacement";
+        comment.EmitSignal(LineEdit.SignalName.TextChanged, comment.Text);
+        ShowLadderLoadDialog();
+        if (_pendingEditorDialog?.Visible != true
+            || !_pendingEditorDialog.DialogText.Contains("Pending edit: PLC tag", StringComparison.Ordinal)
+            || _pendingEditorDialog.GetOkButton().Disabled)
+            throw new InvalidOperationException("The named pending-edit replacement guard did not open.");
+        _ladderWorkspaceStatus.Text = "PROJECT OPEN PAUSED · ONE PLC TAG EDIT IS STILL PENDING";
+        _ladderWorkspaceStatus.TooltipText = "Apply and continue commits the validated tag edit before Open; Discard and continue reloads the original form; Cancel stays in the editor without replacing the project.";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("f1aa5b"));
+    }
+
+    public void PrepareTagAndConstantCrudCapture()
+    {
+        const string disposableTagName = "ReviewUnusedTag";
+        const string constantName = "ReviewTrainingEnabled";
+        const string finalConstantComment = "Applied, undone, redone, and reopened";
+
+        static TreeItem? FindMetadata(TreeItem? first, string metadata)
+        {
+            for (var item = first; item is not null; item = item.GetNext())
+            {
+                if (item.GetMetadata(0).AsString() == metadata) return item;
+                if (FindMetadata(item.GetFirstChild(), metadata) is { } nested) return nested;
+            }
+            return null;
+        }
+        static TreeItem? FindText(TreeItem? first, string value)
+        {
+            for (var item = first; item is not null; item = item.GetNext())
+            {
+                if (item.GetText(0) == value) return item;
+                if (FindText(item.GetFirstChild(), value) is { } nested) return nested;
+            }
+            return null;
+        }
+        T Required<T>(string name) where T : Node
+            => FindChild(name, true, false) as T
+               ?? throw new InvalidOperationException($"The production {name} control is unavailable.");
+        static void Enter(LineEdit field, string value)
+        {
+            field.Text = value;
+            field.EmitSignal(LineEdit.SignalName.TextChanged, value);
+        }
+
+        var projectTree = Required<Tree>("ProjectTree");
+        var defaultTable = FindMetadata(projectTree.GetRoot(), "tag-table:Default tag table")
+            ?? throw new InvalidOperationException("The Default tag table is unavailable.");
+        defaultTable.Select(0);
+        projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+
+        var userConstantsTab = Required<Button>("UserConstantsTab");
+        var constantGrid = Required<Tree>("UserConstantsGrid");
+        void ShowFinalConstant()
+        {
+            var reopenedDefaultTable = FindMetadata(projectTree.GetRoot(), "tag-table:Default tag table")
+                ?? throw new InvalidOperationException("The reopened Default tag table is unavailable.");
+            reopenedDefaultTable.Select(0);
+            projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+            userConstantsTab.EmitSignal(BaseButton.SignalName.Pressed);
+            var final = _ladderDocument.UserConstants.SingleOrDefault(item => item.Name == constantName);
+            if (final is null || final.Type != PlcVariableType.Bool || final.Value != "TRUE"
+                || final.Comment != finalConstantComment)
+                throw new InvalidOperationException("The visible PLC user-constant CRUD result is incomplete.");
+            var row = FindMetadata(constantGrid.GetRoot(), final.Id)
+                ?? throw new InvalidOperationException("The completed user constant is missing from the visible grid.");
+            row.Select(0);
+            constantGrid.EmitSignal(Tree.SignalName.ItemSelected);
+            _ladderWorkspaceStatus.Text = "PLC TAG + USER CONSTANT CRUD COMPLETE · APPLY · UNDO/REDO · DELETE · SAVE/OPEN";
+            _ladderWorkspaceStatus.TooltipText = "Production editor handlers created, edited, undid, redid, and deleted an unreferenced PLC tag, then created, edited, saved, and reopened the selected BOOL user constant.";
+            _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+        }
+
+        void PersistAndShowFinalConstant()
+        {
+            var final = _ladderDocument.UserConstants.SingleOrDefault(item => item.Name == constantName)
+                ?? throw new InvalidOperationException("The completed user constant is unavailable for persistence review.");
+            var expectedId = final.Id;
+            var reviewDirectory = System.IO.Path.Combine(OS.GetUserDataDir(), "review-projects");
+            System.IO.Directory.CreateDirectory(reviewDirectory);
+            var path = System.IO.Path.Combine(reviewDirectory, "tag-user-constant-crud-review.rpproj.json");
+            if (!TrySaveLadderProject(path, out var saveMessage))
+                throw new InvalidOperationException(saveMessage);
+
+            // Remove the completed constant from memory after Save. Open must
+            // restore the same stable row and its exact committed properties.
+            _ladderDocument.UserConstants.RemoveAll(item => item.Id == expectedId);
+            if (!TryOpenLadderProject(path, out var openMessage))
+                throw new InvalidOperationException(openMessage);
+            var reopened = _ladderDocument.UserConstants.SingleOrDefault(item => item.Id == expectedId);
+            if (reopened is null || reopened.Name != constantName || reopened.Type != PlcVariableType.Bool
+                || reopened.Value != "TRUE" || reopened.Comment != finalConstantComment
+                || _ladderDocument.Tags.Any(tag => tag.Name == disposableTagName))
+                throw new InvalidOperationException("The PLC tag/User Constant CRUD result did not survive Save/Open exactly.");
+
+            ShowFinalConstant();
+            _ladderWorkspaceStatus.TooltipText += $"\n{saveMessage}\n{openMessage}\n{path}";
+        }
+
+        if (_ladderDocument.UserConstants.Any(item => item.Name == constantName
+                && item.Type == PlcVariableType.Bool && item.Value == "TRUE"
+                && item.Comment == finalConstantComment)
+            && _ladderDocument.Tags.All(tag => tag.Name != disposableTagName))
+        {
+            PersistAndShowFinalConstant();
+            return;
+        }
+
+        Required<Button>("BeginAddTag").EmitSignal(BaseButton.SignalName.Pressed);
+        Enter(Required<LineEdit>("NewTagName"), disposableTagName);
+        Enter(Required<LineEdit>("TagComment"), "Disposable unreferenced tag");
+        Required<Button>("AddTag").EmitSignal(BaseButton.SignalName.Pressed);
+        if (_ladderDocument.Tags.All(tag => tag.Name != disposableTagName))
+            throw new InvalidOperationException("The production PLC-tag create action failed.");
+
+        var tagList = Required<Tree>("TagTable");
+        var tagRow = FindText(tagList.GetRoot(), disposableTagName)
+            ?? throw new InvalidOperationException("The created PLC tag is missing from the visible table.");
+        tagRow.Select(0);
+        tagList.EmitSignal(Tree.SignalName.ItemSelected);
+        Required<Button>("EditTag").EmitSignal(BaseButton.SignalName.Pressed);
+        Enter(Required<LineEdit>("TagComment"), "Edited before Undo and Redo");
+        Required<Button>("ApplyTagEdit").EmitSignal(BaseButton.SignalName.Pressed);
+        if (_ladderDocument.Tags.Single(tag => tag.Name == disposableTagName).Comment != "Edited before Undo and Redo")
+            throw new InvalidOperationException("The production PLC-tag Apply action failed.");
+        if (!TryUndoLadderEdit(out _) || !TryRedoLadderEdit(out _))
+            throw new InvalidOperationException("PLC-tag Undo/Redo did not complete.");
+
+        tagRow = FindText(tagList.GetRoot(), disposableTagName)
+            ?? throw new InvalidOperationException("The redone PLC tag is missing from the visible table.");
+        tagRow.Select(0);
+        tagList.EmitSignal(Tree.SignalName.ItemSelected);
+        Required<Button>("EditTag").EmitSignal(BaseButton.SignalName.Pressed);
+        Required<Button>("DeleteTag").EmitSignal(BaseButton.SignalName.Pressed);
+        if (_ladderDocument.Tags.Any(tag => tag.Name == disposableTagName))
+            throw new InvalidOperationException("The production unused-tag Delete action failed.");
+
+        userConstantsTab.EmitSignal(BaseButton.SignalName.Pressed);
+        var existingConstant = _ladderDocument.UserConstants.SingleOrDefault(item => item.Name == constantName);
+        if (existingConstant is null)
+        {
+            Required<Button>("AddUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+            Enter(Required<LineEdit>("UserConstantName"), constantName);
+            Enter(Required<LineEdit>("UserConstantValue"), "FALSE");
+            Enter(Required<LineEdit>("UserConstantComment"), "Created through visible Apply");
+            Required<Button>("ApplyUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+            existingConstant = _ladderDocument.UserConstants.SingleOrDefault(item => item.Name == constantName)
+                ?? throw new InvalidOperationException("The production user-constant create action failed.");
+        }
+
+        var constantRow = FindMetadata(constantGrid.GetRoot(), existingConstant.Id)
+            ?? throw new InvalidOperationException("The created user constant is missing from the visible grid.");
+        constantRow.Select(0);
+        constantGrid.EmitSignal(Tree.SignalName.ItemSelected);
+        Required<Button>("EditUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+        Enter(Required<LineEdit>("UserConstantValue"), "TRUE");
+        Enter(Required<LineEdit>("UserConstantComment"), finalConstantComment);
+        Required<Button>("ApplyUserConstant").EmitSignal(BaseButton.SignalName.Pressed);
+        if (!TryUndoLadderEdit(out _) || !TryRedoLadderEdit(out _))
+            throw new InvalidOperationException("User-constant Undo/Redo did not complete.");
+        PersistAndShowFinalConstant();
+    }
+
+    public void PrepareTagOperandDragReadyCapture()
+    {
+        const string treePath = "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree";
+        var projectTree = GetNodeOrNull<Tree>(treePath)
+            ?? throw new InvalidOperationException("The TIA project tree is unavailable for tag-drag review.");
+        static TreeItem? FindMetadata(TreeItem? first, string metadata)
+        {
+            for (var item = first; item is not null; item = item.GetNext())
+            {
+                if (item.GetMetadata(0).AsString() == metadata) return item;
+                if (FindMetadata(item.GetFirstChild(), metadata) is { } nested) return nested;
+            }
+            return null;
+        }
+        var program = FindMetadata(projectTree.GetRoot(), "program:0")
+            ?? throw new InvalidOperationException("The main program block is unavailable.");
+        program.Select(0);
+        projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+
+        var tags = FindMetadata(projectTree.GetRoot(), "tags")
+            ?? throw new InvalidOperationException("The PLC tags folder is unavailable.");
+        tags.Select(0);
+        projectTree.EmitSignal(Tree.SignalName.ItemSelected);
+        projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+
+        var detail = FindChild("TagOperandDetailTable", true, false) as Tree
+            ?? throw new InvalidOperationException("The visible PLC-tag drag source table is unavailable.");
+        var sourceIndex = _ladderDocument.Tags.FindIndex(tag => tag.Name == "reset_command" && tag.Type == PlcVariableType.Bool);
+        var source = FindMetadata(detail.GetRoot(), $"tag:{sourceIndex}")
+            ?? throw new InvalidOperationException("The reset_command BOOL drag source is unavailable.");
+        source.Select(0);
+        detail.ScrollToItem(source, true);
+
+        var canvas = FindChild("GraphicalLadderCanvas", true, false) as LadderEditorCanvas
+            ?? throw new InvalidOperationException("The LAD canvas is unavailable.");
+        canvas.SelectElement(0, 0, 0);
+        if (!_tagDragReviewCaptureArmed)
+        {
+            _tagDragReviewCaptureArmed = true;
+            canvas.TagOperandDropRequested += (tagIdentity, target) =>
+            {
+                if (!_tagDragReviewCaptureArmed) return;
+                _tagDragReviewCaptureArmed = false;
+                _ladderWorkspaceStatus.Text = $"POINTER DROP RECEIVED · {tagIdentity.ToUpperInvariant()} → {target.ToUpperInvariant()}";
+                _ladderWorkspaceStatus.TooltipText = "The native window drag reached this exact LAD operand and opened the inline operand editor. Apply or cancel remains an explicit user decision.";
+                _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+                var timer = GetTree().CreateTimer(0.35);
+                timer.Timeout += () =>
+                {
+                    var path = ProjectSettings.GlobalizePath("user://tia-tag-drag-native.png");
+                    var result = GetViewport().GetTexture().GetImage().SavePng(path);
+                    GD.Print($"TIA_TAG_NATIVE_DRAG_CAPTURE {(result == Error.Ok ? "PASS" : "FAIL")} path={path} tag={tagIdentity} target={target}");
+                };
+            };
+        }
+        _ladderWorkspaceStatus.Text = "POINTER DRAG READY · RESET_COMMAND → SELECTED BOOL CONTACT";
+        _ladderWorkspaceStatus.TooltipText = "Drag the selected reset_command row from the PLC-tag detail view onto the selected BOOL contact; the inline operand editor must open at that exact contact.";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("f1aa5b"));
     }
 
     public void PrepareGlobalDbDefinitionCapture()
@@ -967,7 +1751,7 @@ public partial class SimulatorShell : CanvasLayer
             _ladderDocument.AddInterfaceParameter(db.Id, "SystemEnabled", PlcVariableType.Bool, LadderInterfaceSection.Static, false,
                 comment: "Master operating permission");
             _ladderDocument.AddInterfaceParameter(db.Id, "BatchTarget", PlcVariableType.Int, LadderInterfaceSection.Static, 4L,
-                retain: true, comment: "Batches after power cycle");
+                retain: true, comment: "Retain attribute · offline metadata");
             _ladderDocument.AddInterfaceParameter(db.Id, "ConveyorSpeed", PlcVariableType.Real, LadderInterfaceSection.Static, 1250.0,
                 comment: "Line speed setpoint");
             blockIndex = _ladderDocument.Blocks.IndexOf(db);
@@ -994,6 +1778,684 @@ public partial class SimulatorShell : CanvasLayer
         projectTree.EmitSignal(Tree.SignalName.ItemActivated);
     }
 
+    public void PrepareGlobalDbMemberPropertiesCapture()
+    {
+        PrepareGlobalDbDefinitionCapture();
+        Callable.From(() => Callable.From(() =>
+        {
+            var declarations = FindChild("GlobalDbDeclarations", true, false) as Tree;
+            var firstMember = declarations?.GetRoot()?.GetFirstChild();
+            firstMember?.Select(0);
+            if (firstMember is not null)
+                (FindChild("GlobalDbPropertiesMember", true, false) as Button)
+                    ?.EmitSignal(BaseButton.SignalName.Pressed);
+        }).CallDeferred()).CallDeferred();
+    }
+
+    public void PrepareGlobalDbPersistenceCapture()
+    {
+        const string blockName = "Machine_Setpoints";
+        var block = _ladderDocument.Blocks.FirstOrDefault(candidate =>
+            candidate.Name == blockName && candidate.BlockType == LadderBlockType.DataBlock);
+        if (block is null)
+        {
+            block = _ladderDocument.AddBlock(blockName, LadderBlockType.DataBlock);
+            _ladderDocument.AddInterfaceParameter(block.Id, "SystemEnabled", PlcVariableType.Bool,
+                LadderInterfaceSection.Static, false, comment: "Master operating permission");
+            _ladderDocument.AddInterfaceParameter(block.Id, "BatchTarget", PlcVariableType.Int,
+                LadderInterfaceSection.Static, 4L, retain: true, comment: "Persisted after disk reopen");
+            _ladderDocument.AddInterfaceParameter(block.Id, "ConveyorSpeed", PlcVariableType.Real,
+                LadderInterfaceSection.Static, 1250.0, comment: "Line speed setpoint");
+        }
+        if (block.Interface.Count < 3)
+            throw new InvalidOperationException("The Global DB persistence review requires three typed members.");
+
+        var expectedBlockId = block.Id;
+        var expectedMembers = block.Interface.ToArray();
+        _ladderDocument.SelectBlock(_ladderDocument.Blocks.IndexOf(block));
+
+        var reviewDirectory = System.IO.Path.Combine(OS.GetUserDataDir(), "review-projects");
+        System.IO.Directory.CreateDirectory(reviewDirectory);
+        var path = System.IO.Path.Combine(reviewDirectory, "global-db-persistence-review.rpproj.json");
+        if (!TrySaveLadderProject(path, out var saveMessage))
+            throw new InvalidOperationException(saveMessage);
+
+        // Destroy the in-memory declaration after Save. The following Open must
+        // restore the DB and every typed row from the file-backed project.
+        block.Name = "Transient_DB";
+        block.Interface.Clear();
+        if (!TryOpenLadderProject(path, out var openMessage))
+            throw new InvalidOperationException(openMessage);
+
+        var reopened = _ladderDocument.Blocks.FirstOrDefault(candidate => candidate.Id == expectedBlockId);
+        var persisted = reopened is not null
+            && reopened.Name == blockName
+            && reopened.BlockType == LadderBlockType.DataBlock
+            && reopened.Interface.SequenceEqual(expectedMembers)
+            && reopened.Interface.Any(member => member.Name == "BatchTarget"
+                && member.Type == PlcVariableType.Int
+                && Convert.ToInt64(member.InitialValue) == 4
+                && member.Retain
+                && member.Comment == "Persisted after disk reopen");
+        if (!persisted)
+            throw new InvalidOperationException("The Global DB did not survive the file-backed Save/Open cycle exactly.");
+
+        PrepareGlobalDbDefinitionCapture();
+        _ladderWorkspaceStatus.Text = $"GLOBAL DB REOPENED FROM DISK · {blockName.ToUpperInvariant()} · {reopened!.Interface.Count} MEMBERS · IDENTITIES PRESERVED";
+        _ladderWorkspaceStatus.TooltipText = $"{saveMessage}\n{openMessage}\n{path}";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+    }
+
+    public async void PrepareGlobalDbTransactionCapture()
+    {
+        if (_globalDbTransactionReviewRunning || _globalDbTransactionReviewPrepared) return;
+        _globalDbTransactionReviewRunning = true;
+        async System.Threading.Tasks.Task Settle(int frames = 3)
+        {
+            for (var frame = 0; frame < frames; frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        }
+
+        PrepareGlobalDbDefinitionCapture();
+        await Settle();
+        var block = _ladderDocument.Blocks.First(candidate =>
+            candidate.Name == "Machine_Setpoints" && candidate.BlockType == LadderBlockType.DataBlock);
+        var original = block.Interface.First(member => member.Name == "BatchTarget");
+        var inlineOriginal = block.Interface.First(member => member.Name == "ConveyorSpeed");
+        var isolatedBlock = _ladderDocument.Blocks.FirstOrDefault(candidate =>
+            candidate.Name == "Recipe_Setpoints_Review" && candidate.BlockType == LadderBlockType.DataBlock);
+        if (isolatedBlock is null)
+        {
+            isolatedBlock = _ladderDocument.AddBlock("Recipe_Setpoints_Review", LadderBlockType.DataBlock);
+            _ladderDocument.AddInterfaceParameter(isolatedBlock.Id, "RecipeEnabled", PlcVariableType.Bool,
+                LadderInterfaceSection.Static, false, comment: "Independent recipe permission");
+            _ladderDocument.AddInterfaceParameter(isolatedBlock.Id, "BatchTarget", PlcVariableType.Int,
+                LadderInterfaceSection.Static, 12L, comment: "Independent recipe target");
+        }
+        var isolatedOriginal = isolatedBlock.Interface.First(member => member.Name == "BatchTarget");
+        var primaryBlockId = block.Id;
+        var primaryMemberId = original.Id;
+        var inlineMemberId = inlineOriginal.Id;
+        var isolatedBlockId = isolatedBlock.Id;
+        var isolatedMemberId = isolatedOriginal.Id;
+        var declarations = FindChild("GlobalDbDeclarations", true, false) as Tree
+            ?? throw new InvalidOperationException("The Global DB declaration grid is unavailable.");
+        var edit = FindChild("GlobalDbEditMember", true, false) as Button
+            ?? throw new InvalidOperationException("The Global DB Edit action is unavailable.");
+        var name = FindChild("InterfaceName", true, false) as LineEdit
+            ?? throw new InvalidOperationException("The member Name field is unavailable.");
+        var initial = FindChild("InterfaceInitial", true, false) as LineEdit
+            ?? throw new InvalidOperationException("The member Start value field is unavailable.");
+        var retain = FindChild("InterfaceRetain", true, false) as CheckBox
+            ?? throw new InvalidOperationException("The member Retain field is unavailable.");
+        var comment = FindChild("InterfaceComment", true, false) as LineEdit
+            ?? throw new InvalidOperationException("The member Comment field is unavailable.");
+        var apply = FindChild("AddInterface", true, false) as Button
+            ?? throw new InvalidOperationException("The member Apply action is unavailable.");
+        var cancel = FindChild("CancelInterface", true, false) as Button
+            ?? throw new InvalidOperationException("The member Cancel action is unavailable.");
+        var ladderUndo = FindChild("LadderUndo", true, false) as Button
+            ?? throw new InvalidOperationException("The TIA workbench Undo action is unavailable.");
+        var ladderRedo = FindChild("LadderRedo", true, false) as Button
+            ?? throw new InvalidOperationException("The TIA workbench Redo action is unavailable.");
+
+        LineEdit? FocusedDeclarationEditor()
+        {
+            var pending = new Stack<Node>();
+            pending.Push(declarations);
+            while (pending.Count > 0)
+            {
+                var current = pending.Pop();
+                if (current is LineEdit editor && editor.HasFocus() && editor.IsVisibleInTree()) return editor;
+                foreach (var child in current.GetChildren(true)) pending.Push(child);
+            }
+            return null;
+        }
+
+        async System.Threading.Tasks.Task EditInline(string memberId, int column, string value)
+        {
+            TreeItem? row = null;
+            for (var current = declarations.GetRoot()?.GetFirstChild(); current is not null; current = current.GetNext())
+                if (current.GetMetadata(0).AsString() == memberId) { row = current; break; }
+            if (row is null) throw new InvalidOperationException($"Global DB inline member {memberId} is missing.");
+            declarations.SetSelected(row, column);
+            if (!declarations.EditSelected())
+                throw new InvalidOperationException($"Global DB inline column {column} did not enter edit mode.");
+            await Settle(2);
+            var editor = FocusedDeclarationEditor()
+                ?? throw new InvalidOperationException($"Global DB inline column {column} did not expose its cell editor.");
+            editor.Text = value;
+            editor.EmitSignal(LineEdit.SignalName.TextSubmitted, value);
+            await Settle(2);
+        }
+
+        // Exercise the TIA-style declaration table itself, not only the side
+        // form. Stable member identity must survive the rename and later reopen.
+        await EditInline(inlineMemberId, 0, "LineSpeed");
+        await EditInline(inlineMemberId, 2, "1300");
+        await EditInline(inlineMemberId, 4, "Inline edit persisted");
+        var inlineApplied = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == inlineMemberId);
+        if (inlineApplied.Name != "LineSpeed" || Math.Abs(Convert.ToDouble(inlineApplied.InitialValue) - 1300.0) > 0.0001
+            || inlineApplied.Comment != "Inline edit persisted")
+            throw new InvalidOperationException("The Global DB inline Name/Start/Comment transaction did not commit exactly.");
+
+        void SelectBatchTarget()
+        {
+            for (var row = declarations.GetRoot()?.GetFirstChild(); row is not null; row = row.GetNext())
+            {
+                if (row.GetMetadata(1).AsString() != "BatchTarget") continue;
+                row.Select(0);
+                declarations.ScrollToItem(row);
+                return;
+            }
+            throw new InvalidOperationException("BatchTarget is missing from the Global DB declaration grid.");
+        }
+        async System.Threading.Tasks.Task OpenBatchTarget()
+        {
+            PrepareGlobalDbDefinitionCapture();
+            await Settle(2);
+            SelectBatchTarget();
+            edit.EmitSignal(BaseButton.SignalName.Pressed);
+            await Settle(2);
+        }
+
+        await OpenBatchTarget();
+        initial.Text = "not_an_int";
+        apply.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var afterInvalid = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == primaryMemberId);
+        if (Convert.ToInt64(afterInvalid.InitialValue) != 4 || afterInvalid.Comment != original.Comment)
+            throw new InvalidOperationException("An invalid Global DB start value mutated the declaration.");
+
+        comment.Text = "This draft must be canceled";
+        cancel.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var afterCancel = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == primaryMemberId);
+        if (Convert.ToInt64(afterCancel.InitialValue) != 4 || afterCancel.Comment != original.Comment)
+            throw new InvalidOperationException("Cancel changed the Global DB declaration.");
+
+        await OpenBatchTarget();
+        if (name.Text != "BatchTarget")
+            throw new InvalidOperationException("The Global DB property form did not reopen the selected declaration.");
+        initial.Text = "7";
+        retain.ButtonPressed = true;
+        comment.Text = "Applied through property form";
+        apply.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var applied = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == primaryMemberId);
+        if (Convert.ToInt64(applied.InitialValue) != 7 || !applied.Retain
+            || applied.Comment != "Applied through property form")
+            throw new InvalidOperationException("Apply did not commit the Global DB property transaction.");
+
+        ladderUndo.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var undone = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == primaryMemberId);
+        if (Convert.ToInt64(undone.InitialValue) != 4 || undone.Comment != original.Comment)
+            throw new InvalidOperationException("Undo did not restore the previous Global DB declaration.");
+        ladderRedo.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var redone = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == primaryMemberId);
+        if (Convert.ToInt64(redone.InitialValue) != 7 || redone.Comment != "Applied through property form")
+            throw new InvalidOperationException("Redo did not restore the applied Global DB declaration.");
+
+        // Duplicate-name rejection must be atomic and must not create history.
+        // Exercise the same production form instead of calling document helpers.
+        await OpenBatchTarget();
+        var currentPrimary = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId);
+        var currentIsolated = _ladderDocument.Blocks.First(candidate => candidate.Id == isolatedBlockId);
+        var beforeDuplicate = currentPrimary.Interface.ToArray();
+        var couldUndoBeforeDuplicate = _ladderHistory.CanUndo;
+        name.Text = "SystemEnabled";
+        apply.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        if (!currentPrimary.Interface.SequenceEqual(beforeDuplicate)
+            || _ladderHistory.CanUndo != couldUndoBeforeDuplicate)
+            throw new InvalidOperationException("A duplicate Global DB declaration name mutated the block or history.");
+        cancel.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+
+        // A same-index member in another DB must never inherit the first DB's
+        // pending selection. Change the active block underneath the open form;
+        // the production Apply guard must reject that stale owner identity.
+        await OpenBatchTarget();
+        comment.Text = "This draft must never cross DBs";
+        _ladderDocument.SelectBlock(_ladderDocument.Blocks.IndexOf(currentIsolated));
+        apply.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var primaryAfterCrossAttempt = currentPrimary.Interface.First(member => member.Id == primaryMemberId);
+        var isolatedAfterCrossAttempt = currentIsolated.Interface.First(member => member.Id == isolatedMemberId);
+        if (primaryAfterCrossAttempt.Comment != "Applied through property form"
+            || isolatedAfterCrossAttempt.Comment != "Independent recipe target")
+            throw new InvalidOperationException("A stale Global DB selection crossed into another block.");
+
+        // Open the second DB through the normal TIA document activation route,
+        // then edit its same-index BatchTarget through the visible form.
+        var isolatedBlockIndex = _ladderDocument.Blocks.IndexOf(currentIsolated);
+        _tiaProgramBlockActivator?.Invoke(isolatedBlockIndex);
+        await Settle();
+        SelectBatchTarget();
+        edit.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle(2);
+        if (name.Text != "BatchTarget")
+            throw new InvalidOperationException("The second Global DB property form did not load its selected declaration.");
+        comment.Text = "Updated only in Recipe_Setpoints_Review";
+        apply.EmitSignal(BaseButton.SignalName.Pressed);
+        await Settle();
+        var isolatedApplied = currentIsolated.Interface.First(member => member.Id == isolatedMemberId);
+        if (isolatedApplied.Comment != "Updated only in Recipe_Setpoints_Review"
+            || currentPrimary.Interface.First(member => member.Id == primaryMemberId).Comment != "Applied through property form")
+            throw new InvalidOperationException("The second Global DB edit did not remain block-scoped.");
+
+        var reviewDirectory = System.IO.Path.Combine(OS.GetUserDataDir(), "review-projects");
+        System.IO.Directory.CreateDirectory(reviewDirectory);
+        var path = System.IO.Path.Combine(reviewDirectory, "global-db-transaction-review.rpproj.json");
+        if (!TrySaveLadderProject(path, out var saveMessage)) throw new InvalidOperationException(saveMessage);
+        _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId).Interface.Clear();
+        _ladderDocument.Blocks.First(candidate => candidate.Id == isolatedBlockId).Interface.Clear();
+        if (!TryOpenLadderProject(path, out var openMessage)) throw new InvalidOperationException(openMessage);
+        var reopened = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == primaryMemberId);
+        var isolatedReopened = _ladderDocument.Blocks.First(candidate => candidate.Id == isolatedBlockId)
+            .Interface.First(member => member.Id == isolatedMemberId);
+        var inlineReopened = _ladderDocument.Blocks.First(candidate => candidate.Id == primaryBlockId)
+            .Interface.First(member => member.Id == inlineMemberId);
+        if (Convert.ToInt64(reopened.InitialValue) != 7 || !reopened.Retain
+            || reopened.Comment != "Applied through property form"
+            || isolatedReopened.Comment != "Updated only in Recipe_Setpoints_Review"
+            || inlineReopened.Name != "LineSpeed"
+            || Math.Abs(Convert.ToDouble(inlineReopened.InitialValue) - 1300.0) > 0.0001
+            || inlineReopened.Comment != "Inline edit persisted")
+            throw new InvalidOperationException("The applied Global DB transaction did not survive Save/Open.");
+
+        PrepareGlobalDbDefinitionCapture();
+        await Settle();
+        SelectBatchTarget();
+        var returnToTree = FindChild("EditGlobalDbMembers", true, false) as Button;
+        if (returnToTree?.Visible == true)
+        {
+            returnToTree.EmitSignal(BaseButton.SignalName.Pressed);
+            await Settle();
+        }
+        _globalDbTransactionReviewRunning = false;
+        _globalDbTransactionReviewPrepared = true;
+        _ladderWorkspaceStatus.Text = "GLOBAL DB PASS · INLINE NAME/START/COMMENT · INVALID/DUPLICATE · CANCEL/APPLY · UNDO/REDO · 2-DB · SAVE/OPEN";
+        _ladderWorkspaceStatus.TooltipText = $"{saveMessage}\n{openMessage}\n{path}";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+    }
+
+    public async void PrepareDemo1ActiveCapture()
+    {
+        const string demo1Scene = "lab-4-01-press-count-lamp";
+        if (_demo1ActiveCaptureRunning || _demo1ActiveCapturePrepared) return;
+        if (_activeScene?.Id != demo1Scene)
+        {
+            SetWorkspaceStatus("DEMO 1 ACTIVE REVIEW REQUIRES THE PRESS COUNT SCENE");
+            return;
+        }
+
+        _demo1ActiveCaptureRunning = true;
+        async System.Threading.Tasks.Task PressNextAndSettle()
+        {
+            _operatorDoNext.EmitSignal(BaseButton.SignalName.Pressed);
+            RefreshOperatorPanels();
+            for (var frame = 0; frame < 8; frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+
+        // Use the learner's production NEXT ACTION control for the entire
+        // required cycle. Wait on accepted state between phases so a transient
+        // display/snapshot skew cannot skip Reset or the repeat cycle.
+        await PressNextAndSettle(); // load and run
+        for (var press = 0; press < 3; press++) await PressNextAndSettle();
+        for (var frame = 0; frame < 60 && CurriculumRecoveryStageFor(AuthoredDemos[0]) != CurriculumRecoveryStage.FirstCycleComplete; frame++)
+        {
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+        await PressNextAndSettle(); // machine Reset
+        for (var frame = 0; frame < 60 && CurriculumRecoveryStageFor(AuthoredDemos[0]) != CurriculumRecoveryStage.ResetObserved; frame++)
+        {
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+        for (var press = 0; press < 3; press++) await PressNextAndSettle();
+        for (var frame = 0; frame < 60 && !_completedCurriculumScenes.Contains(demo1Scene); frame++)
+        {
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+
+        var passed = _completedCurriculumScenes.Contains(demo1Scene);
+        var lampOn = CurriculumPointIsOn("threshold_lamp");
+        var count = _runtime?.Points.TryGetValue("press_count_value", out var value) == true
+            ? Convert.ToInt32(value)
+            : -1;
+        if (!passed || !lampOn || count != 3)
+        {
+            _demo1ActiveCaptureRunning = false;
+            SetWorkspaceStatus($"DEMO 1 ACTIVE REVIEW FAILED · PASS={passed} · LAMP={lampOn} · COUNT={count}");
+            return;
+        }
+
+        _demo1ActiveCaptureRunning = false;
+        _demo1ActiveCapturePrepared = true;
+        SetWorkspaceStatus("DEMO 1 PASSED · FIRST COUNT 3 · MACHINE RESET TO 0 · REPEAT COUNT 3");
+        RefreshOperatorPanels();
+    }
+
+    public bool Demo1ActiveCapturePrepared => _demo1ActiveCapturePrepared;
+
+    public async void PrepareDemo2ActiveCapture()
+    {
+        const string demo2Scene = "lab-5-01-delayed-lamp";
+        if (_demo2ActiveCaptureRunning || _demo2ActiveCapturePrepared) return;
+        if (_activeScene?.Id != demo2Scene)
+        {
+            SetWorkspaceStatus("DEMO 2 ACTIVE REVIEW REQUIRES THE DELAYED LAMP SCENE");
+            return;
+        }
+
+        _demo2ActiveCaptureRunning = true;
+        async System.Threading.Tasks.Task PressNextAndSettle()
+        {
+            _operatorDoNext.EmitSignal(BaseButton.SignalName.Pressed);
+            RefreshOperatorPanels();
+            for (var frame = 0; frame < 8; frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+        async System.Threading.Tasks.Task WaitFor(System.Func<bool> condition, int maximumFrames = 240)
+        {
+            for (var frame = 0; frame < maximumFrames && !condition(); frame++)
+            {
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+                RefreshOperatorPanels();
+            }
+        }
+
+        await PressNextAndSettle(); // load and run
+        await PressNextAndSettle(); // REQUEST on
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[1]) == CurriculumRecoveryStage.FirstCycleComplete);
+        await PressNextAndSettle(); // machine STOP
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[1]) == CurriculumRecoveryStage.StopObserved
+            && !CurriculumPointIsOn("delayed_lamp"));
+        await PressNextAndSettle(); // machine RESET
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[1]) == CurriculumRecoveryStage.ResetObserved);
+        await PressNextAndSettle(); // REQUEST off
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[1]) == CurriculumRecoveryStage.RequestCleared);
+        await PressNextAndSettle(); // REQUEST on
+        await WaitFor(() => _completedCurriculumScenes.Contains(demo2Scene));
+
+        var passed = _completedCurriculumScenes.Contains(demo2Scene);
+        var lampOn = CurriculumPointIsOn("delayed_lamp");
+        var elapsed = CurriculumNumericValue("delay_elapsed_ms");
+        if (!passed || !lampOn || elapsed < 2000)
+        {
+            _demo2ActiveCaptureRunning = false;
+            SetWorkspaceStatus($"DEMO 2 ACTIVE REVIEW FAILED · PASS={passed} · LAMP={lampOn} · ET={elapsed:0} ms");
+            return;
+        }
+
+        _demo2ActiveCaptureRunning = false;
+        _demo2ActiveCapturePrepared = true;
+        SetWorkspaceStatus("DEMO 2 PASSED · FIRST DELAY · STOP · RESET ET 0 · REQUEST OFF/ON · REPEAT DELAY");
+        RefreshOperatorPanels();
+    }
+
+    public bool Demo2ActiveCapturePrepared => _demo2ActiveCapturePrepared;
+
+    public async void PrepareDemo3ActiveCapture()
+    {
+        const string demo3Scene = "scene-2-conveyor-pusher";
+        if (_demo3ActiveCaptureRunning || _demo3ActiveCapturePrepared) return;
+        if (_activeScene?.Id != demo3Scene)
+        {
+            SetWorkspaceStatus("DEMO 3 ACTIVE REVIEW REQUIRES THE HEIGHT SORTING SCENE");
+            return;
+        }
+
+        _demo3ActiveCaptureRunning = true;
+        async System.Threading.Tasks.Task PressNextAndSettle()
+        {
+            _operatorDoNext.EmitSignal(BaseButton.SignalName.Pressed);
+            RefreshOperatorPanels();
+            // The review route already waits on each PLC-owned state transition
+            // below. Two rendered frames are enough to release momentary inputs
+            // while keeping the complete recovery proof inside the capture window.
+            for (var frame = 0; frame < 2; frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+        async System.Threading.Tasks.Task WaitFor(System.Func<bool> condition, int maximumFrames = 1800)
+        {
+            for (var frame = 0; frame < maximumFrames && !condition(); frame++)
+            {
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+                RefreshOperatorPanels();
+            }
+        }
+
+        await PressNextAndSettle(); // load and run
+        if (!CurriculumPointIsOn("system_enable")) await PressNextAndSettle();
+        if (!CurriculumControllerPointIsOn("machine_run")) await PressNextAndSettle();
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.FirstCycleComplete);
+        await PressNextAndSettle(); // machine Stop
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.StopObserved);
+        await PressNextAndSettle(); // fresh Start
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.RestartObserved);
+        await PressNextAndSettle(); // trip on
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.TripObserved);
+        await PressNextAndSettle(); // trip off
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.TripCleared);
+        await PressNextAndSettle(); // Reset
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.ResetObserved);
+        await PressNextAndSettle(); // fresh Start after trip
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.RequestCleared);
+        await PressNextAndSettle(); // overload on
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.OverloadObserved);
+        await PressNextAndSettle(); // overload off
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.OverloadCleared);
+        await PressNextAndSettle(); // Reset
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[2]) == CurriculumRecoveryStage.SecondResetObserved);
+        await PressNextAndSettle(); // final fresh Start
+        await WaitFor(() => _completedCurriculumScenes.Contains(demo3Scene));
+
+        var passed = _completedCurriculumScenes.Contains(demo3Scene);
+        var machineRun = CurriculumControllerPointIsOn("machine_run");
+        if (!passed || !machineRun)
+        {
+            _demo3ActiveCaptureRunning = false;
+            SetWorkspaceStatus($"DEMO 3 ACTIVE REVIEW FAILED · PASS={passed} · RUN={machineRun}");
+            return;
+        }
+
+        _demo3ActiveCaptureRunning = false;
+        _demo3ActiveCapturePrepared = true;
+        SetWorkspaceStatus("DEMO 3 PASSED · 3 ROUTES · STOP/RESTART · TRIP RECOVERY · OVERLOAD RECOVERY");
+        RefreshOperatorPanels();
+    }
+
+    public bool Demo3ActiveCapturePrepared => _demo3ActiveCapturePrepared;
+
+    public async void PrepareDemo4ActiveCapture()
+    {
+        const string demo4Scene = "lab-9-11-pallet-counting";
+        if (_demo4ActiveCaptureRunning || _demo4ActiveCapturePrepared) return;
+        if (_activeScene?.Id != demo4Scene)
+        {
+            SetWorkspaceStatus("DEMO 4 ACTIVE REVIEW REQUIRES THE BATCH PROCESS SCENE");
+            return;
+        }
+
+        _demo4ActiveCaptureRunning = true;
+
+        // Drive the same single NEXT ACTION control the learner sees. Each
+        // press advances exactly one production workflow step: load/run,
+        // Start, Type OK, Count Request, five pallet events, Reset, a fresh
+        // Start, then the first valid event of batch two.
+        for (var step = 0; step < 12; step++)
+        {
+            _operatorDoNext.EmitSignal(BaseButton.SignalName.Pressed);
+            for (var frame = 0; frame < 6; frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        }
+
+        var machineRunning = CurriculumPointIsOn("machine_running");
+        var typeValid = CurriculumPointIsOn("pallet_type_valid");
+        var countRequested = CurriculumPointIsOn("count_request");
+        var count = _runtime?.Points.TryGetValue("pallet_count", out var value) == true
+            ? Convert.ToInt32(value)
+            : -1;
+        var passed = _completedCurriculumScenes.Contains(demo4Scene);
+        if (!passed || !machineRunning || !typeValid || !countRequested || count != 1)
+        {
+            _demo4ActiveCaptureRunning = false;
+            SetWorkspaceStatus($"DEMO 4 ACTIVE REVIEW FAILED · PASS={passed} · RUN={machineRunning} · TYPE={typeValid} · REQUEST={countRequested} · COUNT={count}");
+            return;
+        }
+
+        _demo4ActiveCaptureRunning = false;
+        _demo4ActiveCapturePrepared = true;
+        SetWorkspaceStatus("DEMO 4 ACTIVE · MACHINE RUNNING · TYPE OK · COUNT REQUEST ON · PALLET COUNT 1");
+        RefreshOperatorPanels();
+    }
+
+    public bool Demo4ActiveCapturePrepared => _demo4ActiveCapturePrepared;
+
+    public async void PrepareDemo5ActiveCapture()
+    {
+        const string demo5Scene = "lab-11-13-xy-palletizing";
+        if (_demo5ActiveCaptureRunning || _demo5ActiveCapturePrepared) return;
+        if (_activeScene?.Id != demo5Scene)
+        {
+            SetWorkspaceStatus("DEMO 5 ACTIVE REVIEW REQUIRES THE INTEGRATED PALLETIZER SCENE");
+            return;
+        }
+
+        _demo5ActiveCaptureRunning = true;
+        async System.Threading.Tasks.Task PressNextAndSettle()
+        {
+            _operatorDoNext.EmitSignal(BaseButton.SignalName.Pressed);
+            RefreshOperatorPanels();
+            for (var frame = 0; frame < 4; frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            RefreshOperatorPanels();
+        }
+        async System.Threading.Tasks.Task WaitFor(System.Func<bool> condition, int maximumFrames = 9000)
+        {
+            for (var frame = 0; frame < maximumFrames && !condition(); frame++)
+            {
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+                RefreshOperatorPanels();
+            }
+        }
+
+        // Drive only the production NEXT ACTION control, waiting for each
+        // PLC-owned transition before advancing the recovery exercise.
+        await PressNextAndSettle(); // load and run current Demo 5 logic
+        if (!CurriculumPointIsOn("system_enable")) await PressNextAndSettle();
+        if (!CurriculumPointIsOn("pallet_position_valid")) await PressNextAndSettle();
+        if (!CurriculumControllerPointIsOn("machine_run")) await PressNextAndSettle();
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.FirstCycleComplete);
+        await PressNextAndSettle(); // Reset completed layer
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.ResetObserved);
+        await PressNextAndSettle(); // Start recovery exercise
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.RestartObserved);
+        await PressNextAndSettle(); // machine Stop
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.StopObserved);
+        await PressNextAndSettle(); // fresh Start
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.StopRestartObserved);
+        await PressNextAndSettle(); // trip on
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.TripObserved);
+        await PressNextAndSettle(); // trip off
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.TripCleared);
+        await PressNextAndSettle(); // Reset after trip
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.PostTripResetObserved);
+        await PressNextAndSettle(); // restart after trip
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.PostTripRestartObserved);
+        await PressNextAndSettle(); // pallet permissive off
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.PermissiveLossObserved);
+        await PressNextAndSettle(); // pallet permissive on
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.PermissiveRestored);
+        await PressNextAndSettle(); // Reset after permissive loss
+        await WaitFor(() => CurriculumRecoveryStageFor(AuthoredDemos[4]) == CurriculumRecoveryStage.SecondResetObserved);
+        await PressNextAndSettle(); // final fresh Start
+        await WaitFor(() => _completedCurriculumScenes.Contains(demo5Scene));
+
+        var passed = _completedCurriculumScenes.Contains(demo5Scene);
+        var placed = CurriculumNumericValue("placed_cartons");
+        var layerComplete = CurriculumPointIsOn("layer_complete");
+        if (!passed || placed < 4 || !layerComplete)
+        {
+            _demo5ActiveCaptureRunning = false;
+            SetWorkspaceStatus($"DEMO 5 ACTIVE REVIEW FAILED · PASS={passed} · PLACED={placed:0} · LAYER={layerComplete}");
+            return;
+        }
+
+        _demo5ActiveCaptureRunning = false;
+        _demo5ActiveCapturePrepared = true;
+        SetWorkspaceStatus("DEMO 5 PASSED · TWO LAYERS · STOP · TRIP · PALLET PERMISSIVE RECOVERY");
+        RefreshOperatorPanels();
+    }
+
+    public bool Demo5ActiveCapturePrepared => _demo5ActiveCapturePrepared;
+
+    public async void PrepareFiveDemoActiveCapture()
+    {
+        if (_fiveDemoActiveCaptureRunning || _fiveDemoActiveCapturePrepared) return;
+        _fiveDemoActiveCaptureRunning = true;
+
+        async System.Threading.Tasks.Task WaitFor(System.Func<bool> condition, int maximumFrames = 20000)
+        {
+            for (var frame = 0; frame < maximumFrames && !condition(); frame++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        }
+
+        for (var index = 0; index < AuthoredDemos.Length; index++)
+        {
+            var demo = AuthoredDemos[index];
+            if (_activeScene?.Id != demo.SceneId)
+            {
+                RequestSceneChange(demo.SceneId, showOperator: true);
+                await WaitFor(() => _activeScene?.Id == demo.SceneId, 600);
+                for (var frame = 0; frame < 4; frame++)
+                    await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            }
+
+            switch (index)
+            {
+                case 0: PrepareDemo1ActiveCapture(); break;
+                case 1: PrepareDemo2ActiveCapture(); break;
+                case 2: PrepareDemo3ActiveCapture(); break;
+                case 3: PrepareDemo4ActiveCapture(); break;
+                case 4: PrepareDemo5ActiveCapture(); break;
+            }
+            await WaitFor(() => _completedCurriculumScenes.Contains(demo.SceneId));
+            if (!_completedCurriculumScenes.Contains(demo.SceneId))
+            {
+                _fiveDemoActiveCaptureRunning = false;
+                SetWorkspaceStatus($"FIVE-DEMO ACTIVE REVIEW FAILED · DEMO {index + 1} DID NOT PASS");
+                return;
+            }
+        }
+
+        _fiveDemoActiveCaptureRunning = false;
+        _fiveDemoActiveCapturePrepared = _completedCurriculumScenes.Count == AuthoredDemos.Length;
+        SetWorkspaceStatus(_fiveDemoActiveCapturePrepared
+            ? "CURRICULUM COMPLETE · ALL FIVE PRODUCTION DEMOS PASSED THIS SESSION"
+            : $"FIVE-DEMO ACTIVE REVIEW FAILED · {_completedCurriculumScenes.Count}/5 PASSED");
+        RefreshOperatorPanels();
+    }
+
+    public bool FiveDemoActiveCapturePrepared => _fiveDemoActiveCapturePrepared;
+
     public void SetReviewState(string view, string search)
     {
         if (search.Length > 0)
@@ -1006,6 +2468,30 @@ public partial class SimulatorShell : CanvasLayer
             case "scene":
             case "operator":
                 SetProductView("operator");
+                break;
+            case "operator-demo1-active":
+                SetProductView("operator");
+                CallDeferred(nameof(PrepareDemo1ActiveCapture));
+                break;
+            case "operator-demo2-active":
+                SetProductView("operator");
+                CallDeferred(nameof(PrepareDemo2ActiveCapture));
+                break;
+            case "operator-demo3-active":
+                SetProductView("operator");
+                CallDeferred(nameof(PrepareDemo3ActiveCapture));
+                break;
+            case "operator-demo4-active":
+                SetProductView("operator");
+                CallDeferred(nameof(PrepareDemo4ActiveCapture));
+                break;
+            case "operator-demo5-active":
+                SetProductView("operator");
+                CallDeferred(nameof(PrepareDemo5ActiveCapture));
+                break;
+            case "operator-five-demo-active":
+                SetProductView("operator");
+                CallDeferred(nameof(PrepareFiveDemoActiveCapture));
                 break;
             case "split":
                 ShowClassicTool("split");
@@ -1033,6 +2519,80 @@ public partial class SimulatorShell : CanvasLayer
             case "ladder":
                 ShowClassicTool("ladder");
                 break;
+            case "ladder-instance-db":
+                ShowClassicTool("ladder");
+                // Review-only state: create an unsaved representative FB
+                // instance and open it through the same project-tree route as
+                // an operator. This makes the visible app deterministic without
+                // changing the authored project on disk.
+                CallDeferred(nameof(PrepareInstanceDbDefinitionCapture));
+                break;
+            case "ladder-global-db":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareGlobalDbDefinitionCapture));
+                break;
+            case "ladder-instance-member-properties":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareInstanceDbMemberPropertiesCapture));
+                break;
+            case "ladder-global-db-member-properties":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareGlobalDbMemberPropertiesCapture));
+                break;
+            case "ladder-global-db-persistence":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareGlobalDbPersistenceCapture));
+                break;
+            case "ladder-global-db-transaction":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareGlobalDbTransactionCapture));
+                break;
+            case "ladder-interface-properties":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareInterfaceDeclarationPropertiesCapture));
+                break;
+            case "ladder-task-properties":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareTaskSchedulePropertiesCapture));
+                break;
+            case "ladder-active-document-properties":
+                ShowClassicTool("ladder");
+                (FindChild("ActiveEditorDocumentProperties", true, false) as Button)
+                    ?.CallDeferred(BaseButton.MethodName.EmitSignal, BaseButton.SignalName.Pressed);
+                break;
+            case "ladder-user-constant-properties":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareUserConstantPropertiesCapture));
+                break;
+            case "ladder-system-constant-detail":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareSystemConstantDetailCapture));
+                break;
+            case "ladder-object-properties":
+            {
+                ShowClassicTool("ladder");
+                var organization = GetNodeOrNull<Tree>(
+                    "Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/TIA Portal/Workbench/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/ProjectTree");
+                TreeItem? FindProgramBlock(TreeItem? first)
+                {
+                    for (var item = first; item is not null; item = item.GetNext())
+                    {
+                        if (item.GetMetadata(0).AsString().StartsWith("program:", StringComparison.Ordinal)) return item;
+                        var nested = FindProgramBlock(item.GetFirstChild());
+                        if (nested is not null) return nested;
+                    }
+                    return null;
+                }
+                var row = FindProgramBlock(organization?.GetRoot());
+                if (organization is not null && row is not null)
+                {
+                    row.Select(0);
+                    organization.EmitSignal(Tree.SignalName.ItemSelected);
+                    (FindChild("SelectedProjectObjectProperties", true, false) as Button)
+                        ?.CallDeferred(BaseButton.MethodName.EmitSignal, BaseButton.SignalName.Pressed);
+                }
+                break;
+            }
             case "ladder-local":
             {
                 ShowClassicTool("ladder");
@@ -1070,6 +2630,9 @@ public partial class SimulatorShell : CanvasLayer
                 break;
             case "ladder-tags":
             case "ladder-tag-table":
+            case "ladder-tag-properties":
+            case "ladder-user-constants":
+            case "ladder-system-constants":
             {
                 ShowClassicTool("ladder");
                 var organization = GetNodeOrNull<Tree>(
@@ -1091,6 +2654,13 @@ public partial class SimulatorShell : CanvasLayer
                     table.Select(0);
                     organization.EmitSignal(Tree.SignalName.ItemActivated);
                 }
+                if (view == "ladder-user-constants")
+                    (FindChild("UserConstantsTab", true, false) as Button)?.EmitSignal(BaseButton.SignalName.Pressed);
+                else if (view == "ladder-system-constants")
+                    (FindChild("SystemConstantsTab", true, false) as Button)?.EmitSignal(BaseButton.SignalName.Pressed);
+                else if (view == "ladder-tag-properties")
+                    (FindChild("SelectedTagProperties", true, false) as Button)
+                        ?.CallDeferred(BaseButton.MethodName.EmitSignal, BaseButton.SignalName.Pressed);
                 break;
             }
             case "ladder-bindings":
@@ -1208,12 +2778,60 @@ public partial class SimulatorShell : CanvasLayer
                 }
                 var environment = logix ? "Studio 5000" : "TIA Portal";
                 var workbenchRoot = $"Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/{environment}/Workbench/EditorAndTasks/EditorAndInspector";
-                GetNodeOrNull<TabContainer>($"{workbenchRoot}/BottomDockHost/InspectorOutputDock/InspectorOutputBody/InspectorOutputTabs")
-                    ?.Set("current_tab", 2);
+                var reviewBottomPanel = GetNodeOrNull<Control>($"{workbenchRoot}/BottomDockHost/InspectorOutputDock");
+                var reviewReopenBottom = GetNodeOrNull<Control>($"{workbenchRoot}/BottomDockHost/ReopenBottomDock");
                 var split = GetNodeOrNull<VSplitContainer>(workbenchRoot);
-                if (split is not null) split.SplitOffsets = [540];
+                if (logix)
+                {
+                    GetNodeOrNull<TabContainer>($"{workbenchRoot}/BottomDockHost/InspectorOutputDock/InspectorOutputBody/InspectorOutputTabs")
+                        ?.Set("current_tab", 2);
+                    if (split is not null) split.SplitOffsets = [540];
+                }
+                else
+                {
+                    reviewBottomPanel?.Hide();
+                    reviewReopenBottom?.Show();
+                    if (split is not null && reviewReopenBottom is not null)
+                        split.SplitOffsets = [Math.Max(0, (int)split.Size.Y - (int)reviewReopenBottom.CustomMinimumSize.Y)];
+                }
                 break;
             }
+            case "ladder-watch-properties":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareWatchRowPropertiesCapture));
+                break;
+            case "ladder-watch-compact":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareNamedWatchTableCapture));
+                break;
+            case "ladder-watch-format-feedback":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareWatchFormatFeedbackCapture));
+                break;
+            case "ladder-watch-running":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareRunningWatchCapture));
+                break;
+            case "ladder-watch-persistence":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareWatchPersistenceCapture));
+                break;
+            case "ladder-duplication":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareProjectDuplicationCapture));
+                break;
+            case "ladder-pending-tag-open":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PreparePendingTagReplacementCapture));
+                break;
+            case "ladder-tag-constant-crud":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareTagAndConstantCrudCapture));
+                break;
+            case "ladder-tag-drag-ready":
+                ShowClassicTool("ladder");
+                CallDeferred(nameof(PrepareTagOperandDragReadyCapture));
+                break;
             case "ladder-edges":
             case "ladder-edges-ab":
             {
@@ -1566,13 +3184,36 @@ public partial class SimulatorShell : CanvasLayer
                     $"Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderEnvironmentTabs/{environmentName}/Workbench/EditorAndTasks/EditorAndInspector/ProgramEditor/RoutineView/GraphicalLadderCanvas");
                 if (ladderCanvas is not null)
                 {
-                    ladderCanvas._GuiInput(new InputEventMouseButton
+                    var hasEditableContact = _ladderDocument.Rungs.Any(rung =>
+                        rung.Branches.Any(branch => branch.Contacts.Count > 0));
+                    if (!hasEditableContact)
                     {
-                        ButtonIndex = MouseButton.Left,
-                        Pressed = true,
-                        DoubleClick = true,
-                        Position = ladderCanvas.GetElementPosition(0, 0, 0),
-                    });
+                        if (_ladderDocument.Rungs.Count == 0)
+                            _ladderDocument.AddRung("Properties review fixture", "conveyor_running");
+                        _ladderDocument.AddContact(0, 0, "start_command", false);
+                        foreach (var refresh in _ladderEditorRefreshers) refresh();
+                    }
+                    Vector2? propertyTarget = null;
+                    for (var rungIndex = 0; rungIndex < _ladderDocument.Rungs.Count && propertyTarget is null; rungIndex++)
+                    {
+                        var rung = _ladderDocument.Rungs[rungIndex];
+                        for (var branchIndex = 0; branchIndex < rung.Branches.Count; branchIndex++)
+                            if (rung.Branches[branchIndex].Contacts.Count > 0)
+                            {
+                                propertyTarget = ladderCanvas.GetElementPosition(rungIndex, branchIndex, 0);
+                                break;
+                            }
+                    }
+                    if (propertyTarget is null && _ladderDocument.Rungs.Count > 0)
+                        propertyTarget = ladderCanvas.GetElementPosition(0, 0, 0, output: true);
+                    if (propertyTarget is { } target)
+                        ladderCanvas._GuiInput(new InputEventMouseButton
+                        {
+                            ButtonIndex = MouseButton.Left,
+                            Pressed = true,
+                            DoubleClick = true,
+                            Position = target,
+                        });
                 }
                 break;
             }
@@ -1746,6 +3387,7 @@ public partial class SimulatorShell : CanvasLayer
         toolbarRow.AddChild(file);
 
         var view = TopMenu("ViewMenu", "View");
+        _viewPopup = view.GetPopup();
         var viewItems = new (string Label, string View)[]
         {
             ("Operator Console", "operator"),
@@ -1754,33 +3396,54 @@ public partial class SimulatorShell : CanvasLayer
             ("Immersive Scenario", "floor"),
             ("Scenario + Ladder Split", "split"),
         };
-        for (var index = 0; index < viewItems.Length; index++) view.GetPopup().AddItem(viewItems[index].Label, index);
-        view.GetPopup().AddSeparator();
-        view.GetPopup().AddItem("Frame Process", 10);
-        view.GetPopup().AddItem("Frame Whole Scene", 11);
-        view.GetPopup().IdPressed += id =>
+        for (var index = 0; index < viewItems.Length; index++) _viewPopup.AddItem(viewItems[index].Label, index);
+        _viewPopup.AddSeparator();
+        _viewPopup.AddItem("Frame Process", 10);
+        _viewPopup.AddItem("Frame Whole Scene", 11);
+        _viewPopup.AddSeparator("Interface scale");
+        for (var index = 0; index < DesktopUiScalePolicy.Settings.Length; index++)
+        {
+            var setting = DesktopUiScalePolicy.Settings[index];
+            var percent = DesktopUiScalePolicy.ResolvePercent(setting, GetWindow().Size.X, GetWindow().Size.Y);
+            var label = setting == "auto" ? DesktopUiScalePolicy.Label(setting, _resolvedInterfaceScalePercent) : $"{percent}%";
+            var itemId = InterfaceScaleMenuBaseId + index;
+            _viewPopup.AddItem(label, itemId);
+            var itemIndex = _viewPopup.GetItemIndex(itemId);
+            _viewPopup.SetItemAsCheckable(itemIndex, true);
+            _viewPopup.SetItemAsRadioCheckable(itemIndex, true);
+        }
+        RefreshInterfaceScaleControls();
+        _viewPopup.IdPressed += id =>
         {
             if (id >= 0 && id < viewItems.Length) ShowClassicTool(viewItems[id].View);
             if (id is 10 or 11) FrameSceneRequested?.Invoke(id == 11);
+            if (id >= InterfaceScaleMenuBaseId
+                && id < InterfaceScaleMenuBaseId + DesktopUiScalePolicy.Settings.Length)
+                ApplyInterfaceScale(DesktopUiScalePolicy.Settings[id - InterfaceScaleMenuBaseId]);
         };
         toolbarRow.AddChild(view);
 
         var quickTabGroup = new ButtonGroup { AllowUnpress = false };
         _sceneQuickTab = ToolbarButton("SceneQuickTab", "SCENARIO", new Color("355d73"), 92);
+        // These are the primary product-view switches. They must keep their
+        // readable minimum width while the adjacent scene title ellipsizes.
+        _sceneQuickTab.SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd;
         _sceneQuickTab.ToggleMode = true;
         _sceneQuickTab.ButtonGroup = quickTabGroup;
         _sceneQuickTab.TooltipText = "Switch to the scenario/operator view";
         _sceneQuickTab.Pressed += () => SetProductView("operator");
         _logicQuickTab = ToolbarButton("LogicEditorQuickTab", "LOGIC EDITOR", new Color("355d73"), 116);
+        _logicQuickTab.SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd;
         _logicQuickTab.ToggleMode = true;
         _logicQuickTab.ButtonGroup = quickTabGroup;
         _logicQuickTab.TooltipText = "Switch to the ladder logic editor";
         _logicQuickTab.Pressed += () => SetProductView("ladder");
 
-        var playback = TopMenu("PlaybackMenu", "Playback");
-        playback.GetPopup().AddItem("Run", 0);
-        playback.GetPopup().AddItem("Stop", 1);
-        playback.GetPopup().AddItem("Reset", 2);
+        var playback = TopMenu("PlaybackMenu", "App Playback");
+        playback.TooltipText = "Control the local simulator scan. These are not machine Start/Stop/Reset inputs.";
+        playback.GetPopup().AddItem("Run simulator scan", 0);
+        playback.GetPopup().AddItem("Stop simulator scan", 1);
+        playback.GetPopup().AddItem("Reset simulator and scene", 2);
         playback.GetPopup().IdPressed += id =>
         {
             if (id == 0) RunRequested?.Invoke();
@@ -1791,7 +3454,7 @@ public partial class SimulatorShell : CanvasLayer
 
         var sceneMenu = TopMenu("SceneMenu", "Scenario");
         sceneMenu.TooltipText = "Browse and open demonstration scenarios";
-        sceneMenu.GetPopup().AddItem("Scenario Browser", 0);
+        sceneMenu.GetPopup().AddItem("Five-Demo Curriculum & Scenarios", 0);
         sceneMenu.GetPopup().AddItem("Operator Console", 1);
         sceneMenu.GetPopup().AddSeparator();
         const int scenarioMenuBase = 1000;
@@ -1830,9 +3493,8 @@ public partial class SimulatorShell : CanvasLayer
             var scenarioIndex = (int)id - scenarioMenuBase;
             if (scenarioIndex >= 0 && scenarioIndex < menuScenes.Count)
             {
-                SetProductView("operator");
                 SetWorkspaceStatus($"OPENING SCENARIO · {menuScenes[scenarioIndex].Name}");
-                RequestSceneChange(menuScenes[scenarioIndex].Id);
+                RequestSceneChange(menuScenes[scenarioIndex].Id, showOperator: true);
             }
         };
         toolbarRow.AddChild(sceneMenu);
@@ -1892,9 +3554,11 @@ public partial class SimulatorShell : CanvasLayer
 
         var help = TopMenu("HelpMenu", "Help");
         help.GetPopup().AddItem("Simulator Mode and Safety Boundary", 0);
-        help.GetPopup().IdPressed += _ =>
+        help.GetPopup().AddItem("Open Five-Demo Curriculum Guide", 1);
+        help.GetPopup().IdPressed += id =>
         {
-            if (_showSafetyNotices.ButtonPressed) ShowSimulatorModeNotice();
+            if (id == 0 && _showSafetyNotices.ButtonPressed) ShowSimulatorModeNotice();
+            if (id == 1) ShowCurriculumGuide();
         };
         toolbarRow.AddChild(help);
         toolbarRow.AddChild(VRule());
@@ -1908,7 +3572,11 @@ public partial class SimulatorShell : CanvasLayer
         toolbarRow.AddChild(_sceneQuickTab);
         toolbarRow.AddChild(_logicQuickTab);
 
-        var statuses = new VBoxContainer { CustomMinimumSize = new Vector2(190, 0) };
+        var statuses = new VBoxContainer
+        {
+            CustomMinimumSize = new Vector2(190, 0),
+            SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd,
+        };
         _runtimeStatus = SmallStatus("LOCAL RUNTIME  •  STOPPED", new Color("8aa5b4"));
         _connectionStatus = SmallStatus("PLC  •  DISCONNECTED", new Color("f1aa5b"));
         _cycleStatus = SmallStatus("CYCLE  —  ·  SCAN  —", new Color("7fa7ba"));
@@ -2064,9 +3732,12 @@ public partial class SimulatorShell : CanvasLayer
         var transportRow = new HBoxContainer { Name = "TransportRow" };
         transportRow.AddThemeConstantOverride("separation", 7);
         transportMargin.AddChild(transportRow);
-        var run = ToolbarButton("RunButton", "RUN", new Color("1f8a58"), 62);
-        var stop = ToolbarButton("StopButton", "STOP", new Color("355d73"), 62);
-        var reset = ToolbarButton("ResetButton", "RESET", new Color("355d73"), 68);
+        var run = ToolbarButton("RunButton", "APP RUN", new Color("1f8a58"), 84);
+        var stop = ToolbarButton("StopButton", "APP STOP", new Color("8b3535"), 88);
+        var reset = ToolbarButton("ResetButton", "APP RESET", new Color("7b632d"), 96);
+        run.TooltipText = "Start or continue the simulator scan. This does not assert the lesson's machine Start input.";
+        stop.TooltipText = "Stop the simulator scan and output projection. This does not assert the lesson's machine Stop input.";
+        reset.TooltipText = "Reset the simulator and scene. This is separate from the lesson's PLC-consumed machine Reset input.";
         run.Pressed += () => RunRequested?.Invoke();
         stop.Pressed += () => StopRequested?.Invoke();
         reset.Pressed += () => ResetRequested?.Invoke();
@@ -2088,6 +3759,15 @@ public partial class SimulatorShell : CanvasLayer
         };
         transportRow.AddChild(save);
         transportRow.AddChild(load);
+        _transportCurriculum = ToolbarButton("TransportCurriculumButton", "CURRICULUM · 0/5", new Color("355d73"), 158);
+        _transportCurriculum.TooltipText = "Open the active curriculum demo in Operator Console, or resume the next unfinished demo.";
+        _transportCurriculum.Pressed += () =>
+        {
+            var index = ActiveCurriculumIndex();
+            if (index >= 0) SetProductView("operator");
+            else RequestSceneChange(AuthoredDemos[RecommendedCurriculumIndex()].SceneId, showOperator: true);
+        };
+        transportRow.AddChild(_transportCurriculum);
         transportRow.AddChild(VRule());
         var nowPlaying = Heading("NOW PLAYING", 10, new Color("7fa7ba"));
         transportRow.AddChild(nowPlaying);
@@ -2097,6 +3777,7 @@ public partial class SimulatorShell : CanvasLayer
         transportRow.AddChild(_transportScene);
         _transportScope = SmallStatus("LOCAL ONLY", new Color("f1aa5b"));
         transportRow.AddChild(_transportScope);
+        RefreshTransportCurriculumButton();
 
         _ladderWorkspace = BuildLadderWorkspace();
         workspace.AddChild(_ladderWorkspace);
@@ -2237,7 +3918,8 @@ public partial class SimulatorShell : CanvasLayer
             Name = "SimulatorModeDialog",
             Title = "Simulator mode",
             DialogText = "RungProof starts in local simulation mode.\n\n" +
-                         "Start Demo 1, select Run, then press its count button three times: the lamp turns on. Stop removes outputs; Reset restores the initial scene.\n\n" +
+                         "RungProof opens Demo 1 in local simulation mode. Press App Run, then operate the lesson controls. App Stop halts scan/output projection; App Reset restores the simulator and scene.\n\n" +
+                         "The Declared Machine Actions inside a lesson are separate PLC inputs. They are the controls to trace through the displayed ladder logic.\n\n" +
                          "The five demos include authored logic. Other exercises may start empty: open Logic Editor, add networks, then use Online > Verify + load offline before Run.\n\n" +
                          (RuntimeBuildPolicy.IsOfflineDemo
                              ? "This offline demo build cannot connect to a physical PLC. Other catalog scenes remain experimental."
@@ -2252,9 +3934,41 @@ public partial class SimulatorShell : CanvasLayer
         {
             if (action != "demo-1") return;
             _simulatorModeDialog.Hide();
-            RequestSceneChange(AuthoredDemos[0].SceneId);
+            RequestSceneChange(AuthoredDemos[0].SceneId, showOperator: true);
         };
         AddChild(_simulatorModeDialog);
+
+        _curriculumGuideDialog = new AcceptDialog
+        {
+            Name = "FiveDemoCurriculumGuideDialog",
+            Title = "Five-Demo Curriculum Quick Start",
+            DialogText = CurriculumGuideBody,
+            Exclusive = false,
+            DialogAutowrap = true,
+            MinSize = new Vector2I(720, 430),
+        };
+        _curriculumGuideDialog.OkButtonText = "OPEN CURRICULUM";
+        _curriculumGuideDialog.Confirmed += () => ShowClassicTool("scenes");
+        _curriculumGuideResume = _curriculumGuideDialog.AddButton("RESUME NEXT DEMO", true, "resume-next-demo");
+        _curriculumGuideStartFresh = _curriculumGuideDialog.AddButton(
+            "START FRESH CURRICULUM", true, "start-fresh-curriculum");
+        _curriculumGuideDialog.CustomAction += action =>
+        {
+            if (action == "resume-next-demo")
+            {
+                _curriculumGuideDialog.Hide();
+                RequestSceneChange(AuthoredDemos[RecommendedCurriculumIndex()].SceneId, showOperator: true);
+            }
+            else if (action == "start-fresh-curriculum")
+            {
+                _curriculumGuideDialog.Hide();
+                RequestSceneChange(
+                    AuthoredDemos[0].SceneId,
+                    showOperator: true,
+                    onAccepted: ResetCurriculumSession);
+            }
+        };
+        AddChild(_curriculumGuideDialog);
 
         _workspaceFeedbackDialog = new AcceptDialog
         {
@@ -2339,6 +4053,80 @@ public partial class SimulatorShell : CanvasLayer
         helpScroll.AddChild(_assetHelpContent);
         _assetHelpDialog.AddChild(helpScroll);
         AddChild(_assetHelpDialog);
+
+        _machineGuideDialog = new AcceptDialog
+        {
+            Name = "MachineGuideDialog",
+            Title = "MACHINE GUIDE",
+            Exclusive = false,
+            MinSize = new Vector2I(760, 620),
+        };
+        _machineGuideDialog.OkButtonText = "CLOSE";
+        _machineGuideDoNext = _machineGuideDialog.AddButton("DO NEXT ACTION", true, "do-next");
+        _machineGuideDoNext.TooltipText =
+            "Perform the same safe, state-aware next step shown on the curriculum card.";
+        var guideRefresh = _machineGuideDialog.AddButton("REFRESH STATUS", true, "refresh");
+        guideRefresh.TooltipText = "Refresh qualification, next action, and the active demo's current PLC trace values.";
+        var guideMachine = _machineGuideDialog.AddButton("MACHINE", true, "machine");
+        guideMachine.TooltipText = "Close the guide and return to the active demo's machine controls.";
+        var guideLogic = _machineGuideDialog.AddButton("LOGIC", true, "logic");
+        guideLogic.TooltipText = "Close the guide and open the active demo's authored ladder program.";
+        var guideTrace = _machineGuideDialog.AddButton("TRACE", true, "trace");
+        guideTrace.TooltipText = "Close the guide and open the machine scene beside its PLC logic.";
+        var guideMonitor = _machineGuideDialog.AddButton("MONITOR", true, "monitor");
+        guideMonitor.TooltipText = "Close the guide and open the active demo's offline virtual-controller monitor.";
+        _machineGuideDialog.CustomAction += action =>
+        {
+            if (action == "do-next")
+            {
+                _machineGuideDialog.Hide();
+                ExecuteCurriculumNextAction();
+            }
+            else if (action == "refresh")
+            {
+                RefreshActiveMachineGuideDialog();
+            }
+            else if (action == "machine")
+            {
+                _machineGuideDialog.Hide();
+                SetProductView("operator");
+            }
+            else if (action == "logic")
+            {
+                _machineGuideDialog.Hide();
+                SetProductView("ladder");
+            }
+            else if (action == "trace")
+            {
+                _machineGuideDialog.Hide();
+                SetProductView("split");
+            }
+            else if (action == "monitor")
+            {
+                _machineGuideDialog.Hide();
+                ShowClassicTool("virtual-controller");
+            }
+        };
+        var machineGuideScroll = new ScrollContainer
+        {
+            Name = "MachineGuideScroll",
+            CustomMinimumSize = new Vector2(720, 520),
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+            HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
+        };
+        _machineGuideContent = new RichTextLabel
+        {
+            Name = "MachineGuideContent",
+            BbcodeEnabled = true,
+            FitContent = true,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            CustomMinimumSize = new Vector2(700, 520),
+            Text = "Open a curriculum demo to view its machine guide.",
+        };
+        machineGuideScroll.AddChild(_machineGuideContent);
+        _machineGuideDialog.AddChild(machineGuideScroll);
+        AddChild(_machineGuideDialog);
     }
 
     private WorkspaceGroup? SelectedExactGroup()
@@ -2397,6 +4185,24 @@ public partial class SimulatorShell : CanvasLayer
         _simulatorModeDialog.PopupCentered(new Vector2I((int)Math.Min(620, viewport.X - 48), (int)Math.Min(360, viewport.Y - 48)));
     }
 
+    private void ShowCurriculumGuide()
+    {
+        var complete = _completedCurriculumScenes.Count == AuthoredDemos.Length;
+        var nextIndex = RecommendedCurriculumIndex();
+        _curriculumGuideDialog.DialogText =
+            $"SESSION PROGRESS: {_completedCurriculumScenes.Count}/{AuthoredDemos.Length} PASSED\n" +
+            (complete
+                ? "NEXT: Review any lesson or reset the curriculum for a fresh run.\n\n"
+                : $"NEXT: Demo {nextIndex + 1} — {AuthoredDemos[nextIndex].Label}\n\n") +
+            CurriculumGuideBody;
+        _curriculumGuideResume.Text = complete ? "REVIEW DEMO 1" : $"RESUME DEMO {nextIndex + 1}";
+        _curriculumGuideStartFresh.Visible = complete;
+        var viewport = GetViewport().GetVisibleRect().Size;
+        _curriculumGuideDialog.PopupCentered(new Vector2I(
+            (int)Math.Min(760, viewport.X - 48),
+            (int)Math.Min(520, viewport.Y - 48)));
+    }
+
     public void ShowWorkspaceFeedback(string message, bool isError = false)
     {
         _workspaceFeedbackDialog.Title = isError ? "Workspace load failed" : "Workspace";
@@ -2422,9 +4228,28 @@ public partial class SimulatorShell : CanvasLayer
         _workspaceSaveDialog.Hide();
     }
 
-    public void RequestSceneChange(string sceneId)
+    public void RequestSceneChange(string sceneId) => RequestSceneChange(sceneId, showOperator: false);
+
+    private void RequestSceneChange(string sceneId, bool showOperator, Action? onAccepted = null)
     {
-        Action apply = () => SceneRequested?.Invoke(sceneId);
+        Action apply = () =>
+        {
+            onAccepted?.Invoke();
+            SceneRequested?.Invoke(sceneId);
+            if (showOperator) SetProductView("operator");
+            // A curriculum selection from any user-facing surface is a
+            // request to use the lesson, not merely inspect an unloaded draft.
+            // RunRequested follows the normal validate/compile/load path, so
+            // an invalid cached edit still blocks safely and no alternate
+            // controller path is introduced. Other catalog scenes retain
+            // manual startup.
+            if (_activeScene?.Id == sceneId
+                && AuthoredDemos.Any(demo => demo.SceneId == sceneId))
+            {
+                RunRequested?.Invoke();
+                SetWorkspaceStatus($"{_activeSceneName} · LOCAL LESSON SCAN START REQUESTED");
+            }
+        };
         if (WorkspaceReplacementGuard?.Invoke(apply) != false) apply();
         else SelectActiveScenarioRow();
     }
@@ -2457,32 +4282,189 @@ public partial class SimulatorShell : CanvasLayer
             Name = "Operator", HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
         };
+        _operatorConsoleScroll = scroll;
         var body = new VBoxContainer { Name = "OperatorContent", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
+        // Keep the run surface intentionally small. Navigation, reports,
+        // traces, and teaching detail belong in the curriculum browser/guide.
+        var advanced = new VBoxContainer { Name = "OperatorAdvancedControls", Visible = false };
         scroll.AddChild(body);
         body.AddThemeConstantOverride("separation", 8);
         body.AddChild(SectionLabel("SCENARIO"));
         _operatorSceneSummary = Inspector("OperatorSceneSummary");
-        _operatorSceneSummary.CustomMinimumSize = new Vector2(0, 118);
+        _operatorSceneSummary.CustomMinimumSize = new Vector2(0, 68);
         _operatorSceneSummary.FitContent = true;
         _operatorSceneSummary.ScrollActive = false;
         body.AddChild(_operatorSceneSummary);
-        body.AddChild(BuildRepeatCycleObservedTrialCard());
-        body.AddChild(BuildWorkspaceObservedTrialCard());
-        body.AddChild(BuildWorkspaceRollerObservedTrialCard());
-        body.AddChild(SectionLabel("DECLARED MACHINE ACTIONS"));
-        _operatorActions = new VBoxContainer { Name = "OperatorActions" };
+        _operatorLessonProgressLabel = Heading("LESSON PROGRESS", 12, new Color("79c8e8"));
+        _operatorLessonProgressLabel.Name = "OperatorLessonProgressLabel";
+        advanced.AddChild(_operatorLessonProgressLabel);
+        _operatorLessonProgressBar = new ProgressBar
+        {
+            Name = "OperatorLessonProgressBar",
+            MinValue = 0,
+            MaxValue = 100,
+            Value = 0,
+            Step = 0.1,
+            ShowPercentage = false,
+            CustomMinimumSize = new Vector2(0, 20),
+        };
+        advanced.AddChild(_operatorLessonProgressBar);
+        _operatorCurriculumPhaseRail = Inspector("OperatorCurriculumPhaseRail");
+        _operatorCurriculumPhaseRail.CustomMinimumSize = new Vector2(0, 34);
+        _operatorCurriculumPhaseRail.FitContent = true;
+        _operatorCurriculumPhaseRail.ScrollActive = false;
+        _operatorCurriculumPhaseRail.TooltipText = "Live lesson phase: qualify the offline lesson, operate the machine, prove recovery when required, then pass.";
+        advanced.AddChild(_operatorCurriculumPhaseRail);
+        _operatorDoNext = ToolbarButton("OperatorDoNextActionButton", "DO NEXT ACTION", new Color("1f8a58"));
+        _operatorDoNext.TooltipText = "Perform the safe local step named by NEXT ACTION, or open the exact workspace needed to complete it.";
+        _operatorDoNext.Pressed += ExecuteCurriculumNextAction;
+        body.AddChild(_operatorDoNext);
+        var controlBoundary = Inspector("OperatorControlBoundary");
+        controlBoundary.CustomMinimumSize = new Vector2(0, 72);
+        controlBoundary.FitContent = true;
+        controlBoundary.ScrollActive = false;
+        controlBoundary.Text =
+            "[color=#79c8e8][b]CONTROL BOUNDARY[/b][/color]\n" +
+            "[b]App Playback[/b] in the top toolbar runs, stops, or resets the simulator scan. " +
+            "[b]Lesson Inputs[/b] below are controls and field conditions consumed by the displayed PLC program. " +
+            "Any simulated trip is training-only and is not a safety-rated function.";
+        advanced.AddChild(controlBoundary);
+        var controlLegend = new HFlowContainer { Name = "OperatorLessonControlLegend" };
+        controlLegend.AddThemeConstantOverride("h_separation", 6);
+        controlLegend.AddThemeConstantOverride("v_separation", 5);
+        static Button LegendChip(string name, string text, Color color, string tooltip)
+        {
+            var chip = ToolbarButton(name, text, color, 150);
+            chip.MouseFilter = Control.MouseFilterEnum.Ignore;
+            chip.FocusMode = Control.FocusModeEnum.None;
+            chip.TooltipText = tooltip;
+            return chip;
+        }
+        controlLegend.AddChild(LegendChip(
+            "PlaybackControlLegend", "APP · RUN / STOP / RESET", new Color("355d73"),
+            "Top-toolbar playback controls the local simulator scan, not a lesson input."));
+        controlLegend.AddChild(LegendChip(
+            "MomentaryControlLegend", "MOMENTARY · AUTO RELEASE", new Color("496d3f"),
+            "Momentary lesson inputs are asserted only for their authored pulse/action."));
+        controlLegend.AddChild(LegendChip(
+            "MaintainedControlLegend", "MAINTAINED · ON / OFF", new Color("276b89"),
+            "Maintained lesson inputs stay in their selected state until toggled again."));
+        controlLegend.AddChild(LegendChip(
+            "GuidedControlLegend", "▶ NEXT · GUIDED CONTROL", new Color("7b632d"),
+            "The amber NEXT marker identifies the exact lesson control requested by DO NEXT ACTION."));
+        advanced.AddChild(controlLegend);
+        var localPlayback = new HBoxContainer { Name = "OperatorPlaybackControls" };
+        localPlayback.AddThemeConstantOverride("separation", 6);
+        _operatorPlaybackState = Heading("SIMULATOR · STOPPED", 12, new Color("8aa5b4"));
+        _operatorPlaybackState.Name = "OperatorPlaybackState";
+        _operatorPlaybackState.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        localPlayback.AddChild(_operatorPlaybackState);
+        _operatorRunSimulator = ToolbarButton("OperatorRunSimulator", "RUN SIMULATOR", new Color("285d42"), 130);
+        _operatorRunSimulator.TooltipText = "Start the same local simulator scan controlled by App Playback in the top toolbar.";
+        _operatorRunSimulator.Pressed += () => RunRequested?.Invoke();
+        localPlayback.AddChild(_operatorRunSimulator);
+        _operatorStopSimulator = ToolbarButton("OperatorStopSimulator", "STOP", new Color("7b632d"), 86);
+        _operatorStopSimulator.TooltipText = "Stop the local simulator scan without changing authored lesson inputs.";
+        _operatorStopSimulator.Disabled = true;
+        _operatorStopSimulator.Pressed += () => StopRequested?.Invoke();
+        localPlayback.AddChild(_operatorStopSimulator);
+        var localReset = ToolbarButton("OperatorResetSimulator", "RESET", new Color("6f2525"), 86);
+        localReset.TooltipText = "Reset the local simulator and active scene using the same action as App Playback > Reset.";
+        localReset.Pressed += () => ResetRequested?.Invoke();
+        localPlayback.AddChild(localReset);
+        advanced.AddChild(localPlayback);
+        _operatorCurriculumStepRail = new HBoxContainer { Name = "OperatorCurriculumStepRail" };
+        _operatorCurriculumStepRail.AddThemeConstantOverride("separation", 5);
+        for (var demoIndex = 0; demoIndex < AuthoredDemos.Length; demoIndex++)
+        {
+            var index = demoIndex;
+            var step = ToolbarButton(
+                $"OperatorDemoStep{index + 1}",
+                $"{index + 1} {CurriculumStepLabels[index]}",
+                new Color("355d73"),
+                82);
+            step.ToggleMode = true;
+            step.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            step.TooltipText = $"{AuthoredDemos[index].Label}\n{AuthoredDemos[index].Objective}\nProof: {AuthoredDemos[index].CompletionText}";
+            step.Pressed += () => RequestSceneChange(AuthoredDemos[index].SceneId, showOperator: true);
+            _operatorCurriculumStepRail.AddChild(step);
+            _operatorCurriculumStepButtons.Add(step);
+        }
+        advanced.AddChild(_operatorCurriculumStepRail);
+        var demoNavigation = new HBoxContainer { Name = "OperatorCurriculumNavigation" };
+        demoNavigation.AddThemeConstantOverride("separation", 6);
+        _operatorPreviousDemo = ToolbarButton("OperatorPreviousDemoButton", "< PREVIOUS DEMO", new Color("355d73"));
+        _operatorPreviousDemo.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        _operatorPreviousDemo.Pressed += () => NavigateCurriculum(-1);
+        demoNavigation.AddChild(_operatorPreviousDemo);
+        _operatorNextDemo = ToolbarButton("OperatorNextDemoButton", "NEXT DEMO >", new Color("276b89"));
+        _operatorNextDemo.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        _operatorNextDemo.Pressed += () => NavigateCurriculum(1);
+        demoNavigation.AddChild(_operatorNextDemo);
+        advanced.AddChild(demoNavigation);
+        _operatorRestartDemo = ToolbarButton(
+            "OperatorRestartDemoButton",
+            "RESTART CURRENT DEMO · KEEP OTHER PASSES",
+            new Color("7b632d"));
+        _operatorRestartDemo.TooltipText =
+            "Reset the simulator and scene, then clear only this lesson's session pass. Other completed demos remain passed.";
+        _operatorRestartDemo.Pressed += RestartActiveCurriculumDemo;
+        advanced.AddChild(_operatorRestartDemo);
+        _operatorPreviewResults = ToolbarButton("OperatorPreviewCurriculumResults", "VIEW CURRICULUM SESSION REPORT", new Color("276b89"));
+        _operatorPreviewResults.TooltipText = "Review the complete five-demo session report before copying or saving it.";
+        _operatorPreviewResults.Pressed += ShowCurriculumSessionResults;
+        advanced.AddChild(_operatorPreviewResults);
+        _operatorCopyResults = ToolbarButton("OperatorCopyCurriculumResults", "COPY CURRICULUM SESSION RESULTS", new Color("355d73"));
+        _operatorCopyResults.TooltipText = "Copy all five lesson states and local virtual scan evidence with the evidence boundary.";
+        _operatorCopyResults.Disabled = true;
+        _operatorCopyResults.Pressed += CopyCurriculumSessionResults;
+        advanced.AddChild(_operatorCopyResults);
+        _operatorSaveResults = ToolbarButton("OperatorSaveCurriculumResults", "SAVE CURRICULUM SESSION RESULTS", new Color("355d73"));
+        _operatorSaveResults.TooltipText = "Save all five lesson states and local virtual scan evidence as a text report.";
+        _operatorSaveResults.Disabled = true;
+        _operatorSaveResults.Pressed += SaveCurriculumSessionResults;
+        advanced.AddChild(_operatorSaveResults);
+        advanced.AddChild(BuildRepeatCycleObservedTrialCard());
+        advanced.AddChild(BuildWorkspaceObservedTrialCard());
+        advanced.AddChild(BuildWorkspaceRollerObservedTrialCard());
+        // Scene actions stay registered for 3D interaction, guidance state,
+        // and capture automation, but the Operator rail must not duplicate the
+        // physical cabinet/bench controls beside the machine.
+        _operatorActions = new VBoxContainer { Name = "OperatorActions", Visible = false };
         body.AddChild(_operatorActions);
         body.AddChild(SectionLabel("RUNTIME"));
         _operatorRuntimeSummary = Inspector("OperatorRuntimeSummary");
         _operatorRuntimeSummary.FitContent = true;
         _operatorRuntimeSummary.ScrollActive = false;
         body.AddChild(_operatorRuntimeSummary);
-        var ladder = ToolbarButton("OpenLadderButton", "BASIC LOGIC / LADDER", new Color("276b89"));
-        ladder.Pressed += () => SetProductView("ladder");
-        body.AddChild(ladder);
+        _operatorOpenLogic = ToolbarButton("OpenLadderButton", "OPEN CURRENT PLC LOGIC", new Color("276b89"));
+        _operatorOpenLogic.TooltipText = "Open the authored ladder program that consumes the lesson inputs and commands the scene outputs.";
+        _operatorOpenLogic.Pressed += () => SetProductView("ladder");
+        // LOGIC EDITOR is already a permanent primary tab in the header. Keep
+        // this legacy route for structural compatibility, but do not repeat it
+        // as another large button on the compact machine-operating surface.
+        advanced.AddChild(_operatorOpenLogic);
+        _operatorOpenGuide = ToolbarButton("OpenMachineGuideButton", "OPEN CURRENT MACHINE GUIDE", new Color("7b632d"));
+        _operatorOpenGuide.TooltipText =
+            "Open the authored operating sequence, start conditions, stop/reset behavior, fault response, and expected observations. This secondary reference is also available from Curriculum.";
+        _operatorOpenGuide.Pressed += ShowActiveMachineGuide;
+        // Keep reference/navigation actions out of the normal run surface.
+        // Curriculum remains the visible route to the complete machine guide.
+        advanced.AddChild(_operatorOpenGuide);
+        _operatorOpenSplit = ToolbarButton("OpenDemoSplitButton", "TRACE CURRENT SCENE + PLC LOGIC", new Color("276b89"));
+        _operatorOpenSplit.TooltipText =
+            "Open the scene and its displayed PLC program side by side for input-to-logic-to-output tracing.";
+        _operatorOpenSplit.Pressed += () => SetProductView("split");
+        advanced.AddChild(_operatorOpenSplit);
+        _operatorOpenMonitor = ToolbarButton("OpenDemoMonitorButton", "OPEN CURRENT LIVE MONITOR", new Color("496d3f"));
+        _operatorOpenMonitor.TooltipText =
+            "Open the offline virtual-controller monitor and authored watch list. This is local simulator state, not live PLC evidence.";
+        _operatorOpenMonitor.Pressed += () => ShowClassicTool("virtual-controller");
+        advanced.AddChild(_operatorOpenMonitor);
         var engineering = ToolbarButton("OpenEngineeringButton", "OPEN ENGINEERING VIEW", new Color("355d73"));
         engineering.Pressed += () => SetProductView("engineering");
-        body.AddChild(engineering);
+        advanced.AddChild(engineering);
+        body.AddChild(advanced);
 
         // Scene browsing remains available under TOOLS. This hidden list keeps
         // the original population/verification contract without replacing the
@@ -2533,9 +4515,40 @@ public partial class SimulatorShell : CanvasLayer
         scroll.AddChild(body);
         body.AddThemeConstantOverride("separation", 7);
         body.AddChild(SectionLabel("EVENT HISTORY"));
+        var eventActions = new HFlowContainer { Name = "OperatorEventActions" };
+        eventActions.AddThemeConstantOverride("h_separation", 4);
+        _operatorCopyEventLog = ToolbarButton("CopyOperatorEventLog", "COPY LOG", new Color("4d6674"), 92);
+        _operatorClearEventLog = ToolbarButton("ClearOperatorEventLog", "CLEAR LOG", new Color("6d3d42"), 96);
+        _operatorCopyEventLog.Disabled = true;
+        _operatorClearEventLog.Disabled = true;
+        _operatorCopyEventLog.TooltipText = "Copy the bounded operator/action history with its local simulator evidence boundary.";
+        _operatorClearEventLog.TooltipText = "Clear only the visible session event history; curriculum pass evidence is retained.";
+        _operatorCopyEventLog.Pressed += () =>
+        {
+            if (_operatorEvents.Count == 0) return;
+            var log = new StringBuilder();
+            log.AppendLine("RungProof operator event history — current local session");
+            foreach (var entry in _operatorEvents) log.AppendLine(entry);
+            log.AppendLine();
+            log.AppendLine("Evidence boundary: local RungProof operator/action history only; not installed-TIA, commissioning, or live-PLC proof.");
+            DisplayServer.ClipboardSet(log.ToString().TrimEnd());
+            _workspaceStatus.Text = $"OPERATOR EVENT LOG COPIED · {_operatorEvents.Count} ENTRIES";
+            _workspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+        };
+        _operatorClearEventLog.Pressed += () =>
+        {
+            _operatorEvents.Clear();
+            RefreshOperatorEventHistory();
+            _workspaceStatus.Text = "OPERATOR EVENT LOG CLEARED · CURRICULUM PASS EVIDENCE RETAINED";
+            _workspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
+        };
+        eventActions.AddChild(_operatorCopyEventLog);
+        eventActions.AddChild(_operatorClearEventLog);
+        body.AddChild(eventActions);
         _operatorEventHistory = Inspector("OperatorEventHistory");
         _operatorEventHistory.CustomMinimumSize = new Vector2(0, 80);
         _operatorEventHistory.AddThemeFontSizeOverride("normal_font_size", 11);
+        _operatorEventHistory.Text = "No operator events yet. Machine actions, state changes, and lesson passes will appear here.";
         body.AddChild(_operatorEventHistory);
         body.AddChild(SectionLabel("SCENE EQUIPMENT"));
         _operatorEquipment = Inspector("OperatorEquipment");
@@ -2568,13 +4581,26 @@ public partial class SimulatorShell : CanvasLayer
         var ladder = view == "ladder";
         var split = view == "split";
         _leftDock.Visible = engineering || operatorConsole;
-        _rightDock.Visible = engineering || operatorConsole;
-        _diagnosticsDock.Visible = engineering || operatorConsole || split || ladder;
+        // The demo surface needs the machine and its actual lesson inputs, not
+        // permanent engineering telemetry on three sides. Health/event details
+        // and I/O tables remain available in Engineering, Logic, and split
+        // views; Operator keeps its compact left controls and playback strip.
+        _rightDock.Visible = engineering;
+        _diagnosticsDock.Visible = engineering || split || ladder;
         // Ladder workspace is elevated above the scene in split mode. Raise
         // the shared local-model dock with it so the point tables remain a
         // real bottom region instead of being painted underneath the ladder.
         _diagnosticsDock.ZIndex = split || ladder ? 30 : 0;
         _transportDock.Visible = operatorConsole || ladder || split;
+        // Keep the machine-operating surface focused. Pause/single-scan,
+        // history, and project file actions are engineering tools; they remain
+        // available in Logic and split views instead of competing with the
+        // three playback controls and curriculum return route in Operator.
+        foreach (var name in new[] { "PauseButton", "StepScanButton", "ScanHistoryButton", "SaveButton", "LoadButton" })
+        {
+            var control = _transportDock.GetNodeOrNull<Control>($"TransportMargin/TransportRow/{name}");
+            if (control is not null) control.Visible = !operatorConsole;
+        }
         _ladderWorkspace.Visible = ladder || split;
         // The ladder editor has a substantial minimum width from its existing
         // workbench controls. Give it enough room to stay inside a 1600 px
@@ -2589,6 +4615,7 @@ public partial class SimulatorShell : CanvasLayer
         {
             _leftDock.AnchorLeft = 0.0f;
             _leftDock.AnchorRight = 0.0f;
+            _leftDock.AnchorBottom = 1.0f;
             _rightDock.AnchorLeft = 1.0f;
             _rightDock.AnchorRight = 1.0f;
             _leftDock.OffsetTop = 84;
@@ -2606,13 +4633,17 @@ public partial class SimulatorShell : CanvasLayer
         {
             _leftDock.AnchorLeft = 0.0f;
             _leftDock.AnchorRight = 0.0f;
+            _leftDock.AnchorBottom = 0.0f;
             _rightDock.AnchorLeft = 1.0f;
             _rightDock.AnchorRight = 1.0f;
             // Keep both operator docks below the toolbar's actual 84 px
             // minimum height; 70 px cuts into the toolbar row at 125% scale.
             _leftDock.OffsetTop = 84;
             _leftDock.OffsetRight = 290;
-            _leftDock.OffsetBottom = -296;
+            // The Operator rail now contains status only. Its former
+            // full-height bounds left a large empty black slab over the
+            // machine after the duplicate side controls were removed.
+            _leftDock.OffsetBottom = 380;
             _rightDock.OffsetLeft = -250;
             _rightDock.OffsetTop = 84;
             _rightDock.OffsetBottom = -296;
@@ -2628,6 +4659,7 @@ public partial class SimulatorShell : CanvasLayer
             // right rail cover the Ladder workbench.
             _leftDock.AnchorLeft = 0.0f;
             _leftDock.AnchorRight = _splitDividerRatio;
+            _leftDock.AnchorBottom = 1.0f;
             _leftDock.OffsetLeft = 0;
             _leftDock.OffsetTop = 84;
             _leftDock.OffsetRight = -196;
@@ -2683,14 +4715,29 @@ public partial class SimulatorShell : CanvasLayer
 
     private void ApplyToolbarClearance()
     {
-        var compact = GetViewport().GetVisibleRect().Size.X < 1400;
+        var viewportWidth = GetViewport().GetVisibleRect().Size.X;
+        var compact = viewportWidth < 1400;
         var row = GetNode<HBoxContainer>("Workspace/Toolbar/ToolbarMargin/ToolbarRow");
         row.GetNode<Control>("BrandWordmark").Visible = !compact;
-        row.GetNode<Control>("BrandSubtitle").Visible = !compact;
+        // The subtitle duplicates the wordmark and consumes enough width to
+        // truncate the active object at the supported 1600 px workspace. Keep
+        // the brand, but reserve the subtitle for genuinely wide displays.
+        row.GetNode<Control>("BrandSubtitle").Visible = viewportWidth >= 1800;
         row.AddThemeConstantOverride("separation", compact ? 6 : 10);
         _sceneTitle.CustomMinimumSize = new Vector2(compact ? 160 : 0, 0);
         var top = ToolbarClearanceOffset();
         _leftDock.OffsetTop = top;
+        if (_productView == "operator")
+        {
+            var content = _operatorConsoleScroll.GetNodeOrNull<Control>("OperatorContent");
+            var contentHeight = content?.GetCombinedMinimumSize().Y ?? 0.0f;
+            // Include the tab container's frame while allowing wrapped lesson
+            // text to determine the actual rail height. Cap it so unusually
+            // long authored text cannot recreate a full-height overlay.
+            var railHeight = Mathf.Clamp(contentHeight + 24.0f, 220.0f, 330.0f);
+            _leftDock.AnchorBottom = 0.0f;
+            _leftDock.OffsetBottom = top + railHeight;
+        }
         _rightDock.OffsetTop = top;
         _ladderWorkspace.OffsetTop = top;
         _splitDivider.OffsetTop = top;
@@ -2699,10 +4746,12 @@ public partial class SimulatorShell : CanvasLayer
 
     private void RefreshViewportLayout()
     {
+        if (_interfaceScaleSetting == "auto") ApplyInterfaceScale("auto", persist: false);
         ApplySplitLayout();
         ApplyDiagnosticsLayout();
         ApplyChallengeLayout();
         CallDeferred(nameof(ApplyToolbarClearance));
+        ProductViewChanged?.Invoke(_productView);
     }
 
     private void MoveSplitDivider(float x)
@@ -2762,14 +4811,15 @@ public partial class SimulatorShell : CanvasLayer
             if (GetNodeOrNull<Control>($"{programRoot}/InstructionToolbarChrome") is { } palette)
             {
                 palette.Visible = !narrowHeight;
-                // At a 900 px viewport, two wrapped command rows need 64 px;
-                // the category row, spacing, and frame bring the full palette
-                // to about 108 px. The old 144 px minimum left too little room
-                // for the ladder routine while adding blank space below tools.
-                palette.CustomMinimumSize = new Vector2(0, compactPalette ? 112 : 180);
+                // TIA uses one compact editor toolbar above the networks. Its
+                // document path, duplicate title, palette heading, and zoom
+                // row must not accumulate into a second editor header.
+                palette.CustomMinimumSize = environment == "TIA Portal"
+                    ? new Vector2(0, 40)
+                    : new Vector2(0, compactPalette ? 112 : 180);
             }
             if (GetNodeOrNull<Control>($"{programRoot}/InstructionToolbarChrome/InstructionToolbar/Selection") is { } selection)
-                selection.Visible = !compactPalette;
+                selection.Visible = environment != "TIA Portal" && !compactPalette;
         }
         if (split && GetViewport().GetVisibleRect().Size.X < 1900.0f) _compactDockDefaultsApplied = true;
         if (GetNodeOrNull<Control>("Workspace/LadderWorkspace/LadderMargin/LadderBody/LadderHeader") is { } header)
@@ -2877,14 +4927,138 @@ public partial class SimulatorShell : CanvasLayer
             _operatorActions.RemoveChild(child);
             child.QueueFree();
         }
-        foreach (var action in _runtime.GetActions())
+        _operatorActionButtons.Clear();
+        var contracts = new Dictionary<string, (string Point, string Type)>(StringComparer.Ordinal);
+        if (_activeScene?.Simulation.ValueKind == JsonValueKind.Object
+            && _activeScene.Simulation.TryGetProperty("actions", out var actionDefinitions)
+            && actionDefinitions.ValueKind == JsonValueKind.Array)
         {
-            var button = ToolbarButton($"Action_{action.Id.Replace('-', '_')}", action.Label.ToUpperInvariant(), new Color("276b89"));
+            foreach (var definition in actionDefinitions.EnumerateArray())
+            {
+                var id = Text(definition, "id");
+                if (id.Length > 0) contracts[id] = (Text(definition, "point"), Text(definition, "type"));
+            }
+        }
+        var orderedActions = _runtime.GetActions().OrderBy(action =>
+            contracts.TryGetValue(action.Id, out var contract)
+                ? OperatorActionGroup(contract.Point)
+                : 1).ToArray();
+        // A lone visible action category does not need another label beneath
+        // LESSON INPUTS. Keep category headings only where they actually
+        // separate process inputs from fault/interlock simulation. Machine
+        // commands are operated from the 3D station and remain hidden here.
+        var visibleGroupCount = orderedActions
+            .Select(action => contracts.TryGetValue(action.Id, out var contract)
+                ? OperatorActionGroup(contract.Point)
+                : 1)
+            .Where(group => group != 0)
+            .Distinct()
+            .Count();
+        var renderedGroup = -1;
+        foreach (var action in orderedActions)
+        {
+            (string Point, string Type) contract = contracts.TryGetValue(action.Id, out var found)
+                ? found
+                : (Point: string.Empty, Type: string.Empty);
+            var group = OperatorActionGroup(contract.Point);
+            if (group != renderedGroup && group != 0 && visibleGroupCount > 1)
+            {
+                _operatorActions.AddChild(SectionLabel(group switch
+                {
+                    2 => "FAULT / INTERLOCK SIMULATION",
+                    _ => "PROCESS CONDITIONS / SENSOR SIMULATION",
+                }));
+            }
+            renderedGroup = group;
+            var actionColor = OperatorActionColor(contract.Point);
+            var button = ToolbarButton($"Action_{action.Id.Replace('-', '_')}", action.Label.ToUpperInvariant(), actionColor);
+            button.TooltipText = contract.Point.Length == 0
+                ? "Scene action"
+                : $"{(contract.Type == "toggle" ? "Maintained" : "Momentary")} PLC input · {contract.Point}";
+            button.AddThemeStyleboxOverride("focus", BoxStyle(new Color("574929"), new Color("f1aa5b")));
+            if (contract.Type == "toggle")
+            {
+                button.ToggleMode = true;
+                var abnormal = contract.Point is "safety_trip" or "drive_overload";
+                button.AddThemeStyleboxOverride("pressed", BoxStyle(
+                    abnormal ? new Color("6f2525") : new Color("285d42"),
+                    abnormal ? new Color("e36a6a") : new Color("65d49a")));
+                button.AddThemeStyleboxOverride("hover_pressed", BoxStyle(
+                    abnormal ? new Color("863333") : new Color("347553"),
+                    abnormal ? new Color("f08b8b") : new Color("7be3ac")));
+            }
             button.Pressed += () => SceneActionRequested?.Invoke(action.Id);
+            // START/STOP/RESET already exist on the physical 3D station and the
+            // single green guided action can operate the requested command.
+            // Keep these button objects registered (guidance resolves action
+            // identity and labels through the same dictionary), but do not show
+            // a second bank of duplicate machine controls in the learner rail.
+            if (group == 0) button.Visible = false;
             _operatorActions.AddChild(button);
+            _operatorActionButtons[action.Id] = (button, contract.Point, contract.Type, action.Label, actionColor);
         }
         if (_operatorActions.GetChildCount() == 0)
             _operatorActions.AddChild(SectionLabel("No scene-specific actions declared."));
+        RefreshOperatorActionStates();
+    }
+
+    private static int OperatorActionGroup(string point) => point switch
+    {
+        "system_enable" or "start_command" or "stop_command" or "machine_stop"
+            or "reset_command" or "reset_pressed" => 0,
+        "safety_trip" or "drive_overload" => 2,
+        _ => 1,
+    };
+
+    private static Color OperatorActionColor(string point) => point switch
+    {
+        "start_command" => new Color("496d3f"),
+        "stop_command" or "machine_stop" => new Color("8b3535"),
+        "reset_command" or "reset_pressed" => new Color("7b632d"),
+        "safety_trip" or "drive_overload" => new Color("7b3030"),
+        _ => new Color("276b89"),
+    };
+
+    private void RefreshOperatorActionStates()
+    {
+        if (_runtime is null) return;
+        var curriculumIndex = ActiveCurriculumIndex();
+        var guidedDemo = curriculumIndex >= 0 ? AuthoredDemos[curriculumIndex] : null;
+        var nextPoint = guidedDemo is not null
+            && !_completedCurriculumScenes.Contains(guidedDemo.SceneId)
+            && CurriculumOperatorGuidanceReady(guidedDemo)
+                ? CurriculumNextControlPoint(guidedDemo)
+                : null;
+        foreach (var (_, action) in _operatorActionButtons)
+        {
+            var isNext = nextPoint is not null && action.Point == nextPoint;
+            var prefix = isNext ? "▶ NEXT · " : string.Empty;
+            var border = isNext ? new Color("f1aa5b") : action.Color;
+            action.Button.AddThemeStyleboxOverride("normal", BoxStyle(action.Color.Darkened(0.22f), border));
+            action.Button.AddThemeStyleboxOverride("hover", BoxStyle(action.Color.Darkened(0.05f), isNext ? new Color("ffd18a") : action.Color.Lightened(0.18f)));
+            action.Button.TooltipText = (action.Point.Length == 0
+                    ? "Scene action"
+                    : $"{(action.Type == "toggle" ? "Maintained" : "Momentary")} PLC input · {action.Point}")
+                + (isNext ? "\nNEXT LESSON CONTROL · DO NEXT ACTION will focus this button." : string.Empty);
+            if (!action.Type.Equals("toggle", StringComparison.Ordinal))
+            {
+                action.Button.Text = prefix + action.Label.ToUpperInvariant() + " · MOMENTARY";
+                continue;
+            }
+            var enabled = action.Point.Length > 0
+                && _runtime.Points.TryGetValue(action.Point, out var value)
+                && value is bool boolean
+                && boolean;
+            var abnormal = action.Point is "safety_trip" or "drive_overload";
+            action.Button.AddThemeStyleboxOverride("pressed", BoxStyle(
+                abnormal ? new Color("6f2525") : new Color("285d42"),
+                isNext ? new Color("f1aa5b") : abnormal ? new Color("e36a6a") : new Color("65d49a")));
+            action.Button.AddThemeStyleboxOverride("hover_pressed", BoxStyle(
+                abnormal ? new Color("863333") : new Color("347553"),
+                isNext ? new Color("ffd18a") : abnormal ? new Color("f08b8b") : new Color("7be3ac")));
+            action.Button.SetPressedNoSignal(enabled);
+            action.Button.Text = prefix + action.Label.ToUpperInvariant() + (enabled ? " · ON" : " · OFF");
+        }
     }
 
     private bool _externalPlaybackRunning;
@@ -2908,17 +5082,94 @@ public partial class SimulatorShell : CanvasLayer
     {
         if (_runtime is null || _activeScene is null || _operatorActions is null) return;
         _transportScene.Text = $"{Escape(IsChallengeDraftActive ? ChallengeDisplayName : _activeSceneName)} · {ScanInspectionRuntimeLabel}";
-        _operatorSceneSummary.Text =
-            $"[font_size=18][b]{Escape(_activeScene.Name)}[/b][/font_size]\n" +
-            $"[color=#9db4c0]{Escape(_activeScene.Description)}[/color]\n\n" +
-            $"[color=#7fa7ba]{_activeScene.Equipment.Count} declared equipment items · symbolic local model[/color]";
+        var playbackPaused = ActiveRuntimeRunning && _scanInspectionPaused;
+        var scanNumber = _virtualSnapshot?.ScanNumber ?? 0;
+        _operatorPlaybackState.Text = ActiveRuntimeRunning
+            ? playbackPaused
+                ? $"SIMULATOR · PAUSED · SCAN {scanNumber}"
+                : $"SIMULATOR · RUNNING · SCAN {scanNumber}"
+            : $"SIMULATOR · STOPPED · LAST SCAN {scanNumber}";
+        var playbackColor = ActiveRuntimeRunning
+            ? playbackPaused ? new Color("f1aa5b") : new Color("65d49a")
+            : new Color("8aa5b4");
+        _operatorPlaybackState.AddThemeColorOverride("font_color", playbackColor);
+        _operatorRunSimulator.Disabled = ActiveRuntimeRunning;
+        _operatorStopSimulator.Disabled = !ActiveRuntimeRunning;
+        var curriculumIndex = ActiveCurriculumIndex();
+        _operatorCurriculumStepRail.Visible = curriculumIndex >= 0;
+        RefreshCurriculumStepButtons(_operatorCurriculumStepButtons, curriculumIndex);
+        if (curriculumIndex >= 0)
+        {
+            var demo = AuthoredDemos[curriculumIndex];
+            var completion = CurriculumCompletion(demo);
+            var completionState = completion.Complete
+                ? "[color=#65d49a][b]PASSED[/b][/color]"
+                : completion.Eligible
+                    ? "[color=#f1aa5b][b]IN PROGRESS[/b][/color]"
+                    : "[color=#e36a6a][b]NOT QUALIFIED[/b][/color]";
+            _operatorDoNext.Visible = true;
+            _operatorLessonProgressLabel.Visible = true;
+            _operatorLessonProgressBar.Visible = true;
+            var lessonProgress = CurriculumLessonProgress(demo);
+            _operatorLessonProgressLabel.Text = $"LESSON PROGRESS · {lessonProgress.Text}";
+            _operatorLessonProgressBar.Value = lessonProgress.Percent;
+            _operatorLessonProgressBar.TooltipText = lessonProgress.Text;
+            _operatorCurriculumPhaseRail.Visible = true;
+            _operatorCurriculumPhaseRail.Text = CurriculumPhaseRailText(demo, completion);
+            _operatorCopyResults.Visible = true;
+            _operatorCopyResults.Disabled = _completedCurriculumScenes.Count == 0;
+            _operatorSaveResults.Visible = true;
+            _operatorSaveResults.Disabled = _completedCurriculumScenes.Count == 0;
+            _operatorPreviewResults.Visible = true;
+            ConfigureCurriculumActionButton(_operatorDoNext, demo, completion);
+            _operatorSceneSummary.Text =
+                $"[color=#79c8e8][b]DEMO {curriculumIndex + 1} OF {AuthoredDemos.Length}[/b][/color] · {completionState}\n" +
+                $"[font_size=18][b]{Escape(demo.Label)}[/b][/font_size]\n" +
+                $"[color=#9db4c0]{Escape(demo.Objective)}[/color]";
+            _operatorPreviousDemo.Visible = true;
+            _operatorNextDemo.Visible = true;
+            _operatorRestartDemo.Visible = true;
+            _operatorOpenGuide.Visible = true;
+            _operatorRestartDemo.Text = $"RESTART DEMO {curriculumIndex + 1} · KEEP OTHER PASSES";
+            _operatorPreviousDemo.Disabled = curriculumIndex == 0;
+            _operatorNextDemo.Disabled = curriculumIndex == AuthoredDemos.Length - 1;
+            _operatorNextDemo.Text = curriculumIndex == AuthoredDemos.Length - 1
+                ? completion.Complete && _completedCurriculumScenes.Count == AuthoredDemos.Length
+                    ? "CURRICULUM COMPLETE · 5/5"
+                    : "FINAL DEMO"
+                : completion.Complete
+                    ? $"PASSED · NEXT: DEMO {curriculumIndex + 2} >"
+                    : $"NEXT: DEMO {curriculumIndex + 2} >";
+            _operatorOpenLogic.Text = $"OPEN DEMO {curriculumIndex + 1} PLC LOGIC";
+            _operatorOpenGuide.Text = $"OPEN DEMO {curriculumIndex + 1} MACHINE GUIDE";
+            _operatorOpenSplit.Text = $"TRACE DEMO {curriculumIndex + 1} · SCENE + PLC LOGIC";
+            _operatorOpenMonitor.Text = $"OPEN DEMO {curriculumIndex + 1} LIVE MONITOR";
+        }
+        else
+        {
+            _operatorDoNext.Visible = false;
+            _operatorLessonProgressLabel.Visible = false;
+            _operatorLessonProgressBar.Visible = false;
+            _operatorCurriculumPhaseRail.Visible = false;
+            _operatorCopyResults.Visible = false;
+            _operatorSaveResults.Visible = false;
+            _operatorPreviewResults.Visible = false;
+            _operatorSceneSummary.Text =
+                $"[font_size=18][b]{Escape(_activeScene.Name)}[/b][/font_size]\n" +
+                $"[color=#9db4c0]{Escape(_activeScene.Description)}[/color]\n\n" +
+                $"[color=#7fa7ba]{_activeScene.Equipment.Count} declared equipment items · symbolic local model[/color]";
+            _operatorPreviousDemo.Visible = false;
+            _operatorNextDemo.Visible = false;
+            _operatorRestartDemo.Visible = false;
+            _operatorOpenGuide.Visible = false;
+            _operatorOpenLogic.Text = "OPEN CURRENT PLC LOGIC";
+            _operatorOpenSplit.Text = "TRACE CURRENT SCENE + PLC LOGIC";
+            _operatorOpenMonitor.Text = "OPEN CURRENT LIVE MONITOR";
+        }
         var external = _externalMode;
         _operatorRuntimeSummary.Text =
-            $"[b]Player[/b]  {(external ? "EXTERNAL PLC" : "BUILT-IN SIMULATOR")}\n" +
-            $"[b]State[/b]  {ScanInspectionRuntimeLabel}\n" +
-            $"[b]Scene[/b]  {Escape(_activeScene.Id)}\n" +
-            $"[b]Points[/b]  {_runtime.Points.Count}\n" +
-            $"[b]PLC exchange[/b]  {(external ? _connection.State.ToString().ToUpperInvariant() : "LOCAL MODEL")}";
+            $"[b]{ScanInspectionRuntimeLabel}[/b] · " +
+            $"{(external ? "EXTERNAL PLC" : "LOCAL SIMULATOR")} · {_runtime.Points.Count} I/O points";
         var equipment = new StringBuilder();
         equipment.AppendLine($"[b]{Escape(_activeScene.Name)}[/b]");
         foreach (var item in _activeScene.Equipment.Take(8))
@@ -3066,6 +5317,175 @@ public partial class SimulatorShell : CanvasLayer
     {
         var body = new VBoxContainer { Name = "Scenes" };
         body.AddThemeConstantOverride("separation", 7);
+        body.AddChild(SectionLabel("FIVE-DEMO CURRICULUM"));
+        var curriculumCard = PanelContainer("CurriculumCard", new Color("10212aF2"), new Color("315465"));
+        var curriculumBody = new VBoxContainer { Name = "CurriculumBody" };
+        curriculumBody.AddThemeConstantOverride("separation", 7);
+        curriculumCard.AddChild(curriculumBody);
+        _curriculumProgress = Heading("SELECT A DEMO", 13, new Color("79c8e8"));
+        _curriculumProgress.Name = "CurriculumProgress";
+        curriculumBody.AddChild(_curriculumProgress);
+        _curriculumProgressBar = new ProgressBar
+        {
+            Name = "CurriculumProgressBar",
+            MinValue = 0,
+            MaxValue = AuthoredDemos.Length,
+            Value = 0,
+            Step = 1,
+            ShowPercentage = true,
+            CustomMinimumSize = new Vector2(0, 24),
+            TooltipText = "Lessons passed during this RungProof session.",
+        };
+        curriculumBody.AddChild(_curriculumProgressBar);
+        _curriculumStatusBoard = Inspector("CurriculumStatusBoard");
+        _curriculumStatusBoard.CustomMinimumSize = new Vector2(0, 116);
+        _curriculumStatusBoard.FitContent = false;
+        _curriculumStatusBoard.ScrollActive = false;
+        _curriculumStatusBoard.TooltipText = "Five-demo session map. Use the numbered buttons below to open any lesson.";
+        curriculumBody.AddChild(_curriculumStatusBoard);
+        var curriculumStepRail = new HBoxContainer { Name = "CurriculumStepRail" };
+        curriculumStepRail.AddThemeConstantOverride("separation", 5);
+        for (var demoIndex = 0; demoIndex < AuthoredDemos.Length; demoIndex++)
+        {
+            var index = demoIndex;
+            var step = ToolbarButton(
+                $"CurriculumDemoStep{index + 1}",
+                $"{index + 1} {CurriculumStepLabels[index]}",
+                new Color("355d73"),
+                70);
+            step.ToggleMode = true;
+            step.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            step.TooltipText = $"{AuthoredDemos[index].Label}\n{AuthoredDemos[index].Objective}\nProof: {AuthoredDemos[index].CompletionText}";
+            step.Pressed += () => RequestSceneChange(AuthoredDemos[index].SceneId, showOperator: true);
+            curriculumStepRail.AddChild(step);
+            _curriculumStepButtons.Add(step);
+        }
+        curriculumBody.AddChild(curriculumStepRail);
+        _curriculumSummary = Inspector("CurriculumSummary");
+        _curriculumSummary.CustomMinimumSize = new Vector2(0, 310);
+        _curriculumSummary.FitContent = false;
+        _curriculumSummary.ScrollActive = true;
+        _curriculumSummary.TooltipText = "Scroll for the full objective, procedure, live trace, PLC focus, and first troubleshooting checks.";
+        curriculumBody.AddChild(_curriculumSummary);
+        _curriculumLessonProgressLabel = Heading("ACTIVE LESSON PROGRESS", 12, new Color("79c8e8"));
+        _curriculumLessonProgressLabel.Name = "CurriculumLessonProgressLabel";
+        curriculumBody.AddChild(_curriculumLessonProgressLabel);
+        _curriculumLessonProgressBar = new ProgressBar
+        {
+            Name = "CurriculumLessonProgressBar",
+            MinValue = 0,
+            MaxValue = 100,
+            Value = 0,
+            Step = 0.1,
+            ShowPercentage = false,
+            CustomMinimumSize = new Vector2(0, 20),
+        };
+        curriculumBody.AddChild(_curriculumLessonProgressBar);
+        _curriculumPhaseRail = Inspector("CurriculumPhaseRail");
+        _curriculumPhaseRail.CustomMinimumSize = new Vector2(0, 34);
+        _curriculumPhaseRail.FitContent = true;
+        _curriculumPhaseRail.ScrollActive = false;
+        _curriculumPhaseRail.TooltipText = "Live lesson phase: qualify the offline lesson, operate the machine, prove recovery when required, then pass.";
+        curriculumBody.AddChild(_curriculumPhaseRail);
+        _curriculumDoNext = ToolbarButton("CurriculumDoNextActionButton", "DO NEXT ACTION", new Color("1f8a58"));
+        _curriculumDoNext.TooltipText = "Perform the safe local step named by NEXT ACTION, or open the exact workspace needed to complete it.";
+        _curriculumDoNext.Pressed += ExecuteCurriculumNextAction;
+        curriculumBody.AddChild(_curriculumDoNext);
+        var navigation = new HBoxContainer { Name = "CurriculumNavigation" };
+        navigation.AddThemeConstantOverride("separation", 6);
+        _curriculumPrevious = ToolbarButton("PreviousDemoButton", "< PREVIOUS", new Color("355d73"));
+        _curriculumPrevious.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        _curriculumPrevious.Pressed += () => NavigateCurriculum(-1);
+        navigation.AddChild(_curriculumPrevious);
+        _curriculumNext = ToolbarButton("NextDemoButton", "NEXT >", new Color("276b89"));
+        _curriculumNext.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        _curriculumNext.Pressed += () => NavigateCurriculum(1);
+        navigation.AddChild(_curriculumNext);
+        curriculumBody.AddChild(navigation);
+        _curriculumOpenLogic = ToolbarButton("OpenDemoLogicButton", "OPEN THIS DEMO'S LOGIC", new Color("496d3f"));
+        _curriculumOpenLogic.Pressed += () =>
+        {
+            if (ActiveCurriculumIndex() < 0)
+            {
+                RequestSceneChange(AuthoredDemos[RecommendedCurriculumIndex()].SceneId, showOperator: true);
+                return;
+            }
+            SetProductView("ladder");
+        };
+        curriculumBody.AddChild(_curriculumOpenLogic);
+        _curriculumOpenGuide = ToolbarButton(
+            "CurriculumOpenMachineGuideButton",
+            "OPEN THIS DEMO'S MACHINE GUIDE",
+            new Color("7b632d"));
+        _curriculumOpenGuide.TooltipText =
+            "Open the authored operating sequence, start conditions, stop/reset behavior, fault response, and expected observations for this lesson.";
+        _curriculumOpenGuide.Pressed += ShowActiveMachineGuide;
+        curriculumBody.AddChild(_curriculumOpenGuide);
+        _curriculumOpenSplit = ToolbarButton(
+            "CurriculumOpenSplitButton",
+            "TRACE THIS DEMO · SCENE + PLC LOGIC",
+            new Color("276b89"));
+        _curriculumOpenSplit.TooltipText =
+            "Open the active lesson scene and its displayed PLC program side by side for input-to-logic-to-output tracing.";
+        _curriculumOpenSplit.Pressed += () => SetProductView("split");
+        curriculumBody.AddChild(_curriculumOpenSplit);
+        _curriculumOpenMonitor = ToolbarButton(
+            "CurriculumOpenMonitorButton",
+            "OPEN THIS DEMO'S LIVE MONITOR",
+            new Color("496d3f"));
+        _curriculumOpenMonitor.TooltipText =
+            "Open the offline virtual-controller monitor and authored watch list. These are local simulator values, not live PLC evidence.";
+        _curriculumOpenMonitor.Pressed += () => ShowClassicTool("virtual-controller");
+        curriculumBody.AddChild(_curriculumOpenMonitor);
+        _curriculumRestartDemo = ToolbarButton(
+            "CurriculumRestartDemoButton",
+            "RESTART CURRENT DEMO · KEEP OTHER PASSES",
+            new Color("7b632d"));
+        _curriculumRestartDemo.TooltipText =
+            "Reset the simulator and scene, then clear only this lesson's session pass. Other completed demos remain passed.";
+        _curriculumRestartDemo.Pressed += RestartActiveCurriculumDemo;
+        curriculumBody.AddChild(_curriculumRestartDemo);
+        _curriculumPreviewResults = ToolbarButton("PreviewCurriculumResultsButton", "VIEW CURRICULUM SESSION REPORT", new Color("276b89"));
+        _curriculumPreviewResults.TooltipText = "Review the complete five-demo session report before copying or saving it.";
+        _curriculumPreviewResults.Pressed += ShowCurriculumSessionResults;
+        curriculumBody.AddChild(_curriculumPreviewResults);
+        _curriculumCopyResults = ToolbarButton("CopyCurriculumResultsButton", "COPY CURRICULUM SESSION RESULTS", new Color("355d73"));
+        _curriculumCopyResults.TooltipText = "Copy all five lesson states and local virtual scan evidence with the evidence boundary.";
+        _curriculumCopyResults.Disabled = true;
+        _curriculumCopyResults.Pressed += CopyCurriculumSessionResults;
+        curriculumBody.AddChild(_curriculumCopyResults);
+        _curriculumSaveResults = ToolbarButton("SaveCurriculumResultsButton", "SAVE CURRICULUM SESSION RESULTS", new Color("355d73"));
+        _curriculumSaveResults.TooltipText = "Save all five lesson states and local virtual scan evidence as a text report.";
+        _curriculumSaveResults.Disabled = true;
+        _curriculumSaveResults.Pressed += SaveCurriculumSessionResults;
+        curriculumBody.AddChild(_curriculumSaveResults);
+        _curriculumResetProgress = ToolbarButton("ResetCurriculumProgressButton", "RESET CURRICULUM + SIMULATOR", new Color("5b4c45"));
+        _curriculumResetProgress.TooltipText = "Clear all five session completion marks and reset the local simulator/scene.";
+        _curriculumResetConfirmation = new ConfirmationDialog
+        {
+            Name = "CurriculumResetConfirmation",
+            Title = "Reset curriculum session?",
+            OkButtonText = "RESET SESSION",
+            CancelButtonText = "CANCEL",
+            Exclusive = false,
+            MinSize = new Vector2I(620, 220),
+        };
+        _curriculumResetConfirmation.GetLabel().AutowrapMode = TextServer.AutowrapMode.WordSmart;
+        _curriculumResetConfirmation.GetLabel().CustomMaximumSize = new Vector2(560, -1);
+        _curriculumResetConfirmation.Confirmed += ResetCurriculumSession;
+        AddChild(_curriculumResetConfirmation);
+        _curriculumResetProgress.Pressed += () =>
+        {
+            var passed = _completedCurriculumScenes.Count;
+            var stagedRecovery = _curriculumRecoveryStages.Values.Count(stage => stage != CurriculumRecoveryStage.None);
+            _curriculumResetConfirmation.DialogText =
+                $"This will clear {passed} passed lesson record(s), {stagedRecovery} staged recovery record(s), " +
+                "all captured curriculum pass traces, and reset the local simulator plus active scene.\n\n" +
+                "It will not delete authored demo logic, project files, or the five demo scenes.";
+            _curriculumResetConfirmation.PopupCentered(new Vector2I(620, 220));
+        };
+        curriculumBody.AddChild(_curriculumResetProgress);
+        body.AddChild(curriculumCard);
         body.AddChild(SectionLabel("SCENARIO BROWSER"));
         _sceneList = new ItemList
         {
@@ -3081,7 +5501,1522 @@ public partial class SimulatorShell : CanvasLayer
                 RequestSceneChange(scenario.Id);
         };
         body.AddChild(_sceneList);
+        RefreshCurriculumPanel();
         return body;
+    }
+
+    private int ActiveCurriculumIndex() => _activeScene is null
+        ? -1
+        : Array.FindIndex(AuthoredDemos, demo => demo.SceneId.Equals(_activeScene.Id, StringComparison.Ordinal));
+
+    private int RecommendedCurriculumIndex()
+    {
+        var index = Array.FindIndex(AuthoredDemos, demo => !_completedCurriculumScenes.Contains(demo.SceneId));
+        return index >= 0 ? index : 0;
+    }
+
+    private string CurriculumQualificationSummary(CurriculumDemo demo)
+    {
+        static string Mark(bool passed) => passed ? "✓" : "✕";
+        var builtIn = !_externalMode;
+        var running = _virtualSnapshot?.State == VirtualControllerState.Running;
+        var forcesClear = _virtualSnapshot is not null && _virtualSnapshot.Forces.Count == 0;
+        var logicLoaded = _ladderMonitorMatchesLoadedProgram && _ladderDocument.SourceSceneId == demo.SceneId;
+        var sceneMatches = _activeScene?.Id == demo.SceneId;
+        return $"{Mark(builtIn)} built-in simulator   {Mark(running)} scan running   " +
+               $"{Mark(forcesClear)} zero forces   {Mark(logicLoaded)} demo logic loaded   {Mark(sceneMatches)} correct scene";
+    }
+
+    private string CurriculumTraceValue(string point)
+    {
+        if (_runtime?.Points.TryGetValue(point, out var sceneValue) == true)
+            return DisplayPointValue(sceneValue);
+        if (_virtualSnapshot is null) return "—";
+        if (_virtualSnapshot.Variables.TryGetValue(point, out var boolean))
+            return boolean.ToString().ToUpperInvariant();
+        if (_virtualSnapshot.NumericVariables.TryGetValue(point, out var numeric))
+            return numeric.ToString("G6", System.Globalization.CultureInfo.InvariantCulture);
+        if (_virtualSnapshot.TextVariables.TryGetValue(point, out var text)) return text;
+        if (_virtualSnapshot.Timers.TryGetValue(point, out var timer))
+            return $"ET={timer.Accumulated.TotalMilliseconds:0}ms Q={timer.Done.ToString().ToUpperInvariant()}";
+        if (_virtualSnapshot.Counters.TryGetValue(point, out var counter))
+            return $"CV={counter.Accumulated} Q={counter.Done.ToString().ToUpperInvariant()}";
+        return "—";
+    }
+
+    private string CurriculumTraceSummary(CurriculumDemo demo) => string.Join("   ",
+        demo.TracePoints.Select(point => $"{point}={CurriculumTraceValue(point)}"));
+
+    private CurriculumRecoveryStage CurriculumRecoveryStageFor(CurriculumDemo demo) =>
+        _curriculumRecoveryStages.TryGetValue(demo.SceneId, out var stage)
+            ? stage
+            : CurriculumRecoveryStage.None;
+
+    private string CurriculumRecoveryNextAction(CurriculumDemo demo)
+    {
+        var stage = CurriculumRecoveryStageFor(demo);
+        if (demo.SceneId == "lab-5-01-delayed-lamp")
+        {
+            return stage switch
+            {
+                CurriculumRecoveryStage.FirstCycleComplete =>
+                    "First two-second delay proved. Press machine STOP and confirm the lamp turns off.",
+                CurriculumRecoveryStage.StopObserved =>
+                    "Machine STOP proved. Press machine RESET and confirm ET returns to 0.",
+                CurriculumRecoveryStage.ResetRequested =>
+                    "Machine RESET was pressed. Wait for ET 0 and lamp OFF.",
+                CurriculumRecoveryStage.ResetObserved =>
+                    "Turn REQUEST OFF to clear the maintained command before restart.",
+                CurriculumRecoveryStage.RequestCleared =>
+                    "Turn REQUEST ON and hold it through a second full two-second delay.",
+                _ => string.Empty,
+            };
+        }
+        if (demo.SceneId == "lab-9-11-pallet-counting")
+        {
+            return stage switch
+            {
+                CurriculumRecoveryStage.FirstCycleComplete =>
+                    "First five-pallet batch proved. Press machine RESET and confirm COUNT returns to 0.",
+                CurriculumRecoveryStage.ResetRequested =>
+                    "Machine RESET was pressed. Wait for COUNT 0, then release RESET.",
+                CurriculumRecoveryStage.ResetObserved =>
+                    "Press machine START, keep TYPE VALID and COUNT REQUEST on, then press NEW PALLET once to prove batch two starts at COUNT 1.",
+                _ => string.Empty,
+            };
+        }
+        if (demo.SceneId == "lab-11-13-xy-palletizing")
+        {
+            return stage switch
+            {
+                CurriculumRecoveryStage.FirstCycleComplete =>
+                    "First four-carton layer proved. Press machine RESET and confirm STEP/PLACED return to 0.",
+                CurriculumRecoveryStage.ResetRequested =>
+                    "First-layer RESET was pressed. Wait for STEP 0 and PLACED 0.",
+                CurriculumRecoveryStage.ResetObserved =>
+                    "First-layer reset proved. Issue a fresh machine START.",
+                CurriculumRecoveryStage.RestartObserved =>
+                    "Reset restart proved. Press machine STOP.",
+                CurriculumRecoveryStage.StopRequested =>
+                    "Machine STOP requested. Wait for machine run to drop.",
+                CurriculumRecoveryStage.StopObserved =>
+                    "Machine STOP proved. Issue a fresh machine START.",
+                CurriculumRecoveryStage.StopRestartObserved =>
+                    "Stop restart proved. Apply the simulated trip.",
+                CurriculumRecoveryStage.TripRequested =>
+                    "Trip applied. Wait for the PLC to drop machine run.",
+                CurriculumRecoveryStage.TripObserved =>
+                    "Trip inhibit proved. Clear the simulated trip.",
+                CurriculumRecoveryStage.TripCleared =>
+                    "Trip cleared. Press machine RESET and confirm STEP/PLACED return to 0.",
+                CurriculumRecoveryStage.PostTripResetRequested =>
+                    "Trip RESET was pressed. Wait for STEP 0 and PLACED 0.",
+                CurriculumRecoveryStage.PostTripResetObserved =>
+                    "Trip reset proved. Issue a fresh machine START.",
+                CurriculumRecoveryStage.PostTripRestartObserved =>
+                    "Trip restart proved. Turn PALLET permissive OFF.",
+                CurriculumRecoveryStage.PermissiveRemoved =>
+                    "Pallet permissive removed. Wait for machine run to drop.",
+                CurriculumRecoveryStage.PermissiveLossObserved =>
+                    "Pallet-loss inhibit proved. Restore PALLET permissive ON.",
+                CurriculumRecoveryStage.PermissiveRestored =>
+                    "Pallet restored. Press machine RESET.",
+                CurriculumRecoveryStage.SecondResetRequested =>
+                    "Recovery RESET requested. Wait for STEP/PLACED 0.",
+                CurriculumRecoveryStage.SecondResetObserved =>
+                    "Issue a fresh machine START and complete the second four-carton layer.",
+                _ => string.Empty,
+            };
+        }
+        return string.Empty;
+    }
+
+    private string CurriculumRecoveryProgress(CurriculumDemo demo)
+    {
+        if (_completedCurriculumScenes.Contains(demo.SceneId))
+        {
+            return demo.SceneId switch
+            {
+                "lab-4-01-press-count-lamp" =>
+                    "COMPLETE · first count 3, machine RESET to 0, repeat count 3",
+                "lab-5-01-delayed-lamp" =>
+                    "COMPLETE · first delay, machine STOP, RESET to ET 0, REQUEST off/on, repeat delay",
+                "lab-9-11-pallet-counting" =>
+                    "COMPLETE · first batch 5, machine RESET to 0, batch-two COUNT 1",
+                "lab-11-13-xy-palletizing" =>
+                    "COMPLETE · layer 1 + STOP/trip/pallet-loss recovery + RESET + layer 2",
+                _ => string.Empty,
+            };
+        }
+
+        return (demo.SceneId, CurriculumRecoveryStageFor(demo)) switch
+        {
+            ("lab-5-01-delayed-lamp", CurriculumRecoveryStage.None) =>
+                "1/5 · hold REQUEST ON through the first two-second delay",
+            ("lab-5-01-delayed-lamp", CurriculumRecoveryStage.FirstCycleComplete) =>
+                "2/5 · first delay proved; press machine STOP",
+            ("lab-5-01-delayed-lamp", CurriculumRecoveryStage.StopObserved) =>
+                "3/5 · STOP proved; press machine RESET",
+            ("lab-5-01-delayed-lamp", CurriculumRecoveryStage.ResetRequested) =>
+                "3/5 · RESET requested; wait for ET 0",
+            ("lab-5-01-delayed-lamp", CurriculumRecoveryStage.ResetObserved) =>
+                "4/5 · reset proved; turn REQUEST OFF",
+            ("lab-5-01-delayed-lamp", CurriculumRecoveryStage.RequestCleared) =>
+                "5/5 · REQUEST cleared; repeat the full delay",
+            ("lab-9-11-pallet-counting", CurriculumRecoveryStage.None) =>
+                "1/3 · complete the first valid five-pallet batch",
+            ("lab-9-11-pallet-counting", CurriculumRecoveryStage.FirstCycleComplete) =>
+                "1/3 PROVED · press machine RESET",
+            ("lab-9-11-pallet-counting", CurriculumRecoveryStage.ResetRequested) =>
+                "2/3 · RESET requested; waiting for COUNT 0",
+            ("lab-9-11-pallet-counting", CurriculumRecoveryStage.ResetObserved) =>
+                "2/3 PROVED · start batch two and produce COUNT 1",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.None) =>
+                "1/8 · complete the first four-carton layer",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.FirstCycleComplete) =>
+                "2/8 · first layer proved; press machine RESET",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.ResetRequested) =>
+                "2/8 · first-layer RESET requested",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.ResetObserved) =>
+                "3/8 · first-layer reset proved; fresh START",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.RestartObserved) =>
+                "3/8 · reset restart proved; press machine STOP",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.StopRequested) =>
+                "3/8 · STOP requested; waiting for run off",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.StopObserved) =>
+                "4/8 · STOP proved; issue a fresh START",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.StopRestartObserved) =>
+                "4/8 · stop restart proved; apply simulated trip",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.TripRequested) =>
+                "4/8 · trip applied; waiting for run off",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.TripObserved) =>
+                "5/8 · trip inhibit proved; clear trip",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.TripCleared) =>
+                "5/8 · trip cleared; press RESET",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.PostTripResetRequested) =>
+                "5/8 · trip RESET requested; waiting for STEP/PLACED 0",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.PostTripResetObserved) =>
+                "6/8 · trip recovery proved; fresh START",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.PostTripRestartObserved) =>
+                "6/8 · remove PALLET permissive",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.PermissiveRemoved) =>
+                "6/8 · PALLET removed; waiting for run off",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.PermissiveLossObserved) =>
+                "7/8 · pallet-loss inhibit proved; restore PALLET",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.PermissiveRestored) =>
+                "7/8 · PALLET restored; press RESET",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.SecondResetRequested) =>
+                "7/8 · recovery RESET requested",
+            ("lab-11-13-xy-palletizing", CurriculumRecoveryStage.SecondResetObserved) =>
+                "8/8 · fresh START; complete layer two",
+            _ => string.Empty,
+        };
+    }
+
+    private double CurriculumNumericValue(string point)
+    {
+        object? value = null;
+        if (_runtime?.Points.TryGetValue(point, out value) != true
+            && _virtualSnapshot?.NumericVariables.TryGetValue(point, out var numeric) == true)
+            value = numeric;
+        try
+        {
+            return value is null
+                ? 0
+                : Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException)
+        {
+            return 0;
+        }
+    }
+
+    private (double Percent, string Text) CurriculumLessonProgress(CurriculumDemo demo)
+    {
+        if (_completedCurriculumScenes.Contains(demo.SceneId)) return (100, "PASS COMPLETE");
+
+        static double ClampPercent(double value) => Math.Clamp(value, 0, 100);
+        return demo.SceneId switch
+        {
+            "lab-4-01-press-count-lamp" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.None =>
+                    (ClampPercent(CurriculumNumericValue("press_count_value") / 3d * 50d),
+                        $"FIRST COUNT {CurriculumNumericValue("press_count_value"):0}/3"),
+                CurriculumRecoveryStage.FirstCycleComplete or CurriculumRecoveryStage.ResetRequested =>
+                    (50, "FIRST COUNT 3 · RESET TO 0"),
+                _ =>
+                    (ClampPercent(50d + CurriculumNumericValue("press_count_value") / 3d * 50d),
+                        $"REPEAT COUNT {CurriculumNumericValue("press_count_value"):0}/3"),
+            },
+            "lab-5-01-delayed-lamp" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.None =>
+                    (ClampPercent(CurriculumNumericValue("delay_elapsed_ms") / 2000d * 40d),
+                        $"FIRST DELAY {CurriculumNumericValue("delay_elapsed_ms"):0}/2000 ms"),
+                CurriculumRecoveryStage.FirstCycleComplete => (45, "FIRST DELAY COMPLETE · PRESS STOP"),
+                CurriculumRecoveryStage.StopObserved => (55, "STOP PROVED · PRESS RESET"),
+                CurriculumRecoveryStage.ResetRequested => (60, "RESET REQUESTED · WAIT FOR ET 0"),
+                CurriculumRecoveryStage.ResetObserved => (65, "RESET PROVED · TURN REQUEST OFF"),
+                _ =>
+                    (ClampPercent(65d + CurriculumNumericValue("delay_elapsed_ms") / 2000d * 35d),
+                        $"REPEAT DELAY {CurriculumNumericValue("delay_elapsed_ms"):0}/2000 ms"),
+            },
+            "scene-2-conveyor-pusher" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.None =>
+                    (ClampPercent(CurriculumNumericValue("parts_completed") / 3d * 35d),
+                        $"ROUTING {CurriculumNumericValue("parts_completed"):0}/3"),
+                CurriculumRecoveryStage.FirstCycleComplete => (40, "ROUTING PROVED · PRESS STOP"),
+                CurriculumRecoveryStage.StopRequested => (43, "STOP REQUESTED · WAIT FOR RUN OFF"),
+                CurriculumRecoveryStage.StopObserved => (45, "STOP PROVED · FRESH START"),
+                CurriculumRecoveryStage.RestartObserved => (50, "RESTART PROVED · APPLY TRIP"),
+                CurriculumRecoveryStage.TripRequested => (54, "TRIP APPLIED · WAIT FOR RUN OFF"),
+                CurriculumRecoveryStage.TripObserved => (57, "TRIP INHIBIT PROVED · CLEAR TRIP"),
+                CurriculumRecoveryStage.TripCleared => (63, "TRIP CLEAR · RESET"),
+                CurriculumRecoveryStage.ResetRequested => (68, "RESET REQUESTED · WAIT FOR READY"),
+                CurriculumRecoveryStage.ResetObserved => (73, "TRIP RECOVERY · FRESH START"),
+                CurriculumRecoveryStage.RequestCleared => (78, "TRIP RESTART PROVED · APPLY OVERLOAD"),
+                CurriculumRecoveryStage.OverloadRequested => (82, "OVERLOAD APPLIED · WAIT FOR RUN OFF"),
+                CurriculumRecoveryStage.OverloadObserved => (85, "OVERLOAD INHIBIT PROVED · CLEAR OVERLOAD"),
+                CurriculumRecoveryStage.OverloadCleared => (90, "OVERLOAD CLEAR · RESET"),
+                CurriculumRecoveryStage.SecondResetRequested => (94, "SECOND RESET REQUESTED"),
+                _ => (97, "OVERLOAD RECOVERY · FRESH START"),
+            },
+            "lab-9-11-pallet-counting" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.None =>
+                    (ClampPercent(CurriculumNumericValue("pallet_count") / 5d * 33.333d),
+                        $"FIRST BATCH {CurriculumNumericValue("pallet_count"):0}/5"),
+                CurriculumRecoveryStage.FirstCycleComplete or CurriculumRecoveryStage.ResetRequested =>
+                    (33.333d, "FIRST BATCH PROVED · RESET REQUIRED"),
+                _ =>
+                    (ClampPercent(66.667d + CurriculumNumericValue("pallet_count") * 33.333d),
+                        $"RESET PROVED · BATCH TWO {CurriculumNumericValue("pallet_count"):0}/1"),
+            },
+            "lab-11-13-xy-palletizing" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.None =>
+                    (ClampPercent(CurriculumNumericValue("placed_cartons") / 4d * 25d),
+                        $"FIRST LAYER {CurriculumNumericValue("placed_cartons"):0}/4"),
+                CurriculumRecoveryStage.FirstCycleComplete => (28, "FIRST LAYER PROVED · RESET"),
+                CurriculumRecoveryStage.ResetRequested => (31, "FIRST-LAYER RESET REQUESTED"),
+                CurriculumRecoveryStage.ResetObserved => (34, "FIRST-LAYER RESET PROVED · START"),
+                CurriculumRecoveryStage.RestartObserved => (38, "RESET RESTART PROVED · PRESS STOP"),
+                CurriculumRecoveryStage.StopRequested => (41, "STOP REQUESTED · WAIT FOR RUN OFF"),
+                CurriculumRecoveryStage.StopObserved => (44, "STOP PROVED · FRESH START"),
+                CurriculumRecoveryStage.StopRestartObserved => (47, "STOP RESTART PROVED · APPLY TRIP"),
+                CurriculumRecoveryStage.TripRequested => (50, "TRIP APPLIED · WAIT FOR RUN OFF"),
+                CurriculumRecoveryStage.TripObserved => (53, "TRIP INHIBIT PROVED · CLEAR TRIP"),
+                CurriculumRecoveryStage.TripCleared => (56, "TRIP CLEAR · RESET"),
+                CurriculumRecoveryStage.PostTripResetRequested => (59, "TRIP RESET REQUESTED"),
+                CurriculumRecoveryStage.PostTripResetObserved => (62, "TRIP RESET PROVED · FRESH START"),
+                CurriculumRecoveryStage.PostTripRestartObserved => (65, "REMOVE PALLET PERMISSIVE"),
+                CurriculumRecoveryStage.PermissiveRemoved => (68, "PALLET REMOVED · WAIT FOR RUN OFF"),
+                CurriculumRecoveryStage.PermissiveLossObserved => (71, "PALLET LOSS PROVED · RESTORE PALLET"),
+                CurriculumRecoveryStage.PermissiveRestored => (74, "PALLET RESTORED · RESET"),
+                CurriculumRecoveryStage.SecondResetRequested => (77, "RECOVERY RESET REQUESTED"),
+                _ =>
+                    (ClampPercent(80d + CurriculumNumericValue("placed_cartons") / 4d * 20d),
+                        $"RESET PROVED · SECOND LAYER {CurriculumNumericValue("placed_cartons"):0}/4"),
+            },
+            _ => (0, "READY"),
+        };
+    }
+
+    private string CurriculumLiveProcedureStatus(
+        CurriculumDemo demo,
+        (bool Complete, bool Eligible, string CurrentValue, string Guidance) completion)
+    {
+        static string Step(bool complete, bool active, int number, string text) =>
+            $"{(complete ? "✓" : active ? "▶" : "○")} {number}. {text}";
+
+        if (completion.Complete)
+        {
+            var finalText = demo.SceneId switch
+            {
+                "lab-9-11-pallet-counting" => "Repeatability proved: first batch, reset to zero, and batch-two COUNT 1.",
+                "lab-11-13-xy-palletizing" => "Repeatability proved: first layer, reset to home/zero, and second layer.",
+                _ => "Proof condition captured for this session.",
+            };
+            return string.Join("\n",
+                Step(true, false, 1, "Offline lesson qualified."),
+                Step(true, false, 2, "Operate the authored machine sequence."),
+                Step(true, false, 3, finalText));
+        }
+
+        var qualification = Step(completion.Eligible, !completion.Eligible, 1,
+            completion.Eligible ? "Offline lesson qualified." : completion.Guidance);
+        if (!completion.Eligible)
+            return string.Join("\n", qualification,
+                Step(false, false, 2, "Machine exercise locked until qualification is complete."),
+                Step(false, false, 3, "Pass proof not yet available."));
+
+        if (demo.SceneId == "lab-9-11-pallet-counting")
+        {
+            var stage = CurriculumRecoveryStageFor(demo);
+            var count = CurriculumNumericValue("pallet_count");
+            return stage switch
+            {
+                CurriculumRecoveryStage.None => string.Join("\n", qualification,
+                    Step(false, true, 2, $"Build first valid batch · COUNT {count:0}/5."),
+                    Step(false, false, 3, "Reset to COUNT 0, then prove batch two starts at COUNT 1.")),
+                CurriculumRecoveryStage.FirstCycleComplete => string.Join("\n", qualification,
+                    Step(true, false, 2, "First valid five-pallet batch proved."),
+                    Step(false, true, 3, "Press machine RESET and confirm COUNT returns to 0.")),
+                CurriculumRecoveryStage.ResetRequested => string.Join("\n", qualification,
+                    Step(true, false, 2, "First valid five-pallet batch proved."),
+                    Step(false, true, 3, "RESET requested · waiting for COUNT 0, then release RESET.")),
+                _ => string.Join("\n", qualification,
+                    Step(true, false, 2, "First batch and reset-to-zero proved."),
+                    Step(false, true, 3, $"Start batch two · COUNT {count:0}/1.")),
+            };
+        }
+
+        if (demo.SceneId == "lab-11-13-xy-palletizing")
+        {
+            var stage = CurriculumRecoveryStageFor(demo);
+            var placed = CurriculumNumericValue("placed_cartons");
+            if (stage == CurriculumRecoveryStage.None)
+                return string.Join("\n", qualification,
+                    Step(false, true, 2, $"Complete first layer · PLACED {placed:0}/4."),
+                    Step(false, false, 3, "Prove Stop, trip, pallet-loss recovery, then complete layer two."));
+            if (stage != CurriculumRecoveryStage.SecondResetObserved)
+                return string.Join("\n", qualification,
+                    Step(true, false, 2, "First four-carton layer proved."),
+                    Step(false, true, 3, CurriculumRecoveryNextAction(demo)));
+            return string.Join("\n", qualification,
+                Step(true, false, 2, "Stop, trip, pallet-loss, and reset recovery proved."),
+                Step(false, true, 3, $"Complete second layer · PLACED {placed:0}/4."));
+        }
+
+        var progress = CurriculumLessonProgress(demo).Text;
+        return string.Join("\n", qualification,
+            Step(false, true, 2, progress),
+            Step(false, false, 3, demo.CompletionText));
+    }
+
+    private string CurriculumPhaseRailText(
+        CurriculumDemo demo,
+        (bool Complete, bool Eligible, string CurrentValue, string Guidance) completion)
+    {
+        const string completeColor = "65d49a";
+        const string activeColor = "79c8e8";
+        const string pendingColor = "9db4c0";
+        const string inactiveColor = "607983";
+        var recoveryRequired = demo.SceneId is "lab-9-11-pallet-counting" or "lab-11-13-xy-palletizing";
+        var recovering = recoveryRequired && CurriculumRecoveryStageFor(demo) != CurriculumRecoveryStage.None;
+        static string Phase(string color, string marker, string label) =>
+            $"[color=#{color}][b]{marker} {label}[/b][/color]";
+
+        var qualify = completion.Eligible || completion.Complete
+            ? Phase(completeColor, "✓", "QUALIFY")
+            : Phase(activeColor, "▶", "QUALIFY");
+        var operate = completion.Complete || recovering
+            ? Phase(completeColor, "✓", "OPERATE")
+            : completion.Eligible
+                ? Phase(activeColor, "▶", "OPERATE")
+                : Phase(pendingColor, "○", "OPERATE");
+        var recover = !recoveryRequired
+            ? Phase(inactiveColor, "—", "RECOVERY")
+            : completion.Complete
+                ? Phase(completeColor, "✓", "RECOVERY")
+                : recovering
+                    ? Phase(activeColor, "▶", "RECOVERY")
+                    : Phase(pendingColor, "○", "RECOVERY");
+        var pass = completion.Complete
+            ? Phase(completeColor, "✓", "PASS")
+            : Phase(pendingColor, "○", "PASS");
+        return $"[center]{qualify}   {operate}   {recover}   {pass}[/center]";
+    }
+
+    private static string CurriculumRecoveryProofSummary(CurriculumDemo demo) => demo.SceneId switch
+    {
+        "lab-4-01-press-count-lamp" =>
+            "first count 3 + machine RESET to 0 + repeat count 3",
+        "lab-5-01-delayed-lamp" =>
+            "first TON 2000 ms + machine STOP output off + RESET ET 0 + REQUEST off/on + repeat TON 2000 ms",
+        "scene-2-conveyor-pusher" =>
+            "three carton routes + machine STOP/restart + trip clear/RESET/restart + overload clear/RESET/restart",
+        "lab-9-11-pallet-counting" =>
+            "first batch 5 + machine RESET to 0 + batch-two COUNT 1",
+        "lab-11-13-xy-palletizing" =>
+            "first layer 4 + machine STOP/restart + trip clear/RESET/restart + pallet loss/restore/RESET/restart + second layer 4",
+        _ => string.Empty,
+    };
+
+    private (bool Complete, bool Eligible, string CurrentValue, string Guidance) CurriculumCompletion(CurriculumDemo demo)
+    {
+        var current = "unavailable";
+        var reached = false;
+        double? currentNumber = null;
+        var eligible = true;
+        var guidance = string.Empty;
+        if (_externalMode)
+        {
+            eligible = false;
+            guidance = "External PLC mode is not offline curriculum evidence.";
+        }
+        else if (_virtualSnapshot is null)
+        {
+            eligible = false;
+            guidance = "Load the authored offline demo program.";
+        }
+        else if (!_ladderMonitorMatchesLoadedProgram || _ladderDocument.SourceSceneId != demo.SceneId)
+        {
+            eligible = false;
+            guidance = "Verify + Load the displayed authored logic for this demo.";
+        }
+        else if (_virtualSnapshot.Forces.Count > 0)
+        {
+            eligible = false;
+            guidance = "Remove all simulator forces before earning curriculum progress.";
+        }
+        else if (_virtualSnapshot.State != VirtualControllerState.Running)
+        {
+            eligible = false;
+            guidance = "Select App Playback > Run simulator scan.";
+        }
+        if (_runtime?.Points.TryGetValue(demo.CompletionPoint, out var value) == true)
+        {
+            current = DisplayPointValue(value);
+            try
+            {
+                currentNumber = Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
+                reached = currentNumber >= demo.CompletionTarget;
+            }
+            catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException)
+            {
+                reached = false;
+            }
+        }
+        if (demo.CompletionQualifierPoint.Length > 0)
+        {
+            object? qualifier = null;
+            var qualifierReached = _runtime is not null
+                && _runtime.Points.TryGetValue(demo.CompletionQualifierPoint, out qualifier)
+                && qualifier is bool boolean
+                && boolean;
+            current += $" · {demo.CompletionQualifierPoint}={DisplayPointValue(qualifier)}";
+            reached &= qualifierReached;
+        }
+        if (eligible && !_completedCurriculumScenes.Contains(demo.SceneId)
+            && demo.SceneId == "lab-5-01-delayed-lamp")
+        {
+            var stage = CurriculumRecoveryStageFor(demo);
+            if (stage == CurriculumRecoveryStage.None && reached)
+            {
+                stage = CurriculumRecoveryStage.FirstCycleComplete;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 2 · FIRST DELAY PROVED · PRESS MACHINE STOP");
+            }
+
+            var stopPressed = CurriculumPointIsOn("machine_stop");
+            var resetPressed = CurriculumPointIsOn("reset_pressed");
+            var requestOn = CurriculumPointIsOn("timer_request");
+            var lampOn = CurriculumPointIsOn("delayed_lamp");
+            var elapsedMs = CurriculumNumericValue("delay_elapsed_ms");
+            if (stage == CurriculumRecoveryStage.FirstCycleComplete && stopPressed)
+            {
+                stage = CurriculumRecoveryStage.StopObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 2 · MACHINE STOP REQUESTED · WAIT FOR LAMP OFF");
+            }
+            if (stage == CurriculumRecoveryStage.StopObserved && !lampOn && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.ResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            if (stage == CurriculumRecoveryStage.ResetRequested && elapsedMs <= 0 && !lampOn)
+            {
+                stage = CurriculumRecoveryStage.ResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 2 · RESET PROVED · TURN REQUEST OFF");
+            }
+            if (stage == CurriculumRecoveryStage.ResetObserved && !requestOn)
+            {
+                stage = CurriculumRecoveryStage.RequestCleared;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 2 · REQUEST OFF PROVED · TURN REQUEST ON AND REPEAT THE FULL DELAY");
+            }
+
+            var timerCaughtUp = _virtualSnapshot?.Timers.TryGetValue("delay_timer", out var timer) == true
+                && timer.Done
+                && timer.Accumulated.TotalMilliseconds >= 2000;
+            reached = stage == CurriculumRecoveryStage.RequestCleared
+                && requestOn && lampOn && elapsedMs >= 2000 && timerCaughtUp;
+        }
+        if (eligible && !_completedCurriculumScenes.Contains(demo.SceneId)
+            && demo.SceneId == "scene-2-conveyor-pusher")
+        {
+            var stage = CurriculumRecoveryStageFor(demo);
+            var machineRun = CurriculumControllerPointIsOn("machine_run");
+            var stopPressed = CurriculumPointIsOn("stop_command");
+            var resetPressed = CurriculumPointIsOn("reset_command");
+            var tripActive = CurriculumPointIsOn("safety_trip");
+            var overloadActive = CurriculumPointIsOn("drive_overload");
+            if (stage == CurriculumRecoveryStage.None && reached)
+            {
+                stage = CurriculumRecoveryStage.FirstCycleComplete;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · THREE ROUTES PROVED · PRESS MACHINE STOP");
+            }
+            else if (stage == CurriculumRecoveryStage.FirstCycleComplete && stopPressed)
+            {
+                stage = CurriculumRecoveryStage.StopRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.StopRequested && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.StopObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · MACHINE STOP PROVED · ISSUE A FRESH START");
+            }
+            else if (stage == CurriculumRecoveryStage.StopObserved && machineRun)
+            {
+                stage = CurriculumRecoveryStage.RestartObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · STOP RESTART PROVED · APPLY SIMULATED TRIP");
+            }
+            else if (stage == CurriculumRecoveryStage.RestartObserved && tripActive)
+            {
+                stage = CurriculumRecoveryStage.TripRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.TripRequested && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.TripObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · TRIP INHIBIT PROVED · CLEAR THE SIMULATED TRIP");
+            }
+            else if (stage == CurriculumRecoveryStage.TripObserved && !tripActive)
+            {
+                stage = CurriculumRecoveryStage.TripCleared;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.TripCleared && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.ResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.ResetRequested && !resetPressed && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.ResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · TRIP RESET PROVED · ISSUE A FRESH START");
+            }
+            else if (stage == CurriculumRecoveryStage.ResetObserved && machineRun)
+            {
+                stage = CurriculumRecoveryStage.RequestCleared;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · TRIP RESTART PROVED · APPLY DRIVE OVERLOAD");
+            }
+            else if (stage == CurriculumRecoveryStage.RequestCleared && overloadActive)
+            {
+                stage = CurriculumRecoveryStage.OverloadRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.OverloadRequested && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.OverloadObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · OVERLOAD INHIBIT PROVED · CLEAR DRIVE OVERLOAD");
+            }
+            else if (stage == CurriculumRecoveryStage.OverloadObserved && !overloadActive)
+            {
+                stage = CurriculumRecoveryStage.OverloadCleared;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.OverloadCleared && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.SecondResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.SecondResetRequested && !resetPressed && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.SecondResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 3 · OVERLOAD RESET PROVED · ISSUE A FRESH START");
+            }
+
+            reached = stage == CurriculumRecoveryStage.SecondResetObserved && machineRun;
+        }
+        if (eligible && !_completedCurriculumScenes.Contains(demo.SceneId)
+            && demo.SceneId == "lab-11-13-xy-palletizing")
+        {
+            var stage = CurriculumRecoveryStageFor(demo);
+            var machineRun = CurriculumControllerPointIsOn("machine_run");
+            var stopPressed = CurriculumPointIsOn("stop_command");
+            var resetPressed = CurriculumPointIsOn("reset_command");
+            var tripActive = CurriculumPointIsOn("safety_trip");
+            var palletValid = CurriculumPointIsOn("pallet_position_valid");
+            var placed = CurriculumNumericValue("placed_cartons");
+            var step = CurriculumNumericValue("sequence_step_value");
+            var layerComplete = CurriculumPointIsOn("layer_complete");
+
+            if (stage == CurriculumRecoveryStage.None && reached)
+            {
+                stage = CurriculumRecoveryStage.FirstCycleComplete;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · FIRST LAYER PROVED · RESET THE COMPLETED LAYER");
+            }
+            else if (stage == CurriculumRecoveryStage.FirstCycleComplete && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.ResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.ResetRequested
+                && !resetPressed && !machineRun && placed <= 0 && step <= 0)
+            {
+                stage = CurriculumRecoveryStage.ResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · FIRST-LAYER RESET PROVED · START RECOVERY EXERCISE");
+            }
+            else if (stage == CurriculumRecoveryStage.ResetObserved && machineRun)
+            {
+                stage = CurriculumRecoveryStage.RestartObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · RESET RESTART PROVED · PRESS MACHINE STOP");
+            }
+            else if (stage == CurriculumRecoveryStage.RestartObserved && stopPressed)
+            {
+                stage = CurriculumRecoveryStage.StopRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.StopRequested && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.StopObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · MACHINE STOP PROVED · ISSUE A FRESH START");
+            }
+            else if (stage == CurriculumRecoveryStage.StopObserved && machineRun)
+            {
+                stage = CurriculumRecoveryStage.StopRestartObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · STOP RESTART PROVED · APPLY SIMULATED TRIP");
+            }
+            else if (stage == CurriculumRecoveryStage.StopRestartObserved && tripActive)
+            {
+                stage = CurriculumRecoveryStage.TripRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.TripRequested && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.TripObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · TRIP INHIBIT PROVED · CLEAR TRIP");
+            }
+            else if (stage == CurriculumRecoveryStage.TripObserved && !tripActive)
+            {
+                stage = CurriculumRecoveryStage.TripCleared;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.TripCleared && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.PostTripResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.PostTripResetRequested
+                && !resetPressed && !machineRun && placed <= 0 && step <= 0)
+            {
+                stage = CurriculumRecoveryStage.PostTripResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · TRIP RESET PROVED · ISSUE A FRESH START");
+            }
+            else if (stage == CurriculumRecoveryStage.PostTripResetObserved && machineRun)
+            {
+                stage = CurriculumRecoveryStage.PostTripRestartObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · TRIP RESTART PROVED · REMOVE PALLET PERMISSIVE");
+            }
+            else if (stage == CurriculumRecoveryStage.PostTripRestartObserved && !palletValid)
+            {
+                stage = CurriculumRecoveryStage.PermissiveRemoved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.PermissiveRemoved && !machineRun)
+            {
+                stage = CurriculumRecoveryStage.PermissiveLossObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · PALLET LOSS INHIBIT PROVED · RESTORE PALLET");
+            }
+            else if (stage == CurriculumRecoveryStage.PermissiveLossObserved && palletValid)
+            {
+                stage = CurriculumRecoveryStage.PermissiveRestored;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.PermissiveRestored && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.SecondResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            else if (stage == CurriculumRecoveryStage.SecondResetRequested
+                && !resetPressed && !machineRun && placed <= 0 && step <= 0)
+            {
+                stage = CurriculumRecoveryStage.SecondResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                SetWorkspaceStatus("DEMO 5 · PALLET RECOVERY RESET PROVED · START LAYER TWO");
+            }
+
+            reached = stage == CurriculumRecoveryStage.SecondResetObserved
+                && placed >= 4 && layerComplete;
+        }
+        if (eligible && !_completedCurriculumScenes.Contains(demo.SceneId)
+            && demo.SceneId is "lab-4-01-press-count-lamp" or "lab-9-11-pallet-counting")
+        {
+            var stage = CurriculumRecoveryStageFor(demo);
+            if (stage == CurriculumRecoveryStage.None && reached)
+            {
+                stage = CurriculumRecoveryStage.FirstCycleComplete;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+                reached = false;
+                SetWorkspaceStatus(demo.SceneId switch
+                {
+                    "lab-4-01-press-count-lamp" => "DEMO 1 · FIRST COUNT PROVED · RESET AND REPEAT",
+                    "lab-9-11-pallet-counting" => "DEMO 4 · FIRST BATCH PROVED · RESET AND START BATCH TWO",
+                    _ => "DEMO 5 · FIRST LAYER PROVED · RESET AND RUN A SECOND LAYER",
+                });
+            }
+
+            var resetPoint = demo.SceneId switch
+            {
+                "lab-4-01-press-count-lamp" or "lab-9-11-pallet-counting" => "reset_pressed",
+                _ => "reset_command",
+            };
+            var resetPressed = _runtime?.Points.TryGetValue(resetPoint, out var resetValue) == true
+                && resetValue is bool resetBoolean
+                && resetBoolean;
+            if (stage == CurriculumRecoveryStage.FirstCycleComplete && resetPressed)
+            {
+                stage = CurriculumRecoveryStage.ResetRequested;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+            var resetValueObserved = currentNumber <= 0
+                && (demo.SceneId != "lab-4-01-press-count-lamp"
+                    || CurriculumNumericValue("press_count_value") <= 0);
+            if (stage == CurriculumRecoveryStage.ResetRequested && resetValueObserved)
+            {
+                stage = CurriculumRecoveryStage.ResetObserved;
+                _curriculumRecoveryStages[demo.SceneId] = stage;
+            }
+
+            reached = stage == CurriculumRecoveryStage.ResetObserved
+                && demo.SceneId switch
+                {
+                    // Demo 1's completion point is the BOOL threshold lamp;
+                    // its repeat proof must inspect the published CTU value.
+                    "lab-4-01-press-count-lamp" => CurriculumNumericValue("press_count_value") >= 3,
+                    "lab-9-11-pallet-counting" => currentNumber >= 1,
+                    _ => reached,
+                };
+        }
+        if (demo.SceneId == "lab-4-01-press-count-lamp" && reached)
+        {
+            // Freeze pass evidence only when the CTU snapshot and its
+            // published scene value describe the same accepted scan. This
+            // check must run after the recovery stage recomputes `reached`.
+            var publishedCount = Convert.ToInt32(CurriculumNumericValue("press_count_value"));
+            var controllerCount = _virtualSnapshot?.Counters.TryGetValue("press_count", out var counter) == true
+                ? counter.Accumulated
+                : -1;
+            reached = controllerCount == publishedCount;
+        }
+        if (eligible && reached && _completedCurriculumScenes.Add(demo.SceneId))
+        {
+            _curriculumPassEvidence[demo.SceneId] = new(
+                current,
+                _virtualSnapshot?.ScanNumber ?? 0,
+                CurriculumTraceSummary(demo),
+                CurriculumRecoveryProofSummary(demo));
+            if (_curriculumProgressBar is not null) _curriculumProgressBar.Value = _completedCurriculumScenes.Count;
+            RefreshCurriculumRows();
+            var completedIndex = Array.FindIndex(AuthoredDemos, candidate => candidate.SceneId == demo.SceneId);
+            if (_completedCurriculumScenes.Count == AuthoredDemos.Length)
+                SetWorkspaceStatus("CURRICULUM COMPLETE · ALL FIVE DEMOS PASSED THIS SESSION");
+            else
+            {
+                var nextIndex = RecommendedCurriculumIndex();
+                SetWorkspaceStatus($"DEMO {completedIndex + 1} PASSED · NEXT RECOMMENDED: DEMO {nextIndex + 1}");
+            }
+        }
+        return (_completedCurriculumScenes.Contains(demo.SceneId), eligible, current, guidance);
+    }
+
+    private string CurriculumNextAction(
+        CurriculumDemo demo,
+        (bool Complete, bool Eligible, string CurrentValue, string Guidance) completion)
+    {
+        if (!completion.Eligible) return completion.Guidance;
+        if (!completion.Complete)
+        {
+            var recoveryAction = CurriculumRecoveryNextAction(demo);
+            return recoveryAction.Length > 0 ? recoveryAction : demo.ActionHint;
+        }
+        if (_completedCurriculumScenes.Count == AuthoredDemos.Length)
+            return "All five demos passed. Review any lesson from the numbered rail or reset the curriculum for a fresh run.";
+        var nextIndex = RecommendedCurriculumIndex();
+        return $"Demo passed. Open Demo {nextIndex + 1} from the numbered rail or choose the Next action.";
+    }
+
+    private string CurriculumPassEvidenceSummary(CurriculumDemo demo)
+    {
+        if (!_curriculumPassEvidence.TryGetValue(demo.SceneId, out var evidence))
+            return "Session pass recorded; detailed local scan evidence is unavailable.";
+        var recovery = evidence.RecoveryProof.Length > 0
+            ? $" · recovery={evidence.RecoveryProof}"
+            : string.Empty;
+        return $"Local virtual scan {evidence.ScanNumber} · {demo.CompletionPoint}={evidence.ProofValue}{recovery}";
+    }
+
+    private string CurriculumPassTraceSummary(CurriculumDemo demo)
+    {
+        return _curriculumPassEvidence.TryGetValue(demo.SceneId, out var evidence)
+            ? evidence.TraceSnapshot
+            : "Pass-time signal snapshot unavailable.";
+    }
+
+    private string CurriculumSessionResultsText()
+    {
+        var summary = new StringBuilder();
+        summary.AppendLine("RungProof Five-Demo Curriculum — local virtual session");
+        summary.AppendLine($"Passed: {_completedCurriculumScenes.Count}/{AuthoredDemos.Length}");
+        summary.AppendLine();
+        for (var index = 0; index < AuthoredDemos.Length; index++)
+        {
+            var demo = AuthoredDemos[index];
+            if (_completedCurriculumScenes.Contains(demo.SceneId))
+            {
+                summary.AppendLine($"Demo {index + 1}: PASSED — {demo.Label} — {CurriculumPassEvidenceSummary(demo)}");
+                summary.AppendLine($"  Signal snapshot: {CurriculumPassTraceSummary(demo)}");
+            }
+            else
+                summary.AppendLine($"Demo {index + 1}: NOT PASSED — {demo.Label} — Proof required: {demo.CompletionText}");
+        }
+        summary.AppendLine();
+        summary.AppendLine("Recent operator events (newest first):");
+        if (_operatorEvents.Count == 0) summary.AppendLine("  No operator events recorded.");
+        else
+            foreach (var entry in _operatorEvents.Take(12)) summary.AppendLine("  " + entry);
+        summary.AppendLine();
+        summary.AppendLine("Evidence boundary: local RungProof virtual-controller session only; not installed-TIA, screen-control, commissioning, or live-PLC proof.");
+        return summary.ToString().TrimEnd();
+    }
+
+    private void CopyCurriculumSessionResults()
+    {
+        DisplayServer.ClipboardSet(CurriculumSessionResultsText());
+        SetWorkspaceStatus($"CURRICULUM SESSION RESULTS COPIED · {_completedCurriculumScenes.Count}/5 PASSED");
+    }
+
+    private void ShowCurriculumSessionResults()
+    {
+        if (_curriculumResultsPreviewDialog is null)
+        {
+            _curriculumResultsPreviewDialog = new AcceptDialog
+            {
+                Name = "CurriculumSessionResultsPreviewDialog",
+                Title = "Five-demo curriculum session report",
+                Exclusive = false,
+                MinSize = new Vector2I(820, 620),
+            };
+            _curriculumResultsPreviewDialog.OkButtonText = "CLOSE";
+            var copy = _curriculumResultsPreviewDialog.AddButton("COPY REPORT", true, "copy-report");
+            copy.TooltipText = "Copy the report exactly as shown.";
+            var save = _curriculumResultsPreviewDialog.AddButton("SAVE REPORT", true, "save-report");
+            save.TooltipText = "Choose a text-file destination for the report exactly as shown.";
+            _curriculumResultsPreviewDialog.CustomAction += action =>
+            {
+                if (action == "copy-report") CopyCurriculumSessionResults();
+                else if (action == "save-report") SaveCurriculumSessionResults();
+            };
+            var scroll = new ScrollContainer
+            {
+                Name = "CurriculumSessionResultsPreviewScroll",
+                CustomMinimumSize = new Vector2(770, 520),
+                HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
+                VerticalScrollMode = ScrollContainer.ScrollMode.Auto,
+            };
+            _curriculumResultsPreviewContent = new RichTextLabel
+            {
+                Name = "CurriculumSessionResultsPreviewContent",
+                BbcodeEnabled = false,
+                FitContent = true,
+                ScrollActive = false,
+                AutowrapMode = TextServer.AutowrapMode.WordSmart,
+                CustomMinimumSize = new Vector2(740, 500),
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            };
+            scroll.AddChild(_curriculumResultsPreviewContent);
+            _curriculumResultsPreviewDialog.AddChild(scroll);
+            AddChild(_curriculumResultsPreviewDialog);
+        }
+
+        _curriculumResultsPreviewContent!.Text = CurriculumSessionResultsText();
+        _curriculumResultsPreviewDialog.Title = $"Five-demo curriculum session report · {_completedCurriculumScenes.Count}/5 passed";
+        _curriculumResultsPreviewDialog.PopupCentered(new Vector2I(820, 620));
+    }
+
+    private void SaveCurriculumSessionResults()
+    {
+        if (_curriculumResultsSaveDialog is null)
+        {
+            _curriculumResultsSaveDialog = new FileDialog
+            {
+                Name = "SaveCurriculumSessionResultsDialog",
+                FileMode = FileDialog.FileModeEnum.SaveFile,
+                Access = FileDialog.AccessEnum.Filesystem,
+                Title = "Save curriculum session results",
+                CurrentDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
+                Filters = ["*.txt ; Text report"],
+            };
+            _curriculumResultsSaveDialog.FileSelected += selectedPath =>
+            {
+                var path = selectedPath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)
+                    ? selectedPath
+                    : selectedPath + ".txt";
+                try
+                {
+                    System.IO.File.WriteAllText(path, CurriculumSessionResultsText());
+                    SetWorkspaceStatus($"CURRICULUM SESSION RESULTS SAVED · {_completedCurriculumScenes.Count}/5 PASSED · {path}");
+                }
+                catch (Exception exception)
+                {
+                    SetWorkspaceStatus($"CURRICULUM SESSION SAVE FAILED · {exception.Message}");
+                }
+            };
+            AddChild(_curriculumResultsSaveDialog);
+        }
+        _curriculumResultsSaveDialog.CurrentFile = $"RungProof-Curriculum-{DateTime.Now:yyyy-MM-dd-HHmm}.txt";
+        _curriculumResultsSaveDialog.PopupCenteredRatio(0.7f);
+    }
+
+    private void ConfigureCurriculumActionButton(
+        Button button,
+        CurriculumDemo demo,
+        (bool Complete, bool Eligible, string CurrentValue, string Guidance) completion)
+    {
+        button.Disabled = false;
+        var nextControlPoint = CurriculumNextControlPoint(demo);
+        // This action remains wired for deterministic review automation, but
+        // learners operate the physical 3D controls. Do not put a second copy
+        // of START/STOP/RESET, selectors, trips, or process events in the rail.
+        button.Visible = false;
+        var nextControlLabel = nextControlPoint is null
+            ? null
+            : _operatorActionButtons.Values.FirstOrDefault(action => action.Point == nextControlPoint).Label;
+        button.Text = completion.Complete
+            ? _completedCurriculumScenes.Count == AuthoredDemos.Length
+                ? "REVIEW DEMO 1"
+                : $"OPEN NEXT UNFINISHED DEMO {RecommendedCurriculumIndex() + 1}"
+            : _externalMode
+                ? "RETURN TO BUILT-IN SIMULATOR"
+                : _ladderDocument.SourceSceneId != demo.SceneId
+                    ? "OPEN MATCHING DEMO LOGIC"
+                    : _virtualSnapshot is null || !_ladderMonitorMatchesLoadedProgram
+                    ? "RUN CURRENT DEMO LOGIC"
+                    : _virtualSnapshot.Forces.Count > 0
+                        ? "CLEAR ALL SIMULATOR FORCES"
+                        : _virtualSnapshot.State != VirtualControllerState.Running
+                            ? "RUN SIMULATOR SCAN"
+                            : nextControlLabel is { Length: > 0 }
+                                ? $"OPERATE {nextControlLabel.ToUpperInvariant()}"
+                                : "GO TO LESSON INPUTS";
+    }
+
+    private bool CurriculumPointIsOn(string point) =>
+        _runtime?.Points.TryGetValue(point, out var value) == true
+        && value is bool boolean
+        && boolean;
+
+    private bool CurriculumControllerPointIsOn(string point) =>
+        _virtualSnapshot?.Variables.TryGetValue(point, out var value) == true
+        && value is bool boolean
+        && boolean;
+
+    private bool CurriculumOperatorGuidanceReady(CurriculumDemo demo) =>
+        !_externalMode
+        && _activeScene?.Id == demo.SceneId
+        && _virtualSnapshot is not null
+        && _virtualSnapshot.State == VirtualControllerState.Running
+        && _virtualSnapshot.Forces.Count == 0
+        && _ladderMonitorMatchesLoadedProgram
+        && _ladderDocument.SourceSceneId == demo.SceneId;
+
+    private string? CurriculumNextControlPoint(CurriculumDemo demo)
+    {
+        return demo.SceneId switch
+        {
+            "lab-4-01-press-count-lamp" => CurriculumRecoveryStageFor(demo) is CurriculumRecoveryStage.FirstCycleComplete or CurriculumRecoveryStage.ResetRequested
+                ? "reset_pressed"
+                : "pulse_received",
+            "lab-5-01-delayed-lamp" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.FirstCycleComplete => "machine_stop",
+                CurriculumRecoveryStage.StopObserved => CurriculumPointIsOn("delayed_lamp") ? null : "reset_pressed",
+                CurriculumRecoveryStage.ResetRequested => null,
+                CurriculumRecoveryStage.ResetObserved => "timer_request",
+                CurriculumRecoveryStage.RequestCleared => CurriculumPointIsOn("timer_request") ? null : "timer_request",
+                _ => CurriculumPointIsOn("timer_request") ? null : "timer_request",
+            },
+            "scene-2-conveyor-pusher" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.FirstCycleComplete => "stop_command",
+                CurriculumRecoveryStage.StopRequested => null,
+                CurriculumRecoveryStage.StopObserved => "start_command",
+                CurriculumRecoveryStage.RestartObserved => "safety_trip",
+                CurriculumRecoveryStage.TripRequested => null,
+                CurriculumRecoveryStage.TripObserved => "safety_trip",
+                CurriculumRecoveryStage.TripCleared => "reset_command",
+                CurriculumRecoveryStage.ResetRequested => null,
+                CurriculumRecoveryStage.ResetObserved => "start_command",
+                CurriculumRecoveryStage.RequestCleared => "drive_overload",
+                CurriculumRecoveryStage.OverloadRequested => null,
+                CurriculumRecoveryStage.OverloadObserved => "drive_overload",
+                CurriculumRecoveryStage.OverloadCleared => "reset_command",
+                CurriculumRecoveryStage.SecondResetRequested => null,
+                CurriculumRecoveryStage.SecondResetObserved => "start_command",
+                _ => !CurriculumPointIsOn("system_enable") ? "system_enable"
+                    : !CurriculumControllerPointIsOn("machine_run") ? "start_command"
+                    : null,
+            },
+            "lab-9-11-pallet-counting" => CurriculumRecoveryStageFor(demo) is CurriculumRecoveryStage.FirstCycleComplete or CurriculumRecoveryStage.ResetRequested
+                ? "reset_pressed"
+                : !CurriculumPointIsOn("machine_running") ? "start_command"
+                : !CurriculumPointIsOn("pallet_type_valid") ? "pallet_type_valid"
+                : !CurriculumPointIsOn("count_request") ? "count_request"
+                : "pallet_detected",
+            "lab-11-13-xy-palletizing" => CurriculumRecoveryStageFor(demo) switch
+            {
+                CurriculumRecoveryStage.FirstCycleComplete => "reset_command",
+                CurriculumRecoveryStage.ResetRequested => null,
+                CurriculumRecoveryStage.ResetObserved => "start_command",
+                CurriculumRecoveryStage.RestartObserved => "stop_command",
+                CurriculumRecoveryStage.StopRequested => null,
+                CurriculumRecoveryStage.StopObserved => "start_command",
+                CurriculumRecoveryStage.StopRestartObserved => "safety_trip",
+                CurriculumRecoveryStage.TripRequested => null,
+                CurriculumRecoveryStage.TripObserved => "safety_trip",
+                CurriculumRecoveryStage.TripCleared => "reset_command",
+                CurriculumRecoveryStage.PostTripResetRequested => null,
+                CurriculumRecoveryStage.PostTripResetObserved => "start_command",
+                CurriculumRecoveryStage.PostTripRestartObserved => "pallet_position_valid",
+                CurriculumRecoveryStage.PermissiveRemoved => null,
+                CurriculumRecoveryStage.PermissiveLossObserved => "pallet_position_valid",
+                CurriculumRecoveryStage.PermissiveRestored => "reset_command",
+                CurriculumRecoveryStage.SecondResetRequested => null,
+                CurriculumRecoveryStage.SecondResetObserved => !CurriculumControllerPointIsOn("machine_run")
+                    ? "start_command"
+                    : null,
+                _ => !CurriculumPointIsOn("system_enable") ? "system_enable"
+                    : !CurriculumPointIsOn("pallet_position_valid") ? "pallet_position_valid"
+                    : CurriculumPointIsOn("safety_trip") ? "safety_trip"
+                    : !CurriculumControllerPointIsOn("machine_run") ? "start_command"
+                    : null,
+            },
+            _ => null,
+        };
+    }
+
+    private void ExecuteCurriculumNextAction()
+    {
+        var index = ActiveCurriculumIndex();
+        if (index < 0)
+        {
+            RequestSceneChange(AuthoredDemos[RecommendedCurriculumIndex()].SceneId, showOperator: true);
+            return;
+        }
+        var demo = AuthoredDemos[index];
+        var completion = CurriculumCompletion(demo);
+        if (completion.Complete)
+        {
+            var target = _completedCurriculumScenes.Count == AuthoredDemos.Length ? 0 : RecommendedCurriculumIndex();
+            RequestSceneChange(AuthoredDemos[target].SceneId, showOperator: true);
+            return;
+        }
+        if (_externalMode)
+        {
+            SetExternalMode(false);
+            SetWorkspaceStatus($"DEMO {index + 1} · BUILT-IN SIMULATOR SELECTED");
+            return;
+        }
+        if (_ladderDocument.SourceSceneId != demo.SceneId)
+        {
+            if (_curriculumVerifyAndLoad is not null) _curriculumVerifyAndLoad();
+            else
+            {
+                SetProductView("ladder");
+                SetWorkspaceStatus($"DEMO {index + 1} LOGIC OPEN · CHOOSE VERIFY + LOAD OFFLINE");
+            }
+            return;
+        }
+        if (_virtualSnapshot is null || !_ladderMonitorMatchesLoadedProgram)
+        {
+            // App Run already validates, compiles, and loads the current draft.
+            // Keep the learner on the machine instead of forcing an extra editor
+            // round trip before an authored demo can move.
+            RunRequested?.Invoke();
+            SetWorkspaceStatus($"DEMO {index + 1} · CURRENT DEMO LOGIC RUN REQUESTED");
+            return;
+        }
+        if (_virtualSnapshot.Forces.Count > 0)
+        {
+            VirtualForceClearRequested?.Invoke();
+            SetWorkspaceStatus($"DEMO {index + 1} · ALL SIMULATOR FORCES CLEARED");
+            return;
+        }
+        if (_virtualSnapshot.State != VirtualControllerState.Running)
+        {
+            RunRequested?.Invoke();
+            SetWorkspaceStatus($"DEMO {index + 1} · SIMULATOR SCAN RUN REQUESTED");
+            return;
+        }
+        var nextControlPoint = CurriculumNextControlPoint(demo);
+        var nextAction = nextControlPoint is null
+            ? default
+            : _operatorActionButtons.FirstOrDefault(candidate => candidate.Value.Point == nextControlPoint);
+        if (!string.IsNullOrEmpty(nextAction.Key) && nextAction.Value.Button is not null)
+        {
+            SceneActionRequested?.Invoke(nextAction.Key);
+            SetWorkspaceStatus($"DEMO {index + 1} · OPERATED {nextAction.Value.Label.ToUpperInvariant()}");
+            return;
+        }
+        SetProductView("operator");
+        SetWorkspaceStatus($"DEMO {index + 1} · {CurriculumNextAction(demo, completion)}");
+    }
+
+    private void RefreshCurriculumStepButtons(IReadOnlyList<Button> buttons, int activeIndex)
+    {
+        for (var index = 0; index < buttons.Count && index < AuthoredDemos.Length; index++)
+        {
+            var button = buttons[index];
+            var demo = AuthoredDemos[index];
+            var current = index == activeIndex;
+            var passed = _completedCurriculumScenes.Contains(demo.SceneId);
+            var lesson = $"{index + 1} {CurriculumStepLabels[index]}";
+            button.ButtonPressed = current;
+            button.Text = current
+                ? $"▶ {lesson}"
+                : passed
+                    ? $"✓ {lesson}"
+                    : lesson;
+            var color = current ? new Color("79c8e8") : passed ? new Color("65d49a") : new Color("dce8ed");
+            button.AddThemeColorOverride("font_color", color);
+            button.AddThemeColorOverride("font_hover_color", color);
+            button.AddThemeColorOverride("font_pressed_color", color);
+            var status = current
+                ? "CURRENT LESSON"
+                : passed
+                    ? "PASSED THIS SESSION"
+                    : index == RecommendedCurriculumIndex()
+                        ? "NEXT RECOMMENDED LESSON"
+                        : "NOT YET PASSED";
+            var evidence = passed
+                ? $"\nEvidence: {CurriculumPassEvidenceSummary(demo)}\nPass trace: {CurriculumPassTraceSummary(demo)}"
+                : string.Empty;
+            button.TooltipText =
+                $"{status}\n{demo.Label}\n{demo.Objective}\nProof: {demo.CompletionText}{evidence}";
+        }
+    }
+
+    private void RefreshTransportCurriculumButton()
+    {
+        if (_transportCurriculum is null) return;
+        var activeIndex = ActiveCurriculumIndex();
+        var passed = _completedCurriculumScenes.Count;
+        if (activeIndex >= 0)
+        {
+            var activePassed = _completedCurriculumScenes.Contains(AuthoredDemos[activeIndex].SceneId);
+            _transportCurriculum.Text = $"{(activePassed ? "✓ " : string.Empty)}DEMO {activeIndex + 1}/5 · {passed} PASSED";
+            _transportCurriculum.TooltipText = $"Return to the Operator Console for {AuthoredDemos[activeIndex].Label}.";
+            var color = activePassed ? new Color("65d49a") : new Color("79c8e8");
+            _transportCurriculum.AddThemeColorOverride("font_color", color);
+            _transportCurriculum.AddThemeColorOverride("font_hover_color", color);
+            return;
+        }
+        _transportCurriculum.Text = passed == AuthoredDemos.Length
+            ? "✓ CURRICULUM · 5/5"
+            : $"CURRICULUM · {passed}/5";
+        _transportCurriculum.TooltipText = passed == AuthoredDemos.Length
+            ? "Open Demo 1 in Operator Console for review."
+            : $"Resume Demo {RecommendedCurriculumIndex() + 1}, the next unfinished curriculum lesson.";
+        var inactiveColor = passed == AuthoredDemos.Length ? new Color("65d49a") : new Color("dce8ed");
+        _transportCurriculum.AddThemeColorOverride("font_color", inactiveColor);
+        _transportCurriculum.AddThemeColorOverride("font_hover_color", inactiveColor);
+    }
+
+    private void RefreshCurriculumRows()
+    {
+        RefreshTransportCurriculumButton();
+        var activeIndex = ActiveCurriculumIndex();
+        RefreshCurriculumStatusBoard(activeIndex);
+        RefreshCurriculumStepButtons(_curriculumStepButtons, activeIndex);
+        RefreshCurriculumStepButtons(_operatorCurriculumStepButtons, activeIndex);
+        if (_operatorCurriculumStepRail is not null)
+            _operatorCurriculumStepRail.Visible = activeIndex >= 0;
+        if (_sceneList is null) return;
+        for (var index = 0; index < _scenarioBrowserRows.Count; index++)
+        {
+            var scene = _scenarioBrowserRows[index];
+            if (scene is null || !IsAuthoredDemo(scene)) continue;
+            _sceneList.SetItemText(index, ScenarioBrowserRowLabel(scene));
+            _sceneList.SetItemTooltip(index, ScenarioBrowserRowTooltip(scene));
+        }
+        FilterViewerHierarchy(_viewerSearch?.Text ?? string.Empty);
+    }
+
+    private void RefreshCurriculumStatusBoard(int activeIndex)
+    {
+        if (_curriculumStatusBoard is null) return;
+        var recommended = RecommendedCurriculumIndex();
+        var lines = new List<string>(AuthoredDemos.Length + 1)
+        {
+            "[color=#79c8e8][b]FIVE-DEMO SESSION MAP[/b][/color]",
+        };
+        for (var index = 0; index < AuthoredDemos.Length; index++)
+        {
+            var demo = AuthoredDemos[index];
+            var passed = _completedCurriculumScenes.Contains(demo.SceneId);
+            var current = index == activeIndex;
+            var marker = passed ? "✓ PASSED" : current ? "▶ CURRENT" : index == recommended ? "→ NEXT" : "○ READY";
+            var color = passed ? "65d49a" : current ? "79c8e8" : index == recommended ? "f1aa5b" : "9db4c0";
+            lines.Add($"[color=#{color}][b]{marker,-9}[/b][/color]  {index + 1}. {Escape(demo.Label.Replace($"Demo {index + 1} - ", string.Empty, StringComparison.Ordinal))}");
+        }
+        _curriculumStatusBoard.Text = string.Join("\n", lines);
+    }
+
+    private void NavigateCurriculum(int direction)
+    {
+        var current = ActiveCurriculumIndex();
+        var target = current < 0
+            ? RecommendedCurriculumIndex()
+            : Math.Clamp(current + direction, 0, AuthoredDemos.Length - 1);
+        RequestSceneChange(AuthoredDemos[target].SceneId, showOperator: true);
+    }
+
+    private void RefreshCurriculumPanel()
+    {
+        if (_curriculumSummary is null) return;
+        _curriculumProgressBar.Value = _completedCurriculumScenes.Count;
+        RefreshCurriculumStatusBoard(ActiveCurriculumIndex());
+        _curriculumCopyResults.Disabled = _completedCurriculumScenes.Count == 0;
+        _curriculumSaveResults.Disabled = _completedCurriculumScenes.Count == 0;
+        var index = ActiveCurriculumIndex();
+        RefreshCurriculumStepButtons(_curriculumStepButtons, index);
+        if (index < 0)
+        {
+            _curriculumLessonProgressLabel.Visible = false;
+            _curriculumLessonProgressBar.Visible = false;
+            _curriculumPhaseRail.Visible = false;
+            _curriculumOpenGuide.Visible = false;
+            _curriculumOpenSplit.Visible = false;
+            _curriculumOpenMonitor.Visible = false;
+            _curriculumRestartDemo.Visible = false;
+            var recommended = RecommendedCurriculumIndex();
+            var curriculumComplete = _completedCurriculumScenes.Count == AuthoredDemos.Length;
+            _curriculumProgress.Text = _completedCurriculumScenes.Count == AuthoredDemos.Length
+                ? "CURRICULUM COMPLETE · 5/5 PASSED"
+                : $"RESUME HERE · {_completedCurriculumScenes.Count}/5 PASSED THIS SESSION";
+            _curriculumSummary.Text = "[b]Learn ladder logic by operating the machine model.[/b]\n\n" +
+                "Each numbered demo opens with authored PLC logic. Work through them in order, use its lesson controls in the scene, then open Logic to trace the input-to-output path.\n\n" +
+                (curriculumComplete
+                    ? "All five lessons passed this session. Review any demo or reset the curriculum for a fresh run."
+                    : $"[color=#79c8e8][b]NEXT RECOMMENDED[/b][/color]  {Escape(AuthoredDemos[recommended].Label)}");
+            _curriculumPrevious.Disabled = true;
+            _curriculumNext.Disabled = false;
+            _curriculumNext.Text = curriculumComplete ? "REVIEW DEMO 1 >" : $"RESUME DEMO {recommended + 1} >";
+            _curriculumOpenLogic.Text = curriculumComplete ? "REVIEW DEMO 1" : $"RESUME DEMO {recommended + 1}";
+            _curriculumDoNext.Text = curriculumComplete ? "REVIEW DEMO 1" : $"START / RESUME DEMO {recommended + 1}";
+            _curriculumResetProgress.Disabled = _completedCurriculumScenes.Count == 0;
+            return;
+        }
+
+        _curriculumOpenGuide.Visible = true;
+        _curriculumLessonProgressLabel.Visible = true;
+        _curriculumLessonProgressBar.Visible = true;
+        _curriculumPhaseRail.Visible = true;
+        _curriculumOpenSplit.Visible = true;
+        _curriculumOpenMonitor.Visible = true;
+        _curriculumOpenGuide.Text = $"OPEN DEMO {index + 1} MACHINE GUIDE";
+        _curriculumOpenSplit.Text = $"TRACE DEMO {index + 1} · SCENE + PLC LOGIC";
+        _curriculumOpenMonitor.Text = $"OPEN DEMO {index + 1} LIVE MONITOR";
+        _curriculumRestartDemo.Visible = true;
+        _curriculumRestartDemo.Text = $"RESTART DEMO {index + 1} · KEEP OTHER PASSES";
+        var demo = AuthoredDemos[index];
+        var completion = CurriculumCompletion(demo);
+        var lessonProgress = CurriculumLessonProgress(demo);
+        _curriculumLessonProgressLabel.Text = $"ACTIVE LESSON PROGRESS · {lessonProgress.Text}";
+        _curriculumLessonProgressBar.Value = lessonProgress.Percent;
+        _curriculumLessonProgressBar.TooltipText = lessonProgress.Text;
+        _curriculumPhaseRail.Text = CurriculumPhaseRailText(demo, completion);
+        var completionState = completion.Complete
+            ? "[color=#65d49a][b]PASSED THIS SESSION[/b][/color]"
+            : completion.Eligible
+                ? $"[color=#f1aa5b][b]IN PROGRESS[/b][/color] · {Escape(demo.CompletionPoint)} = {Escape(completion.CurrentValue)}"
+                : $"[color=#e36a6a][b]NOT QUALIFIED[/b][/color] · {Escape(completion.Guidance)}";
+        var passEvidence = completion.Complete
+            ? $"[color=#65d49a]SESSION PASS EVIDENCE[/color]  {Escape(CurriculumPassEvidenceSummary(demo))}\n" +
+              $"[color=#65d49a]PASS TRACE[/color]  {Escape(CurriculumPassTraceSummary(demo))}\n"
+            : string.Empty;
+        var recoveryProgress = CurriculumRecoveryProgress(demo);
+        var recoveryLine = recoveryProgress.Length > 0
+            ? $"[color=#f1aa5b]RECOVERY PROOF[/color]  {Escape(recoveryProgress)}\n"
+            : string.Empty;
+        ConfigureCurriculumActionButton(_curriculumDoNext, demo, completion);
+        _curriculumProgress.Text = _completedCurriculumScenes.Count == AuthoredDemos.Length
+            ? "CURRICULUM COMPLETE · 5/5 PASSED"
+            : $"LESSON {index + 1} OF {AuthoredDemos.Length} · {_completedCurriculumScenes.Count}/5 PASSED";
+        _curriculumSummary.Text = $"[b]{Escape(demo.Label)}[/b]\n\n" +
+            $"{completionState}\n" +
+            passEvidence +
+            recoveryLine +
+            $"[color=#79c8e8]NEXT ACTION[/color]  {Escape(CurriculumNextAction(demo, completion))}\n" +
+            $"[color=#9db4c0]QUALIFICATION[/color]  {Escape(CurriculumQualificationSummary(demo))}\n" +
+             $"[color=#79c8e8]LIVE PROCEDURE CHECKLIST[/color]\n{Escape(CurriculumLiveProcedureStatus(demo, completion))}\n" +
+            $"[color=#9db4c0]PROOF[/color]  {Escape(demo.CompletionText)}\n" +
+            $"[color=#79c8e8]LIVE TRACE[/color]  {Escape(CurriculumTraceSummary(demo))}\n\n" +
+            $"[color=#79c8e8]OBJECTIVE[/color]  {Escape(demo.Objective)}\n\n" +
+            $"[color=#79c8e8]PROCEDURE[/color]\n{Escape(demo.Exercise)}\n\n" +
+            $"[color=#79c8e8]PLC FOCUS[/color]  {Escape(demo.PlcFocus)}\n\n" +
+            $"[color=#f1aa5b]FIRST CHECKS IF IT DOESN'T WORK[/color]\n{Escape(demo.Troubleshooting)}";
+        _curriculumPrevious.Disabled = index == 0;
+        _curriculumNext.Disabled = index == AuthoredDemos.Length - 1;
+        _curriculumNext.Text = index == AuthoredDemos.Length - 1
+            ? completion.Complete && _completedCurriculumScenes.Count == AuthoredDemos.Length
+                ? "CURRICULUM COMPLETE · 5/5"
+                : "FINAL DEMO"
+            : completion.Complete
+                ? $"PASSED · NEXT: DEMO {index + 2} >"
+                : $"NEXT: DEMO {index + 2} >";
+        _curriculumOpenLogic.Text = $"OPEN DEMO {index + 1} LOGIC";
+        _curriculumResetProgress.Disabled = _completedCurriculumScenes.Count == 0;
+    }
+
+    private void RestartActiveCurriculumDemo()
+    {
+        var index = ActiveCurriculumIndex();
+        if (index < 0) return;
+
+        var demo = AuthoredDemos[index];
+        ResetRequested?.Invoke();
+        _completedCurriculumScenes.Remove(demo.SceneId);
+        _curriculumPassEvidence.Remove(demo.SceneId);
+        _curriculumRecoveryStages.Remove(demo.SceneId);
+        RefreshCurriculumRows();
+        RefreshCurriculumPanel();
+        RefreshOperatorPanels();
+        SetWorkspaceStatus($"DEMO {index + 1} RESTARTED · OTHER CURRICULUM PASSES KEPT");
+    }
+
+    private void ResetCurriculumSession()
+    {
+        ResetRequested?.Invoke();
+        _completedCurriculumScenes.Clear();
+        _curriculumPassEvidence.Clear();
+        _curriculumRecoveryStages.Clear();
+        RefreshCurriculumRows();
+        RefreshCurriculumPanel();
+        RefreshOperatorPanels();
+        SetWorkspaceStatus("CURRICULUM SESSION PROGRESS RESET");
+    }
+
+    private void ShowActiveMachineGuide()
+    {
+        if (_activeScene is null) return;
+
+        RefreshActiveMachineGuideDialog();
+        _machineGuideDialog.PopupCenteredRatio(0.82f);
+    }
+
+    private void RefreshActiveMachineGuideDialog()
+    {
+        if (_activeScene is null) return;
+
+        var index = ActiveCurriculumIndex();
+        _machineGuideDoNext.Visible = index >= 0;
+        var titlePrefix = index >= 0 ? $"DEMO {index + 1} MACHINE GUIDE" : "MACHINE GUIDE";
+        _machineGuideDialog.Title = $"{titlePrefix} · {_activeScene.Name.ToUpperInvariant()}";
+        var guide = FormatMachineGuide(_activeScene.Training);
+        if (index >= 0)
+        {
+            var demo = AuthoredDemos[index];
+            var completion = CurriculumCompletion(demo);
+            _machineGuideDoNext.Text = "DO NEXT ACTION";
+            _machineGuideDoNext.TooltipText =
+                $"Perform the current safe step: {CurriculumNextAction(demo, completion)}";
+            var status = completion.Complete
+                ? "[color=#65d49a][b]PASSED THIS SESSION[/b][/color]"
+                : completion.Eligible
+                    ? "[color=#f1aa5b][b]IN PROGRESS[/b][/color]"
+                    : "[color=#e36a6a][b]NOT QUALIFIED[/b][/color]";
+            _machineGuideContent.Text =
+                $"[font_size=18][b]{Escape(demo.Label)}[/b][/font_size]\n" +
+                $"[b]STATUS[/b]  {status}\n" +
+                (CurriculumRecoveryProgress(demo) is { Length: > 0 } recovery
+                    ? $"[color=#f1aa5b][b]RECOVERY PROOF[/b][/color]  {Escape(recovery)}\n"
+                    : string.Empty) +
+                $"[color=#79c8e8][b]OBJECTIVE[/b][/color]  {Escape(demo.Objective)}\n" +
+                $"[color=#79c8e8][b]NEXT ACTION[/b][/color]  {Escape(CurriculumNextAction(demo, completion))}\n" +
+                $"[color=#9db4c0][b]QUALIFICATION[/b][/color]  {Escape(CurriculumQualificationSummary(demo))}\n" +
+                 $"[color=#79c8e8][b]LIVE PROCEDURE CHECKLIST[/b][/color]\n{Escape(CurriculumLiveProcedureStatus(demo, completion))}\n" +
+                $"[color=#79c8e8][b]LIVE TRACE[/b][/color]  {Escape(CurriculumTraceSummary(demo))}\n" +
+                $"[color=#9db4c0][b]PASS WHEN[/b][/color]  {Escape(demo.CompletionText)}\n\n" +
+                guide;
+        }
+        else
+        {
+            _machineGuideContent.Text = guide;
+        }
+    }
+
+    private static string FormatMachineGuide(JsonElement training)
+    {
+        if (training.ValueKind != JsonValueKind.Object
+            || !training.TryGetProperty("machineGuide", out var guide)
+            || guide.ValueKind != JsonValueKind.Object)
+        {
+            return "[color=#f1aa5b][b]NO MACHINE GUIDE[/b][/color]\n\n" +
+                "This scene does not include an authored machine guide.";
+        }
+
+        var text = new StringBuilder();
+        AppendMachineGuideSection(text, guide, "purpose", "PURPOSE");
+        AppendMachineGuideSection(text, guide, "startConditions", "START CONDITIONS");
+        AppendMachineGuideSection(text, guide, "normalSequence", "NORMAL SEQUENCE");
+        AppendMachineGuideSection(text, guide, "stateLegend", "SEQUENCE STEP LEGEND");
+        AppendMachineGuideSection(text, guide, "stopBehavior", "STOP / RESET BEHAVIOR");
+        AppendMachineGuideSection(text, guide, "resetBehavior", "RESET BEHAVIOR");
+        AppendMachineGuideSection(text, guide, "faultBehavior", "FAULT RESPONSE");
+        AppendMachineGuideSection(text, guide, "expectedObservations", "EXPECTED OBSERVATIONS");
+        AppendMachineGuideSection(text, guide, "acceptance", "ACCEPTANCE");
+        return text.Length == 0
+            ? "[color=#f1aa5b][b]EMPTY MACHINE GUIDE[/b][/color]"
+            : text.ToString().TrimEnd();
+    }
+
+    private static void AppendMachineGuideSection(
+        StringBuilder text,
+        JsonElement guide,
+        string propertyName,
+        string heading)
+    {
+        if (!guide.TryGetProperty(propertyName, out var section)) return;
+
+        if (text.Length > 0) text.AppendLine();
+        text.AppendLine($"[color=#79c8e8][b]{heading}[/b][/color]");
+        if (section.ValueKind == JsonValueKind.Array)
+        {
+            var step = 1;
+            foreach (var item in section.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.String) continue;
+                text.AppendLine($"{step}. {Escape(item.GetString() ?? string.Empty)}");
+                step++;
+            }
+            return;
+        }
+
+        if (section.ValueKind == JsonValueKind.String)
+            text.AppendLine(Escape(section.GetString() ?? string.Empty));
     }
 
     private Control BuildAssetBrowser()
@@ -3782,11 +7717,12 @@ public partial class SimulatorShell : CanvasLayer
             : _assets.Assets.FirstOrDefault(item => item.Id == placement.AssetId)?.Signals??[];
     }
 
-    private IReadOnlyList<SceneIoPoint> ScenePoints()
+    private IReadOnlyList<SceneIoPoint> ScenePoints(SceneDefinition? scene = null)
     {
         var result = new List<SceneIoPoint>();
-        if (_activeScene?.Simulation.ValueKind != JsonValueKind.Object
-            || !_activeScene.Simulation.TryGetProperty("points", out var points)
+        var sourceScene = scene ?? _activeScene;
+        if (sourceScene?.Simulation.ValueKind != JsonValueKind.Object
+            || !sourceScene.Simulation.TryGetProperty("points", out var points)
             || points.ValueKind != JsonValueKind.Array) return result;
         foreach (var point in points.EnumerateArray())
         {
@@ -3804,6 +7740,30 @@ public partial class SimulatorShell : CanvasLayer
                         ? members.EnumerateArray().Select(member => member.GetString() ?? string.Empty).ToArray() : null));
         }
         return result;
+    }
+
+    private static IReadOnlyDictionary<string, object?> SceneInitialValues(SceneDefinition scene)
+    {
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal);
+        if (scene.Simulation.ValueKind != JsonValueKind.Object
+            || !scene.Simulation.TryGetProperty("points", out var points)
+            || points.ValueKind != JsonValueKind.Array) return values;
+        foreach (var point in points.EnumerateArray())
+        {
+            var name = Text(point, "name");
+            if (name.Length == 0 || !point.TryGetProperty("initial", out var initial)) continue;
+            values[name] = initial.ValueKind switch
+            {
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Number when initial.TryGetInt64(out var integer) => integer,
+                JsonValueKind.Number => initial.GetDouble(),
+                JsonValueKind.String => initial.GetString(),
+                JsonValueKind.Object or JsonValueKind.Array => initial.Clone(),
+                _ => null,
+            };
+        }
+        return values;
     }
 
     private string InstanceName(string instanceId)
@@ -3880,7 +7840,7 @@ public partial class SimulatorShell : CanvasLayer
     {
         var demo = AuthoredDemos.FirstOrDefault(item =>
             item.SceneId.Equals(scene.Id, StringComparison.Ordinal));
-        return demo.SceneId is null ? scene.Name : demo.Label;
+        return demo is null ? scene.Name : demo.Label;
     }
 
     private static string ScenarioBrowserDemoLabel(SceneCatalogEntry scene)
@@ -3889,6 +7849,35 @@ public partial class SimulatorShell : CanvasLayer
         var canonical=scene.Name.Split(" - ",2,StringSplitOptions.None)[0];
         return alias[0]+" / "+canonical+(alias.Length>1?" · "+alias[1]:"");
     }
+
+    private string ScenarioBrowserRowLabel(SceneCatalogEntry scene)
+    {
+        var label = ScenarioBrowserDemoLabel(scene);
+        var index = ScenarioDemoIndex(scene);
+        if (_completedCurriculumScenes.Contains(scene.Id)) return "✓  PASSED  ·  " + label;
+        if (index == ActiveCurriculumIndex()) return "▶  CURRENT  ·  " + label;
+        if (index == RecommendedCurriculumIndex()) return "→  NEXT  ·  " + label;
+        return "○  " + label;
+    }
+
+    private string ScenarioBrowserRowTooltip(SceneCatalogEntry scene)
+    {
+        var index = ScenarioDemoIndex(scene);
+        if (index < 0 || index >= AuthoredDemos.Length) return $"{scene.Name}\n{scene.Id}";
+        var demo = AuthoredDemos[index];
+        var status = _completedCurriculumScenes.Contains(scene.Id)
+            ? "Passed this session"
+            : index == ActiveCurriculumIndex()
+                ? "Current lesson"
+                : index == RecommendedCurriculumIndex()
+                    ? "Next recommended lesson"
+                    : "Not yet passed";
+        var evidence = _completedCurriculumScenes.Contains(scene.Id)
+            ? $"\nSession evidence: {CurriculumPassEvidenceSummary(demo)}"
+            : string.Empty;
+        return $"{status}{evidence}\n{CurriculumQualificationSummary(demo)}\n{demo.Objective}\nTrace: {string.Join(", ", demo.TracePoints)}\nProof: {demo.CompletionText}\nFirst checks: {demo.Troubleshooting}";
+    }
+
     public bool VerifyActiveScenarioIdentity()
     {
         var selected=_sceneList.GetSelectedItems();
@@ -3896,7 +7885,7 @@ public partial class SimulatorShell : CanvasLayer
         var row=selected[0];
         var entry=_scenarioBrowserRows[row];
         if(entry is null||_sceneList.GetItemMetadata(row).AsString()!=_activeScene.Id)return false;
-        var expected=IsAuthoredDemo(entry)?ScenarioBrowserDemoLabel(entry):entry.Name;
+        var expected=IsAuthoredDemo(entry)?ScenarioBrowserRowLabel(entry):entry.Name;
         return _sceneList.GetItemText(row)==expected;
     }    private static int ScenarioDemoIndex(SceneCatalogEntry scene)
     {
@@ -3936,11 +7925,13 @@ public partial class SimulatorShell : CanvasLayer
             foreach (var scene in _orderedScenes.Where(candidate => ScenarioSortGroup(candidate) == group))
             {
                 var label = group == 2
-                    ? ScenarioBrowserDemoLabel(scene)
+                    ? ScenarioBrowserRowLabel(scene)
                     : scene.Name;
                 _sceneList.AddItem(label);
                 _sceneList.SetItemMetadata(_sceneList.ItemCount - 1,scene.Id);
-                _sceneList.SetItemTooltip(_sceneList.ItemCount - 1, $"{scene.Name}\n{scene.Id}");
+                _sceneList.SetItemTooltip(_sceneList.ItemCount - 1, group == 2
+                    ? ScenarioBrowserRowTooltip(scene)
+                    : $"{scene.Name}\n{scene.Id}");
                 _scenarioBrowserRows.Add(scene);
             }
         }
@@ -4006,14 +7997,36 @@ public partial class SimulatorShell : CanvasLayer
         var search = query.Trim();
         _viewerHierarchy.Clear();
         _viewerItems.Clear();
-        AddViewerHeading("SCENES");
+        bool SceneMatches(SceneCatalogEntry scene)
+        {
+            if (search.Length == 0) return true;
+            if (scene.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || scene.Id.Contains(search, StringComparison.OrdinalIgnoreCase)) return true;
+            if (!IsAuthoredDemo(scene)) return false;
+            var demo = AuthoredDemos[ScenarioDemoIndex(scene)];
+            return demo.Label.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || demo.Objective.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || demo.PlcFocus.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || demo.TracePoints.Any(point => point.Contains(search, StringComparison.OrdinalIgnoreCase))
+                || demo.Troubleshooting.Contains(search, StringComparison.OrdinalIgnoreCase);
+        }
+
+        AddViewerHeading("FIVE-DEMO CURRICULUM");
         foreach (var scene in _sceneCatalog.Scenes
-                     .Where(scene => search.Length == 0
-                         || scene.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
-                         || scene.Id.Contains(search, StringComparison.OrdinalIgnoreCase))
+                     .Where(IsAuthoredDemo)
+                     .Where(SceneMatches)
+                     .OrderBy(ScenarioDemoIndex))
+        {
+            AddViewerItem($"◆  {ScenarioBrowserRowLabel(scene)}", "scene", scene.Id,
+                ScenarioBrowserRowTooltip(scene));
+        }
+        AddViewerHeading("OTHER SCENES");
+        foreach (var scene in _sceneCatalog.Scenes
+                     .Where(scene => !IsAuthoredDemo(scene))
+                     .Where(SceneMatches)
                      .OrderBy(scene => scene.Name, StringComparer.OrdinalIgnoreCase))
         {
-            AddViewerItem($"◆  {scene.Name}", "scene", scene.Id);
+            AddViewerItem($"◆  {scene.Name}", "scene", scene.Id, $"{scene.Name}\n{scene.Id}");
         }
         AddViewerHeading("ASSET LIBRARY");
         foreach (var asset in _assets.Assets
@@ -4033,9 +8046,11 @@ public partial class SimulatorShell : CanvasLayer
         _viewerItems.Add(("heading", string.Empty));
     }
 
-    private void AddViewerItem(string text, string kind, string id)
+    private void AddViewerItem(string text, string kind, string id, string tooltip = "")
     {
+        var index = _viewerHierarchy.ItemCount;
         _viewerHierarchy.AddItem(text);
+        if (tooltip.Length > 0) _viewerHierarchy.SetItemTooltip(index, tooltip);
         _viewerItems.Add((kind, id));
     }
 
@@ -4203,6 +8218,8 @@ public partial class SimulatorShell : CanvasLayer
             : "LOCAL RUNTIME  •  STOPPED";
         _runtimeStatus.AddThemeColorOverride("font_color",
             ActiveRuntimeRunning ? new Color("65d49a") : new Color("8aa5b4"));
+        RefreshOperatorActionStates();
+        RefreshCurriculumPanel();
         RefreshIoInspector();
         RefreshOperatorPanels();
         RefreshOperatorPointTables();
@@ -4220,6 +8237,10 @@ public partial class SimulatorShell : CanvasLayer
         panel.OffsetBottom = -50;
         panel.Visible = false;
         panel.ZIndex = 20;
+        // Large projects can give the project tree a tall intrinsic content
+        // region. The Tree remains scrollable, but no child may paint through
+        // the workspace boundary over Scene I/O or the global transport bar.
+        panel.ClipContents = true;
 
         var margin = Margin("LadderMargin", 14, 14, 10, 10);
         panel.AddChild(margin);
@@ -4599,10 +8620,31 @@ public partial class SimulatorShell : CanvasLayer
         // Scene IDs are serialized metadata. Normalize the value that is
         // restored so the editor cannot retain whitespace-padded identities.
         loaded.Document.SourceSceneId = sourceSceneId;
+        var savedSourceJson = LadderEditorProjectJson.Save(loaded.Document);
+        if (_activeScene is not null)
+        {
+            // Legacy projects predating scene ownership have no source scene
+            // ID. The user opened them from this scene's editor, so bind them
+            // to the active scene before injecting its SceneIO declarations.
+            if (sourceSceneId.Length == 0)
+                loaded.Document.SourceSceneId = _activeScene.Id;
+            try
+            {
+                SceneLadderProject.EnsureSceneIoTable(loaded.Document, ScenePoints(),
+                    _runtime?.Points ?? new Dictionary<string, object?>(), out _);
+            }
+            catch (SceneIoTableConflictException exception)
+            {
+                message = "PROJECT OPEN BLOCKED · " + exception.Message.ToUpperInvariant();
+                return false;
+            }
+        }
         ChallengeDraftChanged?.Invoke();
         _ladderDocument.RestoreSnapshot(loaded.Document.CaptureSnapshot());
         _ladderProjectPath = System.IO.Path.GetFullPath(path);
-        _ladderSavedProjectJson = LadderEditorProjectJson.Save(_ladderDocument);
+        // Keep the pre-migration baseline so an older on-disk project is
+        // correctly shown as needing Save after SceneIO normalization.
+        _ladderSavedProjectJson = savedSourceJson;
         _ladderHistory.Clear();
         _ladderRungClipboard = null;
         _ladderContactClipboard = null; _ladderCommandClipboard = null;
@@ -4914,7 +8956,10 @@ public partial class SimulatorShell : CanvasLayer
 
         var work = new HSplitContainer { Name = "Workbench" };
         work.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
-        work.SplitOffsets = [280];
+        // Match the compact installed-TIA V17 project dock. Long object names
+        // may elide exactly as they do in TIA; their full identity remains in
+        // the row tooltip and Properties/context routes.
+        work.SplitOffsets = [GetProjectDockSplitOffset()];
         ConfigureDockSplit(work);
         root.AddChild(work);
 
@@ -4977,6 +9022,24 @@ public partial class SimulatorShell : CanvasLayer
         };
         projectTreeShortcutSlot.AddChild(showProjectTree);
         projectTitle.AddChild(projectTreeShortcutSlot);
+        var selectedProjectOpen = ToolbarButton("OpenSelectedProjectObject", "OPEN", new Color("4d6674"), 54);
+        selectedProjectOpen.TooltipText = "Open the selected project-tree object.";
+        // Installed TIA V17 opens tree objects by activation; it does not add
+        // a large OPEN button to the Project tree header. Keep this named route
+        // for deterministic review automation, but do not expose duplicate UI.
+        selectedProjectOpen.Visible = false;
+        Action? openSelectedProjectObject = null;
+        selectedProjectOpen.Pressed += () => openSelectedProjectObject?.Invoke();
+        projectTitle.AddChild(selectedProjectOpen);
+        var selectedProjectProperties = ToolbarButton("SelectedProjectObjectProperties", "PROPS", new Color("4d6674"), 58);
+        selectedProjectProperties.TooltipText = "Open Properties for the selected project-tree object.";
+        // Properties remains available from the row context menu and the
+        // central document. Avoid another persistent header control that is
+        // absent from the installed V17 workbench.
+        selectedProjectProperties.Visible = false;
+        Action? showSelectedProjectObjectProperties = null;
+        selectedProjectProperties.Pressed += () => showSelectedProjectObjectProperties?.Invoke();
+        projectTitle.AddChild(selectedProjectProperties);
         var addBlockFromTree = ToolbarButton("AddBlockFromProjectTree", "+", accent, 30);
         addBlockFromTree.TooltipText = siemens
             ? "Add OB / FB / FC / DB to Program blocks"
@@ -4985,6 +9048,10 @@ public partial class SimulatorShell : CanvasLayer
         {
             Name = "AddBlockFromProjectTreeSlot",
             CustomMinimumSize = new Vector2(30, 30),
+            // Siemens already exposes the explicit Add new block row under
+            // Program blocks. Do not duplicate it with an unexplained + in
+            // the dock header; keep this route only for the Logix organizer.
+            Visible = !siemens,
             MouseFilter = Control.MouseFilterEnum.Ignore,
         };
         addBlockSlot.AddChild(addBlockFromTree);
@@ -4996,6 +9063,48 @@ public partial class SimulatorShell : CanvasLayer
         // tab content. At constrained heights, a fill-first TabContainer can
         // consume the VBox space and push this header outside the viewport.
         projectBody.AddChild(projectTitle);
+        var projectFilterRow = new HBoxContainer { Name = "ProjectTreeFilterRow", Visible = siemens };
+        projectFilterRow.AddThemeConstantOverride("separation", 4);
+        var projectTreeFilter = new LineEdit
+        {
+            Name = "ProjectTreeFilter",
+            PlaceholderText = "Filter project tree…",
+            ClearButtonEnabled = true,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            CustomMinimumSize = new Vector2(90, 28),
+        };
+        var projectTreeFilterStatus = Heading("ALL", 9, new Color("607983"));
+        projectTreeFilterStatus.CustomMinimumSize = new Vector2(58, 28);
+        projectTreeFilterStatus.HorizontalAlignment = HorizontalAlignment.Center;
+        var clearProjectTreeFilter = ToolbarButton("ClearProjectTreeFilter", "×", new Color("637985"), 28);
+        clearProjectTreeFilter.TooltipText = "Clear the Project tree filter.";
+        // LineEdit already supplies an accessible clear affordance. A second
+        // adjacent × looked like another project action and added no behavior.
+        clearProjectTreeFilter.Visible = false;
+        Action? captureProjectTreeFilterBaseline = null;
+        Action? applyProjectTreeFilter = null;
+        projectTreeFilter.TextChanged += _ => applyProjectTreeFilter?.Invoke();
+        clearProjectTreeFilter.Pressed += () =>
+        {
+            projectTreeFilter.Clear();
+            applyProjectTreeFilter?.Invoke();
+            projectTreeFilter.GrabFocus();
+        };
+        projectFilterRow.AddChild(projectTreeFilter);
+        projectFilterRow.AddChild(projectTreeFilterStatus);
+        projectFilterRow.AddChild(clearProjectTreeFilter);
+        projectBody.AddChild(projectFilterRow);
+        var projectSelectionSummary = new Label
+        {
+            Name = "ProjectSelectionSummary",
+            Text = "Offline controller project\nSelect an object, then use OPEN or PROPS.",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            CustomMinimumSize = new Vector2(0, 42),
+            Visible = siemens,
+        };
+        projectSelectionSummary.AddThemeFontSizeOverride("font_size", 10);
+        projectSelectionSummary.AddThemeColorOverride("font_color", new Color("526a75"));
+        projectBody.AddChild(projectSelectionSummary);
         projectBody.AddChild(projectTabs);
         var organization = new LadderProgramTree
         {
@@ -5013,6 +9122,103 @@ public partial class SimulatorShell : CanvasLayer
         ConfigureSelectableList(organization);
         organization.AddThemeColorOverride("guide_color", new Color("9aa7ad"));
         organization.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
+        var projectTreeContextMenu = new PopupMenu { Name = "ProjectTreeContextMenu" };
+        projectTreeContextMenu.AddItem("Open", 0);
+        projectTreeContextMenu.AddItem("Properties", 1);
+        projectTreeContextMenu.AddSeparator();
+        projectTreeContextMenu.AddItem("Rename…", 2);
+        projectTreeContextMenu.AddItem("Duplicate", 3);
+        projectTreeContextMenu.AddItem("Delete", 4);
+        projectTreeContextMenu.AddSeparator();
+        projectTreeContextMenu.AddItem("Cross-reference", 6);
+        root.AddChild(projectTreeContextMenu);
+        string projectTreeContextMetadata = string.Empty;
+        string projectTreeContextLabel = string.Empty;
+        string projectTreeContextPath = string.Empty;
+        var projectObjectPropertiesDialog = new AcceptDialog
+        {
+            Name = "ProjectObjectPropertiesDialog",
+            Title = "Project object properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(720, 300),
+        };
+        projectObjectPropertiesDialog.OkButtonText = "CLOSE";
+        var propertiesCopy = projectObjectPropertiesDialog.AddButton("COPY SUMMARY", true, "copy-details");
+        propertiesCopy.TooltipText = "Copy the modeled offline object details to the clipboard.";
+        var propertiesCopyPath = projectObjectPropertiesDialog.AddButton("COPY PATH", true, "copy-path");
+        propertiesCopyPath.TooltipText = "Copy the selected object's project-tree location.";
+        propertiesCopyPath.Visible = false;
+        var propertiesOpen = projectObjectPropertiesDialog.AddButton("OPEN OBJECT", true, "open-object");
+        propertiesOpen.TooltipText = "Close Properties and open the selected project object.";
+        var propertiesAdd = projectObjectPropertiesDialog.AddButton("ADD NEW…", true, "add-object");
+        propertiesAdd.TooltipText = "Create a new object in the selected project folder.";
+        var propertiesOpenOwner = projectObjectPropertiesDialog.AddButton("OPEN OWNER", true, "open-owner");
+        propertiesOpenOwner.TooltipText = "Open the FB CALL or IEC instruction that owns this generated instance DB.";
+        var propertiesRename = projectObjectPropertiesDialog.AddButton("RENAME", true, "rename-object");
+        propertiesRename.TooltipText = "Close Properties and open the existing rename workflow for this object.";
+        var propertiesDuplicate = projectObjectPropertiesDialog.AddButton("DUPLICATE", true, "duplicate-object");
+        propertiesDuplicate.TooltipText = "Close Properties and duplicate this object through the existing project transaction.";
+        var propertiesDelete = projectObjectPropertiesDialog.AddButton("DELETE", true, "delete-object");
+        propertiesDelete.TooltipText = "Close Properties and request deletion through the existing protection rules.";
+        var propertiesCrossReference = projectObjectPropertiesDialog.AddButton("CROSS-REFERENCE", true, "cross-reference");
+        propertiesCrossReference.TooltipText = "Close Properties and find usages of the selected program block.";
+        // Project-tree and document toolbars already own lifecycle, search,
+        // and clipboard commands. Properties is an inspection surface with a
+        // single navigation action, plus Open Owner for generated instance DBs.
+        propertiesCopy.Visible = false;
+        propertiesAdd.Visible = false;
+        propertiesRename.Visible = false;
+        propertiesDuplicate.Visible = false;
+        propertiesDelete.Visible = false;
+        propertiesCrossReference.Visible = false;
+        Action<int>? openInstanceDbOwnerAction = null;
+        Action? createProjectFolderObjectAction = null;
+        projectObjectPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+                DisplayServer.ClipboardSet(projectObjectPropertiesDialog.DialogText);
+            else if (action == "copy-path")
+                DisplayServer.ClipboardSet(projectTreeContextPath);
+            else if (action == "open-object")
+            {
+                projectObjectPropertiesDialog.Hide();
+                projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 0L);
+            }
+            else if (action == "add-object")
+            {
+                projectObjectPropertiesDialog.Hide();
+                createProjectFolderObjectAction?.Invoke();
+            }
+            else if (action == "open-owner")
+            {
+                projectObjectPropertiesDialog.Hide();
+                if (!projectTreeContextMetadata.StartsWith("instance-db:", StringComparison.Ordinal)
+                    || !int.TryParse(projectTreeContextMetadata.AsSpan("instance-db:".Length), out var dbNumber)) return;
+                openInstanceDbOwnerAction?.Invoke(dbNumber);
+            }
+            else if (action == "cross-reference")
+            {
+                projectObjectPropertiesDialog.Hide();
+                projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 6L);
+            }
+            else if (action == "rename-object" || action == "duplicate-object" || action == "delete-object")
+            {
+                projectObjectPropertiesDialog.Hide();
+                var command = action == "rename-object" ? 2L : action == "duplicate-object" ? 3L : 4L;
+                projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, command);
+            }
+        };
+        projectObjectPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(740, -1);
+        projectObjectPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(projectObjectPropertiesDialog);
+        var projectTreeCreationMenu = new PopupMenu { Name = "ProjectTreeCreationMenu" };
+        projectTreeCreationMenu.AddItem("Properties", 1);
+        projectTreeCreationMenu.AddSeparator();
+        projectTreeCreationMenu.AddItem("Add new object…", 5);
+        root.AddChild(projectTreeCreationMenu);
+        createProjectFolderObjectAction = () => projectTreeCreationMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 5L);
         var controllerItem = organization.CreateItem();
         controllerItem.SetText(0, "Offline_Controller");
         controllerItem.SetMetadata(0, "controller");
@@ -5073,7 +9279,7 @@ public partial class SimulatorShell : CanvasLayer
             addNewTagTableItem.SetText(0, "Add new tag table");
             addNewTagTableItem.SetMetadata(0, "add-tag-table");
             var defaultTagTableItem = organization.CreateItem(tagItem);
-            defaultTagTableItem.SetText(0, "Default tag table [0]");
+            defaultTagTableItem.SetText(0, "Default tag table");
             defaultTagTableItem.SetMetadata(0, "tag-table:Default tag table");
             watchFolder = organization.CreateItem(plcItem);
             watchFolder.SetText(0, "Watch tables");
@@ -5170,7 +9376,9 @@ public partial class SimulatorShell : CanvasLayer
             tagOperandDetailView.SetColumnTitle(0, "TAG");
             tagOperandDetailView.SetColumnTitle(1, "DATA TYPE");
             tagOperandDetailView.SetColumnExpand(0, true);
-            tagOperandDetailView.SetColumnExpand(1, true);
+            tagOperandDetailView.SetColumnCustomMinimumWidth(0, 190);
+            tagOperandDetailView.SetColumnExpand(1, false);
+            tagOperandDetailView.SetColumnCustomMinimumWidth(1, 92);
             tagOperandDetailView.AddThemeColorOverride("font_color", new Color("263943"));
             tagOperandDetailView.AddThemeColorOverride("font_selected_color", new Color("ffffff"));
             ConfigureSelectableList(tagOperandDetailView);
@@ -5216,6 +9424,15 @@ public partial class SimulatorShell : CanvasLayer
         var editorDocumentButtonGroup = new ButtonGroup { AllowUnpress = false };
         var editorDocumentButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
         var editorDocumentItems = new Dictionary<string, HBoxContainer>(StringComparer.Ordinal);
+        var editorDocumentContextMenu = new PopupMenu { Name = "EditorDocumentContextMenu" };
+        editorDocumentContextMenu.AddItem("Activate", 0);
+        editorDocumentContextMenu.AddItem("Properties", 1);
+        editorDocumentContextMenu.AddItem("Locate in Project tree", 2);
+        editorDocumentContextMenu.AddSeparator();
+        editorDocumentContextMenu.AddItem("Close", 3);
+        editorDocumentContextMenu.AddItem("Close other documents", 4);
+        root.AddChild(editorDocumentContextMenu);
+        var editorDocumentContextKey = string.Empty;
         var nextEditorDocumentIndex = 0;
         var editorTagDocuments = new Dictionary<string, string?>(StringComparer.Ordinal);
         var editorInstanceDbDocuments = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -5265,6 +9482,19 @@ public partial class SimulatorShell : CanvasLayer
             tab.AddThemeStyleboxOverride("hover", BoxStyle(new Color("eaf0f3"), new Color("708690")));
             tab.AddThemeStyleboxOverride("pressed", BoxStyle(new Color("f8f9fa"), new Color("607983")));
             tab.Pressed += () => ResolvePendingEditorForms(() => ActivateEditorDocument(key));
+            tab.GuiInput += input =>
+            {
+                if (input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) return;
+                editorDocumentContextKey = key;
+                editorDocumentContextMenu.SetItemDisabled(editorDocumentContextMenu.GetItemIndex(0), tab.Disabled);
+                editorDocumentContextMenu.SetItemDisabled(editorDocumentContextMenu.GetItemIndex(1), tab.Disabled);
+                editorDocumentContextMenu.SetItemDisabled(editorDocumentContextMenu.GetItemIndex(2), tab.Disabled);
+                editorDocumentContextMenu.SetItemDisabled(editorDocumentContextMenu.GetItemIndex(3), false);
+                editorDocumentContextMenu.SetItemDisabled(editorDocumentContextMenu.GetItemIndex(4), editorDocumentButtons.Count <= 1);
+                editorDocumentContextMenu.Position = DisplayServer.MouseGetPosition();
+                editorDocumentContextMenu.Popup();
+                tab.AcceptEvent();
+            };
             var closeTab = new Button
             {
                 Name = $"EditorDocumentClose_{itemIndex}",
@@ -5286,6 +9516,44 @@ public partial class SimulatorShell : CanvasLayer
             editorDocumentTabs.AddChild(item);
         }
         center.AddChild(editorDocumentHost);
+        var editorBreadcrumbHost = PanelContainer("EditorDocumentBreadcrumbHost", new Color("eef1f3"), new Color("b7c0c5"));
+        // The active document tab and Project tree already carry this path.
+        // Keep the node for navigation/context actions and automated review,
+        // but do not spend a full editor row repeating it in the TIA surface.
+        editorBreadcrumbHost.Visible = false;
+        editorBreadcrumbHost.CustomMinimumSize = new Vector2(0, 30);
+        var editorBreadcrumbRow = new HBoxContainer { Name = "EditorDocumentBreadcrumbRow" };
+        editorBreadcrumbRow.AddThemeConstantOverride("separation", 6);
+        var editorDocumentBreadcrumb = Heading("No editor document open", 10, new Color("344851"));
+        editorDocumentBreadcrumb.Name = "EditorDocumentBreadcrumb";
+        editorDocumentBreadcrumb.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        editorDocumentBreadcrumb.ClipText = true;
+        editorDocumentBreadcrumb.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
+        var editorDocumentType = Heading("—", 9, new Color("607983"));
+        editorDocumentType.Name = "EditorDocumentType";
+        editorDocumentType.CustomMinimumSize = new Vector2(82, 28);
+        editorDocumentType.HorizontalAlignment = HorizontalAlignment.Center;
+        var locateEditorDocument = ToolbarButton("LocateEditorDocumentInTree", "LOCATE", new Color("4d6674"), 68);
+        locateEditorDocument.TooltipText = "Show and select the active editor document in the Project tree.";
+        // Installed TIA V17 keeps document navigation on the editor tab/tree
+        // context menu. Keep the named action for review automation and those
+        // menus, but do not add a permanent LOCATE button to every document.
+        locateEditorDocument.Visible = false;
+        Action? locateActiveEditorDocumentInTree = null;
+        locateEditorDocument.Pressed += () => locateActiveEditorDocumentInTree?.Invoke();
+        var propertiesForEditorDocument = ToolbarButton("ActiveEditorDocumentProperties", "PROPS", new Color("4d6674"), 62);
+        propertiesForEditorDocument.TooltipText = "Open Properties for the active editor document.";
+        // Properties remains available from the project-tree and editor-tab
+        // context menus, matching V17 without a duplicate document-header button.
+        propertiesForEditorDocument.Visible = false;
+        Action? showActiveEditorDocumentProperties = null;
+        propertiesForEditorDocument.Pressed += () => showActiveEditorDocumentProperties?.Invoke();
+        editorBreadcrumbRow.AddChild(editorDocumentBreadcrumb);
+        editorBreadcrumbRow.AddChild(editorDocumentType);
+        editorBreadcrumbRow.AddChild(locateEditorDocument);
+        editorBreadcrumbRow.AddChild(propertiesForEditorDocument);
+        editorBreadcrumbHost.AddChild(editorBreadcrumbRow);
+        center.AddChild(editorBreadcrumbHost);
         var editorTab = PanelContainer("EditorTab", new Color("d9dde0"), new Color("9aa7ad"));
         editorTab.Visible = !siemens;
         var editorTabTitle = Heading(string.Empty, 12, new Color("202b31"));
@@ -5443,7 +9711,7 @@ public partial class SimulatorShell : CanvasLayer
         var interfaceName = new LineEdit
         {
             Name = "InterfaceName",
-            PlaceholderText = "parameter name",
+            PlaceholderText = "name",
             CustomMinimumSize = new Vector2(135, 30),
         };
         var interfaceType = new OptionButton { Name = "InterfaceType", CustomMinimumSize = new Vector2(115, 30) };
@@ -5459,7 +9727,7 @@ public partial class SimulatorShell : CanvasLayer
             PlaceholderText = "initial",
             CustomMinimumSize = new Vector2(100, 30),
         };
-        var interfaceEnumMembers = new LineEdit { Name = "InterfaceEnumMembers", PlaceholderText = "ENUM members, comma separated", CustomMinimumSize = new Vector2(180, 30) };
+        var interfaceEnumMembers = new LineEdit { Name = "InterfaceEnumMembers", PlaceholderText = "ENUM values", CustomMinimumSize = new Vector2(180, 30) };
         var interfaceRetain = new CheckBox { Name = "InterfaceRetain", Text = "RETAIN", TooltipText = "Stores the RETAIN declaration attribute for this optimized-access Global DB member. The offline runtime does not model power-cycle retention." };
         var interfaceComment = new LineEdit { Name = "InterfaceComment", PlaceholderText = "comment", CustomMinimumSize = new Vector2(180, 30) };
         var addInterface = ToolbarButton("AddInterface", "+ PARAMETER", new Color("4d6674"), 130);
@@ -5469,6 +9737,12 @@ public partial class SimulatorShell : CanvasLayer
         cancelInterface.TooltipText = "Discard the current member form draft and return to a blank declaration form.";
         cancelInterface.Disabled = true;
         var removeInterface = ToolbarButton("RemoveInterface", "REMOVE", new Color("8a4d55"), 90);
+        var interfacePropertiesAction = ToolbarButton("SelectedInterfaceProperties", "PROPS", new Color("4d6674"), 82);
+        interfacePropertiesAction.TooltipText = "Inspect the selected declaration's identity, runtime meaning, and CALL impact.";
+        interfacePropertiesAction.Disabled = true;
+        var duplicateInterface = ToolbarButton("DuplicateInterface", "DUPLICATE", new Color("536771"), 105);
+        duplicateInterface.TooltipText = "Create a copy beside the selected declaration with a unique name and new stable identity.";
+        duplicateInterface.Disabled = true;
         var interfaceTable = new Tree
         {
             Name = "BlockInterface",
@@ -5487,6 +9761,65 @@ public partial class SimulatorShell : CanvasLayer
         interfaceTable.AddThemeColorOverride("font_color", new Color("263943"));
         ConfigureSelectableList(interfaceTable);
         interfaceTable.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
+        var interfaceContextMenu = new PopupMenu { Name = "InterfaceContextMenu" };
+        interfaceContextMenu.AddItem("Edit declaration", 0);
+        interfaceContextMenu.AddItem("Properties", 4);
+        interfaceContextMenu.AddItem("Duplicate declaration", 5);
+        interfaceContextMenu.AddSeparator();
+        interfaceContextMenu.AddItem("Move declaration up", 1);
+        interfaceContextMenu.AddItem("Move declaration down", 2);
+        interfaceContextMenu.AddSeparator();
+        interfaceContextMenu.AddItem("Delete declaration", 3);
+        root.AddChild(interfaceContextMenu);
+        var interfacePropertiesDialog = new AcceptDialog
+        {
+            Name = "InterfaceDeclarationPropertiesDialog",
+            Title = "Interface declaration properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(720, 300),
+        };
+        interfacePropertiesDialog.OkButtonText = "CLOSE";
+        var interfacePropertiesCopy = interfacePropertiesDialog.AddButton("COPY DETAILS", true, "copy-details");
+        var interfacePropertiesEdit = interfacePropertiesDialog.AddButton("EDIT DEFINITION", true, "edit-definition");
+        var interfacePropertiesDuplicate = interfacePropertiesDialog.AddButton("DUPLICATE", true, "duplicate");
+        var interfacePropertiesMoveUp = interfacePropertiesDialog.AddButton("MOVE UP", true, "move-up");
+        var interfacePropertiesMoveDown = interfacePropertiesDialog.AddButton("MOVE DOWN", true, "move-down");
+        var interfacePropertiesDelete = interfacePropertiesDialog.AddButton("DELETE", true, "delete");
+        interfacePropertiesCopy.Visible = false;
+        interfacePropertiesDuplicate.Visible = false;
+        interfacePropertiesMoveUp.Visible = false;
+        interfacePropertiesMoveDown.Visible = false;
+        interfacePropertiesDelete.Visible = false;
+        interfacePropertiesCopy.TooltipText = "Copy the declaration's modeled offline properties and reference impact.";
+        interfacePropertiesEdit.TooltipText = "Open the existing validated declaration editor.";
+        interfacePropertiesDuplicate.TooltipText = "Copy this declaration with a unique name and a new stable identity.";
+        interfacePropertiesMoveUp.TooltipText = "Move the declaration one row earlier in its current section order.";
+        interfacePropertiesMoveDown.TooltipText = "Move the declaration one row later in its current section order.";
+        interfacePropertiesDelete.TooltipText = "Delete only when no CALL binding still targets this declaration.";
+        interfacePropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(interfacePropertiesDialog.DialogText);
+                return;
+            }
+            interfacePropertiesDialog.Hide();
+            var command = action.ToString() switch
+            {
+                "edit-definition" => 0L,
+                "duplicate" => 5L,
+                "move-up" => 1L,
+                "move-down" => 2L,
+                "delete" => 3L,
+                _ => -1L,
+            };
+            if (command >= 0) interfaceContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, command);
+        };
+        interfacePropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(680, -1);
+        interfacePropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(interfacePropertiesDialog);
         var taskTarget = new OptionButton { Name = "TaskTarget", CustomMinimumSize = new Vector2(180, 32) };
         var taskName = new LineEdit
         {
@@ -5520,6 +9853,41 @@ public partial class SimulatorShell : CanvasLayer
             Prefix = "P",
             CustomMinimumSize = new Vector2(90, 32),
         };
+        var taskPropertiesDialog = new AcceptDialog
+        {
+            Name = "ObSchedulePropertiesDialog",
+            Title = siemens ? "OB schedule properties" : "Task schedule properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(720, 300),
+        };
+        taskPropertiesDialog.OkButtonText = "CLOSE";
+        var taskPropertiesCopy = taskPropertiesDialog.AddButton("COPY DETAILS", true, "copy-details");
+        var taskPropertiesOpenEntry = taskPropertiesDialog.AddButton("OPEN ENTRY BLOCK", true, "open-entry-block");
+        var taskPropertiesEdit = taskPropertiesDialog.AddButton("EDIT SCHEDULE", true, "edit-schedule");
+        var taskPropertiesDuplicate = taskPropertiesDialog.AddButton("DUPLICATE", true, "duplicate-schedule");
+        var taskPropertiesMoveUp = taskPropertiesDialog.AddButton("MOVE UP", true, "move-up");
+        var taskPropertiesMoveDown = taskPropertiesDialog.AddButton("MOVE DOWN", true, "move-down");
+        var taskPropertiesDelete = taskPropertiesDialog.AddButton(siemens ? "DELETE OB" : "DELETE TASK", true, "delete-schedule");
+        // Schedule lifecycle commands already live in the project-object
+        // editor. Keep Properties focused on inspection and the two useful
+        // navigation actions instead of repeating the entire toolbar.
+        taskPropertiesCopy.Visible = false;
+        taskPropertiesDuplicate.Visible = false;
+        taskPropertiesMoveUp.Visible = false;
+        taskPropertiesMoveDown.Visible = false;
+        taskPropertiesDelete.Visible = false;
+        taskPropertiesCopy.TooltipText = "Copy the selected schedule identity and offline execution properties.";
+        taskPropertiesOpenEntry.TooltipText = "Open the exact scheduled organization/function block in the central program editor.";
+        taskPropertiesEdit.TooltipText = "Focus the existing schedule form without changing any value.";
+        taskPropertiesDuplicate.TooltipText = "Create a new schedule with the same target, timing, and priority but a unique name and identity.";
+        taskPropertiesMoveUp.TooltipText = "Move this schedule one row earlier; equal-priority schedules execute in displayed order.";
+        taskPropertiesMoveDown.TooltipText = "Move this schedule one row later; equal-priority schedules execute in displayed order.";
+        taskPropertiesDelete.TooltipText = "Delete only when the offline project still has another valid schedule.";
+        taskPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(660, -1);
+        taskPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(taskPropertiesDialog);
         var selectedTaskIndex = 0;
         var selectedTagIndex = -1;
         var selectedInterfaceIndex = -1;
@@ -5528,36 +9896,39 @@ public partial class SimulatorShell : CanvasLayer
         string? selectedInterfaceBlockId = null;
         string? selectedInterfaceParameterId = null;
         string? selectedInterfaceParameterName = null;
-        string? activeTagTableName = "Default tag table";
+        string? activeTagTableName = SceneLadderProject.SceneIoTagTableName;
+        var activeTagTableSourceSceneId = document.SourceSceneId;
         Button? applyTagEdit = null;
         Button? deleteTag = null;
+        Button? editTagAction = null;
+        Button? tagPropertiesAction = null;
+        Button? validateAndLoadAction = null;
+        VBoxContainer? tagDefinitionForm = null;
+        var tagFormEditing = false;
         var rungLabel = new LineEdit { Name = "RungLabel", CustomMinimumSize = new Vector2(230, 32) };
         var tagList = new LadderProgramTree
         {
             Name = "TagTable",
-            Columns = siemens ? 7 : 5,
+            Columns = siemens ? 4 : 5,
             ColumnTitlesVisible = true,
             HideRoot = true,
             AllowReselect = true,
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
-            CustomMinimumSize = new Vector2(0, 150),
+            CustomMinimumSize = new Vector2(0, 220),
         };
         var tagColumns = siemens
-            ? new[] { (0, "NAME"), (1, "ADDRESS"), (2, "COMMENT"), (3, "TYPE"), (4, "ROLE"), (5, "INITIAL"), (6, "BINDING") }
+            ? new[] { (0, "NAME"), (1, "DATA TYPE"), (2, "ADDRESS"), (3, "COMMENT") }
             : new[] { (0, "NAME"), (1, "TYPE"), (2, "ROLE"), (3, "INITIAL"), (4, "BINDING"), (5, ""), (6, "") };
-        foreach (var (column, title) in tagColumns.Take(siemens ? 7 : 5))
+        foreach (var (column, title) in tagColumns.Take(siemens ? 4 : 5))
             tagList.SetColumnTitle(column, title);
         var tagNameColumn = 0;
         tagList.SetColumnExpand(tagNameColumn, false);
-        tagList.SetColumnCustomMinimumWidth(tagNameColumn, 118);
+        tagList.SetColumnCustomMinimumWidth(tagNameColumn, 180);
         if (siemens)
         {
-            tagList.SetColumnExpand(1, false); tagList.SetColumnCustomMinimumWidth(1, 90);
-            tagList.SetColumnExpand(2, true); tagList.SetColumnCustomMinimumWidth(2, 120);
-            tagList.SetColumnExpand(3, false); tagList.SetColumnCustomMinimumWidth(3, 60);
-            tagList.SetColumnExpand(4, false); tagList.SetColumnCustomMinimumWidth(4, 60);
-            tagList.SetColumnExpand(5, false); tagList.SetColumnCustomMinimumWidth(5, 72);
-            tagList.SetColumnExpand(6, true); tagList.SetColumnCustomMinimumWidth(6, 110);
+            tagList.SetColumnExpand(1, false); tagList.SetColumnCustomMinimumWidth(1, 120);
+            tagList.SetColumnExpand(2, false); tagList.SetColumnCustomMinimumWidth(2, 150);
+            tagList.SetColumnExpand(3, true); tagList.SetColumnCustomMinimumWidth(3, 260);
         }
         else
         {
@@ -5569,6 +9940,61 @@ public partial class SimulatorShell : CanvasLayer
         tagList.AddThemeColorOverride("font_color", new Color("263943"));
         ConfigureSelectableList(tagList);
         tagList.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
+        var tagContextMenu = new PopupMenu { Name = "TagContextMenu" };
+        tagContextMenu.AddItem("Edit", 0);
+        tagContextMenu.AddItem("Properties", 4);
+        tagContextMenu.AddItem("Cross-reference", 1);
+        tagContextMenu.AddItem("Duplicate", 2);
+        tagContextMenu.AddSeparator();
+        tagContextMenu.AddItem("Delete unused tag", 3);
+        root.AddChild(tagContextMenu);
+        var tagPropertiesDialog = new AcceptDialog
+        {
+            Name = "PlcTagPropertiesDialog",
+            Title = "PLC tag properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(760, 340),
+        };
+        tagPropertiesDialog.OkButtonText = "CLOSE";
+        var tagPropertiesCopy = tagPropertiesDialog.AddButton("COPY SUMMARY", true, "copy-details");
+        var tagPropertiesEdit = tagPropertiesDialog.AddButton("EDIT DEFINITION", true, "edit-definition");
+        var tagPropertiesCrossReference = tagPropertiesDialog.AddButton("CROSS-REFERENCE", true, "cross-reference");
+        var tagPropertiesDuplicate = tagPropertiesDialog.AddButton("DUPLICATE", true, "duplicate");
+        var tagPropertiesDelete = tagPropertiesDialog.AddButton("DELETE", true, "delete");
+        // The table toolbar and right-click menu already own lifecycle/search
+        // commands. Keep Properties focused on inspection and definition edit.
+        tagPropertiesCopy.Visible = false;
+        tagPropertiesCrossReference.Visible = false;
+        tagPropertiesDuplicate.Visible = false;
+        tagPropertiesDelete.Visible = false;
+        tagPropertiesCopy.TooltipText = "Copy this PLC tag's modeled offline properties.";
+        tagPropertiesEdit.TooltipText = "Open the existing validated tag-definition editor.";
+        tagPropertiesCrossReference.TooltipText = "Find declarations and executable references to this tag.";
+        tagPropertiesDuplicate.TooltipText = "Duplicate the tag without copying its address or scene binding.";
+        tagPropertiesDelete.TooltipText = "Delete only when the tag has no executable references.";
+        tagPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(tagPropertiesDialog.DialogText);
+                return;
+            }
+            tagPropertiesDialog.Hide();
+            var command = action.ToString() switch
+            {
+                "edit-definition" => 0L,
+                "cross-reference" => 1L,
+                "duplicate" => 2L,
+                "delete" => 3L,
+                _ => -1L,
+            };
+            if (command >= 0) tagContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, command);
+        };
+        tagPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(690, -1);
+        tagPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(tagPropertiesDialog);
         var tagName = new LineEdit { Name = "NewTagName", PlaceholderText = "new_bool_tag" };
         var tagTableMembership = new OptionButton
         {
@@ -5661,10 +10087,10 @@ public partial class SimulatorShell : CanvasLayer
         var instructionPropertiesFrame = PanelContainer(
             "InstructionPropertiesFrame", new Color("f5f6f7"), accent);
         instructionPropertiesFrame.SetAnchorsPreset(Control.LayoutPreset.Center);
-        instructionPropertiesFrame.OffsetLeft = -380;
-        instructionPropertiesFrame.OffsetTop = -95;
-        instructionPropertiesFrame.OffsetRight = 380;
-        instructionPropertiesFrame.OffsetBottom = 95;
+        instructionPropertiesFrame.OffsetLeft = -410;
+        instructionPropertiesFrame.OffsetTop = -120;
+        instructionPropertiesFrame.OffsetRight = 410;
+        instructionPropertiesFrame.OffsetBottom = 120;
         var instructionPropertiesBody = new VBoxContainer { Name = "InstructionPropertiesBody" };
         instructionPropertiesBody.AddThemeConstantOverride("separation", 8);
         instructionPropertiesFrame.AddChild(instructionPropertiesBody);
@@ -5672,7 +10098,7 @@ public partial class SimulatorShell : CanvasLayer
         var instructionPropertiesTitleRow = new HBoxContainer { Name = "InstructionPropertiesTitleRow" };
         var instructionPropertiesTitle = Heading(
             siemens ? "Instruction properties" : "Instruction Properties",
-            14, new Color("263943"));
+            17, new Color("263943"));
         instructionPropertiesTitle.Name = "InstructionPropertiesTitle";
         instructionPropertiesTitle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         instructionPropertiesTitleRow.AddChild(instructionPropertiesTitle);
@@ -5680,9 +10106,18 @@ public partial class SimulatorShell : CanvasLayer
             "CloseInstructionProperties", "CLOSE", new Color("637985"), 70);
         instructionPropertiesTitleRow.AddChild(closeInstructionProperties);
         instructionPropertiesBody.AddChild(instructionPropertiesTitleRow);
-        var instructionPropertyScope = Heading("", 11, new Color("4f6874"));
+        var instructionPropertyScope = Heading("", 13, new Color("344851"));
         instructionPropertyScope.Name = "InstructionPropertyScope";
         instructionPropertiesBody.AddChild(instructionPropertyScope);
+        var instructionPropertyIdentity = new Label
+        {
+            Name = "InstructionPropertyIdentity",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            CustomMinimumSize = new Vector2(0, 34),
+        };
+        instructionPropertyIdentity.AddThemeColorOverride("font_color", new Color("455f6a"));
+        instructionPropertyIdentity.AddThemeFontSizeOverride("font_size", 13);
+        instructionPropertiesBody.AddChild(instructionPropertyIdentity);
 
         HBoxContainer PropertyRow(string name, params Control[] controls)
         {
@@ -5834,6 +10269,20 @@ public partial class SimulatorShell : CanvasLayer
             emptyInstructionChooser.AddItem(choice.Label);
         root.AddChild(emptyInstructionChooser);
 
+        static string NetworkTerminalSummary(EditableRung rung) =>
+            rung.IsTimerReset ? "RT / timer reset"
+            : rung.IsTimer ? rung.TimerKind.ToString()
+            : rung.IsCounterReset ? "counter reset"
+            : rung.IsCounterLoad ? "counter load"
+            : rung.IsCounter ? rung.CounterKind.ToString()
+            : rung.IsNumericOperation ? rung.NumericOperationKind.ToString()
+            : rung.IsCall ? "CALL"
+            : rung.IsReturn ? "RETURN"
+            : rung.IsJump ? "JMP"
+            : rung.HasTerminalAction ? $"coil · {rung.CoilMode}"
+            : rung.IsLabel ? "LABEL only"
+            : "none";
+
         void UpdateInstructionPropertyVisibility()
         {
             foreach (var row in new[]
@@ -5845,15 +10294,22 @@ public partial class SimulatorShell : CanvasLayer
                 row.Visible = false;
             if (document.Rungs.Count == 0) return;
             var rung = document.Rungs[Math.Clamp(selectedRung, 0, document.Rungs.Count - 1)];
-            var activeBlockName = document.Blocks[document.ActiveBlockIndex].Name;
+            var activeBlock = document.Blocks[document.ActiveBlockIndex];
+            var activeBlockName = activeBlock.Name;
             instructionPropertyScope.Text = siemens
                 ? $"{activeBlockName}  ›  Network {selectedRung + 1}"
                 : $"MainProgram  ›  {activeBlockName}  ›  Rung {selectedRung}";
+            var branchCount = rung.Branches.Count;
+            var instructionCount = rung.Branches.Sum(branch => branch.Contacts.Count);
+            instructionPropertyIdentity.Text =
+                $"Network {selectedRung + 1} of {document.Rungs.Count} · {branchCount} branch(es) · {instructionCount} instruction(s) · Terminal {NetworkTerminalSummary(rung)}";
             if (selectedContact >= 0 && selectedBranch >= 0
                 && selectedBranch < rung.Branches.Count
                 && selectedContact < rung.Branches[selectedBranch].Contacts.Count)
             {
                 var contact = rung.Branches[selectedBranch].Contacts[selectedContact];
+                instructionPropertyIdentity.Text +=
+                    $"\nSelected: {(contact.IsComparison ? "comparison" : "contact")} · branch {selectedBranch + 1} · position {selectedContact + 1}";
                 instructionPropertiesTitle.Text = contact.IsComparison
                     ? (siemens ? "Compare instruction properties" : "Compare Instruction Properties")
                     : (siemens ? "Contact properties" : "Contact Instruction Properties");
@@ -5865,6 +10321,9 @@ public partial class SimulatorShell : CanvasLayer
             }
             if (selectedOutput)
             {
+                instructionPropertyIdentity.Text += propertyNetworkLabel
+                    ? "\nSelected: network LABEL"
+                    : $"\nSelected: terminal instruction · {NetworkTerminalSummary(rung)}";
                 if (propertyNetworkLabel && rung.IsLabel)
                 {
                     instructionPropertiesTitle.Text = siemens ? "LABEL properties" : "LBL Instruction Properties";
@@ -5962,10 +10421,19 @@ public partial class SimulatorShell : CanvasLayer
         string propertyNetworkId = "", propertyNodeId = "";
         bool propertyOutput = false;
         var propertyActions = new HBoxContainer { Name = "InstructionPropertyActions" };
-        var applyProperties = new Button { Name = "ApplyInstructionProperties", Text = "Apply" };
-        var cancelProperties = new Button { Name = "CancelInstructionProperties", Text = "Cancel" };
+        propertyActions.AddThemeConstantOverride("separation", 8);
+        var copyInstructionPropertyDetails = ToolbarButton("CopyInstructionPropertyDetails", "COPY DETAILS", new Color("4d6674"), 118);
+        var applyProperties = ToolbarButton("ApplyInstructionProperties", "APPLY", accent, 82);
+        var cancelProperties = ToolbarButton("CancelInstructionProperties", "CANCEL", new Color("637985"), 82);
         var propertyStatus = new Label { Name = "InstructionPropertyStatus", AutowrapMode = TextServer.AutowrapMode.WordSmart };
-        propertyActions.AddChild(applyProperties); propertyActions.AddChild(cancelProperties);
+        propertyStatus.AddThemeColorOverride("font_color", new Color("344851"));
+        propertyStatus.AddThemeFontSizeOverride("font_size", 13);
+        propertyStatus.CustomMinimumSize = new Vector2(0, 24);
+        copyInstructionPropertyDetails.TooltipText = "Copy the selected block/network/instruction identity and structural summary.";
+        copyInstructionPropertyDetails.Visible = false;
+        copyInstructionPropertyDetails.Pressed += () => DisplayServer.ClipboardSet(
+            instructionPropertiesTitle.Text + "\n" + instructionPropertyScope.Text + "\n" + instructionPropertyIdentity.Text);
+        propertyActions.AddChild(copyInstructionPropertyDetails); propertyActions.AddChild(applyProperties); propertyActions.AddChild(cancelProperties);
         instructionPropertiesBody.AddChild(propertyStatus); instructionPropertiesBody.AddChild(propertyActions);
         void CancelProperties()
         {
@@ -6309,15 +10777,29 @@ public partial class SimulatorShell : CanvasLayer
         Label? interfaceExecutionNote = null;
         Label? tagTableContextHeading = null;
         Action? refreshUserConstants = null;
+        Action? refreshSystemConstants = null;
         Action? loadUserConstantForm = null;
         Action? discardUserConstantForm = null;
         Action? refreshEditorAfterInitialization = null;
+        Action<string> runExactCrossReference = _ => { };
         Button? renameTagTableAction = null;
+        Button? duplicateTagTableAction = null;
         Button? removeTagTableAction = null;
         RichTextLabel? blockInterfaceSummary = null;
         VBoxContainer? globalDbDocument = null;
         RichTextLabel? globalDbHeading = null;
         Action? restoreActiveEditorDocumentBody = null;
+
+        string UniqueCpuCopyName(string original)
+        {
+            bool Assigned(string candidate) => document.Tags.Any(tag => tag.Name.Equals(candidate, StringComparison.OrdinalIgnoreCase))
+                || document.UserConstants.Any(constant => constant.Name.Equals(candidate, StringComparison.OrdinalIgnoreCase))
+                || document.Blocks.Any(block => block.Name.Equals(candidate, StringComparison.OrdinalIgnoreCase));
+            var baseName = original + "_Copy";
+            var candidate = baseName;
+            for (var suffix = 2; Assigned(candidate); suffix++) candidate = $"{baseName}_{suffix}";
+            return candidate;
+        }
 
         string SelectedTagTableMembership() => tagTableMembership.Selected >= 0
             ? tagTableMembership.GetItemMetadata(tagTableMembership.Selected).AsString()
@@ -6350,13 +10832,30 @@ public partial class SimulatorShell : CanvasLayer
                     : $"TAG TABLE: {activeTagTableName.ToUpperInvariant()}";
             var isUserTable = activeTagTableName is not null
                 && !activeTagTableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase)
+                && !activeTagTableName.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase)
                 && document.TagTables.Contains(activeTagTableName, StringComparer.OrdinalIgnoreCase);
             if (renameTagTableAction is not null)
+            {
+                renameTagTableAction.Visible = isUserTable;
                 renameTagTableAction.Disabled = !isUserTable || tagFormDirty || userConstantFormDirty || ChallengeMutationLocked;
+            }
+            if (duplicateTagTableAction is not null)
+            {
+                duplicateTagTableAction.Visible = activeTagTableName is not null
+                    && !activeTagTableName.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase);
+                duplicateTagTableAction.Disabled = activeTagTableName is null
+                    || activeTagTableName.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase)
+                    || tagFormDirty || userConstantFormDirty || ChallengeMutationLocked;
+            }
             if (removeTagTableAction is not null)
+            {
+                removeTagTableAction.Visible = isUserTable;
                 removeTagTableAction.Disabled = !isUserTable || tagFormDirty || userConstantFormDirty || ChallengeMutationLocked
                     || document.Tags.Any(tag => tag.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase))
                     || document.UserConstants.Any(constant => constant.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase));
+            }
+            if (editTagAction is not null)
+                editTagAction.Disabled = selectedTagIndex < 0 || tagFormDirty || tagFormEditing || ChallengeMutationLocked;
         }
 
         Action? refreshTreeActions = null;
@@ -6392,14 +10891,78 @@ public partial class SimulatorShell : CanvasLayer
             }
         }
 
+        var projectTreeFilterBaseline = new Dictionary<TreeItem, bool>();
+        IEnumerable<TreeItem> EnumerateProjectTreeItems(TreeItem? first)
+        {
+            for (var item = first; item is not null; item = item.GetNext())
+            {
+                yield return item;
+                foreach (var child in EnumerateProjectTreeItems(item.GetFirstChild()))
+                    yield return child;
+            }
+        }
+        captureProjectTreeFilterBaseline = () =>
+        {
+            projectTreeFilterBaseline.Clear();
+            foreach (var item in EnumerateProjectTreeItems(organization.GetRoot()))
+                projectTreeFilterBaseline[item] = item.Visible;
+        };
+        applyProjectTreeFilter = () =>
+        {
+            if (!siemens) return;
+            if (projectTreeFilterBaseline.Count == 0)
+                captureProjectTreeFilterBaseline();
+            var query = projectTreeFilter.Text.Trim();
+            if (query.Length == 0)
+            {
+                foreach (var pair in projectTreeFilterBaseline)
+                    if (GodotObject.IsInstanceValid(pair.Key)) pair.Key.Visible = pair.Value;
+                projectTreeFilterStatus.Text = "ALL";
+                projectTreeFilterStatus.TooltipText = "No Project tree filter is active.";
+                return;
+            }
+
+            var directMatches = 0;
+            bool FilterItem(TreeItem item, bool ancestorMatched)
+            {
+                var baselineVisible = projectTreeFilterBaseline.TryGetValue(item, out var wasVisible) && wasVisible;
+                var ownMatch = baselineVisible && item.GetText(0).Contains(query, StringComparison.OrdinalIgnoreCase);
+                if (ownMatch) directMatches++;
+                var revealDescendants = ancestorMatched || ownMatch;
+                var childMatch = false;
+                for (var child = item.GetFirstChild(); child is not null; child = child.GetNext())
+                    childMatch |= FilterItem(child, revealDescendants);
+                item.Visible = baselineVisible && (revealDescendants || childMatch);
+                if (baselineVisible && childMatch) item.SetCollapsed(false);
+                return baselineVisible && (ownMatch || childMatch);
+            }
+            for (var rootItem = organization.GetRoot(); rootItem is not null; rootItem = rootItem.GetNext())
+                FilterItem(rootItem, false);
+            projectTreeFilterStatus.Text = directMatches == 1 ? "1 MATCH" : $"{directMatches} MATCHES";
+            projectTreeFilterStatus.TooltipText = $"{directMatches} visible Project tree object(s) directly match '{query}'. Parent folders remain visible for context.";
+        };
+
         void RefreshEditor()
         {
+            if (!activeTagTableSourceSceneId.Equals(document.SourceSceneId, StringComparison.Ordinal))
+            {
+                activeTagTableSourceSceneId = document.SourceSceneId;
+                activeTagTableName = document.TagTables.FirstOrDefault(name =>
+                    name.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase))
+                    ?? document.TagTables.FirstOrDefault(name =>
+                        name.Equals("Default tag table", StringComparison.OrdinalIgnoreCase));
+                selectedTagIndex = -1;
+            }
             UpdateGlobalDbDeclarationGridEditability();
             if (propertyDirty || tagFormDirty || userConstantFormDirty || blockFormDirty || taskFormDirty || interfaceFormDirty) return;
+            if (siemens && projectTreeFilter.Text.Trim().Length > 0)
+                foreach (var pair in projectTreeFilterBaseline)
+                    if (GodotObject.IsInstanceValid(pair.Key)) pair.Key.Visible = pair.Value;
             ReconcileTagTableEditorState();
             refreshingEditor = true;
             RefreshTagTableEditorControls();
             refreshUserConstants?.Invoke();
+            refreshSystemConstants?.Invoke();
             document.EnsureInstanceDataBlocks();
             var activeBlockName = document.Blocks.Count > 0
                 ? document.Blocks[Math.Clamp(document.ActiveBlockIndex, 0, document.Blocks.Count - 1)].Name
@@ -6449,8 +11012,10 @@ public partial class SimulatorShell : CanvasLayer
                         _ => "FC",
                     };
                     tab.Disabled = false;
-                    tab.Text = $"{tabBlock.Name} [{tabBlockCode}{tabBlockIndex + 1}]";
-                    tab.TooltipText = $"{tabBlock.Name} · {tabBlock.BlockType} · stable block identity";
+                    tab.Text = $"{(projectDirty ? "* " : string.Empty)}{tabBlock.Name} [{tabBlockCode}{tabBlockIndex + 1}]";
+                    tab.TooltipText = $"{tabBlock.Name} · {tabBlock.BlockType} · stable block identity · "
+                        + (projectDirty ? $"unsaved project changes · {projectFileName}" : $"project saved · {projectFileName}")
+                        + " · right-click for document actions";
                 }
 
                 foreach (var (key, tableName) in editorTagDocuments)
@@ -6460,7 +11025,7 @@ public partial class SimulatorShell : CanvasLayer
                     tagTab.Text = $"{(projectDirty ? "* " : string.Empty)}{tagDocumentName} — {projectFileName}";
                     tagTab.TooltipText = $"{(tableName is null ? "All PLC tags" : $"PLC tag table · {tableName}")} · "
                         + (projectDirty ? "Unsaved project changes. " : "Project is saved. ")
-                        + "Use the close button beside this tab to close it.";
+                        + "Right-click for Properties, Locate, and close actions.";
                 }
 
                 foreach (var (key, watchTableId) in editorWatchTableDocuments)
@@ -6478,7 +11043,9 @@ public partial class SimulatorShell : CanvasLayer
                     var watchTable = document.WatchTables[watchTableIndex];
                     watchTab.Disabled = false;
                     watchTab.Text = $"{(projectDirty ? "* " : string.Empty)}{watchTable.Name} — {projectFileName}";
-                    watchTab.TooltipText = $"Watch table · {watchTable.Name} · stable table identity. Values are simulator-only.";
+                    watchTab.TooltipText = $"Watch table · {watchTable.Name} · stable table identity · "
+                        + (projectDirty ? "unsaved project changes" : "project saved")
+                        + " · values are simulator-only · right-click for document actions";
                 }
 
                 foreach (var (key, ownerLocator) in editorInstanceDbDocuments)
@@ -6496,7 +11063,9 @@ public partial class SimulatorShell : CanvasLayer
                     var instanceDb = owner.Value.DataBlock;
                     instanceDbTab.Disabled = false;
                     instanceDbTab.Text = $"{(projectDirty ? "* " : string.Empty)}{instanceDb.Name} [DB{instanceDb.Number}] — {projectFileName}";
-                    instanceDbTab.TooltipText = $"Instance DB · stable owner {ownerLocator} · offline project definition.";
+                    instanceDbTab.TooltipText = $"Instance DB · stable owner {ownerLocator} · offline project definition · "
+                        + (projectDirty ? "unsaved project changes" : "project saved")
+                        + " · right-click for document actions";
                 }
 
                 if (activeEditorDocumentKey.StartsWith("block:", StringComparison.Ordinal)
@@ -6568,6 +11137,7 @@ public partial class SimulatorShell : CanvasLayer
                 // imply TIA identities by deriving them from tree order.
                 var suffix = siemens ? $" [{blockCode}]" : string.Empty;
                 blockItems[index].SetText(0, document.Blocks[index].Name + suffix);
+                blockItems[index].SetTooltipText(0, document.Blocks[index].Name + suffix);
                 blockItems[index].Visible = true;
             }
             for (var index = document.Blocks.Count; index < blockItems.Count; index++)
@@ -6592,7 +11162,7 @@ public partial class SimulatorShell : CanvasLayer
                     var db = instanceDbs[index];
                     instanceDbItems[index].SetText(0, $"DB{db.Number}  \"{db.Name}\"");
                     instanceDbItems[index].SetMetadata(0, $"instance-db:{db.Number}");
-                    instanceDbItems[index].SetTooltipText(0, "FB, IEC timer, or counter instance data block. Edit FB assignments from CALL properties.");
+                    instanceDbItems[index].SetTooltipText(0, $"DB{db.Number}  \"{db.Name}\"\nFB, IEC timer, or counter instance data block. Edit FB assignments from CALL properties.");
                     instanceDbItems[index].Visible = true;
                 }
                 for (var index = instanceDbs.Length; index < instanceDbItems.Count; index++)
@@ -6610,7 +11180,10 @@ public partial class SimulatorShell : CanvasLayer
                     var tableName = document.TagTables[index];
                     var count = document.Tags.Count(tag => tag.TagTable.Equals(tableName, StringComparison.Ordinal));
                     var constantCount = document.UserConstants.Count(constant => constant.TagTable.Equals(tableName, StringComparison.Ordinal));
-                    tagTableItems[index].SetText(0, $"{tableName} [{count} tags · {constantCount} constants]");
+                    // Keep the project-tree object name readable at the normal
+                    // dock width. TIA's tree identifies the table; row counts
+                    // belong in the tooltip and the opened table document.
+                    tagTableItems[index].SetText(0, tableName);
                     tagTableItems[index].SetMetadata(0, $"tag-table:{tableName}");
                     tagTableItems[index].SetTooltipText(0, $"{count} PLC tag(s) and {constantCount} user constant(s) in {tableName}.");
                     tagTableItems[index].Visible = true;
@@ -6650,7 +11223,11 @@ public partial class SimulatorShell : CanvasLayer
                 interfaceSection.Disabled = siemens && activeBlock.BlockType == LadderBlockType.DataBlock;
                 interfaceSection.Visible = !siemens || activeBlock.BlockType != LadderBlockType.DataBlock;
                 interfaceRetain.Visible = siemens && activeBlock.BlockType == LadderBlockType.DataBlock;
-                interfaceComment.Visible = siemens && activeBlock.BlockType == LadderBlockType.DataBlock;
+                // Comments are authored properties for every block-interface
+                // declaration, not only Global DB members. Keep them visible so
+                // opening and applying an FB/FC declaration cannot erase the
+                // existing documentation silently.
+                interfaceComment.Visible = siemens;
                 if (interfaceSection.Disabled)
                     interfaceSection.Select((int)LadderInterfaceSection.Static);
                 if (!StringComparer.Ordinal.Equals(interfaceFormOwnerBlockId, activeBlock.Id))
@@ -6853,25 +11430,25 @@ public partial class SimulatorShell : CanvasLayer
                 tagRow.SetMetadata(0, $"tag:{index}");
                 tagRow.SetMetadata(1, "tag-id:" + LadderCallBindings.GlobalId(tag));
                 tagRow.SetText(0, tag.Name);
-                var addressColumn = siemens ? 1 : -1;
-                var commentColumn = siemens ? 2 : -1;
-                var typeColumn = siemens ? 3 : 1;
-                var roleColumn = siemens ? 4 : 2;
-                var initialColumn = siemens ? 5 : 3;
-                var bindingColumn = siemens ? 6 : 4;
+                var addressColumn = siemens ? 2 : -1;
+                var commentColumn = siemens ? 3 : -1;
+                var typeColumn = 1;
+                var roleColumn = siemens ? -1 : 2;
+                var initialColumn = siemens ? -1 : 3;
+                var bindingColumn = siemens ? -1 : 4;
                 if (addressColumn >= 0) tagRow.SetText(addressColumn, string.IsNullOrWhiteSpace(tag.Address) ? "—" : tag.Address);
                 if (commentColumn >= 0) tagRow.SetText(commentColumn, string.IsNullOrWhiteSpace(tag.Comment) ? "—" : tag.Comment);
                 tagRow.SetText(typeColumn, tag.Type.ToString().ToUpperInvariant());
-                tagRow.SetText(roleColumn, tag.Role.ToString().ToUpperInvariant());
-                tagRow.SetText(initialColumn, FormatTagInitialValue(tag));
-                tagRow.SetText(bindingColumn, string.IsNullOrWhiteSpace(tag.Binding) ? "—" : tag.Binding);
+                if (roleColumn >= 0) tagRow.SetText(roleColumn, tag.Role.ToString().ToUpperInvariant());
+                if (initialColumn >= 0) tagRow.SetText(initialColumn, FormatTagInitialValue(tag));
+                if (bindingColumn >= 0) tagRow.SetText(bindingColumn, string.IsNullOrWhiteSpace(tag.Binding) ? "—" : tag.Binding);
                 tagRow.SetTooltipText(0, tag.Name);
                 if (addressColumn >= 0) tagRow.SetTooltipText(addressColumn, string.IsNullOrWhiteSpace(tag.Address) ? "—" : tag.Address);
                 if (commentColumn >= 0) tagRow.SetTooltipText(commentColumn, string.IsNullOrWhiteSpace(tag.Comment) ? "—" : tag.Comment);
                 tagRow.SetTooltipText(typeColumn, PlcAggregates.IsAggregate(tag.Type) ? string.Join("\n", AggregateEditorLeaves(tag).Select(leaf => $"{leaf.Name}: {leaf.Type}")) : tag.Type.ToString().ToUpperInvariant());
-                tagRow.SetTooltipText(roleColumn, tag.Role.ToString().ToUpperInvariant());
-                tagRow.SetTooltipText(initialColumn, FormatTagInitialValue(tag));
-                tagRow.SetTooltipText(bindingColumn, string.IsNullOrWhiteSpace(tag.Binding) ? "—" : tag.Binding);
+                if (roleColumn >= 0) tagRow.SetTooltipText(roleColumn, tag.Role.ToString().ToUpperInvariant());
+                if (initialColumn >= 0) tagRow.SetTooltipText(initialColumn, FormatTagInitialValue(tag));
+                if (bindingColumn >= 0) tagRow.SetTooltipText(bindingColumn, string.IsNullOrWhiteSpace(tag.Binding) ? "—" : tag.Binding);
             }
             if (parameterizedBlock)
                 foreach (var formal in document.Blocks[document.ActiveBlockIndex].Interface
@@ -6883,6 +11460,7 @@ public partial class SimulatorShell : CanvasLayer
                 selectedTagIndex = -1;
             applyTagEdit!.Disabled = selectedTagIndex < 0;
             deleteTag!.Disabled = selectedTagIndex < 0;
+            tagPropertiesAction!.Disabled = selectedTagIndex < 0;
             if (selectedTagIndex >= 0) SelectIndexedTreeRow(tagList, selectedTagIndex);
             RefreshTagTableEditorControls();
             for (var index = 0; index < document.Blocks.Count; index++)
@@ -7052,21 +11630,21 @@ public partial class SimulatorShell : CanvasLayer
             RefreshWatchTable(_virtualSnapshot);
             refreshTreeActions?.Invoke();
             restoreActiveEditorDocumentBody?.Invoke();
+            captureProjectTreeFilterBaseline?.Invoke();
+            applyProjectTreeFilter?.Invoke();
         }
 
         var instructionChrome = new ScrollContainer
         {
             Name = "InstructionToolbarChrome",
-            VerticalScrollMode = ScrollContainer.ScrollMode.Auto,
-            HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
-            CustomMinimumSize = new Vector2(0, 140),
+            VerticalScrollMode = ScrollContainer.ScrollMode.Disabled,
+            HorizontalScrollMode = ScrollContainer.ScrollMode.Auto,
+            CustomMinimumSize = new Vector2(0, siemens ? 40 : 72),
         };
         instructionChrome.AddThemeStyleboxOverride("panel", BoxStyle(new Color("eef1f3"), new Color("aeb8bd")));
-        var instructions = new VBoxContainer
-        {
-            Name = "InstructionToolbar",
-            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-        };
+        BoxContainer instructions = siemens
+            ? new HBoxContainer { Name = "InstructionToolbar", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill }
+            : new VBoxContainer { Name = "InstructionToolbar", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
         instructions.AddThemeConstantOverride("separation", 4);
         instructionChrome.AddChild(instructions);
         var selectionRow = new HFlowContainer { Name = "Selection" };
@@ -7083,6 +11661,10 @@ public partial class SimulatorShell : CanvasLayer
         selectionRow.AddChild(moveContactRight);
         var openInstructionHelp = ToolbarButton("OpenInstructionHelp", "HELP (F1)", new Color("4d6674"), 92);
         selectionRow.AddChild(openInstructionHelp);
+        // Selection/move/help remain addressable by keyboard, context menus,
+        // and review automation. TIA does not dedicate a permanent row to
+        // them above every LAD network.
+        selectionRow.Visible = !siemens;
         instructions.AddChild(selectionRow);
         // Category tabs and fixed-width command rows forced the split editor
         // beyond its aperture. Keep the existing command paths, but select
@@ -7090,7 +11672,7 @@ public partial class SimulatorShell : CanvasLayer
         var instructionCategory = new OptionButton
         {
             Name = "InstructionCategory",
-            CustomMinimumSize = new Vector2(160, 28),
+            CustomMinimumSize = new Vector2(siemens ? 132 : 160, 30),
             TooltipText = "Choose an instruction category; buttons wrap to the available editor width",
         };
         instructions.AddChild(instructionCategory);
@@ -7098,7 +11680,8 @@ public partial class SimulatorShell : CanvasLayer
         {
             Name = "InstructionPalette",
             TabsVisible = false,
-            CustomMinimumSize = new Vector2(0, 72),
+            CustomMinimumSize = new Vector2(0, siemens ? 34 : 72),
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
         };
         instructionPalette.AddThemeFontSizeOverride("font_size", 11);
         instructionPalette.AddThemeColorOverride("font_selected_color", new Color("263943"));
@@ -7110,7 +11693,7 @@ public partial class SimulatorShell : CanvasLayer
         Button Command(string name, string text)
         {
             var button = ToolbarButton(name, text, new Color("637985"), 76);
-            button.CustomMinimumSize = new Vector2(76, 32);
+            button.CustomMinimumSize = new Vector2(76, siemens ? 30 : 32);
             return button;
         }
         var addNo = Command("AddNormallyOpen", siemens ? "—| |—  NO" : "—] [—  XIC");
@@ -7151,8 +11734,18 @@ public partial class SimulatorShell : CanvasLayer
         addFallingEdge.TooltipText = "Insert a one-scan TRUE-to-FALSE edge contact with stable per-instruction simulator memory";
         addCompare.TooltipText = "Insert a comparison at the selected wire position";
 
-        var bitCommands = new HFlowContainer { Name = "Bit Logic" };
-        bitCommands.AddThemeConstantOverride("separation", 4);
+        Container CommandRow(string name)
+        {
+            // A TIA instruction strip scrolls horizontally instead of growing
+            // into multiple vertical rows above the active network.
+            Container row = siemens
+                ? new HBoxContainer { Name = name }
+                : new HFlowContainer { Name = name };
+            row.AddThemeConstantOverride("separation", 4);
+            return row;
+        }
+
+        var bitCommands = CommandRow("Bit Logic");
         bitCommands.AddChild(addNo);
         bitCommands.AddChild(addEmptyInstruction);
         bitCommands.AddChild(addNc);
@@ -7167,8 +11760,7 @@ public partial class SimulatorShell : CanvasLayer
         bitCommands.AddChild(remove);
         instructionPalette.AddChild(bitCommands);
 
-        var timerCommands = new HFlowContainer { Name = "Timers" };
-        timerCommands.AddThemeConstantOverride("separation", 4);
+        var timerCommands = CommandRow("Timers");
         timerCommands.AddChild(addTon);
         timerCommands.AddChild(addTof);
         timerCommands.AddChild(addTp);
@@ -7176,8 +11768,7 @@ public partial class SimulatorShell : CanvasLayer
         timerCommands.AddChild(addTimerReset);
         instructionPalette.AddChild(timerCommands);
 
-        var counterCommands = new HFlowContainer { Name = "Counters" };
-        counterCommands.AddThemeConstantOverride("separation", 4);
+        var counterCommands = CommandRow("Counters");
         counterCommands.AddChild(addCounter);
         counterCommands.AddChild(addCounterDown);
         if (!siemens)
@@ -7187,13 +11778,11 @@ public partial class SimulatorShell : CanvasLayer
         }
         instructionPalette.AddChild(counterCommands);
 
-        var compareCommands = new HFlowContainer { Name = "Compare" };
-        compareCommands.AddThemeConstantOverride("separation", 4);
+        var compareCommands = CommandRow("Compare");
         compareCommands.AddChild(addCompare);
         instructionPalette.AddChild(compareCommands);
 
-        var numericCommands = new HFlowContainer { Name = "Math and Move" };
-        numericCommands.AddThemeConstantOverride("separation", 4);
+        var numericCommands = CommandRow("Math and Move");
         var addMove = Command("AddMove", "MOV");
         var addFormatText = Command("AddFormatText", "FORMAT_TEXT");
         addFormatText.TooltipText = "Local simulator instruction: numeric source A + quoted template B to STRING; no vendor parity claim.";
@@ -7222,16 +11811,14 @@ public partial class SimulatorShell : CanvasLayer
             // Preserve portable simulator operations without presenting them
             // as native STEP 7 instructions. Siemens CTU/CTD expose R/LD as
             // box inputs, and FORMAT_TEXT is a RungProof-only teaching helper.
-            var localCommands = new HFlowContainer { Name = "RungProof local (not Siemens)" };
-            localCommands.AddThemeConstantOverride("separation", 4);
+            var localCommands = CommandRow("RungProof local (not Siemens)");
             localCommands.AddChild(addCounterLoad);
             localCommands.AddChild(addCounterReset);
             localCommands.AddChild(addFormatText);
             instructionPalette.AddChild(localCommands);
         }
 
-        var scientificCommands = new HFlowContainer { Name = "Scientific Math" };
-        scientificCommands.AddThemeConstantOverride("separation", 4);
+        var scientificCommands = CommandRow("Scientific Math");
         var addExponentiate = Command("AddExponentiate", "EXPT");
         var addNaturalLog = Command("AddNaturalLog", "LN");
         var addSine = Command("AddSine", "SIN");
@@ -7250,8 +11837,7 @@ public partial class SimulatorShell : CanvasLayer
         scientificCommands.AddChild(addArcTangent);
         instructionPalette.AddChild(scientificCommands);
 
-        var conversionCommands = new HFlowContainer { Name = "Conversion" };
-        conversionCommands.AddThemeConstantOverride("separation", 4);
+        var conversionCommands = CommandRow("Conversion");
         var addTruncate = Command("AddTruncate", "TRUNC");
         var addNormalize = Command("AddNormalize", siemens ? "NORM_X" : "CPT NORM");
         var addScale = Command("AddScale", siemens ? "SCALE_X" : "CPT SCALE");
@@ -7268,8 +11854,7 @@ public partial class SimulatorShell : CanvasLayer
         conversionCommands.AddChild(addScale);
         instructionPalette.AddChild(conversionCommands);
 
-        var programCommands = new HFlowContainer { Name = "Program Control" };
-        programCommands.AddThemeConstantOverride("separation", 4);
+        var programCommands = CommandRow("Program Control");
         var addCall = Command("AddCall", siemens ? "FC / FB CALL" : "JSR");
         addCall.TooltipText = siemens
             ? "TIA LAD inserts a named FC/FB from Program blocks into a network; it does not use a generic CALL palette instruction."
@@ -7294,11 +11879,23 @@ public partial class SimulatorShell : CanvasLayer
         instructionPalette.TabChanged += category => instructionCategory.Select((int)category);
 
         var addTask = Command("AddTask", siemens ? "+ OB" : "+ TASK");
-        var applyBlock = Command("ApplyBlock", siemens ? "RENAME BLOCK" : "RENAME ROUTINE");
+        var applyBlock = Command("ApplyBlock", siemens ? "RENAME" : "RENAME ROUTINE");
+        var duplicateBlock = Command("DuplicateBlock", siemens ? "DUPLICATE BLOCK" : "DUPLICATE ROUTINE");
         var cancelBlock = Command("CancelBlockEdit", "CANCEL");
         var removeBlock = Command("RemoveBlock", siemens ? "DELETE BLOCK" : "DELETE ROUTINE");
+        if (siemens)
+        {
+            addBlock.Text = "+ BLOCK";
+            duplicateBlock.Visible = false;
+            removeBlock.Visible = false;
+            cancelBlock.Visible = false;
+        }
         var applyTask = Command("ApplyTask", "APPLY");
         var cancelTask = Command("CancelTaskEdit", "CANCEL");
+        var taskPropertiesAction = Command("SelectedTaskProperties", "PROPS");
+        taskPropertiesAction.TooltipText = "Inspect the selected OB/task schedule identity, target, timing, priority, and delete state.";
+        var duplicateTask = Command("DuplicateTask", siemens ? "DUPLICATE OB" : "DUPLICATE TASK");
+        duplicateTask.TooltipText = "Copy the selected schedule with a unique name and new stable identity.";
         var removeTask = Command("RemoveTask", siemens ? "DELETE OB" : "DELETE TASK");
         center.AddChild(instructionChrome);
 
@@ -7312,6 +11909,10 @@ public partial class SimulatorShell : CanvasLayer
             FitContent = false,
             CustomMinimumSize = new Vector2(0, 44),
             ScrollActive = true,
+            // RefreshEditor exposes this only for a real interface or DB.
+            // Starting visible left an empty OB declaration banner consuming
+            // ladder space before the first refresh completed.
+            Visible = false,
             TooltipText = "Inspect interface declarations. Legacy calls use shared project tags; Parameterized FC/FB calls use explicit bindings and FB instance storage.",
         };
         blockInterfaceSummary.AddThemeColorOverride("default_color", new Color("263943"));
@@ -7324,7 +11925,11 @@ public partial class SimulatorShell : CanvasLayer
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
             CustomMinimumSize = new Vector2(0, 88),
         };
-        center.AddChild(LadderEditorZoom.CreateControls(canvas, scroll));
+        var ladderZoomControls = LadderEditorZoom.CreateControls(canvas, scroll, compact: siemens);
+        if (siemens)
+            instructions.AddChild(ladderZoomControls);
+        else
+            center.AddChild(ladderZoomControls);
         scroll.AddChild(canvas);
         center.AddChild(scroll);
 
@@ -7435,6 +12040,11 @@ public partial class SimulatorShell : CanvasLayer
         watchPage.AddThemeConstantOverride("separation", 3);
         var watchHeader = new HBoxContainer { Name = "WatchHeader" };
         var watchTableSelector = new OptionButton { Name = "WatchTableSelector", CustomMinimumSize = new Vector2(170, 30) };
+        // In the Siemens workbench the project-tree row and editor tab already
+        // identify and switch the active Watch table. Keep this selector alive
+        // for the shared model and deterministic review routes, but avoid a
+        // third, conflicting table-navigation control in the visible document.
+        watchTableSelector.Visible = !siemens;
         watchHeader.AddChild(watchTableSelector);
         var watchStatus = Heading("OFFLINE · PROGRAM NOT LOADED", 11, new Color("4f6874"));
         watchStatus.Name = "WatchStatus";
@@ -7446,24 +12056,55 @@ public partial class SimulatorShell : CanvasLayer
             Visible = false,
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            CustomMinimumSize = new Vector2(0, 28),
+            VerticalAlignment = VerticalAlignment.Center,
         };
-        watchFeedback.AddThemeColorOverride("font_color", new Color("b42318"));
+        watchFeedback.AddThemeColorOverride("font_color", new Color("ff6b61"));
+        watchFeedback.AddThemeColorOverride("font_outline_color", new Color("2a0b09"));
+        watchFeedback.AddThemeFontSizeOverride("font_size", 14);
+        watchFeedback.AddThemeConstantOverride("outline_size", 1);
         var addWatchTable = ToolbarButton("AddWatchTable", "+ TABLE", accent, 72);
         var removeWatchTable = ToolbarButton("RemoveWatchTable", "− TABLE", new Color("8a4d55"), 72);
         var renameWatchTable = ToolbarButton("RenameWatchTable", "RENAME", new Color("4d6674"), 72);
         var duplicateWatchTable = ToolbarButton("DuplicateWatchTable", "COPY", new Color("4d6674"), 60);
         var moveWatchTableUp = ToolbarButton("MoveWatchTableUp", "UP", new Color("4d6674"), 48);
         var moveWatchTableDown = ToolbarButton("MoveWatchTableDown", "DOWN", new Color("4d6674"), 52);
+        var watchTableActions = ToolbarMenuButton("WatchTableActions", "TABLE ACTIONS ▾", new Color("4d6674"), 132);
+        var watchTableActionsPopup = watchTableActions.GetPopup();
+        watchTableActionsPopup.AddItem("New watch table…", 0);
+        watchTableActionsPopup.AddItem("Rename active table…", 1);
+        watchTableActionsPopup.AddItem("Duplicate active table", 2);
+        watchTableActionsPopup.AddSeparator();
+        watchTableActionsPopup.AddItem("Move table up", 3);
+        watchTableActionsPopup.AddItem("Move table down", 4);
+        watchTableActionsPopup.AddSeparator();
+        watchTableActionsPopup.AddItem("Delete active table", 5);
+        watchTableActionsPopup.IdPressed += id =>
+        {
+            if (id == 0) addWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 1) renameWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 2) duplicateWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 3) moveWatchTableUp.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 4) moveWatchTableDown.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 5) removeWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+        };
         renameWatchTable.TooltipText = "Rename the active watch table";
         duplicateWatchTable.TooltipText = "Copy the active watch table and its symbols";
         moveWatchTableUp.TooltipText = "Move the active watch table earlier in the project tree";
         moveWatchTableDown.TooltipText = "Move the active watch table later in the project tree";
-        watchHeader.AddChild(addWatchTable);
-        watchHeader.AddChild(renameWatchTable);
-        watchHeader.AddChild(duplicateWatchTable);
-        watchHeader.AddChild(moveWatchTableUp);
-        watchHeader.AddChild(moveWatchTableDown);
-        watchHeader.AddChild(removeWatchTable);
+        // Siemens table lifecycle commands are available from the Watch tables
+        // project-tree context menu. Do not repeat them in the document header.
+        watchTableActions.Visible = !siemens;
+        watchHeader.AddChild(watchTableActions);
+        foreach (var secondaryAction in new[]
+                 {
+                     addWatchTable, renameWatchTable, duplicateWatchTable,
+                     moveWatchTableUp, moveWatchTableDown, removeWatchTable,
+                 })
+        {
+            secondaryAction.Visible = false;
+            watchHeader.AddChild(secondaryAction);
+        }
         watchPage.AddChild(watchHeader);
         watchPage.AddChild(watchFeedback);
         var watchSymbolHeader = new HBoxContainer { Name = "WatchSymbolActions" };
@@ -7472,25 +12113,49 @@ public partial class SimulatorShell : CanvasLayer
         watchSymbolHeader.AddChild(watchSymbol);
         var addWatch = ToolbarButton("AddWatchSymbol", "+ SYMBOL", accent, 82);
         var watchAddress = new LineEdit { Name = "WatchAbsoluteAddress", PlaceholderText = "Absolute address", TooltipText = "Enter a supported absolute S7 address for the active Watch table.", CustomMinimumSize = new Vector2(145, 30), ClearButtonEnabled = true };
-        var addWatchAddress = ToolbarButton("AddWatchAddress", "+ ADDRESS", new Color("4d6674"), 92);
-        addWatchAddress.TooltipText = "Add the absolute address to the active Watch table.";
+        var addWatchAddress = ToolbarButton("AddWatchAddress", "ADDRESS…", new Color("4d6674"), 88);
+        addWatchAddress.TooltipText = "Show absolute-address entry. Press again to add it; press with an empty field to close.";
         var removeWatch = ToolbarButton("RemoveWatchSymbol", "REMOVE", new Color("8a4d55"), 72);
         var moveWatchRowUp = ToolbarButton("MoveWatchRowUp", "↑ ROW", new Color("4d6674"), 60);
         var moveWatchRowDown = ToolbarButton("MoveWatchRowDown", "↓ ROW", new Color("4d6674"), 60);
         var addAllWatch = ToolbarButton("AddAllWatchSymbols", "ADD ALL", new Color("4d6674"), 72);
         var clearWatch = ToolbarButton("ClearWatchSymbols", "CLEAR", new Color("637985"), 58);
         var modifyWatch = ToolbarButton("ModifyWatchValues", "SIM MODIFY", new Color("a66b20"), 96);
+        var watchRowActions = ToolbarMenuButton("WatchRowActions", "ROW ACTIONS ▾", new Color("4d6674"), 122);
+        var watchRowActionsPopup = watchRowActions.GetPopup();
+        watchRowActionsPopup.AddItem("Remove selected row", 0);
+        watchRowActionsPopup.AddItem("Move selected row up", 1);
+        watchRowActionsPopup.AddItem("Move selected row down", 2);
+        watchRowActionsPopup.AddSeparator();
+        watchRowActionsPopup.AddItem("Add all symbols", 3);
+        watchRowActionsPopup.AddItem("Clear table", 4);
+        watchRowActionsPopup.IdPressed += id =>
+        {
+            if (id == 0) removeWatch.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 1) moveWatchRowUp.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 2) moveWatchRowDown.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 3) addAllWatch.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 4) clearWatch.EmitSignal(BaseButton.SignalName.Pressed);
+        };
         modifyWatch.TooltipText = "Apply selected Modify values to the offline simulator snapshot only. Never writes to a physical PLC.";
         watchSymbolHeader.AddChild(addWatch);
-        watchAddress.Visible = addWatchAddress.Visible = siemens;
+        // V17 uses a compact Add-new workflow. Keep the less common absolute
+        // address field collapsed until requested instead of consuming the
+        // document toolbar permanently.
+        watchAddress.Visible = false;
+        addWatchAddress.Visible = siemens;
         watchSymbolHeader.AddChild(watchAddress);
         watchSymbolHeader.AddChild(addWatchAddress);
-        watchSymbolHeader.AddChild(removeWatch);
-        watchSymbolHeader.AddChild(moveWatchRowUp);
-        watchSymbolHeader.AddChild(moveWatchRowDown);
-        watchSymbolHeader.AddChild(addAllWatch);
-        watchSymbolHeader.AddChild(clearWatch);
+        watchSymbolHeader.AddChild(watchRowActions);
         watchSymbolHeader.AddChild(modifyWatch);
+        foreach (var secondaryAction in new[]
+                 {
+                     removeWatch, moveWatchRowUp, moveWatchRowDown, addAllWatch, clearWatch,
+                 })
+        {
+            secondaryAction.Visible = false;
+            watchSymbolHeader.AddChild(secondaryAction);
+        }
         watchPage.AddChild(watchSymbolHeader);
         var watchTable = new Tree
         {
@@ -7530,6 +12195,74 @@ public partial class SimulatorShell : CanvasLayer
         watchTable.AddThemeStyleboxOverride("panel", BoxStyle(new Color("ffffff"), new Color("b7c0c5")));
         watchPage.AddChild(watchTable);
         watchTable.CustomMinimumSize = new Vector2(0, 66);
+        var watchRowContextMenu = new PopupMenu { Name = "WatchRowContextMenu" };
+        watchRowContextMenu.AddItem("Open tag declaration", 0);
+        watchRowContextMenu.AddItem("Cross-reference", 1);
+        watchRowContextMenu.AddItem("Properties", 8);
+        watchRowContextMenu.AddSeparator();
+        watchRowContextMenu.AddItem("Edit display format", 2);
+        watchRowContextMenu.AddItem("Edit modify value", 3);
+        watchRowContextMenu.AddItem("Edit comment", 4);
+        watchRowContextMenu.AddSeparator();
+        watchRowContextMenu.AddItem("Move row up", 5);
+        watchRowContextMenu.AddItem("Move row down", 6);
+        watchRowContextMenu.AddItem("Remove row", 7);
+        root.AddChild(watchRowContextMenu);
+        var watchRowPropertiesDialog = new AcceptDialog
+        {
+            Name = "WatchRowPropertiesDialog",
+            Title = "Watch row properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(760, 320),
+        };
+        watchRowPropertiesDialog.OkButtonText = "CLOSE";
+        var watchRowPropertiesCopy = watchRowPropertiesDialog.AddButton("COPY DETAILS", true, "copy-details");
+        var watchRowPropertiesOpenTag = watchRowPropertiesDialog.AddButton("OPEN TAG", true, "open-tag");
+        var watchRowPropertiesCrossReference = watchRowPropertiesDialog.AddButton("CROSS-REFERENCE", true, "cross-reference");
+        var watchRowPropertiesEditFormat = watchRowPropertiesDialog.AddButton("EDIT FORMAT", true, "edit-format");
+        var watchRowPropertiesEditModify = watchRowPropertiesDialog.AddButton("EDIT MODIFY", true, "edit-modify");
+        var watchRowPropertiesEditComment = watchRowPropertiesDialog.AddButton("EDIT COMMENT", true, "edit-comment");
+        var watchRowPropertiesRemove = watchRowPropertiesDialog.AddButton("REMOVE ROW", true, "remove-row");
+        // Row edits and lifecycle commands already belong to the Watch table
+        // cells, toolbar, and context menu. Properties remains a focused view.
+        watchRowPropertiesCopy.Visible = false;
+        watchRowPropertiesCrossReference.Visible = false;
+        watchRowPropertiesEditFormat.Visible = false;
+        watchRowPropertiesEditModify.Visible = false;
+        watchRowPropertiesEditComment.Visible = false;
+        watchRowPropertiesRemove.Visible = false;
+        watchRowPropertiesCopy.TooltipText = "Copy this authored watch-row definition and current offline resolution.";
+        watchRowPropertiesOpenTag.TooltipText = "Open the resolved symbolic PLC tag declaration.";
+        watchRowPropertiesCrossReference.TooltipText = "Find usages of the resolved symbolic PLC tag.";
+        watchRowPropertiesEditFormat.TooltipText = "Edit the row's display-format cell.";
+        watchRowPropertiesEditModify.TooltipText = "Edit the row's simulator modify-value cell.";
+        watchRowPropertiesEditComment.TooltipText = "Edit the row's authored comment cell.";
+        watchRowPropertiesRemove.TooltipText = "Remove this row from the active watch table.";
+        watchRowPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(watchRowPropertiesDialog.DialogText);
+                return;
+            }
+            watchRowPropertiesDialog.Hide();
+            var command = action.ToString() switch
+            {
+                "open-tag" => 0L,
+                "cross-reference" => 1L,
+                "edit-format" => 2L,
+                "edit-modify" => 3L,
+                "edit-comment" => 4L,
+                "remove-row" => 7L,
+                _ => -1L,
+            };
+            if (command >= 0) watchRowContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, command);
+        };
+        watchRowPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(720, -1);
+        watchRowPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(watchRowPropertiesDialog);
         AddInspectorPage(watchPage);
         VBoxContainer? watchDocument = null;
         Tree? watchDocumentTable = null;
@@ -7552,65 +12285,24 @@ public partial class SimulatorShell : CanvasLayer
             {
                 Name = "WatchTableDocumentTitle",
                 Text = "Watch table",
+                Visible = false,
                 AutowrapMode = TextServer.AutowrapMode.WordSmart,
             };
             watchDocumentTitle.AddThemeColorOverride("font_color", new Color("202b31"));
             watchDocumentTitle.AddThemeFontSizeOverride("font_size", 20);
             watchDocument.AddChild(watchDocumentTitle);
-            watchDocumentStatus = new Label
+            // Siemens Watch tables are editor documents, not a second copy in
+            // the diagnostics dock. Reuse the working controls so table and
+            // row management remain fully functional in the document surface.
+            foreach (var control in new Control[] { watchHeader, watchFeedback, watchSymbolHeader, watchTable })
             {
-                Name = "WatchTableDocumentStatus",
-                Text = "Offline simulator values · no PLC connection",
-                AutowrapMode = TextServer.AutowrapMode.WordSmart,
-            };
-            watchDocumentStatus.AddThemeColorOverride("font_color", new Color("4f6874"));
-            watchDocument.AddChild(watchDocumentStatus);
-            watchDocumentFeedback = new Label
-            {
-                Name = "WatchTableDocumentFeedback",
-                Visible = false,
-                AutowrapMode = TextServer.AutowrapMode.WordSmart,
-                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-            };
-            watchDocumentFeedback.AddThemeColorOverride("font_color", new Color("b42318"));
-            watchDocument.AddChild(watchDocumentFeedback);
-            watchDocumentTable = new Tree
-            {
-                Name = "WatchTableDocumentGrid",
-                Columns = 8,
-                ColumnTitlesVisible = true,
-                HideRoot = true,
-                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-                SizeFlagsVertical = Control.SizeFlags.ExpandFill,
-                CustomMinimumSize = new Vector2(0, 220),
-            };
-            foreach (var (column, title) in new[]
-                     {
-                         (0, "NAME"), (1, "ADDRESS"), (2, "DISPLAY FORMAT"),
-                         (3, "MONITOR VALUE"), (4, "MODIFY VALUE"), (5, "MODIFY"),
-                         (6, "COMMENT"), (7, "TAG COMMENT"),
-                     })
-                watchDocumentTable.SetColumnTitle(column, title);
-            watchDocumentTable.SetColumnExpand(0, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(0, 115);
-            watchDocumentTable.SetColumnExpand(1, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(1, 100);
-            watchDocumentTable.SetColumnExpand(2, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(2, 100);
-            watchDocumentTable.SetColumnExpand(3, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(3, 95);
-            watchDocumentTable.SetColumnExpand(4, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(4, 95);
-            watchDocumentTable.SetColumnExpand(5, false);
-            watchDocumentTable.SetColumnCustomMinimumWidth(5, 56);
-            watchDocumentTable.SetColumnExpand(6, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(6, 110);
-            watchDocumentTable.SetColumnExpand(7, true);
-            watchDocumentTable.SetColumnCustomMinimumWidth(7, 110);
-            watchDocumentTable.AddThemeColorOverride("font_color", new Color("263943"));
-            ConfigureSelectableList(watchDocumentTable);
-            watchDocumentTable.AddThemeStyleboxOverride("panel", BoxStyle(new Color("ffffff"), new Color("b7c0c5")));
-            watchDocument.AddChild(watchDocumentTable);
+                watchPage.RemoveChild(control);
+                watchDocument.AddChild(control);
+            }
+            watchTable.Name = "WatchTableDocumentGrid";
+            watchTable.CustomMinimumSize = new Vector2(0, 220);
+            watchDocumentTable = watchTable;
+            watchDocumentFeedback = watchFeedback;
             center.AddChild(watchDocument);
         }
         bottomTabs.CurrentTab = 1;
@@ -7628,6 +12320,7 @@ public partial class SimulatorShell : CanvasLayer
         string WatchModifyKey(EditableWatchRow row) => $"{document.ActiveWatchTable.Id}:{row.Id}";
         Action openWatchTableCreation = () => { };
         Action openWatchTableRename = () => { };
+        Action<EditableWatchRow> openWatchRowDeclaration = _ => { };
 
         string WatchValue(PlcVariable variable, VirtualControllerSnapshot snapshot)
         {
@@ -7776,6 +12469,12 @@ public partial class SimulatorShell : CanvasLayer
             removeWatchTable.Disabled = document.WatchTables.Count <= 1;
             moveWatchTableUp.Disabled = document.ActiveWatchTableIndex <= 0;
             moveWatchTableDown.Disabled = document.ActiveWatchTableIndex >= document.WatchTables.Count - 1;
+            watchTableActionsPopup.SetItemDisabled(watchTableActionsPopup.GetItemIndex(0), ChallengeMutationLocked);
+            watchTableActionsPopup.SetItemDisabled(watchTableActionsPopup.GetItemIndex(1), ChallengeMutationLocked);
+            watchTableActionsPopup.SetItemDisabled(watchTableActionsPopup.GetItemIndex(2), ChallengeMutationLocked);
+            watchTableActionsPopup.SetItemDisabled(watchTableActionsPopup.GetItemIndex(3), ChallengeMutationLocked || moveWatchTableUp.Disabled);
+            watchTableActionsPopup.SetItemDisabled(watchTableActionsPopup.GetItemIndex(4), ChallengeMutationLocked || moveWatchTableDown.Disabled);
+            watchTableActionsPopup.SetItemDisabled(watchTableActionsPopup.GetItemIndex(5), ChallengeMutationLocked || removeWatchTable.Disabled);
             var tagNames = watchVariables.Select(tag => tag.Name).ToArray();
             if (!watchTagNames.SequenceEqual(tagNames, StringComparer.Ordinal))
             {
@@ -7854,9 +12553,10 @@ public partial class SimulatorShell : CanvasLayer
             if (watchDocument is not null && watchDocumentTable is not null)
             {
                 watchDocumentTitle!.Text = document.ActiveWatchTable.Name;
-                watchDocumentStatus!.Text = watchStatus.Text;
-                if (watchDocumentTable.GetRoot() is null
+                if (watchDocumentStatus is not null) watchDocumentStatus.Text = watchStatus.Text;
+                if (!ReferenceEquals(watchDocumentTable, watchTable) && (watchDocumentTable.GetRoot() is null
                     || !watchDocumentRowNames.SequenceEqual(rowNames, StringComparer.Ordinal))
+                   )
                 {
                     var selectedName = watchDocumentTable.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
                     watchDocumentTable.Clear();
@@ -7875,19 +12575,20 @@ public partial class SimulatorShell : CanvasLayer
                     }
                     watchDocumentRowNames = rowNames;
                 }
-                for (var index = 0; index < rows.Length; index++)
-                    for (var column = 0; column < watchTable.Columns; column++)
-                    {
-                        watchDocumentRows[index].SetText(column, watchRows[index].GetText(column));
-                        if (column == 5)
+                if (!ReferenceEquals(watchDocumentTable, watchTable))
+                    for (var index = 0; index < rows.Length; index++)
+                        for (var column = 0; column < watchTable.Columns; column++)
                         {
-                            watchDocumentRows[index].SetCellMode(5, TreeItem.TreeCellMode.Check);
-                            watchDocumentRows[index].SetEditable(5, true);
-                            watchDocumentRows[index].SetChecked(5, watchRows[index].IsChecked(5));
+                            watchDocumentRows[index].SetText(column, watchRows[index].GetText(column));
+                            if (column == 5)
+                            {
+                                watchDocumentRows[index].SetCellMode(5, TreeItem.TreeCellMode.Check);
+                                watchDocumentRows[index].SetEditable(5, true);
+                                watchDocumentRows[index].SetChecked(5, watchRows[index].IsChecked(5));
+                            }
+                            if (column is 2 or 4 or 6) watchDocumentRows[index].SetEditable(column, true);
+                            watchDocumentRows[index].SetTooltipText(column, watchRows[index].GetTooltipText(column));
                         }
-                        if (column is 2 or 4 or 6) watchDocumentRows[index].SetEditable(column, true);
-                        watchDocumentRows[index].SetTooltipText(column, watchRows[index].GetTooltipText(column));
-                    }
             }
             var tablePrefix = $"{document.ActiveWatchTable.Name} · ";
             watchStatus.Text = snapshot is null
@@ -7934,10 +12635,18 @@ public partial class SimulatorShell : CanvasLayer
 
         void RefreshWatchTableAfterRejectedEdit(string message)
         {
-            watchValidationFeedback = message;
             output.Text = $"[color=#d64545]Watch-table edit rejected.[/color] {Escape(message)}";
+            // Restoring the rejected cell refreshes the active Watch document,
+            // and document navigation intentionally clears stale feedback.
+            // Restore first, then publish this rejection and repaint only the
+            // Watch surface so the operator can actually read the cause.
             RefreshWatchMetadataEditors();
+            watchValidationFeedback = message;
+            foreach (var refresh in _ladderWatchRefreshers) refresh(_virtualSnapshot);
         }
+        if (siemens)
+            _showWatchFormatRejectionForReview = () =>
+                RefreshWatchTableAfterRejectedEdit("Float is not a supported display format for BOOL.");
 
         void RefreshWatchMetadataEditorsAfterAcceptedAction()
         {
@@ -8016,12 +12725,14 @@ public partial class SimulatorShell : CanvasLayer
             RefreshWatchMetadataEditors();
         }
         watchTable.ItemEdited += () => WatchCellEdited(watchTable);
-        if (watchDocumentTable is not null)
+        if (watchDocumentTable is not null && !ReferenceEquals(watchDocumentTable, watchTable))
             watchDocumentTable.ItemEdited += () => WatchCellEdited(watchDocumentTable);
 
         string SelectedWatchRowId()
         {
-            var selected = watchDocumentTable?.GetSelected() ?? watchTable.GetSelected();
+            var selected = watchDocumentTable is not null && watchDocumentTable.IsVisibleInTree()
+                ? watchDocumentTable.GetSelected()
+                : watchTable.GetSelected();
             return selected?.GetMetadata(0).AsString() ?? string.Empty;
         }
 
@@ -8032,10 +12743,140 @@ public partial class SimulatorShell : CanvasLayer
             removeWatch.Disabled = rows.Count == 0 || index < 0;
             moveWatchRowUp.Disabled = index <= 0;
             moveWatchRowDown.Disabled = index < 0 || index >= rows.Count - 1;
+            watchRowActionsPopup.SetItemDisabled(watchRowActionsPopup.GetItemIndex(0), ChallengeMutationLocked || removeWatch.Disabled);
+            watchRowActionsPopup.SetItemDisabled(watchRowActionsPopup.GetItemIndex(1), ChallengeMutationLocked || moveWatchRowUp.Disabled);
+            watchRowActionsPopup.SetItemDisabled(watchRowActionsPopup.GetItemIndex(2), ChallengeMutationLocked || moveWatchRowDown.Disabled);
+            var allReferences = AggregateWatchVariables(document.Tags).Select(variable => variable.Name).ToArray();
+            var hasMissingReference = allReferences.Any(name => !rows.Any(row => row.Reference.Equals(name, StringComparison.Ordinal)));
+            watchRowActionsPopup.SetItemDisabled(watchRowActionsPopup.GetItemIndex(3), ChallengeMutationLocked || !hasMissingReference);
+            watchRowActionsPopup.SetItemDisabled(watchRowActionsPopup.GetItemIndex(4), ChallengeMutationLocked || rows.Count == 0);
         }
 
         watchTable.ItemSelected += RefreshWatchRowActionState;
-        if (watchDocumentTable is not null) watchDocumentTable.ItemSelected += RefreshWatchRowActionState;
+        if (watchDocumentTable is not null && !ReferenceEquals(watchDocumentTable, watchTable))
+            watchDocumentTable.ItemSelected += RefreshWatchRowActionState;
+
+        Tree? watchContextGrid = null;
+        string watchContextRowId = string.Empty;
+        int WatchDeclarationTagIndex(EditableWatchRow row)
+        {
+            if (row.ReferenceKind != WatchReferenceKind.Symbolic) return -1;
+            return document.Tags.FindIndex(tag => row.Reference == tag.Name
+                || row.Reference.StartsWith(tag.Name + ".", StringComparison.Ordinal)
+                || row.Reference.StartsWith(tag.Name + "[", StringComparison.Ordinal));
+        }
+        bool SelectWatchRowContext(Tree grid, TreeItem item)
+        {
+            item.Select(0);
+            watchContextGrid = grid;
+            watchContextRowId = item.GetMetadata(0).AsString();
+            var rows = document.ActiveWatchTable.Rows;
+            var index = rows.FindIndex(row => row.Id == watchContextRowId);
+            if (index < 0) return false;
+            var hasDeclaration = WatchDeclarationTagIndex(rows[index]) >= 0;
+            watchRowContextMenu.SetItemDisabled(watchRowContextMenu.GetItemIndex(0), !hasDeclaration);
+            watchRowContextMenu.SetItemDisabled(watchRowContextMenu.GetItemIndex(1), !hasDeclaration);
+            watchRowContextMenu.SetItemDisabled(watchRowContextMenu.GetItemIndex(8), false);
+            foreach (var id in new[] { 2, 3, 4, 7 })
+                watchRowContextMenu.SetItemDisabled(watchRowContextMenu.GetItemIndex(id), ChallengeMutationLocked);
+            watchRowContextMenu.SetItemDisabled(watchRowContextMenu.GetItemIndex(5), ChallengeMutationLocked || index == 0);
+            watchRowContextMenu.SetItemDisabled(watchRowContextMenu.GetItemIndex(6), ChallengeMutationLocked || index == rows.Count - 1);
+            return true;
+        }
+        void ConfigureWatchRowContextMenu(Tree grid)
+        {
+            grid.GuiInput += input =>
+            {
+                if (input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right } mouse) return;
+                var item = grid.GetItemAtPosition(mouse.Position);
+                if (item is null || !SelectWatchRowContext(grid, item)) return;
+                watchRowContextMenu.Position = DisplayServer.MouseGetPosition();
+                watchRowContextMenu.Popup();
+                grid.AcceptEvent();
+            };
+        }
+        ConfigureWatchRowContextMenu(watchTable);
+        if (watchDocumentTable is not null && !ReferenceEquals(watchDocumentTable, watchTable))
+            ConfigureWatchRowContextMenu(watchDocumentTable);
+        if (siemens)
+            _openFirstWatchRowPropertiesForReview = () =>
+            {
+                var grid = watchDocumentTable is not null && watchDocumentTable.IsVisibleInTree()
+                    ? watchDocumentTable
+                    : watchTable;
+                var item = grid.GetRoot()?.GetFirstChild();
+                if (item is null || !SelectWatchRowContext(grid, item)) return;
+                watchRowContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 8L);
+            };
+        watchRowContextMenu.IdPressed += id =>
+        {
+            var row = document.ActiveWatchTable.Rows.FirstOrDefault(candidate => candidate.Id == watchContextRowId);
+            if (row is null) return;
+            var tagIndex = WatchDeclarationTagIndex(row);
+            if (id == 0 && tagIndex >= 0)
+            {
+                openWatchRowDeclaration(row);
+                return;
+            }
+            if (id == 1 && tagIndex >= 0)
+            {
+                runExactCrossReference(document.Tags[tagIndex].Name);
+                return;
+            }
+            if (id == 8)
+            {
+                var rowIndex = document.ActiveWatchTable.Rows.FindIndex(candidate => candidate.Id == row.Id);
+                var variable = ResolveWatchVariable(row);
+                var addressIdentity = row.ReferenceKind == WatchReferenceKind.AbsoluteAddress
+                    && SiemensPlcTagAddress.TryGetWatchAddressIdentity(row.Reference, out var identity)
+                        ? identity
+                        : "—";
+                var monitorValue = variable is not null && _virtualSnapshot is not null
+                    ? WatchValue(variable, _virtualSnapshot)
+                    : "—";
+                var tagComment = variable is null || string.IsNullOrWhiteSpace(variable.Comment)
+                    ? "—"
+                    : variable.Comment;
+                watchRowPropertiesDialog.Title = $"{row.Reference} properties";
+                watchRowPropertiesDialog.DialogText = string.Join("\n",
+                    $"Watch row: {row.Reference} · {(row.ReferenceKind == WatchReferenceKind.Symbolic ? "symbolic" : $"address {addressIdentity}")}",
+                    $"Table: {document.ActiveWatchTable.Name} · row {rowIndex + 1} of {document.ActiveWatchTable.Rows.Count}",
+                    $"Resolved tag: {(variable is null ? "unresolved" : $"{variable.Type.ToString().ToUpperInvariant()} · {variable.Role.ToString().ToUpperInvariant()}")}",
+                    $"Display: {row.DisplayFormat}",
+                    $"Monitor: {monitorValue}",
+                    $"Modify: {(string.IsNullOrWhiteSpace(row.ModifyValue) ? "—" : row.ModifyValue)}",
+                    $"Row comment: {(string.IsNullOrWhiteSpace(row.Comment) ? "—" : row.Comment)}",
+                    $"Tag comment: {tagComment}",
+                    $"Remove: {(ChallengeMutationLocked ? "unavailable · active challenge lock" : "available")}",
+                    "Boundary: offline simulator value · never live-PLC evidence");
+                var hasDeclaration = tagIndex >= 0;
+                watchRowPropertiesOpenTag.Disabled = !hasDeclaration;
+                watchRowPropertiesOpenTag.Visible = hasDeclaration;
+                watchRowPropertiesCrossReference.Disabled = !hasDeclaration;
+                watchRowPropertiesEditFormat.Disabled = ChallengeMutationLocked;
+                watchRowPropertiesEditModify.Disabled = ChallengeMutationLocked;
+                watchRowPropertiesEditComment.Disabled = ChallengeMutationLocked;
+                watchRowPropertiesRemove.Disabled = ChallengeMutationLocked;
+                watchRowPropertiesDialog.PopupCentered(new Vector2I(760, 320));
+                return;
+            }
+            if (id is < 2 or > 7 || ChallengeMutationLocked)
+            {
+                if (ChallengeMutationLocked) ShowChallengeLocked();
+                return;
+            }
+            if (id is 2 or 3 or 4)
+            {
+                var column = id == 2 ? 2 : id == 3 ? 4 : 6;
+                var selected = watchContextGrid?.GetSelected();
+                if (selected is null) return;
+                selected.Select(column);
+                watchContextGrid!.EditSelected();
+            }
+            else if (id == 5) MoveWatchRow(-1);
+            else if (id == 6) MoveWatchRow(1);
+            else removeWatch.EmitSignal(BaseButton.SignalName.Pressed);
+        };
 
         addWatch.Pressed += () =>
         {
@@ -8048,7 +12889,22 @@ public partial class SimulatorShell : CanvasLayer
         };
         addWatchAddress.Pressed += () =>
         {
+            if (!watchAddress.Visible)
+            {
+                watchAddress.Visible = true;
+                addWatchAddress.Text = "ADD ADDRESS";
+                addWatchAddress.CustomMinimumSize = new Vector2(104, 36);
+                watchAddress.GrabFocus();
+                return;
+            }
             var address = watchAddress.Text.Trim();
+            if (address.Length == 0)
+            {
+                watchAddress.Visible = false;
+                addWatchAddress.Text = "ADDRESS…";
+                addWatchAddress.CustomMinimumSize = new Vector2(88, 36);
+                return;
+            }
             if (!SiemensPlcTagAddress.TryValidateWatchAddress(address, out var addressError))
             {
                 RefreshWatchTableAfterRejectedEdit($"Absolute watch address rejected. {addressError}");
@@ -8068,6 +12924,9 @@ public partial class SimulatorShell : CanvasLayer
             if (!BeginProjectMetadataEdit("Add absolute watch address")) return;
             document.ActiveWatchTable.Rows.Add(new EditableWatchRow(address, WatchReferenceKind.AbsoluteAddress));
             watchAddress.Clear();
+            watchAddress.Visible = false;
+            addWatchAddress.Text = "ADDRESS…";
+            addWatchAddress.CustomMinimumSize = new Vector2(88, 36);
             RefreshWatchMetadataEditorsAfterAcceptedAction();
         };
         removeWatch.Pressed += () =>
@@ -8111,6 +12970,7 @@ public partial class SimulatorShell : CanvasLayer
                 return;
             }
             var modifyRequests = new List<(string Name, object Value)>();
+            var sceneRefreshedInputs = new List<string>();
             foreach (var row in selectedRows)
             {
                 var variable = ResolveWatchVariable(row);
@@ -8140,6 +13000,10 @@ public partial class SimulatorShell : CanvasLayer
                     return;
                 }
                 modifyRequests.Add((variable.Name, parsedValue));
+                if (variable.Role == PlcVariableRole.Input
+                    && ScenePoints().FirstOrDefault(point => point.Name.Equals(variable.Binding, StringComparison.Ordinal)
+                        && point.Owner.Equals("PC", StringComparison.OrdinalIgnoreCase)) is not null)
+                    sceneRefreshedInputs.Add(variable.Name);
             }
             if (VirtualWatchModifyRequested is null)
             {
@@ -8154,7 +13018,10 @@ public partial class SimulatorShell : CanvasLayer
             }
             watchValidationFeedback = null;
             RefreshWatchMetadataEditors();
-            output.Text = "[color=#18864b]SIM MODIFY applied to the offline simulator only.[/color] No physical PLC was written.";
+            var refreshWarning = sceneRefreshedInputs.Count == 0
+                ? string.Empty
+                : $" [color=#d17a00]Scene-owned input {Escape(string.Join(", ", sceneRefreshedInputs))} will be refreshed from the 3D scene on the next simulator scan.[/color]";
+            output.Text = $"[color=#18864b]SIM MODIFY applied to the offline simulator only.[/color] No physical PLC was written.{refreshWarning}";
         };
         addAllWatch.Pressed += () =>
         {
@@ -8473,13 +13340,13 @@ public partial class SimulatorShell : CanvasLayer
         {
             Name = "TagContent",
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
         };
         tagPage.AddChild(tagList);
         var xrefSelectedTag = ToolbarButton("CrossReferenceSelectedTag", siemens ? "XREF SELECTED TAG" : "FIND ALL FOR SELECTED TAG", accent, 200);
-        tagPage.AddChild(xrefSelectedTag);
         var tagTableActions = new HBoxContainer { Name = "TagTableActions" };
         tagTableActions.AddThemeConstantOverride("separation", 5);
-        var tagTableHeading = Heading("TAG TABLE", 11, new Color("344851"));
+        var tagTableHeading = Heading("TAG TABLE", 13, new Color("bcd3df"));
         tagTableHeading.Name = "TagTableContextHeading";
         tagTableContextHeading = tagTableHeading;
         tagTableHeading.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
@@ -8488,12 +13355,39 @@ public partial class SimulatorShell : CanvasLayer
         renameTagTableAction = renameTagTable;
         renameTagTable.Disabled = true;
         tagTableActions.AddChild(renameTagTable);
+        var duplicateTagTable = ToolbarButton("DuplicateTagTable", "DUPLICATE", new Color("4d6674"), 112);
+        duplicateTagTableAction = duplicateTagTable;
+        duplicateTagTable.Disabled = true;
+        tagTableActions.AddChild(duplicateTagTable);
         var removeTagTable = ToolbarButton("RemoveEmptyTagTable", "DELETE EMPTY TABLE", new Color("8a4d55"), 164);
         removeTagTableAction = removeTagTable;
         removeTagTable.Disabled = true;
         tagTableActions.AddChild(removeTagTable);
-        tagTableActions.Visible = siemens;
+        // In the Siemens workbench table identity and lifecycle live in the
+        // project tree. Keep these named controls for the project-tree context
+        // routes and deterministic review, but do not duplicate a large table
+        // management toolbar inside every tag document.
+        tagTableActions.Visible = false;
         tagPage.AddChild(tagTableActions);
+        var tagRecordActions = new HBoxContainer { Name = "TagRecordActions" };
+        tagRecordActions.AddThemeConstantOverride("separation", 5);
+        var beginAddTag = ToolbarButton("BeginAddTag", "+ TAG", accent, 72);
+        beginAddTag.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        editTagAction = ToolbarButton("EditTag", "EDIT", new Color("4d6674"), 56);
+        editTagAction.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        editTagAction.Disabled = true;
+        tagPropertiesAction = ToolbarButton("SelectedTagProperties", "PROPS", new Color("4d6674"), 82);
+        tagPropertiesAction.Disabled = true;
+        // Properties and Cross-reference remain on the selected tag's context
+        // menu, matching V17 without four permanent row-action buttons.
+        tagPropertiesAction.Visible = false;
+        xrefSelectedTag.Visible = false;
+        tagRecordActions.AddChild(beginAddTag);
+        tagRecordActions.AddChild(editTagAction);
+        tagRecordActions.AddChild(tagPropertiesAction);
+        if (siemens) tagRecordActions.AddChild(xrefSelectedTag);
+        else tagPage.AddChild(xrefSelectedTag);
+        tagRecordActions.Visible = siemens;
         HBoxContainer TagFieldRow(string name, string label, Control field)
         {
             var row = new HBoxContainer { Name = name };
@@ -8521,8 +13415,7 @@ public partial class SimulatorShell : CanvasLayer
         tagPage.AddChild(aggregateTagEditor);
         tagPage.AddChild(TagFieldRow("TagBindingRow", "BINDING", tagBinding));
         tagPage.AddChild(tagBindingStatus);
-        var addTag = ToolbarButton("AddTag", "+ ADD TAG", accent, 180);
-        tagPage.AddChild(addTag);
+        var addTag = ToolbarButton("AddTag", "CREATE TAG", accent, 130);
         var tagEditActions = new HFlowContainer { Name = "TagEditActions" };
         tagEditActions.AddThemeConstantOverride("h_separation", 5);
         tagEditActions.AddThemeConstantOverride("v_separation", 5);
@@ -8534,20 +13427,61 @@ public partial class SimulatorShell : CanvasLayer
         tagEditActions.AddChild(applyTagEdit);
         tagEditActions.AddChild(cancelTagEdit);
         tagEditActions.AddChild(deleteTag);
-        tagPage.AddChild(tagEditActions);
-        // TIA tag documents expose Tags, User constants, and System constants
-        // as separate views. Keep the existing tag form intact as the Tags view.
-        var tagDefinitionsView = new VBoxContainer { Name = "TagDefinitionsView", SizeFlagsVertical = Control.SizeFlags.ExpandFill };
-        foreach (var existingChild in tagPage.GetChildren().ToArray())
+        tagDefinitionForm = new VBoxContainer
         {
-            tagPage.RemoveChild(existingChild);
-            tagDefinitionsView.AddChild(existingChild);
+            Name = "TagDefinitionForm",
+            Visible = false,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.Fill,
+        };
+        if (siemens)
+        {
+            foreach (var existingChild in tagPage.GetChildren().ToArray())
+            {
+                if (ReferenceEquals(existingChild, tagList) || ReferenceEquals(existingChild, tagTableActions)) continue;
+                tagPage.RemoveChild(existingChild);
+                tagDefinitionForm.AddChild(existingChild);
+            }
+            tagDefinitionForm.AddChild(addTag);
+            tagDefinitionForm.AddChild(tagEditActions);
+        }
+        else
+        {
+            tagPage.AddChild(addTag);
+            tagPage.AddChild(tagEditActions);
+        }
+        // TIA tag documents expose Tags, User constants, and System constants
+        // as separate views. Show the declaration grid first; simulator-specific
+        // role, startup value, and scene-binding properties open only on Edit.
+        var tagDefinitionsView = new VBoxContainer { Name = "TagDefinitionsView", SizeFlagsVertical = Control.SizeFlags.ExpandFill };
+        if (siemens)
+        {
+            tagPage.RemoveChild(tagTableActions);
+            tagPage.RemoveChild(tagList);
+            tagDefinitionsView.AddChild(tagTableActions);
+            tagDefinitionsView.AddChild(tagList);
+            tagDefinitionsView.AddChild(tagRecordActions);
+            tagDefinitionsView.AddChild(tagDefinitionForm);
+        }
+        else
+        {
+            foreach (var existingChild in tagPage.GetChildren().ToArray())
+            {
+                tagPage.RemoveChild(existingChild);
+                tagDefinitionsView.AddChild(existingChild);
+            }
         }
         var tagDeclarationTabs = new HBoxContainer { Name = "TagDeclarationTabs" };
         tagDeclarationTabs.AddThemeConstantOverride("separation", 5);
-        var tagDefinitionsTab = ToolbarButton("TagDefinitionsTab", "TAGS", new Color("4d6674"), 90);
-        var userConstantsTab = ToolbarButton("UserConstantsTab", "USER CONSTANTS", new Color("4d6674"), 150);
-        var systemConstantsTab = ToolbarButton("SystemConstantsTab", "SYSTEM CONSTANTS", new Color("4d6674"), 165);
+        var tagDefinitionsTab = ToolbarButton("TagDefinitionsTab", "TAGS", new Color("4d6674"), 64);
+        var userConstantsTab = ToolbarButton("UserConstantsTab", "USER CONSTANTS", new Color("4d6674"), 120);
+        var systemConstantsTab = ToolbarButton("SystemConstantsTab", "SYSTEM CONSTANTS", new Color("4d6674"), 128);
+        foreach (var declarationTab in new[] { tagDefinitionsTab, userConstantsTab, systemConstantsTab })
+        {
+            declarationTab.CustomMinimumSize = new Vector2(declarationTab.CustomMinimumSize.X, 30);
+            declarationTab.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            declarationTab.AddThemeFontSizeOverride("font_size", 12);
+        }
         tagDefinitionsTab.ToggleMode = userConstantsTab.ToggleMode = systemConstantsTab.ToggleMode = true;
         tagDefinitionsTab.ButtonPressed = true;
         tagDeclarationTabs.AddChild(tagDefinitionsTab);
@@ -8571,20 +13505,99 @@ public partial class SimulatorShell : CanvasLayer
             ColumnTitlesVisible = true,
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
-            CustomMinimumSize = new Vector2(0, 180),
+            // Leave guaranteed room for the action row and scope disclosure
+            // above the diagnostics splitter at the supported 900 px height.
+            CustomMinimumSize = new Vector2(0, 120),
         };
         userConstantsGrid.SetColumnTitle(0, "NAME");
         userConstantsGrid.SetColumnTitle(1, "DATA TYPE");
         userConstantsGrid.SetColumnTitle(2, "VALUE");
         userConstantsGrid.SetColumnTitle(3, "COMMENT");
+        var userConstantsEmpty = new Label
+        {
+            Name = "UserConstantsEmptyState",
+            Text = "NO USER CONSTANTS IN THIS VIEW\nUse + CONSTANT to add a typed, read-only LAD input.",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+        };
+        userConstantsEmpty.AddThemeColorOverride("font_color", new Color("b8cbd3"));
+        userConstantsEmpty.AddThemeFontSizeOverride("font_size", 18);
+        var userConstantContextMenu = new PopupMenu { Name = "UserConstantContextMenu" };
+        userConstantContextMenu.AddItem("Edit", 0);
+        userConstantContextMenu.AddItem("Properties", 4);
+        userConstantContextMenu.AddItem("Cross-reference", 1);
+        userConstantContextMenu.AddItem("Duplicate", 2);
+        userConstantContextMenu.AddSeparator();
+        userConstantContextMenu.AddItem("Delete", 3);
+        root.AddChild(userConstantContextMenu);
+        var userConstantPropertiesDialog = new AcceptDialog
+        {
+            Name = "UserConstantPropertiesDialog",
+            Title = "User constant properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(720, 300),
+        };
+        userConstantPropertiesDialog.OkButtonText = "CLOSE";
+        var userConstantPropertiesCopy = userConstantPropertiesDialog.AddButton("COPY DETAILS", true, "copy-details");
+        var userConstantPropertiesEdit = userConstantPropertiesDialog.AddButton("EDIT DEFINITION", true, "edit-definition");
+        var userConstantPropertiesCrossReference = userConstantPropertiesDialog.AddButton("CROSS-REFERENCE", true, "cross-reference");
+        var userConstantPropertiesDuplicate = userConstantPropertiesDialog.AddButton("DUPLICATE", true, "duplicate");
+        var userConstantPropertiesDelete = userConstantPropertiesDialog.AddButton("DELETE", true, "delete");
+        // The constants grid and context menu already own lifecycle and search
+        // commands. Properties remains a focused declaration summary.
+        userConstantPropertiesCopy.Visible = false;
+        userConstantPropertiesCrossReference.Visible = false;
+        userConstantPropertiesDuplicate.Visible = false;
+        userConstantPropertiesDelete.Visible = false;
+        userConstantPropertiesCopy.TooltipText = "Copy this user constant's modeled offline properties.";
+        userConstantPropertiesEdit.TooltipText = "Open the existing validated user-constant editor.";
+        userConstantPropertiesCrossReference.TooltipText = "Find LAD references to this constant.";
+        userConstantPropertiesDuplicate.TooltipText = "Duplicate this constant in the same tag table.";
+        userConstantPropertiesDelete.TooltipText = "Delete only when the constant has no LAD references.";
+        userConstantPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(userConstantPropertiesDialog.DialogText);
+                return;
+            }
+            userConstantPropertiesDialog.Hide();
+            var command = action.ToString() switch
+            {
+                "edit-definition" => 0L,
+                "cross-reference" => 1L,
+                "duplicate" => 2L,
+                "delete" => 3L,
+                _ => -1L,
+            };
+            if (command >= 0) userConstantContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, command);
+        };
+        userConstantPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(660, -1);
+        userConstantPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(userConstantPropertiesDialog);
         var userConstantsActions = new HBoxContainer { Name = "UserConstantsActions" };
-        var addUserConstant = ToolbarButton("AddUserConstant", "+ CONSTANT", accent, 130);
-        var editUserConstant = ToolbarButton("EditUserConstant", "EDIT", new Color("4d6674"), 80);
+        var addUserConstant = ToolbarButton("AddUserConstant", "+ CONSTANT", accent, 96);
+        addUserConstant.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        var editUserConstant = ToolbarButton("EditUserConstant", "EDIT", new Color("4d6674"), 56);
+        editUserConstant.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        var propertiesUserConstant = ToolbarButton("SelectedUserConstantProperties", "PROPS", new Color("4d6674"), 82);
         var removeUserConstant = ToolbarButton("RemoveUserConstant", "DELETE", new Color("8a4d55"), 90);
         editUserConstant.Disabled = true;
+        propertiesUserConstant.Disabled = true;
         removeUserConstant.Disabled = true;
+        // Properties, Cross-reference, Duplicate, and Delete are available on
+        // the selected declaration's context menu. Keep their named handlers
+        // for review automation without another permanent action cluster.
+        propertiesUserConstant.Visible = false;
+        removeUserConstant.Visible = false;
         userConstantsActions.AddChild(addUserConstant);
         userConstantsActions.AddChild(editUserConstant);
+        userConstantsActions.AddChild(propertiesUserConstant);
         userConstantsActions.AddChild(removeUserConstant);
         var userConstantName = new LineEdit { Name = "UserConstantName", PlaceholderText = "Symbolic constant name", ClearButtonEnabled = true };
         var userConstantTable = new OptionButton { Name = "UserConstantTable" };
@@ -8624,11 +13637,14 @@ public partial class SimulatorShell : CanvasLayer
         var userConstantScope = new Label
         {
             Name = "UserConstantScope",
-            Text = "User constants are offline declarations. Supported types: BOOL, INT, DINT, REAL, TIME, STRING.",
+            Text = "User constants are read-only LAD inputs. Supported types: BOOL, INT, DINT, REAL, TIME, STRING.",
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
         };
-        userConstantScope.AddThemeColorOverride("font_color", new Color("637780"));
+        userConstantScope.AddThemeColorOverride("font_color", new Color("8fb7c8"));
+        userConstantScope.AddThemeFontSizeOverride("font_size", 13);
+        userConstantScope.CustomMinimumSize = new Vector2(0, 28);
         userConstantsView.AddChild(userConstantsGrid);
+        userConstantsView.AddChild(userConstantsEmpty);
         userConstantsView.AddChild(userConstantsActions);
         userConstantsView.AddChild(userConstantForm);
         userConstantsView.AddChild(userConstantEditActions);
@@ -8645,23 +13661,54 @@ public partial class SimulatorShell : CanvasLayer
         var systemConstantsGrid = new Tree
         {
             Name = "SystemConstantsGrid",
-            Columns = 3,
+            Columns = 4,
             HideRoot = true,
             ColumnTitlesVisible = true,
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
         };
         systemConstantsGrid.SetColumnTitle(0, "NAME");
-        systemConstantsGrid.SetColumnTitle(1, "VALUE");
-        systemConstantsGrid.SetColumnTitle(2, "COMMENT");
+        systemConstantsGrid.SetColumnTitle(1, "DATA TYPE");
+        systemConstantsGrid.SetColumnTitle(2, "VALUE");
+        systemConstantsGrid.SetColumnTitle(3, "COMMENT");
+        var systemConstantsEmpty = new Label
+        {
+            Name = "SystemConstantsEmptyState",
+            Text = "NO HARDWARE SYSTEM CONSTANTS\nThis offline project has no configured device metadata.",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill,
+        };
+        systemConstantsEmpty.AddThemeColorOverride("font_color", new Color("b8cbd3"));
+        systemConstantsEmpty.AddThemeFontSizeOverride("font_size", 18);
+        var systemConstantDetailPanel = PanelContainer(
+            "SelectedSystemConstantPanel", new Color("e8eef1"), new Color("5f7f8d"));
+        systemConstantDetailPanel.Visible = false;
+        systemConstantDetailPanel.CustomMinimumSize = new Vector2(0, 96);
+        var systemConstantDetail = new Label
+        {
+            Name = "SelectedSystemConstantDetail",
+            Text = string.Empty,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        systemConstantDetail.AddThemeColorOverride("font_color", new Color("263943"));
+        systemConstantDetail.AddThemeFontSizeOverride("font_size", 15);
+        systemConstantDetailPanel.AddChild(systemConstantDetail);
         var systemConstantsScope = new Label
         {
             Name = "SystemConstantsScope",
             Text = "No hardware configuration is modeled in this offline project. TIA system constants are generated from configured hardware and are read-only.",
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
         };
-        systemConstantsScope.AddThemeColorOverride("font_color", new Color("637780"));
+        systemConstantsScope.AddThemeColorOverride("font_color", new Color("8fb7c8"));
+        systemConstantsScope.AddThemeFontSizeOverride("font_size", 13);
+        systemConstantsScope.CustomMinimumSize = new Vector2(0, 42);
         systemConstantsView.AddChild(systemConstantsGrid);
+        systemConstantsView.AddChild(systemConstantsEmpty);
+        systemConstantsView.AddChild(systemConstantDetailPanel);
         systemConstantsView.AddChild(systemConstantsScope);
         tagPage.AddChild(systemConstantsView);
         var userConstantFormEditing = false;
@@ -8677,7 +13724,10 @@ public partial class SimulatorShell : CanvasLayer
             userConstantsGrid.SizeFlagsVertical = userConstantFormEditing
                 ? Control.SizeFlags.Fill
                 : Control.SizeFlags.ExpandFill;
-            userConstantsGrid.CustomMinimumSize = new Vector2(0, userConstantFormEditing ? 100 : 180);
+            userConstantsGrid.CustomMinimumSize = new Vector2(0, userConstantFormEditing ? 100 : 120);
+            var hasVisibleRows = userConstantsGrid.GetRoot()?.GetFirstChild() is not null;
+            userConstantsGrid.Visible = userConstantFormEditing || hasVisibleRows;
+            userConstantsEmpty.Visible = !userConstantFormEditing && !hasVisibleRows;
             userConstantEditActions.Visible = userConstantFormEditing;
             userConstantScope.Visible = !userConstantFormEditing;
         }
@@ -8700,10 +13750,13 @@ public partial class SimulatorShell : CanvasLayer
                 tagDefinitionsView.Visible = index == 0;
                 userConstantsView.Visible = index == 1;
                 systemConstantsView.Visible = index == 2;
+                if (validateAndLoadAction is not null)
+                    validateAndLoadAction.Visible = index == 0;
                 tagDefinitionsTab.ButtonPressed = index == 0;
                 userConstantsTab.ButtonPressed = index == 1;
                 systemConstantsTab.ButtonPressed = index == 2;
                 if (index == 1) refreshUserConstants?.Invoke();
+                if (index == 2) refreshSystemConstants?.Invoke();
             });
         }
         void RefreshUserConstantTableOptions()
@@ -8752,6 +13805,9 @@ public partial class SimulatorShell : CanvasLayer
                 .Where(constant => activeTagTableName is null
                     || constant.TagTable.Equals(activeTagTableName, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
+            if (visibleConstants.Length > 0
+                && (selectedUserConstantId is null || !visibleConstants.Any(constant => constant.Id == selectedUserConstantId)))
+                selectedUserConstantId = visibleConstants[0].Id;
             refreshingUserConstantsGrid = true;
             try
             {
@@ -8774,12 +13830,61 @@ public partial class SimulatorShell : CanvasLayer
             var hasSelection = selectedUserConstantId is not null
                 && visibleConstants.Any(constant => constant.Id == selectedUserConstantId);
             editUserConstant.Disabled = !hasSelection || ChallengeMutationLocked || userConstantFormDirty;
+            propertiesUserConstant.Disabled = !hasSelection;
             removeUserConstant.Disabled = !hasSelection || ChallengeMutationLocked || userConstantFormDirty;
             addUserConstant.Disabled = ChallengeMutationLocked || userConstantFormDirty;
             applyUserConstant.Disabled = !userConstantFormEditing || !userConstantFormDirty || ChallengeMutationLocked;
             cancelUserConstant.Disabled = !userConstantFormEditing;
             systemConstantsTab.Disabled = activeTagTableName is not null
                 && !activeTagTableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase);
+            UpdateUserConstantFormLayout();
+        };
+        refreshSystemConstants = () =>
+        {
+            systemConstantsGrid.Clear();
+            var rootItem = systemConstantsGrid.CreateItem();
+            TreeItem? selectedSystemConstantRow = null;
+            foreach (var constant in document.SystemConstants)
+            {
+                var row = systemConstantsGrid.CreateItem(rootItem);
+                row.SetText(0, constant.Name);
+                row.SetText(1, constant.DataType);
+                row.SetText(2, constant.Value);
+                row.SetText(3, constant.Comment);
+                row.SetMetadata(0, constant.Id);
+                var provenance = $"HARDWARE SOURCE · {constant.HardwareSource}";
+                for (var column = 0; column < 4; column++) row.SetTooltipText(column, provenance);
+                selectedSystemConstantRow ??= row;
+            }
+            rootItem.Collapsed = false;
+            var hasSystemConstants = document.SystemConstants.Count > 0;
+            systemConstantsGrid.Visible = hasSystemConstants;
+            systemConstantsEmpty.Visible = !hasSystemConstants;
+            systemConstantDetailPanel.Visible = hasSystemConstants;
+            systemConstantsScope.Visible = hasSystemConstants;
+            systemConstantsScope.Text = $"{document.SystemConstants.Count} read-only system constant(s) sourced from configured project hardware. Editing is unavailable.";
+            if (selectedSystemConstantRow is not null)
+            {
+                selectedSystemConstantRow.Select(0);
+                var constant = document.SystemConstants[0];
+                systemConstantDetail.Text = string.Join("\n",
+                    $"READ-ONLY SYSTEM CONSTANT · {constant.Name} · {constant.DataType} · VALUE {constant.Value}",
+                    $"HARDWARE SOURCE · {constant.HardwareSource}",
+                    $"COMMENT · {(string.IsNullOrWhiteSpace(constant.Comment) ? "—" : constant.Comment)}");
+            }
+            else systemConstantDetail.Text = string.Empty;
+        };
+        systemConstantsGrid.ItemSelected += () =>
+        {
+            var selected = systemConstantsGrid.GetSelected();
+            if (selected is null) return;
+            var id = selected.GetMetadata(0).AsString();
+            var constant = document.SystemConstants.FirstOrDefault(item => item.Id.Equals(id, StringComparison.Ordinal));
+            if (constant is null) return;
+            systemConstantDetail.Text = string.Join("\n",
+                $"READ-ONLY SYSTEM CONSTANT · {constant.Name} · {constant.DataType} · VALUE {constant.Value}",
+                $"HARDWARE SOURCE · {constant.HardwareSource}",
+                $"COMMENT · {(string.IsNullOrWhiteSpace(constant.Comment) ? "—" : constant.Comment)}");
         };
         loadUserConstantForm = () =>
         {
@@ -8871,8 +13976,14 @@ public partial class SimulatorShell : CanvasLayer
             if (ChallengeMutationLocked) { ShowChallengeLocked(); return; }
             if (selectedUserConstantId is null) return;
             var constant = document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
-            if (constant is null || !BeginProjectMetadataEdit("Delete PLC user constant")) return;
-            document.RemoveUserConstant(constant.Id);
+            if (constant is null) return;
+            var references = document.CountUserConstantReferences(constant.Name);
+            if (references > 0)
+            {
+                output.Text = $"[color=#a43d35]PLC user constant is in use.[/color] {Escape(constant.Name)} has {references} LAD reference(s).";
+                return;
+            }
+            if (!BeginProjectMetadataEdit("Delete PLC user constant") || !document.RemoveUserConstant(constant.Id)) return;
             selectedUserConstantId = null;
             userConstantFormEditing = false;
             userConstantFormDirty = false;
@@ -8881,6 +13992,104 @@ public partial class SimulatorShell : CanvasLayer
             refreshEditorAfterInitialization?.Invoke();
             output.Text = $"[color=#18864b]PLC user constant deleted.[/color] {Escape(constant.Name)}.";
         };
+        userConstantsGrid.ItemActivated += () => editUserConstant.EmitSignal(BaseButton.SignalName.Pressed);
+        void ConfigureUserConstantContextActions(PlcUserConstant constant)
+        {
+            userConstantContextMenu.SetItemDisabled(userConstantContextMenu.GetItemIndex(0), ChallengeMutationLocked || userConstantFormDirty);
+            userConstantContextMenu.SetItemDisabled(userConstantContextMenu.GetItemIndex(4), false);
+            userConstantContextMenu.SetItemDisabled(userConstantContextMenu.GetItemIndex(1), false);
+            userConstantContextMenu.SetItemDisabled(userConstantContextMenu.GetItemIndex(2),
+                ChallengeMutationLocked || userConstantFormDirty);
+            userConstantContextMenu.SetItemDisabled(userConstantContextMenu.GetItemIndex(3),
+                ChallengeMutationLocked || userConstantFormDirty || document.CountUserConstantReferences(constant.Name) > 0);
+        }
+        userConstantsGrid.GuiInput += input =>
+        {
+            if (input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right } mouse) return;
+            var row = userConstantsGrid.GetItemAtPosition(mouse.Position);
+            if (row is null) return;
+            row.Select(0);
+            selectedUserConstantId = row.GetMetadata(0).AsString();
+            var constant = document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
+            if (constant is null) return;
+            ConfigureUserConstantContextActions(constant);
+            userConstantContextMenu.Position = DisplayServer.MouseGetPosition();
+            userConstantContextMenu.Popup();
+            userConstantsGrid.AcceptEvent();
+        };
+        userConstantContextMenu.IdPressed += id =>
+        {
+            var constant = selectedUserConstantId is null
+                ? null
+                : document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
+            if (constant is null) return;
+            if (id == 0) editUserConstant.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 4)
+            {
+                var references = document.CountUserConstantReferences(constant.Name);
+                var deleteAvailable = !ChallengeMutationLocked && !userConstantFormDirty && references == 0;
+                userConstantPropertiesDialog.Title = $"{constant.Name} properties";
+                userConstantPropertiesDialog.DialogText = string.Join("\n",
+                    $"PLC user constant: {constant.Type.ToString().ToUpperInvariant()} · fixed read-only LAD input",
+                    $"Tag table: {constant.TagTable}",
+                    $"Value: {constant.Value}",
+                    $"Comment: {(string.IsNullOrWhiteSpace(constant.Comment) ? "—" : constant.Comment)}",
+                    $"LAD references: {references}",
+                    $"Delete: {(deleteAvailable ? "Available" : references > 0 ? $"Protected · {references} LAD reference(s)" : ChallengeMutationLocked ? "Unavailable · active challenge lock" : "Unavailable · finish or cancel the pending constant edit")}",
+                    "Execution: compiled as a typed constant · never a writable destination",
+                    "Boundary: offline RungProof declaration · not physical PLC data");
+                userConstantPropertiesEdit.Disabled = userConstantContextMenu.IsItemDisabled(userConstantContextMenu.GetItemIndex(0));
+                userConstantPropertiesCrossReference.Disabled = false;
+                userConstantPropertiesDuplicate.Disabled = userConstantContextMenu.IsItemDisabled(userConstantContextMenu.GetItemIndex(2));
+                userConstantPropertiesDelete.Disabled = !deleteAvailable;
+                userConstantPropertiesDialog.PopupCentered(new Vector2I(720, 300));
+            }
+            else if (id == 1) runExactCrossReference(constant.Name);
+            else if (id == 2)
+            {
+                if (!BeginProjectMetadataEdit("Duplicate PLC user constant")) return;
+                var copy = document.AddUserConstant(UniqueCpuCopyName(constant.Name), constant.Type,
+                    constant.Value, constant.TagTable, constant.Comment);
+                selectedUserConstantId = copy.Id;
+                refreshEditorAfterInitialization?.Invoke();
+                output.Text = $"[color=#18864b]PLC user constant duplicated.[/color] {Escape(copy.Name)} · {copy.Type} · {Escape(copy.Value)}.";
+            }
+            else if (id == 3) removeUserConstant.EmitSignal(BaseButton.SignalName.Pressed);
+        };
+        propertiesUserConstant.Pressed += () =>
+        {
+            var row = userConstantsGrid.GetSelected();
+            if (row is null) return;
+            selectedUserConstantId = row.GetMetadata(0).AsString();
+            var constant = document.UserConstants.FirstOrDefault(item => item.Id == selectedUserConstantId);
+            if (constant is null) return;
+            ConfigureUserConstantContextActions(constant);
+            userConstantContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 4L);
+        };
+        if (siemens)
+            _openFirstUserConstantPropertiesForReview = () =>
+            {
+                var projectTree = FindChild("ProjectTree", true, false) as Tree;
+                TreeItem? FindDefaultTagTable(TreeItem? first)
+                {
+                    for (var item = first; item is not null; item = item.GetNext())
+                    {
+                        if (item.GetMetadata(0).AsString() == "tag-table:Default tag table") return item;
+                        var nested = FindDefaultTagTable(item.GetFirstChild());
+                        if (nested is not null) return nested;
+                    }
+                    return null;
+                }
+                var table = FindDefaultTagTable(projectTree?.GetRoot());
+                if (projectTree is null || table is null) return;
+                table.Select(0);
+                projectTree.EmitSignal(Tree.SignalName.ItemActivated);
+                Callable.From(() =>
+                {
+                    userConstantsTab.EmitSignal(BaseButton.SignalName.Pressed);
+                    Callable.From(() => propertiesUserConstant.EmitSignal(BaseButton.SignalName.Pressed)).CallDeferred();
+                }).CallDeferred();
+            };
         applyUserConstant.Pressed += () =>
         {
             if (userConstantFormDirty && !CurrentForm(userConstantFormRevision)) return;
@@ -9005,6 +14214,17 @@ public partial class SimulatorShell : CanvasLayer
         var instanceDbSubtitle = new Label { Name = "InstanceDbSubtitle", Text = "Generated from the assigned FB or IEC instruction · offline definition" };
         instanceDbSubtitle.AddThemeColorOverride("font_color", new Color("aebcc2"));
         instanceDbDocument.AddChild(instanceDbSubtitle);
+        var instanceDbMemberActions = new HFlowContainer { Name = "InstanceDbMemberActions" };
+        instanceDbMemberActions.AddThemeConstantOverride("h_separation", 4);
+        var instanceDbMemberProperties = ToolbarButton("InstanceDbMemberProperties", "MEMBER PROPERTIES", new Color("4d6674"), 170);
+        instanceDbMemberProperties.TooltipText = "Inspect the selected inherited FB or generated IEC instance member.";
+        instanceDbMemberProperties.Disabled = true;
+        // V17 opens member details from the declaration row/detail pane. Keep
+        // the named route for deterministic captures, while normal users use
+        // row activation or right-click Properties instead of a large toolbar.
+        instanceDbMemberProperties.Visible = false;
+        instanceDbMemberActions.AddChild(instanceDbMemberProperties);
+        instanceDbDocument.AddChild(instanceDbMemberActions);
         var instanceDbDeclarations = new Tree
         {
             Name = "InstanceDbDeclarations",
@@ -9057,16 +14277,52 @@ public partial class SimulatorShell : CanvasLayer
         instanceDbDeclarations.Resized += QueueInstanceDbColumnLayout;
         root.Resized += QueueInstanceDbColumnLayout;
         instanceDbDeclarations.AddThemeColorOverride("font_color", new Color("263943"));
+        ConfigureSelectableList(instanceDbDeclarations);
         instanceDbDeclarations.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
         instanceDbDocument.AddChild(instanceDbDeclarations);
+        var instanceDbMemberContextMenu = new PopupMenu { Name = "InstanceDbMemberContextMenu" };
+        instanceDbMemberContextMenu.AddItem("Properties", 0);
+        root.AddChild(instanceDbMemberContextMenu);
+        var instanceDbMemberPropertiesDialog = new AcceptDialog
+        {
+            Name = "InstanceDbMemberPropertiesDialog",
+            Title = "Instance DB member properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(800, 390),
+        };
+        instanceDbMemberPropertiesDialog.OkButtonText = "CLOSE";
+        var instanceDbMemberCopy = instanceDbMemberPropertiesDialog.AddButton("COPY DETAILS", true, "copy-details");
+        var instanceDbMemberOpenOwner = instanceDbMemberPropertiesDialog.AddButton("OPEN OWNER", true, "open-owner");
+        instanceDbMemberCopy.Visible = false;
+        instanceDbMemberCopy.TooltipText = "Copy this read-only instance-member definition and support boundary.";
+        instanceDbMemberOpenOwner.TooltipText = "Open the owning FB or IEC instruction where this generated member is defined.";
+        var instanceDbPropertiesNumber = -1;
+        instanceDbMemberPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(instanceDbMemberPropertiesDialog.DialogText);
+                return;
+            }
+            if (action != "open-owner" || instanceDbPropertiesNumber < 0) return;
+            instanceDbMemberPropertiesDialog.Hide();
+            openInstanceDbOwnerAction?.Invoke(instanceDbPropertiesNumber);
+        };
+        instanceDbMemberPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(700, -1);
+        instanceDbMemberPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(instanceDbMemberPropertiesDialog);
         Callable.From(ApplyInstanceDbColumnLayout).CallDeferred();
         var instanceDbBoundary = new Label
         {
             Name = "InstanceDbBoundary",
-            Text = "Read-only offline instance view. No per-instance start/comment/retain overrides; power-cycle retention, standard-access offsets, monitor/snapshots, HMI attributes or supervision are not modeled.",
+            Text = "Read-only offline definition. Edit inherited members in the owning FB. Live values, snapshots, retention validation, and per-instance overrides are not modeled.",
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            CustomMinimumSize = new Vector2(0, 28),
         };
-        instanceDbBoundary.AddThemeColorOverride("font_color", new Color("aebcc2"));
+        instanceDbBoundary.AddThemeColorOverride("font_color", new Color("8fb7c8"));
+        instanceDbBoundary.AddThemeFontSizeOverride("font_size", 13);
         instanceDbDocument.AddChild(instanceDbBoundary);
         center.AddChild(instanceDbDocument);
         globalDbDocument = new VBoxContainer
@@ -9090,17 +14346,29 @@ public partial class SimulatorShell : CanvasLayer
         globalDbHeading.AddThemeColorOverride("default_color", new Color("dce8ed"));
         globalDbHeading.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         globalDbHeader.AddChild(globalDbHeading);
-        var globalDbAddMember = ToolbarButton("GlobalDbAddMember", "+ MEMBER", new Color("1f8a58"), 104);
+        var globalDbAddMember = ToolbarButton("GlobalDbAddMember", "+ MEMBER", new Color("1f8a58"), 88);
         globalDbAddMember.TooltipText = "Add a declaration to this Global DB.";
-        var globalDbEditMember = ToolbarButton("GlobalDbEditMember", "EDIT", new Color("4d6674"), 68);
+        globalDbAddMember.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        var globalDbEditMember = ToolbarButton("GlobalDbEditMember", "EDIT", new Color("4d6674"), 56);
         globalDbEditMember.TooltipText = "Edit the selected Global DB declaration.";
-        var globalDbRemoveMember = ToolbarButton("GlobalDbRemoveMember", "REMOVE", new Color("8a4d55"), 88);
+        globalDbEditMember.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        var globalDbPropertiesMember = ToolbarButton("GlobalDbPropertiesMember", "PROPS", new Color("4d6674"), 76);
+        globalDbPropertiesMember.TooltipText = "Inspect the selected Global DB declaration and supported offline behavior.";
+        // A selected declaration already exposes Properties on right-click.
+        // Retain this named route for deterministic capture/review only.
+        globalDbPropertiesMember.Visible = false;
+        var globalDbRemoveMember = ToolbarButton("GlobalDbRemoveMember", "REMOVE", new Color("8a4d55"), 76);
         globalDbRemoveMember.TooltipText = "Remove the selected Global DB declaration.";
+        globalDbRemoveMember.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
         globalDbHeader.AddChild(globalDbAddMember);
         globalDbHeader.AddChild(globalDbEditMember);
+        globalDbHeader.AddChild(globalDbPropertiesMember);
         globalDbHeader.AddChild(globalDbRemoveMember);
         var editGlobalDbMembers = ToolbarButton("EditGlobalDbMembers", "EDIT MEMBERS", new Color("4d6674"), 130);
-        editGlobalDbMembers.TooltipText = "Open the project member editor or return to the project tree.";
+        // + MEMBER and EDIT enter the member editor directly. This control is
+        // needed only after that transition, as the explicit return route.
+        editGlobalDbMembers.Visible = false;
+        editGlobalDbMembers.TooltipText = "Return from the Global DB member editor to the project tree.";
         editGlobalDbMembers.Pressed += () =>
         {
             var showMemberEditor = projectTabs.CurrentTab != 2;
@@ -9153,9 +14421,10 @@ public partial class SimulatorShell : CanvasLayer
             }
             projectHeading.Text = showMemberEditor ? "Project objects" : "Project tree";
             editGlobalDbMembers.Text = showMemberEditor ? "PROJECT TREE" : "EDIT MEMBERS";
+            editGlobalDbMembers.Visible = showMemberEditor;
             output.Text = showMemberEditor
                 ? "Global DB member editor active. Add, select, apply, and remove declarations in Project objects."
-                : "Project tree active. Select a program block or data block.";
+                : "Project tree active. The current editor document remains open; select or activate another project object to navigate.";
         };
         globalDbHeader.AddChild(editGlobalDbMembers);
         globalDbDocument.AddChild(globalDbHeader);
@@ -9169,6 +14438,65 @@ public partial class SimulatorShell : CanvasLayer
             SizeFlagsVertical = Control.SizeFlags.ExpandFill,
             CustomMinimumSize = new Vector2(0, 220),
         };
+        var globalDbDeclarationContextMenu = new PopupMenu { Name = "GlobalDbDeclarationContextMenu" };
+        globalDbDeclarationContextMenu.AddItem("Edit declaration", 0);
+        globalDbDeclarationContextMenu.AddItem("Properties", 5);
+        globalDbDeclarationContextMenu.AddItem("Duplicate declaration", 1);
+        globalDbDeclarationContextMenu.AddSeparator();
+        globalDbDeclarationContextMenu.AddItem("Move declaration up", 2);
+        globalDbDeclarationContextMenu.AddItem("Move declaration down", 3);
+        globalDbDeclarationContextMenu.AddSeparator();
+        globalDbDeclarationContextMenu.AddItem("Delete declaration", 4);
+        root.AddChild(globalDbDeclarationContextMenu);
+        var globalDbMemberPropertiesDialog = new AcceptDialog
+        {
+            Name = "GlobalDbMemberPropertiesDialog",
+            Title = "Global DB declaration properties",
+            DialogText = string.Empty,
+            DialogAutowrap = true,
+            Exclusive = true,
+            MinSize = new Vector2I(760, 360),
+        };
+        globalDbMemberPropertiesDialog.OkButtonText = "CLOSE";
+        var globalDbPropertiesCopy = globalDbMemberPropertiesDialog.AddButton("COPY DETAILS", true, "copy-details");
+        var globalDbPropertiesEdit = globalDbMemberPropertiesDialog.AddButton("EDIT DEFINITION", true, "edit-definition");
+        var globalDbPropertiesDuplicate = globalDbMemberPropertiesDialog.AddButton("DUPLICATE", true, "duplicate");
+        var globalDbPropertiesMoveUp = globalDbMemberPropertiesDialog.AddButton("MOVE UP", true, "move-up");
+        var globalDbPropertiesMoveDown = globalDbMemberPropertiesDialog.AddButton("MOVE DOWN", true, "move-down");
+        var globalDbPropertiesDelete = globalDbMemberPropertiesDialog.AddButton("DELETE", true, "delete");
+        // Declaration lifecycle commands already live beside the grid and in
+        // its context menu. Properties is for inspection and definition edit.
+        globalDbPropertiesCopy.Visible = false;
+        globalDbPropertiesDuplicate.Visible = false;
+        globalDbPropertiesMoveUp.Visible = false;
+        globalDbPropertiesMoveDown.Visible = false;
+        globalDbPropertiesDelete.Visible = false;
+        globalDbPropertiesCopy.TooltipText = "Copy this declaration's modeled offline properties.";
+        globalDbPropertiesEdit.TooltipText = "Open the validated Global DB member editor.";
+        globalDbPropertiesDuplicate.TooltipText = "Duplicate this declaration with a new stable identity.";
+        globalDbPropertiesDelete.TooltipText = "Delete this declaration through normal editor history.";
+        globalDbMemberPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(globalDbMemberPropertiesDialog.DialogText);
+                return;
+            }
+            globalDbMemberPropertiesDialog.Hide();
+            var command = action.ToString() switch
+            {
+                "edit-definition" => 0L,
+                "duplicate" => 1L,
+                "move-up" => 2L,
+                "move-down" => 3L,
+                "delete" => 4L,
+                _ => -1L,
+            };
+            if (command >= 0) globalDbDeclarationContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, command);
+        };
+        globalDbMemberPropertiesDialog.GetLabel().CustomMaximumSize = new Vector2(680, -1);
+        globalDbMemberPropertiesDialog.GetLabel().AddThemeFontSizeOverride("font_size", 15);
+        root.AddChild(globalDbMemberPropertiesDialog);
         globalDbDeclarations.SetColumnTitle(0, "NAME");
         globalDbDeclarations.SetColumnTitle(1, "DATA TYPE");
         globalDbDeclarations.SetColumnTitle(2, "START VALUE");
@@ -9206,6 +14534,7 @@ public partial class SimulatorShell : CanvasLayer
         root.Resized += QueueGlobalDbColumnLayout;
         Callable.From(ApplyGlobalDbColumnLayout).CallDeferred();
         globalDbDeclarations.AddThemeColorOverride("font_color", new Color("263943"));
+        ConfigureSelectableList(globalDbDeclarations);
         globalDbDeclarations.AddThemeStyleboxOverride("panel", BoxStyle(new Color("f8f9fa"), new Color("b7c0c5")));
         globalDbDeclarations.ItemEdited += () =>
         {
@@ -9319,27 +14648,120 @@ public partial class SimulatorShell : CanvasLayer
             output.Text = $"[color=#18864b]Global DB declaration updated.[/color] {Escape(updated.Name)} · {updated.Type.ToString().ToUpperInvariant()}.";
         };
         globalDbDocument.AddChild(globalDbDeclarations);
-        var globalDbBoundary = Inspector("GlobalDbBoundary");
-        globalDbBoundary.FitContent = true;
-        globalDbBoundary.AddThemeColorOverride("default_color", new Color("607983"));
-        globalDbBoundary.Text = "Optimized-access offline subset: Name, Data type, Start value, Retain, Comment. TIA V21 supports additional configurable columns, including Default value, HMI visibility/access/write, Setpoint, and Supervision; Offset requires standard access. Monitor values require an online connection; creating a snapshot requires online access, though a saved snapshot can be viewed offline. These are omitted. Retain is metadata; power-cycle retention is not simulated. ARRAY/system-type DB and manual instance-DB creation are unsupported.";
-        globalDbDocument.AddChild(globalDbBoundary);
+        // This is required capability disclosure, not disabled helper text.
+        // Present it as an information band so it stays readable against the
+        // dark TIA workbench instead of looking like low-priority debug output.
+        var globalDbBoundaryPanel = new PanelContainer
+        {
+            Name = "GlobalDbBoundary",
+            CustomMinimumSize = new Vector2(0, 42),
+            TooltipText = "Supported: Name, Data type, Start value, Retain metadata, and Comment. Not modeled: configurable TIA columns, standard-access offsets, HMI attributes, supervision, snapshots, online monitor values, ARRAY/system-type DBs, manual instance-DB creation, and simulated power-cycle retention.",
+        };
+        globalDbBoundaryPanel.AddThemeStyleboxOverride("panel",
+            BoxStyle(new Color("17313c"), new Color("4f879d")));
+        var globalDbBoundary = new Label
+        {
+            Text = "OFFLINE SCOPE  ·  Five editable scalar fields  ·  No live values or power-cycle retention",
+            VerticalAlignment = VerticalAlignment.Center,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+        };
+        globalDbBoundary.AddThemeColorOverride("font_color", new Color("d7eef5"));
+        globalDbBoundary.AddThemeFontSizeOverride("font_size", 14);
+        globalDbBoundaryPanel.AddChild(globalDbBoundary);
+        globalDbDocument.AddChild(globalDbBoundaryPanel);
         center.AddChild(globalDbDocument);
+        (string Path, string Type) DescribeEditorDocument(string key)
+        {
+            const string rootPath = "Offline_Controller / PLC_1 [S7-1500]";
+            if (TryResolveBlockDocument(key, out var blockIndex))
+            {
+                var block = document.Blocks[blockIndex];
+                var type = block.BlockType switch
+                {
+                    LadderBlockType.OrganizationBlock => "OB",
+                    LadderBlockType.FunctionBlock => "FB",
+                    LadderBlockType.Function => "FC",
+                    LadderBlockType.DataBlock => "GLOBAL DB",
+                    _ => "BLOCK",
+                };
+                return ($"{rootPath} / Program blocks / {block.Name} [{type}]", type);
+            }
+            if (editorTagDocuments.TryGetValue(key, out var tableName))
+                return ($"{rootPath} / PLC tags / {tableName ?? "Show all tags"}", "TAG TABLE");
+            if (editorInstanceDbDocuments.TryGetValue(key, out var ownerLocator)
+                && ResolveInstanceDbOwner(ownerLocator) is { DataBlock: { } dataBlock })
+                return ($"{rootPath} / Program blocks / DB{dataBlock.Number} \"{dataBlock.Name}\"", "INSTANCE DB");
+            if (EditorDocumentIdentity.TryResolveWatchTableIndex(document, key, out var watchIndex))
+                return ($"{rootPath} / Watch tables / {document.WatchTables[watchIndex].Name}", "WATCH");
+            return ("No editor document open", "—");
+        }
+
+        TreeItem? ActiveEditorDocumentTreeItem()
+        {
+            if (TryResolveBlockDocument(activeEditorDocumentKey, out var blockIndex)
+                && blockIndex >= 0 && blockIndex < blockItems.Count)
+                return blockItems[blockIndex];
+            if (editorTagDocuments.TryGetValue(activeEditorDocumentKey, out var tableName))
+                return tableName is null
+                    ? showAllTagsItem ?? tagItem
+                    : tagTableItems.FirstOrDefault(item =>
+                        item.GetMetadata(0).AsString().Equals($"tag-table:{tableName}", StringComparison.Ordinal));
+            if (editorInstanceDbDocuments.TryGetValue(activeEditorDocumentKey, out var ownerLocator)
+                && ResolveInstanceDbOwner(ownerLocator) is { DataBlock: { } dataBlock })
+                return instanceDbItems.FirstOrDefault(item =>
+                    item.GetMetadata(0).AsString().Equals($"instance-db:{dataBlock.Number}", StringComparison.Ordinal));
+            if (EditorDocumentIdentity.TryResolveWatchTableIndex(document, activeEditorDocumentKey, out var watchIndex)
+                && watchIndex >= 0 && watchIndex < watchTableItems.Count)
+                return watchTableItems[watchIndex];
+            return null;
+        }
+
+        locateActiveEditorDocumentInTree = () =>
+        {
+            var target = ActiveEditorDocumentTreeItem();
+            if (target is null)
+            {
+                output.Text = "The active editor document is no longer present in the Project tree.";
+                return;
+            }
+            projectTreeFilter.Clear();
+            ShowProjectDock();
+            projectTabs.CurrentTab = 0;
+            target.Select(0);
+            organization.ScrollToItem(target);
+            organization.GrabFocus();
+            output.Text = $"[b]Located in Project tree[/b] · {Escape(target.GetText(0))}";
+        };
+
         void SetEditorDocumentBody(string key)
         {
             activeEditorDocumentKey = key;
+            var documentDescription = DescribeEditorDocument(key);
+            editorDocumentBreadcrumb.Text = documentDescription.Path;
+            editorDocumentBreadcrumb.TooltipText = documentDescription.Path;
+            editorDocumentType.Text = documentDescription.Type;
+            locateEditorDocument.Disabled = key.Length == 0;
+            propertiesForEditorDocument.Disabled = key.Length == 0;
             var showGlobalDb = false;
+            var showBlockInterfaceSummary = false;
             if (siemens && TryResolveBlockDocument(key, out var dbBlockIndex))
-                showGlobalDb = document.Blocks[dbBlockIndex].BlockType == LadderBlockType.DataBlock;
+            {
+                var selectedBlock = document.Blocks[dbBlockIndex];
+                showGlobalDb = selectedBlock.BlockType == LadderBlockType.DataBlock;
+                showBlockInterfaceSummary = !showGlobalDb && selectedBlock.Interface.Count > 0;
+            }
             var showWatchTable = siemens && key.StartsWith("watch-table:", StringComparison.Ordinal);
             var showBlockEditor = !siemens || TryResolveBlockDocument(key, out _) && !showGlobalDb;
             foreach (var child in center.GetChildren().OfType<Control>())
             {
                 if (child == editorDocumentHost) child.Visible = true;
+                else if (child == editorBreadcrumbHost) child.Visible = !siemens;
+                else if (child == editorTab) child.Visible = !siemens && showBlockEditor;
                 else if (child == tagScroll) child.Visible = key.StartsWith("tags:", StringComparison.Ordinal);
                 else if (child == instanceDbDocument) child.Visible = key.StartsWith("instance-db:", StringComparison.Ordinal);
                 else if (child == globalDbDocument) child.Visible = showGlobalDb;
                 else if (child == watchDocument) child.Visible = showWatchTable;
+                else if (child == blockInterfaceSummary) child.Visible = showBlockInterfaceSummary;
                 else child.Visible = showBlockEditor;
             }
         }
@@ -9384,6 +14806,36 @@ public partial class SimulatorShell : CanvasLayer
             else SetEditorDocumentBody(string.Empty);
             output.Text = "Editor tab closed. The project object and its saved data are unchanged.";
         }
+        editorDocumentContextMenu.IdPressed += id => ResolvePendingEditorForms(() =>
+        {
+            var key = editorDocumentContextKey;
+            if (string.IsNullOrWhiteSpace(key) || !editorDocumentButtons.ContainsKey(key)) return;
+            if (id == 0)
+            {
+                ActivateEditorDocument(key);
+            }
+            else if (id == 1)
+            {
+                ActivateEditorDocument(key);
+                showActiveEditorDocumentProperties?.Invoke();
+            }
+            else if (id == 2)
+            {
+                ActivateEditorDocument(key);
+                locateActiveEditorDocumentInTree?.Invoke();
+            }
+            else if (id == 3)
+            {
+                CloseEditorDocument(key);
+            }
+            else if (id == 4)
+            {
+                ActivateEditorDocument(key);
+                foreach (var otherKey in editorDocumentButtons.Keys.Where(candidate => candidate != key).ToArray())
+                    CloseEditorDocument(otherKey);
+                output.Text = "Other editor tabs closed. Project objects and saved data are unchanged.";
+            }
+        });
         restoreActiveEditorDocumentBody = () => SetEditorDocumentBody(activeEditorDocumentKey);
         string? FindInstanceDbOwnerLocator(int dbNumber)
         {
@@ -9442,6 +14894,94 @@ public partial class SimulatorShell : CanvasLayer
             return null;
         }
 
+        void ShowSelectedInstanceDbMemberProperties()
+        {
+            var row = instanceDbDeclarations.GetSelected();
+            if (row is null
+                || string.IsNullOrWhiteSpace(activeEditorDocumentKey)
+                || !editorInstanceDbDocuments.TryGetValue(activeEditorDocumentKey, out var ownerLocator)
+                || ResolveInstanceDbOwner(ownerLocator) is not { } owner) return;
+            var memberKind = row.GetMetadata(2).AsString();
+            var memberIdentity = row.GetMetadata(0).AsString();
+            var memberType = row.GetMetadata(1).AsString();
+            if (string.IsNullOrWhiteSpace(memberKind) || string.IsNullOrWhiteSpace(memberIdentity)) return;
+
+            var db = owner.DataBlock!;
+            instanceDbPropertiesNumber = db.Number;
+            if (memberKind == "formal" && owner.Instance is not null && owner.InstanceBlock is not null)
+            {
+                var parameter = owner.InstanceBlock.Interface.FirstOrDefault(candidate =>
+                    StringComparer.Ordinal.Equals(candidate.Id, memberIdentity));
+                if (parameter is null) return;
+                var initial = FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type,
+                    PlcVariableRole.Memory, parameter.InitialValue, EnumMembers: parameter.EnumMembers));
+                instanceDbMemberPropertiesDialog.Title = $"{parameter.Name} · {db.Name} properties";
+                instanceDbMemberPropertiesDialog.DialogText = string.Join("\n",
+                    $"Generated FB member: {parameter.Section.ToString().ToUpperInvariant()} · {(string.IsNullOrWhiteSpace(parameter.DataType) ? parameter.Type.ToString().ToUpperInvariant() : parameter.DataType)}",
+                    $"Instance: {db.Name} [DB{db.Number}] · {owner.Instance.Name}",
+                    $"Owner: {owner.InstanceBlock.Name} [FB]",
+                    $"Default / start: {initial} · inherited from the FB",
+                    $"Retain: {(parameter.Retain ? "YES" : "NO")}",
+                    $"Comment: {(string.IsNullOrWhiteSpace(parameter.Comment) ? "—" : parameter.Comment)}",
+                    $"Execution: {InterfaceExecutionMeaning(owner.InstanceBlock, parameter)}",
+                    "Editing: change the owning FB interface declaration",
+                    "Boundary: no per-instance overrides or live values");
+            }
+            else if (memberKind == "iec" && owner.Rung is not null && owner.InstructionBlock is not null)
+            {
+                var memberName = memberIdentity;
+                var timer = owner.Rung.IsTimer || owner.Rung.IsTimerReset;
+                var instruction = timer ? "IEC_TIMER" : "IEC_COUNTER";
+                var meaning = memberName switch
+                {
+                    "PT" => "Preset time input declared by the IEC timer instance.",
+                    "ET" => "Elapsed time state published by the IEC timer instance.",
+                    "IN" => "Enable input state sampled by the IEC timer instance.",
+                    "Q" => "Boolean completion/output state published by the IEC instance.",
+                    "CV" => "Current count value published by the IEC counter instance.",
+                    _ => "Generated IEC instruction instance member.",
+                };
+                instanceDbMemberPropertiesDialog.Title = $"{memberName} · {db.Name} properties";
+                instanceDbMemberPropertiesDialog.DialogText = string.Join("\n",
+                    $"Generated IEC member: {instruction} · STATIC · {memberType}",
+                    $"Instance DB: {db.Name} [DB{db.Number}]",
+                    $"Owner: {owner.InstructionBlock.Name} · Network {owner.RungIndex + 1}",
+                    $"Operand: {(timer ? owner.Rung.TimerVariable : owner.Rung.CounterVariable)}",
+                    $"Meaning: {meaning}",
+                    "Retain: NO",
+                    "Editing: open the owning IEC instruction properties",
+                    "Overrides: generated members are read-only",
+                    "Boundary: no live values or snapshots");
+            }
+            else return;
+
+            instanceDbMemberPropertiesDialog.PopupCentered(new Vector2I(760, 320));
+        }
+
+        instanceDbDeclarations.ItemSelected += () =>
+        {
+            var row = instanceDbDeclarations.GetSelected();
+            instanceDbMemberProperties.Disabled = row is null
+                || string.IsNullOrWhiteSpace(row.GetMetadata(2).AsString());
+        };
+        instanceDbDeclarations.ItemActivated += ShowSelectedInstanceDbMemberProperties;
+        instanceDbDeclarations.GuiInput += input =>
+        {
+            if (input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right } mouse) return;
+            var row = instanceDbDeclarations.GetItemAtPosition(mouse.Position);
+            if (row is null || string.IsNullOrWhiteSpace(row.GetMetadata(2).AsString())) return;
+            row.Select(0);
+            instanceDbMemberProperties.Disabled = false;
+            instanceDbMemberContextMenu.Position = DisplayServer.MouseGetPosition();
+            instanceDbMemberContextMenu.Popup();
+            instanceDbDeclarations.AcceptEvent();
+        };
+        instanceDbMemberContextMenu.IdPressed += id =>
+        {
+            if (id == 0) ShowSelectedInstanceDbMemberProperties();
+        };
+        instanceDbMemberProperties.Pressed += ShowSelectedInstanceDbMemberProperties;
+
         void OpenInstanceDbDocument(int dbNumber)
         {
             if (!siemens) return;
@@ -9482,7 +15022,9 @@ public partial class SimulatorShell : CanvasLayer
             instanceDbHeading.Text = $"{db.Name} [DB{db.Number}]";
             instanceDbSubtitle.Text = "Instance data block · offline project definition";
             instanceDbDeclarations.Clear();
+            instanceDbMemberProperties.Disabled = true;
             var declarationRoot = instanceDbDeclarations.CreateItem();
+            TreeItem? firstMemberRow = null;
             if (assignedInstance is not null)
             {
                 instanceDbSubtitle.Text = $"Assigned instance {assignedInstance.Name} · {instanceBlock?.Name ?? assignedInstance.BlockId} [FB] · offline project definition";
@@ -9499,6 +15041,7 @@ public partial class SimulatorShell : CanvasLayer
                     foreach (var parameter in members)
                     {
                         var memberRow = instanceDbDeclarations.CreateItem(sectionRow);
+                        firstMemberRow ??= memberRow;
                         memberRow.SetText(0, parameter.Name);
                         memberRow.SetText(1, string.IsNullOrWhiteSpace(parameter.DataType) ? parameter.Type.ToString().ToUpperInvariant() : parameter.DataType);
                         var inheritedValue = FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type, PlcVariableRole.Memory, parameter.InitialValue));
@@ -9514,7 +15057,10 @@ public partial class SimulatorShell : CanvasLayer
                         memberRow.SetTooltipText(5, string.IsNullOrWhiteSpace(parameter.Comment)
                             ? "No comment."
                             : parameter.Comment);
-                        memberRow.SetSelectable(0, false);
+                        memberRow.SetMetadata(0, parameter.Id);
+                        memberRow.SetMetadata(1, parameter.Type.ToString().ToUpperInvariant());
+                        memberRow.SetMetadata(2, "formal");
+                        memberRow.SetTooltipText(0, "Select, double-click, or right-click to inspect inherited instance-member properties.");
                     }
                     sectionRow.Collapsed = false;
                 }
@@ -9542,23 +15088,49 @@ public partial class SimulatorShell : CanvasLayer
                 foreach (var (memberName, memberType) in memberNames)
                 {
                     var memberRow = instanceDbDeclarations.CreateItem(sectionRow);
+                    firstMemberRow ??= memberRow;
                     memberRow.SetText(0, memberName);
                     memberRow.SetText(1, memberType);
                     memberRow.SetText(2, "");
                     memberRow.SetText(3, "");
                     memberRow.SetText(4, "NO");
                     memberRow.SetText(5, "");
-                    memberRow.SetSelectable(0, false);
+                    memberRow.SetMetadata(0, memberName);
+                    memberRow.SetMetadata(1, memberType);
+                    memberRow.SetMetadata(2, "iec");
+                    memberRow.SetTooltipText(0, "Select, double-click, or right-click to inspect this generated IEC member.");
                 }
                 sectionRow.Collapsed = false;
             }
             declarationRoot.Collapsed = false;
+            if (firstMemberRow is not null)
+            {
+                firstMemberRow.Select(0);
+                instanceDbDeclarations.ScrollToItem(firstMemberRow);
+                instanceDbMemberProperties.Disabled = false;
+            }
             SetEditorDocumentBody(key);
+            // Instance DBs are read-only generated views. Keep the left rail on
+            // the owning project hierarchy instead of leaving an unrelated FB
+            // declaration editor beside the DB definition.
+            ShowProjectDock();
+            projectTabs.CurrentTab = 0;
             QueueInstanceDbColumnLayout();
             editorDocumentButtons[key].ButtonPressed = true;
             editorTabTitle.Text = $"{db.Name} [DB{db.Number}]";
             editorTabTitle.TooltipText = "Read-only instance DB definition generated from the current FB or IEC instruction assignment.";
             output.Text = $"[color=#18864b]Instance DB opened.[/color] %DB{db.Number} \"{Escape(db.Name)}\".";
+        }
+        void SetTagFormOpen(bool isOpen, bool isNew)
+        {
+            if (!siemens) return;
+            tagFormEditing = isOpen;
+            tagDefinitionForm!.Visible = isOpen;
+            tagList.Visible = !isOpen;
+            tagRecordActions.Visible = !isOpen;
+            addTag.Visible = isNew;
+            applyTagEdit!.Visible = !isNew;
+            deleteTag!.Visible = !isNew;
         }
         void OpenTagDocument(string? tableName, int selectedIndex = -1)
         {
@@ -9579,8 +15151,13 @@ public partial class SimulatorShell : CanvasLayer
             var tagTitle = $"{(LadderEditorProjectJson.HasUnsavedChanges(document, _ladderSavedProjectJson) ? "* " : string.Empty)}{tableName ?? "Show all tags"} — {projectFileName}";
             AddEditorDocumentTab(key, tagTitle);
             activeTagTableName = tableName;
-            selectedTagIndex = selectedIndex >= 0 && selectedIndex < document.Tags.Count ? selectedIndex : -1;
+            selectedTagIndex = selectedIndex >= 0 && selectedIndex < document.Tags.Count
+                && (tableName is null || document.Tags[selectedIndex].TagTable.Equals(tableName, StringComparison.Ordinal))
+                    ? selectedIndex
+                    : document.Tags.FindIndex(tag => tableName is null
+                        || tag.TagTable.Equals(tableName, StringComparison.Ordinal));
             tagFormDirty = false;
+            SetTagFormOpen(false, true);
             loadingFormControls = true;
             tagName.Clear();
             tagType.Select(0);
@@ -9607,6 +15184,17 @@ public partial class SimulatorShell : CanvasLayer
                 ? $"Showing all {document.Tags.Count} PLC tags."
                 : $"[color=#18864b]Tag table open.[/color] {Escape(tableName)} · {document.Tags.Count(tag => tag.TagTable.Equals(tableName, StringComparison.Ordinal))} tag(s).";
         }
+        openWatchRowDeclaration = row =>
+        {
+            var tagIndex = WatchDeclarationTagIndex(row);
+            if (tagIndex < 0) return;
+            ResolvePendingEditorForms(() =>
+            {
+                activeTagTableName = null;
+                OpenTagDocument(null, tagIndex);
+                aggregateTagEditor.RevealMember(row.Reference, document.Tags[tagIndex].Name);
+            });
+        };
         void OpenWatchTableDocument(EditableWatchTable watchTable)
         {
             if (!siemens) return;
@@ -9622,10 +15210,9 @@ public partial class SimulatorShell : CanvasLayer
             var dirtyPrefix = LadderEditorProjectJson.HasUnsavedChanges(document, _ladderSavedProjectJson) ? "* " : string.Empty;
             AddEditorDocumentTab(key, $"{dirtyPrefix}{watchTable.Name} — {projectFileName}");
             SetEditorDocumentBody(key);
-            ShowBottomDock();
-            bottomPanel.Visible = true;
-            reopenBottomDock.Visible = false;
-            bottomTabs.CurrentTab = 2;
+            bottomPanel.Visible = false;
+            reopenBottomDock.Visible = true;
+            editorAndInspector.SplitOffsets = [Math.Max(0, (int)editorAndInspector.Size.Y - (int)reopenBottomDock.CustomMinimumSize.Y)];
             RefreshWatchTable(_virtualSnapshot);
             SelectActiveWatchTableTreeRow();
             editorDocumentButtons[key].ButtonPressed = true;
@@ -9723,13 +15310,18 @@ public partial class SimulatorShell : CanvasLayer
                 if (editorDocumentButtons.ContainsKey(key)) ActivateEditorDocument(key);
             };
         }
-        var apply = ToolbarButton("ValidateAndLoadButton", "VERIFY + LOAD OFFLINE", new Color("1f8a58"), 210);
+        var apply = ToolbarButton("ValidateAndLoadButton", "VERIFY + LOAD", new Color("1f8a58"), 132);
+        validateAndLoadAction = apply;
+        apply.SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin;
+        apply.TooltipText = "Validate the offline project and load it into the built-in simulator. No physical PLC is written.";
         tagPage.AddChild(apply);
         var boundary = Inspector("VendorBoundary");
         boundary.FitContent = true;
-        boundary.AddThemeColorOverride("default_color", new Color("344851"));
+        boundary.AddThemeColorOverride("default_color", new Color("8fb7c8"));
+        boundary.AddThemeFontSizeOverride("normal_font_size", 13);
+        boundary.CustomMinimumSize = new Vector2(0, 28);
         boundary.Text = siemens
-            ? "Simulator-native STEP 7-style workbench. No TIA project file or Siemens connection is created."
+            ? "OFFLINE SIMULATOR · no TIA project file or Siemens PLC connection"
             : "Simulator-native Logix-style workbench. No ACD file or Rockwell connection is created.";
         tagPage.AddChild(boundary);
 
@@ -9758,6 +15350,7 @@ public partial class SimulatorShell : CanvasLayer
         blockCommands.AddThemeConstantOverride("v_separation", 4);
         blockCommands.AddChild(addBlock);
         blockCommands.AddChild(applyBlock);
+        blockCommands.AddChild(duplicateBlock);
         blockCommands.AddChild(cancelBlock);
         blockCommands.AddChild(removeBlock);
         projectPage.AddChild(blockCommands);
@@ -9765,9 +15358,11 @@ public partial class SimulatorShell : CanvasLayer
         interfaceHeading = Heading(siemens ? "FB / FC INTERFACE" : "ROUTINE PARAMETERS", 11, new Color("344851"));
         interfaceHeading.Name = "BlockInterfaceHeading";
         projectPage.AddChild(interfaceHeading);
-        interfaceExecutionNote = Heading("Supported scalar parameters; FB Static also TIMER/COUNTER.", 11, new Color("344851"));
+        interfaceExecutionNote = Heading("Typed scalar parameters. FB Static also supports TIMER/COUNTER.", 12, new Color("344851"));
         interfaceExecutionNote.Name = "InterfaceExecutionNote";
-        interfaceExecutionNote.ClipText = true;
+        interfaceExecutionNote.ClipText = false;
+        interfaceExecutionNote.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+        interfaceExecutionNote.CustomMinimumSize = new Vector2(0, 38);
         interfaceExecutionNote.TooltipText = "Legacy mode keeps descriptive declarations. Explicit parameterized mode executes typed Input/Output/InOut bindings; FB Static storage belongs to the chosen instance.";
         projectPage.AddChild(interfaceExecutionNote);
         var interfaceFields = new HFlowContainer { Name = "InterfaceFields" };
@@ -9791,7 +15386,10 @@ public partial class SimulatorShell : CanvasLayer
         interfaceCommands.AddChild(addInterface);
         interfaceCommands.AddChild(newInterface);
         interfaceCommands.AddChild(cancelInterface);
+        interfaceCommands.AddChild(interfacePropertiesAction);
+        interfaceCommands.AddChild(duplicateInterface);
         interfaceCommands.AddChild(removeInterface);
+        projectPage.AddChild(interfaceCommands);
         projectPage.AddChild(interfaceTable);
         projectPage.AddChild(Heading(siemens ? "OB SCHEDULE" : "TASK SCHEDULE", 11, new Color("344851")));
         projectPage.AddChild(taskName);
@@ -9809,6 +15407,8 @@ public partial class SimulatorShell : CanvasLayer
         taskCommands.AddChild(addTask);
         taskCommands.AddChild(applyTask);
         taskCommands.AddChild(cancelTask);
+        taskCommands.AddChild(taskPropertiesAction);
+        taskCommands.AddChild(duplicateTask);
         taskCommands.AddChild(removeTask);
         projectPage.AddChild(taskCommands);
         var objectsScroll = new ScrollContainer
@@ -9820,10 +15420,6 @@ public partial class SimulatorShell : CanvasLayer
             VerticalScrollMode = ScrollContainer.ScrollMode.Auto,
         };
         objectsScroll.AddChild(projectPage);
-        // Keep the core member actions in the fixed-width tab viewport. The
-        // declaration fields below remain horizontally scrollable, but their
-        // preferred minimum width must not push Add/New/Cancel/Remove off dock.
-        projectObjectsTab.AddChild(interfaceCommands);
         projectObjectsTab.AddChild(objectsScroll);
         projectTabs.AddChild(projectObjectsTab);
 
@@ -9839,6 +15435,8 @@ public partial class SimulatorShell : CanvasLayer
         projectTabs.TabChanged += tabIndex =>
         {
             showProjectTree.Visible = siemens && tabIndex != 0;
+            projectFilterRow.Visible = siemens && tabIndex == 0;
+            projectSelectionSummary.Visible = siemens && tabIndex == 0;
             if (tabIndex == 0)
             {
                 projectHeading.Text = siemens ? "Project tree" : "Controller Organizer";
@@ -9949,7 +15547,6 @@ public partial class SimulatorShell : CanvasLayer
                 exactCrossReference ? "CROSS-REFERENCE" : "FIND ALL");
             toolTabs.CurrentTab = 1;
         }
-
         void NavigateSearchResult(int resultIndex)
         {
             if (resultIndex < 0 || resultIndex >= visibleSearchResults.Count) return;
@@ -10067,6 +15664,22 @@ public partial class SimulatorShell : CanvasLayer
             ResolvePendingEditorForms(() => { selectedTagIndex = targetTagIndex; RestoreTagSelection(); LoadTagControls(); }, RestoreTagSelection);
         };
 
+        beginAddTag.Pressed += () => ResolvePendingEditorForms(() =>
+        {
+            OpenTagDocument(activeTagTableName);
+            SetTagFormOpen(true, true);
+            tagName.GrabFocus();
+        }, RestoreTagSelection);
+        editTagAction!.Pressed += () =>
+        {
+            var index = SelectedTreeRowIndex(tagList);
+            if (index < 0 || index >= document.Tags.Count) return;
+            selectedTagIndex = index;
+            LoadTagControls();
+            SetTagFormOpen(true, false);
+            tagName.GrabFocus();
+        };
+
         xrefSelectedTag.Pressed += () =>
         {
             var selected = SelectedTreeRowIndex(tagList);
@@ -10076,10 +15689,96 @@ public partial class SimulatorShell : CanvasLayer
         };
         tagList.ItemActivated += () =>
         {
+            if (siemens)
+                editTagAction!.EmitSignal(BaseButton.SignalName.Pressed);
+            else
+            {
+                var index = SelectedTreeRowIndex(tagList);
+                if (index < 0 || index >= document.Tags.Count) return;
+                searchQuery.Text = document.Tags[index].Name;
+                RunProjectSearch(true);
+            }
+        };
+        void ConfigureTagContextActions(PlcVariable tag)
+        {
+            tagContextMenu.SetItemDisabled(tagContextMenu.GetItemIndex(0),
+                ChallengeMutationLocked || tagFormDirty || tagFormEditing);
+            tagContextMenu.SetItemDisabled(tagContextMenu.GetItemIndex(4), false);
+            tagContextMenu.SetItemDisabled(tagContextMenu.GetItemIndex(1), false);
+            tagContextMenu.SetItemDisabled(tagContextMenu.GetItemIndex(2),
+                ChallengeMutationLocked || tagFormDirty || tagFormEditing);
+            tagContextMenu.SetItemDisabled(tagContextMenu.GetItemIndex(3),
+                ChallengeMutationLocked || tagFormDirty || tagFormEditing || document.CountTagReferences(tag.Name) > 0);
+        }
+        tagList.GuiInput += input =>
+        {
+            if (!siemens || input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right } mouse) return;
+            var row = tagList.GetItemAtPosition(mouse.Position);
+            if (row is null) return;
+            row.Select(0);
             var index = SelectedTreeRowIndex(tagList);
             if (index < 0 || index >= document.Tags.Count) return;
-            searchQuery.Text = document.Tags[index].Name;
-            RunProjectSearch(true);
+            selectedTagIndex = index;
+            LoadTagControls();
+            var tag = document.Tags[index];
+            ConfigureTagContextActions(tag);
+            tagContextMenu.Position = DisplayServer.MouseGetPosition();
+            tagContextMenu.Popup();
+            tagList.AcceptEvent();
+        };
+        tagContextMenu.IdPressed += id =>
+        {
+            if (!siemens || selectedTagIndex < 0 || selectedTagIndex >= document.Tags.Count) return;
+            var tag = document.Tags[selectedTagIndex];
+            if (id == 0) editTagAction!.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 4)
+            {
+                var references = document.CountTagReferences(tag.Name);
+                var deleteAvailable = !ChallengeMutationLocked && !tagFormDirty && !tagFormEditing && references == 0;
+                tagPropertiesDialog.Title = $"{tag.Name} properties";
+                tagPropertiesDialog.DialogText = string.Join("\n",
+                    $"PLC tag: {tag.Type.ToString().ToUpperInvariant()} · {tag.Role.ToString().ToUpperInvariant()}",
+                    $"Table: {tag.TagTable}",
+                    $"Address: {(string.IsNullOrWhiteSpace(tag.Address) ? "not assigned" : tag.Address)}",
+                    $"Initial value: {FormatTagInitialValue(tag)}",
+                    $"Scene binding: {(string.IsNullOrWhiteSpace(tag.Binding) ? "not assigned" : tag.Binding)}",
+                    $"Comment: {(string.IsNullOrWhiteSpace(tag.Comment) ? "—" : tag.Comment)}",
+                    $"References: {references}",
+                    $"Delete: {(deleteAvailable ? "available" : references > 0 ? $"protected · {references} executable reference(s)" : ChallengeMutationLocked ? "unavailable · active challenge lock" : "unavailable · finish or cancel the pending tag edit")}",
+                    "Boundary: offline RungProof tag · address metadata does not create physical PLC I/O");
+                tagPropertiesEdit.Disabled = tagContextMenu.IsItemDisabled(tagContextMenu.GetItemIndex(0));
+                tagPropertiesCrossReference.Disabled = false;
+                tagPropertiesDuplicate.Disabled = tagContextMenu.IsItemDisabled(tagContextMenu.GetItemIndex(2));
+                tagPropertiesDelete.Disabled = !deleteAvailable;
+                tagPropertiesEdit.Visible = !tagPropertiesEdit.Disabled;
+                tagPropertiesDialog.PopupCentered(new Vector2I(730, 310));
+            }
+            else if (id == 1) runExactCrossReference(tag.Name);
+            else if (id == 2)
+            {
+                if (!BeginEdit("Duplicate PLC tag")) return;
+                var copyName = UniqueCpuCopyName(tag.Name);
+                var copy = PlcAggregates.IsAggregate(tag.Type)
+                    ? document.AddAggregateTag(copyName, tag.Role, tag.Type, tag.Aggregate!, tag.InitialValue,
+                        binding: string.Empty, tagTable: tag.TagTable, address: string.Empty, comment: tag.Comment)
+                    : document.AddTag(copyName, tag.Role, binding: string.Empty, type: tag.Type,
+                        initialValue: tag.InitialValue, enumMembers: tag.EnumMembers,
+                        tagTable: tag.TagTable, address: string.Empty, comment: tag.Comment);
+                selectedTagIndex = document.Tags.IndexOf(copy);
+                RefreshEditor();
+                SetTagFormOpen(false, true);
+                output.Text = $"[color=#18864b]PLC tag duplicated.[/color] {Escape(copy.Name)} · {copy.Type} · {copy.Role}. Address and scene binding were intentionally left blank.";
+            }
+            else if (id == 3) deleteTag!.EmitSignal(BaseButton.SignalName.Pressed);
+        };
+        tagPropertiesAction!.Pressed += () =>
+        {
+            var index = SelectedTreeRowIndex(tagList);
+            if (!siemens || index < 0 || index >= document.Tags.Count) return;
+            selectedTagIndex = index;
+            LoadTagControls();
+            ConfigureTagContextActions(document.Tags[index]);
+            tagContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 4L);
         };
         applyTagEdit!.Pressed += () =>
         {
@@ -10107,6 +15806,7 @@ public partial class SimulatorShell : CanvasLayer
             var updated = UpdateTagDefinition(document);
             tagFormDirty = false;
             RefreshEditor();
+            SetTagFormOpen(false, true);
             output.Text = $"[color=#18864b]Tag updated.[/color] {Escape(updated.Name)} · {updated.Type} · {updated.Role}. All symbolic references were renamed atomically.";
         };
         deleteTag!.Pressed += () =>
@@ -10129,6 +15829,7 @@ public partial class SimulatorShell : CanvasLayer
             tagBinding.Clear();
             RefreshTagBindingOptions(SelectedTagType(), SelectedTagRole(SelectedTagType()), string.Empty);
             loadingFormControls = false; tagFormDirty = false; RefreshEditor();
+            SetTagFormOpen(false, true);
             output.Text = $"[color=#18864b]Unused tag deleted.[/color] {Escape(tag.Name)} had no executable references.";
         };
         toolTabs.AddChild(searchPage);
@@ -10253,6 +15954,12 @@ public partial class SimulatorShell : CanvasLayer
             toolTabs.CurrentTab = tab;
             editorAndTasks.SplitOffsets = [Math.Max(0, (int)editorAndTasks.Size.X - 320)];
         }
+        runExactCrossReference = symbol =>
+        {
+            searchQuery.Text = symbol;
+            ShowToolDock(1);
+            RunProjectSearch(true);
+        };
         void ShowProjectDock()
         {
             projectDockHost.Show(); projectPanel.Show(); reopenProjectDock.Hide();
@@ -10424,7 +16131,7 @@ public partial class SimulatorShell : CanvasLayer
         var operandEditor = new LadderOperandEditor(); canvas.AddChild(operandEditor);
         LadderEditTransaction? operandEdit = null;
         void CancelOperand() { operandEdit?.Cancel(); operandEdit = null; canvas.GrabFocus(); }
-        _pendingEditorForms.Add(new(() => operandEditor.Visible, () => operandEditor.TryApply(false), () => operandEditor.CancelEdit()));
+        _pendingEditorForms.Add(new(() => "Inline ladder operand", () => operandEditor.Visible, () => operandEditor.TryApply(false), () => operandEditor.CancelEdit()));
         canvas.InlineOperandRequested += (initialText, clearOnOpen, requestedTarget) => ResolvePendingEditorForms(() =>
         {
             if (document.Rungs.Count == 0 || ChallengeMutationLocked) return;
@@ -11384,6 +17091,28 @@ public partial class SimulatorShell : CanvasLayer
             tagTableRenameName.GrabFocus();
             tagTableRenameName.SelectAll();
         };
+        duplicateTagTable.Pressed += () =>
+        {
+            var sourceName = activeTagTableName;
+            if (sourceName is null || duplicateTagTable.Disabled) return;
+            var preview = new LadderEditorDocument();
+            preview.RestoreSnapshot(document.CaptureSnapshot());
+            string duplicateName;
+            try { duplicateName = preview.DuplicateTagTable(sourceName); }
+            catch (InvalidOperationException exception)
+            {
+                output.Text = $"[color=#d64545]Tag table duplicate rejected.[/color] {Escape(exception.Message)}";
+                return;
+            }
+            if (!BeginProjectMetadataEdit("Duplicate tag table")) return;
+            duplicateName = document.DuplicateTagTable(sourceName);
+            activeTagTableName = duplicateName;
+            selectedTagIndex = -1;
+            RefreshEditor();
+            if (siemens) OpenTagDocument(duplicateName);
+            RefreshTagTableEditorControls();
+            output.Text = $"[color=#18864b]Tag table duplicated.[/color] {Escape(sourceName)} → {Escape(duplicateName)}. I/O bindings and addresses were cleared.";
+        };
         removeTagTable.Pressed += () =>
         {
             var oldName = activeTagTableName;
@@ -11496,9 +17225,33 @@ public partial class SimulatorShell : CanvasLayer
             { output.Text = $"[color=#d64545]Rename blocked.[/color] {Escape(exception.Message)}"; return; }
             if (!BeginEdit(siemens ? "Rename program block" : "Rename routine")) return;
             var block = document.RenameBlock(document.Blocks[document.ActiveBlockIndex].Id, normalizedName);
-            blockFormDirty = false; RefreshEditor();
+            blockFormDirty = false;
+            if (siemens) cancelBlock.Visible = false;
+            RefreshEditor();
             blockItems[document.ActiveBlockIndex].Select(0);
             output.Text = $"[color=#18864b]{(siemens ? "Block" : "Routine")} renamed.[/color] Stable calls and task references still target {Escape(block.Name)}.";
+        };
+        duplicateBlock.Pressed += () =>
+        {
+            if (document.Blocks.Count == 0 || ChallengeMutationLocked) return;
+            var source = document.Blocks[document.ActiveBlockIndex];
+            var preview = new LadderEditorDocument(); preview.RestoreSnapshot(document.CaptureSnapshot());
+            try { preview.DuplicateBlock(source.Id); }
+            catch (InvalidOperationException exception)
+            {
+                output.Text = $"[color=#d64545]Duplicate blocked.[/color] {Escape(exception.Message)}";
+                return;
+            }
+            if (!BeginEdit(siemens ? "Duplicate program block" : "Duplicate routine")) return;
+            var copy = document.DuplicateBlock(source.Id);
+            selectedRung = 0;
+            selectedBranch = 0;
+            selectedContact = -1;
+            selectedInsertionIndex = -1;
+            selectedOutput = false;
+            RefreshEditor();
+            blockItems[document.ActiveBlockIndex].Select(0);
+            output.Text = $"[color=#18864b]{(siemens ? "Block" : "Routine")} duplicated.[/color] {Escape(source.Name)} → {Escape(copy.Name)}. Existing tasks and calls still target the source.";
         };
         removeBlock.Pressed += () =>
         {
@@ -11546,6 +17299,14 @@ public partial class SimulatorShell : CanvasLayer
             addInterface.Text = activeBlockIsGlobalDb ? "+ MEMBER" : "+ PARAMETER";
             newInterface.Text = activeBlockIsGlobalDb ? "NEW MEMBER" : "NEW";
             cancelInterface.Disabled = true;
+            newInterface.Visible = false;
+            cancelInterface.Visible = false;
+            interfacePropertiesAction.Visible = false;
+            duplicateInterface.Visible = false;
+            removeInterface.Visible = false;
+            interfacePropertiesAction.Disabled = true;
+            duplicateInterface.Disabled = true;
+            removeInterface.Disabled = true;
             loadingFormControls = false;
             UpdateGlobalDbDeclarationGridEditability();
         }
@@ -11591,6 +17352,14 @@ public partial class SimulatorShell : CanvasLayer
             interfaceComment.Text = parameter.Comment;
             addInterface.Text = block.BlockType == LadderBlockType.DataBlock ? "APPLY MEMBER" : "APPLY EDIT";
             cancelInterface.Disabled = false;
+            newInterface.Visible = true;
+            cancelInterface.Visible = true;
+            interfacePropertiesAction.Visible = true;
+            duplicateInterface.Visible = true;
+            removeInterface.Visible = true;
+            interfacePropertiesAction.Disabled = false;
+            duplicateInterface.Disabled = ChallengeMutationLocked;
+            removeInterface.Disabled = ChallengeMutationLocked || InterfaceReferenceImpact(block, parameter).Bindings > 0;
             interfaceFormRevision = document.Revision;
             interfaceFormDirty = false;
             loadingFormControls = false;
@@ -11614,6 +17383,84 @@ public partial class SimulatorShell : CanvasLayer
                     if (StringComparer.Ordinal.Equals(block.Interface[index].Name, selectedName)) return index;
             return selectedInterfaceIndex >= 0 && selectedInterfaceIndex < block.Interface.Count
                 ? selectedInterfaceIndex : -1;
+        }
+
+        (int CallSites, int Bindings) InterfaceReferenceImpact(EditableBlock block, LadderInterfaceParameter parameter)
+        {
+            var calls = document.Blocks.SelectMany(owner => owner.Rungs)
+                .Where(rung => rung.IsCall && StringComparer.Ordinal.Equals(rung.CallTarget, block.Id))
+                .ToArray();
+            return (calls.Length, calls.Sum(rung => rung.CallBindings.Count(binding =>
+                StringComparer.Ordinal.Equals(binding.ParameterId, parameter.Id))));
+        }
+
+        string InterfaceExecutionMeaning(EditableBlock block, LadderInterfaceParameter parameter) => parameter.Section switch
+        {
+            LadderInterfaceSection.Input => "Copied from its bound symbol or typed literal when the CALL begins; not copied back.",
+            LadderInterfaceSection.Output => block.BlockType == LadderBlockType.FunctionBlock
+                ? "Stored in the selected FB instance and copied to its writable bound symbol when the CALL completes successfully; may be explicitly discarded."
+                : "Stored for this invocation and copied to its writable bound symbol when the CALL completes successfully; may be explicitly discarded.",
+            LadderInterfaceSection.InOut => "Aliases the caller's writable storage for the duration of the CALL; changes act on that same storage.",
+            LadderInterfaceSection.Static => block.BlockType == LadderBlockType.DataBlock
+                ? "Global DB storage in the offline project; it is not a CALL binding."
+                : "Stored persistently in the selected FB instance; it is not a CALL binding.",
+            LadderInterfaceSection.Temp => "Invocation-local scratch storage initialized for each CALL; it is not copied in or out.",
+            _ => "Unsupported declaration section.",
+        };
+
+        void ConfigureInterfaceContextActions(EditableBlock block, int index)
+        {
+            if (index < 0 || index >= block.Interface.Count) return;
+            var parameter = block.Interface[index];
+            var (_, bindings) = InterfaceReferenceImpact(block, parameter);
+            interfaceContextMenu.SetItemDisabled(interfaceContextMenu.GetItemIndex(0), ChallengeMutationLocked);
+            interfaceContextMenu.SetItemDisabled(interfaceContextMenu.GetItemIndex(4), false);
+            interfaceContextMenu.SetItemDisabled(interfaceContextMenu.GetItemIndex(5), ChallengeMutationLocked);
+            interfaceContextMenu.SetItemDisabled(interfaceContextMenu.GetItemIndex(1), ChallengeMutationLocked || index == 0);
+            interfaceContextMenu.SetItemDisabled(interfaceContextMenu.GetItemIndex(2), ChallengeMutationLocked || index == block.Interface.Count - 1);
+            interfaceContextMenu.SetItemDisabled(interfaceContextMenu.GetItemIndex(3), ChallengeMutationLocked || bindings > 0);
+        }
+
+        void ShowSelectedInterfaceProperties()
+        {
+            if (!siemens || document.Blocks.Count == 0) return;
+            var block = document.Blocks[document.ActiveBlockIndex];
+            if (!StringComparer.Ordinal.Equals(selectedInterfaceBlockId, block.Id)) return;
+            var index = FindSelectedInterfaceIndex(block);
+            if (index < 0) return;
+            var parameter = block.Interface[index];
+            var (callSites, bindings) = InterfaceReferenceImpact(block, parameter);
+            var deleteAvailable = !ChallengeMutationLocked && bindings == 0;
+            var blockKind = block.BlockType switch
+            {
+                LadderBlockType.FunctionBlock => "FB",
+                LadderBlockType.Function => "FC",
+                LadderBlockType.OrganizationBlock => "OB",
+                LadderBlockType.DataBlock => "Global DB",
+                _ => "Block",
+            };
+            var initial = FormatTagInitialValue(new PlcVariable(parameter.Name, parameter.Type,
+                PlcVariableRole.Memory, parameter.InitialValue, EnumMembers: parameter.EnumMembers));
+            interfacePropertiesDialog.Title = $"{parameter.Name} properties";
+            interfacePropertiesDialog.DialogText = string.Join("\n",
+                $"{blockKind} interface: {parameter.Section.ToString().ToUpperInvariant()} · {parameter.Type.ToString().ToUpperInvariant()}",
+                $"Owner: {block.Name} · {block.SemanticMode} semantics",
+                $"Position: row {index + 1} of {block.Interface.Count}",
+                $"Initial value: {initial}",
+                $"Retain: {(parameter.Retain ? "YES" : "NO")}",
+                $"Comment: {(string.IsNullOrWhiteSpace(parameter.Comment) ? "—" : parameter.Comment)}",
+                $"Execution: {InterfaceExecutionMeaning(block, parameter)}",
+                $"CALL impact: {callSites} owner call site(s) · {bindings} binding(s)",
+                $"Delete: {(deleteAvailable ? "available" : bindings > 0 ? $"protected · change {bindings} CALL binding(s) first" : "unavailable · active challenge lock")}",
+                "Boundary: offline RungProof declaration · not an installed-TIA object");
+            ConfigureInterfaceContextActions(block, index);
+            interfacePropertiesEdit.Disabled = interfaceContextMenu.IsItemDisabled(interfaceContextMenu.GetItemIndex(0));
+            interfacePropertiesEdit.Visible = !interfacePropertiesEdit.Disabled;
+            interfacePropertiesDuplicate.Disabled = interfaceContextMenu.IsItemDisabled(interfaceContextMenu.GetItemIndex(5));
+            interfacePropertiesMoveUp.Disabled = interfaceContextMenu.IsItemDisabled(interfaceContextMenu.GetItemIndex(1));
+            interfacePropertiesMoveDown.Disabled = interfaceContextMenu.IsItemDisabled(interfaceContextMenu.GetItemIndex(2));
+            interfacePropertiesDelete.Disabled = !deleteAvailable;
+            interfacePropertiesDialog.PopupCentered(new Vector2I(720, 300));
         }
 
         bool restoringInterfaceSelection = false;
@@ -11651,6 +17498,122 @@ public partial class SimulatorShell : CanvasLayer
                 RestoreInterfaceSelection();
             }, RestoreInterfaceSelection);
         };
+        interfaceTable.ItemActivated += () =>
+        {
+            if (selectedInterfaceIndex < 0) return;
+            interfaceName.GrabFocus();
+            interfaceName.SelectAll();
+        };
+
+        void MoveSelectedInterfaceDeclaration(int offset)
+        {
+            if (!siemens || document.Blocks.Count == 0) return;
+            var block = document.Blocks[document.ActiveBlockIndex];
+            if (!StringComparer.Ordinal.Equals(selectedInterfaceBlockId, block.Id)) return;
+            var index = FindSelectedInterfaceIndex(block);
+            var destination = index + offset;
+            if (index < 0 || destination < 0 || destination >= block.Interface.Count) return;
+            if (!BeginEdit("Reorder block interface declaration")) return;
+            var parameter = block.Interface[index];
+            block.Interface.RemoveAt(index);
+            block.Interface.Insert(destination, parameter);
+            selectedInterfaceIndex = destination;
+            selectedInterfaceBlockId = block.Id;
+            selectedInterfaceParameterId = parameter.Id;
+            selectedInterfaceParameterName = parameter.Name;
+            RefreshEditor();
+            SelectInterfaceTreeRow(destination);
+            LoadInterfaceForm(destination);
+            output.Text = $"[color=#18864b]Declaration moved.[/color] {Escape(parameter.Name)} · row {destination + 1}.";
+        }
+
+        void DuplicateSelectedInterfaceDeclaration()
+        {
+            if (!siemens || ChallengeMutationLocked || document.Blocks.Count == 0) return;
+            var block = document.Blocks[document.ActiveBlockIndex];
+            if (!StringComparer.Ordinal.Equals(selectedInterfaceBlockId, block.Id)) return;
+            var index = FindSelectedInterfaceIndex(block);
+            if (index < 0) return;
+
+            var source = block.Interface[index];
+            var comparer = block.BlockType == LadderBlockType.DataBlock
+                ? StringComparer.OrdinalIgnoreCase
+                : StringComparer.Ordinal;
+            var stem = source.Name + "_Copy";
+            var uniqueName = stem;
+            for (var suffix = 2; block.Interface.Any(parameter => comparer.Equals(parameter.Name, uniqueName)); suffix++)
+                uniqueName = $"{stem}{suffix}";
+
+            if (!BeginEdit("Duplicate block interface declaration")) return;
+            var copy = source with
+            {
+                Name = uniqueName,
+                Id = "formal-" + Guid.NewGuid().ToString("N"),
+            };
+            var destination = index + 1;
+            block.Interface.Insert(destination, copy);
+            selectedInterfaceIndex = destination;
+            selectedInterfaceBlockId = block.Id;
+            selectedInterfaceParameterId = copy.Id;
+            selectedInterfaceParameterName = copy.Name;
+            RefreshEditor();
+            SelectInterfaceTreeRow(destination);
+            LoadInterfaceForm(destination);
+
+            var bindingNote = block.SemanticMode == LadderSemanticMode.Parameterized
+                && copy.Section is LadderInterfaceSection.Input or LadderInterfaceSection.Output or LadderInterfaceSection.InOut
+                ? " Existing CALL sites must bind the new formal before Verify + Load."
+                : string.Empty;
+            output.Text = $"[color=#18864b]Declaration duplicated.[/color] {Escape(source.Name)} → {Escape(copy.Name)} · new stable identity.{bindingNote}";
+        }
+
+        interfaceTable.GuiInput += input =>
+        {
+            if (!siemens || input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right } mouse) return;
+            var row = interfaceTable.GetItemAtPosition(mouse.Position);
+            if (row is null) return;
+            var targetIndex = row.GetIndex();
+            var popupPosition = DisplayServer.MouseGetPosition();
+            ResolvePendingEditorForms(() =>
+            {
+                if (document.Blocks.Count == 0
+                    || targetIndex < 0
+                    || targetIndex >= document.Blocks[document.ActiveBlockIndex].Interface.Count) return;
+                row.Select(0);
+                LoadInterfaceForm(targetIndex);
+                ConfigureInterfaceContextActions(document.Blocks[document.ActiveBlockIndex], targetIndex);
+                interfaceContextMenu.Position = popupPosition;
+                interfaceContextMenu.Popup();
+            }, RestoreInterfaceSelection);
+            interfaceTable.AcceptEvent();
+        };
+        interfaceContextMenu.IdPressed += id =>
+        {
+            if (id == 0)
+            {
+                interfaceName.GrabFocus();
+                interfaceName.SelectAll();
+            }
+            else if (id == 4) ShowSelectedInterfaceProperties();
+            else if (id == 5) DuplicateSelectedInterfaceDeclaration();
+            else if (id == 1) MoveSelectedInterfaceDeclaration(-1);
+            else if (id == 2) MoveSelectedInterfaceDeclaration(1);
+            else if (id == 3) removeInterface.EmitSignal(BaseButton.SignalName.Pressed);
+        };
+        interfacePropertiesAction.Pressed += ShowSelectedInterfaceProperties;
+        if (siemens)
+            _openFirstInterfaceDeclarationPropertiesForReview = () =>
+            {
+                ShowProjectDock();
+                projectTabs.CurrentTab = 2;
+                SelectInterfaceTreeRow(0);
+                interfaceTable.EmitSignal(Tree.SignalName.ItemSelected);
+                Callable.From(() =>
+                {
+                    interfacePropertiesAction.EmitSignal(BaseButton.SignalName.Pressed);
+                }).CallDeferred();
+            };
+        duplicateInterface.Pressed += DuplicateSelectedInterfaceDeclaration;
 
         newInterface.Pressed += () => ResolvePendingEditorForms(() =>
         {
@@ -11774,7 +17737,7 @@ public partial class SimulatorShell : CanvasLayer
                 DataType: existing?.Type == type ? existing.DataType : string.Empty,
                 Id: !string.IsNullOrWhiteSpace(existing?.Id) ? existing.Id : "formal-" + Guid.NewGuid().ToString("N"), EnumMembers: domain,
                 Retain: activeBlock.BlockType == LadderBlockType.DataBlock && interfaceRetain.ButtonPressed,
-                Comment: activeBlock.BlockType == LadderBlockType.DataBlock ? interfaceComment.Text.Trim() : string.Empty);
+                Comment: interfaceComment.Text.Trim());
             if (activeBlock.SemanticMode == LadderSemanticMode.Parameterized && LadderCallAuthoring.ValidateFormal(activeBlock.BlockType, stagedFormal) is { } invalidFormal)
             { output.Text = "[color=#d64545]Interface parameter rejected.[/color] " + Escape(invalidFormal); return; }
             // Reject form errors before history/monitor state changes.
@@ -11815,6 +17778,15 @@ public partial class SimulatorShell : CanvasLayer
                     ? activeBlock.Interface.FindIndex(parameter => StringComparer.Ordinal.Equals(parameter.Id, targetParameterId))
                     : selectedIndex < activeBlock.Interface.Count ? selectedIndex : -1;
                 if (index < 0) return;
+                var parameter = activeBlock.Interface[index];
+                var (_, bindings) = InterfaceReferenceImpact(activeBlock, parameter);
+                if (bindings > 0)
+                {
+                    output.Text = $"[color=#d64545]Delete blocked.[/color] {Escape(parameter.Name)} is still used by {bindings} CALL binding(s). Change those CALL properties first.";
+                    ConfigureInterfaceContextActions(activeBlock, index);
+                    removeInterface.Disabled = true;
+                    return;
+                }
                 if (!BeginEdit("Remove block interface parameter")) return;
                 document.RemoveInterfaceParameter(activeBlock.Id, index);
                 ResetInterfaceForm();
@@ -11837,7 +17809,7 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = "Select a Global DB declaration before choosing Edit.";
                 return;
             }
-            var targetBlockId = document.Blocks[document.ActiveBlockIndex].Id;
+            var targetBlockId = selectedRow.GetMetadata(2).AsString();
             var targetIdentity = selectedRow.GetMetadata(0).AsString();
             var targetName = selectedRow.GetMetadata(1).AsString();
             var targetRowIndex = selectedRow.GetIndex();
@@ -11872,7 +17844,7 @@ public partial class SimulatorShell : CanvasLayer
                 output.Text = "Select a Global DB declaration before choosing Remove.";
                 return;
             }
-            var targetBlockId = document.Blocks[document.ActiveBlockIndex].Id;
+            var targetBlockId = selectedRow.GetMetadata(2).AsString();
             var targetIdentity = selectedRow.GetMetadata(0).AsString();
             var targetName = selectedRow.GetMetadata(1).AsString();
             var targetRowIndex = selectedRow.GetIndex();
@@ -11897,6 +17869,134 @@ public partial class SimulatorShell : CanvasLayer
                 removeInterface.EmitSignal(BaseButton.SignalName.Pressed);
             }, RestoreInterfaceSelection);
         };
+        (EditableBlock Owner, LadderInterfaceParameter Declaration, int Index)? SelectedGlobalDbDeclaration()
+        {
+            var row = globalDbDeclarations?.GetSelected();
+            if (row is null) return null;
+            var ownerId = row.GetMetadata(2).AsString();
+            var identity = row.GetMetadata(0).AsString();
+            var name = row.GetMetadata(1).AsString();
+            var owner = document.Blocks.FirstOrDefault(block =>
+                block.BlockType == LadderBlockType.DataBlock && StringComparer.Ordinal.Equals(block.Id, ownerId));
+            if (owner is null) return null;
+            var index = owner.Interface.FindIndex(parameter =>
+                !string.IsNullOrWhiteSpace(identity)
+                    ? StringComparer.Ordinal.Equals(parameter.Id, identity)
+                    : StringComparer.Ordinal.Equals(parameter.Name, name));
+            return index < 0 ? null : (owner, owner.Interface[index], index);
+        }
+
+        void SelectGlobalDbDeclarationById(string identity)
+        {
+            for (var row = globalDbDeclarations?.GetRoot()?.GetFirstChild(); row is not null; row = row.GetNext())
+            {
+                if (!StringComparer.Ordinal.Equals(row.GetMetadata(0).AsString(), identity)) continue;
+                row.Select(0);
+                globalDbDeclarations!.ScrollToItem(row);
+                break;
+            }
+        }
+
+        void ConfigureGlobalDbDeclarationActions(EditableBlock owner, int index)
+        {
+            globalDbDeclarationContextMenu.SetItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(0), ChallengeMutationLocked);
+            globalDbDeclarationContextMenu.SetItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(5), false);
+            globalDbDeclarationContextMenu.SetItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(1), ChallengeMutationLocked);
+            globalDbDeclarationContextMenu.SetItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(2), ChallengeMutationLocked || index == 0);
+            globalDbDeclarationContextMenu.SetItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(3), ChallengeMutationLocked || index >= owner.Interface.Count - 1);
+            globalDbDeclarationContextMenu.SetItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(4), ChallengeMutationLocked);
+        }
+
+        void ShowSelectedGlobalDbDeclarationProperties()
+        {
+            if (SelectedGlobalDbDeclaration() is not { } selected) return;
+            var (owner, declaration, index) = selected;
+            ConfigureGlobalDbDeclarationActions(owner, index);
+            var initial = FormatTagInitialValue(new PlcVariable(declaration.Name, declaration.Type,
+                PlcVariableRole.Memory, declaration.InitialValue, EnumMembers: declaration.EnumMembers));
+            globalDbMemberPropertiesDialog.Title = $"{declaration.Name} · {owner.Name} properties";
+            globalDbMemberPropertiesDialog.DialogText = string.Join("\n",
+                $"Global DB member: {declaration.Type.ToString().ToUpperInvariant()}",
+                $"DB: {owner.Name} · row {index + 1} of {owner.Interface.Count}",
+                $"Start value: {initial}",
+                $"Retain: {(declaration.Retain ? "YES" : "NO")} · metadata only",
+                $"Comment: {(string.IsNullOrWhiteSpace(declaration.Comment) ? "—" : declaration.Comment)}",
+                "Storage: optimized-access scalar subset",
+                $"Delete: {(ChallengeMutationLocked ? "unavailable · active challenge lock" : "available")}",
+                "Boundary: no offsets, HMI attributes, snapshots, online values, or simulated power-cycle retention");
+            globalDbPropertiesEdit.Disabled = globalDbDeclarationContextMenu.IsItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(0));
+            globalDbPropertiesEdit.Visible = !globalDbPropertiesEdit.Disabled;
+            globalDbPropertiesDuplicate.Disabled = globalDbDeclarationContextMenu.IsItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(1));
+            globalDbPropertiesMoveUp.Disabled = globalDbDeclarationContextMenu.IsItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(2));
+            globalDbPropertiesMoveDown.Disabled = globalDbDeclarationContextMenu.IsItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(3));
+            globalDbPropertiesDelete.Disabled = globalDbDeclarationContextMenu.IsItemDisabled(globalDbDeclarationContextMenu.GetItemIndex(4));
+            globalDbMemberPropertiesDialog.PopupCentered(new Vector2I(720, 300));
+        }
+
+        void DuplicateSelectedGlobalDbDeclaration()
+        {
+            if (ChallengeMutationLocked || SelectedGlobalDbDeclaration() is not { } selected) return;
+            var (owner, source, index) = selected;
+            var stem = source.Name + "_Copy";
+            var name = stem;
+            for (var suffix = 2; owner.Interface.Any(parameter => parameter.Name.Equals(name, StringComparison.OrdinalIgnoreCase)); suffix++)
+                name = stem + suffix;
+            if (!BeginEdit("Duplicate Global DB declaration")) return;
+            var copy = source with { Name = name, Id = "formal-" + Guid.NewGuid().ToString("N") };
+            owner.Interface.Insert(index + 1, copy);
+            RefreshEditor();
+            SelectGlobalDbDeclarationById(copy.Id);
+            output.Text = $"[color=#18864b]Global DB declaration duplicated.[/color] {Escape(source.Name)} → {Escape(copy.Name)} · new stable identity.";
+        }
+
+        void MoveSelectedGlobalDbDeclaration(int offset)
+        {
+            var selectedRow = globalDbDeclarations?.GetSelected();
+            if (selectedRow is null || document.Blocks.Count == 0) return;
+            var targetBlockId = selectedRow.GetMetadata(2).AsString();
+            var targetIdentity = selectedRow.GetMetadata(0).AsString();
+            var targetName = selectedRow.GetMetadata(1).AsString();
+            ResolvePendingEditorForms(() =>
+            {
+                var owner = document.Blocks.FirstOrDefault(block => StringComparer.Ordinal.Equals(block.Id, targetBlockId));
+                var index = owner?.Interface.FindIndex(parameter =>
+                    !string.IsNullOrWhiteSpace(targetIdentity)
+                        ? StringComparer.Ordinal.Equals(parameter.Id, targetIdentity)
+                        : StringComparer.Ordinal.Equals(parameter.Name, targetName)) ?? -1;
+                var destination = index + offset;
+                if (owner is null || owner.BlockType != LadderBlockType.DataBlock
+                    || index < 0 || destination < 0 || destination >= owner.Interface.Count) return;
+                if (!BeginEdit("Reorder Global DB declaration")) return;
+                var declaration = owner.Interface[index];
+                owner.Interface.RemoveAt(index);
+                owner.Interface.Insert(destination, declaration);
+                RefreshEditor();
+                SelectGlobalDbDeclarationById(declaration.Id);
+                output.Text = $"[color=#18864b]Global DB declaration moved.[/color] {Escape(declaration.Name)} · row {destination + 1}.";
+            }, RestoreInterfaceSelection);
+        }
+        globalDbDeclarations.GuiInput += input =>
+        {
+            if (input is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right } mouse) return;
+            var row = globalDbDeclarations.GetItemAtPosition(mouse.Position);
+            if (row is null) return;
+            row.Select(0);
+            if (SelectedGlobalDbDeclaration() is not { } selected) return;
+            ConfigureGlobalDbDeclarationActions(selected.Owner, selected.Index);
+            globalDbDeclarationContextMenu.Position = DisplayServer.MouseGetPosition();
+            globalDbDeclarationContextMenu.Popup();
+            globalDbDeclarations.AcceptEvent();
+        };
+        globalDbDeclarationContextMenu.IdPressed += id =>
+        {
+            if (id == 0) globalDbEditMember.EmitSignal(BaseButton.SignalName.Pressed);
+            else if (id == 5) ShowSelectedGlobalDbDeclarationProperties();
+            else if (id == 1) DuplicateSelectedGlobalDbDeclaration();
+            else if (id == 2) MoveSelectedGlobalDbDeclaration(-1);
+            else if (id == 3) MoveSelectedGlobalDbDeclaration(1);
+            else if (id == 4) globalDbRemoveMember.EmitSignal(BaseButton.SignalName.Pressed);
+        };
+        globalDbPropertiesMember.Pressed += ShowSelectedGlobalDbDeclarationProperties;
         addCall.Pressed += () =>
         {
             if (document.Rungs.Count == 0 || callTarget.ItemCount == 0) return;
@@ -12016,6 +18116,132 @@ public partial class SimulatorShell : CanvasLayer
             loadingFormControls = false; taskFormDirty = false;
             UpdateGlobalDbDeclarationGridEditability();
         }
+        void ShowSelectedTaskProperties()
+        {
+            if (selectedTaskIndex < 0 || selectedTaskIndex >= document.Tasks.Count) return;
+            var task = document.Tasks[selectedTaskIndex];
+            var target = document.Blocks.FirstOrDefault(block => block.Id == task.EntryBlock);
+            var scheduleLabel = siemens
+                ? task.Kind == LadderTaskKind.Continuous ? "OB1" : $"OB{30 + selectedTaskIndex}"
+                : task.Name;
+            var canDelete = document.CanRemoveTask(task.Id, out var deleteReason);
+            var runtimeState = _virtualSnapshot is not null
+                && _virtualSnapshot.Tasks.TryGetValue(task.Id, out var loadedTask)
+                    ? $"Loaded local runtime · {(loadedTask.Due ? "DUE THIS SCAN" : "idle this scan")} · executions {loadedTask.ExecutionCount}"
+                    : "Not present in the current local runtime snapshot · Verify + Load required after offline changes";
+            taskPropertiesDialog.Title = $"{scheduleLabel} · {task.Name} properties";
+            taskPropertiesDialog.DialogText = string.Join("\n",
+                $"{(siemens ? "OB schedule" : "Task schedule")}: {task.Kind} · position {selectedTaskIndex + 1} of {document.Tasks.Count}",
+                $"Entry block: {(target is null ? "Missing target" : $"{target.Name} · {target.BlockType}")}",
+                $"Cycle: {(task.Kind == LadderTaskKind.Continuous ? $"project scan · {document.ScanPeriod.TotalMilliseconds:0.###} ms" : $"{task.Period.TotalMilliseconds:0.###} ms")} · Priority P{task.Priority}",
+                $"Execution: {(task.Kind == LadderTaskKind.Continuous ? "entry block runs once per local scan" : "entry block runs when the modeled cyclic interval is due")}",
+                $"Runtime: {runtimeState}",
+                $"Delete: {(canDelete ? "Available" : $"Protected · {deleteReason}")}",
+                "Changes: offline until Verify + Load accepts the complete project",
+                "Boundary: local RungProof scheduler · not an installed-TIA OB or PLC execution proof");
+            taskPropertiesEdit.Disabled = ChallengeMutationLocked;
+            taskPropertiesOpenEntry.Disabled = target is null;
+            taskPropertiesDuplicate.Disabled = ChallengeMutationLocked;
+            taskPropertiesMoveUp.Disabled = ChallengeMutationLocked || selectedTaskIndex == 0;
+            taskPropertiesMoveDown.Disabled = ChallengeMutationLocked || selectedTaskIndex == document.Tasks.Count - 1;
+            taskPropertiesDelete.Disabled = ChallengeMutationLocked || !canDelete;
+            taskPropertiesDialog.PopupCentered(new Vector2I(720, 300));
+        }
+
+        void DuplicateSelectedTaskSchedule()
+        {
+            if (ChallengeMutationLocked || selectedTaskIndex < 0 || selectedTaskIndex >= document.Tasks.Count) return;
+            var source = document.Tasks[selectedTaskIndex];
+            var stem = source.Name + "_Copy";
+            var uniqueName = stem;
+            for (var suffix = 2; document.Tasks.Any(task => task.Name.Equals(uniqueName, StringComparison.Ordinal)); suffix++)
+                uniqueName = $"{stem}{suffix}";
+            if (!BeginEdit(siemens ? "Duplicate OB schedule" : "Duplicate task schedule")) return;
+            var copy = document.AddTask(uniqueName, source.Kind, source.Period, source.Priority, source.EntryBlock);
+            selectedTaskIndex = document.Tasks.FindIndex(task => task.Id == copy.Id);
+            RefreshEditor();
+            if (selectedTaskIndex >= 0)
+            {
+                taskItems[selectedTaskIndex].Select(0);
+                organization.ScrollToItem(taskItems[selectedTaskIndex]);
+                LoadTaskControls(selectedTaskIndex);
+            }
+            output.Text = $"[color=#18864b]{(siemens ? "OB schedule" : "Task schedule")} duplicated.[/color] {Escape(source.Name)} → {Escape(copy.Name)} · new stable identity · Verify + Load required.";
+        }
+
+        void MoveSelectedTaskSchedule(int offset)
+        {
+            if (ChallengeMutationLocked || selectedTaskIndex < 0 || selectedTaskIndex >= document.Tasks.Count) return;
+            var destination = selectedTaskIndex + offset;
+            if (destination < 0 || destination >= document.Tasks.Count) return;
+            var task = document.Tasks[selectedTaskIndex];
+            if (!BeginEdit(siemens ? "Reorder OB schedule" : "Reorder task schedule")) return;
+            document.Tasks.RemoveAt(selectedTaskIndex);
+            document.Tasks.Insert(destination, task);
+            selectedTaskIndex = destination;
+            RefreshEditor();
+            taskItems[selectedTaskIndex].Select(0);
+            organization.ScrollToItem(taskItems[selectedTaskIndex]);
+            LoadTaskControls(selectedTaskIndex);
+            output.Text = $"[color=#18864b]Schedule moved.[/color] {Escape(task.Name)} · position {selectedTaskIndex + 1} of {document.Tasks.Count}. Equal-priority execution follows this displayed order.";
+        }
+
+        taskPropertiesDialog.CustomAction += action =>
+        {
+            if (action == "copy-details")
+            {
+                DisplayServer.ClipboardSet(taskPropertiesDialog.DialogText);
+                return;
+            }
+            taskPropertiesDialog.Hide();
+            if (action == "open-entry-block")
+            {
+                if (selectedTaskIndex < 0 || selectedTaskIndex >= document.Tasks.Count) return;
+                var entryBlockId = document.Tasks[selectedTaskIndex].EntryBlock;
+                var blockIndex = document.Blocks.FindIndex(block => block.Id == entryBlockId);
+                if (blockIndex < 0)
+                {
+                    output.Text = "[color=#d64545]Open entry block failed.[/color] The selected schedule target no longer exists.";
+                    return;
+                }
+                ResolvePendingEditorForms(() =>
+                {
+                    ActivateTiaProgramBlock(blockIndex);
+                    output.Text = $"[color=#18864b]Scheduled entry block opened.[/color] {Escape(document.Blocks[blockIndex].Name)} · from {Escape(document.Tasks[selectedTaskIndex].Name)}.";
+                });
+            }
+            else if (action == "edit-schedule")
+            {
+                ShowProjectDock();
+                projectTabs.CurrentTab = 2;
+                taskName.GrabFocus();
+                taskName.SelectAll();
+            }
+            else if (action == "duplicate-schedule")
+                DuplicateSelectedTaskSchedule();
+            else if (action == "move-up")
+                MoveSelectedTaskSchedule(-1);
+            else if (action == "move-down")
+                MoveSelectedTaskSchedule(1);
+            else if (action == "delete-schedule")
+                removeTask.EmitSignal(BaseButton.SignalName.Pressed);
+        };
+        taskPropertiesAction.Pressed += ShowSelectedTaskProperties;
+        if (siemens)
+            _openFirstTaskSchedulePropertiesForReview = () =>
+            {
+                ShowProjectDock();
+                projectTabs.CurrentTab = 2;
+                selectedTaskIndex = 0;
+                if (taskItems.Count > 0)
+                {
+                    taskItems[0].Select(0);
+                    LoadTaskControls(0);
+                }
+                Callable.From(() => taskPropertiesAction.EmitSignal(BaseButton.SignalName.Pressed)).CallDeferred();
+            };
+        duplicateTask.Pressed += DuplicateSelectedTaskSchedule;
+
         EditorTarget? taskCreationTarget = null;
         EditorNamedCreation? pendingTaskCreation = null;
         var taskCreation = NamedCreationDialog("CreateTaskDialog", siemens ? "Create OB schedule" : "Create task", name =>
@@ -12370,7 +18596,8 @@ public partial class SimulatorShell : CanvasLayer
                     address: tagAddress.Text, comment: tagComment.Text);
             if (!PreflightTagEdit(AddDefinition)) return;
             if (!BeginEdit("Add tag")) return;
-            AddDefinition(document);
+            var createdTag = AddDefinition(document);
+            selectedTagIndex = document.Tags.FindIndex(tag => LadderCallBindings.GlobalId(tag) == LadderCallBindings.GlobalId(createdTag));
             tagFormDirty = false;
             loadingFormControls = true;
             tagName.Clear();
@@ -12380,10 +18607,16 @@ public partial class SimulatorShell : CanvasLayer
                 { PlcVariableType.Bool => "FALSE", PlcVariableType.String => "", PlcVariableType.Enum => "Stopped", _ => "0" };
             RefreshTagBindingOptions(type, role, string.Empty);
             loadingFormControls = false; tagFormDirty = false; RefreshEditor();
+            SetTagFormOpen(false, true);
+            if (selectedTagIndex >= 0)
+            {
+                SelectIndexedTreeRow(tagList, selectedTagIndex);
+                LoadTagControls();
+            }
         };
         applyProperties.Pressed += () => ApplyProperties(); cancelProperties.Pressed += () => CancelProperties();
         closeInstructionProperties.Pressed += () => CancelProperties();
-        _pendingEditorForms.Add(new(() => propertyDirty, () => ApplyProperties(), () => CancelProperties()));
+        _pendingEditorForms.Add(new(() => "Instruction properties", () => propertyDirty, () => ApplyProperties(), () => CancelProperties()));
         instructionPropertiesPopup.GuiInput += input =>
         {
             if (input is InputEventKey { Pressed: true, Keycode: Key.Escape })
@@ -12417,13 +18650,19 @@ public partial class SimulatorShell : CanvasLayer
             tagFormDirty = true;
             UpdateGlobalDbDeclarationGridEditability();
         };
-        foreach (var field in new Control[] { blockName, blockTypeSelector }) WatchPending(field, () => { if (!blockFormDirty) blockFormRevision = document.Revision; blockFormDirty = true; });
+        foreach (var field in new Control[] { blockName, blockTypeSelector }) WatchPending(field, () =>
+        {
+            if (!blockFormDirty) blockFormRevision = document.Revision;
+            blockFormDirty = true;
+            if (siemens) cancelBlock.Visible = true;
+        });
         foreach (var field in new Control[] { taskName, taskKind, taskPeriod, taskPriority, taskTarget }) WatchPending(field, () => { if (!taskFormDirty) taskFormRevision = document.Revision; taskFormDirty = true; });
         foreach (var field in new Control[] { interfaceName, interfaceType, interfaceSection, interfaceInitial, interfaceEnumMembers, interfaceRetain, interfaceComment }) WatchPending(field, () =>
         {
             if (!interfaceFormDirty) interfaceFormRevision = document.Revision;
             interfaceFormDirty = true;
             cancelInterface.Disabled = false;
+            cancelInterface.Visible = true;
             UpdateGlobalDbDeclarationGridEditability();
         });
         void DiscardTag()
@@ -12431,6 +18670,7 @@ public partial class SimulatorShell : CanvasLayer
             tagFormDirty = false;
             tagAddressValidation.Text = string.Empty;
             tagAddressValidation.Visible = false;
+            SetTagFormOpen(false, true);
             if (selectedTagIndex >= 0) LoadTagControls();
             else OpenTagDocument(activeTagTableName);
         }
@@ -12439,6 +18679,7 @@ public partial class SimulatorShell : CanvasLayer
             // Restore this form independently: a sibling draft may legitimately suppress
             // RefreshEditor. Clearing the flag alone would leave discarded values applicable.
             blockFormDirty = false;
+            if (siemens) cancelBlock.Visible = false;
             var wasLoading = loadingFormControls; loadingFormControls = true;
             try
             {
@@ -12483,8 +18724,15 @@ public partial class SimulatorShell : CanvasLayer
             DiscardTask();
             output.Text = "Schedule changes discarded. No project data or history was changed.";
         };
-        _pendingEditorForms.Add(new(() => tagFormDirty, () => { (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed); return !tagFormDirty; }, DiscardTag));
         _pendingEditorForms.Add(new(
+            () => selectedTagIndex >= 0 && selectedTagIndex < document.Tags.Count
+                ? $"PLC tag \"{document.Tags[selectedTagIndex].Name}\""
+                : $"New PLC tag \"{tagName.Text.Trim()}\"",
+            () => tagFormDirty,
+            () => { (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed); return !tagFormDirty; },
+            DiscardTag));
+        _pendingEditorForms.Add(new(
+            () => $"User constant \"{userConstantName.Text.Trim()}\"",
             () => userConstantFormDirty,
             () =>
             {
@@ -12492,9 +18740,9 @@ public partial class SimulatorShell : CanvasLayer
                 return !userConstantFormDirty;
             },
             () => discardUserConstantForm?.Invoke()));
-        _pendingEditorForms.Add(new(() => blockFormDirty, () => { applyBlock.EmitSignal(BaseButton.SignalName.Pressed); return !blockFormDirty; }, DiscardBlock));
-        _pendingEditorForms.Add(new(() => taskFormDirty, () => { applyTask.EmitSignal(BaseButton.SignalName.Pressed); return !taskFormDirty; }, DiscardTask));
-        _pendingEditorForms.Add(new(() => interfaceFormDirty, () => { addInterface.EmitSignal(BaseButton.SignalName.Pressed); return !interfaceFormDirty; }, DiscardInterface));
+        _pendingEditorForms.Add(new(() => $"Block properties \"{blockName.Text.Trim()}\"", () => blockFormDirty, () => { applyBlock.EmitSignal(BaseButton.SignalName.Pressed); return !blockFormDirty; }, DiscardBlock));
+        _pendingEditorForms.Add(new(() => $"Task properties \"{taskName.Text.Trim()}\"", () => taskFormDirty, () => { applyTask.EmitSignal(BaseButton.SignalName.Pressed); return !taskFormDirty; }, DiscardTask));
+        _pendingEditorForms.Add(new(() => $"Block interface member \"{interfaceName.Text.Trim()}\"", () => interfaceFormDirty, () => { addInterface.EmitSignal(BaseButton.SignalName.Pressed); return !interfaceFormDirty; }, DiscardInterface));
         foreach (var field in new[] { tagName, tagAddress, tagComment, tagInitialValue, tagEnumMembers })
             field.TextSubmitted += _ => (selectedTagIndex >= 0 ? applyTagEdit! : addTag).EmitSignal(BaseButton.SignalName.Pressed);
         blockName.TextSubmitted += _ => applyBlock.EmitSignal(BaseButton.SignalName.Pressed);
@@ -12677,6 +18925,15 @@ public partial class SimulatorShell : CanvasLayer
             _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
             VirtualControllerProgramRequested?.Invoke(program);
         });
+        if (siemens)
+        {
+            _curriculumVerifyAndLoad = () =>
+            {
+                SetProductView("ladder");
+                _ladderEnvironmentTabs.CurrentTab = 0;
+                apply.EmitSignal(BaseButton.SignalName.Pressed);
+            };
+        }
         instructionTree.ItemSelected += () =>
         {
             var kind = instructionTree.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
@@ -12792,6 +19049,53 @@ public partial class SimulatorShell : CanvasLayer
             })).CallDeferred();
         }
         var restoringOrganizationSelection = false;
+        void UpdateProjectSelectionSummary(string kind)
+        {
+            if (!siemens) return;
+            var row = organization.GetSelected();
+            var label = row?.GetText(0) ?? "No selection";
+            string detail;
+            if (kind.StartsWith("program:", StringComparison.Ordinal)
+                && int.TryParse(kind.AsSpan("program:".Length), out var selectedBlockIndex)
+                && selectedBlockIndex >= 0 && selectedBlockIndex < document.Blocks.Count)
+            {
+                var block = document.Blocks[selectedBlockIndex];
+                var type = block.BlockType switch
+                {
+                    LadderBlockType.OrganizationBlock => "OB",
+                    LadderBlockType.FunctionBlock => "FB",
+                    LadderBlockType.Function => "FC",
+                    LadderBlockType.DataBlock => "Global DB",
+                    _ => "Block",
+                };
+                detail = $"{type} · {block.Rungs.Count} network(s) · double-click / Enter · right-click Properties";
+            }
+            else if (kind.StartsWith("instance-db:", StringComparison.Ordinal))
+                detail = "Generated instance DB · double-click / Enter · right-click Properties";
+            else if (kind.StartsWith("tag-table:", StringComparison.Ordinal))
+                detail = kind.Length == "tag-table:".Length
+                    ? "All PLC tags · double-click / Enter · right-click Properties"
+                    : "PLC tag table · double-click / Enter · right-click Properties";
+            else if (EditorDocumentIdentity.TryResolveWatchTableIndex(document, kind, out var selectedWatchIndex))
+                detail = $"Watch table · {document.WatchTables[selectedWatchIndex].Rows.Count} row(s) · double-click / Enter · right-click Properties";
+            else
+                detail = kind switch
+                {
+                    "controller" => "Offline PLC station · OPEN workspace · PROPS project summary",
+                    "device" => "Symbolic simulator I/O · OPEN tag mapping · PROPS counts",
+                    "diagnostics" => "Offline diagnostics · OPEN diagnostics · PROPS current state",
+                    "blocks" => $"Program blocks folder · {document.Blocks.Count} object(s) · right-click ADD · PROPS summary",
+                    "tags" => $"PLC tags folder · {document.TagTables.Count} table(s) · right-click ADD · PROPS summary",
+                    "watch" => $"Watch tables folder · {document.WatchTables.Count} table(s) · right-click ADD · PROPS summary",
+                    "add-block" => "Create a new OB, FB, FC, or global DB",
+                    "add-tag-table" => "Create a new PLC tag table",
+                    "add-watch-table" => "Create a new watch table",
+                    _ => "Select an object, then use OPEN or PROPS.",
+                };
+            projectSelectionSummary.Text = $"{label}\n{detail}";
+            projectSelectionSummary.TooltipText = projectSelectionSummary.Text;
+        }
+
         void RestoreActiveOrganizationRow()
         {
             var expected = "program:" + document.ActiveBlockIndex;
@@ -12810,11 +19114,13 @@ public partial class SimulatorShell : CanvasLayer
             restoringOrganizationSelection = true;
             try { row.Select(0); }
             finally { restoringOrganizationSelection = false; }
+            UpdateProjectSelectionSummary(expected);
         }
         organization.ItemSelected += () =>
         {
             if (restoringOrganizationSelection) return;
             var kind = organization.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
+            UpdateProjectSelectionSummary(kind);
             ResolvePendingEditorForms(() =>
             {
             if (kind.StartsWith("tag-table:", StringComparison.Ordinal))
@@ -12904,6 +19210,23 @@ public partial class SimulatorShell : CanvasLayer
                             projectTabs.CurrentTab = tagOperandDetailTabIndex;
                             projectHeading.Text = "PLC tag detail view";
                             addBlockFromTree.Visible = false;
+                            // A drag operation requires the source tag and the
+                            // selected ladder operand to be visible together.
+                            // Opening the tag drawer previously left the first
+                            // network header in view while its operands stayed
+                            // below the routine viewport.
+                            Callable.From(() =>
+                            {
+                                if (string.IsNullOrEmpty(canvas.SelectedNodeId) && document.Rungs.Count > 0)
+                                {
+                                    var rungIndex = Math.Clamp(canvas.SelectedRung, 0, document.Rungs.Count - 1);
+                                    var firstOperand = EditableLadderTree.Visit(document.Rungs[rungIndex].Root)
+                                        .FirstOrDefault(node => node.IsLeaf);
+                                    if (firstOperand is not null)
+                                        canvas.SelectTreeNode(rungIndex, firstOperand.Id, notify: false);
+                                }
+                                LadderEditorZoom.RevealSelection(canvas, scroll);
+                            }).CallDeferred();
                             output.Text = "PLC tag detail view opened. Drag a tag onto a compatible operand in the open LAD document.";
                         }
                         else
@@ -13190,6 +19513,13 @@ public partial class SimulatorShell : CanvasLayer
                 });
                 return;
             }
+            if (siemens && kind is "controller" or "device" or "diagnostics")
+            {
+                projectTreeContextMetadata = kind;
+                projectTreeContextLabel = organization.GetSelected()?.GetText(0) ?? kind;
+                projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 0L);
+                return;
+            }
             if (kind is not ("add-block" or "add-tag-table" or "add-watch-table")) return;
             ResolvePendingEditorForms(() =>
             {
@@ -13198,6 +19528,627 @@ public partial class SimulatorShell : CanvasLayer
                 else openWatchTableCreation();
             });
         };
+        openInstanceDbOwnerAction = dbNumber =>
+        {
+            if (FindInstanceDbOwnerLocator(dbNumber) is not { } ownerLocator
+                || ResolveInstanceDbOwner(ownerLocator) is not { } owner)
+            {
+                output.Text = "[color=#d64545]The generated DB owner is no longer present.[/color]";
+                return;
+            }
+
+            var ownerBlockIndex = -1;
+            var ownerRungIndex = -1;
+            if (owner.Instance is not null)
+            {
+                for (var blockIndex = 0; blockIndex < document.Blocks.Count && ownerRungIndex < 0; blockIndex++)
+                {
+                    var rungIndex = document.Blocks[blockIndex].Rungs.FindIndex(rung =>
+                        rung.IsCall && rung.CallInstanceId == owner.Instance.Id);
+                    if (rungIndex < 0) continue;
+                    ownerBlockIndex = blockIndex;
+                    ownerRungIndex = rungIndex;
+                }
+            }
+            else if (owner.InstructionBlock is not null)
+            {
+                ownerBlockIndex = document.Blocks.FindIndex(block => block.Id == owner.InstructionBlock.Id);
+                ownerRungIndex = owner.RungIndex;
+            }
+
+            if (ownerBlockIndex >= 0 && ownerRungIndex >= 0)
+            {
+                SwitchEditorBlock(ownerBlockIndex, restoreView: true);
+                canvas.SelectElement(ownerRungIndex, -1, -1, output: true, notify: false);
+                OpenInstructionProperties();
+                output.Text = $"[b]Instance DB owner[/b] · {Escape(document.Blocks[ownerBlockIndex].Name)} · Network {ownerRungIndex + 1}";
+            }
+            else if (owner.InstanceBlock is not null)
+            {
+                var instanceBlockIndex = document.Blocks.FindIndex(block => block.Id == owner.InstanceBlock.Id);
+                if (instanceBlockIndex >= 0)
+                {
+                    ActivateTiaProgramBlock(instanceBlockIndex);
+                    output.Text = $"[b]Instance DB owner block[/b] · {Escape(owner.InstanceBlock.Name)}";
+                    return;
+                }
+                output.Text = "[color=#d64545]The generated DB owner could not be opened.[/color]";
+            }
+            else
+            {
+                output.Text = "[color=#d64545]The generated DB owner could not be opened.[/color]";
+            }
+        };
+        if (siemens)
+        {
+            void SetProjectTreeContextActionEnabled(int id, bool enabled)
+            {
+                var index = projectTreeContextMenu.GetItemIndex(id);
+                if (index >= 0) projectTreeContextMenu.SetItemDisabled(index, !enabled);
+            }
+
+            bool ConfigureProjectTreeObjectContext(string metadata)
+            {
+                var blockIndex = -1;
+                var isProgramBlock = metadata.StartsWith("program:", StringComparison.Ordinal)
+                    && int.TryParse(metadata.AsSpan("program:".Length), out blockIndex)
+                    && blockIndex >= 0 && blockIndex < document.Blocks.Count;
+                var isTagTable = metadata.StartsWith("tag-table:", StringComparison.Ordinal)
+                    && metadata.Length > "tag-table:".Length;
+                var isWatchTable = EditorDocumentIdentity.TryResolveWatchTableIndex(document, metadata, out _);
+                var isInstanceDb = metadata.StartsWith("instance-db:", StringComparison.Ordinal)
+                    && int.TryParse(metadata.AsSpan("instance-db:".Length), out _);
+                var isControllerObject = metadata is "controller" or "device" or "diagnostics";
+                var isFolder = metadata is "blocks" or "tags" or "watch";
+                if (!isProgramBlock && !isTagTable && !isWatchTable && !isInstanceDb && !isControllerObject && !isFolder)
+                    return false;
+
+                SetProjectTreeContextActionEnabled(0, true);
+                SetProjectTreeContextActionEnabled(1, true);
+                SetProjectTreeContextActionEnabled(6, isProgramBlock);
+                if (isProgramBlock)
+                {
+                    var canDelete = document.CanRemoveBlock(document.Blocks[blockIndex].Id, out _);
+                    SetProjectTreeContextActionEnabled(2, !ChallengeMutationLocked);
+                    SetProjectTreeContextActionEnabled(3, !ChallengeMutationLocked);
+                    SetProjectTreeContextActionEnabled(4, !ChallengeMutationLocked && canDelete);
+                }
+                else if (isTagTable)
+                {
+                    var tableName = metadata["tag-table:".Length..];
+                    var isSceneIo = tableName.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase);
+                    var isUserTable = !tableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase)
+                        && !isSceneIo
+                        && document.TagTables.Contains(tableName, StringComparer.OrdinalIgnoreCase);
+                    var isEmpty = !document.Tags.Any(tag => tag.TagTable.Equals(tableName, StringComparison.OrdinalIgnoreCase))
+                        && !document.UserConstants.Any(constant => constant.TagTable.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+                    SetProjectTreeContextActionEnabled(2, !ChallengeMutationLocked && isUserTable);
+                    SetProjectTreeContextActionEnabled(3, !ChallengeMutationLocked && !isSceneIo);
+                    SetProjectTreeContextActionEnabled(4, !ChallengeMutationLocked && isUserTable && isEmpty);
+                }
+                else if (isWatchTable)
+                {
+                    SetProjectTreeContextActionEnabled(2, !ChallengeMutationLocked);
+                    SetProjectTreeContextActionEnabled(3, !ChallengeMutationLocked);
+                    SetProjectTreeContextActionEnabled(4, !ChallengeMutationLocked && document.WatchTables.Count > 1);
+                }
+                else
+                {
+                    SetProjectTreeContextActionEnabled(2, false);
+                    SetProjectTreeContextActionEnabled(3, false);
+                    SetProjectTreeContextActionEnabled(4, false);
+                }
+                return true;
+            }
+
+            string SelectedProjectTreePath()
+            {
+                var item = organization.GetSelected();
+                if (item is null) return string.Empty;
+                var selectedMetadata = item.GetMetadata(0).AsString();
+                if (projectTreeContextMetadata is "blocks" or "tags" or "watch"
+                    && selectedMetadata is "add-block" or "add-tag-table" or "add-watch-table" or "tag-table:")
+                    item = item.GetParent();
+
+                var segments = new Stack<string>();
+                for (var current = item; current is not null; current = current.GetParent())
+                {
+                    var text = current.GetText(0).Trim();
+                    if (!string.IsNullOrEmpty(text)) segments.Push(text);
+                }
+                return string.Join(" / ", segments);
+            }
+
+            void ShowProjectObjectProperties(string title, params string[] details)
+            {
+                projectObjectPropertiesDialog.Title = $"{title} properties";
+                projectTreeContextPath = SelectedProjectTreePath();
+                projectObjectPropertiesDialog.DialogText = string.Join("\n",
+                    string.IsNullOrWhiteSpace(projectTreeContextPath)
+                        ? details
+                        : new[] { $"Location: {projectTreeContextPath}" }.Concat(details));
+                propertiesCopyPath.Disabled = string.IsNullOrWhiteSpace(projectTreeContextPath);
+                var openIndex = projectTreeContextMenu.GetItemIndex(0);
+                propertiesOpen.Disabled = openIndex < 0 || projectTreeContextMenu.IsItemDisabled(openIndex);
+                propertiesOpen.Visible = !propertiesOpen.Disabled;
+                propertiesOpenOwner.Visible = projectTreeContextMetadata.StartsWith("instance-db:", StringComparison.Ordinal);
+                projectObjectPropertiesDialog.PopupCentered(new Vector2I(720, 300));
+            }
+
+            organization.GuiInput += input =>
+            {
+                if (input is InputEventKey { Pressed: true, Echo: false } key
+                    && key.Keycode is Key.F2 or Key.Delete)
+                {
+                    var keyboardMetadata = organization.GetSelected()?.GetMetadata(0).AsString() ?? string.Empty;
+                    var rename = key.Keycode == Key.F2;
+                    var permitted = false;
+                    if (!ChallengeMutationLocked
+                        && keyboardMetadata.StartsWith("program:", StringComparison.Ordinal)
+                        && int.TryParse(keyboardMetadata.AsSpan("program:".Length), out var selectedBlockIndex)
+                        && selectedBlockIndex >= 0 && selectedBlockIndex < document.Blocks.Count)
+                    {
+                        permitted = rename || document.CanRemoveBlock(document.Blocks[selectedBlockIndex].Id, out _);
+                    }
+                    else if (!ChallengeMutationLocked
+                             && keyboardMetadata.StartsWith("tag-table:", StringComparison.Ordinal)
+                             && keyboardMetadata.Length > "tag-table:".Length)
+                    {
+                        var tableName = keyboardMetadata["tag-table:".Length..];
+                        var isUserTable = !tableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase)
+                            && !tableName.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase)
+                            && document.TagTables.Contains(tableName, StringComparer.OrdinalIgnoreCase);
+                        permitted = isUserTable && (rename
+                            || !document.Tags.Any(tag => tag.TagTable.Equals(tableName, StringComparison.OrdinalIgnoreCase))
+                            && !document.UserConstants.Any(constant => constant.TagTable.Equals(tableName, StringComparison.OrdinalIgnoreCase)));
+                    }
+                    else if (!ChallengeMutationLocked
+                             && EditorDocumentIdentity.TryResolveWatchTableIndex(document, keyboardMetadata, out _))
+                    {
+                        permitted = rename || document.WatchTables.Count > 1;
+                    }
+
+                    if (permitted)
+                    {
+                        projectTreeContextMetadata = keyboardMetadata;
+                        projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, rename ? 2L : 4L);
+                    }
+                    else
+                    {
+                        output.Text = ChallengeMutationLocked
+                            ? "Project changes are locked for this lesson."
+                            : $"{(rename ? "Rename" : "Delete")} is not available for the selected project-tree object.";
+                    }
+                    organization.AcceptEvent();
+                    return;
+                }
+
+                if (input is not InputEventMouseButton
+                    {
+                        Pressed: true,
+                        ButtonIndex: MouseButton.Right,
+                    } mouse) return;
+
+                var row = organization.GetItemAtPosition(mouse.Position);
+                if (row is null) return;
+                var metadata = row.GetMetadata(0).AsString();
+                var isCreationTarget = metadata is "blocks" or "tags" or "watch" or "add-block" or "add-tag-table" or "add-watch-table";
+                if (!isCreationTarget && !ConfigureProjectTreeObjectContext(metadata)) return;
+
+                row.Select(0);
+                projectTreeContextMetadata = metadata;
+                projectTreeContextLabel = row.GetText(0);
+                if (isCreationTarget)
+                {
+                    var label = metadata is "blocks" or "add-block"
+                        ? "Add new block…"
+                        : metadata is "tags" or "add-tag-table"
+                            ? "Add new tag table…"
+                            : "Add new watch table…";
+                    projectTreeCreationMenu.SetItemText(projectTreeCreationMenu.GetItemIndex(5), label);
+                    projectTreeCreationMenu.SetItemDisabled(projectTreeCreationMenu.GetItemIndex(5), ChallengeMutationLocked);
+                    projectTreeCreationMenu.Position = DisplayServer.MouseGetPosition();
+                    projectTreeCreationMenu.Popup();
+                    organization.AcceptEvent();
+                    return;
+                }
+
+                projectTreeContextMenu.Position = DisplayServer.MouseGetPosition();
+                projectTreeContextMenu.Popup();
+                organization.AcceptEvent();
+            };
+
+            bool PrepareSelectedProjectObjectContext(out string metadata)
+            {
+                var row = organization.GetSelected();
+                if (row is null)
+                {
+                    output.Text = "Select a project-tree object before using OPEN or PROPS.";
+                    metadata = string.Empty;
+                    return false;
+                }
+
+                metadata = row.GetMetadata(0).AsString();
+                metadata = metadata switch
+                {
+                    "add-block" => "blocks",
+                    "add-tag-table" => "tags",
+                    "add-watch-table" => "watch",
+                    "tag-table:" => "tags",
+                    _ => metadata,
+                };
+                if (!ConfigureProjectTreeObjectContext(metadata))
+                {
+                    output.Text = "OPEN and PROPS are not available for the selected project-tree object.";
+                    return false;
+                }
+
+                projectTreeContextMetadata = metadata;
+                projectTreeContextLabel = metadata switch
+                {
+                    "blocks" => blockFolder.GetText(0),
+                    "tags" => tagItem.GetText(0),
+                    "watch" => watchFolder.GetText(0),
+                    _ => row.GetText(0),
+                };
+                return true;
+            }
+
+            openSelectedProjectObject = () =>
+            {
+                if (PrepareSelectedProjectObjectContext(out _))
+                    projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 0L);
+            };
+            showSelectedProjectObjectProperties = () =>
+            {
+                if (!PrepareSelectedProjectObjectContext(out _)) return;
+                projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 1L);
+            };
+            showActiveEditorDocumentProperties = () =>
+            {
+                var target = ActiveEditorDocumentTreeItem();
+                if (target is null)
+                {
+                    output.Text = "The active editor document is no longer present in the Project tree.";
+                    return;
+                }
+                target.Select(0);
+                if (!PrepareSelectedProjectObjectContext(out _)) return;
+                projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 1L);
+            };
+
+            projectTreeContextMenu.IdPressed += id => ResolvePendingEditorForms(() =>
+            {
+                var metadata = projectTreeContextMetadata;
+                if (metadata is "blocks" or "tags" or "watch")
+                {
+                    if (id == 0)
+                    {
+                        if (metadata == "blocks")
+                        {
+                            ShowProjectDock();
+                            projectTabs.CurrentTab = 0;
+                            blockFolder.SetCollapsed(false);
+                            blockFolder.Select(0);
+                            organization.ScrollToItem(blockFolder);
+                            output.Text = $"[b]Program blocks[/b] · {document.Blocks.Count} authored block(s).";
+                        }
+                        else if (metadata == "tags")
+                        {
+                            OpenTagDocument(null);
+                            output.Text = $"[b]PLC tags[/b] · {document.Tags.Count} tag(s) in {document.TagTables.Count} table(s).";
+                        }
+                        else
+                        {
+                            OpenWatchTableDocument(document.ActiveWatchTable);
+                            output.Text = $"[b]Watch tables[/b] · {document.WatchTables.Count} table(s); {Escape(document.ActiveWatchTable.Name)} is active.";
+                        }
+                    }
+                    else if (id == 1)
+                    {
+                        if (metadata == "blocks")
+                        {
+                            ShowProjectObjectProperties(projectTreeContextLabel,
+                                "Object type: Program blocks folder",
+                                $"Organization blocks (OB): {document.Blocks.Count(block => block.BlockType == LadderBlockType.OrganizationBlock)}",
+                                $"Function blocks (FB): {document.Blocks.Count(block => block.BlockType == LadderBlockType.FunctionBlock)}",
+                                $"Functions (FC): {document.Blocks.Count(block => block.BlockType == LadderBlockType.Function)}",
+                                $"Global data blocks (DB): {document.Blocks.Count(block => block.BlockType == LadderBlockType.DataBlock)}",
+                                $"Total authored networks: {document.Blocks.Sum(block => block.Rungs.Count)}",
+                                "Add: Available from the project-tree folder menu");
+                        }
+                        else if (metadata == "tags")
+                        {
+                            ShowProjectObjectProperties(projectTreeContextLabel,
+                                "Object type: PLC tags folder",
+                                $"Tag tables: {document.TagTables.Count}",
+                                $"PLC tags: {document.Tags.Count}",
+                                $"User constants: {document.UserConstants.Count}",
+                                $"Scene-bound tags: {document.Tags.Count(tag => !string.IsNullOrWhiteSpace(tag.Binding))}",
+                                "Add: Available from the project-tree folder menu");
+                        }
+                        else
+                        {
+                            ShowProjectObjectProperties(projectTreeContextLabel,
+                                "Object type: Watch tables folder",
+                                $"Watch tables: {document.WatchTables.Count}",
+                                $"Configured rows: {document.WatchTables.Sum(table => table.Rows.Count)}",
+                                $"Active table: {document.ActiveWatchTable.Name}",
+                                "Add: Available from the project-tree folder menu",
+                                "Minimum: Project must retain at least one watch table");
+                        }
+                    }
+                    return;
+                }
+                if (metadata == "controller")
+                {
+                    if (id == 0)
+                    {
+                        ShowProjectDock();
+                        projectTabs.CurrentTab = 0;
+                        output.Text = $"[b]{Escape(projectTreeContextLabel)}[/b] · offline controller project · {document.Blocks.Count} block(s), {document.Tags.Count} tag(s).";
+                    }
+                    else if (id == 1)
+                    {
+                        ShowProjectObjectProperties(projectTreeContextLabel,
+                            "Object type: Offline controller / PLC station",
+                            $"Project identity: {document.Id}",
+                            $"Program blocks: {document.Blocks.Count}",
+                            $"PLC tags: {document.Tags.Count}",
+                            $"Tag tables: {document.TagTables.Count}",
+                            $"Watch tables: {document.WatchTables.Count}",
+                            $"Configured scan period: {document.ScanPeriod.TotalMilliseconds:0.###} ms",
+                            $"Runtime scope: {(_externalMode ? "External PLC mode selected" : "Built-in offline simulator")}");
+                    }
+                    return;
+                }
+                if (metadata == "device")
+                {
+                    var boundTags = document.Tags.Count(tag => !string.IsNullOrWhiteSpace(tag.Binding));
+                    if (id == 0)
+                    {
+                        OpenTagDocument(null);
+                        output.Text = $"[b]Symbolic I/O[/b] · {boundTags} of {document.Tags.Count} PLC tag(s) have scene bindings.";
+                    }
+                    else if (id == 1)
+                    {
+                        ShowProjectObjectProperties(projectTreeContextLabel,
+                            "Object type: Symbolic simulator I/O mapping",
+                            $"Bound tags: {boundTags}",
+                            $"Input-role tags: {document.Tags.Count(tag => tag.Role == PlcVariableRole.Input)}",
+                            $"Output-role tags: {document.Tags.Count(tag => tag.Role == PlcVariableRole.Output)}",
+                            "Hardware rack / slot: Not modeled",
+                            "Physical PLC transport: Not configured by this object");
+                    }
+                    return;
+                }
+                if (metadata == "diagnostics")
+                {
+                    if (id == 0)
+                    {
+                        ShowBottomDock();
+                        bottomPanel.Visible = true;
+                        reopenBottomDock.Visible = false;
+                        bottomTabs.CurrentTab = 1;
+                        output.Text = OfflineDiagnosticStatus();
+                    }
+                    else if (id == 1)
+                    {
+                        ShowProjectObjectProperties(projectTreeContextLabel,
+                            "Object type: Offline diagnostics entry",
+                            $"Controller state: {_virtualSnapshot?.State.ToString().ToUpperInvariant() ?? "NOT LOADED"}",
+                            $"Loaded program matches draft: {(_ladderMonitorMatchesLoadedProgram ? "YES" : "NO")}",
+                            $"Simulator forces: {_virtualSnapshot?.Forces.Count ?? 0}",
+                            $"Last scan: {_virtualSnapshot?.ScanNumber ?? 0}",
+                            "Scope: Local simulator diagnostics; not installed-TIA or live-PLC evidence");
+                    }
+                    return;
+                }
+                if (metadata.StartsWith("program:", StringComparison.Ordinal)
+                    && int.TryParse(metadata.AsSpan("program:".Length), out var blockIndex)
+                    && blockIndex >= 0 && blockIndex < document.Blocks.Count)
+                {
+                    var block = document.Blocks[blockIndex];
+                    if (id == 0)
+                    {
+                        ActivateTiaProgramBlock(blockIndex);
+                        return;
+                    }
+                    if (id == 1)
+                    {
+                        var typeName = block.BlockType switch
+                        {
+                            LadderBlockType.OrganizationBlock => "Organization block (OB)",
+                            LadderBlockType.FunctionBlock => "Function block (FB)",
+                            LadderBlockType.Function => "Function (FC)",
+                            LadderBlockType.DataBlock => "Global data block (DB)",
+                            _ => block.BlockType.ToString(),
+                        };
+                        var callSites = document.Blocks
+                            .SelectMany(owner => owner.Rungs.Select((rung, networkIndex) => (Owner: owner, Rung: rung, NetworkIndex: networkIndex)))
+                            .Where(site => site.Rung.IsCall && site.Rung.CallTarget == block.Id)
+                            .ToArray();
+                        var callerSummary = callSites.Length == 0
+                            ? "None"
+                            : string.Join("; ", callSites.Select(site => $"{site.Owner.Name} · Network {site.NetworkIndex + 1}"));
+                        var blockInstances = document.Instances.Where(instance => instance.BlockId == block.Id).ToArray();
+                        var instanceSummary = blockInstances.Length == 0
+                            ? "None"
+                            : string.Join("; ", blockInstances.Select(instance => instance.InstanceDataBlock is null
+                                ? instance.Name
+                                : $"{instance.Name} · DB{instance.InstanceDataBlock.Number} {instance.InstanceDataBlock.Name}"));
+                        var schedules = document.Tasks
+                            .Select((task, index) => (Task: task, Index: index))
+                            .Where(item => item.Task.EntryBlock == block.Id)
+                            .ToArray();
+                        var scheduleSummary = schedules.Length == 0
+                            ? "None"
+                            : string.Join("; ", schedules.Select(item =>
+                                $"{(siemens ? item.Task.Kind == LadderTaskKind.Continuous ? "OB1" : $"OB{30 + item.Index}" : item.Task.Name)} · {item.Task.Kind} · P{item.Task.Priority}"));
+                        var canDelete = document.CanRemoveBlock(block.Id, out var deleteReason);
+                        ShowProjectObjectProperties(block.Name,
+                            $"Type: {typeName}",
+                            $"Contents: {block.Rungs.Count} network(s) · {block.Interface.Count} declaration(s) · {block.SemanticMode} semantics",
+                            $"Execution: {scheduleSummary}",
+                            $"CALL references: {callerSummary}",
+                            $"Assigned instances: {instanceSummary}",
+                            $"Offline status: {(_ladderMonitorMatchesLoadedProgram ? "draft matches the loaded local runtime" : "draft differs from the loaded local runtime · Verify + Load required")}",
+                            $"Delete: {(canDelete ? "available" : $"protected · {deleteReason}")}",
+                            "Boundary: offline RungProof project · no Siemens connection");
+                        return;
+                    }
+                    if (id == 6)
+                    {
+                        searchQuery.Text = block.Name;
+                        ShowToolDock(1);
+                        RunProjectSearch(true);
+                        output.Text = $"[b]Block cross-reference[/b] · {Escape(block.Name)}";
+                        return;
+                    }
+
+                    SwitchEditorBlock(blockIndex, restoreView: true);
+                    blockItems[blockIndex].Select(0);
+                    organization.ScrollToItem(blockItems[blockIndex]);
+                    if (id == 2)
+                    {
+                        ShowProjectDock();
+                        projectTabs.CurrentTab = 2;
+                        blockName.GrabFocus();
+                        blockName.SelectAll();
+                        output.Text = $"[b]Rename block[/b] · edit {Escape(block.Name)} and choose RENAME BLOCK.";
+                    }
+                    else if (id == 3) duplicateBlock.EmitSignal(BaseButton.SignalName.Pressed);
+                    else if (id == 4) removeBlock.EmitSignal(BaseButton.SignalName.Pressed);
+                    return;
+                }
+
+                if (EditorDocumentIdentity.TryResolveWatchTableIndex(document, metadata, out var watchIndex))
+                {
+                    document.SelectWatchTable(watchIndex);
+                    var watch = document.WatchTables[watchIndex];
+                    if (id == 1)
+                    {
+                        var symbolicRowCount = watch.Rows.Count(row => row.ReferenceKind == WatchReferenceKind.Symbolic);
+                        var addressRowCount = watch.Rows.Count(row => row.ReferenceKind == WatchReferenceKind.AbsoluteAddress);
+                        var deleteStatus = ChallengeMutationLocked
+                            ? "Unavailable · project editing is locked during the active challenge"
+                            : document.WatchTables.Count > 1
+                                ? "Available"
+                                : "Protected · project must retain at least one watch table";
+                        ShowProjectObjectProperties(watch.Name,
+                            "Object type: Watch table",
+                            $"Name: {watch.Name}",
+                            $"Stable ID: {watch.Id}",
+                            $"Configured rows: {watch.Rows.Count}",
+                            $"Symbolic references: {symbolicRowCount}",
+                            $"Absolute-address references: {addressRowCount}",
+                            $"Delete: {deleteStatus}",
+                            "Source: Offline RungProof project",
+                            $"Editable: {(ChallengeMutationLocked ? "No · active challenge lock" : "Yes · use Rename, Duplicate, or Delete from the project tree")}");
+                        return;
+                    }
+                    OpenWatchTableDocument(watch);
+                    if (id == 0) return;
+                    if (id == 2) renameWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+                    else if (id == 3) duplicateWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+                    else if (id == 4) removeWatchTable.EmitSignal(BaseButton.SignalName.Pressed);
+                    return;
+                }
+
+                if (metadata.StartsWith("instance-db:", StringComparison.Ordinal)
+                    && int.TryParse(metadata.AsSpan("instance-db:".Length), out var instanceDbNumber))
+                {
+                    if (id == 1)
+                    {
+                        var ownerLocator = FindInstanceDbOwnerLocator(instanceDbNumber);
+                        var owner = ownerLocator is null ? null : ResolveInstanceDbOwner(ownerLocator);
+                        if (owner is null)
+                        {
+                            output.Text = $"[color=#d64545]Instance DB %DB{instanceDbNumber} is no longer present in the current project.[/color]";
+                            return;
+                        }
+                        var db = owner.Value.DataBlock!;
+                        var ownerDescription = owner.Value.Instance is not null
+                            ? $"FB instance: {owner.Value.Instance.Name} → {owner.Value.InstanceBlock?.Name ?? owner.Value.Instance.BlockId}"
+                            : $"IEC instruction: {owner.Value.InstructionBlock?.Name} · Network {owner.Value.RungIndex + 1}";
+                        ShowProjectObjectProperties(db.Name,
+                            "Object type: Instance data block",
+                            $"Name: {db.Name}",
+                            $"Number: DB{db.Number}",
+                            $"Owner: {ownerDescription}",
+                            "Lifecycle: Generated from its FB or IEC instruction assignment",
+                            "Editable: No · change the owning assignment instead");
+                        return;
+                    }
+                    if (id == 0) OpenInstanceDbDocument(instanceDbNumber);
+                    return;
+                }
+
+                if (!metadata.StartsWith("tag-table:", StringComparison.Ordinal)
+                    || metadata.Length <= "tag-table:".Length) return;
+                var tableName = metadata["tag-table:".Length..];
+                if (id == 1)
+                {
+                    var builtIn = tableName.Equals("Default tag table", StringComparison.OrdinalIgnoreCase)
+                        || tableName.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase);
+                    var tagCount = document.Tags.Count(tag => tag.TagTable.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+                    var constantCount = document.UserConstants.Count(constant => constant.TagTable.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+                    var deleteStatus = builtIn
+                        ? "Protected · built-in project table"
+                        : tagCount + constantCount == 0
+                            ? "Available"
+                            : $"Protected · contains {tagCount} tag(s) and {constantCount} user constant(s)";
+                    ShowProjectObjectProperties(tableName,
+                        "Object type: PLC tag table",
+                        $"Name: {tableName}",
+                        $"PLC tags: {tagCount}",
+                        $"User constants: {constantCount}",
+                        $"Scope: {(builtIn ? "Built-in project table" : "User-created project table")}",
+                        $"Delete: {deleteStatus}",
+                        $"Editable: {(builtIn ? "Contents only" : "Yes · use Rename, Duplicate, or Delete from the project tree")}");
+                    return;
+                }
+                OpenTagDocument(tableName);
+                if (id == 0) return;
+                if (id == 2) renameTagTable.EmitSignal(BaseButton.SignalName.Pressed);
+                else if (id == 3) duplicateTagTable.EmitSignal(BaseButton.SignalName.Pressed);
+                else if (id == 4) removeTagTable.EmitSignal(BaseButton.SignalName.Pressed);
+            });
+            projectTreeCreationMenu.IdPressed += id => ResolvePendingEditorForms(() =>
+            {
+                var metadata = projectTreeContextMetadata;
+                if (id == 1)
+                {
+                    metadata = metadata switch
+                    {
+                        "add-block" => "blocks",
+                        "add-tag-table" => "tags",
+                        "add-watch-table" => "watch",
+                        _ => metadata,
+                    };
+                    projectTreeContextMetadata = metadata;
+                    projectTreeContextLabel = metadata switch
+                    {
+                        "blocks" => blockFolder.GetText(0),
+                        "tags" => tagItem.GetText(0),
+                        "watch" => watchFolder.GetText(0),
+                        _ => projectTreeContextLabel,
+                    };
+                    SetProjectTreeContextActionEnabled(0, true);
+                    SetProjectTreeContextActionEnabled(1, true);
+                    SetProjectTreeContextActionEnabled(2, false);
+                    SetProjectTreeContextActionEnabled(3, false);
+                    SetProjectTreeContextActionEnabled(4, false);
+                    SetProjectTreeContextActionEnabled(6, false);
+                    projectTreeContextMenu.EmitSignal(PopupMenu.SignalName.IdPressed, 1L);
+                    return;
+                }
+                if (id != 5) return;
+                if (metadata is "blocks" or "add-block") addBlock.EmitSignal(BaseButton.SignalName.Pressed);
+                else if (metadata is "tags" or "add-tag-table") OpenTagTableCreation();
+                else if (metadata is "watch" or "add-watch-table") openWatchTableCreation();
+            });
+        }
         watchTable.ItemActivated += () =>
         {
             // Column zero is the user's watch reference. Metadata zero is a
@@ -13331,6 +20282,36 @@ public partial class SimulatorShell : CanvasLayer
         });
         body.AddChild(_mcpUiEnabled);
         body.AddChild(_showSafetyNotices);
+        var scaleRow = new HBoxContainer { Name = "InterfaceScaleSettingRow" };
+        scaleRow.AddChild(new Label
+        {
+            Text = "Interface scale",
+            CustomMinimumSize = new Vector2(180, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+        _interfaceScaleSelector = new OptionButton
+        {
+            Name = "InterfaceScaleSetting",
+            CustomMinimumSize = new Vector2(210, 34),
+            TooltipText = "Scale the complete workbench. Ladder diagram zoom remains independent.",
+        };
+        for (var index = 0; index < DesktopUiScalePolicy.Settings.Length; index++)
+        {
+            var setting = DesktopUiScalePolicy.Settings[index];
+            var percent = DesktopUiScalePolicy.ResolvePercent(setting, GetWindow().Size.X, GetWindow().Size.Y);
+            _interfaceScaleSelector.AddItem(
+                setting == "auto" ? $"Auto ({percent}% for this window)" : $"{percent}%",
+                index);
+        }
+        _interfaceScaleSelector.Select(Array.IndexOf(
+            DesktopUiScalePolicy.Settings, DesktopUiScalePolicy.NormalizeSetting(settings.InterfaceScale)));
+        scaleRow.AddChild(_interfaceScaleSelector);
+        body.AddChild(scaleRow);
+        body.AddChild(new Label
+        {
+            Text = "Auto uses 75% for small windows, 85% for 1600×900-class windows, and 100% when more workspace is available.",
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+        });
         body.AddChild(new Label
         {
             Text = "Codex manages server registration. Use Codex MCP settings to unregister the server; this menu controls only RungProof UI behavior.",
@@ -13753,23 +20734,75 @@ public partial class SimulatorShell : CanvasLayer
         if (persist) SaveApplicationSettings();
     }
 
+    private void ApplyInterfaceScale(string setting, bool persist = true)
+    {
+        if (_applyingInterfaceScale) return;
+        _applyingInterfaceScale = true;
+        try
+        {
+            _interfaceScaleSetting = DesktopUiScalePolicy.NormalizeSetting(setting);
+            var window = GetWindow();
+            _resolvedInterfaceScalePercent = DesktopUiScalePolicy.ResolvePercent(
+                _interfaceScaleSetting, window.Size.X, window.Size.Y);
+            window.ContentScaleMode = Window.ContentScaleModeEnum.CanvasItems;
+            window.ContentScaleSize = Vector2I.Zero;
+            window.ContentScaleFactor = _resolvedInterfaceScalePercent / 100.0f;
+            RefreshInterfaceScaleControls();
+        }
+        finally
+        {
+            _applyingInterfaceScale = false;
+        }
+        if (persist) SaveApplicationSettings();
+    }
+
+    private void RefreshInterfaceScaleControls()
+    {
+        if (_viewPopup is not null && GodotObject.IsInstanceValid(_viewPopup))
+        {
+            for (var index = 0; index < DesktopUiScalePolicy.Settings.Length; index++)
+            {
+                var itemId = InterfaceScaleMenuBaseId + index;
+                var itemIndex = _viewPopup.GetItemIndex(itemId);
+                if (itemIndex < 0) continue;
+                var setting = DesktopUiScalePolicy.Settings[index];
+                _viewPopup.SetItemChecked(itemIndex, setting == _interfaceScaleSetting);
+                if (setting == "auto")
+                    _viewPopup.SetItemText(itemIndex, DesktopUiScalePolicy.Label(setting, _resolvedInterfaceScalePercent));
+            }
+        }
+        if (_interfaceScaleSelector is not null && GodotObject.IsInstanceValid(_interfaceScaleSelector))
+        {
+            var selected = Array.IndexOf(DesktopUiScalePolicy.Settings, _interfaceScaleSetting);
+            if (selected >= 0) _interfaceScaleSelector.Select(selected);
+            var autoIndex = _interfaceScaleSelector.GetItemIndex(0);
+            if (autoIndex >= 0)
+                _interfaceScaleSelector.SetItemText(autoIndex, $"Auto ({_resolvedInterfaceScalePercent}% for this window)");
+        }
+    }
+
     private void SaveApplicationSettings()
     {
+        if (_interfaceScaleSelector is not null && GodotObject.IsInstanceValid(_interfaceScaleSelector)
+            && _interfaceScaleSelector.Selected >= 0)
+            _interfaceScaleSetting = DesktopUiScalePolicy.Settings[_interfaceScaleSelector.Selected];
+        ApplyInterfaceScale(_interfaceScaleSetting, persist: false);
         var payload = new Godot.Collections.Dictionary
         {
-            ["schemaVersion"] = 1,
+            ["schemaVersion"] = 2,
             ["mcpUiEnabled"] = _mcpUiEnabled.ButtonPressed,
             ["showSafetyNotices"] = _showSafetyNotices.ButtonPressed,
             ["reducedMotion"] = ReducedMotion,
+            ["interfaceScale"] = _interfaceScaleSetting,
         };
         using var file = FileAccess.Open(SettingsPath, FileAccess.ModeFlags.Write);
         file?.StoreString(Json.Stringify(payload, "  "));
         SetMcpUiEnabled(_mcpUiEnabled.ButtonPressed, persist: false);
     }
 
-    private static (bool McpUiEnabled, bool ShowSafetyNotices, bool ReducedMotion) LoadApplicationSettings()
+    private static (bool McpUiEnabled, bool ShowSafetyNotices, bool ReducedMotion, string InterfaceScale) LoadApplicationSettings()
     {
-        if (!FileAccess.FileExists(SettingsPath)) return (true, true, true);
+        if (!FileAccess.FileExists(SettingsPath)) return (true, true, true, "auto");
         try
         {
             using var file = FileAccess.Open(SettingsPath, FileAccess.ModeFlags.Read);
@@ -13777,15 +20810,52 @@ public partial class SimulatorShell : CanvasLayer
             return (
                 parsed.ContainsKey("mcpUiEnabled") ? parsed["mcpUiEnabled"].AsBool() : true,
                 parsed.ContainsKey("showSafetyNotices") ? parsed["showSafetyNotices"].AsBool() : true,
-                parsed.ContainsKey("reducedMotion") ? parsed["reducedMotion"].AsBool() : true);
+                parsed.ContainsKey("reducedMotion") ? parsed["reducedMotion"].AsBool() : true,
+                DesktopUiScalePolicy.NormalizeSetting(
+                    parsed.ContainsKey("interfaceScale") ? parsed["interfaceScale"].AsString() : "auto"));
         }
         catch
         {
-            return (true, true, true);
+            return (true, true, true, "auto");
         }
     }
 
     public bool IsLadderView => _productView is "ladder" or "split";
+
+    public bool VerifyInterfaceScaleControls(out string result)
+    {
+        var menuItems = 0;
+        var checkedItems = 0;
+        var selectedSetting = string.Empty;
+        if (_viewPopup is not null && GodotObject.IsInstanceValid(_viewPopup))
+        {
+            for (var index = 0; index < DesktopUiScalePolicy.Settings.Length; index++)
+            {
+                var itemIndex = _viewPopup.GetItemIndex(InterfaceScaleMenuBaseId + index);
+                if (itemIndex < 0) continue;
+                menuItems++;
+                if (_viewPopup.IsItemChecked(itemIndex))
+                {
+                    checkedItems++;
+                    selectedSetting = DesktopUiScalePolicy.Settings[index];
+                }
+            }
+        }
+        var selectorItems = _interfaceScaleSelector is not null
+            && GodotObject.IsInstanceValid(_interfaceScaleSelector)
+            ? _interfaceScaleSelector.ItemCount
+            : 0;
+        var expectedFactor = _resolvedInterfaceScalePercent / 100.0f;
+        var factorMatches = Math.Abs(GetWindow().ContentScaleFactor - expectedFactor) < 0.001f;
+        var passed = menuItems == DesktopUiScalePolicy.Settings.Length
+            && selectorItems == DesktopUiScalePolicy.Settings.Length
+            && checkedItems == 1
+            && selectedSetting == _interfaceScaleSetting
+            && factorMatches;
+        result = $"setting={_interfaceScaleSetting} resolved={_resolvedInterfaceScalePercent}% "
+            + $"menuItems={menuItems} selectorItems={selectorItems} checked={checkedItems} factorMatches={factorMatches}";
+        return passed;
+    }
 
     public bool VerifyWorkspaceLoadMenuBinding(out string result)
     {
@@ -13864,8 +20934,12 @@ public partial class SimulatorShell : CanvasLayer
             var program = _ladderDocument.BuildProgram();
             var compile = LadderCompiler.Compile(program);
             var bindingIssues = SceneIoBindingValidator.Validate(program, ScenePoints());
+            var hasAuthored = AuthoredDemoLadderPrograms.TryCreate(expected.SceneId, out var authored);
+            if (hasAuthored)
+                SceneLadderProject.EnsureSceneIoTable(authored, ScenePoints(),
+                    _runtime?.Points ?? new Dictionary<string, object?>(), out _);
             if (!compile.IsValid || bindingIssues.Count > 0
-                || !AuthoredDemoLadderPrograms.TryCreate(expected.SceneId, out var authored)
+                || !hasAuthored
                 || LadderEditorProjectJson.Save(_ladderDocument) != LadderEditorProjectJson.Save(authored))
             {
                 result = $"Scenario menu loaded an invalid or different demo draft: {expected.Label}; compile={compile.IsValid} bindingIssues={bindingIssues.Count}";
@@ -14034,6 +21108,17 @@ public partial class SimulatorShell : CanvasLayer
         _virtualControllerVariables.Text = "No virtual program loaded.";
         body.AddChild(_virtualControllerVariables);
         return scroll;
+    }
+
+    public void PublishVerifiedDraftState()
+    {
+        RefreshLadderMonitorMatch();
+        // Never clear invalid/offline draft errors just because an older
+        // controller is running. Only the exact loaded draft is verified.
+        if (!_ladderMonitorMatchesLoadedProgram) return;
+        foreach (var refresh in _ladderValidationRefreshers) refresh(Array.Empty<LadderValidationIssue>());
+        _ladderWorkspaceStatus.Text = "VALID - CURRENT DRAFT LOADED - OFFLINE RUNTIME";
+        _ladderWorkspaceStatus.AddThemeColorOverride("font_color", new Color("65d49a"));
     }
 
     public void AttachVirtualController(LadderProgram program, VirtualControllerSnapshot snapshot)
@@ -14405,7 +21490,7 @@ public partial class SimulatorShell : CanvasLayer
         var blockName = GetNodeOrNull<LineEdit>($"{projectObjectsRoot}/BlockName");
         var blockTypeSelector = GetNodeOrNull<OptionButton>($"{projectObjectsRoot}/BlockTypeSelector");
         var interfaceTable = GetNodeOrNull<Tree>($"{projectObjectsRoot}/BlockInterface");
-        var interfaceCommandsRoot = $"{projectTabsRoot}/Project objects/InterfaceCommands";
+        var interfaceCommandsRoot = $"{projectObjectsRoot}/InterfaceCommands";
         var addInterface = GetNodeOrNull<Button>($"{interfaceCommandsRoot}/AddInterface");
         var removeInterface = GetNodeOrNull<Button>($"{interfaceCommandsRoot}/RemoveInterface");
         var addBlock = GetNodeOrNull<Button>($"{blockCommandsRoot}/AddBlock");
@@ -14484,15 +21569,17 @@ public partial class SimulatorShell : CanvasLayer
         var projectTabs = GetNodeOrNull<TabContainer>(projectTabsRoot);
         var tagPageRoot = $"{editorRoot}/PLC tags/TagContent";
         var tagDefinitionsRoot = $"{tagPageRoot}/TagDefinitionsView";
+        var tagFormRoot = GetNodeOrNull<Control>($"{tagDefinitionsRoot}/TagDefinitionForm") is not null
+            ? $"{tagDefinitionsRoot}/TagDefinitionForm" : tagDefinitionsRoot;
         var verifyAndLoad = GetNodeOrNull<Button>($"{tagPageRoot}/ValidateAndLoadButton");
         var editorTagList = GetNodeOrNull<Tree>($"{tagDefinitionsRoot}/TagTable");
-        var editorTagName = GetNodeOrNull<LineEdit>($"{tagDefinitionsRoot}/TagNameRow/NewTagName");
-        var editorTagInitialValue = GetNodeOrNull<LineEdit>($"{tagDefinitionsRoot}/TagInitialValueRow/TagInitialValue");
-        var editorTagBinding = GetNodeOrNull<OptionButton>($"{tagDefinitionsRoot}/TagBindingRow/NewTagBinding");
-        var editorTagBindingStatus = GetNodeOrNull<Label>($"{tagDefinitionsRoot}/TagBindingStatus");
-        var addTagButton = GetNodeOrNull<Button>($"{tagDefinitionsRoot}/AddTag");
-        var applyTagButton = GetNodeOrNull<Button>($"{tagDefinitionsRoot}/TagEditActions/ApplyTagEdit");
-        var deleteTagButton = GetNodeOrNull<Button>($"{tagDefinitionsRoot}/TagEditActions/DeleteTag");
+        var editorTagName = GetNodeOrNull<LineEdit>($"{tagFormRoot}/TagNameRow/NewTagName");
+        var editorTagInitialValue = GetNodeOrNull<LineEdit>($"{tagFormRoot}/TagInitialValueRow/TagInitialValue");
+        var editorTagBinding = GetNodeOrNull<OptionButton>($"{tagFormRoot}/TagBindingRow/NewTagBinding");
+        var editorTagBindingStatus = GetNodeOrNull<Label>($"{tagFormRoot}/TagBindingStatus");
+        var addTagButton = GetNodeOrNull<Button>($"{tagFormRoot}/AddTag");
+        var applyTagButton = GetNodeOrNull<Button>($"{tagFormRoot}/TagEditActions/ApplyTagEdit");
+        var deleteTagButton = GetNodeOrNull<Button>($"{tagFormRoot}/TagEditActions/DeleteTag");
         var helpSelector = GetNodeOrNull<OptionButton>($"{toolRoot}/ToolTabsHost/ToolTabs/Instruction help/HelpInstructionSelector");
         var helpDetails = GetNodeOrNull<RichTextLabel>($"{toolRoot}/ToolTabsHost/ToolTabs/Instruction help/InstructionHelpDetails");
         var openHelp = GetNodeOrNull<Button>($"{editorRoot}/InstructionToolbarChrome/InstructionToolbar/Selection/OpenInstructionHelp");
@@ -14538,10 +21625,13 @@ public partial class SimulatorShell : CanvasLayer
             && addCounterDown.GetParent()?.Name == "Counters";
         GD.Print($"TIA_LOCAL_INSTRUCTION_SEPARATION_VERIFY {(tiaLocalInstructionsSeparated ? "PASS" : "FAIL")}");
         var projectPersistenceWorked = false;
+        var legacySceneIoOpenWorked = false;
         var originalSavedProjectJson = _ladderSavedProjectJson;
         var originalProjectPath = _ladderProjectPath;
         var projectRoundTripPath = ProjectSettings.GlobalizePath("res://build/verify-ladder-project.rpproj.json");
         var validProjectRoundTripPath = ProjectSettings.GlobalizePath("res://build/verify-valid-ladder-project.rpproj.json");
+        var legacySceneIoProjectPath = ProjectSettings.GlobalizePath("res://build/verify-legacy-sceneio-project.rpproj.json");
+        var blankSceneIdProjectPath = ProjectSettings.GlobalizePath("res://build/verify-blank-scene-id-project.rpproj.json");
         var priorRuntimeProgram = _virtualProgram;
         var priorRuntimeSnapshot = _virtualSnapshot;
         try
@@ -14549,6 +21639,8 @@ public partial class SimulatorShell : CanvasLayer
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(projectRoundTripPath)!);
             if (System.IO.File.Exists(projectRoundTripPath)) System.IO.File.Delete(projectRoundTripPath);
             if (System.IO.File.Exists(validProjectRoundTripPath)) System.IO.File.Delete(validProjectRoundTripPath);
+            if (System.IO.File.Exists(legacySceneIoProjectPath)) System.IO.File.Delete(legacySceneIoProjectPath);
+            if (System.IO.File.Exists(blankSceneIdProjectPath)) System.IO.File.Delete(blankSceneIdProjectPath);
             var priorCompilation = LadderCompiler.Compile(originalProgram);
             if (!priorCompilation.IsValid || priorCompilation.Program is null)
                 throw new InvalidOperationException("Persistence regression needs a valid loaded program.");
@@ -14584,6 +21676,33 @@ public partial class SimulatorShell : CanvasLayer
                 && ReferenceEquals(validRuntimeProgramBeforeOpen, _virtualProgram)
                 && validRuntimeScanBeforeOpen == _virtualSnapshot?.ScanNumber
                 && _virtualSnapshot?.State == VirtualControllerState.Running;
+            var legacySceneProject = new LadderEditorDocument();
+            legacySceneProject.RestoreSnapshot(_ladderDocument.CaptureSnapshot());
+            legacySceneProject.TagTables.RemoveAll(table =>
+                table.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase));
+            for (var tagIndex = 0; tagIndex < legacySceneProject.Tags.Count; tagIndex++)
+                if (legacySceneProject.Tags[tagIndex].TagTable.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase))
+                    legacySceneProject.Tags[tagIndex] = legacySceneProject.Tags[tagIndex] with { TagTable = "Default tag table" };
+            System.IO.File.WriteAllText(legacySceneIoProjectPath, LadderEditorProjectJson.Save(legacySceneProject));
+            var legacySceneIoOpened = TryOpenLadderProject(legacySceneIoProjectPath, out _);
+            var expectedSceneBindings = ScenePoints().Where(point => point.Owner is "PC" or "PLC")
+                .Select(point => point.Name).ToHashSet(StringComparer.Ordinal);
+            legacySceneIoOpenWorked = legacySceneIoOpened
+                && _ladderDocument.TagTables.Contains(SceneLadderProject.SceneIoTagTableName, StringComparer.Ordinal)
+                && expectedSceneBindings.All(binding => _ladderDocument.Tags.Count(tag => tag.Binding == binding
+                    && tag.TagTable == SceneLadderProject.SceneIoTagTableName) == 1)
+                && _ladderSavedProjectJson != LadderEditorProjectJson.Save(_ladderDocument);
+            GD.Print($"SCENEIO_LEGACY_PROJECT_OPEN_VERIFY {(legacySceneIoOpenWorked ? "PASS" : "FAIL")} scene={_activeScene?.Id} bindings={expectedSceneBindings.Count}");
+            legacySceneProject.SourceSceneId = string.Empty;
+            System.IO.File.WriteAllText(blankSceneIdProjectPath, LadderEditorProjectJson.Save(legacySceneProject));
+            var blankSceneIdOpened = TryOpenLadderProject(blankSceneIdProjectPath, out _);
+            var blankSceneIdMigrationWorked = blankSceneIdOpened
+                && _ladderDocument.SourceSceneId == _activeScene?.Id
+                && _ladderDocument.TagTables.Contains(SceneLadderProject.SceneIoTagTableName, StringComparer.Ordinal)
+                && expectedSceneBindings.All(binding => _ladderDocument.Tags.Count(tag => tag.Binding == binding
+                    && tag.TagTable == SceneLadderProject.SceneIoTagTableName) == 1)
+                && _ladderSavedProjectJson != LadderEditorProjectJson.Save(_ladderDocument);
+            GD.Print($"SCENEIO_BLANK_SOURCE_PROJECT_VERIFY {(blankSceneIdMigrationWorked ? "PASS" : "FAIL")} scene={_activeScene?.Id} bindings={expectedSceneBindings.Count}");
             var priorExternalMode = _externalMode;
             _externalMode = true;
             verifyAndLoad.EmitSignal(BaseButton.SignalName.Pressed);
@@ -14636,6 +21755,8 @@ public partial class SimulatorShell : CanvasLayer
                 && validationIssues.ItemCount > 0
                 && validOpenRetainedRuntime && paddedSceneIdNormalized && verifyLoadReplacedRuntime
                 && externalModeBlocksLocalLoadClearly
+                && legacySceneIoOpenWorked
+                && blankSceneIdMigrationWorked
                 && validSaveMessage.Contains("WORK IN PROGRESS PRESERVED", StringComparison.Ordinal);
         }
         finally
@@ -14651,6 +21772,8 @@ public partial class SimulatorShell : CanvasLayer
             RefreshLadderMonitorMatch();
             if (System.IO.File.Exists(projectRoundTripPath)) System.IO.File.Delete(projectRoundTripPath);
             if (System.IO.File.Exists(validProjectRoundTripPath)) System.IO.File.Delete(validProjectRoundTripPath);
+            if (System.IO.File.Exists(legacySceneIoProjectPath)) System.IO.File.Delete(legacySceneIoProjectPath);
+            if (System.IO.File.Exists(blankSceneIdProjectPath)) System.IO.File.Delete(blankSceneIdProjectPath);
         }
         _ladderDocument.Rungs[0].Label += " unsaved guard review";
         var guardedJson = LadderEditorProjectJson.Save(_ladderDocument);
@@ -14922,8 +22045,13 @@ public partial class SimulatorShell : CanvasLayer
         validationIssues.EmitSignal(ItemList.SignalName.ItemActivated, 0);
         var validationNavigationWorked = editorCanvas.SelectedRung == 0
             && output.Text.Contains("VC005", StringComparison.Ordinal);
+        // A running older controller must not make an invalid draft look valid.
+        PublishVerifiedDraftState();
+        structuredValidationWorked &= validationIssues.ItemCount == 1;
         _ladderDocument.Rungs[0].CoilVariable = originalValidationCoil;
-        verifyAndLoad.EmitSignal(BaseButton.SignalName.Pressed);
+        // Exercise the human App Run route, not only Verify + Load: this was
+        // the path that left EDIT001/Run blocked feedback stale in QA.
+        RunRequested?.Invoke();
         var validationCleared = validationIssues.ItemCount == 0
             && validationSummary.Text.StartsWith("0 ERRORS", StringComparison.Ordinal)
             && bottomTabs.CurrentTab == 1;
@@ -16774,10 +23902,19 @@ public partial class SimulatorShell : CanvasLayer
     {
         // Bound the view and retain only operator/transition events. Scan
         // refreshes do not log, so long runs cannot flood the history or UI.
-        _operatorEvents.Insert(0, $"{DateTime.Now:HH:mm:ss}  {Escape(message)}");
+        _operatorEvents.Insert(0, $"{DateTime.Now:HH:mm:ss}  {message}");
         if (_operatorEvents.Count > 32) _operatorEvents.RemoveAt(_operatorEvents.Count - 1);
+        RefreshOperatorEventHistory();
+    }
+
+    private void RefreshOperatorEventHistory()
+    {
         if (_operatorEventHistory is not null)
-            _operatorEventHistory.Text = string.Join("\n", _operatorEvents);
+            _operatorEventHistory.Text = _operatorEvents.Count == 0
+                ? "No operator events yet. Machine actions, state changes, and lesson passes will appear here."
+                : string.Join("\n", _operatorEvents.Select(Escape));
+        if (_operatorCopyEventLog is not null) _operatorCopyEventLog.Disabled = _operatorEvents.Count == 0;
+        if (_operatorClearEventLog is not null) _operatorClearEventLog.Disabled = _operatorEvents.Count == 0;
     }
 
     public void SetTransformMode(WorkspaceTransformMode mode)
@@ -16798,7 +23935,12 @@ public partial class SimulatorShell : CanvasLayer
     {
         IsWorkspaceDirty = dirty;
         var title = IsChallengeDraftActive ? ChallengeDisplayName : _activeSceneName;
-        _sceneTitle.Text = dirty ? $"{title}  •  UNSAVED" : title;
+        // This title tracks the integrated scene + ladder workspace draft,
+        // not the separately persisted ladder project shown inside Logic Editor.
+        _sceneTitle.Text = dirty ? $"{title}  •  DRAFT*" : title;
+        _sceneTitle.TooltipText = dirty
+            ? "Integrated scene + ladder workspace has unsaved changes. This is separate from the ladder-project filename and saved state shown inside Logic Editor."
+            : "Active scene/workspace.";
         _sceneTitle.AddThemeColorOverride("font_color",
             dirty ? new Color("f1aa5b") : new Color("bcd3df"));
     }
@@ -16920,6 +24062,16 @@ public partial class SimulatorShell : CanvasLayer
     private static Button ToolbarButton(string name, string text, Color color, float width = 104)
     {
         var button = new Button { Name = name, Text = text, CustomMinimumSize = new Vector2(width, 36) };
+        button.AddThemeStyleboxOverride("normal", BoxStyle(color.Darkened(0.22f), color));
+        button.AddThemeStyleboxOverride("hover", BoxStyle(color.Darkened(0.05f), color.Lightened(0.18f)));
+        button.AddThemeStyleboxOverride("pressed", BoxStyle(color.Darkened(0.35f), color));
+        button.AddThemeFontSizeOverride("font_size", 13);
+        return button;
+    }
+
+    private static MenuButton ToolbarMenuButton(string name, string text, Color color, float width = 120)
+    {
+        var button = new MenuButton { Name = name, Text = text, CustomMinimumSize = new Vector2(width, 36) };
         button.AddThemeStyleboxOverride("normal", BoxStyle(color.Darkened(0.22f), color));
         button.AddThemeStyleboxOverride("hover", BoxStyle(color.Darkened(0.05f), color.Lightened(0.18f)));
         button.AddThemeStyleboxOverride("pressed", BoxStyle(color.Darkened(0.35f), color));

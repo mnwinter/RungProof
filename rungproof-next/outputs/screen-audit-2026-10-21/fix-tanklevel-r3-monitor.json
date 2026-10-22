@@ -1,0 +1,1 @@
+[{"name":"fix-tanklevel-r3-repeat-signals","expected":{"pump_request":true,"drain_request":false,"inlet_pump_run":true,"drain_valve_open":false}}]

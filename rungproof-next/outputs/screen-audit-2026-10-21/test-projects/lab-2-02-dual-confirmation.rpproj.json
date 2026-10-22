@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-screen-lab-2-02-dual-confirmation",
+  "name": "QA_Lab202_Main",
+  "sourceSceneId": "lab-2-02-dual-confirmation",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 20,
+  "tags": [
+    {
+      "symbolId": "qa-symbol-1",
+      "name": "operator_confirmed",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator_confirmed",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit PC-owned scene point; no physical address."
+    },
+    {
+      "symbolId": "qa-symbol-2",
+      "name": "quality_confirmed",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "quality_confirmed",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit PC-owned scene point; no physical address."
+    },
+    {
+      "symbolId": "qa-symbol-3",
+      "name": "handoff_ready",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "handoff_ready",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit PLC-owned scene point; no physical address."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "QA_Lab202_Main",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-3",
+          "label": "Both operator and quality confirmations required",
+          "coilVariable": "handoff_ready",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-4",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-5",
+                "kind": 0,
+                "variable": "operator_confirmed",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "contact-6",
+                "kind": 0,
+                "variable": "quality_confirmed",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-3-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "operator_confirmed",
+    "quality_confirmed",
+    "handoff_ready"
+  ],
+  "watchTables": [
+    {
+      "id": "qa-lab-2-02-dual-confirmation-watch",
+      "name": "Watch table 1",
+      "variables": [
+        "operator_confirmed",
+        "quality_confirmed",
+        "handoff_ready"
+      ],
+      "rows": [
+        {
+          "id": "qa-watch-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "operator_confirmed",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen-audit observation only"
+        },
+        {
+          "id": "qa-watch-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "quality_confirmed",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen-audit observation only"
+        },
+        {
+          "id": "qa-watch-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "handoff_ready",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen-audit observation only"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

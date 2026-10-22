@@ -2,7 +2,7 @@
   "fileType": "plc-visual-scene",
   "version": 1,
   "id": "lab-11-13-xy-palletizing",
-  "name": "Lab 11.13 - XY Palletizing Cell",
+  "name": "Lab 11.13 - Integrated XYZ Palletizing Cell",
   "description": "Four-carton palletizing lesson: one Start runs a complete gantry batch using simulated three-axis encoder feedback, PLC-commanded vacuum, placement feedback and home return.",
   "camera": {
     "position": [
@@ -21,7 +21,7 @@
     {
       "id": "conveyor_1",
       "type": "conveyor",
-      "label": "XY Palletizing Cell conveyor",
+      "label": "Carton infeed conveyor",
       "position": [
         -3.3,
         0,
@@ -38,7 +38,7 @@
     {
       "id": "box_2",
       "type": "box",
-      "label": "XY Palletizing Cell box",
+      "label": "Carton at pickup",
       "position": [
         -0.95,
         1.055,
@@ -56,7 +56,7 @@
     {
       "id": "indicator_3",
       "type": "indicator",
-      "label": "XY Palletizing Cell indicator",
+      "label": "Vacuum gripper command lamp",
       "position": [
         3.3000000000000003,
         0,
@@ -64,17 +64,15 @@
       ],
       "config": {
         "colors": [
-          "red",
-          "amber",
           "green"
         ],
-        "active": "red"
+        "active": "green"
       }
     },
     {
       "id": "training_accessory_4",
       "type": "trainingAccessory",
-      "label": "XY Palletizing Cell - XY gantry",
+      "label": "PLC-controlled XYZ palletizing gantry",
       "position": [
         0,
         0,
@@ -146,7 +144,7 @@
     {
       "id": "switch_9",
       "type": "switch",
-      "label": "XY Palletizing Cell operator input",
+      "label": "Palletizer machine Start",
       "position": [
         -0.20000000000000007,
         0,
@@ -187,7 +185,7 @@
       "config": {
         "style": "pushbutton",
         "action": "reset-palletizer",
-        "color": 2204518,
+        "color": 16755234,
         "faceLabel": "RESET"
       }
     },
@@ -210,14 +208,14 @@
     {
       "id": "switch_11",
       "type": "switch",
-      "label": "XY Palletizing Cell operator input",
+      "label": "Pallet position valid permissive",
       "position": [
         4.2,
         0,
         4.7
       ],
       "config": {
-        "style": "pushbutton",
+        "style": "rotary",
         "action": "toggle-pallet_position_valid",
         "color": 2204518,
         "faceLabel": "PALLET"
@@ -226,7 +224,7 @@
     {
       "id": "indicator_12",
       "type": "indicator",
-      "label": "XY Palletizing Cell output indication",
+      "label": "Palletizer cell active lamp",
       "position": [
         -1.9500000000000002,
         0,
@@ -234,17 +232,15 @@
       ],
       "config": {
         "colors": [
-          "red",
-          "amber",
           "green"
         ],
-        "active": "red"
+        "active": "green"
       }
     },
     {
       "id": "indicator_13",
       "type": "indicator",
-      "label": "XY Palletizing Cell output indication",
+      "label": "Four-carton layer complete lamp",
       "position": [
         0.25,
         0,
@@ -252,16 +248,90 @@
       ],
       "config": {
         "colors": [
-          "red",
-          "amber",
           "green"
         ],
-        "active": "red"
+        "active": "green"
+      }
+    },
+    {
+      "id": "training_accessory_17",
+      "type": "trainingAccessory",
+      "label": "Integrated XYZ Palletizing Cell - placed-carton count display",
+      "position": [
+        2.45,
+        0,
+        7.050000000000001
+      ],
+      "config": {
+        "assetName": "placed-carton count display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "PLACED"
+      }
+    },
+    {
+      "id": "training_accessory_18",
+      "type": "trainingAccessory",
+      "label": "Integrated XYZ Palletizing Cell - X encoder display",
+      "position": [-1.95, 0, 9.15],
+      "config": {
+        "assetName": "X encoder count display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "X CNT"
+      }
+    },
+    {
+      "id": "training_accessory_19",
+      "type": "trainingAccessory",
+      "label": "Integrated XYZ Palletizing Cell - Y encoder display",
+      "position": [0.25, 0, 9.15],
+      "config": {
+        "assetName": "Y encoder count display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "Y CNT"
+      }
+    },
+    {
+      "id": "training_accessory_20",
+      "type": "trainingAccessory",
+      "label": "Integrated XYZ Palletizing Cell - Z encoder display",
+      "position": [2.45, 0, 9.15],
+      "config": {
+        "assetName": "Z encoder count display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "Z CNT"
+      }
+    },
+    {
+      "id": "training_accessory_21",
+      "type": "trainingAccessory",
+      "label": "Integrated XYZ Palletizing Cell - sequence step display",
+      "position": [4.65, 0, 9.15],
+      "config": {
+        "assetName": "sequence step display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "STEP"
       }
     }
   ],
   "simulation": {
     "type": "booleanPanel",
+    "materialEntryPortal": {
+      "axis": "x",
+      "coordinate": -4.15,
+      "crossCenter": -0.4,
+      "wallSpanM": 18.0,
+      "wallHeightM": 5.8,
+      "openingWidthM": 1.5,
+      "openingHeightM": 2.4,
+      "wallThicknessM": 0.2,
+      "sourceRoomDepthM": 7.0,
+      "sourceDirection": -1
+    },
     "points": [
       {
         "name": "system_enable",
@@ -424,6 +494,12 @@
         "initial": 0
       },
       {
+        "name": "sequence_step_value",
+        "type": "DINT",
+        "owner": "PLC",
+        "initial": 0
+      },
+      {
         "name": "gantry_x_encoder_counts",
         "type": "DINT",
         "owner": "PC",
@@ -445,7 +521,7 @@
     "actions": [
       {
         "id": "toggle-system_enable",
-        "label": "Toggle system enable",
+        "label": "System Enable selector",
         "type": "toggle",
         "point": "system_enable"
       },
@@ -469,13 +545,13 @@
       },
       {
         "id": "toggle-safety_trip",
-        "label": "Toggle simulated safety trip (training only)",
+        "label": "Simulated safety trip (training only)",
         "type": "toggle",
         "point": "safety_trip"
       },
       {
         "id": "toggle-pallet_position_valid",
-        "label": "Toggle pallet permissive",
+        "label": "Pallet position permissive",
         "type": "toggle",
         "point": "pallet_position_valid"
       }
@@ -530,6 +606,41 @@
         "point": "safety_trip",
         "equipmentId": "switch_16",
         "mode": "switch"
+      },
+      {
+        "point": "placed_cartons",
+        "equipmentId": "training_accessory_17",
+        "label": "PLACED",
+        "mode": "numericDisplay",
+        "format": "F0"
+      },
+      {
+        "point": "gantry_x_encoder_counts",
+        "equipmentId": "training_accessory_18",
+        "label": "X CNT",
+        "mode": "numericDisplay",
+        "format": "F0"
+      },
+      {
+        "point": "gantry_y_encoder_counts",
+        "equipmentId": "training_accessory_19",
+        "label": "Y CNT",
+        "mode": "numericDisplay",
+        "format": "F0"
+      },
+      {
+        "point": "gantry_z_encoder_counts",
+        "equipmentId": "training_accessory_20",
+        "label": "Z CNT",
+        "mode": "numericDisplay",
+        "format": "F0"
+      },
+      {
+        "point": "sequence_step_value",
+        "equipmentId": "training_accessory_21",
+        "label": "STEP",
+        "mode": "numericDisplay",
+        "format": "F0"
       }
     ],
     "palletizerPlant": {
@@ -556,7 +667,8 @@
       "XY gantry",
       "pallet magazine",
       "carton load",
-      "supported pickup table"
+      "supported pickup table",
+      "sequence step display"
     ],
     "machineGuide": {
       "purpose": "Four-carton palletizing lesson: one Start runs a complete gantry batch with simulated encoder feedback, PLC-commanded vacuum, placement feedback and home return.",
@@ -568,7 +680,19 @@
         "Run, then press Start once to begin the four-carton batch.",
         "After each home return, the carton-load supply stages the next carton at the supported pickup station until all four positions are filled.",
         "The gantry lowers onto the carton, dwells 750 ms, picks up, carries to the next pallet slot, releases on the pallet, and returns home.",
-        "The layer-complete lamp follows the fourth completed home return. The X/Y/Z encoder-count watch values track simulated position relative to pickup home."
+        "The layer-complete lamp follows the fourth completed home return. STEP shows the PLC sequence state, X CNT, Y CNT, and Z CNT track measured position relative to pickup home, and PLACED advances from 0 to 4."
+      ],
+      "stateLegend": [
+        "0 - Idle at home, waiting for a qualified fresh Start.",
+        "10 - Lower Y axis toward the pickup carton.",
+        "20 - Hold at pickup through the 750 ms vacuum dwell and attachment.",
+        "30 - Raise Y axis to carry height with the carton attached.",
+        "40 - Move X and Z toward the selected pallet slot.",
+        "50 - Lower Y axis to the supported place position.",
+        "60 - Release vacuum and confirm the carton is no longer attached.",
+        "70 - Raise Y axis clear of the placed carton.",
+        "80 - Return X and Z to measured home; continue or finish after home feedback.",
+        "100 - Fourth carton returned home; layer complete."
       ],
       "stopBehavior": [
         "Machine Stop freezes pose and attachment, clears all six axis commands and vacuum, and preserves the PLC sequence step and placed cartons. Fresh Start resumes; app Run alone does not.",
@@ -579,8 +703,10 @@
       ],
       "expectedObservations": [
         "The pickup carton remains on a table until attached. Carried cartons follow the tool; released cartons remain on four separate pallet slots.",
-        "Encoder counts change with simulated travel. Home is generated from the completed return; the placement counter advances after release and home return."
-      ]
+        "STEP follows the PLC-owned sequence state while X CNT, Y CNT, and Z CNT change with simulated travel. Home is generated from the completed return; PLACED advances after release and home return.",
+        "Machine Reset returns all encoder displays and PLACED to zero before a fresh Start begins the second layer."
+      ],
+      "acceptance": "PLACED reaches 4 and layer_complete turns ON after the fourth home return; RESET and a fresh START complete a second four-carton layer."
     },
     "sequenceNumber": 69,
     "inheritsFrom": "lab-11-12-mobile-traffic-lights",

@@ -91,8 +91,11 @@ public partial class SceneSimulationRuntime
         var bottom = y + .175f; var height = 2.395f - bottom;
         _palletizerRod!.Transform = new(Basis.FromScale(new(1, height / 1.55f, 1)) * rod.Basis,
             rod.Origin + delta + new Vector3(0, (bottom + 2.395f) / 2 - 1.62f, 0));
-        _palletizerBox!.Visible = _palletizer.CartonAtPick || _palletizer.Attached;
-        _palletizerBox.Position = _palletizer.Attached ? new(x, y - .4f, z) : new(-.95f, 1.055f, -.4f);
+        _palletizerBox!.Visible = _palletizer.CartonAtPick || _palletizer.CartonFeeding || _palletizer.Attached;
+        _palletizerBox.Position = _palletizer.Attached
+            ? new(x, y - .4f, z)
+            : new((float)(_palletizer.CartonFeeding ? _palletizer.CartonFeedX : PalletizerPlantModel.PickX),
+                1.055f, -.4f);
         for (var index = 0; index < 4; index++)
         {
             var slot = PalletizerPlantModel.Slot(index); _placedCartons[index].Visible = index < _palletizer.Placed;

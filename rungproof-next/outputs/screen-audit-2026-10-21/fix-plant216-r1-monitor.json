@@ -1,0 +1,1 @@
+[{"name":"fix-plant216-r1-complete-signals","expected":{"drill_run":false,"drill_feed_down":false,"drill_retract_up":false,"drill_at_top":true,"drill_at_bottom":false,"cycle_complete":true},"keep_monitor":true}]

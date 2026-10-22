@@ -1,0 +1,1 @@
+[{"name": "standalone-conveyor-r4-reset", "expected": {"estop_ok": true, "conveyor_run": false, "parts_completed": 0}}]

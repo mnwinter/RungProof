@@ -1,0 +1,13 @@
+[
+ {"capture":"lab202-00-initial","wait":0.1},
+ {"click":[747,348],"wait":0.4,"capture":"lab202-10-operator-only"},
+ {"click":[849,379],"wait":0.4,"capture":"lab202-11-both"},
+ {"click":[747,348],"wait":0.4,"capture":"lab202-01-quality-only"},
+ {"click":[849,379],"wait":0.4,"capture":"lab202-00-released"},
+ {"click":[747,348],"wait":0.2},
+ {"click":[849,379],"wait":0.4,"capture":"lab202-11-repeat"},
+ {"click":[131,884],"wait":0.4,"capture":"lab202-stop-active"},
+ {"click":[52,884],"wait":0.4,"capture":"lab202-restart-retained-inputs"},
+ {"click":[215,884],"wait":0.4,"capture":"lab202-reset"},
+ {"click":[52,884],"wait":0.4,"capture":"lab202-reset-restart"}
+]

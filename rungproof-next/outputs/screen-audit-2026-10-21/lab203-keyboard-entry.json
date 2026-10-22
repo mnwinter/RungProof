@@ -1,0 +1,1 @@
+[{"key": "Escape", "wait": 0.1}, {"click": [595, 39], "wait": 0.2}, {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"], "wait": 2, "capture": "lab203-keyboard-entry"}]

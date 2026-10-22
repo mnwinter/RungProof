@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.35}, {"click": [525, 102], "wait": 0.3, "capture": "lab408-r2-release-stop"}, {"wait": 1.2, "capture": "lab408-r2-release-stop-held"}, {"click": [496, 39], "wait": 0.35}, {"click": [525, 80], "wait": 0.3, "capture": "lab408-r2-release-run"}, {"wait": 12, "capture": "lab408-r2-resumed-later"}]

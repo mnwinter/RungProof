@@ -23,7 +23,6 @@ public static partial class SceneComposer
             ["lab-11-06-wastewater-collection"] = ["indicator_5", "indicator_13", "training_accessory_9"],
             ["lab-11-07-multi-conveyor-pallet-route"] = ["indicator_12", "indicator_13", "indicator_14"],
             ["lab-11-11-service-elevator"] = ["indicator_3", "indicator_10"],
-            ["lab-11-13-xy-palletizing"] = ["indicator_3", "indicator_12", "indicator_13"],
             ["lab-11-19-powder-batch-mixer"] = ["indicator_5", "indicator_14", "indicator_15"],
             ["lab-2-11-inbound-tote-stop"] = ["inbound_status"],
             ["lab-2-13-coolant-jug-fill"] = ["fill_status"],
@@ -48,7 +47,6 @@ public static partial class SceneComposer
             ["lab-4-12-cable-cut-length"] = ["indicator_3", "indicator_12"],
             ["lab-6-07-luggage-weight-sort"] = ["indicator_3", "indicator_11"],
             ["lab-9-10-box-volume"] = ["indicator_2"],
-            ["lab-9-11-pallet-counting"] = ["indicator_3"],
             // These are charge_enable and energy_session_active, not one head
             // per bay. Preserve their actual meaning at the operator cabinet.
             ["lab-9-12-ev-charging-manager"] = ["indicator_2", "indicator_10"],

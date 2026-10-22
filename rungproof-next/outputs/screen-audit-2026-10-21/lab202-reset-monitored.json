@@ -1,0 +1,8 @@
+[
+ {"click":[1265,39],"wait":0.3},
+ {"click":[215,884],"wait":0.4,"capture":"lab202-reset-from-both-active"},
+ {"click":[52,884],"wait":0.4},
+ {"click":[595,39],"wait":0.2},
+ {"click":[701,15],"wait":0.3},
+ {"click":[1418,101],"wait":0.3,"capture":"lab202-reset-inputs-cleared"}
+]

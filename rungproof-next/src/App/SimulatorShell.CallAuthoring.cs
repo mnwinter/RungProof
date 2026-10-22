@@ -140,14 +140,17 @@ public partial class SimulatorShell
         _callAuthoring = new(edit, _ladderHistory, () => ChallengeMutationLocked, committed);
         AddChild(_callAuthoring); _callAuthoring.PopupCentered();
         var form = _callAuthoring;
-        _callPendingForm = new(() => GodotObject.IsInstanceValid(form) && form.Pending, form.TryApply, form.CancelEdit);
+        _callPendingForm = new(() => "Call instruction parameters", () => GodotObject.IsInstanceValid(form) && form.Pending, form.TryApply, form.CancelEdit);
         _pendingEditorForms.Add(_callPendingForm);
     }
     private Control CreateBlockSemanticControls(LadderEditorDocument document, Action committed)
     {
         var body = new VBoxContainer { Name = "BlockSemanticControls" };
         var status = new Label { Name = "BlockSemanticMode", AutowrapMode = TextServer.AutowrapMode.WordSmart };
-        var convert = new Button { Name = "ConvertBlockSemantics", Text = "Convert to parameterized FC/FB" };
+        status.AddThemeColorOverride("font_color", new Color("344851"));
+        status.AddThemeFontSizeOverride("font_size", 12);
+        var convert = ToolbarButton("ConvertBlockSemantics", "CONVERT TO PARAMETERIZED", new Color("4d6674"));
+        convert.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         body.AddChild(status); body.AddChild(convert);
         void Refresh()
         {

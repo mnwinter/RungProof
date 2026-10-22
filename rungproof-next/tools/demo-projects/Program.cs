@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.Json;
 using RungProof.Next.VirtualController;
 
 // Run from rungproof-next. Default is read-only; --write explicitly regenerates
@@ -27,6 +30,36 @@ internal static class Program
             if (!AuthoredDemoLadderPrograms.TryCreate(sceneId, out var document)
                 || !LadderCompiler.Compile(document.BuildProgram()).IsValid)
                 throw new InvalidOperationException($"Authored demo is invalid: {sceneId}");
+            var scenePath = Path.Combine(root, "scenes", "migrated", sceneId + ".scene.json");
+            using var scene = JsonDocument.Parse(File.ReadAllText(scenePath));
+            var points = new List<SceneIoPoint>();
+            var initial = new Dictionary<string, object?>();
+            foreach (var point in scene.RootElement.GetProperty("simulation").GetProperty("points").EnumerateArray())
+            {
+                var name = point.GetProperty("name").GetString()!;
+                points.Add(new SceneIoPoint(name,
+                    point.GetProperty("type").GetString()!,
+                    point.GetProperty("owner").GetString()!,
+                    point.TryGetProperty("role", out var role) ? role.GetString() ?? string.Empty : string.Empty,
+                    point.TryGetProperty("purpose", out var purpose) ? purpose.GetString() ?? string.Empty : string.Empty,
+                    point.TryGetProperty("aggregate", out var schema) ? PlcAggregates.ParseSchema(schema) : null,
+                    point.TryGetProperty("enumMembers", out var members) && members.ValueKind == JsonValueKind.Array
+                        ? members.EnumerateArray().Select(member => member.GetString() ?? string.Empty).ToArray()
+                        : null));
+                if (point.TryGetProperty("initial", out var value))
+                    initial[name] = value.ValueKind switch
+                    {
+                        JsonValueKind.True => true,
+                        JsonValueKind.False => false,
+                        JsonValueKind.Number when value.TryGetInt64(out var integer) => integer,
+                        JsonValueKind.Number => value.GetDouble(),
+                        JsonValueKind.String => value.GetString(),
+                        _ => null,
+                    };
+            }
+            SceneLadderProject.EnsureSceneIoTable(document, points, initial, out var unsupported);
+            if (unsupported.Count != 0)
+                throw new InvalidOperationException($"Authored demo has unsupported scene I/O types: {sceneId}");
             var expected = LadderEditorProjectJson.Save(document);
             var path = Path.Combine(root, relativePath);
             if (write) File.WriteAllText(path, expected + "\n", new UTF8Encoding(false));

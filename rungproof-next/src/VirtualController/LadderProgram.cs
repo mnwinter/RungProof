@@ -40,8 +40,9 @@ public sealed record PlcVariable(
 );
 
 /// <summary>
-/// A PLC-wide symbolic constant declared in a tag table. Constants are editor
-/// metadata only; they are never mutable runtime tags or PLC I/O points.
+/// A PLC-wide symbolic constant declared in a tag table. Constants remain
+/// immutable declarations: BuildProgram lowers input references to typed
+/// literals, so they never become mutable runtime tags or PLC I/O points.
 /// </summary>
 public sealed record PlcUserConstant(
     string Id,
@@ -49,6 +50,19 @@ public sealed record PlcUserConstant(
     PlcVariableType Type,
     string Value,
     string TagTable,
+    string Comment = "");
+
+/// <summary>
+/// Read-only identifier emitted by configured PLC hardware.  RungProof never
+/// invents these rows: an importer or saved engineering project must provide
+/// the hardware source together with the symbolic value.
+/// </summary>
+public sealed record PlcSystemConstant(
+    string Id,
+    string Name,
+    string DataType,
+    string Value,
+    string HardwareSource,
     string Comment = "");
 
 public enum LadderNodeKind

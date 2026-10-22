@@ -3,7 +3,7 @@
   "version": 1,
   "id": "lab-2-12-assembly-lift",
   "name": "Lab 2.12 - Ergonomic Assembly Lift",
-  "description": "Independent raise and lower commands move a scissor lift between modeled bottom and top limits.",
+  "description": "Independent raise and lower commands move a scissor lift between modeled bottom and top limits. Full mechanical travel takes 2 s over 2.2 m. Simultaneous up/down commands hold position without changing either PLC command. Completion indicates a physical top visit followed by return to bottom; Reset clears it.",
   "camera": {
     "position": [
       8.5,
@@ -120,7 +120,24 @@
   ],
   "simulation": {
     "type": "sequence",
+    "assemblyLiftPlant": true,
+    "liftFullTravelSeconds": 2.0,
+    "liftTravelM": 2.2,
     "points": [
+      {
+        "name": "lower_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
+      {
+        "name": "raise_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
       {
         "name": "lift_up",
         "type": "BOOL",
@@ -162,12 +179,14 @@
     "actions": [
       {
         "id": "raise-lift",
+        "controllerStartBinding": "raise_request",
         "label": "Raise to work height",
         "type": "start",
         "sequence": "raise"
       },
       {
         "id": "lower-lift",
+        "controllerStartBinding": "lower_request",
         "label": "Lower to load height",
         "type": "start",
         "sequence": "lower"

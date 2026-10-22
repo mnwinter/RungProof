@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.35}, {"click": [525, 80], "wait": 0.9, "capture": "lab607-r2-moving22"}, {"click": [496, 39], "wait": 0.35}, {"click": [525, 102], "wait": 0.3, "capture": "lab607-r2-stop22"}, {"wait": 1.2, "capture": "lab607-r2-stop22-held"}, {"click": [496, 39], "wait": 0.35}, {"click": [525, 80], "wait": 0.3, "capture": "lab607-r2-run22"}]

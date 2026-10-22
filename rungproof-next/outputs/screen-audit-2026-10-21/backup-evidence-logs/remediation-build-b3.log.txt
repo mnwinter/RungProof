@@ -1,0 +1,9 @@
+  GODOT_SOURCE_UTF8_PASS files=420
+  CHALLENGE_SEMANTIC_MANIFEST_PASS engineInputs=61 evaluatorInputs=3 output=C:\Users\matt.winter\Documents\RungProof\rungproof-next\challenges\semantic-manifest.json
+  RungProof.Next -> C:\Users\matt.winter\Documents\RungProof\rungproof-next\.godot\mono\temp\bin\Debug\RungProof.Next.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:36.28

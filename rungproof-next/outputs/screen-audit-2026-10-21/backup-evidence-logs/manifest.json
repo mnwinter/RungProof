@@ -1,0 +1,218 @@
+[
+  {
+    "original": "remediation-app-shell.log",
+    "original_sha256": "66415b1e3558436b8043a58c2a45d53797569999f0c1f7e49d8d36876957b186",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-app-shell.log.txt",
+    "copy_sha256": "66415b1e3558436b8043a58c2a45d53797569999f0c1f7e49d8d36876957b186"
+  },
+  {
+    "original": "remediation-b2-compose-lab-2-11-inbound-tote-stop.log",
+    "original_sha256": "4026afebc0ea5abd9a1c973408569219b1dbcd5484480b636f6155db594deca1",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-b2-compose-lab-2-11-inbound-tote-stop.log.txt",
+    "copy_sha256": "4026afebc0ea5abd9a1c973408569219b1dbcd5484480b636f6155db594deca1"
+  },
+  {
+    "original": "remediation-b2-compose-lab-2-12-assembly-lift.log",
+    "original_sha256": "e5d400905d9fb33de519fc5c376c0f4811bfca50465ceff226179de841d244ba",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-b2-compose-lab-2-12-assembly-lift.log.txt",
+    "copy_sha256": "e5d400905d9fb33de519fc5c376c0f4811bfca50465ceff226179de841d244ba"
+  },
+  {
+    "original": "remediation-b2-compose-tank-high-low.log",
+    "original_sha256": "04f5cc2eab04f550346922311ef4abee10d22683b3722955b473da4221a59463",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-b2-compose-tank-high-low.log.txt",
+    "copy_sha256": "04f5cc2eab04f550346922311ef4abee10d22683b3722955b473da4221a59463"
+  },
+  {
+    "original": "remediation-b2-compose-tank-level.log",
+    "original_sha256": "277c9bff2bfd4d0c36a3cb6dd321e9cb79dbdecf7a2232cf673cbd123afdfd05",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-b2-compose-tank-level.log.txt",
+    "copy_sha256": "277c9bff2bfd4d0c36a3cb6dd321e9cb79dbdecf7a2232cf673cbd123afdfd05"
+  },
+  {
+    "original": "remediation-b2-workbench-errors.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-b2-workbench-errors.log.txt",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "original": "remediation-b2-workbench.log",
+    "original_sha256": "218f86bb19b868cd240e1f68f457ecb0839363010b409df129fb714d1a878b98",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-b2-workbench.log.txt",
+    "copy_sha256": "218f86bb19b868cd240e1f68f457ecb0839363010b409df129fb714d1a878b98"
+  },
+  {
+    "original": "remediation-build-b2.log",
+    "original_sha256": "1c8d88aba323e8d609b9567f52323c6a179718458414edad1c6ac330696dccfe",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-build-b2.log.txt",
+    "copy_sha256": "1c8d88aba323e8d609b9567f52323c6a179718458414edad1c6ac330696dccfe"
+  },
+  {
+    "original": "remediation-build-b3.log",
+    "original_sha256": "b59ea6ca3988699986dbbf0bb64e1da5a96675b810496c85ef302c30bcb85be2",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-build-b3.log.txt",
+    "copy_sha256": "b59ea6ca3988699986dbbf0bb64e1da5a96675b810496c85ef302c30bcb85be2"
+  },
+  {
+    "original": "remediation-build-b4.log",
+    "original_sha256": "950dbc528f800a4587054b3b5f8324179f8fa82ff31313c1579e047437006286",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-build-b4.log.txt",
+    "copy_sha256": "950dbc528f800a4587054b3b5f8324179f8fa82ff31313c1579e047437006286"
+  },
+  {
+    "original": "remediation-build-b5.log",
+    "original_sha256": "3cec4698b9aaa70ae22eda010455bd4b84f4304dab271a25869847b281b20cca",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-build-b5.log.txt",
+    "copy_sha256": "3cec4698b9aaa70ae22eda010455bd4b84f4304dab271a25869847b281b20cca"
+  },
+  {
+    "original": "remediation-compose-lab-10-03-vision-package-sorter-1792696371552796200.log",
+    "original_sha256": "df204429eaa88b9f9d0a7439fec7e56f4c041e70c542ad4179ac1bd5cb59eb32",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-10-03-vision-package-sorter-1792696371552796200.log.txt",
+    "copy_sha256": "df204429eaa88b9f9d0a7439fec7e56f4c041e70c542ad4179ac1bd5cb59eb32"
+  },
+  {
+    "original": "remediation-compose-lab-11-07-multi-conveyor-pallet-route-1792696372753079500.log",
+    "original_sha256": "f66ca74dffdab6966c9f5abf0f12d06b81261f65ade6a4b3d35c206cc4516390",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-11-07-multi-conveyor-pallet-route-1792696372753079500.log.txt",
+    "copy_sha256": "f66ca74dffdab6966c9f5abf0f12d06b81261f65ade6a4b3d35c206cc4516390"
+  },
+  {
+    "original": "remediation-compose-lab-2-12-assembly-lift-1792696368766803300.log",
+    "original_sha256": "e5d400905d9fb33de519fc5c376c0f4811bfca50465ceff226179de841d244ba",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-12-assembly-lift-1792696368766803300.log.txt",
+    "copy_sha256": "e5d400905d9fb33de519fc5c376c0f4811bfca50465ceff226179de841d244ba"
+  },
+  {
+    "original": "remediation-compose-lab-2-13-coolant-jug-fill-1792696368670760700.log",
+    "original_sha256": "461f78ada32be98086236fec181d18eef122a96b359565ec3bd49caefb341d2a",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-13-coolant-jug-fill-1792696368670760700.log.txt",
+    "copy_sha256": "461f78ada32be98086236fec181d18eef122a96b359565ec3bd49caefb341d2a"
+  },
+  {
+    "original": "remediation-compose-lab-2-15-fume-extractor-1792696372609745000.log",
+    "original_sha256": "01d2579538ea7a4368e985980adbd304d11ccd8b50a4082f61ad43366a25562c",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-15-fume-extractor-1792696372609745000.log.txt",
+    "copy_sha256": "01d2579538ea7a4368e985980adbd304d11ccd8b50a4082f61ad43366a25562c"
+  },
+  {
+    "original": "remediation-compose-lab-2-16-safe-drill-1792696368580239000.log",
+    "original_sha256": "9a344bcdf8902fd3c4627f4016665075ef76fb3adcf8615470e44874376a69ad",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-16-safe-drill-1792696368580239000.log.txt",
+    "copy_sha256": "9a344bcdf8902fd3c4627f4016665075ef76fb3adcf8615470e44874376a69ad"
+  },
+  {
+    "original": "remediation-compose-lab-2-19-service-door-1792696370116313600.log",
+    "original_sha256": "6495721f5af815b22d82c6e2b34a538fed3abc15655b282e33d901ea0a184339",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-19-service-door-1792696370116313600.log.txt",
+    "copy_sha256": "6495721f5af815b22d82c6e2b34a538fed3abc15655b282e33d901ea0a184339"
+  },
+  {
+    "original": "remediation-compose-lab-2-23-parcel-sorter-1792696370204448000.log",
+    "original_sha256": "c911ccdf3a14abbe503b6ff1621d345ac2cf8b80015115b614259318df871cc9",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-23-parcel-sorter-1792696370204448000.log.txt",
+    "copy_sha256": "c911ccdf3a14abbe503b6ff1621d345ac2cf8b80015115b614259318df871cc9"
+  },
+  {
+    "original": "remediation-compose-lab-2-24-robot-cnc-1792696370306331400.log",
+    "original_sha256": "4bde2e20775897b8f9c856aa18a07c80e724b5e10b0e67fe92eafbf8fe58eb9b",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-lab-2-24-robot-cnc-1792696370306331400.log.txt",
+    "copy_sha256": "4bde2e20775897b8f9c856aa18a07c80e724b5e10b0e67fe92eafbf8fe58eb9b"
+  },
+  {
+    "original": "remediation-compose-tank-high-low-1792696371386636200.log",
+    "original_sha256": "80b8fe927020e5da503a05091f71af4c6a3691df40b191d5a1419c27e461a486",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-tank-high-low-1792696371386636200.log.txt",
+    "copy_sha256": "80b8fe927020e5da503a05091f71af4c6a3691df40b191d5a1419c27e461a486"
+  },
+  {
+    "original": "remediation-compose-tank-level-1792696371632127800.log",
+    "original_sha256": "c9b802f6d79e33628df8ec8998bfe137632d01b56c9e170c24a8c5afa79bb2c4",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose-tank-level-1792696371632127800.log.txt",
+    "copy_sha256": "c9b802f6d79e33628df8ec8998bfe137632d01b56c9e170c24a8c5afa79bb2c4"
+  },
+  {
+    "original": "remediation-compose211.log",
+    "original_sha256": "f51e66dfad5bbc4528b2f488acee0c0d7e103bbeec92751c7d45b1be117b386b",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-compose211.log.txt",
+    "copy_sha256": "f51e66dfad5bbc4528b2f488acee0c0d7e103bbeec92751c7d45b1be117b386b"
+  },
+  {
+    "original": "remediation-controller-tests-b2.log",
+    "original_sha256": "94f68c41fe98c2ae3e7e40cccb81fb6fe0dfad3d3943200b3201af2f4a9a7866",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-controller-tests-b2.log.txt",
+    "copy_sha256": "94f68c41fe98c2ae3e7e40cccb81fb6fe0dfad3d3943200b3201af2f4a9a7866"
+  },
+  {
+    "original": "remediation-controller-tests-b3.log",
+    "original_sha256": "54d9df5f9e0b5b59e85a4267eb1b50f2f4ba8c2cd68609a9620a957704a41917",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-controller-tests-b3.log.txt",
+    "copy_sha256": "54d9df5f9e0b5b59e85a4267eb1b50f2f4ba8c2cd68609a9620a957704a41917"
+  },
+  {
+    "original": "remediation-controller-tests-b4.log",
+    "original_sha256": "421b4192fc2f3316df556b35bee96c80a4448033b7f954552a6cfc93099ef86b",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-controller-tests-b4.log.txt",
+    "copy_sha256": "421b4192fc2f3316df556b35bee96c80a4448033b7f954552a6cfc93099ef86b"
+  },
+  {
+    "original": "remediation-controller-tests-b5.log",
+    "original_sha256": "ebc8f7ec5203bbd532d3a68f8300b74fa19486ceb0ce2e7ce3b216eb4c8f8155",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-controller-tests-b5.log.txt",
+    "copy_sha256": "ebc8f7ec5203bbd532d3a68f8300b74fa19486ceb0ce2e7ce3b216eb4c8f8155"
+  },
+  {
+    "original": "remediation-controller-tests-final.log",
+    "original_sha256": "27bf2dc09ba34691db138643620f0428364a496b0e576153e41f54d8982d42fc",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-controller-tests-final.log.txt",
+    "copy_sha256": "27bf2dc09ba34691db138643620f0428364a496b0e576153e41f54d8982d42fc"
+  },
+  {
+    "original": "remediation-controller-tests.log",
+    "original_sha256": "767e54d2a9a0b93191e1ee9d48ccc5059f6ef7bbacc45789babccb1fc6de5a4b",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-controller-tests.log.txt",
+    "copy_sha256": "767e54d2a9a0b93191e1ee9d48ccc5059f6ef7bbacc45789babccb1fc6de5a4b"
+  },
+  {
+    "original": "remediation-editor-verifier.log",
+    "original_sha256": "d60c579f80a6cec779423f795b9fb2541830c7fac5123e2ede81a99b617a6248",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-editor-verifier.log.txt",
+    "copy_sha256": "d60c579f80a6cec779423f795b9fb2541830c7fac5123e2ede81a99b617a6248"
+  },
+  {
+    "original": "remediation-full-workbench-errors.log",
+    "original_sha256": "a6d007ab9ec3dd94d1560ee60fb25b236fe942a571a6ffcd0c9fd032261bed5d",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-full-workbench-errors.log.txt",
+    "copy_sha256": "a6d007ab9ec3dd94d1560ee60fb25b236fe942a571a6ffcd0c9fd032261bed5d"
+  },
+  {
+    "original": "remediation-full-workbench.log",
+    "original_sha256": "306846e5b1e3925be3dfc90e70061b0ac7ba552385ab3b5dfbbfaac618a25f58",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-full-workbench.log.txt",
+    "copy_sha256": "306846e5b1e3925be3dfc90e70061b0ac7ba552385ab3b5dfbbfaac618a25f58"
+  },
+  {
+    "original": "remediation-live-app-errors.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-live-app-errors.log.txt",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "original": "remediation-live-app.log",
+    "original_sha256": "d7d1ce71a503dc1a236f0d67591e69e9e65634f37d72b9fa24b26c810a894dd9",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-live-app.log.txt",
+    "copy_sha256": "d7d1ce71a503dc1a236f0d67591e69e9e65634f37d72b9fa24b26c810a894dd9"
+  },
+  {
+    "original": "remediation-workbench-errors.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-workbench-errors.log.txt",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "original": "remediation-workbench.log",
+    "original_sha256": "d7d1ce71a503dc1a236f0d67591e69e9e65634f37d72b9fa24b26c810a894dd9",
+    "copy": "rungproof-next/outputs/screen-audit-2026-10-21/backup-evidence-logs/remediation-workbench.log.txt",
+    "copy_sha256": "d7d1ce71a503dc1a236f0d67591e69e9e65634f37d72b9fa24b26c810a894dd9"
+  }
+]

@@ -18,6 +18,8 @@ public partial class Main
         {
             var filter = OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--installation-scene-id=", StringComparison.Ordinal))?
                 .Substring("--installation-scene-id=".Length);
+            var identificationClearanceOnly = OS.GetCmdlineUserArgs()
+                .Contains("--verify-identification-clearance-only", StringComparer.Ordinal);
             var catalog = SceneCatalogLoader.LoadCatalog("res://scenes/catalog/original-scenes.catalog.json");
             var entries = catalog.Scenes.Where(e => filter is null || e.Id == filter).ToArray();
             if (entries.Length == 0) throw new InvalidOperationException("Unknown installation scene filter.");
@@ -67,6 +69,23 @@ public partial class Main
                     {
                         position = VectorEvidence(value.Position), size = VectorEvidence(value.Size), end = VectorEvidence(value.End)
                     };
+                    var identificationPlates = support.FindChildren("InstallationIdentification_*", "MeshInstance3D", true, false)
+                        .OfType<MeshInstance3D>().Where(mesh => mesh.IsVisibleInTree()).ToArray();
+                    foreach (var plate in identificationPlates)
+                    {
+                        Require(plate.HasMeta("mountingSurfaceFront"),
+                            $"identification plate lacks mounting-surface clearance evidence: {plate.Name}");
+                        var mountingSurfaceFront = plate.GetMeta("mountingSurfaceFront").AsSingle();
+                        var plateBounds = plate.Transform * plate.GetAabb();
+                        Require(plateBounds.Position.Z - mountingSurfaceFront >= .002f,
+                            $"identification plate is coplanar with or penetrates its mounting surface: {plate.Name}");
+                    }
+                    GD.Print($"CONTROL_INSTALLATION_IDENTIFICATION_CLEARANCE PASS scene={entry.Id} plates={identificationPlates.Length} minimumClearanceM=0.002");
+                    if (identificationClearanceOnly)
+                    {
+                        GetTree().Quit(0);
+                        return;
+                    }
                     var cabinet = support.FindChild("OperatorCabinet_Body", true, false) as MeshInstance3D;
                     var heads = mounted.Select(node => new
                     {
@@ -581,7 +600,7 @@ public partial class Main
         var target = bench ? 3 : 5;
         for (var count = 1; count <= target; count++)
         {
-            Action(bench ? "toggle-pulse_received" : "toggle-pallet_detected"); Tick(); Tick();
+            Action(bench ? "toggle-pulse_received" : "pulse-pallet_detected"); Tick(); Tick();
             Trace("event-after-scan-" + count);
             Require(_virtualController!.Snapshot.Counters[counter].Accumulated == count, "actual scan counter differs at " + count);
             if (!bench)
@@ -589,7 +608,6 @@ public partial class Main
                 Require(Convert.ToInt64(runtime.Points["pallet_count"]) == count, "mapped numeric output differs");
                 var label = root.GetNode<Node3D>("training_accessory_6").GetNode<Label3D>("NumericReadout");
                 Require(label.Text.Contains(count.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal), "actual display does not publish count");
-                Action("toggle-pallet_detected"); Tick();
             }
             Require(Equals(runtime.Points[output], count == target) && Emits() == (count == target), "authored threshold output/lens mismatch");
             Trace("accepted-event-" + count);

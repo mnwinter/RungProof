@@ -1,0 +1,1 @@
+[{"name": "lab412-recovered-3m-final", "expected": {"measured_length_m": 3, "stock_remaining_m": 7, "length_reached": true, "cut_done": true, "cut_complete": true, "cycle_complete": true, "cycle_active": false, "feed_run": false, "cutter_fire": false, "cutter_home": true, "cut_fault": false}, "monitor_only": true, "keep_monitor": true}]

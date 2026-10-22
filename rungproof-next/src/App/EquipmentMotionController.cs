@@ -47,6 +47,10 @@ public partial class EquipmentMotionController : Node
     // Opt-in setpoint slew for indexed parcel tables. Other assets retain
     // their existing immediate position contract when this value is zero.
     [Export] public float PositionInputSlewSeconds { get; set; }
+    // Position-only actuators such as valves and slide gates have no separate
+    // run command. Their accepted position command is enough to move them,
+    // while indexed drives can retain the existing run-permissive requirement.
+    [Export] public bool PositionInputSlewRequiresRunCommand { get; set; } = true;
     // Optional visual stream follows valve position; no fabricated PLC feedback.
     [Export] public string PositionVisibilityChildName { get; set; } = string.Empty;
     // Opt-in mounted fixture follows this carriage's actual position. Its
@@ -154,21 +158,20 @@ public partial class EquipmentMotionController : Node
                 }
                 break;
             case MotionKind.PositionRotation:
+            case MotionKind.LinearX:
+            case MotionKind.LinearY:
+            case MotionKind.PneumaticPusher:
+            case MotionKind.ScissorLift:
+            case MotionKind.RollerShutter:
                 if (PositionInputSlewSeconds > 0)
                 {
-                    if (RunCommand)
+                    if (RunCommand || !PositionInputSlewRequiresRunCommand)
                     {
                         _position = Mathf.MoveToward(_position, _targetPosition, seconds / PositionInputSlewSeconds);
                         ApplyPosition();
                     }
                     break;
                 }
-                goto case MotionKind.LinearX;
-            case MotionKind.LinearX:
-            case MotionKind.LinearY:
-            case MotionKind.PneumaticPusher:
-            case MotionKind.ScissorLift:
-            case MotionKind.RollerShutter:
                 if (RunCommand && AutonomousPositionTravel)
                 {
                     _position = Mathf.MoveToward(_position, 1.0f, seconds / MathF.Max(TravelTimeSeconds, 0.05f));
@@ -190,7 +193,9 @@ public partial class EquipmentMotionController : Node
     public void SetPositionNormalized(float position)
     {
         _targetPosition = Mathf.Clamp(PositionInputInverted ? 1.0f - position : position, 0.0f, 1.0f);
-        if (Kind == MotionKind.PositionRotation && PositionInputSlewSeconds > 0) return;
+        if (Kind is MotionKind.PositionRotation or MotionKind.LinearX or MotionKind.LinearY
+            or MotionKind.PneumaticPusher or MotionKind.ScissorLift or MotionKind.RollerShutter
+            && PositionInputSlewSeconds > 0) return;
         _position = _targetPosition;
         if (Kind is MotionKind.PositionRotation
             or MotionKind.LinearX

@@ -1,0 +1,95 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    660,
+    305,
+    980,
+    490
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    245
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab205-off-r2",
+      "source": "lab205-off-r2.png",
+      "sha256": "b23d91676af923b5fb33df615a2c109acd5c69164555246090a480df1614f92e",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-on-r2",
+      "source": "lab205-on-r2.png",
+      "sha256": "f787357a0874784860b514d830ebb3f6db8014b1ef6534d5b37fce2c3a5048b7",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-off-repeat-r2",
+      "source": "lab205-off-repeat-r2.png",
+      "sha256": "a3750bb73f0c009dac2769f7c9730a0bbcefdfe9257bcfe95e5ca5acbbe5ed7a",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-on-repeat-r2",
+      "source": "lab205-on-repeat-r2.png",
+      "sha256": "bf530626df067ead05cfc96b6ecc6438ee670ef5a8224140548aa434ee497e46",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-app-stop-r2",
+      "source": "lab205-app-stop-r2.png",
+      "sha256": "ca2f27d24f03d8072b2c10ccbefad3f603672650b2618361a0a8b4a83c97a790",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-app-run-r2",
+      "source": "lab205-app-run-r2.png",
+      "sha256": "e70ff875099db920c5ce760a6545899386035896e0f647ec5f3852f0d3926274",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-app-reset-r2",
+      "source": "lab205-app-reset-r2.png",
+      "sha256": "ed1a86dd4957dc1eaa3d14a6ea1a1b26c67a164e4b0d0ed6437ce75ff67de0a9",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab205-reset-run-r2",
+      "source": "lab205-reset-run-r2.png",
+      "sha256": "15564fa334b3a27deff8cd8f0b399d2753965110e209d9c3a79aca0e9dd05350",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

@@ -154,7 +154,7 @@
           "isCounterLoad": false,
           "counterKind": "CountUp",
           "counterVariable": "completed_calls",
-          "counterPreset": 2147483647,
+          "counterPreset": 32767,
           "isNumericOperation": false,
           "numericOperationKind": "Move",
           "numericSourceA": "0",

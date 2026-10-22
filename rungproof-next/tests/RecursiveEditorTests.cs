@@ -1,12 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RungProof.Next.App;
 using RungProof.Next.VirtualController;
 
 internal static partial class Program
 {
     private static void RegisterRecursiveEditorTests()
     {
+        Test("DesktopUiScaleOffersManualAndResolutionAwareChoices", () =>
+        {
+            Equal("auto", DesktopUiScalePolicy.NormalizeSetting("unexpected"));
+            Equal("85", DesktopUiScalePolicy.NormalizeSetting("85"));
+            Equal(75, DesktopUiScalePolicy.ResolvePercent("75", 2560, 1440));
+            Equal(115, DesktopUiScalePolicy.ResolvePercent("115", 1280, 720));
+            Equal(75, DesktopUiScalePolicy.ResolvePercent("auto", 1280, 720));
+            Equal(85, DesktopUiScalePolicy.ResolvePercent("auto", 1600, 900));
+            Equal(100, DesktopUiScalePolicy.ResolvePercent("auto", 1920, 1080));
+            Equal(100, DesktopUiScalePolicy.ResolvePercent("auto", 2560, 1440));
+        });
         Test("BlockViewStateRetainsStableSelectionAndScroll", () =>
         {
             var memory = new LadderEditorViewMemory();

@@ -1,0 +1,48 @@
+{
+  "version": 9,
+  "activation_mode": "pinned-only-temporary-AttachThreadInput-finally-detach",
+  "pid": 36292,
+  "app_pid": 5916,
+  "keys": [
+    "Escape",
+    "Return",
+    "Tab",
+    "Space",
+    "Down",
+    "Up",
+    "Home",
+    "End",
+    "PageDown",
+    "PageUp",
+    "Left",
+    "Right",
+    "BackSpace",
+    "Delete"
+  ],
+  "chords": [
+    "Ctrl+A"
+  ],
+  "text": true,
+  "mouse_buttons": [
+    "left",
+    "right",
+    "middle"
+  ],
+  "mouse_move": true,
+  "coordinate_mode": "native-physical-pixels-per-monitor-v2",
+  "capture_mode": "foreground-screenDC-BitBlt-unoccluded-client",
+  "thread_dpi_awareness": 2,
+  "native_client": [
+    1600,
+    900
+  ],
+  "mouse_phases": [
+    "click",
+    "down",
+    "up",
+    "wheel",
+    "move"
+  ],
+  "text_max_characters": 4096,
+  "input_struct_bytes": 40
+}

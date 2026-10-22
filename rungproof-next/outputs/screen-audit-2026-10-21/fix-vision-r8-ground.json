@@ -1,0 +1,1 @@
+[{"click":[496,39],"wait":0.6},{"click":[525,125],"wait":0.6},{"click":[496,39],"wait":0.6},{"click":[525,80],"wait":0.4},{"click":[1265,39],"wait":0.5},{"click":[422,39],"wait":0.6},{"click":[485,148],"wait":0.6},{"wheel":[700,450,120]},{"wheel":[700,450,120]},{"wheel":[700,450,120],"capture":"fix-vision-r8-grounded-controls"}]

@@ -1,0 +1,113 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    660,
+    305,
+    980,
+    490
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    245
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab207-normal",
+      "source": "lab207-normal.png",
+      "sha256": "9bc68ce42bf16eeb9d5b07ea48cf8b4f69b88be382c41683f39ff76e1430665e",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-reset-only",
+      "source": "lab207-reset-only.png",
+      "sha256": "2612c52ddfe9d7476d2ab4fec0a318e67d4dfe1c2d85b3d0aaec989d86650c83",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-both",
+      "source": "lab207-both.png",
+      "sha256": "7f9c91266fc04a0d64d8807e56917f91a5e19b434e9cd333b55d7341e34cf479",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-nc-only",
+      "source": "lab207-nc-only.png",
+      "sha256": "02aeee8bafe8b10b7ea2f58cf9252755996dfe6ca65e5a9c61949d44fd1143c2",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-normal-repeat",
+      "source": "lab207-normal-repeat.png",
+      "sha256": "6bd684e27290a63ddd28f21825b17a7923fccf1d57a01aae51b3429480e04536",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-nc-only-repeat",
+      "source": "lab207-nc-only-repeat.png",
+      "sha256": "9604d9293b84b7542943f6679bdcd217f21581fb2d4c5cd416ccc0952dd13642",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-app-stop",
+      "source": "lab207-app-stop.png",
+      "sha256": "437b2841c2340c5f7fba7d3b25935a7a6157dec2e93e1272d7d8b5f7aff13e90",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-app-run",
+      "source": "lab207-app-run.png",
+      "sha256": "f77a6044ca31fe85907a29c19baa9aaece0bf1c5ed9f664022d330ecb5eb97fa",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-active-reset",
+      "source": "lab207-active-reset.png",
+      "sha256": "3519d5280abeee32c0192568a887793d8af8f752b4667e48da0134904902cbce",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab207-reset-run",
+      "source": "lab207-reset-run.png",
+      "sha256": "b08da713c9f37fbd988212aa7eda19fb95004f807707836f37a8c1445492a45e",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

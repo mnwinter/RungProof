@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "example-09-product-function",
+  "name": "Product Function Block - offline reference",
+  "sourceSceneId": "lab-9-02-product-function",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "main",
+  "nextId": 900,
+  "tags": [
+    {
+      "name": "factor_a_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "factor_a_valid"
+    },
+    {
+      "name": "factor_b_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "factor_b_valid"
+    },
+    {
+      "name": "calculate_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "calculate_request"
+    },
+    {
+      "name": "product_result_valid",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "product_result_valid"
+    },
+    {
+      "name": "factor_a",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "factor_a"
+    },
+    {
+      "name": "factor_b",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "factor_b"
+    },
+    {
+      "name": "product_result",
+      "type": "DInt",
+      "role": "Output",
+      "initial": 0,
+      "binding": "product_result"
+    },
+    {
+      "name": "always_scan",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": true,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "main",
+      "name": "Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "r4",
+          "label": "Always scan product block",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "fb-calculate",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "b4",
+              "contacts": [
+                {
+                  "id": "c4-0",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fb-calculate",
+      "name": "FB_Product",
+      "blockType": "FunctionBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "r1",
+          "label": "Multiply valid values",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Multiply",
+          "numericSourceA": "factor_a",
+          "numericSourceB": "factor_b",
+          "numericSourceC": "0",
+          "numericDestination": "product_result",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "b1",
+              "contacts": [
+                {
+                  "id": "r1-contact-0",
+                  "variable": "factor_a_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r1-contact-1",
+                  "variable": "factor_b_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r1-contact-2",
+                  "variable": "calculate_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "label": "Publish calculation validity",
+          "coilVariable": "product_result_valid",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "b2",
+              "contacts": [
+                {
+                  "id": "r2-contact-0",
+                  "variable": "factor_a_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r2-contact-1",
+                  "variable": "factor_b_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r2-contact-2",
+                  "variable": "calculate_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-main",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "main"
+    }
+  ],
+  "watchVariables": [
+    "factor_a_valid",
+    "factor_b_valid",
+    "calculate_request",
+    "product_result_valid",
+    "factor_a",
+    "factor_b",
+    "product_result",
+    "always_scan"
+  ]
+}

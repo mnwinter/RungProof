@@ -1,0 +1,67 @@
+{
+  "counts": {
+    "demo_workflows": 5,
+    "unique_scenes": 77,
+    "labs": 70,
+    "other_scenes": 7,
+    "demo_partial": 5,
+    "demo_not_tested": 0,
+    "curriculum_pass_labels": 5,
+    "non_demo_scene_records": 72,
+    "menu_groups": {
+      "demos": 5,
+      "user_created": 6,
+      "labs": 66
+    },
+    "breadth_snapshot_reviewed_scene_ids": 77,
+    "breadth_non_demo_entries_reviewed": 72,
+    "breadth_review_last_menu_ordinal": 77,
+    "breadth_captured_scene_ids": 77,
+    "breadth_visible_run_running": 10,
+    "breadth_blank_ladder_run_blocks": 67,
+    "prepared_learner_fixtures": 46,
+    "learner_fixtures_with_reviewed_ui_execution": 46,
+    "staged_existing_reference_projects": 15,
+    "total_available_test_project_files": 61,
+    "staged_references_with_reviewed_ui_execution": 13,
+    "reviewed_deep_non_demo_scene_ids": 67,
+    "saved_rpproj_leaves_including_invalid_evidence": 74,
+    "preserved_invalid_v1_rpproj_leaves": 4,
+    "diagnostic_probe_files_prepared": 7,
+    "diagnostic_probes_with_confirmed_ui_failure": 7,
+    "diagnostic_candidates_not_ui_confirmed": 0,
+    "confirmed_functional_master_issues": 2,
+    "normal_rpproj_leaves_including_invalid_v1": 65,
+    "confirmed_functional_issue_affected_scene_ids": 11,
+    "confirmed_functional_issue_failed_command_paths": 15,
+    "supplied_reference_loading_failures": 1,
+    "confirmed_issue_masters_functional_or_reference": 4,
+    "contract_subchecks_not_applicable": {
+      "dedicated_trip_fault": 65,
+      "mechanical_process_motion": 26,
+      "autonomous_mid_phase_interruption": 14,
+      "primary_case_groups_removed": 0
+    },
+    "code_authored_non_demo_labs_reviewed": 3,
+    "confirmed_visual_feedback_issues": 1,
+    "screen_verified_closed_confirmed_issues": 3,
+    "normal_route_dispositions": {
+      "non_demo_bounded_normal_reviewed": 67,
+      "non_demo_normal_blocked": 5,
+      "demo_workflows_partial": 5,
+      "normal_NOT_TESTED": 0,
+      "overall_complete": 0,
+      "non_demo_normal_failed": 0
+    },
+    "additional_confirmed_issue_masters": [
+      "QA-PLANT-001",
+      "QA-LOAD-001"
+    ]
+  },
+  "cases": [
+    {
+      "Name": "PARTIAL",
+      "Count": 77
+    }
+  ]
+}

@@ -12,6 +12,7 @@ public sealed class PalletizerPlantModel
 {
     public const double PickX = -.95, PickZ = -.4, DeckY = 1.055, PalletY = .4505,
         CartonHeight = .4, CarryY = 1.66;
+    public const double FeedStartX = -4.55;
     public const double PickupY = DeckY + CartonHeight;
     public const double PlaceY = PalletY + CartonHeight;
     // Matches the authored ±5 mm encoder-window comparisons. The prescribed
@@ -20,12 +21,15 @@ public sealed class PalletizerPlantModel
     private const double PositionTolerance = .005;
     private const double HorizontalSpeed = .4;
     private const double VerticalSpeed = .3;
+    private const double FeedSpeed = 1.2;
 
     public double X { get; private set; }
     public double Z { get; private set; }
     public double ToolY { get; private set; }
     public int Placed { get; private set; }
     public bool CartonAtPick { get; private set; }
+    public bool CartonFeeding { get; private set; }
+    public double CartonFeedX { get; private set; }
     public bool Attached { get; private set; }
     public bool PickComplete { get; private set; }
     public bool Faulted { get; private set; }
@@ -59,6 +63,8 @@ public sealed class PalletizerPlantModel
         ToolY = CarryY;
         Placed = 0;
         CartonAtPick = true;
+        CartonFeeding = false;
+        CartonFeedX = PickX;
         Attached = false;
         PickComplete = false;
         Faulted = false;
@@ -67,11 +73,12 @@ public sealed class PalletizerPlantModel
 
     // Optional operator supply action. The normal four-carton lesson models an
     // automatic magazine, so a carton is also staged after each completed place.
-    public bool CanLoadCarton => Home && !CartonAtPick && !Attached && Placed < 4 && !Faulted;
+    public bool CanLoadCarton => Home && !CartonAtPick && !CartonFeeding && !Attached && Placed < 4 && !Faulted;
     public bool LoadCarton()
     {
         if (!CanLoadCarton) return false;
         CartonAtPick = true;
+        CartonFeedX = PickX;
         return true;
     }
 
@@ -102,6 +109,22 @@ public sealed class PalletizerPlantModel
             var dt = Math.Min(.01, remaining);
             remaining -= dt;
 
+            // The carton magazine is a physical infeed, not an invisible
+            // object factory. After each placement, advance the next carton
+            // from the connected source-room conveyor to the pickup table.
+            // This stages material only; the PLC still owns every gantry and
+            // vacuum sequence transition.
+            if (CartonFeeding)
+            {
+                CartonFeedX = Math.Min(PickX, CartonFeedX + FeedSpeed * dt);
+                if (CartonFeedX >= PickX - PositionTolerance)
+                {
+                    CartonFeedX = PickX;
+                    CartonFeeding = false;
+                    CartonAtPick = true;
+                }
+            }
+
             X = IntegrateAxis(X, xPositive, xNegative, PickX, Slot(3).X, HorizontalSpeed, dt);
             Z = IntegrateAxis(Z, zPositive, zNegative, PickZ, Slot(3).Z, HorizontalSpeed, dt);
 
@@ -131,8 +154,14 @@ public sealed class PalletizerPlantModel
                 Attached = false;
                 Placed++;
                 // The magazine is device-local material handling, not a motion
-                // sequencer. It presents the next carton without choosing a PLC state.
-                CartonAtPick = Placed < 4;
+                // sequencer. It physically feeds the next carton without
+                // choosing a PLC state.
+                if (Placed < 4)
+                {
+                    CartonAtPick = false;
+                    CartonFeeding = true;
+                    CartonFeedX = FeedStartX;
+                }
             }
         }
 

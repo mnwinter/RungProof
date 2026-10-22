@@ -1,0 +1,279 @@
+{
+  "purpose": "Disposable declarative learner fixture only; UI load/runtime validation pending",
+  "entries": [
+    {
+      "file": "fixture-lab-2-15-fume-extractor.rpproj.json",
+      "sourceSceneId": "lab-2-15-fume-extractor",
+      "schemaVersion": 9,
+      "networks": 6,
+      "sceneIoTags": 5,
+      "sha256": "cec8c54ecda21871ebeaf7ef05a36eb741b5b9dd45e3d3ad79339b43469f9339",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-2-14-sump-pump.rpproj.json",
+      "sourceSceneId": "lab-2-14-sump-pump",
+      "schemaVersion": 9,
+      "sceneIoTags": 5,
+      "networks": 5,
+      "sha256": "499b40e1a40fba2d217a8dc455a8e1ca296d124561102c53f137d64b9d3a7bf5",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-2-25-inspection-toggle.rpproj.json",
+      "sourceSceneId": "lab-2-25-inspection-toggle",
+      "schemaVersion": 9,
+      "sceneIoTags": 3,
+      "networks": 5,
+      "sha256": "8310b74500549c90a6c335f02d70957bf31acf893a04934bac7c3db68041560f",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-3-01-guarded-pallet-transfer.rpproj.json",
+      "sourceSceneId": "lab-3-01-guarded-pallet-transfer",
+      "schemaVersion": 9,
+      "sceneIoTags": 9,
+      "networks": 2,
+      "sha256": "98bff233cf7dc3cf4d2a85b9de33ad6caf60473df276634938477999c445cdaa",
+      "runtimeStatus": "NOT_TESTED",
+      "fixtureAssumption": "resume on restored permissives"
+    },
+    {
+      "file": "fixture-lab-6-08-hand-dryer.rpproj.json",
+      "sourceSceneId": "lab-6-08-hand-dryer",
+      "schemaVersion": 9,
+      "sceneIoTags": 6,
+      "networks": 6,
+      "sha256": "b07e0b173f4d9c8321f76372e10dabc11710699de8e41f4dfab6e8ddb82f0a85",
+      "runtimeStatus": "NOT_TESTED",
+      "fixtureAssumption": "QA interval5000ms, not application specification"
+    },
+    {
+      "file": "fixture-lab-5-06-running-light-tower.rpproj.json",
+      "sourceSceneId": "lab-5-06-running-light-tower",
+      "schemaVersion": 9,
+      "sceneIoTags": 5,
+      "networks": 11,
+      "sha256": "06ac068b6a772ff014a6769b4c79cc87913ac5c3dcf124bfef36ecc5c19eca84",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-03-rotary-flasher.rpproj.json",
+      "sourceSceneId": "lab-5-03-rotary-flasher",
+      "schemaVersion": 9,
+      "sceneIoTags": 2,
+      "networks": 7,
+      "sha256": "499de36612469bbd07f109d07177de957194c6585e09954e55b7e34be1c5dc54",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-04-alternating-lamps.rpproj.json",
+      "sourceSceneId": "lab-5-04-alternating-lamps",
+      "schemaVersion": 9,
+      "sceneIoTags": 3,
+      "networks": 8,
+      "sha256": "42911f2ca6fb879235e0ccd34131e02144d01e310674678ca36ed457cb15d689",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-05-variable-flash-rate.rpproj.json",
+      "sourceSceneId": "lab-5-05-variable-flash-rate",
+      "schemaVersion": 9,
+      "sceneIoTags": 4,
+      "networks": 16,
+      "sha256": "fb350c88db053f48ee34b9f87c515f342cca8a807400f650c72598870edee340",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-10-05-motor-struct-data.rpproj.json",
+      "sourceSceneId": "lab-10-05-motor-struct-data",
+      "schemaVersion": 9,
+      "sceneIoTags": 7,
+      "networks": 2,
+      "sha256": "1f79aa9c9451bc230097cea7be57a99dea88e65d7687379c39d991716542d306",
+      "runtimeStatus": "INVALID_QA_INPUT_V1_REPLACED",
+      "replacement": "fixture-lab-10-05-motor-struct-data-v2.rpproj.json",
+      "invalidArchive": "fixture-lab-10-05-motor-struct-data-invalid-v1.json"
+    },
+    {
+      "file": "fixture-lab-10-06-ten-motor-array-startup.rpproj.json",
+      "sourceSceneId": "lab-10-06-ten-motor-array-startup",
+      "schemaVersion": 9,
+      "sceneIoTags": 26,
+      "networks": 11,
+      "sha256": "fe0ef02100f49efd8a468170493869c59517309f973378f969e081166fed59e5",
+      "runtimeStatus": "INVALID_QA_INPUT_V1_REPLACED",
+      "replacement": "fixture-lab-10-06-ten-motor-array-startup-v2.rpproj.json",
+      "invalidArchive": "fixture-lab-10-06-ten-motor-array-startup-invalid-v1.json"
+    },
+    {
+      "file": "fixture-lab-9-12-ev-charging-manager.rpproj.json",
+      "sourceSceneId": "lab-9-12-ev-charging-manager",
+      "schemaVersion": 9,
+      "sceneIoTags": 29,
+      "networks": 22,
+      "sha256": "b4ba33a71c0aefd6a751abf1495d441b5a9080faa6ce4f65cd7872fac504e60b",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-11-06-wastewater-collection.rpproj.json",
+      "sourceSceneId": "lab-11-06-wastewater-collection",
+      "schemaVersion": 9,
+      "sceneIoTags": 15,
+      "networks": 2,
+      "sha256": "ba6daa22741bc0a4a305553d8e4a68a5dd21fd22397b87d0251b614389024539",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-11-07-multi-conveyor-pallet-route.rpproj.json",
+      "sourceSceneId": "lab-11-07-multi-conveyor-pallet-route",
+      "schemaVersion": 9,
+      "sceneIoTags": 11,
+      "networks": 9,
+      "sha256": "c76f08b40efa058604745f92297664f69153e267f29f008351adb08ca374c972",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-11-11-service-elevator.rpproj.json",
+      "sourceSceneId": "lab-11-11-service-elevator",
+      "schemaVersion": 9,
+      "sceneIoTags": 9,
+      "networks": 3,
+      "sha256": "30aaacef217b3c25205859ca92d8617fc1357d0c6f780425c91adb6e7f67b507",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-11-12-mobile-traffic-lights.rpproj.json",
+      "sourceSceneId": "lab-11-12-mobile-traffic-lights",
+      "schemaVersion": 9,
+      "sceneIoTags": 15,
+      "networks": 25,
+      "sha256": "bf6bfa433dcbee521e55b8ee8d529650b352133fb28371139a0ef4408d6c9e45",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-11-19-powder-batch-mixer.rpproj.json",
+      "sourceSceneId": "lab-11-19-powder-batch-mixer",
+      "schemaVersion": 9,
+      "sceneIoTags": 6,
+      "networks": 4,
+      "sha256": "d545d145812efa6e4097fe943ed8188a796afe3a705d30a0a8ba8ba7f0dc893e",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-2-17-pallet-robot.rpproj.json",
+      "sourceSceneId": "lab-2-17-pallet-robot",
+      "schemaVersion": 9,
+      "sceneIoTags": 7,
+      "networks": 3,
+      "sha256": "5f28e6f43ffc625031f6ef99ee3dad5ecb54ed1e3895401b25431955f49e4710",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-2-18-pallet-pickup.rpproj.json",
+      "sourceSceneId": "lab-2-18-pallet-pickup",
+      "schemaVersion": 9,
+      "sceneIoTags": 5,
+      "networks": 2,
+      "sha256": "3d69cac14033d4a2af1e97fe95b43de6e5d941da87bb324051dcb0e52578d1b8",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-10-03-vision-package-sorter.rpproj.json",
+      "sourceSceneId": "lab-10-03-vision-package-sorter",
+      "schemaVersion": 9,
+      "sceneIoTags": 7,
+      "networks": 2,
+      "sha256": "cf19d0e6369bd016a918516db2998720632837fe2ab9f8def60ff688de0cb67e",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-08-drawbridge-control.rpproj.json",
+      "sourceSceneId": "lab-5-08-drawbridge-control",
+      "schemaVersion": 9,
+      "sceneIoTags": 15,
+      "networks": 6,
+      "sha256": "b83e5f61cbfc67cca2df53b24fad16a5377f683b3182386bb4302601a53d8101",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-09-bag-indexing-conveyor.rpproj.json",
+      "sourceSceneId": "lab-5-09-bag-indexing-conveyor",
+      "schemaVersion": 9,
+      "sceneIoTags": 10,
+      "networks": 6,
+      "sha256": "d320259ad1edf1276012d56078c4e3ddca0411177707b84741c9235d32fcef72",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-10-coating-line.rpproj.json",
+      "sourceSceneId": "lab-5-10-coating-line",
+      "schemaVersion": 9,
+      "sceneIoTags": 13,
+      "networks": 10,
+      "sha256": "233484949a6b10634300d783221ee0d8db7932e8f33932d64b7c9bbe3260ecec",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-5-07-pedestrian-crossing.rpproj.json",
+      "sourceSceneId": "lab-5-07-pedestrian-crossing",
+      "schemaVersion": 9,
+      "sceneIoTags": 8,
+      "networks": 21,
+      "sha256": "f963737803b90becd2ce98c4908400c1b2388b1c46b3372309e6cc2c0b2ef956",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-6-07-luggage-weight-sort.rpproj.json",
+      "sourceSceneId": "lab-6-07-luggage-weight-sort",
+      "schemaVersion": 9,
+      "sceneIoTags": 22,
+      "networks": 22,
+      "sha256": "55183865f7899f15069eede80ccb5053d2a5f766bc23f39ce1e6c86e63796a18",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "fixture-lab-9-03-sum-and-counter-function-legal-int.rpproj.json",
+      "sourceSceneId": "lab-9-03-sum-and-counter-function",
+      "schemaVersion": 9,
+      "sceneIoTags": 9,
+      "networks": 6,
+      "sha256": "ad1ee428a2e9aff0f5bc5cda1d5f51ae970bb85cd32bcd507f3567ad2b8bfb2b",
+      "runtimeStatus": "NOT_TESTED",
+      "derivedFrom": "existing-09-sum-counter-reference.rpproj.json",
+      "unchangedSourceSha256": "ca79e9b9970a57fdc1d11a9d3394d3b0a89176367a04c802dc1e0ce3d4069fd7",
+      "fixtureParameter": "Counter INT preset5 with explicitDB101; QA-REF-001 unchanged"
+    },
+    {
+      "file": "fixture-lab-2-01-workstation-call.rpproj.json",
+      "sourceSceneId": "lab-2-01-workstation-call",
+      "schemaVersion": 9,
+      "networks": 1,
+      "sceneIoTags": 2,
+      "runtimeStatus": "NOT_TESTED",
+      "sha256": "c312ef37224d8718eeafb1b852d6e8c3a2953acb6fcd0b3d47a1b4cfce68d12d"
+    },
+    {
+      "file": "fixture-lab-10-05-motor-struct-data-v2.rpproj.json",
+      "sourceSceneId": "lab-10-05-motor-struct-data",
+      "schemaVersion": 9,
+      "sceneIoTags": 7,
+      "networks": 2,
+      "sha256": "5dd233ba1b68f62fe0b46ee4bb38bd59f3bfc4e3859e8ea1ad7a39630d7bd20f",
+      "runtimeStatus": "NOT_TESTED",
+      "qaInputCorrection": "Aggregate field/element PlcVariableType enum uses integer in editor saved format",
+      "invalidV1Sha256": "1f79aa9c9451bc230097cea7be57a99dea88e65d7687379c39d991716542d306"
+    },
+    {
+      "file": "fixture-lab-10-06-ten-motor-array-startup-v2.rpproj.json",
+      "sourceSceneId": "lab-10-06-ten-motor-array-startup",
+      "schemaVersion": 9,
+      "sceneIoTags": 26,
+      "networks": 11,
+      "sha256": "d6f28a958a555acbba06db2135ee25f531ab03141112aa41b873cd87f5ec7a8e",
+      "runtimeStatus": "NOT_TESTED",
+      "qaInputCorrection": "Aggregate field/element PlcVariableType enum uses integer in editor saved format",
+      "invalidV1Sha256": "fe0ef02100f49efd8a468170493869c59517309f973378f969e081166fed59e5"
+    }
+  ]
+}

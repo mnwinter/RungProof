@@ -1,0 +1,149 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    660,
+    305,
+    980,
+    490
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    270
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab209-off",
+      "source": "lab209-off.png",
+      "sha256": "0f0bff13e631be48cb9d377a07cd1da0dd342a1166c6a74b02f7858fa4bbe333",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle1-pos1",
+      "source": "lab209-cycle1-pos1.png",
+      "sha256": "f03b3feec76f8e4ab211f478e3d87a46341b48bd602909f4f14a4def1e564486",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle1-pos2",
+      "source": "lab209-cycle1-pos2.png",
+      "sha256": "2f8232bbcbcbff6c8736c301c31873658d6deab22b8f85906cd9d75ebdd42245",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle1-pos3",
+      "source": "lab209-cycle1-pos3.png",
+      "sha256": "0a0921b807f3dce35b152df4b31b37770b83cb0714e61aac3e6e41987d8327aa",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle1-pos0",
+      "source": "lab209-cycle1-pos0.png",
+      "sha256": "83adf57251a2edb5fbdf55f828981a9892c6bc72e7b19d9b8167a94ae2363280",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle2-pos1",
+      "source": "lab209-cycle2-pos1.png",
+      "sha256": "0bad07eb7200270aec7d4e24b09bad72afc3e7a91e65dd59820d27dd3be8e559",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle2-pos2",
+      "source": "lab209-cycle2-pos2.png",
+      "sha256": "2a2fb3361b77209dffab3aeb8954af1a02a03a8d373e753c17639e02c60837de",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle2-pos3",
+      "source": "lab209-cycle2-pos3.png",
+      "sha256": "a5b13c0ceb170a387a181335c73dae9cd2dd77aabfa2a92ab42b5fb2404a9c6c",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-cycle2-pos0",
+      "source": "lab209-cycle2-pos0.png",
+      "sha256": "8058f4230feb04658be5e2ec8d70ba79873ffb1bb5f190729e8f6e982f11ed6e",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-active-before-stop",
+      "source": "lab209-active-before-stop.png",
+      "sha256": "03e9505ca3c3f8bdef3212ec3b13b2bd6472481fc9294d4ac3e8e08bccb31106",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-app-stop",
+      "source": "lab209-app-stop.png",
+      "sha256": "93a10179e2d60e428676f7ecdb62025ed5976d259c43d37ec4b306c2df3af124",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-app-run",
+      "source": "lab209-app-run.png",
+      "sha256": "0adab9dfb023dec5e5f8cfed92e8858f5141c254203f2a186e21d7a603883c6f",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-active-reset",
+      "source": "lab209-active-reset.png",
+      "sha256": "1019e6f3b4baecf0867c9b64f79aa3c5b73291ae45e9c2ffc91f1d82a3b6885a",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab209-reset-run",
+      "source": "lab209-reset-run.png",
+      "sha256": "0ddd1f6eab5435cf823b44afaad3a8ba14f6990de99721ab202819c95e936ab4",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

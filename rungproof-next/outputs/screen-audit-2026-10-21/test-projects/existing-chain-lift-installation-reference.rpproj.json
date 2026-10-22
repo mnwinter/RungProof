@@ -1,0 +1,932 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "reference-chain-lift-cycle",
+  "name": "Chain_Lift_Carton_Cycle",
+  "sourceSceneId": "lab-4-09-chain-drive-lift",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 79,
+  "tags": [
+    {
+      "name": "carton_on_infeed",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "carton_on_infeed"
+    },
+    {
+      "name": "lift_home",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "lift_home"
+    },
+    {
+      "name": "destination_clear",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "destination_clear"
+    },
+    {
+      "name": "carton_on_lift",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "carton_on_lift"
+    },
+    {
+      "name": "lift_upper",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "lift_upper"
+    },
+    {
+      "name": "carton_at_receiver",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "carton_at_receiver"
+    },
+    {
+      "name": "transfer_fault",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "transfer_fault"
+    },
+    {
+      "name": "lift_start",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "lift_start"
+    },
+    {
+      "name": "stop_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.stop"
+    },
+    {
+      "name": "start_edge",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "start_accepted",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "chain_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "chain_run"
+    },
+    {
+      "name": "lift_enable",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "lift_enable"
+    },
+    {
+      "name": "lift_lower",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "lift_lower"
+    },
+    {
+      "name": "cycle_active",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "cycle_active"
+    },
+    {
+      "name": "cycle_complete",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "cycle_complete"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Chain_Lift_Carton_Cycle",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-3",
+          "label": "Sample fresh Start edge",
+          "coilVariable": "start_edge",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-4",
+              "contacts": [
+                {
+                  "id": "edge-5",
+                  "variable": "lift_start",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "Rising"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-6",
+          "label": "Accept initial or held-route Start",
+          "coilVariable": "start_accepted",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-7",
+              "contacts": [
+                {
+                  "id": "contact-8",
+                  "variable": "start_edge",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-9",
+                  "variable": "cycle_active",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-10",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-11",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-12",
+                  "variable": "carton_on_infeed",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-13",
+                  "variable": "lift_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-14",
+                  "variable": "destination_clear",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-15",
+              "contacts": [
+                {
+                  "id": "contact-16",
+                  "variable": "start_edge",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-17",
+                  "variable": "cycle_active",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-18",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-19",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-20",
+                  "variable": "carton_on_lift",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-21",
+                  "variable": "destination_clear",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-22",
+              "contacts": [
+                {
+                  "id": "contact-23",
+                  "variable": "start_edge",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-24",
+                  "variable": "cycle_active",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-25",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-26",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-27",
+                  "variable": "lift_upper",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-28",
+                  "variable": "carton_at_receiver",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-29",
+              "contacts": [
+                {
+                  "id": "contact-30",
+                  "variable": "start_edge",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-31",
+                  "variable": "cycle_active",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-32",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-33",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-34",
+                  "variable": "carton_at_receiver",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-35",
+                  "variable": "lift_home",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-36",
+          "label": "Complete after discharge and empty-carriage return",
+          "coilVariable": "cycle_complete",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-37",
+              "contacts": [
+                {
+                  "id": "contact-38",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-39",
+                  "variable": "carton_at_receiver",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-40",
+                  "variable": "lift_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-43",
+                  "variable": "start_accepted",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-44",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-45",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-41",
+              "contacts": [
+                {
+                  "id": "contact-42",
+                  "variable": "cycle_complete",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-46",
+                  "variable": "start_accepted",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-47",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-48",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-49",
+          "label": "Authorization seal cleared by Stop fault completion",
+          "coilVariable": "cycle_active",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-50",
+              "contacts": [
+                {
+                  "id": "contact-51",
+                  "variable": "start_accepted",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-54",
+                  "variable": "cycle_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-55",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-56",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-52",
+              "contacts": [
+                {
+                  "id": "contact-53",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-57",
+                  "variable": "cycle_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-58",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-59",
+                  "variable": "transfer_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-60",
+          "label": "Horizontal loading at HOME or discharge at UPPER",
+          "coilVariable": "chain_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-61",
+              "contacts": [
+                {
+                  "id": "contact-62",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-63",
+                  "variable": "lift_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-64",
+                  "variable": "carton_on_infeed",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-65",
+              "contacts": [
+                {
+                  "id": "contact-66",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-67",
+                  "variable": "lift_upper",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-68",
+                  "variable": "carton_at_receiver",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-69",
+          "label": "Raise carried carton stopping at UPPER",
+          "coilVariable": "lift_enable",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-70",
+              "contacts": [
+                {
+                  "id": "contact-71",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-72",
+                  "variable": "carton_on_lift",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-73",
+                  "variable": "lift_upper",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-74",
+          "label": "Return empty carriage after carton reaches stop",
+          "coilVariable": "lift_lower",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-75",
+              "contacts": [
+                {
+                  "id": "contact-76",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-77",
+                  "variable": "carton_at_receiver",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-78",
+                  "variable": "lift_home",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": []
+}

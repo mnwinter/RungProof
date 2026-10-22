@@ -1,0 +1,1 @@
+[{"key": "Escape", "wait": 0.3}, {"click": [595, 39], "wait": 0.6, "capture": "scenario-menu-open-probe"}]

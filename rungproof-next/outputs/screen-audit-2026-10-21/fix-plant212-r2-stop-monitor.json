@@ -1,0 +1,1 @@
+[{"name":"fix-plant212-r2-stop-signals","expected":{"top_limit":false,"bottom_limit":false,"lift_up":false,"lift_down":false,"cycle_complete":false}}]

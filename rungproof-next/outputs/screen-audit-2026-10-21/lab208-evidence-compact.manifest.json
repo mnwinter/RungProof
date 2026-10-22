@@ -1,0 +1,122 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    660,
+    305,
+    980,
+    490
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    290
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab208-00",
+      "source": "lab208-00.png",
+      "sha256": "62a548e2d849c64b8afd6cc1397aea6734ea33069b0ce7201a23a5d8d7a65c5e",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-10",
+      "source": "lab208-10.png",
+      "sha256": "9ceb8548dcc165004f6597daf1cd2f8fd6eacb8367859f4d193fb9cc2245c762",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-11",
+      "source": "lab208-11.png",
+      "sha256": "1d8753bad5eb530c08e52b1ea5be2614fb3991073fd96c9ee8440af00d46074d",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-01",
+      "source": "lab208-01.png",
+      "sha256": "c0dcd245024ee908d42aad61f54b672a76653cf7e2850e2a5857acbb99dff0d0",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-00-repeat",
+      "source": "lab208-00-repeat.png",
+      "sha256": "3dbf1794339a392741201fdb5838e312b44c01c2fd866fce72f6f0d7c06f35ca",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-01-repeat",
+      "source": "lab208-01-repeat.png",
+      "sha256": "fbe9da6869035ea910297c981099501f7aaf1898680d671311b8729a7d7934c5",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-11-repeat",
+      "source": "lab208-11-repeat.png",
+      "sha256": "0ea33cd387802ad7ca3dcc21e7dc99b9172da4124d1399ed3d58d30b6bd5279f",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-app-stop",
+      "source": "lab208-app-stop.png",
+      "sha256": "d1101e06583d3e70e66da45dbbef2878d7b174a25de1c254969d3089973c17f3",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-app-run",
+      "source": "lab208-app-run.png",
+      "sha256": "00b30b03578182992a1085e34d1033920d4fc51cdb6a3a2ef1b798b3d58d421f",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-active-reset",
+      "source": "lab208-active-reset.png",
+      "sha256": "56f3706aff2f44fa48f8934fb5fee3750150d4f9cb4d9781e98ad3b10d8632f1",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab208-reset-run",
+      "source": "lab208-reset-run.png",
+      "sha256": "b4d08f11fa8ff24a91fa94af1d90ecb15a576d7a55eba1785ae3aadc6fe811f6",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

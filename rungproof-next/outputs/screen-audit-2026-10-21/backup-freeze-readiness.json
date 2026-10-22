@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-22T21:33:40.3780239Z",
+  "paths": 662,
+  "missing": [],
+  "bytes": 76129875.0,
+  "largest_bytes": 1428168.0,
+  "all_selected_text_capability_scan": "431files;0unredactedURLs",
+  "original_session_selected": false,
+  "git_mutations": false
+}

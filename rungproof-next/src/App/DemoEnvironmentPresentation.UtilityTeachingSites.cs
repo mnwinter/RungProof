@@ -67,11 +67,25 @@ public partial class DemoEnvironmentPresentation
             if (dx.HasValue) { Strip(-len / 2 + .10f, dx.Value - .6f); Strip(dx.Value + .6f, len / 2 - .10f); }
             else Strip(-len / 2 + .10f, len / 2 - .10f);
         }
-        void Board(string name, float u, float z, string text, float width = 2)
+        void Board(string name, float u, float z, string text, float width = 2,
+            float height = .8f, bool highContrast = false)
         {
-            Box(architecture, name + "BearingPlate", new Vector3(width, .8f, .06f), At(u, 1.55f, z - .115f), ivory);
-            architecture.AddChild(new Label3D { Name = name + "StaticLegend", Text = text, FontSize = 32, PixelSize = .0018f, OutlineSize = 0,
-                Modulate = new Color("#39403B"), Position = At(u, 1.55f, z - .151f), RotationDegrees = new Vector3(0, sz > 0 ? 180 : 0, 0) });
+            var centerY = highContrast ? 1.8f : 1.55f;
+            var plate = highContrast ? EnvironmentDetailedSurface("#173E59", "paint") : ivory;
+            Box(architecture, name + "BearingPlate", new Vector3(width, height, .06f), At(u, centerY, z - .115f), plate);
+            architecture.AddChild(new Label3D
+            {
+                Name = name + "StaticLegend", Text = text,
+                FontSize = highContrast ? 56 : 32,
+                PixelSize = highContrast ? .0024f : .0018f,
+                OutlineSize = highContrast ? 6 : 0,
+                OutlineModulate = highContrast ? new Color("#07141D") : Colors.Transparent,
+                Modulate = highContrast ? new Color("#FFF3B0") : new Color("#39403B"),
+                Position = At(u, centerY, z - .151f),
+                RotationDegrees = new Vector3(0, sz > 0 ? 180 : 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            });
         }
         var doorV=f+1.1f;
         if(state)
@@ -120,7 +134,35 @@ public partial class DemoEnvironmentPresentation
         }
         else if(pallet)
         {
-            var h=MathF.Max(3.8f,bounds.End.Y+.8f);
+            // This lesson's fitted camera is elevated to keep the conveyor,
+            // inspection machine, and adjacent operator cabinet legible. Use
+            // a real high-bay shell around that camera instead of a low
+            // cutaway whose roof or wall ends enter the shot.
+            var h=MathF.Max(8.0f,bounds.End.Y+.8f);
+            const float roomHalf=18.0f;
+            Box(architecture,"PalletRoomContinuousFloor",new Vector3(roomHalf*2,.12f,roomHalf*2),At(cu,-.07f,cv),floor);
+            Box(architecture,"PalletRoomContinuousCeiling",new Vector3(roomHalf*2,.20f,roomHalf*2),At(cu,h+.10f,cv),wall);
+            foreach(var u in new[]{cu-roomHalf,cu+roomHalf})
+                Box(architecture,"PalletRoomOuterSideWall",new Vector3(.18f,h,roomHalf*2),At(u,h/2,cv),wall);
+            foreach(var zc in new[]{cv-roomHalf,cv+roomHalf})
+                Box(architecture,"PalletRoomOuterEndWall",new Vector3(roomHalf*2,h,.18f),At(cu,h/2,zc),wall);
+            var highBay=(StandardMaterial3D)ivory.Duplicate();
+            highBay.EmissionEnabled=true;
+            highBay.Emission=new Color("F4F0DE").SrgbToLinear();
+            highBay.EmissionEnergyMultiplier=1.6f;
+            foreach(var (u,zc) in new[]{(cu-5f,cv-4f),(cu+5f,cv-4f),(cu-5f,cv+4f),(cu+5f,cv+4f)})
+            {
+                Box(architecture,"PalletRoomHighBayLuminaire",new Vector3(2.2f,.08f,.55f),At(u,h-.08f,zc),highBay);
+                architecture.AddChild(new OmniLight3D
+                {
+                    Name="PalletRoomHighBayLight",
+                    Position=At(u,h-.35f,zc),
+                    LightColor=new Color("F4EAD4"),
+                    LightEnergy=1.35f,
+                    OmniRange=15f,
+                    ShadowEnabled=true,
+                });
+            }
             // Actual outward receiving recess, with loading aperture wholly
             // independent of the manual source pallet-detection inputs.
             Wall("PalletReceivingRearLeft",l,v,cu-2,v,h,wall);
@@ -131,7 +173,9 @@ public partial class DemoEnvironmentPresentation
             Wall("PalletPersonnelSide",r,f,r,v,h,wall,doorV);
             Box(architecture,"PalletReceivingBearingHeader",new Vector3(4.18f,.22f,.26f),At(cu,h-.11f,v+.05f),metal);
             Box(architecture,"PalletReceivingRearRoof",new Vector3(4.18f,.12f,2.18f),At(cu,h+.06f,v+1),metal);
-            Board("PalletManualValidation",(l+cu-2)/2,v,"PALLET INPUTS\nDetection / type: manual\nLoaded block owns count",MathF.Min(2.5f,cu-2-l-.2f));
+            // The cabinet and the lesson panel already identify every input
+            // and machine command. A second wall-sized instruction board was
+            // redundant, partially hidden by the machine, and visually noisy.
         }
         else if(discrete)
         {

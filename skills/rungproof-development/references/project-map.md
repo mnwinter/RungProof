@@ -15,7 +15,7 @@ current checkout because names and responsibilities can evolve.
 - `rungproof-next/docs/TIA_INSTRUCTION_EVIDENCE_MATRIX.md`: current TIA/LAD
   acceptance ledger.
 - `rungproof-next/docs/TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md`: governing
-  scope, status, and work order for TIA V21 main-screen/property parity.
+  scope, status, and work order for TIA V17 main-screen/property parity.
 - `rungproof-next/docs/TIA_PORTAL_PARITY_AUDIT.md`: detailed sources, findings,
   evidence records, and remaining gates.
 - `rungproof-next/docs/VIRTUAL_CONTROLLER_PROGRAM_SCHEMA.md`: saved ladder

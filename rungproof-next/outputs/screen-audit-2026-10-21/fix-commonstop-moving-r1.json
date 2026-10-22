@@ -1,0 +1,1 @@
+[{"click": [575, 560]}, {"click": [594, 572]}, {"click": [615, 582], "wait": 1, "capture": "fix-commonstop-r1-moving"}, {"click": [615, 399], "wait": 0.5, "capture": "fix-commonstop-r1-stopped"}, {"wait": 2, "capture": "fix-commonstop-r1-held"}]

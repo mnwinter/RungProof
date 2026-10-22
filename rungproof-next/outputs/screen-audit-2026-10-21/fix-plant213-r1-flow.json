@@ -1,0 +1,1 @@
+[{"click":[422,39],"wait":0.6},{"click":[485,148],"wait":0.6},{"click":[1077,547],"wait":1,"capture":"fix-plant213-r1-moving"},{"wait":3,"capture":"fix-plant213-r1-filling"},{"wait":3,"capture":"fix-plant213-r1-discharge"},{"wait":6,"capture":"fix-plant213-r1-end"}]

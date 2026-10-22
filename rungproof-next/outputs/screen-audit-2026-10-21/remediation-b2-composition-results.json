@@ -1,0 +1,26 @@
+[
+  {
+    "scene": "tank-level",
+    "passed": true,
+    "log": "remediation-b2-compose-tank-level.log",
+    "errors": []
+  },
+  {
+    "scene": "tank-high-low",
+    "passed": true,
+    "log": "remediation-b2-compose-tank-high-low.log",
+    "errors": []
+  },
+  {
+    "scene": "lab-2-11-inbound-tote-stop",
+    "passed": true,
+    "log": "remediation-b2-compose-lab-2-11-inbound-tote-stop.log",
+    "errors": []
+  },
+  {
+    "scene": "lab-2-12-assembly-lift",
+    "passed": true,
+    "log": "remediation-b2-compose-lab-2-12-assembly-lift.log",
+    "errors": []
+  }
+]

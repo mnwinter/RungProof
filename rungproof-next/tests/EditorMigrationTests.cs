@@ -12,11 +12,13 @@ internal static partial class Program
     {
         Test("CurrentEditorSchemaWritesAndReadsLegacyDemos", CurrentEditorSchemaWritesAndReadsLegacyDemos);
         Test("UserConstantsValidatePersistAndUndo", UserConstantsValidatePersistAndUndo);
+        Test("HardwareSystemConstantsPersistReadOnlyProvenance", HardwareSystemConstantsPersistReadOnlyProvenance);
         Test("WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration", WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration);
         Test("OpenBranchStatePersistsButCannotExportExecutableProgram", OpenBranchStatePersistsButCannotExportExecutableProgram);
         Test("TagTablesPersistAndLegacyTagsUseDefaultTable", TagTablesPersistAndLegacyTagsUseDefaultTable);
         Test("ReplacingProgramRebuildsTagTableDeclarations", ReplacingProgramRebuildsTagTableDeclarations);
         Test("TagTableOperationsPreserveIdentityAndHistory", TagTableOperationsPreserveIdentityAndHistory);
+        Test("TagTableDuplicateCopiesDeclarationsWithoutIoOwnership", TagTableDuplicateCopiesDeclarationsWithoutIoOwnership);
         Test("TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic", TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic);
         Test("HierarchicalAggregateCommentsPersist", HierarchicalAggregateCommentsPersist);
         Test("UnassignedTimerPresetPersistsAndFailsLoadValidation", UnassignedTimerPresetPersistsAndFailsLoadValidation);
@@ -155,7 +157,7 @@ internal static partial class Program
 
     private static void CurrentEditorSchemaWritesAndReadsLegacyDemos()
     {
-        Equal(9, LadderEditorProjectJson.SchemaVersion);
+        Equal(10, LadderEditorProjectJson.SchemaVersion);
         var files = Directory.GetFiles(Path.Combine(FindProjectRoot(), "tests", "fixtures", "editor-migration"), "*.rpproj.json");
         Equal(5, files.Length);
         foreach (var file in files)
@@ -165,7 +167,7 @@ internal static partial class Program
             if (!first.IsReadable) throw new InvalidOperationException(string.Join("; ", first.Issues.Select(issue => $"{issue.Code} {issue.Path}: {issue.Message}")));
             Equal(File.ReadAllText(file + ".v1-ir.json"), LadderProgramJson.Save(first.Document!.BuildProgram() with { SchemaVersion = 1 }));
             var written = LadderEditorProjectJson.Save(first.Document!);
-            Equal(9, JsonNode.Parse(written)!["schemaVersion"]!.GetValue<int>());
+            Equal(10, JsonNode.Parse(written)!["schemaVersion"]!.GetValue<int>());
             var reopened = LadderEditorProjectJson.Load(written);
             True(reopened.IsReadable);
             Equal(string.Join(",", first.Document.WatchTables.Select(table => table.Id)),
@@ -175,6 +177,48 @@ internal static partial class Program
             Equal(string.Join(",", first.Document.WatchVariables), string.Join(",", reopened.Document.WatchVariables));
             Equal(original, File.ReadAllText(file));
         }
+    }
+
+    private static void HardwareSystemConstantsPersistReadOnlyProvenance()
+    {
+        var document = new LadderEditorDocument { Id = "hardware-project", Name = "Hardware project" };
+        document.AddBlock("Main");
+        document.SystemConstants.Add(new PlcSystemConstant(
+            "device-1-led", "LocalModule", "HW_DEVICE", "257",
+            "PLC_1 / Rack 0 / Slot 1", "Configured CPU hardware identifier"));
+        document.SystemConstants.Add(new PlcSystemConstant(
+            "module-2-led", "InputModule", "HW_MODULE", "258",
+            "PLC_1 / Rack 0 / Slot 2", "Configured DI module identifier"));
+
+        var saved = LadderEditorProjectJson.Save(document);
+        var json = JsonNode.Parse(saved)!;
+        Equal(10, json["schemaVersion"]!.GetValue<int>());
+        Equal("PLC_1 / Rack 0 / Slot 1", json["systemConstants"]![0]!["hardwareSource"]!.GetValue<string>());
+
+        var reopened = LadderEditorProjectJson.Load(saved);
+        True(reopened.IsReadable);
+        Equal(saved, LadderEditorProjectJson.Save(reopened.Document!));
+        Equal(2, reopened.Document!.SystemConstants.Count);
+        Equal("HW_MODULE", reopened.Document.SystemConstants[1].DataType);
+
+        var history = new LadderEditorHistory();
+        history.Execute(document, "Add tag", () => document.AddTag("unrelated", PlcVariableRole.Memory));
+        True(history.Undo(document, out _));
+        Equal(2, document.SystemConstants.Count);
+        True(history.Redo(document, out _));
+        Equal("PLC_1 / Rack 0 / Slot 2", document.SystemConstants[1].HardwareSource);
+
+        var malformed = JsonNode.Parse(saved)!;
+        malformed["systemConstants"]![0]!["hardwareSource"] = "";
+        False(LadderEditorProjectJson.Load(malformed.ToJsonString()).IsReadable);
+
+        var collision = JsonNode.Parse(saved)!;
+        collision["tags"] = JsonNode.Parse("""[{"symbolId":"tag-1","name":"LocalModule","type":"Bool","role":"Memory","initial":false,"binding":"","tagTable":"Default tag table","address":"","comment":""}]""");
+        False(LadderEditorProjectJson.Load(collision.ToJsonString()).IsReadable);
+
+        var importedProgram = LadderEditorDocument.CreateConveyorExample().BuildProgram();
+        document.ReplaceFromProgram(importedProgram);
+        Equal(0, document.SystemConstants.Count);
     }
 
     private static void UserConstantsValidatePersistAndUndo()
@@ -206,11 +250,47 @@ internal static partial class Program
         Equal("Machine limits", document.UserConstants.Single().TagTable);
 
         var saved = LadderEditorProjectJson.Save(document);
-        Equal(9, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
+        Equal(10, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
         var reopened = LadderEditorProjectJson.Load(saved);
         True(reopened.IsReadable);
         Equal(saved, LadderEditorProjectJson.Save(reopened.Document!));
         Equal("1250", reopened.Document!.UserConstants.Single().Value);
+
+        var executable = new LadderEditorDocument { Id = "constant-inputs", Name = "Constant inputs" };
+        executable.AddBlock("Main");
+        executable.AddTag("measured", PlcVariableRole.Input, type: PlcVariableType.DInt, initialValue: 0L);
+        executable.AddTag("enabled_lamp", PlcVariableRole.Output);
+        executable.AddTag("limit_lamp", PlcVariableRole.Output);
+        var enabled = executable.AddUserConstant("FeatureEnabled", PlcVariableType.Bool, "TRUE");
+        var limit = executable.AddUserConstant("MaxTravel", PlcVariableType.DInt, "1250");
+        executable.AddRung("Constant contact", "enabled_lamp");
+        executable.AddContact(0, 0, enabled.Name, false);
+        executable.AddRung("Constant comparison", "limit_lamp");
+        executable.AddComparison(1, 0, "measured", LadderCompareOperator.LessOrEqual, limit.Name,
+            LadderComparisonValueType.DInt);
+
+        var symbols = LadderOperandSymbols.ForDocument(executable);
+        True(symbols.Any(symbol => symbol.Name == enabled.Name && symbol.Type == PlcVariableType.Bool && !symbol.Writable));
+        True(LadderOperandSymbols.Validate(symbols, enabled.Name, PlcVariableType.Bool, false, false) is null);
+        True(LadderOperandSymbols.Validate(symbols, enabled.Name, PlcVariableType.Bool, true, false) is not null);
+
+        var executableProgram = executable.BuildProgram();
+        Equal("TRUE", executableProgram.Networks[0].Logic.Children![0].Variable);
+        Equal("1250", executableProgram.Networks[1].Logic.Children![0].RightOperand);
+        Equal(0, LadderCompiler.Validate(executableProgram).Count);
+        var constantRuntime = Runtime(executableProgram);
+        constantRuntime.Run();
+        var constantSnapshot = constantRuntime.Scan(Inputs(), NumericInputs(("measured", 1000)));
+        True(constantSnapshot.Outputs["enabled_lamp"]);
+        True(constantSnapshot.Outputs["limit_lamp"]);
+
+        var renamed = executable.UpdateUserConstant(enabled.Id, "EnableTraining", PlcVariableType.Bool,
+            "TRUE", enabled.Comment, enabled.TagTable);
+        Equal("EnableTraining", executable.Rungs[0].Branches[0].Contacts[0].Variable);
+        Equal(1, executable.CountUserConstantReferences(renamed.Name));
+        False(executable.RemoveUserConstant(renamed.Id));
+        executable.Rungs[0].Branches[0].Contacts[0] = executable.Rungs[0].Branches[0].Contacts[0] with { Variable = "TRUE" };
+        True(executable.RemoveUserConstant(renamed.Id));
 
         // Schema 7 predates constants; old projects migrate with an empty collection.
         var legacy = JsonNode.Parse(saved)!;
@@ -332,7 +412,7 @@ internal static partial class Program
                 new("template", LadderNodeKind.Contact, "start_command")));
         True(insert.Applied);
         var saved = LadderEditorProjectJson.Save(document);
-        Equal(9, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
+        Equal(10, JsonNode.Parse(saved)!["schemaVersion"]!.GetValue<int>());
         True(saved.Contains("\"openEnd\": true", StringComparison.Ordinal));
         var loaded = LadderEditorProjectJson.Load(saved);
         True(loaded.IsReadable);
@@ -444,6 +524,42 @@ internal static partial class Program
         True(document.TagTables.Contains("Empty", StringComparer.OrdinalIgnoreCase));
         True(history.Redo(document, out _));
         False(document.TagTables.Contains("Empty", StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static void TagTableDuplicateCopiesDeclarationsWithoutIoOwnership()
+    {
+        var document = new LadderEditorDocument();
+        document.AddBlock("Main", LadderBlockType.OrganizationBlock);
+        var source = document.AddTagTable("Cell");
+        document.AddTag("cell_enable", PlcVariableRole.Input, "start_command", tagTable: source,
+            address: "%IX0.0", comment: "Bound input");
+        document.AddTag("mode", PlcVariableRole.Memory, type: PlcVariableType.String,
+            initialValue: "Auto", tagTable: source, comment: "Mode text");
+        document.AddUserConstant("MaxTravel", PlcVariableType.DInt, "1250", source, "Travel limit");
+
+        var history = new LadderEditorHistory();
+        string copy = string.Empty;
+        history.Execute(document, "Duplicate tag table", () => copy = document.DuplicateTagTable(source));
+        Equal("Cell Copy", copy);
+        var copiedTags = document.Tags.Where(tag => tag.TagTable == copy).ToArray();
+        Equal(2, copiedTags.Length);
+        True(copiedTags.All(tag => tag.Binding.Length == 0 && tag.Address.Length == 0));
+        Equal("Bound input", copiedTags.Single(tag => tag.Name.StartsWith("cell_enable", StringComparison.Ordinal)).Comment);
+        Equal("Auto", copiedTags.Single(tag => tag.Type == PlcVariableType.String).InitialValue);
+        var copiedConstant = document.UserConstants.Single(constant => constant.TagTable == copy);
+        Equal("1250", copiedConstant.Value);
+        True(!copiedConstant.Name.Equals("MaxTravel", StringComparison.OrdinalIgnoreCase));
+
+        True(history.Undo(document, out _));
+        False(document.TagTables.Contains(copy, StringComparer.OrdinalIgnoreCase));
+        True(history.Redo(document, out _));
+        True(document.TagTables.Contains(copy, StringComparer.OrdinalIgnoreCase));
+
+        document.AddTagTable(SceneLadderProject.SceneIoTagTableName);
+        var rejected = false;
+        try { document.DuplicateTagTable(SceneLadderProject.SceneIoTagTableName); }
+        catch (InvalidOperationException) { rejected = true; }
+        True(rejected);
     }
 
     private static void TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic()

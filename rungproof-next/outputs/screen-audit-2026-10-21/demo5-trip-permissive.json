@@ -1,0 +1,16 @@
+[
+ {"click":[1265,39],"wait":0.4},
+ {"click":[1178,674],"wait":2,"capture":"demo5-stop-fresh-start"},
+ {"click":[1183,543],"wait":0.5,"capture":"demo5-trip-applied"},
+ {"click":[1178,674],"wait":0.8,"capture":"demo5-trip-start-blocked"},
+ {"click":[1183,543],"wait":0.3},
+ {"click":[1018,526],"wait":0.4,"capture":"demo5-trip-cleared-reset"},
+ {"click":[1178,674],"wait":2,"capture":"demo5-trip-fresh-start"},
+ {"click":[1373,557],"wait":0.5,"capture":"demo5-pallet-permissive-removed"},
+ {"click":[1178,674],"wait":0.6,"capture":"demo5-pallet-invalid-start-blocked"},
+ {"click":[1373,557],"wait":0.3},
+ {"click":[1018,526],"wait":0.4},
+ {"click":[1178,674],"wait":2,"capture":"demo5-permissive-restored-fresh-start"},
+ {"click":[595,39],"wait":0.2},
+ {"click":[701,15],"wait":0.5,"capture":"demo5-trip-permissive-progress"}
+]

@@ -1,0 +1,1 @@
+[{"name": "lab410-completed-final", "expected": {"batch_complete": true, "cycle_complete": true, "cycle_active": false, "cookie_count": 6, "wrapped_count": 6, "infeed_run": false, "packaging_enable": false, "packaging_busy": false, "packaging_fault": false}, "monitor_only": true, "keep_monitor": true}]

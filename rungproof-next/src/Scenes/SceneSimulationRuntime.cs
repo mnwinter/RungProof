@@ -26,6 +26,7 @@ public partial class SceneSimulationRuntime : Node
     private readonly Dictionary<string, string> _pointTypes = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Vector3> _initialEquipmentPositions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Vector3> _initialEquipmentRotations = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Vector3> _initialEquipmentScales = new(StringComparer.Ordinal);
     private readonly HashSet<string> _sequenceRotatedEquipment = new(StringComparer.Ordinal);
     private readonly Dictionary<Node3D, (Vector3 Scale, Vector3 Position, float Height)> _liquidAuthored = [];
     private JsonElement _activeSteps;
@@ -47,6 +48,9 @@ public partial class SceneSimulationRuntime : Node
     // Keep its visual pose separately from the canonical infeed leading edge.
     // This scene renders one recycled carton, not a receiver accumulation queue.
     private Vector3? _releasedCartonPosition;
+    private double _mainLineExitFeedbackSeconds;
+    private double _sideLineExitFeedbackSeconds;
+    private Vector3 _conveyorProductBaseScale = Vector3.One;
     private readonly HashSet<string> _pulsePoints = new(StringComparer.Ordinal);
 
     public event Action? StateChanged;
@@ -163,6 +167,13 @@ public partial class SceneSimulationRuntime : Node
         FreezeHandDryerAdapter();
         _guardedDrive?.SetPhysicsProcess(false);
         FreezeToteTransferAdapter();
+        FreezeInboundScanAdapter();
+        FreezeAssemblyLiftAdapter();
+        FreezeServiceDoorAdapter();
+        FreezeJugFillAdapter();
+        FreezeDrillAdapter();
+        FreezeCncTendingAdapters();
+        FreezeParcelTransferAdapters();
         FreezeLuggageAdapters();
         FreezeVisionSorterAdapters();
         FreezeMotorConveyorAdapters();
@@ -232,15 +243,21 @@ public partial class SceneSimulationRuntime : Node
             _conveyorPlant = new ConveyorPlantModel(Number(_definition, "lengthM", 1), Number(_definition, "speedMps", 0.5),
                 Number(_definition, "objectLengthM", 0.2), Number(_definition, "photoeyePositionM", 0.5),
                 Number(_definition, "minimumPhotoeyeOnS", 0.1), Number(_definition, "pusherStrokeTimeS", 0.3),
-                Number(_definition, "transferPositionFraction", 0.8), RuntimeType == "conveyorPusher" ? Number(_definition, "repeatLoadSeconds", 2.5) : null);
+                Number(_definition, "transferPositionFraction", 0.8), RuntimeType == "conveyorPusher" ? Number(_definition, "repeatLoadSeconds", 2.5) : null,
+                RuntimeType == "conveyorPusher" ? NumberArray(_definition, "cartonHeightSequenceM") : null);
         foreach (Node child in sceneRoot.GetChildren())
         {
             if (child is Node3D equipment)
             {
                 _initialEquipmentPositions[equipment.Name.ToString()] = equipment.Position;
                 _initialEquipmentRotations[equipment.Name.ToString()] = equipment.RotationDegrees;
+                _initialEquipmentScales[equipment.Name.ToString()] = equipment.Scale;
             }
         }
+        var conveyorProductId = SafeNodeName(Text(_definition, "productId", string.Empty));
+        if (_sceneRoot.GetNodeOrNull<Node3D>(conveyorProductId) is { } conveyorProduct)
+            _conveyorProductBaseScale = conveyorProduct.Scale;
+        InitializePalletCounterVisual();
     }
 
     public override void _Ready()
@@ -269,6 +286,8 @@ public partial class SceneSimulationRuntime : Node
             _pulsePoints.Clear();
             EvaluateRules();
         }
+
+        AdvancePalletCounterVisual(delta);
 
         // An explicitly configured PLC enable starts this plant routine once
         // per Reset. Scene step output presets never replace that PLC image.
@@ -307,6 +326,13 @@ public partial class SceneSimulationRuntime : Node
         if (HasMobileTrafficPlant) { AdvanceMobileTrafficPlant(delta); return; }
         if (HasDualSpindlePlant && UsesExternalClock) { AdvanceDualSpindlePlant(delta); return; }
         if (HasToteTransfer && UsesExternalClock) { AdvanceToteTransfer(delta); return; }
+        if (HasInboundScanPlant && UsesExternalClock) { AdvanceInboundScanPlant(delta); return; }
+        if (HasAssemblyLiftPlant && UsesExternalClock) { AdvanceAssemblyLiftPlant(delta); return; }
+        if (HasJugFillPlant && UsesExternalClock) { AdvanceJugFillPlant(delta); return; }
+        if (HasDrillPlant && UsesExternalClock) { AdvanceDrillPlant(delta); return; }
+        if (HasCncTendingPlant && UsesExternalClock) { AdvanceCncTendingPlant(delta); return; }
+        if (HasParcelTransferPlant && UsesExternalClock) { AdvanceParcelTransferPlant(delta); return; }
+        if (HasServiceDoorPlant && UsesExternalClock) { AdvanceServiceDoorPlant(delta); return; }
         if (HasLuggagePlant) { AdvanceLuggagePlant(delta); return; }
         if (HasEvPlant) { AdvanceEvPlant(delta); return; }
         if (HasParkingEntryPlant) { AdvanceParkingEntryPlant(delta); return; }
@@ -498,6 +524,9 @@ public partial class SceneSimulationRuntime : Node
         if (RuntimeType == "tank")
         {
             _tankSimulationRunning = true;
+            // Maintained preview requests survive Stop. Resume their ordinary
+            // legacy rules only after Run; loaded controllers bypass rules.
+            if (!UsesExternalClock && ManualTankRequestsRequireRun) EvaluateRules();
             ProjectTankState();
         }
         StateChanged?.Invoke();
@@ -554,6 +583,9 @@ public partial class SceneSimulationRuntime : Node
         _tankSimulationRunning = false;
         _pulsePoints.Clear();
         _releasedCartonPosition = null;
+        _mainLineExitFeedbackSeconds = 0;
+        _sideLineExitFeedbackSeconds = 0;
+        ResetPalletCounterVisual();
         _conveyorPlant?.Reset();
         _points.Clear();
         foreach (var (name, value) in _initialPoints)
@@ -622,6 +654,13 @@ public partial class SceneSimulationRuntime : Node
         ResetServiceElevator();
         ResetDualSpindlePlant();
         ResetToteTransfer();
+        ResetInboundScanPlant();
+        ResetAssemblyLiftPlant();
+        ResetServiceDoorPlant();
+        ResetJugFillPlant();
+        ResetDrillPlant();
+        ResetCncTendingPlant();
+        ResetParcelTransferPlant();
         ResetLuggagePlant();
         ResetEvPlant();
         ResetWastewaterPlant();
@@ -1034,8 +1073,24 @@ public partial class SceneSimulationRuntime : Node
 
     private void AdvanceConveyorStop(double delta)
     {
-        _conveyorPlant!.Step(delta, AsBool(_points.GetValueOrDefault("conveyor_running")),
-            AsBool(_points.GetValueOrDefault("pusher_extend")), RuntimeType == "conveyorPusher");
+        if (RuntimeType == "conveyorPusher" && AsBool(_points.GetValueOrDefault("sorter_reset")))
+        {
+            _conveyorPlant!.Reset();
+            _releasedCartonPosition = null;
+            _mainLineExitFeedbackSeconds = 0;
+            _sideLineExitFeedbackSeconds = 0;
+        }
+        else
+        {
+            _conveyorPlant!.Step(delta, AsBool(_points.GetValueOrDefault("conveyor_running")),
+                AsBool(_points.GetValueOrDefault("pusher_extend")), RuntimeType == "conveyorPusher");
+            if (_conveyorPlant.ObjectPassedMainLine)
+                _mainLineExitFeedbackSeconds = Number(_definition, "mainExitFeedbackHoldS", 0.2);
+            else _mainLineExitFeedbackSeconds = Math.Max(0, _mainLineExitFeedbackSeconds - delta);
+            if (_conveyorPlant.ObjectTransferred)
+                _sideLineExitFeedbackSeconds = Number(_definition, "sideExitFeedbackHoldS", 0.2);
+            else _sideLineExitFeedbackSeconds = Math.Max(0, _sideLineExitFeedbackSeconds - delta);
+        }
         ProjectConveyorPlant();
         ApplyBindings();
         StateChanged?.Invoke();
@@ -1050,6 +1105,10 @@ public partial class SceneSimulationRuntime : Node
         SetExistingPoint("pusher_position", _conveyorPlant.PusherPosition * 100);
         SetExistingPoint("pusher_extended", _conveyorPlant.PusherExtended);
         SetExistingPoint("pusher_retracted", _conveyorPlant.PusherRetracted);
+        SetExistingPoint("carton_height_mm", _conveyorPlant.PhotoeyeBlocked
+            ? (long)Math.Round(_conveyorPlant.CurrentCartonHeightM * 1000.0, MidpointRounding.AwayFromZero) : 0L);
+        SetExistingPoint("main_line_exit", _mainLineExitFeedbackSeconds > 0);
+        SetExistingPoint("side_line_exit", _sideLineExitFeedbackSeconds > 0);
         SetExistingPoint("parts_completed", _conveyorPlant.Completed);
         SetExistingPoint("component_state", _conveyorPlant.State);
         var productId = SafeNodeName(Text(_definition, "productId", string.Empty));
@@ -1064,6 +1123,12 @@ public partial class SceneSimulationRuntime : Node
             }
         if (_sceneRoot.GetNodeOrNull<Node3D>(productId) is { } product)
         {
+            if (_initialEquipmentScales.TryGetValue(productId, out var baseScale))
+            {
+                var baseHeight = Number(_definition, "cartonBaseHeightM", 0.72);
+                var heightScale = baseHeight > 0 ? (float)(_conveyorPlant.CurrentCartonHeightM / baseHeight) : 1.0f;
+                product.Scale = new Vector3(baseScale.X, baseScale.Y * heightScale, baseScale.Z);
+            }
             if (_conveyorPlant.ObjectPresent) _releasedCartonPosition = null;
             else if (RuntimeType == "conveyorPusher" && _conveyorPlant.ObjectTransferred)
                 _releasedCartonPosition = product.Position;
@@ -1104,6 +1169,15 @@ public partial class SceneSimulationRuntime : Node
                 }
                 product.Position = target;
             }
+        }
+        var sensorId = SafeNodeName(Text(_definition, "heightSensorId", string.Empty));
+        if (_sceneRoot.GetNodeOrNull<Node3D>(sensorId) is { } sensorPortal)
+        {
+            var measuredHeight = _conveyorPlant.PhotoeyeBlocked ? _conveyorPlant.CurrentCartonHeightM : 0;
+            var beamHeights = NumberArray(_definition, "heightBeamHeightsM");
+            for (var index = 0; index < Math.Min(beamHeights.Length, 3); index++)
+                if (sensorPortal.GetNodeOrNull<Node3D>($"KIN_beam_size_{index + 1}") is { } beam)
+                    beam.Visible = measuredHeight + 1e-9 < beamHeights[index];
         }
     }
 
@@ -1283,6 +1357,10 @@ public partial class SceneSimulationRuntime : Node
         return (bottom, top);
     }
 
+    private bool ManualTankRequestsRequireRun => _definition.ValueKind == JsonValueKind.Object
+        && _definition.TryGetProperty("manualTankRequestsRequireRun", out var required)
+        && required.ValueKind == JsonValueKind.True;
+
     private void EvaluateRules()
     {
         if(HasLuggagePlant) ProjectLuggagePlant();
@@ -1330,6 +1408,15 @@ public partial class SceneSimulationRuntime : Node
                 }
             }
         }
+        // An opted-in manual tank's maintained requests are not permission
+        // to restart its preview outputs after Stop. Do not alter requests,
+        // measured level, or the loaded-controller output image above.
+        if (RuntimeType == "tank" && !_tankSimulationRunning
+            && ManualTankRequestsRequireRun)
+        {
+            SetPoint("inlet_pump_run", false);
+            SetPoint("drain_valve_open", false);
+        }
         foreach (var (name, value) in _points) _previousPoints[name] = value;
         ApplyBindings();
         StateChanged?.Invoke();
@@ -1337,6 +1424,16 @@ public partial class SceneSimulationRuntime : Node
 
     private void ApplyBindings()
     {
+        ProjectInboundScanPlant();
+        ProjectAssemblyLiftPlant();
+        ProjectJugFillPlant();
+        ProjectDrillPlant();
+        ProjectCncTendingPlant();
+        ProjectParcelTransferPlant();
+        ProjectServiceDoorPlant();
+        if (_definition.TryGetProperty("fumeSpeedFeedback", out var speedFeedback)
+            && speedFeedback.ValueKind == JsonValueKind.True)
+            FumeExtractorFeedback.Project(_points);
         ProjectAggregatePoints();
         // Count the effective command image from typed ARRAY and legacy BOOL
         // sources. This display does not represent measured shaft feedback.
@@ -1477,6 +1574,8 @@ public partial class SceneSimulationRuntime : Node
         foreach (var (equipment, running) in runningStates)
             foreach (var controller in Controllers(equipment)) SetControllerRunning(controller, running);
         ProjectToteFillVisibility();
+        ProjectJugFillVisibility();
+        ProjectParcelTransferVisuals();
         ProjectChainLiftCommands();
         ProjectWastewaterValveFeedback();
     }
@@ -1626,6 +1725,7 @@ public partial class SceneSimulationRuntime : Node
         SetPoint(point, true);
         EvaluateRules();
         _pulsePoints.Add(point);
+        AcceptPalletCounterVisualPulse(point);
         return true;
     }
 
@@ -1700,6 +1800,10 @@ public partial class SceneSimulationRuntime : Node
         && element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() ?? fallback : fallback;
     private static double Number(JsonElement element, string name, double fallback) => element.ValueKind == JsonValueKind.Object
         && element.TryGetProperty(name, out var value) && value.TryGetDouble(out var number) ? number : fallback;
+    private static double[] NumberArray(JsonElement element, string name) => element.ValueKind == JsonValueKind.Object
+        && element.TryGetProperty(name, out var values) && values.ValueKind == JsonValueKind.Array
+            ? values.EnumerateArray().Select(value => value.TryGetDouble(out var number) ? number : double.NaN).ToArray()
+            : [];
     private static object? Value(JsonElement value) => value.ValueKind switch
     {
         JsonValueKind.True => true, JsonValueKind.False => false,

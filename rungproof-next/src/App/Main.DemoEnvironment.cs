@@ -38,7 +38,18 @@ public partial class Main
             GD.PushError($"SCENE_ENVIRONMENT_PROFILE_MISSING {sceneId}");
             return;
         }
-        var meshes = ReviewMeshes(processRoot);
+        // The material-entry portal is authored building architecture. If its
+        // wall panels participate in the process envelope, the room expands to
+        // contain the wall and guarantees that the wall reads as a freestanding
+        // divider. Size the room from machinery and motion only so the entry
+        // wall can terminate into (and slightly beyond) the room perimeter.
+        bool IsMaterialEntryArchitecture(Node node)
+        {
+            for (Node? current = node; current is not null && current != processRoot; current = current.GetParent())
+                if (current.Name == "MaterialEntryPortal") return true;
+            return false;
+        }
+        var meshes = ReviewMeshes(processRoot).Where(mesh => !IsMaterialEntryArchitecture(mesh)).ToArray();
         if (meshes.Length == 0) return;
         var bounds = meshes.Select(ReviewBounds).Aggregate((a, b) => a.Merge(b));
         // Authored scene ground is Y=0. A submerged sump or hanging accessory

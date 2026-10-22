@@ -1,0 +1,9 @@
+[
+ {"capture":"lab202-monitored-00","wait":0.1},
+ {"click":[697,380],"wait":0.4,"capture":"lab202-monitored-10"},
+ {"click":[789,411],"wait":0.4,"capture":"lab202-monitored-11"},
+ {"click":[697,380],"wait":0.4,"capture":"lab202-monitored-01"},
+ {"click":[789,411],"wait":0.4,"capture":"lab202-monitored-00-again"},
+ {"click":[697,380],"wait":0.2},
+ {"click":[789,411],"wait":0.4,"capture":"lab202-monitored-11-again"}
+]

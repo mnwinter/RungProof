@@ -660,7 +660,13 @@ public static class LadderCompiler
                 else if (!string.IsNullOrWhiteSpace(edgeMemory))
                     issues.Add(new("VC001", $"{path}.edgeMemory", $"Unknown edge-memory operand '{edgeMemory}'."));
             }
-            if (variables.TryGetValue(node.Variable, out var variable))
+            if (node.Variable.Equals("TRUE", StringComparison.OrdinalIgnoreCase)
+                || node.Variable.Equals("FALSE", StringComparison.OrdinalIgnoreCase))
+            {
+                // BOOL user constants are lowered to immutable literals before
+                // compile; the runtime already resolves these literal contacts.
+            }
+            else if (variables.TryGetValue(node.Variable, out var variable))
             {
                 if (variable.Type != PlcVariableType.Bool)
                     issues.Add(new("VC002", $"{path}.variable", $"Contact variable '{variable.Name}' must be BOOL."));

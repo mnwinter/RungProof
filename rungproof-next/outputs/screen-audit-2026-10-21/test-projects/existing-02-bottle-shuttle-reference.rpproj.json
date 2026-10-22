@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "example-02-bottle-shuttle",
+  "name": "Bottle Shuttle - offline round trip",
+  "sourceSceneId": "lab-2-20-bottle-shuttle",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "main",
+  "nextId": 900,
+  "tasks": [],
+  "watchVariables": [
+    "shuttle_step",
+    "motor_run",
+    "motor_direction",
+    "left_sensor_active",
+    "right_sensor_active"
+  ],
+  "tags": [
+    {
+      "name": "start_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.start"
+    },
+    {
+      "name": "stop_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.stop"
+    },
+    {
+      "name": "left_sensor_active",
+      "type": "Bool",
+      "role": "Input",
+      "initial": true,
+      "binding": "left_sensor_active"
+    },
+    {
+      "name": "right_sensor_active",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "right_sensor_active"
+    },
+    {
+      "name": "motor_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "motor_run"
+    },
+    {
+      "name": "motor_direction",
+      "type": "Int",
+      "role": "Output",
+      "initial": 0,
+      "binding": "motor_direction"
+    },
+    {
+      "name": "shuttle_step",
+      "type": "Int",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    },
+    {
+      "name": "always_scan",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": true,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "main",
+      "name": "Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "r1",
+          "label": "Machine Stop cancels the cycle",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "shuttle_step",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r1-b0",
+              "contacts": [
+                {
+                  "id": "r1-b0-c0",
+                  "variable": "stop_command",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "label": "Return to left sensor completes the cycle",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "shuttle_step",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r2-b0",
+              "contacts": [
+                {
+                  "id": "r2-b0-c0",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "2",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r2-b0-c1",
+                  "variable": "left_sensor_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "label": "Fresh Start at left sensor enters outward travel",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "1",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "shuttle_step",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r3-b0",
+              "contacts": [
+                {
+                  "id": "r3-b0-c0",
+                  "variable": "start_command",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r3-b0-c1",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r3-b0-c2",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r3-b0-c3",
+                  "variable": "left_sensor_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r4",
+          "label": "Actual right sensor selects return travel",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "2",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "shuttle_step",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r4-b0",
+              "contacts": [
+                {
+                  "id": "r4-b0-c0",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "1",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r4-b0-c1",
+                  "variable": "right_sensor_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r5",
+          "label": "Default direction is stopped",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "motor_direction",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r5-b0",
+              "contacts": [
+                {
+                  "id": "r5-b0-c0",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r6",
+          "label": "Outward direction +1",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "1",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "motor_direction",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r6-b0",
+              "contacts": [
+                {
+                  "id": "r6-b0-c0",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "1",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r7",
+          "label": "Return direction -1",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "-1",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "motor_direction",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r7-b0",
+              "contacts": [
+                {
+                  "id": "r7-b0-c0",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "2",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r8",
+          "label": "Run the belt only during a travel step",
+          "coilVariable": "motor_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "r8-b0",
+              "contacts": [
+                {
+                  "id": "r8-b0-c0",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "1",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r8-b0-c1",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "r8-b1",
+              "contacts": [
+                {
+                  "id": "r8-b1-c0",
+                  "variable": "shuttle_step",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "2",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "r8-b1-c1",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# QA-PLANT-001: Lab2.11 missing command-driven plant
+
+Native `newbinding211-controls.png`, `newbinding211-r1-after-start-a.png` and `newbinding211-r1-after-start-b.png` show the tote at the same upstream position relative to the fixed beam and conveyor after the accepted Start and roughly1/6s checkpoints. Actual `newbinding211-r1-start-signals.png` reads conveyor_runTrue while tote_at_scannerFalse and scan_completeFalse; the tote is still upstream. Selected evidence in `newbinding211-review-compact.jpg`.
+
+This is a distinct command→mechanical integration failure, not a reopened command-binding guard. QA-PLANT-001 S2 confirmed for Lab2.11 only. Six other legacy sequence scenes remain source candidates, not UI-confirmed instances.
+
+Authorized implementation now adds a narrowly opted-in physical model: accepted-tick integration at configured0.75m/s, supported route end3.4, actual delivered tote/beam geometry for scanner overlap, automatic identification after0.8s continuously stopped in beam. Moving before completion restarts identification. Scan result retains until Reset. Plant does not command stopping/scanning/clearing or write PLC outputs; LAD decides its sequence. Explicit mechanical contract added to scene help. No post-fix native evidence yet; status implemented/pending build and UI verification. Regression checks added but not run by reviewer to avoid concurrent builds.
+
+## Post-fix bounded native verification
+Built-app B2 actual GUI frames in `fix-plant211-review-compact.jpg` now show supported tote movement from upstream through scanner vicinity to downstream endpoint. Final native Signals show conveyorFalse, scan_completeTrue, tote_at_scannerFalse, cycle_completeTrue. Reset restores upstream pose/all four monitored BOOLsFalse. During a fresh moving run AppStop/held preserve the tote pose with conveyorFalse and both scan feedbacksFalse; root confirms terminal R2 run/repeat finishes with the same completed/alloff endpoint.
+
+The original no-motion failure is resolved for this built-app normal endpoint and active Stop/Reset/repeat route. QA-FUNC-001 Lab2.11 request delivery is likewise demonstrated through the physical Start→running route. Phase filenames are observations, not state assertions: r1-scanner is still green/upstream; r1-clearing is amber near beam. An explicit native tote_at_scannerTrue checkpoint and precise identification dwell remain pending; no exact0.8s UI timing claim. Help corrected to distinguish commanded belt travel from bounded displayed tote endpoint.

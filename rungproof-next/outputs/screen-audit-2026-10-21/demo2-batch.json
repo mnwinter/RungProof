@@ -1,0 +1,7 @@
+[
+ {"click":[467,314],"wait":0.7,"capture":"demo2-request-under-preset"},
+ {"click":[467,314],"wait":0.4,"capture":"demo2-request-off-resets"},
+ {"click":[467,314],"wait":2.5,"capture":"demo2-request-completes"},
+ {"click":[855,334],"wait":0.4,"capture":"demo2-machine-stop"},
+ {"click":[1085,338],"wait":0.4,"capture":"demo2-machine-reset"}
+]

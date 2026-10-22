@@ -1,0 +1,9 @@
+# Lab 6.8 independent native review
+
+Reviewed20normal native captures and8recovery cases using four lab68-review sheets. Physical hands, cutaway, blower/heater pilots, countdown and six native Signals retained. Loaded reviewer fixture has a five-second TON parameter; this is not a documented scene-duration claim. No reviewer UI/backend operations.
+
+Insertion visibly presents hands beneath the dryer, lights green blower and amber heater pilots, and makes cutaway heater bars red. Native blower/heaterTrue with hands_inserted/presentTrue and heater_inhibitedFalse. Remaining countdown falls4.9→4.5→3.82→3.46→2.8→2.3→1.78→1.38→.7→.18→0. Physical display visibly follows these values (e.g. native full dry-cycle05 reads1.78). At6287 outputsFalse, both pilots dark, heater bars unlit and countdown0, while hands remain present. Subsequent held frames through6561 and independent timeout9641 stay off/zero: no automatic retrigger with hands continuously present. This does not prove exact timer expiry boundaries or fan rotational rate.
+
+Withdrawal9727 removes physical hands and leaves off/zero. Reinsertion9812 starts fresh blower/heater with3.96 remaining; early withdrawal9890 removes hands and cancels both outputs/countdown. Fresh insertion9976 restarts outputs/countdown4. AppStop10030 retains physical hands/presence but clears outputs/remaining0; heater_inhibited is visiblyTrue in this stopped checkpoint. AppRun10073 restarts blower/heater and a fresh interval4.14 with hands retained, heater_inhibitedFalse, matching loaded fixture policy. AppReset0 removes hands, clears both outputs/countdown and heater_inhibitedFalse.
+
+No new issue. Independent heater-inhibit manipulation, thermal/fan faults, exact five-second acceptance timing, rapid input chatter and continuous mechanical fan motion remain unproven. No whole-scene PASS.

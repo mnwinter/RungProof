@@ -30,7 +30,10 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | Symbolic point | Equipment | Mode |
 | --- | --- | --- |
 | `reset_request` | `reset_button` | `switch` |
+| `stop_contact_nc` | `nc_button` | `switch` via `toggle-nc` action |
 | `permit_output` | `permit_lamp` | `indicator` |
+
+The NC test button maps through its equipment `config.action` (`toggle-nc`) to `stop_contact_nc`; the explicit `simulation.pointBindings` list contains the NO reset and lamp rows only.
 
 ## Expected equipment
 

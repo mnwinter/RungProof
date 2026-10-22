@@ -80,6 +80,14 @@ public partial class SimulatorShell
                 ("project-open-replaces-document-tabs", "opening another project closes documents owned by the previous project and selects the new project's active block"),
                 ("project-open-does-not-retarget-colliding-keys", "project-local block IDs and DB numbers do not retarget old document tabs to objects in the replacement project"),
                 ("gate-restores-original-editor-documents", "the gate restores the original editor tabs, titles, and active document during teardown"),
+                ("v17-compact-dock-removes-duplicate-header-actions", "the V17 project dock uses the compact default width and does not expose duplicate OPEN or PROPS header buttons"),
+                ("v17-editor-toolbars-remove-duplicate-actions", "the V17 document and Global DB headers hide redundant LOCATE and PROPS actions while retaining compact editing controls"),
+                ("v17-watch-document-removes-duplicate-table-navigation", "the V17 Watch document relies on its project-tree row and editor tab, and keeps absolute-address entry collapsed until requested"),
+                ("shell-primary-view-switches-remain-readable", "the Scenario and Logic Editor primary view switches retain their full labels at the required 1600 by 900 frame"),
+                ("v17-tag-document-removes-duplicate-lifecycle-actions", "the V17 tag document hides duplicate table, Properties, and Cross-reference controls while retaining compact Add and Edit actions"),
+                ("v17-instance-db-uses-declaration-row-properties", "the V17 instance DB document hides the duplicate member Properties toolbar while preserving row activation and context-menu routes"),
+                ("v17-user-constants-use-compact-primary-actions", "the V17 User constants view keeps compact Add and Edit actions while row Properties and Delete remain on the context menu"),
+                ("v17-constants-views-hide-simulator-load-action", "the read-only User and System constants views do not display the Tags-view simulator load action"),
             ],
             ["tia.project-tree.visible-form-cancel-actions"] =
             [
@@ -113,6 +121,11 @@ public partial class SimulatorShell
                 ("type-change-selects-compatible-default", "changing a new User constant type updates its untouched value draft to a compatible default"),
                 ("type-defaults-parse-for-supported-types", "every supported User constant type receives a value accepted by its type validator"),
                 ("editing-layout-keeps-form-actions-prioritized", "editing a User constant reduces table expansion and shows Apply/Cancel in place of the table actions and help note"),
+            ],
+            ["tia.project-tree.hardware-system-constants"] =
+            [
+                ("hardware-row-is-rendered-read-only-with-provenance", "configured hardware metadata renders in the read-only System constants grid with its source provenance"),
+                ("hardware-provenance-persists", "system-constant identity, value, type, comment, and hardware source survive project Save/Load"),
             ],
             ["tia.project-tree.create-block"] =
             [
@@ -164,7 +177,7 @@ public partial class SimulatorShell
                 ("remove-resolves-pending-form", "removing a selected member resolves its pending form; Cancel preserves it, Discard removes the declaration, and Undo/Redo restore exact states"),
                 ("ordinary-remove-preserves-survivors", "ordinary Remove without a pending form deletes exactly the selected declaration, preserves all other declarations and DBs, and supports exact Undo/Redo"),
                 ("cancel-member-form", "Cancel discards an unapplied member draft without changing the declaration or Undo history"),
-                ("form-context-labels", "initial DB entry and DB-to-FB-to-DB navigation refresh member labels and defaults"),
+                ("form-context-labels", "initial DB entry and DB-to-FB-to-DB navigation refresh member labels, defaults, and context-appropriate fields"),
                 ("member-editor-route", "member actions fit in constrained and wide project docks and returning to the tree restores the prior dock width"),
                 ("declaration-grid-actions", "the Global DB declaration grid exposes Add, Edit, and Remove actions that target the selected declaration"),
                 ("member-selection-stable-id", "a selected declaration remains selected by persistent member ID after same-DB row insertion and edits the same member"),
@@ -408,8 +421,15 @@ public partial class SimulatorShell
             var sourceTag = _ladderDocument.Tags.FirstOrDefault(tag => tag.Type == PlcVariableType.Bool);
             var sourceIndex = sourceTag is null ? -1 : _ladderDocument.Tags.IndexOf(sourceTag);
             var sourceRow = sourceIndex < 0 ? null : FindMetadata(tagDetailView.GetRoot(), $"tag:{sourceIndex}");
-            var sourcePayload = LadderProgramTree.DragPayloadForItem(sourceRow);
+            var sourceDragRequestsBefore = tagDetailView.ReviewDragDataRequests;
+            var sourceDragData = sourceRow is null
+                ? default
+                : tagDetailView.ReviewDragDataForItem(sourceRow);
+            var sourcePayload = sourceDragData.VariantType == Variant.Type.Nil
+                ? null
+                : sourceDragData.AsString();
             var sourcePayloadValid = sourceTag is not null
+                && tagDetailView.ReviewDragDataRequests == sourceDragRequestsBefore + 1
                 && sourcePayload is not null
                 && LadderTagOperandDragPayload.TryGetIdentity(sourcePayload, out var sourceIdentity)
                 && sourceIdentity == LadderCallBindings.GlobalId(sourceTag);
@@ -421,7 +441,7 @@ public partial class SimulatorShell
             tagDetailGate.Set("folder-opens-detail-view", detailOpened,
                 $"tab={detailProjectTabs.CurrentTab} detailVisible={tagDetailView.IsVisibleInTree()} ladderVisible={canvas.IsVisibleInTree()}");
             tagDetailGate.Set("tag-row-produces-stable-drag-payload", sourcePayloadValid,
-                $"row={sourceRow?.GetText(0)} payload={sourcePayload} expectedId={(sourceTag is null ? "<none>" : LadderCallBindings.GlobalId(sourceTag))}");
+                $"productionDragRequests={tagDetailView.ReviewDragDataRequests - sourceDragRequestsBefore} row={sourceRow?.GetText(0)} payload={sourcePayload} expectedId={(sourceTag is null ? "<none>" : LadderCallBindings.GlobalId(sourceTag))}");
             tagDetailGate.Set("return-restores-project-tree", returnedToTree,
                 $"treeVisible={tree.IsVisibleInTree()} contentUnchanged={LadderEditorProjectJson.Save(_ladderDocument) == tagDetailBaseline}");
             detailProjectTabs.CurrentTab = 2;
@@ -505,6 +525,136 @@ public partial class SimulatorShell
             activation.Set("enter-activates-selected-row", enterAll, string.Join("; ", enterDetails));
             activation.Set("activation-opens-exact-target", broadPass && showAll.Status == "passed", "program/tag/watch/DB/instance/command aggregate plus Show all tags");
             activation.Set("instance-return-restores-owner", broadPass, "physical pointer verifier finalTitle assertion");
+            var compactProjectDock = GetNode<Control>(workbenchRoot + "/ProjectDockHost/ProjectOrganization");
+            var compactDock = _tiaProjectDockSplitOffset == 250
+                && compactProjectDock.Size.X >= 220 && compactProjectDock.Size.X <= 280;
+            var duplicateHeaderActionsHidden = !Find<Button>("OpenSelectedProjectObject").IsVisibleInTree()
+                && !Find<Button>("SelectedProjectObjectProperties").IsVisibleInTree();
+            activation.Set("v17-compact-dock-removes-duplicate-header-actions",
+                compactDock && duplicateHeaderActionsHidden,
+                $"cachedWidth={_tiaProjectDockSplitOffset} renderedWidth={compactProjectDock.Size.X:F1} openVisible={Find<Button>("OpenSelectedProjectObject").IsVisibleInTree()} propsVisible={Find<Button>("SelectedProjectObjectProperties").IsVisibleInTree()}");
+            var locateHeaderAction = Find<Button>("LocateEditorDocumentInTree");
+            var activeDocumentProperties = Find<Button>("ActiveEditorDocumentProperties");
+            var globalDbProperties = Find<Button>("GlobalDbPropertiesMember");
+            var globalDbDeclarationContextMenu = Find<PopupMenu>("GlobalDbDeclarationContextMenu");
+            var globalDbAdd = Find<Button>("GlobalDbAddMember");
+            var globalDbEdit = Find<Button>("GlobalDbEditMember");
+            var globalDbRemove = Find<Button>("GlobalDbRemoveMember");
+            var redundantEditorActionsHidden = !locateHeaderAction.Visible
+                && !activeDocumentProperties.Visible
+                && !globalDbProperties.Visible
+                && globalDbDeclarationContextMenu.GetItemText(globalDbDeclarationContextMenu.GetItemIndex(0)) == "Edit declaration"
+                && globalDbDeclarationContextMenu.GetItemText(globalDbDeclarationContextMenu.GetItemIndex(5)) == "Properties";
+            var compactGlobalDbActions = globalDbAdd.CustomMinimumSize.X <= 88
+                && globalDbEdit.CustomMinimumSize.X <= 56
+                && globalDbRemove.CustomMinimumSize.X <= 76
+                && globalDbAdd.SizeFlagsVertical == Control.SizeFlags.ShrinkCenter
+                && globalDbEdit.SizeFlagsVertical == Control.SizeFlags.ShrinkCenter
+                && globalDbRemove.SizeFlagsVertical == Control.SizeFlags.ShrinkCenter;
+            activation.Set("v17-editor-toolbars-remove-duplicate-actions",
+                redundantEditorActionsHidden && compactGlobalDbActions,
+                $"locateVisible={locateHeaderAction.Visible} documentPropsVisible={activeDocumentProperties.Visible} globalDbPropsVisible={globalDbProperties.Visible} addWidth={globalDbAdd.CustomMinimumSize.X:F0} editWidth={globalDbEdit.CustomMinimumSize.X:F0} removeWidth={globalDbRemove.CustomMinimumSize.X:F0}");
+            var watchTableSelector = Find<OptionButton>("WatchTableSelector");
+            var watchTableActions = Find<MenuButton>("WatchTableActions");
+            var watchAddress = Find<LineEdit>("WatchAbsoluteAddress");
+            var addWatchAddress = Find<Button>("AddWatchAddress");
+            var compactWatchDocument = !watchTableSelector.Visible
+                && !watchTableActions.Visible
+                && !watchAddress.Visible
+                && addWatchAddress.Visible
+                && addWatchAddress.Text == "ADDRESS…"
+                && addWatchAddress.CustomMinimumSize.X <= 88;
+            addWatchAddress.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var addressEntryExpands = watchAddress.Visible
+                && addWatchAddress.Text == "ADD ADDRESS"
+                && addWatchAddress.CustomMinimumSize.X >= 104;
+            addWatchAddress.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var blankAddressEntryCollapses = !watchAddress.Visible
+                && addWatchAddress.Text == "ADDRESS…"
+                && addWatchAddress.CustomMinimumSize.X <= 88;
+            activation.Set("v17-watch-document-removes-duplicate-table-navigation",
+                compactWatchDocument && addressEntryExpands && blankAddressEntryCollapses,
+                $"selectorVisible={watchTableSelector.Visible} tableActionsVisible={watchTableActions.Visible} initialCompact={compactWatchDocument} expands={addressEntryExpands} blankCollapses={blankAddressEntryCollapses}");
+            var sceneQuickTab = Find<Button>("SceneQuickTab");
+            var logicQuickTab = Find<Button>("LogicEditorQuickTab");
+            var primarySwitchesReadable = sceneQuickTab.Text == "SCENARIO"
+                && logicQuickTab.Text == "LOGIC EDITOR"
+                && sceneQuickTab.Size.X >= 90
+                && logicQuickTab.Size.X >= 112;
+            activation.Set("shell-primary-view-switches-remain-readable",
+                primarySwitchesReadable,
+                $"scenario={sceneQuickTab.Text}:{sceneQuickTab.Size.X:F1} logic={logicQuickTab.Text}:{logicQuickTab.Size.X:F1}");
+            var tagTableActions = Find<Control>("TagTableActions");
+            var tagProperties = Find<Button>("SelectedTagProperties");
+            var tagCrossReference = Find<Button>("CrossReferenceSelectedTag");
+            var beginAddTag = Find<Button>("BeginAddTag");
+            var editTag = Find<Button>("EditTag");
+            var verifyAndLoad = Find<Button>("ValidateAndLoadButton");
+            var tagDefinitionsTab = Find<Button>("TagDefinitionsTab");
+            var userConstantsTab = Find<Button>("UserConstantsTab");
+            var systemConstantsTab = Find<Button>("SystemConstantsTab");
+            var vendorBoundary = Find<RichTextLabel>("VendorBoundary");
+            var compactTagActions = !tagTableActions.Visible
+                && !tagProperties.Visible
+                && !tagCrossReference.Visible
+                && beginAddTag.Visible
+                && editTag.Visible
+                && beginAddTag.CustomMinimumSize.X <= 72
+                && editTag.CustomMinimumSize.X <= 56
+                && beginAddTag.SizeFlagsVertical == Control.SizeFlags.ShrinkCenter
+                && editTag.SizeFlagsVertical == Control.SizeFlags.ShrinkCenter
+                && verifyAndLoad.Text == "VERIFY + LOAD"
+                && verifyAndLoad.CustomMinimumSize.X <= 132
+                && verifyAndLoad.SizeFlagsHorizontal == Control.SizeFlags.ShrinkBegin
+                && tagDefinitionsTab.CustomMinimumSize.X <= 64
+                && userConstantsTab.CustomMinimumSize.X <= 120
+                && systemConstantsTab.CustomMinimumSize.X <= 128
+                && tagDefinitionsTab.CustomMinimumSize.Y <= 30
+                && userConstantsTab.CustomMinimumSize.Y <= 30
+                && systemConstantsTab.CustomMinimumSize.Y <= 30
+                && vendorBoundary.Text == "OFFLINE SIMULATOR · no TIA project file or Siemens PLC connection";
+            activation.Set("v17-tag-document-removes-duplicate-lifecycle-actions",
+                compactTagActions,
+                $"tableActionsVisible={tagTableActions.Visible} propsVisible={tagProperties.Visible} xrefVisible={tagCrossReference.Visible} addWidth={beginAddTag.CustomMinimumSize.X:F0} editWidth={editTag.CustomMinimumSize.X:F0} verifyWidth={verifyAndLoad.CustomMinimumSize.X:F0} tabs={tagDefinitionsTab.CustomMinimumSize.X:F0}/{userConstantsTab.CustomMinimumSize.X:F0}/{systemConstantsTab.CustomMinimumSize.X:F0}");
+            var instanceDbMemberProperties = Find<Button>("InstanceDbMemberProperties");
+            var instanceDbMemberContextMenu = Find<PopupMenu>("InstanceDbMemberContextMenu");
+            var instanceDbRowProperties = !instanceDbMemberProperties.Visible
+                && instanceDbMemberContextMenu.ItemCount == 1
+                && instanceDbMemberContextMenu.GetItemText(0) == "Properties";
+            activation.Set("v17-instance-db-uses-declaration-row-properties",
+                instanceDbRowProperties,
+                $"toolbarVisible={instanceDbMemberProperties.Visible} contextItems={instanceDbMemberContextMenu.ItemCount} firstAction={instanceDbMemberContextMenu.GetItemText(0)}");
+            var addUserConstant = Find<Button>("AddUserConstant");
+            var editUserConstant = Find<Button>("EditUserConstant");
+            var userConstantProperties = Find<Button>("SelectedUserConstantProperties");
+            var removeUserConstant = Find<Button>("RemoveUserConstant");
+            var userConstantContextMenu = Find<PopupMenu>("UserConstantContextMenu");
+            var compactUserConstantActions = addUserConstant.Visible
+                && editUserConstant.Visible
+                && !userConstantProperties.Visible
+                && !removeUserConstant.Visible
+                && addUserConstant.CustomMinimumSize.X <= 96
+                && editUserConstant.CustomMinimumSize.X <= 56
+                && userConstantContextMenu.ItemCount >= 6
+                && userConstantContextMenu.GetItemText(userConstantContextMenu.GetItemIndex(4)) == "Properties"
+                && userConstantContextMenu.GetItemText(userConstantContextMenu.GetItemIndex(3)) == "Delete";
+            activation.Set("v17-user-constants-use-compact-primary-actions",
+                compactUserConstantActions,
+                $"addWidth={addUserConstant.CustomMinimumSize.X:F0} editWidth={editUserConstant.CustomMinimumSize.X:F0} propsVisible={userConstantProperties.Visible} deleteVisible={removeUserConstant.Visible} contextItems={userConstantContextMenu.ItemCount}");
+            userConstantsTab.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var hiddenForUserConstants = !verifyAndLoad.Visible;
+            systemConstantsTab.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var hiddenForSystemConstants = !verifyAndLoad.Visible;
+            tagDefinitionsTab.EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var visibleForTags = verifyAndLoad.Visible;
+            activation.Set("v17-constants-views-hide-simulator-load-action",
+                hiddenForUserConstants && hiddenForSystemConstants && visibleForTags,
+                $"userHidden={hiddenForUserConstants} systemHidden={hiddenForSystemConstants} tagsVisible={visibleForTags}");
             activation.Finish();
 
             var cancelGate = Gate("tia.project-tree.visible-form-cancel-actions");
@@ -524,6 +674,8 @@ public partial class SimulatorShell
             try
             {
                 await Activate("tag-table:Default tag table");
+                Find<Button>("BeginAddTag").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
                 cancelTagVisible = cancelTagButton.IsVisibleInTree();
                 var tagNameControl = Find<LineEdit>("NewTagName");
                 var tagCommentControl = Find<LineEdit>("TagComment");
@@ -543,6 +695,8 @@ public partial class SimulatorShell
                     && !_pendingEditorForms.Any(form => form.HasPending())
                     && (_ladderHistory.CanUndo, _ladderHistory.CanRedo) == addCancelHistory;
 
+                Find<Button>("BeginAddTag").EmitSignal(BaseButton.SignalName.Pressed);
+                await Frames();
                 var beforeInvalidAddress = LadderEditorProjectJson.Save(_ladderDocument);
                 var invalidAddressHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
                 tagNameControl.Text = "CancelGate_InvalidAddress";
@@ -586,6 +740,8 @@ public partial class SimulatorShell
                 var fixtureTagRow = FindMetadata(tagTree.GetRoot(), $"tag:{fixtureTagIndex}");
                 fixtureTagRow?.Select(0);
                 tagTree.EmitSignal(Tree.SignalName.ItemSelected);
+                await Frames();
+                Find<Button>("EditTag").EmitSignal(BaseButton.SignalName.Pressed);
                 await Frames();
                 var beforeEditCancel = LadderEditorProjectJson.Save(_ladderDocument);
                 var editCancelHistory = (_ladderHistory.CanUndo, _ladderHistory.CanRedo);
@@ -1280,7 +1436,7 @@ public partial class SimulatorShell
                 && title.Text.Contains("StructuredGlobalData [DB]", StringComparison.Ordinal)
                 && !title.Text.Contains("[DB2]", StringComparison.Ordinal);
             var applyDeclaration = GetNodeOrNull<Button>(projectWorkbenchPath
-                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/InterfaceCommands/AddInterface")
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/ProjectObjectScroll/ObjectContent/InterfaceCommands/AddInterface")
                 ?? throw new InvalidOperationException("TIA member Apply control is unavailable.");
             var newMemberButton = Find<Button>("NewInterface");
             var editSection = Find<OptionButton>("InterfaceSection");
@@ -1474,7 +1630,7 @@ public partial class SimulatorShell
                 projectWorkbenchPath + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/ProjectTreeShortcutSlot/ShowProjectTree")
                 ?? throw new InvalidOperationException("TIA Project Tree shortcut is unavailable.");
             var cancelMemberButton = GetNodeOrNull<Button>(projectWorkbenchPath
-                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/InterfaceCommands/CancelInterface")
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/ProjectObjectScroll/ObjectContent/InterfaceCommands/CancelInterface")
                 ?? throw new InvalidOperationException("TIA Global DB member Cancel control is unavailable.");
             await Activate($"program:{globalIndex}");
             if (!globalDbDocument.IsVisibleInTree() || !addMemberAction.IsVisibleInTree())
@@ -1496,7 +1652,7 @@ public partial class SimulatorShell
             var directAddTree = GetNodeOrNull<Tree>(projectObjectsRoot + "/BlockInterface")
                 ?? throw new InvalidOperationException("TIA Global DB member declaration table is unavailable.");
             var directAddButton = GetNodeOrNull<Button>(projectWorkbenchPath
-                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/InterfaceCommands/AddInterface")
+                + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTreeAndTags/Project objects/ProjectObjectScroll/ObjectContent/InterfaceCommands/AddInterface")
                 ?? throw new InvalidOperationException("TIA Global DB Apply Member control is unavailable.");
             var directAddHeading = GetNodeOrNull<Label>(projectWorkbenchPath
                 + "/ProjectDockHost/ProjectOrganization/ProjectBody/ProjectTitle/ProjectTreeHeading")?.Text
@@ -1786,7 +1942,7 @@ public partial class SimulatorShell
             var fbMemberLabels = applyDeclaration.Text == "+ PARAMETER"
                 && newMemberButton.Text == "NEW"
                 && editSection.Selected == (int)LadderInterfaceSection.Input
-                && !editRetain.Visible && !editComment.Visible;
+                && !editRetain.Visible && editComment.Visible;
             await Activate($"program:{globalIndex}");
             var globalMemberLabelsAfterReturn = applyDeclaration.Text == "+ MEMBER"
                 && newMemberButton.Text == "NEW MEMBER"
@@ -2466,6 +2622,38 @@ public partial class SimulatorShell
             deleteGate.Set("final-table-protected", finalDisabled && finalProtected, $"disabled={finalDisabled} rejected={finalProtected}");
             deleteGate.Set("no-tree-row-delete", !treeHasDeleteRoute, $"treeDeleteRoute={treeHasDeleteRoute} supportedRoute=RemoveWatchTable workspace button");
             deleteGate.Finish();
+
+            // Keep this metadata-only view last so changing declaration tabs
+            // cannot influence the older property and document-activation gates.
+            var systemConstantGate = Gate("tia.project-tree.hardware-system-constants");
+            var systemConstantSnapshot = _ladderDocument.CaptureSnapshot();
+            _ladderDocument.SystemConstants.Add(new PlcSystemConstant(
+                "gate-device-led", "GateDevice", "HW_DEVICE", "257",
+                "PLC_1 / Rack 0 / Slot 1", "Configured CPU hardware identifier"));
+            Refresh();
+            await Activate("tag-table:Default tag table");
+            Find<Button>("SystemConstantsTab").EmitSignal(BaseButton.SignalName.Pressed);
+            await Frames();
+            var systemConstantsGrid = Find<Tree>("SystemConstantsGrid");
+            var systemConstantRow = systemConstantsGrid.GetRoot()?.GetFirstChild();
+            var systemConstantRendered = systemConstantsGrid.Columns == 4
+                && systemConstantRow is not null
+                && systemConstantRow.GetText(0) == "GateDevice"
+                && systemConstantRow.GetText(1) == "HW_DEVICE"
+                && systemConstantRow.GetText(2) == "257"
+                && systemConstantRow.GetText(3) == "Configured CPU hardware identifier"
+                && systemConstantRow.GetTooltipText(0).Contains("PLC_1 / Rack 0 / Slot 1", StringComparison.Ordinal);
+            var systemConstantScope = Find<Label>("SystemConstantsScope");
+            systemConstantGate.Set("hardware-row-is-rendered-read-only-with-provenance", systemConstantRendered,
+                $"columns={systemConstantsGrid.Columns} rows={systemConstantsGrid.GetRoot()?.GetChildCount() ?? 0} scope={systemConstantScope.Text}");
+            var systemConstantSaved = LadderEditorProjectJson.Save(_ladderDocument);
+            var systemConstantRoundTrip = LadderEditorProjectJson.Load(systemConstantSaved) is { IsReadable: true, Document: not null } systemLoaded
+                && LadderEditorProjectJson.Save(systemLoaded.Document) == systemConstantSaved
+                && systemLoaded.Document.SystemConstants.Single().HardwareSource == "PLC_1 / Rack 0 / Slot 1";
+            systemConstantGate.Set("hardware-provenance-persists", systemConstantRoundTrip,
+                $"roundTrip={systemConstantRoundTrip}");
+            _ladderDocument.RestoreSnapshot(systemConstantSnapshot); _ladderHistory.Clear(); Refresh(); await Frames();
+            systemConstantGate.Finish();
 
             foreach (var gate in gates.Where(gate => gate.CompletedUtc == gate.StartedUtc)) gate.Finish();
         }

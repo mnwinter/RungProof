@@ -1,0 +1,1 @@
+[{"click": [499, 491], "wait": 0.4, "capture": "lab508-r1-lowering"}, {"wait": 2, "capture": "lab508-r1-lowering-mid"}, {"wait": 4.5, "capture": "lab508-r1-home-traffic"}]

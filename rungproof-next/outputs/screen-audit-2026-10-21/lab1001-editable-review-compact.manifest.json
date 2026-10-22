@@ -1,0 +1,66 @@
+[
+  {
+    "source": "lab1001-custom-empty.png",
+    "sha256": "ee152f1f4586f735dc75e78abcee0bb2c95076c8e396e27fdad9ddde7f279e38"
+  },
+  {
+    "source": "lab1001-custom-valid-empty.png",
+    "sha256": "614827446d498251224a40465c56cfc2a381f6a23fccc27a336da19cd2b7159b"
+  },
+  {
+    "source": "lab1001-custom-F003-no-longer-match.png",
+    "sha256": "3bce57f94a39caea46a2f8de244502c7689525b18c9ed3a8c4fb844719063078"
+  },
+  {
+    "source": "lab1001-custom-F030-selected-match.png",
+    "sha256": "1a2c6dc30ba12f7907c7df911f33971ce9aa6114a05071b620e807afe29c1e77"
+  },
+  {
+    "source": "lab1001-custom-F0030-rejected.png",
+    "sha256": "587c1d04791194129efa9d2f6beec672edbe0f4f4dde001dd013090e6ca86a4c"
+  },
+  {
+    "source": "lab1001-custom-prefix-rejected.png",
+    "sha256": "57b2cd894e65281e41164fea22618ffc696321f0941b8dc8f7ee9801291d9259"
+  },
+  {
+    "source": "lab1001-custom-lowercase-rejected.png",
+    "sha256": "4943af825d7b49a708779724c204dd4f2acca4ebb1d87dedc084c58ae9d89510"
+  },
+  {
+    "source": "lab1001-custom-empty-wrap.png",
+    "sha256": "d5c2a6dc06776975c75041fa046a56c340a473f04e1a155c4604160d6b232630"
+  },
+  {
+    "source": "lab1001-custom-F003-repeat-rejected.png",
+    "sha256": "7c8b0d17abc0d09efd3600116e481aaef964516d264651b9de31d92731b18ac1"
+  },
+  {
+    "source": "lab1001-custom-F030-repeat-match.png",
+    "sha256": "50517ae8efae7367b734cb207aea5701089e34337c286d31b12f9bb7f0d72f3f"
+  },
+  {
+    "source": "lab1001-custom-reset-on.png",
+    "sha256": "737ac051ca94146644b3bc6fe3f3b78afc97e11d96a9f6110f66ce7ab8bfb471"
+  },
+  {
+    "source": "lab1001-custom-reset-off.png",
+    "sha256": "72c1a3a02d10026b574fd55e4dabcfd1f059f5b5d34e890afde3a43744dc1cf9"
+  },
+  {
+    "source": "lab1001-custom-valid-off.png",
+    "sha256": "4ce7f5e14c55c5cec611d946ee1a6f73b8368568589b97f7a06f6d830b97c0bc"
+  },
+  {
+    "source": "lab1001-custom-valid-on.png",
+    "sha256": "74b3ea4a498548ccfa5a660206cff8842ef579650c47ccf65358cb26aaabf867"
+  },
+  {
+    "source": "lab1001-restored-empty.png",
+    "sha256": "2e1488de9153fa3936b9e5611df40906595092da5932f6d30e1e195dcec3e5c8"
+  },
+  {
+    "source": "lab1001-restored-F003-match.png",
+    "sha256": "6176bd88fb7e323bf71fae42df40de0b53f131fad5047baf318b402d9ddc27d5"
+  }
+]

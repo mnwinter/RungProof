@@ -1,0 +1,5 @@
+# Remaining legacy plant instances: native confirmation
+
+Actual selected `newbinding223-224-gap-review.jpg` shows Lab2.23's three cartons at unchanged infeed queue positions across START+1/+7s. Native Signals reads conveyors_runTrue, all size detectionsFalse, route0, sorted_count0. Lab2.24 blank likewise remains upstream across START+1/+6s while actual corrected R2 monitor reads infeed_runTrue/blank_at_pickupFalse/other actuatorsFalse. Wrong r1 pickup tag expectation is excluded QA naming error. These confirm absent command-driven object transport for both, separate from request delivery. All seven original legacy sequence scenes now have native-confirmed absent-plant instances;2.11/12 are post-fix verified, others pending their adapters.
+
+Correct2.23/2.24 composition and native scene identity also resolve the remaining tested QA-LOAD-001 provenance table subcases in B2. No Discard callback failure inferred. CNC adapter belongs to bridge agent; parcel remains plan only during B3 build boundary.

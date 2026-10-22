@@ -1,0 +1,1 @@
+[{"click":[422,39],"wait":0.6},{"click":[485,148],"wait":0.6,"capture":"fix-plant219-r1-closed"},{"click":[1005,574],"wait":0.8,"capture":"fix-plant219-r1-opening"},{"wait":3,"capture":"fix-plant219-r1-open"}]

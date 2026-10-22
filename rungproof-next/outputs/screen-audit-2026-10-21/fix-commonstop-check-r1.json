@@ -1,0 +1,1 @@
+[{"name": "fix-commonstop-r1-signals", "expected": {"common_stop_request": true, "zone_3_run": false}}]

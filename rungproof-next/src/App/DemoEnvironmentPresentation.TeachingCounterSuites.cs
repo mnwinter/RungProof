@@ -91,7 +91,8 @@ public partial class DemoEnvironmentPresentation
             Wall("CountLibraryRight", l + 2, v, l + 2, v + 1.4f, h, feature);
             Wall("CountMainRear", l + 2, v, r, v, h, wall, window: (l + 2 + r) / 2, ww: w - 2.6f, wy: 2.15f, wh: .7f);
             Wall("CountEntrySide", r, f, r, v, h, wall, doorV);
-            Board("CountPulseReference", l + 1, v + 1.4f, "OPERATOR PULSES\npulse_received -> threshold_lamp", 1.75f);
+            // No wall legend here: the installed PULSE, COUNT and threshold
+            // lamp labels already carry the lesson at the point of use.
             // Grounded passive teaching-library shelves. No stored live result.
             foreach (var y in new[] { .45f, .8f })
                 Box(architecture, "LibrarySupportedShelf", new Vector3(1.7f, .07f, .3f), At(l + 1, y, v + 1.4f - .2f), feature);

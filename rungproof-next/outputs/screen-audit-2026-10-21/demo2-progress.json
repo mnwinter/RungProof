@@ -1,0 +1,4 @@
+[
+ {"click":[595,39],"wait":0.2},
+ {"click":[701,15],"wait":0.4,"capture":"demo2-curriculum-progress"}
+]

@@ -1,0 +1,1 @@
+[{"click": [1120, 545], "wait": 0.6, "capture": "standalone-scene1-r1-moving"}, {"wait": 5, "capture": "standalone-scene1-r1-sensor-stop"}, {"wait": 2, "capture": "standalone-scene1-r1-held"}]

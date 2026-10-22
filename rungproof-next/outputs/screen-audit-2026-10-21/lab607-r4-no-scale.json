@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.35}, {"click": [525, 80], "wait": 2, "capture": "lab607-r4-no-scale-jog-early"}, {"wait": 5, "capture": "lab607-r4-no-scale-held"}, {"click": [558, 445], "wait": 0.3, "capture": "lab607-r4-load-active-attempt"}, {"click": [1280, 101], "wait": 0.3, "capture": "lab607-r4-load-guard-health"}, {"click": [1418, 101], "wait": 0.3}]

@@ -1,0 +1,1 @@
+[{"name": "fix-reference-r4-run-retained-signals", "expected": {"event_count": 2, "sum_result": 0, "result_valid": false}}]

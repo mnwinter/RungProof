@@ -1,0 +1,1 @@
+[{"name": "fix-plant211-r1-complete-signals", "expected": {"conveyor_run": false, "scan_complete": true, "tote_at_scanner": false, "cycle_complete": true}}]

@@ -1,0 +1,1 @@
+[{"capture": "lab220-idle"}, {"click": [1222, 570], "wait": 0.4, "capture": "lab220-start-early"}, {"wait": 1.2, "capture": "lab220-outbound"}, {"wait": 1.5, "capture": "lab220-end-or-return"}, {"wait": 2, "capture": "lab220-return-or-complete"}, {"wait": 3, "capture": "lab220-completed-check"}]

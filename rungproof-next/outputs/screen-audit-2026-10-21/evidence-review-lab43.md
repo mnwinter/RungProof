@@ -1,0 +1,11 @@
+# Lab4.3 independent native review
+
+Reviewed23motion+6completion/lifecycle+6r2interruption+finalrecoveredcount3 nativeframes;5lab43-review sheets include9Signals,machinehead,physicalamber/greenlamps. No reviewerUI/backend operations. ExplicitQAlearnerfixture scope, includingretainedcounter/recoverypolicy; notasserteduniversalappsemantics.
+
+Normalmotion0..9 actualheadpositions84/4/26/98/22/8/84/40/0/60 withmachinebusyTrue/activeTrue, amberlit; batchcount0 then1 at03,2 at07. Motion10count3/completeTrue/activeFalse/busyFalse/homeTrue/position100, amberoff/greenlit, stablethrough22. Physicalheadposechangescorroboratesboundedrepeatedmotion; exactcycle_donepulseedgesnotcaptured(allsettledFalse), so noexacteventscanclaim. Actualcountprogressandsettledfinalareproved, notcommand-onlyinference.
+
+Completedcount3persistsunderSTARTheld1.2seconds/mouseup, nofourthcycle. AppStopoutputs0/completeFalse/darkSTOPPED7738; Run7764republishes3/completeTrue/greenwithoutmotion. AppResetSTOPPEDscan0 clearscount0/enabledFalse/completionFalse/homeTrue.
+
+Freshr2 enable/batch then disablemidstroke: positions26atRUNNING79/147 unchanged, busyTrue butactiveFalse/dark whiledisabled. Reenable175position0/activeTrue/amber; AppStop early/latebothSTOPPED195/position0/commandsinactive/physicalposestableacross1.2secondwait. Run219position46/activeTrue/amber, eventuallyrecoveredcount3at2399/completeTrue/busyFalse/homeTrue/position100/green. Thisisboundsobservedfixtureautomaticresume; exactvelocity/continuousmotion/strictsafetyfunctionunproven.
+
+No newdemonstratedissue. Exactcompletionpulsewidth/internalcounteredgecausality, rapidcoalescing, machineStopdistinctfromAppStop, abortpolicyforallphases remainunproven; no whole-scenePASS.

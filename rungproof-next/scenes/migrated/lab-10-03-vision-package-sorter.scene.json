@@ -131,7 +131,8 @@
         "assetName": "package-class result display",
         "catalogAssetId": "training.accessory.count_display.v1",
         "display": "numeric",
-        "displayLabel": "SIM CLASS"
+        "displayLabel": "CLASS NEXT",
+        "action": "cycle-vision_class"
       }
     },
     {
@@ -503,7 +504,7 @@
         "point": "vision_class",
         "equipmentId": "training_accessory_6",
         "mode": "numericDisplay",
-        "label": "SIM CLASS",
+        "label": "CLASS NEXT",
         "format": "F0",
         "validPoint": "vision_result_valid"
       },
@@ -540,7 +541,7 @@
     "hints": [
       "Translate the lesson into explicit state and permissive logic: Sorting is enabled only for a present package with a valid vision result and clear destination.",
       "Inputs are simulator feedback (package_present, vision_result_valid, destination_clear, vision_class); PLC logic owns sort_conveyor_run, diverter_enable.",
-      "Select simulated vision_class 1-4; the class display is hidden until vision_result_valid. This is a fixture, not camera image recognition.",
+      "Click the CLASS NEXT display to cycle simulated vision_class 1-4; the value is hidden until vision_result_valid. The class is latched during travel until Reset. This is a fixture, not camera image recognition.",
       "Travel latches the class until Reset. Conveyor moves infeed/discharge; diverter indexes the table. Keep package, result and destination permissives true. Completion retains the carton on its receiving lane.",
       "Test the initial state, the valid condition, and at least one missing permissive."
     ],

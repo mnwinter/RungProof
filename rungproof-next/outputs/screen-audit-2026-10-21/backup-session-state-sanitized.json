@@ -1,0 +1,80 @@
+{
+  "purpose": "Operational handoff for the active UI audit; verify live handles before resuming",
+  "app_pid": 9672,
+  "bridge_url": "http://127.0.0.1:51946/LOCAL_CAPABILITY_REDACTED",
+  "bridge_exec_session": 27952,
+  "bridge_version": 9,
+  "breadth_exec_session": 64454,
+  "breadth_command_scope": "menu offsets5 through76; first5 completed separately",
+  "breadth_progress_source": "breadth-results.jsonl",
+  "input_owner": "root only; no concurrent agent UI input",
+  "verified_curriculum": "All5 demo curriculum procedures completed; demos remain PARTIAL for broader cases",
+  "current_deep_lab": "Userdeadline22:04:11UTC;sourceCNCfixmeansfreeze/backupmustrefreshafterB5. Rootownsallstage/commit/push. NoB4jugnativecredituntilindependentreview.",
+  "next_work": [
+    "Rootjugflow63015terminal/review;agentCNCgripsupportfixbeforecoordinatedB5build.",
+    "AfterB5sourcefinalrefreshexplicitbackupmanifest/addfinalbuild-testreportsandselectedtextcapabilityscan;rootonlystages/pushesbefore22:04:11UTC.",
+    "Reportallremainingfunctional/testlimitationshonestly;no fullgoalsuccessfromB4mixedtests."
+  ],
+  "agent_ownership": {
+    "coverage_inventory": "coverage-ledger.json, EXECUTION-LOG.md, SESSION-STATE.json and disposable test-projects/README; no UI",
+    "evidence_review": "provisional-issues.md and independent evidence review files; no UI",
+    "bridge_text_input": "new screen_bridge_v5.py only; no native input or live process changes"
+  },
+  "boundaries": "Userauthorizedall7confirmedfixes; sourceimplementedawaitingpostfixUIverification. Preserveunrelateddirtywork, sixstandalonestillpending; no livePLC/commit. RootexclusiveUI.",
+  "bridge_pid": null,
+  "breadth_status": "Verified terminal exit0 by root;77/77 captured and reviewed",
+  "monitored_exec_session": 63015,
+  "active_ui_job": "Jugnativeflow63015ACTIVE",
+  "latest_independent_review_milestones": [
+    {
+      "scene": "lab-9-10-box-volume",
+      "review": "evidence-review-lab910-r2.md",
+      "frames": 34,
+      "boundary": "Signals numeric evidence only; projected physical digits unproven."
+    },
+    {
+      "scene": "lab-10-01-drive-alarm-code-string",
+      "review": "evidence-review-lab1001-r2.md",
+      "frames": 19,
+      "boundary": "Default F003 starter only; custom F030 variant pending."
+    }
+  ],
+  "current_scene": "lab-2-13-coolant-jug-fill",
+  "current_view": "B4jugmatchingfixtureUIloadedRUNNING;loader21363exit0",
+  "current_batch_status": "B4liveGUI9672console31304appsession78940;bridgev9exec27952(specificPIDnotprovided). Build0warn0err/full422PASS3FAIL;newCNCgripsupport3.9982mmerroragentfixing/B5rebuildneeded,existing2failunchanged",
+  "temporary_program_edit": {
+    "scene": "lab-10-04-motor-enum-state",
+    "custom": "MOV Running→Stopped",
+    "status": "UNDO_VERIFY_LOAD_RESTORED_TEN_CASES_COMPLETED_PER_ROOT",
+    "app_source_files_changed": false
+  },
+  "bridge_v6": "LIVE per root; previous exact v5 PID32280 stopped; no process verification/input by support agent",
+  "pending_prepared_fixture": "Per-file fixture-runtime-status.json authoritative;5.6terminalreportedawaitingreview, never creditpreparedfiles automatically",
+  "input_transport_block": "None reported;B3rootconfirmedlivefullworkbench/nativeDPIbridge",
+  "app_parent_pid": 31304,
+  "last_stopped_transport": {
+    "gui_pid": 41444,
+    "bridge_pid": 43876,
+    "bridge_exec": 34069,
+    "reason": "Rootstoppedbothbeforeconsolidatedbuild98647"
+  },
+  "app_exec_session": 78940,
+  "built_app_identity": {
+    "build": "B4",
+    "artifact_path": "C:\\Users\\matt.winter\\Documents\\RungProof\\rungproof-next\\.godot\\mono\\temp\\bin\\Debug\\RungProof.Next.dll",
+    "sha256": "33d6000315cc86c20c9109d50bb0b52cf28fa65174ecfb6184a8427407aada07",
+    "bytes": 7040512,
+    "file_utc": "2026-10-22T21:32:50.0417144Z",
+    "live_gui_pid": 9672,
+    "console_pid": 31304,
+    "app_exec_session": 78940,
+    "bridge_version": 9,
+    "bridge_pid": null,
+    "bridge_exec_session": 27952,
+    "build_result": "0warnings0errors",
+    "tests": "422PASS3FAIL",
+    "new_failure": "CNCgripsupportexpectedY.9actual.9039982m;rootconfirmeddefect,sourcefixinprogress",
+    "source_drift": "CNCfixaheadB4,requiresB5",
+    "identity_provenance": "Rootlivehandles;DLLread-onlyhash;bridgePIDnotprovided"
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-learner-conveyor-cell",
+  "name": "QA_conveyor-cell",
+  "sourceSceneId": "conveyor-cell",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 2000,
+  "tags": [
+    {
+      "symbolId": "symbol-101",
+      "name": "conveyor_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "conveyor_run",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit exact scene point; no physical address."
+    },
+    {
+      "symbolId": "symbol-102",
+      "name": "photoeye_blocked",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "photoeye_blocked",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit exact scene point; no physical address."
+    },
+    {
+      "symbolId": "symbol-103",
+      "name": "operator_start",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.start",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Explicit scene controller command binding, not invented PC feedback"
+    },
+    {
+      "symbolId": "symbol-104",
+      "name": "operator_stop",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.stop",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Explicit scene controller command binding, not invented PC feedback"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "QA_conveyor-cell",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-110",
+          "label": "QA conveyor_run",
+          "coilVariable": "conveyor_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "node-109",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "node-105",
+                "kind": 0,
+                "variable": "operator_stop",
+                "normallyClosed": true,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "node-108",
+                "kind": 3,
+                "variable": "",
+                "normallyClosed": false,
+                "children": [
+                  {
+                    "id": "node-106",
+                    "kind": 0,
+                    "variable": "operator_start",
+                    "normallyClosed": false,
+                    "children": null,
+                    "compareOperator": 0,
+                    "rightOperand": "",
+                    "edgeMode": 0,
+                    "comparisonValueType": 0,
+                    "edgeMemoryOperand": null,
+                    "isLeaf": true
+                  },
+                  {
+                    "id": "node-107",
+                    "kind": 0,
+                    "variable": "conveyor_run",
+                    "normallyClosed": false,
+                    "children": null,
+                    "compareOperator": 0,
+                    "rightOperand": "",
+                    "edgeMode": 0,
+                    "comparisonValueType": 0,
+                    "edgeMemoryOperand": null,
+                    "isLeaf": true
+                  }
+                ],
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": false
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-110-action",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "conveyor_run",
+    "photoeye_blocked",
+    "operator_start",
+    "operator_stop"
+  ],
+  "watchTables": [],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

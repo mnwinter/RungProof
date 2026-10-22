@@ -1,0 +1,1 @@
+[{"name": "fix-reference-r3-restored-signals", "expected": {"event_count": 2, "result_valid": false, "sum_result": 7, "call_complete": false}}]

@@ -1,0 +1,9 @@
+# Lab 2.17 independent selected-checkpoint review
+
+Reviewed19selectednative motion/lifecycle/repeat checkpoints in three lab217-selected-review sheets plus baseline. Physicalrobotjoints/tool, containerstation/pallet/outbound and eightSignals retained. Loadedlearnerfixture scope only; no reviewer UI/backend operations.
+
+Baseline702has placed0/palletready/robotparkTrue/commandsOff. FreshSTART2742robotTrue/parkFalse/conveyorFalse startsvisiblejointmotion. Firstplacement is retainedatcount1 inStop3524andheld3524, robotFalse/parkFalse/conveyorFalse and identicalrobot/toolpose across1.2seconds. Run3540robotTrue/count1 andlater3648/3867/4089showdistinctrobotposes reachingthestations. Count2at4307withrobotstillrunning/notparked/conveyorFalse;4523robotparkTrue/runFalse precedesactualconveyorTrue/greenstatus andpalletoutboundmovement. Final21151count2/parkTrue/completeTrue, bothcommandsFalse/palletreadyFalse, palletphysicallydownstream. ExtraSTART21241retainscompleted2/commandsOff. No automatic thirdplacement orreset occurs.
+
+ResetRun25returnsplaced0/palletready+parkTrue/completeFalse/commandsOff andcontainersupstream. Freshrepeat226/548/872/1204/1534/1643showschangingjoint/toolposes, includingbluecontainerattool/station, count0→1→2 whileconveyorremainsFalse/parkFalse. Final2193parkTrue/count2/completeTrue/bothcommandsFalse withpalletdownstream. These supporttwo-countrobotsequence, returntoparkbeforeconveyor andboundedoutboundcompletionagain. Parts of finalcontainerarrangement are occludedbyinstallationgeometry; exactgripcontact, collisionclearance andratedphysicalhandling are notestablished fromthesepixels.
+
+No newissue. Pallet-not-ready, robotinterruptionduringcarryingversusbetweenplacements, movingoutboundStop, heldSTARTpulsewidth andmechanicalgrippingquality remainunproven. No whole-scene PASS.

@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.4}, {"click": [525, 102], "wait": 0.5, "capture": "standalone-conveyor-r6-app-stop"}, {"wait": 2, "capture": "standalone-conveyor-r6-app-held"}]

@@ -1,0 +1,1 @@
+[{"name": "lab607-r4-repeat-final", "expected": {"fixture_mass_kg": 12, "class_result": 1, "class_2_count": 0, "class_3_count": 0, "bag_at_normal_exit": true, "bag_at_reject_exit": false, "infeed_run": false, "discharge_run": false, "scale_ready": true}, "monitor_only": true, "keep_monitor": true}]

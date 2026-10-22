@@ -1,0 +1,1 @@
+[{"name": "lab1111-r1-final", "expected": {"at_lower_landing": true, "at_upper_landing": false, "car_position_pct": 0, "lift_up_cmd": false, "lift_down_cmd": false, "direction_conflict": false}, "monitor_only": true, "keep_monitor": true}]

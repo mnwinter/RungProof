@@ -1,0 +1,11 @@
+# Lab 4.12 independent native review
+
+Reviewed 21 normal motion captures plus normal final, reset, Stop early/late, Run alone, fresh START and recovered final. Five lab412-review sheets preserve plant, native Signals and runtime. Loaded reference scope only; no reviewer UI/backend operations.
+
+Yellow cable visibly extends down the table during feeding. Native measured_length_m progresses 0.06, .258, .426, .6, .78, .96, 1.152, 1.32, 1.494, 1.662, 1.842, 1.998, 2.202, 2.382, 2.562, 2.736, 2.916, then 3; corresponding stock decreases from 9.94 to 7, conserving 10 m in each captured pair. Feeding shows feed_run=True and feed_speed_mps=.3. At motion17 length_reached=True, feed stops, cutter_fire=True and position=.275/home=False. Motion18 shows position1/cut_done=True and the cutter region changes pose; motion19 retracts to .2; motion20 returns effectively zero with home=True, cycle_complete=True and commands off. The two physical green indicator stacks change from feed to cutter during this sequence. Cable remains visibly on the output table after completion. These pixels support a feed/cutter/retract sequence and retained output length; material severing quality, microscopic separation and a numeric cut count are not proved.
+
+Normal final lab412-completed-final.png (scan11098) shows measured3/stock7, cut_complete/cut_done/cutter_home/length_reached/cycle_complete=True, active/feed/cutter_fire=False, speed0 and no fault. Length remains3 through the completed observations: no second feed cycle is captured.
+
+Reset is STOPPED scan0, measured0/stock10, home=True, completions=False and commands off; outgoing yellow length is cleared. Stop during feeding freezes both early/late at STOPPED scan93, measured.45/stock9.55, speed0, feed/active=False, home=True and no fault across 1.2 seconds. Run alone (142) retains .45/9.55 without feeding. Fresh START (185) resumes feed at .3, measured.666/stock9.334. Recovered final lab412-recovered-3m-final.png (2893) again shows3/7, all completion/home flags True, commands off and no fault.
+
+No new issue. Knife-specific interruption, low-stock/missing-cable/fault cases, exact threshold/scan timing, held START coalescing, repeated fresh cuts and distinct machine Stop remain unproven. No whole-scene PASS.

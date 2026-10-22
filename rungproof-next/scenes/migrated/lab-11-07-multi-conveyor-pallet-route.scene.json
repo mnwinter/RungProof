@@ -171,7 +171,8 @@
       ],
       "config": {
         "assetName": "common stop station",
-        "catalogAssetId": "training.accessory.common_stop_station.v1"
+        "catalogAssetId": "training.accessory.common_stop_station.v1",
+        "action": "toggle-common-stop"
       }
     },
     {

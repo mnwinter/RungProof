@@ -1,0 +1,9 @@
+# Lab 11.7 common-stop route review
+
+Independent pixels: lab1107-controls-crop.png shows a red stop head on a separate stand; grounded native coordinate664,438 lies on that head. Calibration JSON first toggles three cabinet zone controls; all three accepted events appear in native Health. Its fourth stop click and a separate stop-probe retry at664,438 produce no new action history. lab1107-stop-retry.png remains local RUNNING11335, common_stop_requestFalse, all three zone_runTrue and all three green physical stacks lit. Route is already complete at12.3, so these stop attempts prove missing input/control response, not failure to arrest a moving pallet.
+
+Help explicitly advertises Toggle common stop request and stop-together behavior. Current scene training_accessory_8 is the common stop station, but config contains only assetName/catalogAssetId, no action/sceneControls. SceneControlInteractor.CreateBindings166..189 yields bindings only for those explicit fields. Scene actions separately declare toggle-common-stop→common_stop_request. SimulatorShell4433 keeps OperatorActions invisible. Static evidence explains the failed advertised physical route; it does not replace native response evidence or prove every possible alternate UI route absent.
+
+QA-FUNC-002 records a bounded S2 advertised exercise-control route failure: common stop station does not submit its documented PC input. Shared behavior of all zone PLC outputs when that input is actuallyTrue remains untested; AppPlaybackStop is a distinct path.
+
+Lab11.11 clarification: r2active50=position0/upTrue/lowerTrue; doors-loss72 andheld125=position0/bothcommandsFalse; restore158=position0/upTrue. Landing-loss178/held235=position0/bothFalse; restore254=2.33333/upTrue. Call-loss280/held334=9/bothFalse; restore360=13.3333/upTrue. Thus door/landing events preceded captured nonzero motion; only call-loss is evidenced midtravel. No private upper_seen value is used.

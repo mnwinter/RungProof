@@ -1,0 +1,5 @@
+[
+ {"key":"Down","wait":0.05},
+ {"key":"Down","wait":0.05},
+ {"key":"Return","wait":2,"capture":"lab202-entry-or-draft-prompt"}
+]

@@ -74,11 +74,18 @@ public partial class DemoEnvironmentPresentation
             if (dx.HasValue) { Strip(-len / 2 + .10f, dx.Value - .6f); Strip(dx.Value + .6f, len / 2 - .10f); }
             else Strip(-len / 2 + .10f, len / 2 - .10f);
         }
-        void Board(string name, float u, float z, string text, float width = 2)
+        void Board(string name, float u, float z, string text, float width = 2.6f)
         {
-            Box(architecture, name + "BearingPlate", new Vector3(width, .8f, .06f), At(u, 1.55f, z - .115f), ivory);
-            architecture.AddChild(new Label3D { Name = name + "StaticLegend", Text = text, FontSize = 32, PixelSize = .0018f, OutlineSize = 0,
-                Modulate = new Color("#39403B"), Position = At(u, 1.55f, z - .151f), RotationDegrees = new Vector3(0, sz > 0 ? 180 : 0, 0) });
+            var board = EnvironmentDetailedSurface("#173E59", "paint");
+            Box(architecture, name + "BearingPlate", new Vector3(width, 1.05f, .06f), At(u, 1.68f, z - .115f), board);
+            architecture.AddChild(new Label3D
+            {
+                Name = name + "StaticLegend", Text = text,
+                FontSize = 52, PixelSize = .00225f, OutlineSize = 5,
+                OutlineModulate = new Color("#07141D"), Modulate = new Color("#FFF3B0"),
+                Position = At(u, 1.68f, z - .151f), RotationDegrees = new Vector3(0, sz > 0 ? 180 : 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
+            });
         }
         var doorV = f + 1.1f;
         var routeU = r - .8f;
@@ -96,7 +103,9 @@ public partial class DemoEnvironmentPresentation
             Wall("DelayEntrySide", r, f, r, v, 2.9f, wall, doorV);
             // The roof ribbon remains in the clear strip behind the full B/A.
             Box(architecture, "DelayRearCeilingRibbon", new Vector3(w, .10f, .8f), At(cu, rearH, v - .4f), feature);
-            Board("MaintainedRequestReference", cu, v, "MAINTAINED REQUEST\ntimer_request -> delayed_lamp\nPLC owns accepted-scan timing");
+            // The learner rail already states the maintained two-second
+            // objective. Keep the wall as architecture instead of repeating
+            // those instructions on a second oversized sign behind the bench.
         }
         else if (pulse)
         {

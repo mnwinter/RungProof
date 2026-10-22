@@ -1,0 +1,1 @@
+[{"name": "lab49-r2-completed", "expected": {"cycle_complete": true, "cycle_active": false, "carton_at_receiver": true, "lift_home": true, "chain_run": false, "lift_enable": false, "lift_lower": false, "transfer_fault": false}, "monitor_only": true, "keep_monitor": true}]

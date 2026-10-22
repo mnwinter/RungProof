@@ -1,0 +1,19 @@
+{
+  "purpose": "Static declarative translation only; no compiler/runtime/backend execution",
+  "entries": [
+    {
+      "file": "fixture-lab-4-07-parking-garage-entry-feedback.rpproj.json",
+      "sourceSceneId": "lab-4-07-parking-garage-entry",
+      "sha256": "22b8b948d2b4809183d03c3be12b5666694c3fdda6d91148340528c1a214b463",
+      "status": "NOT_UI_LOADED_OR_VALIDATED",
+      "networks": 6
+    },
+    {
+      "file": "fixture-lab-4-08-package-grouping-feedback.rpproj.json",
+      "sourceSceneId": "lab-4-08-package-grouping",
+      "sha256": "c453e673cc355c4d76f80b8626ed831de116e4d4130065f0d2eaed2693536313",
+      "status": "NOT_UI_LOADED_OR_VALIDATED",
+      "networks": 7
+    }
+  ]
+}

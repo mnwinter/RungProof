@@ -1,0 +1,1 @@
+[{"name": "lab55-reset-check", "expected": {"flash_enable": false, "fast_rate_selected": false, "slow_rate_selected": false, "rate_lamp": false}, "monitor_only": true, "keep_monitor": true}]

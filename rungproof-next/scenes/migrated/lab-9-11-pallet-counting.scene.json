@@ -21,7 +21,7 @@
     {
       "id": "conveyor_0",
       "type": "conveyor",
-      "label": "Pallet Count Function conveyor",
+      "label": "Pallet inspection infeed conveyor",
       "position": [
         -3.3000000000000003,
         0,
@@ -38,7 +38,7 @@
     {
       "id": "box_1",
       "type": "box",
-      "label": "Pallet Count Function box",
+      "label": "Pallet sample load",
       "position": [
         -1.1,
         0.9,
@@ -55,27 +55,28 @@
     },
     {
       "id": "machine_2",
-      "type": "machine",
-      "label": "Pallet Count Function machine",
+      "type": "trainingAccessory",
+      "label": "Fixed pallet barcode inspection scanner",
       "position": [
         1.1,
         0,
         0
       ],
+      "rotation": [
+        0,
+        180,
+        0
+      ],
       "config": {
-        "size": [
-          2.1,
-          2.7,
-          1.7
-        ],
-        "color": 5466227,
-        "running": false
+        "assetName": "fixed pallet barcode scanner",
+        "catalogAssetId": "sensing.identification.fixed-barcode-scanner.v1",
+        "installation": "palletInspectionScanner"
       }
     },
     {
       "id": "indicator_3",
       "type": "indicator",
-      "label": "Pallet Count Function indicator",
+      "label": "Valid five-pallet batch lamp",
       "position": [
         3.3000000000000003,
         0,
@@ -83,11 +84,25 @@
       ],
       "config": {
         "colors": [
-          "red",
-          "amber",
           "green"
         ],
-        "active": "red"
+        "active": "green"
+      }
+    },
+    {
+      "id": "machine_running_lamp",
+      "type": "indicator",
+      "label": "Batch counter running lamp",
+      "position": [
+        4.4,
+        0,
+        0
+      ],
+      "config": {
+        "colors": [
+          "amber"
+        ],
+        "active": "amber"
       }
     },
     {
@@ -136,7 +151,7 @@
     {
       "id": "switch_7",
       "type": "switch",
-      "label": "Pallet Count Function operator input",
+      "label": "New pallet detection event",
       "position": [
         3.7500000000000004,
         0,
@@ -144,44 +159,137 @@
       ],
       "config": {
         "style": "pushbutton",
-        "action": "toggle-pallet_detected",
-        "color": 2204518
+        "action": "pulse-pallet_detected",
+        "faceLabel": "NEW PALLET",
+        "color": 16755234
       }
     },
     {
       "id": "switch_8",
       "type": "switch",
-      "label": "Pallet Count Function operator input",
+      "label": "Pallet type valid selector",
       "position": [
         -2.4000000000000004,
         0,
         4.7
       ],
       "config": {
-        "style": "pushbutton",
+        "style": "rotary",
         "action": "toggle-pallet_type_valid",
+        "faceLabel": "TYPE OK",
         "color": 2204518
       }
     },
     {
       "id": "switch_9",
       "type": "switch",
-      "label": "Pallet Count Function operator input",
+      "label": "Batch count request selector",
       "position": [
         -0.20000000000000007,
         0,
         4.7
       ],
       "config": {
-        "style": "pushbutton",
+        "style": "rotary",
         "action": "toggle-count_request",
+        "faceLabel": "COUNT REQ",
         "color": 2204518
+      }
+    },
+    {
+      "id": "switch_10",
+      "type": "switch",
+      "label": "Batch counter machine Start",
+      "position": [
+        3.75,
+        0,
+        4.2
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "pulse-start_command",
+        "faceLabel": "START",
+        "color": 2204518
+      }
+    },
+    {
+      "id": "switch_11",
+      "type": "switch",
+      "label": "Batch counter machine Stop",
+      "position": [
+        1.25,
+        0,
+        4.2
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "pulse-machine_stop",
+        "faceLabel": "STOP",
+        "color": 11141120
+      }
+    },
+    {
+      "id": "switch_12",
+      "type": "switch",
+      "label": "Batch counter machine Reset",
+      "position": [
+        -1.25,
+        0,
+        4.2
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "pulse-reset_pressed",
+        "faceLabel": "RESET",
+        "color": 16755234
       }
     }
   ],
   "simulation": {
     "type": "booleanPanel",
+    "palletCounterVisual": {
+      "equipmentId": "box_1",
+      "eventPoint": "pallet_detected",
+      "runPoint": "machine_running",
+      "resetPoint": "reset_pressed",
+      "startX": -6.0,
+      "endX": -0.25,
+      "travelSeconds": 3.2
+    },
+    "materialEntryPortal": {
+      "axis": "x",
+      "coordinate": -5.45,
+      "crossCenter": 0,
+      "wallSpanM": 18.0,
+      "wallHeightM": 5.8,
+      "openingWidthM": 2.2,
+      "openingHeightM": 2.6,
+      "wallThicknessM": 0.2,
+      "sourceRoomDepthM": 7.0,
+      "sourceDirection": -1
+    },
     "points": [
+      {
+        "name": "start_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine-level Start pushbutton input; enables counting until Stop or Reset."
+      },
+      {
+        "name": "machine_stop",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine-level Stop pushbutton input; disables count acceptance while retaining the count."
+      },
+      {
+        "name": "reset_pressed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine-level Reset pushbutton input; clears the counter and validity."
+      },
       {
         "name": "pallet_detected",
         "type": "BOOL",
@@ -201,6 +309,14 @@
         "initial": false
       },
       {
+        "name": "machine_running",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output",
+        "purpose": "PLC-owned run state; drives the pallet inspection conveyor and amber RUNNING pilot."
+      },
+      {
         "name": "pallet_count_valid",
         "type": "BOOL",
         "owner": "PLC",
@@ -217,20 +333,38 @@
     ],
     "actions": [
       {
-        "id": "toggle-pallet_detected",
-        "label": "Toggle pallet detected",
-        "type": "toggle",
+        "id": "pulse-start_command",
+        "label": "Machine Start pushbutton",
+        "type": "pulse",
+        "point": "start_command"
+      },
+      {
+        "id": "pulse-machine_stop",
+        "label": "Machine Stop pushbutton",
+        "type": "pulse",
+        "point": "machine_stop"
+      },
+      {
+        "id": "pulse-reset_pressed",
+        "label": "Machine Reset pushbutton",
+        "type": "pulse",
+        "point": "reset_pressed"
+      },
+      {
+        "id": "pulse-pallet_detected",
+        "label": "New pallet detection event",
+        "type": "pulse",
         "point": "pallet_detected"
       },
       {
         "id": "toggle-pallet_type_valid",
-        "label": "Toggle pallet type valid",
+        "label": "Pallet type valid",
         "type": "toggle",
         "point": "pallet_type_valid"
       },
       {
         "id": "toggle-count_request",
-        "label": "Toggle count request",
+        "label": "Count request",
         "type": "toggle",
         "point": "count_request"
       }
@@ -238,6 +372,21 @@
     "rules": [],
     "edgeRules": [],
     "pointBindings": [
+      {
+        "point": "start_command",
+        "equipmentId": "switch_10",
+        "mode": "switch"
+      },
+      {
+        "point": "machine_stop",
+        "equipmentId": "switch_11",
+        "mode": "switch"
+      },
+      {
+        "point": "reset_pressed",
+        "equipmentId": "switch_12",
+        "mode": "switch"
+      },
       {
         "point": "pallet_detected",
         "equipmentId": "switch_7",
@@ -252,6 +401,17 @@
         "point": "count_request",
         "equipmentId": "switch_9",
         "mode": "switch"
+      },
+      {
+        "point": "machine_running",
+        "equipmentId": "conveyor_0",
+        "mode": "running"
+      },
+      {
+        "point": "machine_running",
+        "equipmentId": "machine_running_lamp",
+        "mode": "indicator",
+        "activeColor": "amber"
       },
       {
         "point": "pallet_count_valid",
@@ -291,12 +451,12 @@
     "machineGuide": {
       "purpose": "A reusable block counts manually validated pallet detection edges and publishes the current count and batch validity.",
       "startConditions": [
-        "The common PLC/watchdog foundation is healthy.",
-        "All required simulator inputs are at their documented initial state."
+        "Use the built-in offline controller with the matching Demo 4 logic loaded and no active forces.",
+        "Run the app scan, press machine RESET, then press machine START with PALLET off before enabling TYPE OK and COUNT REQ."
       ],
       "normalSequence": [
         "Enable pallet type valid and count request.",
-        "Toggle pallet detected off and on for each new valid event. The DINT count and 3D display advance once per rising detection edge.",
+        "Press NEW PALLET once for each valid event. The momentary simulation creates one rising detection edge, then releases automatically; the DINT count and 3D display advance once.",
         "The batch-valid lamp turns on at five valid events. Invalid events are not counted; held detection does not recount."
       ],
       "stopBehavior": [
@@ -305,13 +465,15 @@
         "Reset clears inputs, counter memory and outputs."
       ],
       "faultBehavior": [
-        "A missing or stale input must fail safe and remain diagnosable."
+        "NEW PALLET events are rejected while TYPE OK or COUNT REQ is off; each momentary press can contribute at most one count.",
+        "These are manual training inputs. The optical fixture does not classify pallets or create detector transitions."
       ],
       "expectedObservations": [
         "The 3D readout and DINT pallet_count match the accumulated valid detection events. The batch-valid bit requires at least five events and both permissives.",
         "Stop clears the numeric output image to zero while retaining internal counter memory. Run republishes the retained count on its next scan. Reset clears inputs, memory and outputs.",
         "Pallet type is a manually supplied validity bit; the optical fixture does not classify pallets or generate detection events."
-      ]
+      ],
+      "acceptance": "Five qualified NEW PALLET momentary events produce COUNT 5 and pallet_count_valid ON; RESET followed by a fresh qualified event starts batch two at COUNT 1."
     },
     "sequenceNumber": 57,
     "inheritsFrom": "lab-9-10-box-volume",

@@ -1,0 +1,1 @@
+[{"click":[481,325],"wait":0.5,"capture":"fix-vision-r7-class4-start"},{"wait":8,"capture":"fix-vision-r7-class4-transfer-a"},{"wait":2.5,"capture":"fix-vision-r7-class4-transfer-b"},{"wait":5.5,"capture":"fix-vision-r7-class4-lane"},{"wait":10,"capture":"fix-vision-r7-class4-end"}]

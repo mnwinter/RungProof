@@ -1,0 +1,1 @@
+[{"click": [1000, 586], "wait": 0.15, "capture": "lab31-guard-loss-early"}, {"wait": 1.2, "capture": "lab31-guard-loss-late"}, {"click": [1000, 586], "wait": 0.8, "capture": "lab31-guard-restored"}]

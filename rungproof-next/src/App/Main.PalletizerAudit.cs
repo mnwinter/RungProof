@@ -70,14 +70,16 @@ public partial class Main
         var loaded = LadderEditorProjectJson.Load(FileAccess.GetFileAsString(
             "res://programs/demos/05-integrated-cell-multi-fb-fc.rpproj.json"));
         check(loaded.IsReadable && loaded.Document is not null, "normal_saved_demo_document_is_editable");
-        check(LadderEditorProjectJson.Save(loaded.Document!) == LadderEditorProjectJson.Save(
-            AuthoredDemoLadderPrograms.TryCreate("lab-11-13-xy-palletizing", out var authored)
-                ? authored : throw new InvalidOperationException("Missing Demo 5")),
+        var authored = AuthoredDemoLadderPrograms.TryCreate("lab-11-13-xy-palletizing", out var created)
+            ? created : throw new InvalidOperationException("Missing Demo 5");
+        SceneLadderProject.EnsureSceneIoTable(authored, ReadScenePoints(_activeSceneDefinition!), runtime.Points, out _);
+        check(LadderEditorProjectJson.Save(loaded.Document!) == LadderEditorProjectJson.Save(authored),
             "saved_file_matches_demo_menu_document");
         check(!authored.Tags.Any(tag => tag.Name == "gantry_cycle")
-            && authored.Instances.Count == 4
-            && authored.Instances.Select(instance => instance.InstanceDataBlock!.Number).Order().SequenceEqual(new[] { 101, 102, 103, 104 }),
-            "no_aggregate_cycle_and_four_distinct_axis_gripper_instance_dbs");
+            && authored.Blocks.Any(block => block.Name == "FB_EncoderChannel")
+            && authored.Instances.Count == 7
+            && authored.Instances.Select(instance => instance.InstanceDataBlock!.Number).Order().SequenceEqual(new[] { 101, 102, 103, 104, 105, 106, 107 }),
+            "no_aggregate_cycle_and_seven_distinct_axis_gripper_encoder_instance_dbs");
 
         RunActiveController();
         _PhysicsProcess(.1);

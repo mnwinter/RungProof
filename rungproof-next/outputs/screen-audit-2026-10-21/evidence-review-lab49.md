@@ -1,0 +1,9 @@
+# Lab4.9 corrected r2 native review
+
+Reviewed41 proper r2 motionframes, completed nativeSignals and8 reset/recovery/finalframes;7r2review sheets and1recoveryreview. Earlier idlecaptures following wrongreadonlyLED clickexcluded: QAcontrolidentificationfault, notappdefect. ActualphysicalSTARTfirstleft(988,602). No reviewerUI/backend operations.
+
+Normalboundedmotion: carton indexesfrominfeedonto homelevel lift withchainTrue; motion12 carton_on_liftTrue/chainFalse/lift_enableTrue, platformvisiblyrises. Motion19 upperTrue; motion20 lift_enableFalse/chainTrue, cartonphysicallymovesacrossupperreceiver. Motion31receiverbeamblocked/occupiedTrue; laterbeamFalsewhileoccupiedTrue. Propercompleted nativeframe shows carton_at_receiverTrue,cycle_completeTrue,cycle_activeFalse,lift_homeTrue,chain/liftenable/lowerFalse,transfer_faultFalse; cartonphysicallyonreceiver, platformhome. Intermediateplatformloweringnotcapturedby41normalframes, butfinalhomedifferentpositionproved.
+
+AppReset returnscartontoinfeed, receiverclear/homeTrue, allcommandsFalse/completeFalse,STOPPEDscan0. Newindex AppStopearly/latebothSTOPPEDscan141/allcommandsFalse/samecartonposition across1.2secondwait. Run189doesnotresume, freshSTART229 resumeschain/index. Finalrecovered-home-complete nativeframe shows receiverTrue/homeTrue/completeTrue/allcommandsFalse/nofault, physicalcartonreceiver/platformhome. Premature lab49-r2-repeat-completed filename is notcompleted: actualchainTrue/carton_on_liftTrue/upperTrue/receiverFalse atscan796, so it is excludedfromfinalacceptance and notcalleddescending. Laterfullactualcompletion supersedes timingexpectationfailure.
+
+No newissue. Remainingunproven: destinationblockedstartpolicy/trip,boxabsentstart, midliftStopdifferentphase, exactloweringmotiontrace, machineStopdistinctfromAppStop, continuouschainmotion/speed andexactlatency. Explicitreferencecasecredit only,no whole-scenePASS.

@@ -41,12 +41,19 @@ public partial class SceneCameraController : Node
         var viewport = _camera.GetViewport().GetVisibleRect();
         var aperture = ViewportRectProvider?.Invoke() ?? viewport;
         if (aperture.Size.X <= 0 || aperture.Size.Y <= 0) aperture = viewport;
-        var worldUnitsPerPixel = 2.0f * _distance
+        var verticalWorldUnitsPerPixel = 2.0f * _distance
             * Mathf.Tan(Mathf.DegToRad(_camera.Fov * 0.5f)) / viewport.Size.Y;
+        var horizontalWorldUnitsPerPixel = 2.0f * _distance
+            * Mathf.Tan(Mathf.DegToRad(_camera.Fov * 0.5f)) / viewport.Size.X;
         // Godot camera offsets participate in projection and ray picking. Keep
         // the scene center inside the actual aperture, including after zoom.
-        _camera.HOffset = (viewport.GetCenter().X - aperture.GetCenter().X) * worldUnitsPerPixel;
-        _camera.VOffset = (aperture.GetCenter().Y - viewport.GetCenter().Y) * worldUnitsPerPixel;
+        // A positive physical camera offset moves the projected subject toward
+        // the opposite screen edge. Move both axes from the full-viewport
+        // centre toward the unobstructed scene aperture; otherwise the lesson
+        // rail's width is effectively applied twice and leaves the machine
+        // crowded against the rail with unused space on the right.
+        _camera.HOffset = (viewport.GetCenter().X - aperture.GetCenter().X) * horizontalWorldUnitsPerPixel;
+        _camera.VOffset = (viewport.GetCenter().Y - aperture.GetCenter().Y) * verticalWorldUnitsPerPixel;
     }
 
     /// <summary>

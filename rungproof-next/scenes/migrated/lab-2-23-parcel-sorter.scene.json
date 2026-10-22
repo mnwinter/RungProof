@@ -225,7 +225,7 @@
       "type": "sizeSensorBank",
       "label": "Three-height size sensor bank",
       "position": [
-        -3.6,
+        -2.75,
         0,
         0
       ],
@@ -276,7 +276,29 @@
   ],
   "simulation": {
     "type": "sequence",
+    "parcelTransferPlant": true,
+    "parcelGateX": -2.7,
+    "parcelTableRadius": 1.8,
+    "parcelFullTurnSeconds": 1.2,
     "points": [
+      {"name": "infeed_run", "type": "BOOL", "owner": "PLC", "initial": false},
+      {"name": "table_transfer_run", "type": "BOOL", "owner": "PLC", "initial": false},
+      {"name": "infeed_gate_open", "type": "BOOL", "owner": "PLC", "initial": false},
+      {"name": "primary_table_loaded", "type": "BOOL", "owner": "PC", "initial": false},
+      {"name": "primary_table_clear", "type": "BOOL", "owner": "PC", "initial": true},
+      {"name": "primary_table_aligned", "type": "BOOL", "owner": "PC", "initial": false},
+      {"name": "infeed_gate_clear", "type": "BOOL", "owner": "PC", "initial": false},
+      {"name": "transfer_inhibited", "type": "BOOL", "owner": "PC", "initial": false},
+      {"name": "misroute_detected", "type": "BOOL", "owner": "PC", "initial": false},
+      {"name": "all_parcels_received", "type": "BOOL", "owner": "PC", "initial": false},
+      {"name": "infeed_effective", "type": "BOOL", "owner": "SIM", "initial": false},
+      {
+        "name": "start_sort_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
       {
         "name": "conveyors_run",
         "type": "BOOL",
@@ -329,6 +351,7 @@
     "actions": [
       {
         "id": "start-sort",
+        "controllerStartBinding": "start_sort_request",
         "label": "Sort three-parcel batch",
         "type": "start",
         "sequence": "sort-batch"
@@ -346,7 +369,7 @@
     ],
     "pointBindings": [
       {
-        "point": "conveyors_run",
+        "point": "infeed_effective",
         "equipmentId": "sort_infeed",
         "mode": "running"
       },
@@ -614,7 +637,7 @@
       "acceptance": "One parcel reaches each lane and the sorted count ends at three."
     },
     "machineGuide": {
-      "purpose": "Illustrative three-parcel transfer: load, index the flat primary table, then send each parcel onto its supported takeaway path. A secondary table carries the medium route. This is scripted plant geometry, not a validated conveyor contact or real PLC process model.",
+      "purpose": "Command-driven three-parcel transfer. LAD independently meters the infeed escapement, indexes the primary table and transfers each parcel onto the physically aligned takeaway. The plant integrates commands, samples delivered support and reports sensors; it does not select routes or run the legacy preview sequence.",
       "startConditions": [
         "For the operator shell, author/load the required ladder and command bindings; no parcel-sorter reference ladder is supplied.",
         "All required simulator inputs are at their documented initial state.",
@@ -645,7 +668,7 @@
       ],
       "expectedObservations": [
         "One parcel reaches each lane and the sorted count ends at three.",
-        "The cartons pause at the table center before indexing. Scripted queue holds and size feedback do not prove physical sensing, friction or throughput."
+        "LAD stops the table belt at its center sensor before indexing, and closes the visible escapement after each parcel rear clears. Height classification is derived from actual parcel dimensions crossing the delivered sensor bank. This illustrative rigid-load contact model is not a validated friction or throughput model."
       ]
     },
     "sequenceNumber": 23,

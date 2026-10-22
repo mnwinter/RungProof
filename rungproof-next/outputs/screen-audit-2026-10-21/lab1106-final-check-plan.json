@@ -1,0 +1,1 @@
+[{"name": "lab1106-drain-final-check", "expected": {"inflow_enabled": false, "source_level_high": false, "transfer_pump_run": false, "outlet_valve_open": false, "transfer_inhibited": false}, "monitor_only": true, "keep_monitor": true}]

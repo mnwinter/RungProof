@@ -336,6 +336,13 @@ public partial class Main
                 GetTree().Quit(passed ? 0 : 1);
                 return;
             }
+            if (OS.GetCmdlineUserArgs().Contains("--verify-powder-mixer", StringComparer.Ordinal))
+            {
+                VerifyPowderMixerMotion(Check);
+                GD.Print($"POWDER_MIXER_VERIFY {(passed ? "PASS" : "FAIL")} PLC-output projection and timed actuator motion; no material-flow simulation");
+                GetTree().Quit(passed ? 0 : 1);
+                return;
+            }
             if (OS.GetCmdlineUserArgs().Contains("--verify-pallet-robot-controller", StringComparer.Ordinal))
             {
                 VerifyPalletRobotCommandBoundary(Check);
@@ -469,6 +476,54 @@ public partial class Main
             GD.PushError($"SCENE_GEOMETRY_VERIFY FAIL {exception}");
             GetTree().Quit(1);
         }
+    }
+
+    private void VerifyPowderMixerMotion(Action<bool, string> check)
+    {
+        AddMigratedScene("lab-11-19-powder-batch-mixer", _candidateCatalog!, _mainCamera!, false, false);
+        var root = _sceneCompositionRoot!;
+        var motor = root.GetNode<Node3D>("motor_3");
+        var valve = root.GetNode<Node3D>("valve_4");
+        var feeder = root.GetNode<Node3D>("training_accessory_7");
+        var motorMotion = motor.FindChildren("*", string.Empty, true, false).OfType<EquipmentMotionController>().Single();
+        var valveMotion = valve.FindChildren("*", string.Empty, true, false).OfType<EquipmentMotionController>().Single();
+        var gateMotion = feeder.FindChildren("*", string.Empty, true, false).OfType<EquipmentMotionController>().Single();
+        var motorShaft = motor.FindChildren("KIN_motor_*", string.Empty, true, false).OfType<Node3D>().First();
+        var valveStem = valve.FindChildren("KIN_valve_stem*", string.Empty, true, false).OfType<Node3D>().Single();
+        var gateBlade = feeder.FindChildren("KIN_SLIDE_GATE*", string.Empty, true, false).OfType<Node3D>().Single();
+        var motorHome = motorShaft.Transform;
+        var valveHome = valveStem.Transform;
+        var gateHome = gateBlade.Transform;
+
+        _sceneRuntime!.CommitExternalPlcOutputs(new Dictionary<string, object?>
+        {
+            ["dose_run"] = true,
+            ["mixer_run"] = true,
+            ["discharge_valve_open"] = true,
+        });
+        motorMotion._PhysicsProcess(0.05);
+        valveMotion._PhysicsProcess(0.6);
+        gateMotion._PhysicsProcess(0.575);
+        check(motorMotion.Running && !motorShaft.Transform.IsEqualApprox(motorHome),
+            "powder_mixer_output_rotates_mixer_motor");
+        check(valveMotion.PositionPercent > 40 && valveMotion.PositionPercent < 60
+            && !valveStem.Transform.IsEqualApprox(valveHome),
+            "powder_mixer_discharge_valve_uses_timed_travel");
+        check(gateMotion.PositionPercent > 40 && gateMotion.PositionPercent < 60
+            && !gateBlade.Transform.IsEqualApprox(gateHome),
+            "powder_mixer_dose_command_moves_feeder_gate");
+
+        _sceneRuntime.CommitExternalPlcOutputs(new Dictionary<string, object?>
+        {
+            ["dose_run"] = false,
+            ["mixer_run"] = false,
+            ["discharge_valve_open"] = false,
+        });
+        valveMotion._PhysicsProcess(1.2);
+        gateMotion._PhysicsProcess(1.15);
+        check(!motorMotion.Running && valveMotion.PositionPercent == 0 && gateMotion.PositionPercent == 0
+            && valveStem.Transform.IsEqualApprox(valveHome) && gateBlade.Transform.IsEqualApprox(gateHome),
+            "powder_mixer_commands_off_stop_motor_and_close_actuators");
     }
 
     private void VerifyParcelGeometry(Action<bool, string> check)

@@ -1,0 +1,95 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    580,
+    350,
+    1110,
+    650
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    310
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab220-repeat-outbound",
+      "source": "lab220-repeat-outbound.png",
+      "sha256": "2f830fbae02da183112ff39dd8bb0162f23c00260ef1f5e23e67647719115369",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-motion-1",
+      "source": "lab220-repeat-motion-1.png",
+      "sha256": "65c3b0017e253f13e4ebfa60478dd0753fe1f7c381bf002de25fbf723afbd743",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-motion-2",
+      "source": "lab220-repeat-motion-2.png",
+      "sha256": "27576d1822d0b9b425f35d99faccda70a29df768180c33c8ab1642a8aabd39f8",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-motion-3",
+      "source": "lab220-repeat-motion-3.png",
+      "sha256": "3b519f735af06b351750317c1da63c81ecd3e5ec5236538dc03b3e4204f1bc69",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-motion-4",
+      "source": "lab220-repeat-motion-4.png",
+      "sha256": "ce05e3aa91b6eb2b94dc8bbed5618cee0f02339dff6d89b0f019131e3e961758",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-motion-5",
+      "source": "lab220-repeat-motion-5.png",
+      "sha256": "ddf704769c4392ef71b2fc6885a479ead710288ecff0b295a3594f631848a53d",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-motion-6",
+      "source": "lab220-repeat-motion-6.png",
+      "sha256": "69c25e01b732118cc704fff8b011c8bd121ab48747ee3ce4804440b99e931ad6",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab220-repeat-complete",
+      "source": "lab220-repeat-complete.png",
+      "sha256": "965e3550c36038b577b5ee20c3c8019d90bd7604da54262a3ac42f72e9848b86",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

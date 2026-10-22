@@ -14,7 +14,15 @@ public partial class Main
         if (!GuardChallengeSceneReplacement(action)) return false;
         RefreshWorkspaceDirty(); // Includes the actual integrated ladder draft.
         if (_workspaceReplacementAuthorized || _simulatorShell?.IsWorkspaceDirty != true) return true;
-        if (_pendingWorkspaceAction is not null) return false;
+        if (_pendingWorkspaceAction is not null)
+        {
+            // Do not silently ignore a later demo selection. Keep the latest
+            // destination and bring the Save / Discard / Cancel choice forward.
+            _pendingWorkspaceAction = action;
+            _simulatorShell.ShowUnsavedWorkspaceDialog(
+                "A new scene was requested while this decision was open. The latest request is now waiting.\n\n");
+            return false;
+        }
         _pendingWorkspaceAction = action;
         _simulatorShell.ShowUnsavedWorkspaceDialog();
         return false;

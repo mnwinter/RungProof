@@ -1,6 +1,6 @@
 ---
 name: rungproof-development
-description: Develop, review, and verify the canonical RungProof Godot/.NET PLC simulator, including ladder editing, virtual-controller behavior, authored demos, Siemens TIA evidence work, industrial assets, and the guarded external-PLC seam. Use for changes or audits in the RungProof repository; do not use for ControlsTrace or unrelated PLC projects.
+description: Develop, review, and verify the canonical RungProof Godot/.NET PLC simulator, including ladder editing, virtual-controller behavior, authored demos, Siemens TIA evidence work, industrial assets, and the guarded external-PLC seam. Use only for changes or audits in the RungProof repository.
 ---
 
 # RungProof development

@@ -9,8 +9,9 @@ public partial class Main
 {
     private bool _verifyDemoSequence;
 
-    // Exercise the authored Demo 3 through the same input/session/plant route
-    // as the application. No force, direct output write or position fixture.
+    // Exercise the authored height-sort Demo 3 through the same
+    // input/session/plant route as the application. No force, direct output
+    // write or position fixture is used.
     private void VerifyDemoSequence()
     {
         var failures = 0;
@@ -21,64 +22,88 @@ public partial class Main
         }
         try
         {
-            const string scene = "scene-1-conveyor-stop";
+            const string scene = "scene-2-conveyor-pusher";
             AddMigratedScene(scene, _candidateCatalog!, _mainCamera!, false, false);
             if (!AuthoredDemoLadderPrograms.TryCreate(scene, out var document))
                 throw new InvalidOperationException("Authored Demo 3 missing.");
             EnableVirtualControllerProgram(document.BuildProgram());
             var runtime = _sceneRuntime!;
-            var product = _sceneCompositionRoot!.GetNode<Node3D>("scene1_product");
-            var sensor = _sceneCompositionRoot.GetNode<Node3D>("scene1_photoeye");
+            var product = _sceneCompositionRoot!.GetNode<Node3D>("scene2_product");
+            var sensor = _sceneCompositionRoot.GetNode<Node3D>("scene2_photoeye");
             var beams = sensor.FindChildren("KIN_beam*", "", true, false).OfType<Node3D>().ToArray();
             var home = product.Transform;
             void Tick(int count = 1) { for (var i = 0; i < count; i++) _PhysicsProcess(.02); }
-            bool Output() => _virtualController!.Snapshot.Outputs["conveyor_running"];
-            bool Eye() => runtime.Points["simulated_photoeye"] is true;
-            bool Seal() => _virtualController!.Snapshot.Variables["seal_in"];
+            bool Conveyor() => _virtualController!.Snapshot.Outputs["conveyor_running"];
+            bool Pusher() => _virtualController!.Snapshot.Outputs["pusher_extend"];
             Check(beams.Length > 0 && beams.All(b => b.Visible), "initial_beam_visible");
             RunActiveController(); Tick(5);
-            Check(!Output() && !Seal() && product.Transform == home, "run_alone_idle_no_motion");
-            Check(ExecuteSelectedControllerAction("scene-toggle"), "clean_start_action_accepted");
-            Tick();
-            Check(Output() && Seal() && product.Transform != home
-                && runtime.Points["conveyor_running"] is true, "start_scan_seal_output_and_actual_carton_motion");
-            Tick();
-            Check(!_virtualController!.Snapshot.Variables["start_command"] && Seal()
-                && Output() && _virtualController.Snapshot.Forces.Count == 0,
-                "start_pulse_released_latch_runs_without_forces");
+            Check(!Conveyor() && !Pusher() && product.Transform == home, "app_run_alone_does_not_start_machine");
+            Check(ExecuteSelectedControllerAction("toggle-system_enable"), "system_enable_action_accepted");
+            Check(ExecuteSelectedControllerAction("pulse-start_command"), "machine_start_action_accepted");
+            Tick(2);
+            Check(_virtualController!.Snapshot.Variables["machine_run"] && Conveyor()
+                && _virtualController.Snapshot.Forces.Count == 0, "machine_start_seals_and_runs_without_forces");
+
+            var routes = new System.Collections.Generic.List<(long Height, string Destination)>();
+            long measuredHeight = 0;
+            var tallPusherCommandSeen = false;
             var ticks = 0;
-            while (!Eye() && ticks++ < 200) Tick();
-            Check(Eye() && ticks < 200 && Output() && Seal() && product.Transform != home && beams.All(b => !b.Visible),
-                "actual_carton_motion_reaches_sensor_and_hides_beam");
-            // Feedback projects after plant travel. LD consumes that image on
-            // the next scan, consistent with ordinary fixed scan ordering.
-            Tick(); var stoppedAtBeam = product.Transform;
-            Check(!Output() && !Seal() && runtime.Points["conveyor_running"] is false,
-                "next_scan_photoeye_breaks_seal_and_removes_output");
-            Tick(50);
-            Check(product.Transform == stoppedAtBeam && Eye() && !Output(), "sensor_stop_retains_actual_carton_pose");
-            ResetActiveController();
-            Check(product.Transform == home && !Eye() && !Output() && !Seal()
-                && beams.All(b => b.Visible) && _virtualController!.Snapshot.ScanNumber == 0,
-                "reset_restores_carton_sensor_beam_and_controller_image");
-            RunActiveController();
-            Check(ExecuteSelectedControllerAction("scene-toggle"), "second_clean_start_accepted"); Tick(8);
-            Check(Output() && !Eye() && product.Transform != home, "early_motion_before_photoeye");
-            Check(ExecuteSelectedControllerAction("scene-toggle"), "clean_stop_pulse_accepted");
-            Tick(); var earlyStopped = product.Transform;
-            Check(!Output() && !Seal() && _virtualController!.Snapshot.Variables["stop_command"],
-                "stop_pulse_breaks_latch_before_sensor");
+            while (routes.Count < 3 && ticks++ < 6000)
+            {
+                Tick();
+                if (runtime.Points["part_at_pusher"] is true)
+                {
+                    measuredHeight = Convert.ToInt64(runtime.Points["carton_height_mm"]);
+                    if (measuredHeight == 820 && Pusher()) tallPusherCommandSeen = true;
+                }
+                if (runtime.Points["main_line_exit"] is true
+                    && !routes.Any(route => route.Height == measuredHeight && route.Destination == "main"))
+                    routes.Add((measuredHeight, "main"));
+                if (runtime.Points["side_line_exit"] is true
+                    && !routes.Any(route => route.Height == measuredHeight && route.Destination == "side"))
+                    routes.Add((measuredHeight, "side"));
+            }
+            Check(ticks < 6000, "three_cartons_reach_measured_exit_feedback");
+            Check(routes.Contains((420L, "main")), "short_420mm_carton_passes_main_line");
+            Check(routes.Contains((820L, "side")), "tall_820mm_carton_diverts_side_line");
+            Check(routes.Contains((600L, "main")), "boundary_600mm_carton_passes_main_line");
+            Check(tallPusherCommandSeen, "tall_carton_uses_plc_pusher_command");
+
+            Check(ExecuteSelectedControllerAction("pulse-stop_command"), "machine_stop_action_accepted");
+            Tick(2); var machineStopped = product.Transform;
+            Check(_virtualController!.Snapshot.Variables["machine_run"] is false && !Conveyor() && !Pusher(),
+                "machine_stop_drops_run_and_actuator_commands");
             Tick(20);
-            Check(product.Transform == earlyStopped && !Eye() && !Output()
-                && !_virtualController!.Snapshot.Variables["stop_command"], "released_stop_pulse_and_pose_hold");
-            StopActiveController(); var scan = _virtualController!.Snapshot.ScanNumber; Tick(20);
-            Check(product.Transform == earlyStopped && _virtualController.Snapshot.ScanNumber == scan,
-                "controller_stop_freezes_scan_and_pose");
+            Check(product.Transform == machineStopped, "machine_stop_holds_carton_pose");
+            Check(ExecuteSelectedControllerAction("pulse-start_command"), "fresh_start_after_machine_stop_accepted");
+            Tick(2);
+            Check(_virtualController!.Snapshot.Variables["machine_run"] is true, "machine_stop_recovery_requires_and_accepts_fresh_start");
+
+            Check(ExecuteSelectedControllerAction("toggle-safety_trip"), "simulated_trip_action_accepted");
+            Tick(2);
+            Check(_virtualController!.Snapshot.Variables["machine_run"] is false && !Conveyor() && !Pusher(),
+                "simulated_trip_drops_machine_commands");
+            Check(ExecuteSelectedControllerAction("toggle-safety_trip"), "simulated_trip_clear_action_accepted");
+            Tick(2);
+            Check(_virtualController!.Snapshot.Variables["machine_run"] is false, "trip_clear_does_not_auto_restart");
+
+            Check(ExecuteSelectedControllerAction("pulse-reset_command"), "machine_reset_action_accepted");
+            Tick(2);
+            Check(_virtualController!.Snapshot.Variables["machine_run"] is false && product.Transform.IsEqualApprox(home)
+                && Convert.ToInt64(runtime.Points["parts_completed"]) == 0 && !Conveyor() && !Pusher(),
+                "machine_reset_restores_repeatable_plant_and_idle_logic");
+            Check(ExecuteSelectedControllerAction("pulse-start_command"), "repeat_start_action_accepted");
+            Tick(2);
+            Check(_virtualController!.Snapshot.Variables["machine_run"] is true && Conveyor(), "fresh_start_runs_again_after_machine_reset");
+
+            StopActiveController(); var scan = _virtualController!.Snapshot.ScanNumber; var appStopped = product.Transform; Tick(20);
+            Check(product.Transform == appStopped && _virtualController.Snapshot.ScanNumber == scan,
+                "app_stop_separately_freezes_scan_and_plant");
             ResetActiveController();
-            Check(product.Transform == home && !Eye() && !Output() && !Seal()
+            Check(product.Transform.IsEqualApprox(home) && !Conveyor() && !Pusher()
                 && _virtualController!.Snapshot.ScanNumber == 0
                 && _virtualController.Snapshot.State == VirtualControllerState.Stopped,
-                "final_reset_stopped_initial_state");
+                "app_reset_returns_stopped_initial_state");
         }
         catch (Exception error) { failures++; GD.PushError($"DEMO_SEQUENCE_EXCEPTION {error}"); }
         GD.Print($"DEMO_SEQUENCE_VERIFY {(failures == 0 ? "PASS" : "FAIL")} failures={failures} offline-only; mesh/feedback integration, not native visual acceptance");

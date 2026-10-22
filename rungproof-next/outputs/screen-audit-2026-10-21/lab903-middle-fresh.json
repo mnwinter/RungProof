@@ -1,0 +1,1 @@
+[{"name": "lab903-calibrate-middle-fresh", "click": [725, 436], "expected": {"calculate_request": true, "call_complete": true, "inputs_valid": true, "sum_result": 7, "result_valid": true, "event_count": 0}, "monitor_only": true, "keep_monitor": true}]

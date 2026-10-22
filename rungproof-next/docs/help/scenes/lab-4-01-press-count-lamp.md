@@ -15,27 +15,36 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
 | `pulse_received` | `BOOL` | **PC** | `False` |
+| `reset_pressed` | `BOOL` | **PC** | `False` |
 | `threshold_lamp` | `BOOL` | **PLC** | `False` |
+| `press_count_value` | `DINT` | **PLC** | `0` |
 
 ## Operator actions
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
 | `Pulse count button` | `pulse` | `pulse_received` |
+| `Machine reset pushbutton` | `pulse` | `reset_pressed` |
 
 ## Equipment bindings
 
 | Symbolic point | Equipment | Mode |
 | --- | --- | --- |
 | `pulse_received` | `switch_0` | `switch` |
+| `reset_pressed` | `switch_2` | `switch` |
 | `threshold_lamp` | `indicator_1` | `indicator` |
+| `press_count_value` | `training_accessory_3` | `numericDisplay` (`COUNT`) |
 
 ## Expected equipment
 
 | ID | Type | Label |
 | --- | --- | --- |
-| `switch_0` | `switch` | Press-Count Lamp switch |
-| `indicator_1` | `indicator` | Press-Count Lamp indicator |
+| `switch_0` | `switch` | Press count event input |
+| `indicator_1` | `indicator` | Threshold lamp - count reached three |
+| `switch_2` | `switch` | Press-Count Lamp machine reset |
+| `training_accessory_3` | `trainingAccessory` | Press-count accumulator display |
+
+The threshold output is one green bench lamp bound to `threshold_lamp`; it is not a three-color machine-status tower.
 
 ## Stop and safety boundary
 

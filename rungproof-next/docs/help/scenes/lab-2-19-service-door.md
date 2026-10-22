@@ -14,6 +14,8 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `open_request` | `BOOL` | **PC** | `False` |
+| `close_request` | `BOOL` | **PC** | `False` |
 | `motor_open` | `BOOL` | **PLC** | `False` |
 | `motor_close` | `BOOL` | **PLC** | `False` |
 | `open_limit_nc` | `BOOL` | **PC** | `True` |
@@ -25,10 +27,12 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Open service door` | `start` | `open` |
-| `Close service door` | `start` | `close` |
+| `Open service door` | `start` | Loaded controller: pulse `open_request` (legacy preview: `open`) |
+| `Close service door` | `start` | Loaded controller: pulse `close_request` (legacy preview: `close`) |
 | `Immediate stop` | `stop` | `` |
 | `Reset door` | `reset` | `` |
+
+With a loaded ladder controller, each Start action pulses the named PC-owned BOOL request binding; the learner program decides actuator commands. A legacy preview sequence name does not imply that the loaded controller automatically executes that sequence.
 
 ## Equipment bindings
 
@@ -79,3 +83,10 @@ Open, close, and stop commands move a symbolic service-door shutter between simu
 ### Expected observations
 
 - Each direction stops at its limit; open and close outputs are never on together.
+
+## Loaded-controller shutter physics
+
+OPEN/CLOSE stations pulse separate `open_request` / `close_request` PC inputs. Learner ladder owns `motor_open` / `motor_close`; an accepted request alone does not move the shutter. In controller mode the actual shutter moves only while exactly one motor command is true. Both commands true or both false holds its position. The simulation full stroke is 3 seconds (model parameter, not a hardware rating).
+
+`door_position` is actual normalized travel: 0% open, 100% closed. `open_limit_nc` is FALSE only at fully open; `closed_limit_nc` is FALSE only at fully closed. Midtravel both are TRUE. Endpoint feedback follows modeled position, never a reference timer. Stop freezes travel; Reset closes the shutter and restores initial limits. `cycle_complete` indicates a commanded travel reached an endpoint; no automatic reversal or return sequence is supplied.
+

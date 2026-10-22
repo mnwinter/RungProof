@@ -1,0 +1,1 @@
+[{"name": "standalone-radar-r2-stop-signals", "monitor_only": false, "keep_monitor": true, "expected": {"cycle_request": true, "manual_drain_request": false, "inlet_pump_run": false, "drain_valve_open": false}}]

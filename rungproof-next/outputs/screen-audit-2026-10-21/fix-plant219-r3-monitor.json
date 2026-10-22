@@ -1,0 +1,1 @@
+[{"name":"fix-plant219-r3-closed-signals","expected":{"motor_open":false,"motor_close":false,"open_limit_nc":true,"closed_limit_nc":false,"door_position":100}},{"name":"fix-plant219-r3-reset-signals","clicks":[[496,39],[525,125]],"wait":0.4,"expected":{"motor_open":false,"motor_close":false,"open_limit_nc":true,"closed_limit_nc":false,"door_position":100}}]

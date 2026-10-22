@@ -6,7 +6,7 @@ Scene contract: `res://scenes/migrated/lab-11-19-powder-batch-mixer.scene.json`
 
 ## Purpose
 
-Batch-control exercise with manual recipe, dose-complete and mixer-ready inputs. PLC outputs drive indicators; equipment is an illustrative static layout.
+Batch-control exercise with manual recipe, dose-complete and mixer-ready inputs. PLC outputs operate the feeder gate, mixer drive and discharge valve while the panel lamps mirror each command.
 
 ## Expected I/O to operate this scene
 
@@ -37,8 +37,11 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `dose_complete` | `switch_12` | `switch` |
 | `mixer_ready` | `switch_13` | `switch` |
 | `dose_run` | `indicator_5` | `indicator` |
+| `dose_run` | `training_accessory_7` | `position` |
 | `mixer_run` | `indicator_14` | `indicator` |
+| `mixer_run` | `motor_3` | `running` |
 | `discharge_valve_open` | `indicator_15` | `indicator` |
+| `discharge_valve_open` | `valve_4` | `position` |
 
 ## Expected equipment
 
@@ -67,7 +70,7 @@ A normal Stop removes PLC-owned commands according to the scene runtime. This do
 
 ## Machine guide
 
-Practice batch sequencing with symbolic inputs and output indicators. The separate equipment models do not simulate powder transfer, weighing or mixing. Tank diameter/height size the cylindrical shell; attachments remain proportional.
+Practice batch sequencing with symbolic inputs and visible actuator commands. The feeder gate, mixer motor and discharge valve follow the three PLC outputs; the scene does not claim physical powder transfer, weighing or process fidelity.
 
 ### Start conditions
 
@@ -77,10 +80,11 @@ Practice batch sequencing with symbolic inputs and output indicators. The separa
 ### Normal sequence
 
 - Apply the requested input condition.
-- Verify only the documented PLC outputs respond.
+- Verify the feeder gate opens during dosing, the mixer drive turns during mixing, and the discharge valve opens only after the batch permissives are satisfied.
 
 ### Expected observations
 
 - Input actions toggle recipe_valid, dose_complete and mixer_ready.
 - PLC output indicators display dose_run, mixer_run and discharge_valve_open from the user's controller.
+- The same outputs visibly command the slide gate, mixer motor and discharge valve; they do not create simulated material or fabricated process feedback.
 - A correct controller should enforce dosing before mixing and discharge after batch completion; the initial-safe-state case alone does not prove that sequence.

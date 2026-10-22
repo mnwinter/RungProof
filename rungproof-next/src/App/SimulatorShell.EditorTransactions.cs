@@ -7,7 +7,7 @@ namespace RungProof.Next.App;
 
 public partial class SimulatorShell
 {
-    private sealed record PendingEditorForm(Func<bool> HasPending, Func<bool> Apply, Action Discard);
+    private sealed record PendingEditorForm(Func<string> Describe, Func<bool> HasPending, Func<bool> Apply, Action Discard);
     private readonly List<PendingEditorForm> _pendingEditorForms = [];
     private ConfirmationDialog? _pendingEditorDialog;
     private Action? _pendingEditorContinuation;
@@ -32,10 +32,12 @@ public partial class SimulatorShell
             _pendingEditorDialog = new ConfirmationDialog
             {
                 Name = "ResolvePendingEditorForms", Title = "Pending editor changes",
-                DialogText = "Apply the pending form before continuing, discard it, or cancel navigation.",
-                OkButtonText = "Apply", CancelButtonText = "Cancel"
+                DialogText = "Apply the pending edit before continuing, discard it, or cancel navigation.",
+                OkButtonText = "APPLY AND CONTINUE", CancelButtonText = "CANCEL",
+                MinSize = new Vector2I(720, 250)
             };
-            _pendingEditorDialog.AddButton("Discard", false, "discard");
+            _pendingEditorDialog.GetLabel().AddThemeFontSizeOverride("font_size", 16);
+            _pendingEditorDialog.AddButton("DISCARD AND CONTINUE", false, "discard");
             _pendingEditorDialog.Confirmed += () =>
             {
                 var pending = _pendingEditorForms.Where(form => form.HasPending()).ToArray();
@@ -45,7 +47,7 @@ public partial class SimulatorShell
                 {
                     _pendingEditorContinuation = null;
                     _pendingEditorNavigationCancelled?.Invoke(); _pendingEditorNavigationCancelled = null;
-                    _pendingEditorDialog.DialogText = "Multiple forms contain pending edits. Nothing was applied. Cancel and discard extra forms before applying one form, or choose Discard to discard all pending edits.";
+                    _pendingEditorDialog.DialogText = BuildPendingEditorDialogText(pending, multiple: true, applyRejected: true);
                     return;
                 }
                 foreach (var form in pending)
@@ -64,11 +66,28 @@ public partial class SimulatorShell
             _pendingEditorDialog.Canceled += () => { _pendingEditorContinuation = null; _pendingEditorNavigationCancelled?.Invoke(); _pendingEditorNavigationCancelled = null; };
             AddChild(_pendingEditorDialog);
         }
-        var multiplePending = _pendingEditorForms.Count(form => form.HasPending()) > 1;
+        var pendingForms = _pendingEditorForms.Where(form => form.HasPending()).ToArray();
+        var multiplePending = pendingForms.Length > 1;
         _pendingEditorDialog.GetOkButton().Disabled = multiplePending;
-        _pendingEditorDialog.DialogText = multiplePending
-            ? "Multiple forms contain pending edits. Combined Apply is unavailable. Cancel and discard extra forms before applying one form, or choose Discard to discard all pending edits."
-            : "Apply the pending form before continuing, discard it, or cancel navigation.";
-        _pendingEditorDialog.PopupCentered();
+        _pendingEditorDialog.DialogText = BuildPendingEditorDialogText(pendingForms, multiplePending, applyRejected: false);
+        _pendingEditorDialog.PopupCentered(new Vector2I(720, 250));
+    }
+
+    private static string BuildPendingEditorDialogText(PendingEditorForm[] pending, bool multiple, bool applyRejected)
+    {
+        static string SafeDescription(PendingEditorForm form)
+        {
+            var description = form.Describe().Trim();
+            return description.Length == 0 ? "Unnamed editor form" : description;
+        }
+
+        if (!multiple)
+            return $"Pending edit: {SafeDescription(pending[0])}\n\nApply and continue, discard and continue, or cancel and remain here.";
+
+        var list = string.Join("\n", pending.Select(form => $"- {SafeDescription(form)}"));
+        var prefix = applyRejected
+            ? "Nothing was applied. More than one editor contains pending changes:"
+            : "More than one editor contains pending changes:";
+        return $"{prefix}\n{list}\n\nCombined Apply is unavailable because each form owns a separate revision. Discard all and continue, or cancel and resolve each edit individually.";
     }
 }

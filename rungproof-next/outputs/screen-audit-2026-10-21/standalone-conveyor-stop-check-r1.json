@@ -1,0 +1,1 @@
+[{"name": "standalone-conveyor-r1-stop-signals", "expected": {"conveyor_run": false, "estop_ok": true}}]

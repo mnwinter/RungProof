@@ -1,0 +1,1 @@
+[{"name": "conveyor-r1-start", "click": [1214, 574], "wait": 1, "expected": {"conveyor_run": true}}, {"name": "conveyor-r1-circulate", "wait": 12, "expected": {"conveyor_run": true}}, {"name": "conveyor-r1-station-stop", "click": [1214, 574], "expected": {"conveyor_run": false}}, {"name": "conveyor-r1-restart", "click": [1214, 574], "expected": {"conveyor_run": true}}]

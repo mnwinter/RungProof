@@ -1,0 +1,1 @@
+[{"name":"newbinding219-r1-open-signals","expected":{"motor_open":true,"motor_close":false,"open_limit_nc":true,"closed_limit_nc":false},"keep_monitor":true}]

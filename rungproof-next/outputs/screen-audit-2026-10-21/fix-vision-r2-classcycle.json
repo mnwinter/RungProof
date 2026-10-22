@@ -1,0 +1,1 @@
+[{"click":[422,39],"wait":0.4},{"click":[485,146],"wait":0.4},{"wheel":[700,450,120]},{"wheel":[700,450,120]},{"wheel":[700,450,120]},{"click":[501,330],"capture":"fix-vision-r2-class3"},{"click":[501,330],"capture":"fix-vision-r2-class4"},{"click":[501,330],"capture":"fix-vision-r2-wrap1"},{"click":[481,325],"wait":0.5,"capture":"fix-vision-r2-valid1"}]

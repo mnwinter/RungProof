@@ -13,6 +13,9 @@ public partial class Main
         check(_sceneCompositionRoot!.GetNode<Node3D>("switch_0")
             .GetNodeOrNull<Label3D>("OperatorFaceLabel")?.Text == "PULSE",
             "press_count_operator_plate_identifies_input_pulse");
+        check(_sceneCompositionRoot.GetNode<Node3D>("switch_2")
+            .GetNodeOrNull<Label3D>("OperatorFaceLabel")?.Text == "RESET",
+            "press_count_machine_reset_button_is_visible_and_labeled");
         AuthoredDemoLadderPrograms.TryCreate("lab-4-01-press-count-lamp", out var document);
         EnableVirtualControllerProgram(document.BuildProgram());
         try
@@ -36,15 +39,30 @@ public partial class Main
             check(_virtualController.Snapshot.Counters["press_count"].Accumulated == 3
                 && runtime.Points["threshold_lamp"] is true,
                 "press_count_idle_scans_do_not_recount_button_pulses");
+            runtime.ExecuteAction("pulse-reset_pressed");
+            _PhysicsProcess(0.040);
+            check(runtime.Points["reset_pressed"] is false && runtime.Points["threshold_lamp"] is false
+                && _virtualController.Snapshot.Counters["press_count"].Accumulated == 0,
+                "press_count_machine_reset_clears_counter_and_lamp_without_scene_reset");
+            var repeatedCycle = true;
+            for (var press = 1; press <= 3; press++)
+            {
+                runtime.ExecuteAction("toggle-pulse_received");
+                _PhysicsProcess(0.040);
+                repeatedCycle &= _virtualController.Snapshot.Counters["press_count"].Accumulated == press
+                    && Equals(runtime.Points["threshold_lamp"], press == 3);
+            }
+            check(repeatedCycle, "press_count_machine_reset_allows_a_second_complete_count_cycle");
             CommitVirtualControllerSnapshot(_virtualController.Stop());
             check(runtime.Points["threshold_lamp"] is false
                 && _virtualController.Snapshot.Counters["press_count"].Accumulated == 3,
                 "press_count_stop_removes_lamp_command_without_resetting_counter");
             runtime.ResetSimulation();
             CommitVirtualControllerSnapshot(_virtualController.Reset());
-            check(runtime.Points["pulse_received"] is false && runtime.Points["threshold_lamp"] is false
+            check(runtime.Points["pulse_received"] is false && runtime.Points["reset_pressed"] is false
+                && runtime.Points["threshold_lamp"] is false
                 && _virtualController.Snapshot.Counters["press_count"].Accumulated == 0,
-                "press_count_reset_clears_input_output_and_counter");
+                "press_count_application_reset_remains_separate_from_machine_reset");
         }
         finally
         {

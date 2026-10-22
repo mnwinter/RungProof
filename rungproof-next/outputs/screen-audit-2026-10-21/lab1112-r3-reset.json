@@ -1,0 +1,1 @@
+[{"name": "lab1112-r3-reset-run", "clicks": [[496, 39], [525, 125], [496, 39], [525, 80]], "expected": {"controller_ready": false, "road_a_clear": false, "road_b_clear": false, "road_a_red": true, "road_b_red": true, "signal_conflict": false}, "monitor_only": true, "keep_monitor": true}]

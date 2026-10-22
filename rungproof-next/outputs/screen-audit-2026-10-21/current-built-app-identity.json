@@ -1,0 +1,18 @@
+{
+  "build": "B4",
+  "artifact_path": "C:\\Users\\matt.winter\\Documents\\RungProof\\rungproof-next\\.godot\\mono\\temp\\bin\\Debug\\RungProof.Next.dll",
+  "sha256": "33d6000315cc86c20c9109d50bb0b52cf28fa65174ecfb6184a8427407aada07",
+  "bytes": 7040512,
+  "file_utc": "2026-10-22T21:32:50.0417144Z",
+  "live_gui_pid": 9672,
+  "console_pid": 31304,
+  "app_exec_session": 78940,
+  "bridge_version": 9,
+  "bridge_pid": null,
+  "bridge_exec_session": 27952,
+  "build_result": "0warnings0errors",
+  "tests": "422PASS3FAIL",
+  "new_failure": "CNCgripsupportexpectedY.9actual.9039982m;rootconfirmeddefect,sourcefixinprogress",
+  "source_drift": "CNCfixaheadB4,requiresB5",
+  "identity_provenance": "Rootlivehandles;DLLread-onlyhash;bridgePIDnotprovided"
+}

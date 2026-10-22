@@ -1,0 +1,1 @@
+[{"click": [422, 39], "wait": 0.4}, {"click": [485, 146], "wait": 0.4}, {"wheel": [850, 430, 120]}, {"wheel": [850, 430, 120]}, {"wheel": [850, 430, 120]}, {"wheel": [850, 430, 120]}, {"click": [850, 450], "wait": 0.5, "capture": "standalone-radar-r4-body-inspection-attempt"}, {"click": [875, 195], "wait": 0.5, "capture": "standalone-radar-r4-transmitter-inspection-attempt"}]

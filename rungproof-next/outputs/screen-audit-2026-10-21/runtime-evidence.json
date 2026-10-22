@@ -1,0 +1,14 @@
+{
+  "audit_date": "2026-10-21",
+  "timezone": "America/Los_Angeles",
+  "pid": 36352,
+  "process_started": "2026-10-22T04:54:31.2843989Z",
+  "executable": "C:\\Users\\matt.winter\\Documents\\RungProof\\rungproof-next\\.tools\\godot\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "commit": "3b67ed1534ca11c468acd55558ced9096421ccd1",
+  "assembly_path": "C:\\Users\\matt.winter\\Documents\\RungProof\\rungproof-next\\.godot\\mono\\temp\\bin\\Debug\\RungProof.Next.dll",
+  "assembly_modified_utc": "2026-10-22T04:42:19.5632192Z",
+  "assembly_sha256": "3490973D5462441F3D33173EAF26DCF435615C58AC9B7918DDFD1769A2021DFD",
+  "source_state": "Pre-existing dirty worktree; commit alone does not identify source",
+  "input_method": "User-authorized loopback screen bridge; native OS mouse/keyboard only",
+  "backend_behavior_tests_run": false
+}

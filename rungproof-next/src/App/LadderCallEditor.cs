@@ -120,6 +120,10 @@ public partial class LadderCallEditor : Window
             if (root is null) continue; var reference = "global:" + LadderCallBindings.GlobalId(root) + global.Name[root.Name.Length..];
             if (LadderCallBindings.ResolveDeclaration(program, owner, reference) is { } declaration) actuals.Add((reference, global.Name + " (global)", declaration));
         }
+        foreach (var constant in _edit.Draft.UserConstants)
+            if (LadderEditorDocument.TryParseInitialValue(constant.Type, constant.Value, out var value, out _))
+                actuals.Add((constant.Name, constant.Name + " (constant)",
+                    new PlcVariable(constant.Name, constant.Type, PlcVariableRole.Input, value)));
         if (owner.SemanticMode == LadderSemanticMode.Parameterized)
             foreach (var formal in owner.Interface ?? [])
                 if (LadderCallBindings.ResolveDeclaration(program, owner, "local:" + formal.Id) is { } declaration) actuals.Add(("local:" + formal.Id, formal.Name + " (local)", declaration));

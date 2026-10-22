@@ -24,7 +24,8 @@ public sealed record LadderEditorSnapshot(
     IReadOnlyList<string>? TagTables = null,
     IReadOnlyList<EditableWatchTable>? WatchTables = null,
     int ActiveWatchTableIndex = 0,
-    IReadOnlyList<PlcUserConstant>? UserConstants = null);
+    IReadOnlyList<PlcUserConstant>? UserConstants = null,
+    IReadOnlyList<PlcSystemConstant>? SystemConstants = null);
 
 public sealed class LadderEditorHistory
 {
@@ -117,6 +118,8 @@ public sealed partial class LadderEditorDocument
     {
         var watchVariables = WatchVariablesFor(Tags);
         foreach (var table in WatchTables) table.ValidateRows(watchVariables);
+        if (!TryValidateSystemConstants(SystemConstants, Tags, UserConstants, Blocks, out var systemConstantError))
+            throw new InvalidOperationException(systemConstantError);
         return new(
         Id,
         Name,
@@ -131,7 +134,8 @@ public sealed partial class LadderEditorDocument
         _nextId, Instances.ToArray(), TagTables.ToArray(),
         WatchTables.Select(CloneWatchTable).ToArray(),
         ActiveWatchTableIndex,
-        UserConstants.ToArray());
+        UserConstants.ToArray(),
+        SystemConstants.ToArray());
     }
 
     public void RestoreSnapshot(LadderEditorSnapshot snapshot)
@@ -153,6 +157,9 @@ public sealed partial class LadderEditorDocument
         if (!LadderEditorDocument.TryValidateUserConstants(snapshot.UserConstants, snapshot.Tags,
                 snapshot.Blocks, restoredTagTables, out var constantError))
             throw new ArgumentException(constantError, nameof(snapshot));
+        if (!TryValidateSystemConstants(snapshot.SystemConstants, snapshot.Tags,
+                snapshot.UserConstants, snapshot.Blocks, out var systemConstantError))
+            throw new ArgumentException(systemConstantError, nameof(snapshot));
 
         InvalidateCommandTargets();
         Id = snapshot.Id;
@@ -168,6 +175,8 @@ public sealed partial class LadderEditorDocument
                 name.Equals(constant.TagTable, StringComparison.OrdinalIgnoreCase));
             UserConstants.Add(constant with { TagTable = canonicalTable });
         }
+        SystemConstants.Clear();
+        SystemConstants.AddRange(snapshot.SystemConstants ?? []);
         TagTables.Clear();
         TagTables.AddRange(restoredTagTables);
         for (var tagIndex = 0; tagIndex < Tags.Count; tagIndex++)

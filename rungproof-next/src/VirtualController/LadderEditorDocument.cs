@@ -265,6 +265,7 @@ public sealed partial class LadderEditorDocument
     public TimeSpan ScanPeriod { get; set; } = TimeSpan.FromMilliseconds(20);
     public List<PlcVariable> Tags { get; } = [];
     public List<PlcUserConstant> UserConstants { get; } = [];
+    public List<PlcSystemConstant> SystemConstants { get; } = [];
     public List<string> TagTables { get; } = ["Default tag table"];
     public List<LadderInstance> Instances { get; } = [];
     public List<EditableBlock> Blocks { get; } = [];
@@ -294,6 +295,7 @@ public sealed partial class LadderEditorDocument
         ScanPeriod = scanPeriod;
         Tags.Clear();
         UserConstants.Clear();
+        SystemConstants.Clear();
         TagTables.Clear();
         TagTables.Add("Default tag table");
         Instances.Clear();
@@ -450,6 +452,90 @@ public sealed partial class LadderEditorDocument
         return block;
     }
 
+    /// <summary>
+    /// Duplicates one block/routine with new stable block, interface, network,
+    /// instruction, and IEC-instance identities. Existing callers and tasks
+    /// continue to reference the source block; the copy is intentionally
+    /// unassigned until the author wires it into the program.
+    /// </summary>
+    public EditableBlock DuplicateBlock(string blockId)
+    {
+        var source = Blocks.FirstOrDefault(block => block.Id.Equals(blockId, StringComparison.Ordinal))
+            ?? throw new InvalidOperationException($"Block/routine '{blockId}' does not exist.");
+        var snapshot = CaptureSnapshot();
+        try
+        {
+            var baseName = source.Name + " Copy";
+            var copyName = baseName;
+            for (var suffix = 2; Blocks.Any(block => block.Name.Equals(copyName, StringComparison.OrdinalIgnoreCase))
+                 || Tags.Any(tag => tag.Name.Equals(copyName, StringComparison.OrdinalIgnoreCase))
+                 || UserConstants.Any(constant => constant.Name.Equals(copyName, StringComparison.OrdinalIgnoreCase)); suffix++)
+                copyName = $"{baseName} {suffix}";
+
+            var copy = AddBlock(copyName, source.BlockType);
+            copy.SemanticMode = source.SemanticMode;
+            var localIds = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var parameter in source.Interface)
+            {
+                var newId = "formal-" + Guid.NewGuid().ToString("N");
+                localIds.Add(parameter.Id, newId);
+                copy.Interface.Add(parameter with { Id = newId });
+            }
+
+            string Map(string operand)
+            {
+                foreach (var pair in localIds)
+                {
+                    var oldPrefix = "local:" + pair.Key;
+                    if (operand.Equals(oldPrefix, StringComparison.Ordinal)) return "local:" + pair.Value;
+                    if (operand.StartsWith(oldPrefix + ".", StringComparison.Ordinal)
+                        || operand.StartsWith(oldPrefix + "[", StringComparison.Ordinal))
+                        return "local:" + pair.Value + operand[oldPrefix.Length..];
+                }
+                return operand;
+            }
+
+            EditableLadderNode MapNode(EditableLadderNode node) => node with
+            {
+                Variable = Map(node.Variable),
+                RightOperand = Map(node.RightOperand),
+                EdgeMemoryOperand = node.EdgeMemoryOperand is null ? null : Map(node.EdgeMemoryOperand),
+                Children = node.Children?.Select(MapNode).ToArray(),
+            };
+
+            ActiveBlockIndex = Blocks.IndexOf(copy);
+            foreach (var sourceRung in source.Rungs)
+            {
+                var rung = CloneRungTemplate(sourceRung, preserveIds: false);
+                rung.SetRoot(MapNode(AssignFreshEdgeMemoryOperands(rung.Root)));
+                rung.CoilVariable = Map(rung.CoilVariable);
+                rung.TimerVariable = Map(rung.TimerVariable);
+                rung.TimerPresetOperand = Map(rung.TimerPresetOperand);
+                rung.TimerResetOperand = Map(rung.TimerResetOperand);
+                rung.CounterVariable = Map(rung.CounterVariable);
+                rung.CounterLoadInput = Map(rung.CounterLoadInput);
+                rung.CounterResetInput = Map(rung.CounterResetInput);
+                rung.NumericSourceA = Map(rung.NumericSourceA);
+                rung.NumericSourceB = Map(rung.NumericSourceB);
+                rung.NumericSourceC = Map(rung.NumericSourceC);
+                rung.NumericDestination = Map(rung.NumericDestination);
+                rung.ReturnValueOperand = Map(rung.ReturnValueOperand);
+                rung.CallBindings = rung.CallBindings.Select(binding =>
+                    binding.Kind == LadderActualKind.Symbol
+                        ? binding with { Symbol = Map(binding.Symbol) }
+                        : binding).ToArray();
+                copy.Rungs.Add(rung);
+            }
+            EnsureInstanceDataBlocks();
+            return copy;
+        }
+        catch
+        {
+            RestoreSnapshot(snapshot);
+            throw;
+        }
+    }
+
     public bool CanRemoveBlock(string blockId, out string reason)
     {
         var index = Blocks.FindIndex(block => block.Id.Equals(blockId, StringComparison.Ordinal));
@@ -566,6 +652,59 @@ public sealed partial class LadderEditorDocument
         var normalizedName = ValidateUniqueName(name, TagTables, "Tag table", StringComparison.OrdinalIgnoreCase);
         TagTables.Add(normalizedName);
         return normalizedName;
+    }
+
+    /// <summary>
+    /// Duplicates a tag table as an independent offline declaration set.
+    /// Scene bindings and absolute addresses are intentionally cleared because
+    /// duplicating either would create ambiguous I/O ownership or address overlap.
+    /// </summary>
+    public string DuplicateTagTable(string sourceName)
+    {
+        var normalizedSource = sourceName?.Trim();
+        var source = TagTables.FirstOrDefault(table => table.Equals(normalizedSource, StringComparison.OrdinalIgnoreCase))
+            ?? throw new InvalidOperationException($"PLC tag table '{sourceName}' does not exist.");
+        if (source.Equals(SceneLadderProject.SceneIoTagTableName, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("SceneIO is generated from scene ownership and cannot be duplicated.");
+
+        var snapshot = CaptureSnapshot();
+        try
+        {
+            var baseName = source + " Copy";
+            var copyName = baseName;
+            for (var suffix = 2; TagTables.Any(table => table.Equals(copyName, StringComparison.OrdinalIgnoreCase)); suffix++)
+                copyName = $"{baseName} {suffix}";
+            AddTagTable(copyName);
+
+            string CopySymbolName(string original)
+            {
+                var baseSymbol = original + " Copy";
+                var candidate = baseSymbol;
+                for (var suffix = 2; CpuNameIsAssigned(candidate, null); suffix++)
+                    candidate = $"{baseSymbol} {suffix}";
+                return candidate;
+            }
+
+            foreach (var tag in snapshot.Tags.Where(tag => tag.TagTable.Equals(source, StringComparison.OrdinalIgnoreCase)))
+            {
+                var name = CopySymbolName(tag.Name);
+                if (PlcAggregates.IsAggregate(tag.Type))
+                    AddAggregateTag(name, tag.Role, tag.Type, tag.Aggregate!, tag.InitialValue,
+                        tagTable: copyName, comment: tag.Comment);
+                else
+                    AddTag(name, tag.Role, type: tag.Type, initialValue: tag.InitialValue,
+                        enumMembers: tag.EnumMembers, tagTable: copyName, comment: tag.Comment);
+            }
+            foreach (var constant in (snapshot.UserConstants ?? []).Where(constant =>
+                         constant.TagTable.Equals(source, StringComparison.OrdinalIgnoreCase)))
+                AddUserConstant(constant.Name, constant.Type, constant.Value, copyName, constant.Comment);
+            return copyName;
+        }
+        catch
+        {
+            RestoreSnapshot(snapshot);
+            throw;
+        }
     }
 
     /// <summary>Checks the persisted PLC tag-table declaration list. A null list is a legacy project with no explicit table list.</summary>
@@ -703,6 +842,8 @@ public sealed partial class LadderEditorDocument
             TagTable = canonicalTable,
             Comment = comment.Trim(),
         };
+        if (!current.Name.Equals(updated.Name, StringComparison.Ordinal))
+            RenameUserConstantReferences(current.Name, updated.Name);
         UserConstants[index] = updated;
         return updated;
     }
@@ -711,8 +852,66 @@ public sealed partial class LadderEditorDocument
     {
         var index = UserConstants.FindIndex(constant => constant.Id.Equals(constantId, StringComparison.Ordinal));
         if (index < 0) return false;
+        if (CountUserConstantReferences(UserConstants[index].Name) > 0) return false;
         UserConstants.RemoveAt(index);
         return true;
+    }
+
+    public int CountUserConstantReferences(string name)
+    {
+        var count = 0;
+        bool Matches(string operand) => operand.Equals(name, StringComparison.Ordinal);
+        foreach (var rung in Blocks.SelectMany(block => block.Rungs))
+        {
+            foreach (var contact in rung.Branches.SelectMany(branch => branch.Contacts))
+            {
+                if (Matches(contact.Variable)) count++;
+                if (contact.IsComparison && Matches(contact.RightOperand)) count++;
+            }
+            if (rung.IsTimer && rung.TimerPresetAssigned && Matches(rung.TimerPresetOperand)) count++;
+            if (rung.IsTimer && Matches(rung.TimerResetOperand)) count++;
+            if (rung.IsCounter && rung.CounterKind == LadderCounterKind.CountDown && Matches(rung.CounterLoadInput)) count++;
+            if (rung.IsCounter && rung.CounterKind == LadderCounterKind.CountUp && Matches(rung.CounterResetInput)) count++;
+            if (rung.IsNumericOperation)
+            {
+                if (Matches(rung.NumericSourceA)) count++;
+                if (LadderNumericOperationRules.RequiresSourceB(rung.NumericOperationKind) && Matches(rung.NumericSourceB)) count++;
+                if (LadderNumericOperationRules.RequiresSourceC(rung.NumericOperationKind) && Matches(rung.NumericSourceC)) count++;
+            }
+            if (rung.IsReturn && rung.ReturnValueKind == LadderReturnValueKind.Operand && Matches(rung.ReturnValueOperand)) count++;
+            count += rung.CallBindings.Count(binding => binding.Kind == LadderActualKind.Symbol && Matches(binding.Symbol));
+        }
+        return count;
+    }
+
+    private void RenameUserConstantReferences(string oldName, string newName)
+    {
+        string Rename(string operand) => operand.Equals(oldName, StringComparison.Ordinal) ? newName : operand;
+        foreach (var rung in Blocks.SelectMany(block => block.Rungs))
+        {
+            foreach (var branch in rung.Branches)
+            for (var index = 0; index < branch.Contacts.Count; index++)
+            {
+                var contact = branch.Contacts[index];
+                branch.Contacts[index] = contact with
+                {
+                    Variable = Rename(contact.Variable),
+                    RightOperand = Rename(contact.RightOperand),
+                };
+            }
+            rung.TimerPresetOperand = Rename(rung.TimerPresetOperand);
+            rung.TimerResetOperand = Rename(rung.TimerResetOperand);
+            rung.CounterLoadInput = Rename(rung.CounterLoadInput);
+            rung.CounterResetInput = Rename(rung.CounterResetInput);
+            rung.NumericSourceA = Rename(rung.NumericSourceA);
+            rung.NumericSourceB = Rename(rung.NumericSourceB);
+            rung.NumericSourceC = Rename(rung.NumericSourceC);
+            rung.ReturnValueOperand = Rename(rung.ReturnValueOperand);
+            rung.CallBindings = rung.CallBindings.Select(binding =>
+                binding.Kind == LadderActualKind.Symbol && Rename(binding.Symbol) != binding.Symbol
+                    ? binding with { Symbol = newName }
+                    : binding).ToArray();
+        }
     }
 
     public static bool IsSupportedUserConstantType(PlcVariableType type) => type is
@@ -776,6 +975,53 @@ public sealed partial class LadderEditorDocument
         return true;
     }
 
+    public static bool TryValidateSystemConstants(
+        IEnumerable<PlcSystemConstant?>? constants,
+        IEnumerable<PlcVariable>? tags,
+        IEnumerable<PlcUserConstant>? userConstants,
+        IEnumerable<EditableBlock>? blocks,
+        out string error)
+    {
+        error = string.Empty;
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var reserved = new HashSet<string>((tags ?? []).Select(tag => tag.Name), StringComparer.OrdinalIgnoreCase);
+        reserved.UnionWith((userConstants ?? []).Select(constant => constant.Name));
+        reserved.UnionWith((blocks ?? []).Select(block => block.Name));
+        foreach (var constant in constants ?? [])
+        {
+            if (constant is null)
+            {
+                error = "PLC system constants must not contain null entries.";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(constant.Id) || !ids.Add(constant.Id))
+            {
+                error = "PLC system-constant IDs must be nonempty and unique.";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(constant.Name) || constant.Name != constant.Name.Trim()
+                || constant.Name.Contains('"'))
+            {
+                error = "PLC system-constant names must be nonempty, trimmed, and must not contain quotation marks.";
+                return false;
+            }
+            if (!names.Add(constant.Name) || !reserved.Add(constant.Name))
+            {
+                error = $"PLC system-constant name '{constant.Name}' conflicts with another CPU-wide symbol.";
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(constant.DataType)
+                || string.IsNullOrWhiteSpace(constant.Value)
+                || string.IsNullOrWhiteSpace(constant.HardwareSource))
+            {
+                error = $"PLC system constant '{constant.Name}' requires data type, value, and hardware source metadata.";
+                return false;
+            }
+        }
+        return true;
+    }
+
     private string ValidateCpuConstantName(string name, string? excludedConstantId = null)
     {
         var normalized = name.Trim();
@@ -795,7 +1041,8 @@ public sealed partial class LadderEditorDocument
         Tags.Any(tag => tag.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
         || Blocks.Any(block => block.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
         || UserConstants.Any(constant => constant.Id != excludedConstantId
-            && constant.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            && constant.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+        || SystemConstants.Any(constant => constant.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>Moves a tag by its stable global identity (or its legacy name when it has no ID).</summary>
     public PlcVariable MoveTag(string tagIdentity, string targetTableName)
@@ -1734,7 +1981,7 @@ public sealed partial class LadderEditorDocument
             task.Kind == LadderTaskKind.Continuous ? ScanPeriod : task.Period,
             task.Priority,
             task.EntryBlock)).ToArray();
-        return new LadderProgram(
+        var program = new LadderProgram(
             2,
             Id,
             Name,
@@ -1746,6 +1993,96 @@ public sealed partial class LadderEditorDocument
             string.IsNullOrWhiteSpace(EntryBlockId) ? blocks[0].Id : EntryBlockId,
             tasks,
             AllWatchVariables.ToArray(), Instances.ToArray());
+        return LowerUserConstantInputs(program);
+    }
+
+    private LadderProgram LowerUserConstantInputs(LadderProgram program)
+    {
+        if (UserConstants.Count == 0) return program;
+        var constants = UserConstants.ToDictionary(constant => constant.Name, StringComparer.Ordinal);
+
+        bool TryConstant(string operand, out PlcUserConstant constant, out object value)
+        {
+            value = false;
+            if (!constants.TryGetValue(operand, out constant!)) return false;
+            return TryParseInitialValue(constant.Type, constant.Value, out value, out _);
+        }
+
+        string LiteralText(string operand)
+        {
+            if (!TryConstant(operand, out var constant, out var value)) return operand;
+            return constant.Type switch
+            {
+                PlcVariableType.Bool => (bool)value ? "TRUE" : "FALSE",
+                PlcVariableType.Time => LadderTimeLiteral.Format((TimeSpan)value),
+                PlcVariableType.String => System.Text.Json.JsonSerializer.Serialize((string)value),
+                PlcVariableType.Real => ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                _ => Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture)
+                    .ToString(System.Globalization.CultureInfo.InvariantCulture),
+            };
+        }
+
+        LadderNode Node(LadderNode node) => node with
+        {
+            Variable = node.Kind is LadderNodeKind.Contact or LadderNodeKind.Compare
+                ? LiteralText(node.Variable) : node.Variable,
+            RightOperand = node.Kind == LadderNodeKind.Compare ? LiteralText(node.RightOperand) : node.RightOperand,
+            Children = node.Children?.Select(Node).ToArray(),
+        };
+
+        LadderNetwork Network(LadderNetwork network)
+        {
+            var call = network.Call;
+            if (call?.Bindings is { } bindings)
+                call = call with
+                {
+                    Bindings = bindings.Select(binding =>
+                    {
+                        if (binding.Kind != LadderActualKind.Symbol
+                            || !TryConstant(binding.Symbol, out var constant, out var value)) return binding;
+                        return binding with
+                        {
+                            Kind = LadderActualKind.Literal,
+                            Symbol = string.Empty,
+                            Literal = value,
+                            LiteralType = constant.Type,
+                        };
+                    }).ToArray(),
+                };
+            return network with
+            {
+                Logic = Node(network.Logic),
+                Timer = network.Timer is { } timer ? timer with
+                {
+                    PresetOperand = timer.PresetOperand is null ? null : LiteralText(timer.PresetOperand),
+                    ResetOperand = timer.ResetOperand is null ? null : LiteralText(timer.ResetOperand),
+                } : null,
+                Counter = network.Counter is { } counter ? counter with
+                {
+                    LoadInput = LiteralText(counter.LoadInput),
+                    ResetInput = LiteralText(counter.ResetInput),
+                } : null,
+                NumericOperation = network.NumericOperation is { } numeric ? numeric with
+                {
+                    SourceA = LiteralText(numeric.SourceA),
+                    SourceB = LiteralText(numeric.SourceB),
+                    SourceC = LiteralText(numeric.SourceC),
+                } : null,
+                Return = network.Return is { ValueKind: LadderReturnValueKind.Operand } result
+                    ? result with { Operand = LiteralText(result.Operand) }
+                    : network.Return,
+                Call = call,
+            };
+        }
+
+        var blocks = (program.Blocks ?? []).Select(block => block with
+        {
+            Networks = block.Networks.Select(Network).ToArray(),
+        }).ToArray();
+        var entryNetworks = blocks.FirstOrDefault(block => block.Id == program.EntryBlock)?.Networks
+            ?? blocks.FirstOrDefault()?.Networks
+            ?? program.Networks.Select(Network).ToArray();
+        return program with { Blocks = blocks, Networks = entryNetworks };
     }
 
     public void ReplaceFromProgram(LadderProgram program)
@@ -1834,6 +2171,7 @@ public sealed partial class LadderEditorDocument
         // Constants are editor metadata and are not part of LadderProgram yet.
         // Replacing from an external executable program must not retain stale declarations.
         UserConstants.Clear();
+        SystemConstants.Clear();
         Instances.Clear(); Instances.AddRange(program.Instances ?? []);
         WatchTables.Clear(); WatchTables.Add(EditableWatchTable.CreateDefault(program.WatchVariables)); ActiveWatchTableIndex = 0;
         Blocks.Clear(); Blocks.AddRange(newBlocks); Tasks.Clear(); _nextId = 1;
@@ -1928,6 +2266,8 @@ public sealed partial class LadderEditorDocument
             throw new InvalidOperationException($"Tag name '{normalized}' conflicts with a block/routine name.");
         if (UserConstants.Any(constant => constant.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
             throw new InvalidOperationException($"Tag name '{normalized}' conflicts with a PLC user constant.");
+        if (SystemConstants.Any(constant => constant.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException($"Tag name '{normalized}' conflicts with a hardware system constant.");
         return normalized;
     }
 

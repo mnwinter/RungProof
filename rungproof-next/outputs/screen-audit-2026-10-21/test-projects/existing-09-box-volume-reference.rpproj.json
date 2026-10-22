@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "example-09-box-volume",
+  "name": "Box Volume - offline reference",
+  "sourceSceneId": "lab-9-10-box-volume",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "main",
+  "nextId": 900,
+  "tags": [
+    {
+      "name": "length_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "length_valid"
+    },
+    {
+      "name": "width_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "width_valid"
+    },
+    {
+      "name": "height_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "height_valid"
+    },
+    {
+      "name": "volume_result_valid",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "volume_result_valid"
+    },
+    {
+      "name": "length_mm",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "length_mm"
+    },
+    {
+      "name": "width_mm",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "width_mm"
+    },
+    {
+      "name": "height_mm",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "height_mm"
+    },
+    {
+      "name": "volume_mm3",
+      "type": "DInt",
+      "role": "Output",
+      "initial": 0,
+      "binding": "volume_mm3"
+    },
+    {
+      "name": "always_scan",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": true,
+      "binding": ""
+    },
+    {
+      "name": "base_area_mm2",
+      "type": "DInt",
+      "role": "Memory",
+      "initial": 0,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "main",
+      "name": "Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "r4",
+          "label": "Always scan volume block",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "fb-volume",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "b4",
+              "contacts": [
+                {
+                  "id": "c4-0",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fb-volume",
+      "name": "FB_Volume",
+      "blockType": "FunctionBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "base-area",
+          "label": "Calculate base area in mm2",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Multiply",
+          "numericSourceA": "length_mm",
+          "numericSourceB": "width_mm",
+          "numericSourceC": "0",
+          "numericDestination": "base_area_mm2",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "base-area-b",
+              "contacts": [
+                {
+                  "id": "base-area-c0",
+                  "variable": "length_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c1",
+                  "variable": "width_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c2",
+                  "variable": "height_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c3",
+                  "variable": "length_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c4",
+                  "variable": "length_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c5",
+                  "variable": "width_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c6",
+                  "variable": "width_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c7",
+                  "variable": "height_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "base-area-c8",
+                  "variable": "height_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "volume",
+          "label": "Calculate volume in mm3",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Multiply",
+          "numericSourceA": "base_area_mm2",
+          "numericSourceB": "height_mm",
+          "numericSourceC": "0",
+          "numericDestination": "volume_mm3",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "volume-b",
+              "contacts": [
+                {
+                  "id": "volume-c0",
+                  "variable": "length_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c1",
+                  "variable": "width_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c2",
+                  "variable": "height_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c3",
+                  "variable": "length_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c4",
+                  "variable": "length_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c5",
+                  "variable": "width_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c6",
+                  "variable": "width_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c7",
+                  "variable": "height_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-c8",
+                  "variable": "height_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "volume-valid",
+          "label": "Publish valid bounded volume",
+          "coilVariable": "volume_result_valid",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "volume-valid-b",
+              "contacts": [
+                {
+                  "id": "volume-valid-c0",
+                  "variable": "length_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c1",
+                  "variable": "width_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c2",
+                  "variable": "height_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c3",
+                  "variable": "length_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c4",
+                  "variable": "length_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c5",
+                  "variable": "width_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c6",
+                  "variable": "width_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c7",
+                  "variable": "height_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "GreaterThan",
+                  "rightOperand": "0",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "volume-valid-c8",
+                  "variable": "height_mm",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessOrEqual",
+                  "rightOperand": "1000",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-main",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "main"
+    }
+  ],
+  "watchVariables": [
+    "length_valid",
+    "width_valid",
+    "height_valid",
+    "volume_result_valid",
+    "length_mm",
+    "width_mm",
+    "height_mm",
+    "volume_mm3",
+    "always_scan",
+    "base_area_mm2"
+  ]
+}

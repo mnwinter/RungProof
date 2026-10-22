@@ -49,11 +49,57 @@
       ],
       "config": {
         "colors": [
-          "red",
-          "amber",
           "green"
         ],
         "active": null
+      }
+    },
+    {
+      "id": "switch_2",
+      "type": "switch",
+      "label": "Delayed Lamp machine stop",
+      "position": [
+        -3.3000000000000003,
+        0,
+        1.55
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "pulse-machine_stop",
+        "faceLabel": "STOP",
+        "color": 11141120
+      }
+    },
+    {
+      "id": "switch_3",
+      "type": "switch",
+      "label": "Delayed Lamp machine reset",
+      "position": [
+        -3.3000000000000003,
+        0,
+        2.9
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "pulse-reset_pressed",
+        "faceLabel": "RESET",
+        "color": 16755234
+      }
+    },
+    {
+      "id": "training_accessory_4",
+      "type": "trainingAccessory",
+      "label": "TON elapsed-time display",
+      "position": [
+        1.1,
+        0,
+        0
+      ],
+      "config": {
+        "assetName": "timer elapsed display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "ELAPSED MS"
       }
     }
   ],
@@ -67,19 +113,53 @@
         "initial": false
       },
       {
+        "name": "machine_stop",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine-level stop pushbutton input; ladder drops the lamp and cancels the timer."
+      },
+      {
+        "name": "reset_pressed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine-level reset pushbutton input; ladder clears the timer and requires request OFF before rearming."
+      },
+      {
         "name": "delayed_lamp",
         "type": "BOOL",
         "owner": "PLC",
         "initial": false,
         "role": "output"
+      },
+      {
+        "name": "delay_elapsed_ms",
+        "type": "DINT",
+        "owner": "PLC",
+        "initial": 0,
+        "role": "output",
+        "purpose": "PLC-owned TON elapsed time converted to milliseconds for the learner display."
       }
     ],
     "actions": [
       {
         "id": "toggle-timer_request",
-        "label": "Turn request OFF / ON",
+        "label": "Timer REQUEST selector",
         "type": "toggle",
         "point": "timer_request"
+      },
+      {
+        "id": "pulse-machine_stop",
+        "label": "Machine Stop pushbutton",
+        "type": "pulse",
+        "point": "machine_stop"
+      },
+      {
+        "id": "pulse-reset_pressed",
+        "label": "Machine Reset pushbutton",
+        "type": "pulse",
+        "point": "reset_pressed"
       }
     ],
     "rules": [],
@@ -91,10 +171,27 @@
         "mode": "selector"
       },
       {
+        "point": "machine_stop",
+        "equipmentId": "switch_2",
+        "mode": "switch"
+      },
+      {
+        "point": "reset_pressed",
+        "equipmentId": "switch_3",
+        "mode": "switch"
+      },
+      {
         "point": "delayed_lamp",
         "equipmentId": "indicator_1",
         "mode": "indicator",
         "activeColor": "green"
+      },
+      {
+        "point": "delay_elapsed_ms",
+        "equipmentId": "training_accessory_4",
+        "label": "ELAPSED MS",
+        "mode": "numericDisplay",
+        "format": "F0"
       }
     ]
   },
@@ -122,8 +219,8 @@
       ],
       "normalSequence": [
         "Select Demo 2, Run, then turn REQUEST ON.",
-        "The authored PLC TON keeps the lamp off for 100 accepted 20 ms scans (2 s), then on while REQUEST remains ON.",
-        "Turning OFF clears the timer and lamp on the next accepted scan; a new ON needs the full delay."
+        "The authored PLC TON advances the ELAPSED MS display to 2000 across 100 accepted 20 ms scans, keeping the lamp off until the preset is reached.",
+        "Turning REQUEST OFF clears ELAPSED MS and the lamp on the next accepted scan; a new ON needs the full delay."
       ],
       "stopBehavior": [
         "Stop removes the lamp command and resets the nonretentive TON while retaining selector position.",
@@ -134,8 +231,10 @@
         "A missing or stale input must fail safe and remain diagnosable."
       ],
       "expectedObservations": [
-        "Two-second TON in existing Demo 2; OFF resets it, Stop resets it, Run with retained ON starts the full delay again."
-      ]
+        "ELAPSED MS follows the PLC TON elapsed value from 0 to 2000; the delayed lamp turns on only when the preset is reached.",
+        "REQUEST OFF, machine Stop, and machine Reset return elapsed time and lamp output to zero/off; Run with retained ON starts the full delay again."
+      ],
+      "acceptance": "Maintained REQUEST advances ELAPSED MS to 2000 before delayed_lamp turns ON; REQUEST OFF clears both."
     },
     "sequenceNumber": 40,
     "inheritsFrom": "lab-4-12-cable-cut-length",

@@ -1,0 +1,1 @@
+[{"name": "standalone-radar-r3-repeat-signals", "expected": {"cycle_request": true, "inlet_pump_run": true, "drain_valve_open": false}}]

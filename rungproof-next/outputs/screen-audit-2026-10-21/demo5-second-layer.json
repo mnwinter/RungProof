@@ -1,0 +1,5 @@
+[
+ {"wait":20,"capture":"demo5-second-layer-mid"},
+ {"wait":20,"capture":"demo5-second-layer-late"},
+ {"wait":20,"capture":"demo5-second-layer-final"}
+]

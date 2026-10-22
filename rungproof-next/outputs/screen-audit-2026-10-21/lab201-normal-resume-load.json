@@ -1,0 +1,1 @@
+[{"click": [642, 711], "wait": 0.2}, {"key": "Ctrl+A", "wait": 0.1}, {"text": "fixture-lab-2-01-workstation-call.rpproj.json", "wait": 0.2}, {"click": [596, 754], "wait": 0.9, "capture": "lab201-normal-project-open"}, {"click": [52, 884], "wait": 0.6}, {"click": [1265, 39], "wait": 0.4, "capture": "lab201-normal-running"}]

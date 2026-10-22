@@ -1,0 +1,9 @@
+[
+ {"click":[1265,39],"wait":0.4},
+ {"click":[1018,526],"wait":0.4,"capture":"demo5-first-layer-reset"},
+ {"click":[1178,674],"wait":3,"capture":"demo5-second-layer-start"},
+ {"click":[1367,701],"wait":0.7,"capture":"demo5-machine-stop"},
+ {"wait":1,"capture":"demo5-stopped-pose-stable"},
+ {"click":[595,39],"wait":0.2},
+ {"click":[701,15],"wait":0.5,"capture":"demo5-stop-recovery-progress"}
+]

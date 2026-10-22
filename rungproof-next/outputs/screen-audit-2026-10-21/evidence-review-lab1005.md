@@ -1,0 +1,9 @@
+# Lab 10.5 independent native review
+
+Reviewed9proper v2-r2 truth/motion frames and5lifecycle frames using four lab1005-review sheets. Actual physical twin green stacks, plant, full native scalar/STRUCT Signals and runtime retained. Loaded v2 reviewer fixture scope only; no reviewer UI/backend operations. Earlier coordinate-calibration frame and malformed v1 fixture excluded from behavioral credit.
+
+All eight record/temperature/alarm truth combinations are present:000,100,110,010,011,001,101,111. Each native scalar input agrees with its motor_feedback record_valid/temperature_valid/alarm_clear field. Only111 makes motor_command.enable/record_ready and motor_effective_enable/readyTrue, physically lighting both green stacks (scan456 and later546). Every other combination leaves all four fieldsFalse and both stacks dark. Legacy scalar motor_enable and record_ready remainFalse throughout, including111. This gives screen evidence of the STRUCT command route reaching effective outputs rather than illumination through the legacy scalar outputs.
+
+AppStop3039 retains the three inputs/feedbackTrue but clears STRUCT command/effective fields and both physical lamps. AppRun3063 republishes both command/effectiveTrue and green lamps. AppReset0 clears inputs, feedback BOOLs, command/effective fields and lamps; Run25 remainsclear. Fresh three-input repeat117 lights both stacks through the same STRUCT route. Native power/temperature numeric feedback stay0 and power_validFalse; their nonzero behavior is untested. Physical projected readout digits are too small for exact numeric claims. The motor/plant is visible, but these stills do not independently establish shaft rotation or speed.
+
+No new issue. Nonzero numeric STRUCT feedback, power-valid behavior, simultaneous field writes, faults and continuous motor motion remain unproven. No whole-scene PASS.

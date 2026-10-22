@@ -267,7 +267,7 @@
       "name": "Lab 11.13 - XY Palletizing Cell",
       "path": "res://scenes/migrated/lab-11-13-xy-palletizing.scene.json",
       "sourceFile": "prototype/scenes/lab-11-13-xy-palletizing.plcscene",
-      "equipmentCount": 14,
+      "equipmentCount": 20,
       "equipmentTypes": [
         "box",
         "conveyor",
@@ -720,7 +720,7 @@
       "name": "Lab 4.1 - Press-Count Lamp",
       "path": "res://scenes/migrated/lab-4-01-press-count-lamp.scene.json",
       "sourceFile": "prototype/scenes/lab-4-01-press-count-lamp.plcscene",
-      "equipmentCount": 2,
+      "equipmentCount": 4,
       "equipmentTypes": [
         "indicator",
         "switch"
@@ -906,7 +906,7 @@
       "name": "Lab 5.1 - Delayed Lamp",
       "path": "res://scenes/migrated/lab-5-01-delayed-lamp.scene.json",
       "sourceFile": "prototype/scenes/lab-5-01-delayed-lamp.plcscene",
-      "equipmentCount": 2,
+      "equipmentCount": 5,
       "equipmentTypes": [
         "indicator",
         "rotarySwitch"
@@ -1169,7 +1169,7 @@
       "name": "Lab 9.11 - Pallet Count Function",
       "path": "res://scenes/migrated/lab-9-11-pallet-counting.scene.json",
       "sourceFile": "prototype/scenes/lab-9-11-pallet-counting.plcscene",
-      "equipmentCount": 10,
+      "equipmentCount": 13,
       "equipmentTypes": [
         "box",
         "conveyor",
@@ -1220,7 +1220,7 @@
       "name": "Conveyor Pusher",
       "path": "res://scenes/migrated/scene-2-conveyor-pusher.scene.json",
       "sourceFile": "prototype/scenes/scene-2-conveyor-pusher.plcscene",
-      "equipmentCount": 7,
+      "equipmentCount": 17,
       "equipmentTypes": [
         "box",
         "containerReceiver",

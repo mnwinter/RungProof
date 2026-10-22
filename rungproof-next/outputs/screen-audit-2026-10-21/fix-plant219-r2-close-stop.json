@@ -1,0 +1,1 @@
+[{"click":[1265,39],"wait":0.5},{"click":[422,39],"wait":0.6},{"click":[485,148],"wait":0.6},{"click":[1067,594],"wait":0.6,"capture":"fix-plant219-r2-closing"},{"click":[1035,584],"wait":0.4,"capture":"fix-plant219-r2-station-stop"},{"wait":2,"capture":"fix-plant219-r2-held"}]

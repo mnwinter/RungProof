@@ -220,6 +220,7 @@ public partial class Main : Node3D
         _verifySceneGeometry = userArguments.Contains("--verify-scene-geometry", StringComparer.Ordinal)
             || userArguments.Contains("--verify-wastewater-installation", StringComparer.Ordinal)
             || userArguments.Contains("--verify-tank-switch-mounts", StringComparer.Ordinal)
+            || userArguments.Contains("--verify-powder-mixer", StringComparer.Ordinal)
             || userArguments.Contains("--verify-pallet-robot-controller", StringComparer.Ordinal)
             || userArguments.Contains("--verify-service-elevator-installation", StringComparer.Ordinal);
         _verifyToteFinishing = userArguments.Contains("--verify-tote-finishing", StringComparer.Ordinal);
@@ -664,21 +665,32 @@ public partial class Main : Node3D
         InitializeChallengeShell();
         _cameraController = new SceneCameraController(camera);
         _cameraController.ViewportRectProvider = () => _simulatorShell?.SceneViewportRect() ?? new Rect2();
-        _simulatorShell.ProductViewChanged += _ => _cameraController.CancelPointerCapture();
+        _simulatorShell.ProductViewChanged += _ =>
+        {
+            _cameraController.CancelPointerCapture();
+            // Dock visibility and toolbar wrapping settle after the view switch.
+            // Refit on the deferred frame so the machine uses the real remaining
+            // aperture instead of stale pre-layout dimensions.
+            CallDeferred(nameof(ReframeActiveSceneForCurrentLayout));
+        };
         AddChild(_cameraController);
         _transformGizmo = new WorkspaceTransformGizmo();
         AddChild(_transformGizmo);
 
         if (sceneCatalog.Scenes.Count > 0)
         {
-            var initialSceneId = _shellScene.Length > 0 ? _shellScene : sceneCatalog.Scenes[0].Id;
+            const string defaultCurriculumSceneId = "lab-4-01-press-count-lamp";
+            var defaultSceneId = sceneCatalog.Scenes.Any(scene => scene.Id == defaultCurriculumSceneId)
+                ? defaultCurriculumSceneId
+                : sceneCatalog.Scenes[0].Id;
+            var initialSceneId = _shellScene.Length > 0 ? _shellScene : defaultSceneId;
             var unavailableRequestedScene = !sceneCatalog.Scenes.Any(scene => scene.Id.Equals(initialSceneId, StringComparison.Ordinal));
             if (unavailableRequestedScene)
             {
                 // A stale shortcut/review argument must not abort _Ready and
                 // leave a half-built shell displaying "Loading project".
                 GD.PushWarning($"Startup scene '{initialSceneId}' is unavailable; loading the default scene.");
-                initialSceneId = sceneCatalog.Scenes[0].Id;
+                initialSceneId = defaultSceneId;
             }
             AddMigratedScene(
                 initialSceneId,
@@ -1161,10 +1173,14 @@ public partial class Main : Node3D
         }
         else
         {
-            // Startup acknowledgement is interactive-only; it must not cover
-            // deterministic verification or capture output.
-            if (_capturePath is null && !_nativeMotionMovie && !_verifyChallengeUi && !_verifyConveyorChallenge)
-                _simulatorShell.CallDeferred(nameof(SimulatorShell.ShowSimulatorModeNotice));
+            // Normal startup lands on Demo 1 with the working controls visible.
+            // The simulator/safety boundary remains available from Help instead
+            // of blocking the machine behind a large first-run modal.
+            if (_capturePath is null && _shellScene.Length == 0)
+            {
+                RunEditorDraftController();
+                _simulatorShell.SetWorkspaceStatus("DEMO 1 READY · AUTHORED LOCAL LESSON SCAN STARTED");
+            }
         }
         if (_verifyConveyorChallenge) CallDeferred(nameof(VerifyConveyorChallenge));
         if (_verifyChallengeUi) CallDeferred(nameof(VerifyChallengeUi));
@@ -1193,7 +1209,9 @@ public partial class Main : Node3D
                 GD.Print("RUNTIME_CAPTURE_ACTION_APPLIED " + actionId);
             }
         }
-        if (_capturePath is not null && _shellView.Length > 0) _simulatorShell.SetReviewState(_shellView, _shellSearch);
+        // An explicitly requested shell review route is also useful for an
+        // interactive handoff; capture mode should not be required to open it.
+        if (_shellView.Length > 0) _simulatorShell.SetReviewState(_shellView, _shellSearch);
         if (_capturePath is not null && OS.GetCmdlineUserArgs().Contains("--capture-block-creation-dialog", StringComparer.Ordinal))
             _simulatorShell.CallDeferred(nameof(SimulatorShell.PrepareBlockCreationDialogCapture));
         if (_tenZoneCaptureState is not null) CallDeferred(nameof(PrepareTenZoneCaptureReview));
@@ -1587,6 +1605,9 @@ public partial class Main : Node3D
         // execution identity so a watch-only edit cannot reset program memory.
         if (_virtualProgram is null || LadderProgramJson.Save(_virtualProgram with { WatchVariables = null }) != LadderProgramJson.Save(draft with { WatchVariables = null }))
             EnableVirtualControllerProgram(draft, resetScene: false);
+        // Run validates the same draft as Verify + Load. Publish that successful
+        // result even when the identical controller is already loaded.
+        _simulatorShell.PublishVerifiedDraftState();
         RunActiveController();
     }
 
@@ -1963,6 +1984,10 @@ public partial class Main : Node3D
 
     private void VerifyAppShell()
     {
+        var auditDiagnosticsResult = "shell unavailable";
+        var auditDiagnosticsPassed = _simulatorShell is not null
+            && _simulatorShell.VerifyAuditDiagnosticRecovery(out auditDiagnosticsResult);
+        GD.Print($"AUDIT_DIAGNOSTICS_VERIFY {(auditDiagnosticsPassed ? "PASS" : "FAIL")} {auditDiagnosticsResult}");
         var rendererModesPassed = VerifyRendererBindingModes();
         var result = "shell unavailable";
         var menuResult = "shell unavailable";
@@ -1990,7 +2015,7 @@ public partial class Main : Node3D
         var unsavedPassed = _simulatorShell is not null && _simulatorShell.VerifyUnsavedWorkGuard(out unsavedResult);
         GD.Print($"UNSAVED_WORK_VERIFY {(unsavedPassed ? "PASS" : "FAIL")} {unsavedResult}");
         GD.Print($"EXTERNAL_PROFILE_GUARD_VERIFY {(guardPassed ? "PASS" : "FAIL")} {guardResult}");
-        if (rendererModesPassed && structurePassed && menuPassed && plcPassed && scenarioPassed && projectPassed && guardPassed && draftPassed && unsavedPassed)
+        if (auditDiagnosticsPassed && rendererModesPassed && structurePassed && menuPassed && plcPassed && scenarioPassed && projectPassed && guardPassed && draftPassed && unsavedPassed)
         {
             GD.Print($"APP_SHELL_VERIFY PASS {result} workspaceMenu={menuResult} plcMenu={plcResult} scenarioMenu={scenarioResult} crossSceneProject={projectResult}");
             if (OS.GetCmdlineUserArgs().Contains("--trace-orphans", StringComparer.Ordinal))
@@ -2031,13 +2056,22 @@ public partial class Main : Node3D
         var physicalSize = DisplayServer.WindowGetSize();
         var viewportSize = window.GetVisibleRect().Size;
         var mode = window.ContentScaleMode;
-        var oneToOne = Math.Abs(viewportSize.X - physicalSize.X) < 1.0f
-            && Math.Abs(viewportSize.Y - physicalSize.Y) < 1.0f;
-        var passed = mode == Window.ContentScaleModeEnum.Disabled
-            && Math.Abs(window.ContentScaleFactor - 1.0f) < 0.001f
-            && oneToOne;
+        var factor = window.ContentScaleFactor;
+        var expectedViewport = new Vector2(physicalSize.X / factor, physicalSize.Y / factor);
+        var viewportMatchesScale = Math.Abs(viewportSize.X - expectedViewport.X) < 1.1f
+            && Math.Abs(viewportSize.Y - expectedViewport.Y) < 1.1f;
+        var supportedFactor = new[] { 0.75f, 0.85f, 1.0f, 1.15f }
+            .Any(candidate => Math.Abs(factor - candidate) < 0.001f);
+        var scaleResult = "shell unavailable";
+        var scaleControls = _simulatorShell?.VerifyInterfaceScaleControls(out scaleResult) == true;
+        var passed = mode == Window.ContentScaleModeEnum.CanvasItems
+            && window.ContentScaleSize == Vector2I.Zero
+            && supportedFactor
+            && viewportMatchesScale
+            && scaleControls;
         var result = $"mode={mode} factor={window.ContentScaleFactor:0.###} "
-            + $"window={physicalSize.X}x{physicalSize.Y} viewport={viewportSize.X:0}x{viewportSize.Y:0} oneToOne={oneToOne}";
+            + $"window={physicalSize.X}x{physicalSize.Y} viewport={viewportSize.X:0}x{viewportSize.Y:0} "
+            + $"viewportMatchesScale={viewportMatchesScale} controls={scaleResult}";
         if (passed)
         {
             GD.Print($"UI_DENSITY_VERIFY PASS {result}");
@@ -4498,6 +4532,7 @@ public partial class Main : Node3D
         if(finiteRollerWorkspace is not null)RegisterFiniteRollerWorkspace(finiteRollerWorkspace);
         if (_visualSceneReview) UpdateVisualReviewLabel();
         _simulatorShell?.AttachScene(scene, _sceneRuntime, composition);
+        CallDeferred(nameof(ReframeActiveSceneForCurrentLayout));
         _simulatorShell?.ResetWorkspaceTrialHint();
         _simulatorShell?.ResetWorkspaceRollerTrialHint();
         ResetRepeatCycleTrial();
@@ -4563,10 +4598,33 @@ public partial class Main : Node3D
         RefreshStatus();
     }
 
+    private void ReframeActiveSceneForCurrentLayout()
+    {
+        if (_mainCamera is null || _sceneCompositionRoot is null) return;
+        FrameComposition(_mainCamera, _sceneCompositionRoot, _sceneCameraDirection);
+    }
+
     private void FrameComposition(Camera3D camera, Node3D root, Vector3 authoredDirection, Node3D? companion = null)
     {
         var points = new List<Vector3>();
         IEnumerable<Node> frameMeshes = root.FindChildren("*", "MeshInstance3D", true, false);
+        var demoProfile = _simulatorShell is not null && !_visualSceneReview && !_frameWholeScene
+            && companion is null && !ReferenceEquals(root, _assetPreviewRoot)
+            ? GetDemoPresentationProfile() : null;
+        if (demoProfile is not null)
+        {
+            // Frame the lesson equipment and its consolidated operator station,
+            // not every passive sample spread around the room. View > Whole
+            // Scene remains available when the surrounding architecture matters.
+            var focusMeshes = root.GetChildren().OfType<Node3D>()
+                .Where(node => demoProfile.FocusEquipment.Contains(node.Name.ToString())
+                    || node.Name == "ControlInstallation" || node.HasMeta("installationKind")
+                    || node.Name.ToString().StartsWith("PlacedCarton_", StringComparison.Ordinal))
+                .SelectMany(node => node.FindChildren("*", "MeshInstance3D", true, false)).ToArray();
+            if (focusMeshes.Length > 0) frameMeshes = focusMeshes;
+            camera.Fov = demoProfile.FieldOfView;
+            authoredDirection = demoProfile.CameraDirection;
+        }
         if (_simulatorShell is not null && !_visualSceneReview && !_frameWholeScene
             && companion is null && !ReferenceEquals(root, _assetPreviewRoot)
             && _activeSceneDefinition?.Id == "lab-11-13-xy-palletizing")
@@ -4672,12 +4730,18 @@ public partial class Main : Node3D
         camera.KeepAspect = Camera3D.KeepAspectEnum.Height;
         var distance = MathF.Max(halfHeight * viewport.Size.Y / (verticalTangent * aperture.Size.Y),
             halfWidth * viewport.Size.Y / (verticalTangent * aperture.Size.X));
-        distance = (distance + halfDepth) * 1.16f;
+        distance = (distance + halfDepth * (demoProfile?.DepthAllowance ?? 1f))
+            * (demoProfile?.FramingMargin ?? 1.16f);
         // Reserve space below the review clock for barrier tips and sensor heads
         // in nearly vertical full-scene views and the rotating sorter focus.
         if (_visualSceneReview && (ReferenceEquals(root, _sceneCompositionRoot) || sorterCartonFocus) && MathF.Abs(direction.Y) > 0.99f)
             distance *= 1.30f;
-        camera.Position = center + direction * MathF.Max(distance, 2.5f);
+        // Small teaching benches were forced into distant room-wide shots by
+        // the general 2.5 m machinery floor. Their authored focus set already
+        // bounds every required control/readout, so allow a close operator
+        // view while retaining the conservative floor for ordinary scenes.
+        var minimumCameraDistance = demoProfile is null ? 2.5f : 1.25f;
+        camera.Position = center + direction * MathF.Max(distance, minimumCameraDistance);
         camera.LookAt(center, Vector3.Up);
         _cameraController?.CaptureCurrentView(center);
         _lastFramedAperture = _simulatorShell?.SceneViewportRect();
@@ -4723,6 +4787,35 @@ public partial class Main : Node3D
             return;
         }
         if (_userReadoutCapturePending || _repeatLearnerCapturePending || _workspaceDriveCapturePending || _typedLearnerCapturePending || _scanInspectionCapturePending || _tenZoneCapturePending || _templateCapturePending || _deviceTraceCapturePending || _workspaceBeltCapturePending || _workspaceRollerCapturePending || _demo5LearnerCapturePending || _indexedTraceCapturePending || _workspaceRollerGeometryCapturePending) return;
+        // The fixed-frame timer must not save a lesson while its asynchronous
+        // production-path review is still operating the same visible controls.
+        // Demo 2 in particular needs two real seconds twice, so an arbitrary
+        // frame countdown previously captured ET=1960 and called it evidence.
+        if (_shellView == "operator-demo1-active"
+            && _simulatorShell?.Demo1ActiveCapturePrepared != true)
+            return;
+        if (_shellView == "operator-demo2-active"
+            && _simulatorShell?.Demo2ActiveCapturePrepared != true)
+            return;
+        // Demo 3's production-path review includes three physical routes plus
+        // Stop, trip, and overload recovery. Do not let the generic fixed-frame
+        // screenshot timer record a misleading in-progress state.
+        if (_shellView == "operator-demo3-active"
+            && _simulatorShell?.Demo3ActiveCapturePrepared != true)
+            return;
+        // Demo 4 requires five accepted event edges, machine Reset, a fresh
+        // Start, and the first accepted event of batch two. A fixed frame
+        // countdown used to save an in-progress COUNT 0/4 frame while that
+        // production workflow was still running.
+        if (_shellView == "operator-demo4-active"
+            && _simulatorShell?.Demo4ActiveCapturePrepared != true)
+            return;
+        if (_shellView == "operator-demo5-active"
+            && _simulatorShell?.Demo5ActiveCapturePrepared != true)
+            return;
+        if (_shellView == "operator-five-demo-active"
+            && _simulatorShell?.FiveDemoActiveCapturePrepared != true)
+            return;
         _captureFramesRemaining--;
         if (_captureFramesRemaining == 100 && _simulatorShell is not null && _shellView.Length > 0)
         {
@@ -5034,6 +5127,17 @@ public partial class Main : Node3D
         // The full-screen CanvasLayer consumes pointer events before
         // _UnhandledInput. Scene controls therefore need to be considered at
         // the raw input stage, but only inside the unobstructed 3D aperture.
+        if (inputEvent is InputEventMouseMotion pointerMotion)
+        {
+            var overMappedControl = _simulatorShell is not null
+                && _mainCamera is not null
+                && _sceneControlInteractor is not null
+                && _simulatorShell.SceneViewportRect().HasPoint(pointerMotion.Position)
+                && _sceneControlInteractor.TryPick(_mainCamera, pointerMotion.Position, out _);
+            Input.SetDefaultCursorShape(overMappedControl
+                ? Input.CursorShape.PointingHand
+                : Input.CursorShape.Arrow);
+        }
         if (_simulatorShell is null
             || inputEvent is not InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true } click
             || !_simulatorShell.SceneViewportRect().HasPoint(click.Position)
@@ -5069,7 +5173,39 @@ public partial class Main : Node3D
     private bool ExecuteSelectedControllerAction(string actionId)
     {
         var executed = TryExecuteSelectedControllerAction(actionId);
-        if (executed) _simulatorShell?.SetWorkspaceStatus($"Scene action accepted · {actionId}");
+        if (executed && _sceneRuntime?.TryGetAction(actionId, out var action) == true)
+        {
+            var label = action.TryGetProperty("label", out var labelElement)
+                && labelElement.ValueKind == JsonValueKind.String
+                    ? labelElement.GetString() ?? actionId
+                    : actionId;
+            var type = action.TryGetProperty("type", out var typeElement)
+                && typeElement.ValueKind == JsonValueKind.String
+                    ? typeElement.GetString() ?? string.Empty
+                    : string.Empty;
+            var point = action.TryGetProperty("point", out var pointElement)
+                && pointElement.ValueKind == JsonValueKind.String
+                    ? pointElement.GetString() ?? string.Empty
+                    : string.Empty;
+            var behavior = type switch
+            {
+                "toggle" or "togglePoint" => "MAINTAINED",
+                "pulse" or "start" or "stop" or "reset" => "MOMENTARY",
+                _ => type.Length == 0 ? "SCENE ACTION" : type.ToUpperInvariant(),
+            };
+            var state = point.Length > 0 && _sceneRuntime.Points.TryGetValue(point, out var current)
+                ? current switch
+                {
+                    bool boolean => boolean.ToString().ToUpperInvariant(),
+                    double number => number.ToString("G6", System.Globalization.CultureInfo.InvariantCulture),
+                    float number => number.ToString("G6", System.Globalization.CultureInfo.InvariantCulture),
+                    _ => Convert.ToString(current, System.Globalization.CultureInfo.InvariantCulture) ?? "—",
+                }
+                : "REQUESTED";
+            var pointState = point.Length == 0 ? string.Empty : $" · {point}={state}";
+            _simulatorShell?.SetWorkspaceStatus($"ACTION ACCEPTED · {label.ToUpperInvariant()} · {behavior}{pointState}");
+        }
+        else if (executed) _simulatorShell?.SetWorkspaceStatus($"ACTION ACCEPTED · {actionId}");
         return executed;
     }
 

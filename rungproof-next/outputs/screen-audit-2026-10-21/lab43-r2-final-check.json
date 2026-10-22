@@ -1,0 +1,1 @@
+[{"name": "lab43-r2-recovered-count3", "expected": {"batch_count": 3, "cycle_complete": true, "cycle_active": false, "machine_home": true, "machine_busy": false}, "monitor_only": true, "keep_monitor": true}]

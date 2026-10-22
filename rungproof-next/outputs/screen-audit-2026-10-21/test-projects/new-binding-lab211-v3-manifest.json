@@ -1,0 +1,15 @@
+{
+  "file": "fixture-new-binding-lab-2-11-v3.rpproj.json",
+  "sourceSceneId": "lab-2-11-inbound-tote-stop",
+  "sha256": "0c50c49471480ca8d1b7664ed885afe60a74e669be40d929e251f76cd564ea79",
+  "supersedes": "fixture-new-binding-lab-2-11-v2.rpproj.json",
+  "preserved_v2_sha256": "979c86968d911a2f7b52ee70fc8d612517aab36f2768a09dc492019462259869",
+  "policy": "START latch; actual beam stops feed; actual barcode-complete latches clearance; LAD TON6000ms clears cycle/output. Timer DB211 unique.",
+  "assumptions": "6-second discharge clearance is a conservative QA parameter; no exit sensor exists, so exit is time based. Never writes PC or SIM feedback. Reset before new tote; Stop freezes plant but private phase may resume on Run.",
+  "compile_validation": {
+    "exit_code": 0,
+    "log": "fixture-lab211-v3-compile-1792695325403757900.log",
+    "log_sha256": "5a12568886a8390af9f04a3501eb2a2a1ca65dc67038c87be74d380b3cb592a7",
+    "passed": true
+  }
+}

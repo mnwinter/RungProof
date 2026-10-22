@@ -1,0 +1,1 @@
+[{"name": "lab408-r1-enable", "click": [1018, 565], "expected": {"machine_enabled": true, "release_clear": false, "group_conveyor_run": false}, "monitor_only": true, "keep_monitor": true}, {"name": "lab408-r1-clear", "click": [1049, 579], "expected": {"machine_enabled": true, "release_clear": true, "group_conveyor_run": true}, "monitor_only": true, "keep_monitor": true}]

@@ -82,6 +82,20 @@ public partial class PalletRobotMotion : Node
         SetJawSpan(0.36f);
     }
 
+    /// <summary>Projects controller-mode gripper mechanics without invoking reference phases.
+    /// Pose is supplied separately through Solve; attachment is admitted by actual plant geometry.</summary>
+    public void ProjectControllerGripper(Node3D load, bool closeRequested, bool attached)
+    {
+        var bounds = Bounds(load);
+        _loadOffset = Vector3.Up * (bounds.Position.Y - load.GlobalPosition.Y + GripHeightM);
+        _closedHalfSpan = bounds.Size.X / 2 + 0.035f;
+        // A rejected unsupported release retains physical grip even when the
+        // controller requests open; feedback reports inhibition, not a fall/teleport.
+        SetJawSpan(_closedHalfSpan + (attached || closeRequested ? 0 : 0.025f));
+        GrippedLoad = attached ? load : null;
+        AtPark = ToolTransform.Origin.DistanceTo(ParkTarget) < 0.003f;
+    }
+
     public bool ApplyReference(string key, string kind, Node3D? load,
         Vector3 from, Vector3 to, float progress)
     {

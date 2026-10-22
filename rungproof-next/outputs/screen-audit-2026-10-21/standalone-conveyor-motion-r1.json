@@ -1,0 +1,1 @@
+[{"click": [1141, 553], "wait": 2, "capture": "standalone-conveyor-r1-moving-a"}, {"wait": 5, "capture": "standalone-conveyor-r1-moving-b"}, {"click": [1141, 553], "wait": 0.5, "capture": "standalone-conveyor-r1-station-stop"}, {"wait": 2, "capture": "standalone-conveyor-r1-station-held"}]

@@ -42,6 +42,8 @@ public static class LadderOperandSymbols
                 if (declaration is not null) Add(reference, formal.Name + " (" + formal.Section + ")", declaration);
             }
         }
+        foreach (var constant in document.UserConstants)
+            symbols.Add(new(constant.Name, constant.Type, false, constant.Name + " (constant)"));
         return symbols;
     }
 

@@ -1,0 +1,1 @@
+[{"name": "lab1106-reset-repeat-baseline", "clicks": [[496, 39], [525, 125], [496, 39], [525, 80], [1049, 599]], "expected": {"inflow_enabled": true, "treatment_ready": false, "outlet_clear": false, "transfer_pump_run": false, "outlet_valve_open": false}, "monitor_only": true, "keep_monitor": true}]

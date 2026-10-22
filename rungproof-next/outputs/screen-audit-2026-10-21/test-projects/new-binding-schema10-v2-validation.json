@@ -1,0 +1,74 @@
+[
+  {
+    "file": "fixture-new-binding-lab-2-11-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-11-v2.rpproj-mcp-validation-1792694784282743900.log",
+    "sha256": "aaf93c2dbe977121361d8bc88dfd35620a4d853eb6cc4337396e49c383c7f48b"
+  },
+  {
+    "file": "fixture-new-binding-lab-2-12-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-12-v2.rpproj-mcp-validation-1792694784892031300.log",
+    "sha256": "163cd486538ee799e0c57d2b73b257bc8bde58571a94a5e7ab73205b40ca84dc"
+  },
+  {
+    "file": "fixture-new-binding-lab-2-13-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-13-v2.rpproj-mcp-validation-1792694785598494500.log",
+    "sha256": "324572baf488d3fefc8fe56a7e0d5fea2ffbe98400f62135b39c5a5bba5a9e8c"
+  },
+  {
+    "file": "fixture-new-binding-lab-2-16-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-16-v2.rpproj-mcp-validation-1792694786304959200.log",
+    "sha256": "5c636e8cf70fb63fd1af9a1deeb6b3eb96838aa734a6197d18d7433f6bdbfde5"
+  },
+  {
+    "file": "fixture-new-binding-lab-2-19-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-19-v2.rpproj-mcp-validation-1792694786912833800.log",
+    "sha256": "58a8af06a4b47f8fd5c326436111387e92226a5e92034cc4e16b5a7fb8d25f88"
+  },
+  {
+    "file": "fixture-new-binding-lab-2-23-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-23-v2.rpproj-mcp-validation-1792694787616316600.log",
+    "sha256": "48e168628dad326755a3da1f712bc6e1b2836d033c797457a2729c72c3f82fa2"
+  },
+  {
+    "file": "fixture-new-binding-lab-2-24-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-new-binding-lab-2-24-v2.rpproj-mcp-validation-1792694788326298300.log",
+    "sha256": "15134a352983bac6676573ced480c64b3d0931be3b57a386e5f99fbded7b0170"
+  },
+  {
+    "file": "fixture-tank-high-low-operator-requests-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-tank-high-low-operator-requests-v2.rpproj-mcp-validation-1792694788931546500.log",
+    "sha256": "6178e426e7c48af58636b5e225cdefaa49009c14120a47f14fd7b32c22ce98e7"
+  },
+  {
+    "file": "fixture-tank-level-operator-requests-v2.rpproj.json",
+    "exit_code": 0,
+    "passed": true,
+    "issues": [],
+    "log": "fixture-tank-level-operator-requests-v2.rpproj-mcp-validation-1792694789548687700.log",
+    "sha256": "8237d007a17b45fed1561449a158a4c17cfe86bc754afc7fd71b07539300b628"
+  }
+]

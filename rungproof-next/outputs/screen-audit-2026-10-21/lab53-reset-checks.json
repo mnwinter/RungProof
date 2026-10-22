@@ -1,0 +1,1 @@
+[{"name": "lab53-reset-check", "expected": {"flash_mode_selected": false, "flash_lamp": false}, "monitor_only": true, "keep_monitor": true}]

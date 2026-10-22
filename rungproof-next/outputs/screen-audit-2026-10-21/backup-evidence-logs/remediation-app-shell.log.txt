@@ -1,0 +1,229 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+RungProof Next ready. Production assets: 63.
+Candidate assets: 232.
+Legacy primitive assets intentionally excluded.
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-4-01-press-count-lamp transport=none
+AUDIT_DIAGNOSTICS_VERIFY PASS successfulRunClearsPreviousErrors=True invalidDraftErrorsRetained=True
+CATALOG_DIAGNOSTIC SYS-READY: Catalog data checks passed: 295 assets, 77 scenes.
+RENDER_BINDING_VALIDATION_VERIFY PASS actualSupported=True unknownRejected=True
+PROCEDURAL_ACCESSORY_VALIDATION_VERIFY PASS sorterBridgeRecognized=True
+PROCEDURAL_ACCESSORY_REJECTION_VERIFY PASS
+PROCEDURAL_ACCESSORY_CATALOG_VERIFY PASS allResolved=True orphanBridgeRejected=True
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+WORKSPACE_LOADED scene=lab-4-01-press-count-lamp placements=0
+CONTROL_INSTALLATION_ACCESS scene=lab-5-01-delayed-lamp illustrativeBounds=(-1.9, 0, 0.6) size=(3.8,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-5-01-delayed-lamp equipment=switch_0 kind=studentBench pose=(-1.4, 0.37425, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-5-01-delayed-lamp equipment=indicator_1 kind=studentBench pose=(-0.7, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-5-01-delayed-lamp equipment=switch_2 kind=studentBench pose=(0, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-5-01-delayed-lamp equipment=switch_3 kind=studentBench pose=(0.7, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-5-01-delayed-lamp equipment=training_accessory_4 kind=studentBench pose=(1.4, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-5-01-delayed-lamp kind=studentBench components=5
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=5 actions=3
+SCENE_ENVIRONMENT_READY scene=lab-5-01-delayed-lamp family=TrainingWorkshop variant=commissioning yaw=0 protectedBounds=(-1.9, 0, -0.5825), (3.8, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-5-01-delayed-lamp rendered=5 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-5-01-delayed-lamp transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=scene-2-conveyor-pusher illustrativeBounds=(4.4162498, 0, 0.77199996) size=(2.6328,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=scene-2-conveyor-pusher equipment=scene2_station kind=operatorPanel pose=(4.8578496, 0.1832, 0.4279999) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=scene-2-conveyor-pusher equipment=switch_4 kind=operatorPanel pose=(5.4410496, 0.1832, 0.4279999) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=scene-2-conveyor-pusher equipment=switch_1 kind=operatorPanel pose=(6.02425, 0.1832, 0.4279999) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=scene-2-conveyor-pusher equipment=switch_2 kind=operatorPanel pose=(6.60745, 0.1832, 0.4279999) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=scene-2-conveyor-pusher equipment=switch_3 kind=operatorPanel pose=(5.4410496, 0.62319994, 0.4279999) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=scene-2-conveyor-pusher equipment=switch_5 kind=operatorPanel pose=(6.02425, 0.62319994, 0.4279999) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=scene-2-conveyor-pusher equipment=scene2_stacklight role=machine-status support=operator-cabinet pose=(5.73265, 1.2439998, 0.28199995) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=scene-2-conveyor-pusher kind=operatorPanel components=6
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Equipment motion controller PneumaticPusher bound 17 nodes for 'KIN_pusher_'.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=conveyorPusher points=18 actions=6
+SCENE_ENVIRONMENT_READY scene=scene-2-conveyor-pusher family=DispatchWarehouse variant=dispatch yaw=0 protectedBounds=(-7.400525, -2.15, -5.8670006), (14.80105, 6.2539997, 11.734001)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED scene-2-conveyor-pusher rendered=17 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=scene-2-conveyor-pusher transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-9-11-pallet-counting illustrativeBounds=(2.6, 0, 0.36600003) size=(2.6328,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=switch_10 kind=operatorPanel pose=(3.0415998, 0.14319998, 0.02200003) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=switch_11 kind=operatorPanel pose=(3.6248, 0.14319998, 0.02200003) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=switch_12 kind=operatorPanel pose=(4.208, 0.14319998, 0.02200003) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=switch_7 kind=operatorPanel pose=(4.7912, 0.14319998, 0.02200003) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=switch_8 kind=operatorPanel pose=(3.0415998, 0.5832, 0.02200003) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=switch_9 kind=operatorPanel pose=(3.6248, 0.5832, 0.02200003) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=indicator_3 kind=operatorPanel pose=(4.208, 1.0725, -0.6227) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-9-11-pallet-counting equipment=machine_running_lamp kind=operatorPanel pose=(4.7912, 1.0725, -0.6227) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-9-11-pallet-counting kind=operatorPanel components=8
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=9 actions=6
+SCENE_ENVIRONMENT_READY scene=lab-9-11-pallet-counting family=DispatchWarehouse variant=receiving yaw=0 protectedBounds=(-6.4434, -0.505, -2.566), (12.8868, 3.2649999, 5.132)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-9-11-pallet-counting rendered=14 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-9-11-pallet-counting transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-11-13-xy-palletizing illustrativeBounds=(1.95, 0, 1.8820001) size=(2.0496001,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=switch_10 kind=operatorPanel pose=(2.3916001, 0.1832, 1.5380001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=switch_9 kind=operatorPanel pose=(2.9748, 0.1832, 1.5380001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=switch_14 kind=operatorPanel pose=(3.558, 0.1832, 1.5380001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=switch_15 kind=operatorPanel pose=(2.3916001, 0.62319994, 1.5380001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=switch_16 kind=operatorPanel pose=(2.9748, 0.62319994, 1.5380001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=switch_11 kind=operatorPanel pose=(3.558, 0.62319994, 1.5380001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=indicator_3 kind=operatorPanel pose=(2.3916001, 1.5525, 0.89330006) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=indicator_12 kind=operatorPanel pose=(2.9748, 1.5525, 0.89330006) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-11-13-xy-palletizing equipment=indicator_13 kind=operatorPanel pose=(3.558, 1.5525, 0.89330006) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-11-13-xy-palletizing kind=operatorPanel components=9
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=29 actions=6
+SCENE_ENVIRONMENT_READY scene=lab-11-13-xy-palletizing family=DispatchWarehouse variant=palletizing yaw=0 protectedBounds=(-5.8722, -1.5, -2.8968), (11.7444, 5.55, 5.7936)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-11-13-xy-palletizing rendered=20 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-11-13-xy-palletizing transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-4-01-press-count-lamp transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-01-workstation-call illustrativeBounds=(-1.2, 0, 0.6) size=(2.4,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-01-workstation-call equipment=material_call_button kind=studentBench pose=(-0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-01-workstation-call equipment=material_call_lamp kind=studentBench pose=(0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-2-01-workstation-call kind=studentBench components=2
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=2 actions=1
+SCENE_ENVIRONMENT_READY scene=lab-2-01-workstation-call family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.2, 0, -0.5825), (2.4, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-01-workstation-call rendered=2 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=scene-1-conveyor-stop illustrativeBounds=(4.3725, 0, -0.060208343) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=scene-1-conveyor-stop equipment=scene1_station kind=operatorPanel pose=(4.9225, 0.6632, -0.40420836) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=scene-1-conveyor-stop equipment=scene1_stacklight role=machine-status support=operator-cabinet pose=(4.9225, 0.7440001, -0.55020833) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=scene-1-conveyor-stop kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=conveyorStop points=5 actions=1
+SCENE_ENVIRONMENT_READY scene=scene-1-conveyor-stop family=DispatchWarehouse variant=dispatch yaw=0 protectedBounds=(-4.54225, -4.656613E-10, -1.6452496), (9.0845, 2.8040004, 3.2904992)
+DISPATCH_LOOK_APPLIED structuralSurfaces=15 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED scene-1-conveyor-stop rendered=5 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=scene-1-conveyor-stop illustrativeBounds=(4.3725, 0, -0.060208343) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=scene-1-conveyor-stop equipment=scene1_station kind=operatorPanel pose=(4.9225, 0.6632, -0.40420836) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=scene-1-conveyor-stop equipment=scene1_stacklight role=machine-status support=operator-cabinet pose=(4.9225, 0.7440001, -0.55020833) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=scene-1-conveyor-stop kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=conveyorStop points=5 actions=1
+SCENE_ENVIRONMENT_READY scene=scene-1-conveyor-stop family=DispatchWarehouse variant=dispatch yaw=0 protectedBounds=(-4.54225, -4.656613E-10, -1.6452496), (9.0845, 2.8040004, 3.2904992)
+DISPATCH_LOOK_APPLIED structuralSurfaces=15 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED scene-1-conveyor-stop rendered=5 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=scene-1-conveyor-stop illustrativeBounds=(4.3725, 0, -0.060208343) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=scene-1-conveyor-stop equipment=scene1_station kind=operatorPanel pose=(4.9225, 0.6632, -0.40420836) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=scene-1-conveyor-stop equipment=scene1_stacklight role=machine-status support=operator-cabinet pose=(4.9225, 0.7440001, -0.55020833) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=scene-1-conveyor-stop kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=conveyorStop points=5 actions=1
+SCENE_ENVIRONMENT_READY scene=scene-1-conveyor-stop family=DispatchWarehouse variant=dispatch yaw=0 protectedBounds=(-4.54225, -4.656613E-10, -1.6452496), (9.0845, 2.8040004, 3.2904992)
+DISPATCH_LOOK_APPLIED structuralSurfaces=15 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED scene-1-conveyor-stop rendered=5 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=scene-1-conveyor-stop illustrativeBounds=(4.3725, 0, -0.060208343) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=scene-1-conveyor-stop equipment=scene1_station kind=operatorPanel pose=(4.9225, 0.6632, -0.40420836) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=scene-1-conveyor-stop equipment=scene1_stacklight role=machine-status support=operator-cabinet pose=(4.9225, 0.7440001, -0.55020833) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=scene-1-conveyor-stop kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=conveyorStop points=5 actions=1
+SCENE_ENVIRONMENT_READY scene=scene-1-conveyor-stop family=DispatchWarehouse variant=dispatch yaw=0 protectedBounds=(-4.54225, -4.656613E-10, -1.6452496), (9.0845, 2.8040004, 3.2904992)
+DISPATCH_LOOK_APPLIED structuralSurfaces=15 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED scene-1-conveyor-stop rendered=5 deferred=0
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+SCENE_DRAFT_VERIFY PASS draft=True isolated=True undo=True redo=True sameScene=True labProject=True
+UNSAVED_WORK_VERIFY PASS allScenes=True cancel=True failureBlocks=True waitsForAll=True savesAll=True discard=True
+EXTERNAL_PROFILE_GUARD_VERIFY PASS mismatchBlocked=True selectionClearsApproval=True diagnosticMismatchBlocked=True noTransport=True
+ERROR: APP_SHELL_VERIFY FAIL saved demo project differs from Demo menu: programs/demos/04-batch-process-blocks.rpproj.json
+   at: void RungProof.Next.App.Main.VerifyAppShell() (res://src/App/Main.cs:2041)
+   C# backtrace (most recent call first):
+       [0] void Godot.GD.PushError(string) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/GD.cs:366)
+       [1] void RungProof.Next.App.Main.VerifyAppShell() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:2041)
+       [2] bool RungProof.Next.App.Main.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (C:\Users\matt.winter\Documents\RungProof\rungproof-next\.godot\mono\temp\obj\Debug\Godot.SourceGenerators\Godot.SourceGenerators.ScriptMethodsGenerator\RungProof.Next.App.Main_ScriptMethods.generated.cs:1892)
+       [3] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+ERROR: 1 RID allocations of type 'N16RendererViewport8ViewportE' were leaked at exit.
+WARNING: 1 RID of type "Canvas" was leaked.
+ERROR: 39 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 66 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2733)
+WARNING: 23 RIDs of type "CanvasItem" were leaked.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 272 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

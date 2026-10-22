@@ -1,0 +1,588 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "reference-cable-cut",
+  "name": "Cable_Measured_Cut_Cycle",
+  "sourceSceneId": "lab-4-12-cable-cut-length",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 38,
+  "tags": [
+    {
+      "name": "cable_present",
+      "type": "Bool",
+      "role": "Input",
+      "initial": true,
+      "binding": "cable_present"
+    },
+    {
+      "name": "length_reached",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "length_reached"
+    },
+    {
+      "name": "cutter_home",
+      "type": "Bool",
+      "role": "Input",
+      "initial": true,
+      "binding": "cutter_home"
+    },
+    {
+      "name": "cut_done",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "cut_done"
+    },
+    {
+      "name": "cut_complete",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "cut_complete"
+    },
+    {
+      "name": "cut_fault",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "cut_fault"
+    },
+    {
+      "name": "measured_length_m",
+      "type": "Real",
+      "role": "Input",
+      "initial": 0.0,
+      "binding": "measured_length_m"
+    },
+    {
+      "name": "stock_remaining_m",
+      "type": "Real",
+      "role": "Input",
+      "initial": 10.0,
+      "binding": "stock_remaining_m"
+    },
+    {
+      "name": "feed_speed_mps",
+      "type": "Real",
+      "role": "Input",
+      "initial": 0.0,
+      "binding": "feed_speed_mps"
+    },
+    {
+      "name": "cutter_position",
+      "type": "Real",
+      "role": "Input",
+      "initial": 0.0,
+      "binding": "cutter_position"
+    },
+    {
+      "name": "batch_start",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "batch_start"
+    },
+    {
+      "name": "feed_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "feed_run"
+    },
+    {
+      "name": "cutter_fire",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "cutter_fire"
+    },
+    {
+      "name": "cycle_active",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "cycle_active"
+    },
+    {
+      "name": "cycle_complete",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "cycle_complete"
+    },
+    {
+      "name": "stop_command",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.stop"
+    },
+    {
+      "name": "start_edge",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "start_accepted",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Cable_Measured_Cut_Cycle",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-2",
+          "label": "Fresh Start edge",
+          "coilVariable": "start_edge",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-3",
+              "contacts": [
+                {
+                  "id": "contact-4",
+                  "variable": "batch_start",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "Rising"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-5",
+          "label": "Accept incomplete fault-free cut",
+          "coilVariable": "start_accepted",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-6",
+              "contacts": [
+                {
+                  "id": "contact-7",
+                  "variable": "start_edge",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-8",
+                  "variable": "cut_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-9",
+                  "variable": "cut_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-10",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-11",
+          "label": "Observed cut and home completion",
+          "coilVariable": "cycle_complete",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-12",
+              "contacts": [
+                {
+                  "id": "contact-13",
+                  "variable": "cut_complete",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-14",
+          "label": "Authorize cut until complete or Stop",
+          "coilVariable": "cycle_active",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-15",
+              "contacts": [
+                {
+                  "id": "contact-16",
+                  "variable": "start_accepted",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-17",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-18",
+                  "variable": "cut_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-19",
+                  "variable": "cut_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-20",
+              "contacts": [
+                {
+                  "id": "contact-21",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-22",
+                  "variable": "stop_command",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-23",
+                  "variable": "cut_fault",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-24",
+                  "variable": "cut_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-25",
+          "label": "Feed only before target with knife home",
+          "coilVariable": "feed_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-26",
+              "contacts": [
+                {
+                  "id": "contact-27",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-28",
+                  "variable": "cable_present",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-29",
+                  "variable": "cutter_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-30",
+                  "variable": "length_reached",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-31",
+                  "variable": "cut_done",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-32",
+          "label": "Cut measured stationary cable; release for home return",
+          "coilVariable": "cutter_fire",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-33",
+              "contacts": [
+                {
+                  "id": "contact-34",
+                  "variable": "cycle_active",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-35",
+                  "variable": "length_reached",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-36",
+                  "variable": "feed_run",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-37",
+                  "variable": "cut_done",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": []
+}

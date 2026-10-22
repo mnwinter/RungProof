@@ -1,0 +1,7 @@
+# Lab10.1 editable selected-code follow-up
+
+Reviewed14 custom-F030 and2 restored-check native captures, two compact sheets/source-hash manifest, and native monitored ladder value crops F030-runtime-ladder-value / F003-restored-runtime-value. These show selected_alarm_code STRING F030 then F003 respectively; no hardcoded-default inference is needed. No reviewer UI input.
+
+With selected code F030, actual drive_alarm_text F003:undervoltage is rejected; F030:overload sets all three outputsTrue and lights the red stack, green match stack and pedestal alarm. F0030:different code, XF003:prefix, lowercase f003:case differs, and empty are rejected; repeated F003 remainsrejected, repeated F030 matches. At retained F030, maintained resetON clears outputs/allthreeindicators, resetOFF restores; validOFF clears, validON restores. All STRING values were read from actual native Signals, not only helper expectedBooleans.
+
+Following the UI restoration route, monitored ladder shows selected_alarm_code F003. Restoredempty has allflags/outputsFalse/dark; after valid plus fresh F003 message, allthreeoutputsTrue/indicatorslit again. This demonstrates editable-program choice changes behavior and restoration recovers the original positive case in this session. It does not prove arbitrary codeentry, boundary rules for allpossible strings, disk persistence, or a restoredF030negative case. No new issue; default19-frame report remains separate.

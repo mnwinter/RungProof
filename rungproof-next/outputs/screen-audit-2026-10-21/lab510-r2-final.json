@@ -1,0 +1,1 @@
+[{"name": "lab510-r2-recovered-exit-check", "expected": {"workpiece_at_exit": true, "index_run": false, "spray_enable": false, "vent_run": false, "motion_inhibited": false, "spray_inhibited": false}, "monitor_only": true, "keep_monitor": true}]

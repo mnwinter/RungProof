@@ -3,19 +3,19 @@
   "version": 1,
   "id": "lab-11-19-powder-batch-mixer",
   "name": "Lab 11.19 - Powder Batch Mixer",
-  "description": "Batch-control exercise with manual recipe, dose-complete and mixer-ready inputs. PLC outputs drive indicators; equipment is an illustrative static layout.",
+  "description": "Batch-control exercise with manual recipe, dose-complete and mixer-ready inputs. PLC outputs operate the feeder gate, mixer drive and discharge valve while the panel lamps mirror each command.",
   "camera": {
     "position": [
-      11,
-      8,
-      12
+      7.5,
+      4.2,
+      7.3
     ],
     "target": [
-      0,
+      1,
       1.1,
-      0
+      0.5
     ],
-    "fov": 45
+    "fov": 42
   },
   "equipment": [
     {
@@ -89,7 +89,9 @@
         1.8
       ],
       "config": {
-        "initialPosition": 0
+        "initialPosition": 0,
+        "positionSlewSeconds": 1.2,
+        "positionSlewRequiresRunCommand": false
       }
     },
     {
@@ -135,7 +137,9 @@
       ],
       "config": {
         "assetName": "slide-gate feeder",
-        "catalogAssetId": "training.accessory.slide_gate_feeder.v1"
+        "catalogAssetId": "training.accessory.slide_gate_feeder.v1",
+        "motion": "slideGatePosition",
+        "positionSlewSeconds": 1.15
       }
     },
     {
@@ -350,16 +354,31 @@
         "activeColor": "green"
       },
       {
+        "point": "dose_run",
+        "equipmentId": "training_accessory_7",
+        "mode": "position"
+      },
+      {
         "point": "mixer_run",
         "equipmentId": "indicator_14",
         "mode": "indicator",
         "activeColor": "green"
       },
       {
+        "point": "mixer_run",
+        "equipmentId": "motor_3",
+        "mode": "running"
+      },
+      {
         "point": "discharge_valve_open",
         "equipmentId": "indicator_15",
         "mode": "indicator",
         "activeColor": "green"
+      },
+      {
+        "point": "discharge_valve_open",
+        "equipmentId": "valve_4",
+        "mode": "position"
       }
     ]
   },
@@ -386,14 +405,14 @@
       "powder discharge chute"
     ],
     "machineGuide": {
-      "purpose": "Practice batch sequencing with symbolic inputs and output indicators. The separate equipment models do not simulate powder transfer, weighing or mixing. Tank diameter/height size the cylindrical shell; attachments remain proportional.",
+      "purpose": "Practice batch sequencing with symbolic inputs and visible actuator commands. The feeder gate, mixer motor and discharge valve follow the three PLC outputs; the scene does not claim physical powder transfer, weighing or process fidelity.",
       "startConditions": [
         "Author or load a controller program for this exercise; no batch reference ladder is supplied.",
         "The local recipe_valid, dose_complete and mixer_ready inputs begin false."
       ],
       "normalSequence": [
         "Apply the requested input condition.",
-        "Verify only the documented PLC outputs respond."
+        "Verify the feeder gate opens during dosing, the mixer drive turns during mixing, and the discharge valve opens only after the batch permissives are satisfied."
       ],
       "stopBehavior": [
         "Removing the permissive removes PLC-owned commands.",
@@ -405,6 +424,7 @@
       "expectedObservations": [
         "Input actions toggle recipe_valid, dose_complete and mixer_ready.",
         "PLC output indicators display dose_run, mixer_run and discharge_valve_open from the user's controller.",
+        "The same outputs visibly command the slide gate, mixer motor and discharge valve; they do not create simulated material or fabricated process feedback.",
         "A correct controller should enforce dosing before mixing and discharge after batch completion; the initial-safe-state case alone does not prove that sequence."
       ]
     },

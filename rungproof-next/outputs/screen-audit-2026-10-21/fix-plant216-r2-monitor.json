@@ -1,0 +1,1 @@
+[{"name":"fix-plant216-r2-hand-loss-signals","expected":{"left_hand_request":false,"drill_run":false,"drill_feed_down":false,"drill_retract_up":false},"keep_monitor":true}]

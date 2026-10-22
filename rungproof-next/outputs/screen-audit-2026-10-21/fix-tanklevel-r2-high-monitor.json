@@ -1,0 +1,1 @@
+[{"name":"fix-tanklevel-r2-high-cutoff","wait":12,"monitor_only":true,"keep_monitor":true,"expected":{"pump_request":true,"high_level_switch":true,"inlet_pump_run":false,"drain_valve_open":false}}]

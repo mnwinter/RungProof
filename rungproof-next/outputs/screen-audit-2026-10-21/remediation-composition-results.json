@@ -1,0 +1,87 @@
+{
+  "scope": "headless composition/legacy contracts only; no screen functional PASS",
+  "dll_sha256": "feca711705ec6d886a85602d0ce2adb25585555ba49c53b222104311df81c243",
+  "results": [
+    {
+      "scene": "lab-2-12-assembly-lift",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-12-assembly-lift-1792696368766803300.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-2-13-coolant-jug-fill",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-13-coolant-jug-fill-1792696368670760700.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-2-16-safe-drill",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-16-safe-drill-1792696368580239000.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-2-19-service-door",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-19-service-door-1792696370116313600.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-2-23-parcel-sorter",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-23-parcel-sorter-1792696370204448000.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-2-24-robot-cnc",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-24-robot-cnc-1792696370306331400.log",
+      "errors": []
+    },
+    {
+      "scene": "tank-high-low",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-tank-high-low-1792696371386636200.log",
+      "errors": []
+    },
+    {
+      "scene": "tank-level",
+      "passed": false,
+      "exit": 1,
+      "log": "remediation-compose-tank-level-1792696371632127800.log",
+      "errors": [
+        "SCENE_CONTRACT_CASE stopped process holds its level and clears commands FAIL",
+        "SCENE_CONTRACT_RESULT FAIL",
+        "ERROR: SCENE_CONTRACT_MISMATCH case=stopped process holds its level and clears commands point=inlet_pump_run expected=False actual=True"
+      ]
+    },
+    {
+      "scene": "lab-10-03-vision-package-sorter",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-10-03-vision-package-sorter-1792696371552796200.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-11-07-multi-conveyor-pallet-route",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-11-07-multi-conveyor-pallet-route-1792696372753079500.log",
+      "errors": []
+    },
+    {
+      "scene": "lab-2-15-fume-extractor",
+      "passed": true,
+      "exit": 0,
+      "log": "remediation-compose-lab-2-15-fume-extractor-1792696372609745000.log",
+      "errors": []
+    }
+  ]
+}

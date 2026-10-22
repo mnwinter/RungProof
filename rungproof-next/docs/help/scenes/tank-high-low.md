@@ -10,10 +10,12 @@ A discrete level-control example with separate low and high point level switches
 
 ## Expected I/O to operate this scene
 
-All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or hardware addresses. PC-owned points are simulator feedback; PLC-owned points are commands supplied by the controller; SIM points are internal and should not be wired as external I/O.
+All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or hardware addresses. PC-owned points are simulator feedback or local operator requests; PLC-owned points are commands supplied by the controller; SIM points are internal and should not be wired as external I/O.
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `pump_request` | `BOOL` | **PC** | `False` |
+| `drain_request` | `BOOL` | **PC** | `False` |
 | `inlet_pump_run` | `BOOL` | **PLC** | `False` |
 | `drain_valve_open` | `BOOL` | **PLC** | `False` |
 | `tank_level` | `REAL` | **SIM** | `50` |
@@ -25,15 +27,19 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
 | `Run simulated process` | `run` | `` |
-| `Toggle inlet pump (simulated)` | `toggle` | `inlet_pump_run` |
-| `Toggle drain valve (simulated)` | `toggle` | `drain_valve_open` |
+| `Toggle inlet pump request` | `toggle` | `pump_request` |
+| `Toggle drain request` | `toggle` | `drain_request` |
 | `Stop simulated process` | `stop` | `` |
+
+The two local stations toggle maintained request inputs. A loaded controller must consume those inputs and produce `inlet_pump_run` / `drain_valve_open`; clicking a station never writes either PLC output. A simple learner policy gives drain priority, stops fill at the high switch, and inhibits drain at the low switch. Stop removes commands; maintained requests may still be ON when Run resumes. Reset/toggle them OFF before a fresh test. Standalone preview rules retain manual pump/drain operation with drain priority.
 
 ## Equipment bindings
 
 | Symbolic point | Equipment | Mode |
 | --- | --- | --- |
 | `drain_valve_open` | `hl_drain_valve` | `position` |
+| `pump_request` | `hl_pump_station` | `switch` |
+| `drain_request` | `hl_drain_station` | `switch` |
 
 ## Expected equipment
 

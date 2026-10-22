@@ -5,12 +5,13 @@ namespace RungProof.Next.App;
 
 public static class LadderEditorZoom
 {
-    public static HBoxContainer CreateControls(LadderEditorCanvas canvas, ScrollContainer scroll)
+    public static HBoxContainer CreateControls(LadderEditorCanvas canvas, ScrollContainer scroll, bool compact = false)
     {
         var row = new LadderEditorZoomRow { Name = "LadderZoomControls" };
         var label = new Label { Text = "  Ladder zoom", VerticalAlignment = VerticalAlignment.Center };
+        label.Visible = !compact;
         label.AddThemeColorOverride("font_color", new Color("263943")); label.AddThemeFontSizeOverride("font_size", 12); row.AddChild(label);
-        var selector = new OptionButton { Name = "LadderZoomSelector", CustomMinimumSize = new Vector2(92, 32),
+        var selector = new OptionButton { Name = "LadderZoomSelector", CustomMinimumSize = new Vector2(compact ? 76 : 92, compact ? 30 : 32),
             TooltipText = "Zoom the ladder view. Use scrollbars to reach offscreen instructions." };
         foreach (var percent in new[] { 75, 100, 150 }) selector.AddItem(percent + "%", percent);
         selector.AddThemeColorOverride("font_color", new Color("263943")); selector.AddThemeFontSizeOverride("font_size", 12);

@@ -1,0 +1,1 @@
+[{"name": "lab507-r1-idle-green", "click": [638, 565], "expected": {"clear_to_finish": true, "vehicle_ready": true, "vehicle_stop": false, "pedestrian_stop": true, "pedestrian_walk": false}, "monitor_only": true, "keep_monitor": true}]

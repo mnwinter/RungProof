@@ -1,0 +1,1 @@
+[{"name": "standalone-gallery-r2-reset-signals", "expected": {"gallery_animation": false, "industrial_fan_run": false, "emergency_stop": false, "demo_tank_level": 50, "demo_level_signal": 12}}]

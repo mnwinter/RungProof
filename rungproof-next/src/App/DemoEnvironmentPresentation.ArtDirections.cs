@@ -584,7 +584,27 @@ public partial class DemoEnvironmentPresentation
                 S(dep * .25f, h, sz * dep * .28f, 1.2f, true, 1); break;
             case "pallet-count-open-dock-header": R(w * .35f, h, -w * .22f, 1.3f, true, 2); Side(dep * .30f, .85f); break;
             case "stop-conveyor-short-dock": Rear(w * .60f, h, 0, 2); Side(dep * .20f, .85f); break;
-            case "pusher-open-takeaway-side": R(w * .45f, h, -w * .18f, 1.4f, true, 2); break;
+            case "pusher-open-takeaway-side":
+                // This cell is inside a warehouse room, not parked in front of
+                // a freestanding architectural prop.  Carry the rear wall across
+                // the full protected-room width and cut the conveyor infeed into
+                // that wall.  Deep reveals make the opening read as a real
+                // transfer tunnel while the far side wall closes the room at the
+                // edge of the equipment footprint.  The two camera-facing sides
+                // remain omitted as the intentional cutaway.
+                var portalCenter = -w * .18f;
+                var portalWidth = MathF.Min(2.7f, w - .8f);
+                var portalHeight = MathF.Min(2.45f, h - .22f);
+                ArtWall(rear, w, h, .24f, wall,
+                    new List<Rect2> { new(portalCenter - portalWidth / 2, 0, portalWidth, portalHeight) }, false);
+                Box(rear, "ConveyorPortalLeftReveal", new Vector3(.20f, portalHeight, 1.8f),
+                    new Vector3(portalCenter - portalWidth / 2, portalHeight / 2, sz * .9f), wall);
+                Box(rear, "ConveyorPortalRightReveal", new Vector3(.20f, portalHeight, 1.8f),
+                    new Vector3(portalCenter + portalWidth / 2, portalHeight / 2, sz * .9f), wall);
+                Box(rear, "ConveyorPortalHeaderReveal", new Vector3(portalWidth + .20f, .22f, 1.8f),
+                    new Vector3(portalCenter, portalHeight, sz * .9f), steel);
+                ArtWall(side, dep, h, .24f, wall, new List<Rect2>(), false);
+                break;
             case "radar-open-roof-sky": Rear(w * .22f, .6f, -w * .32f); Rear(w * .22f, .6f, w * .32f); S(dep * .30f, 2.7f, 0, 1.2f, true, 1); break;
             default: return false;
         }

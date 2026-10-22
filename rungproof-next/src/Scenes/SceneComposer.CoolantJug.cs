@@ -73,7 +73,10 @@ public static partial class SceneComposer
         {
             Name = "JugFillNozzleController", Kind = EquipmentMotionController.MotionKind.LinearY,
             TargetPrefix = "KIN_fill_nozzle", RunCommand = runCommand,
-            TravelM = -0.12f, TravelTimeSeconds = 0.35f,
+            // The scaled jug's open neck tops at about 1.982 m; the delivered
+            // tip outlet starts at 2.14 m. A 120 mm stroke stopped above the
+            // mouth, so the command-driven fill eligibility correctly held.
+            TravelM = -0.18f, TravelTimeSeconds = 0.35f,
             PositionVisibilityChildName = "JUG_FILL_stream",
         });
         return model;

@@ -1,0 +1,9 @@
+# Lab 5.10 independent selected-checkpoint review
+
+Reviewed22selectednative checkpoints in three lab510-selected-review sheets: sevenstart/permissivecases, actualspraytrigger, readinessloss/Stoprecovery, phasechanges, exit andReset. Actualstation/workpiece, cabinetindicators and13Signals preserved. Loadedlearnerfixture scope only; no reviewer UI/backend operations. Filenames r1-recovery belong to the fresh r2cycle; missed earlierSpraypoll is notappfailure.
+
+Missingbothready, sprayonly/missingvent, ventonly/missingspray and bothreadywithoutfreshSTART remainposition-2/allthreeoutputsFalse. FreshSTART3706 indexesat.5/indexTrue to-1.73. Actualspraytrigger326shows stationTrue/position.01/indexFalse, sprayTrue/ventTrue and physicalamber/greenpilots. Sprayreadyloss373/held433clears spray whileventTrue; restore473resprayTrue. Ventreadyloss493/held553clearsbothspray/vent; restore586bothTrue. Stationposition.01remainsfixed throughthesecheckpoints. This proves outputinterlocks duringstationprocess, not movingconveyorarrest.
+
+AppStop620/held620 clearsallthreeoutputs andholds stationpose across1.2seconds; Run632restoresspray+vent. Later718stillbothTrue. Filename resume-discharge765 actuallyshows sprayFalse/ventTrue/indexFalse, stationTrue/.01: a ventilation-only purge checkpoint. Thus purge is captured and does not require another run. Later1071andindependent2491showactualworkpiece physicallyatexit2.23, exitTrue/stationFalse, allthreeoutputsFalse, motion/sprayinhibitedFalse. Workpiece movement fromupstream→station→exit is supported, but continuoussprayplume, coatingquality and fanrotation are notestablished. Greenventpilot tracksventcommand in theseimages.
+
+ResetRun22returnsworkpiece-2, bothreadyFalse, alloutputsFalse. No newissue. Exactphase/timerboundaries, freshSTARTwhileactive, movingindexinterruption, independentinhibit/fault cases, materialquality and mechanicalfanrate remainunproven. No whole-scene PASS.

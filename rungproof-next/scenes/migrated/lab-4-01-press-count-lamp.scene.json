@@ -21,7 +21,7 @@
     {
       "id": "switch_0",
       "type": "switch",
-      "label": "Press-Count Lamp switch",
+      "label": "Press count event input",
       "position": [
         -3.3000000000000003,
         0,
@@ -37,7 +37,7 @@
     {
       "id": "indicator_1",
       "type": "indicator",
-      "label": "Press-Count Lamp indicator",
+      "label": "Threshold lamp - count reached three",
       "position": [
         -1.1,
         0,
@@ -45,11 +45,41 @@
       ],
       "config": {
         "colors": [
-          "red",
-          "amber",
           "green"
         ],
-        "active": "red"
+        "active": "green"
+      }
+    },
+    {
+      "id": "switch_2",
+      "type": "switch",
+      "label": "Press-Count Lamp machine reset",
+      "position": [
+        -3.3000000000000003,
+        0,
+        1.55
+      ],
+      "config": {
+        "style": "pushbutton",
+        "action": "pulse-reset_pressed",
+        "faceLabel": "RESET",
+        "color": 16755234
+      }
+    },
+    {
+      "id": "training_accessory_3",
+      "type": "trainingAccessory",
+      "label": "Press-count accumulator display",
+      "position": [
+        1.1,
+        0,
+        0
+      ],
+      "config": {
+        "assetName": "press-count display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "COUNT"
       }
     }
   ],
@@ -63,11 +93,26 @@
         "initial": false
       },
       {
+        "name": "reset_pressed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine-level reset pushbutton input for the PLC CTU."
+      },
+      {
         "name": "threshold_lamp",
         "type": "BOOL",
         "owner": "PLC",
         "initial": false,
         "role": "output"
+      },
+      {
+        "name": "press_count_value",
+        "type": "DINT",
+        "owner": "PLC",
+        "initial": 0,
+        "role": "output",
+        "purpose": "PLC-owned CTU accumulator value published for the learner display."
       }
     ],
     "actions": [
@@ -76,6 +121,12 @@
         "label": "Pulse count button",
         "type": "pulse",
         "point": "pulse_received"
+      },
+      {
+        "id": "pulse-reset_pressed",
+        "label": "Machine reset pushbutton",
+        "type": "pulse",
+        "point": "reset_pressed"
       }
     ],
     "rules": [],
@@ -87,10 +138,22 @@
         "mode": "switch"
       },
       {
+        "point": "reset_pressed",
+        "equipmentId": "switch_2",
+        "mode": "switch"
+      },
+      {
         "point": "threshold_lamp",
         "equipmentId": "indicator_1",
         "mode": "indicator",
         "activeColor": "green"
+      },
+      {
+        "point": "press_count_value",
+        "equipmentId": "training_accessory_3",
+        "label": "COUNT",
+        "mode": "numericDisplay",
+        "format": "F0"
       }
     ]
   },
@@ -113,24 +176,27 @@
     "machineGuide": {
       "purpose": "A discrete counter lesson turns a station lamp on after a defined number of operator pulses.",
       "startConditions": [
-        "The common PLC/watchdog foundation is healthy.",
-        "All required simulator inputs are at their documented initial state."
+        "Use the built-in offline controller with the matching Demo 1 logic loaded and no active forces.",
+        "Run the app scan, release PULSE, and use machine RESET so COUNT is 0 and the threshold lamp is off."
       ],
       "normalSequence": [
         "Run the authored starter program.",
         "Press PULSE three times, allowing the input to release between presses.",
-        "Verify threshold_lamp stays off for the first two pulses and turns on after the third."
+        "Verify the COUNT display advances 1, 2, 3 while threshold_lamp stays off for the first two pulses and turns on after the third."
       ],
       "stopBehavior": [
         "Stop removes the lamp command without clearing the counter.",
         "Reset clears the counter and returns the input and lamp to false."
       ],
       "faultBehavior": [
-        "A missing or stale input must fail safe and remain diagnosable."
+        "A held PULSE supplies only one rising edge and must not repeatedly increment the CTU.",
+        "If COUNT changes without a fresh edge, inspect pulse_received and press_count in the live trace before continuing."
       ],
       "expectedObservations": [
-        "A Ladder CTU counts pulse_received rising edges and turns the lamp on at its preset."
-      ]
+        "A Ladder CTU counts pulse_received rising edges, publishes its accumulator to the COUNT display, and turns the lamp on at its preset.",
+        "Machine Reset returns COUNT to 0 and the threshold lamp to off; a new pulse begins a fresh count at 1."
+      ],
+      "acceptance": "Three distinct PULSE presses produce COUNT 3 and threshold_lamp ON; RESET returns COUNT 0 and lamp OFF."
     },
     "sequenceNumber": 28,
     "inheritsFrom": "lab-3-02-robot-cell-safe-restart",

@@ -23,9 +23,9 @@ This matrix compares authored ladder execution with scene behavior. Native obser
 | --- | --- | --- | --- |
 | 1 / Press_Count_Main, CTU preset 3 | Each operator pulse counts once; lamp off for counts 1–2, on at 3; idle does not recount. | Native process 28244: first two pulses lamp off; third pulse scan1568 showed threshold_lamp TRUE and green lamp. | Main.PressCountWorkflowReview.cs drives actual scene actions through physics, checks count and projected lamp each pulse and idle. Native Stop2246 cleared lamp; Reset0 restored initial scene. Counter memory is retained by Stop and cleared by Reset. |
 | 2 / Delayed_Lamp_Main, TON 2 s | Maintained request waits 100 ordinary 20 ms scans before lamp turns on; OFF resets timer/output. Stop cancels delay; retained ON after Run needs a fresh full delay. | Process28244: request TRUE/lampFALSE scan1143, later lampTRUE/visible green1604; OFF2784 lampFALSE. These screenshots do not measure the exact two-second boundary. | Main.TimerLessonReview.cs tests actual authored program/scene at scan99 ET1.98/outputFALSE and scan100 ET2/outputTRUE, OFF, Stop, restart and Reset. Native Stop3409, Reset0. Exact timing is model scan evidence, not wall-clock/native pixel timing certification. |
-| 3 / Conveyor_Sequence_Main, seal-in and photoeye inhibit | Run alone idle. Start pulse seals output; actual carton travel blocks beam; next scan removes seal/output and carton holds. Stop pulse before beam stops travel. | Rebuilt process31316: Run40 idle594; Start1270 outputTRUE/position0.39/photoeyeFALSE and carton displacement. At1761 position0.50/photoeyeTRUE/outputFALSE; unchanged2373. | Main.DemoSequenceReview.cs checks real carton transform and visible beam nodes, released Start/no forces, next-scan feedback, early Stop pulse, pose hold and controller Stop/Reset. Native Stop3560 retained beam carton; Reset0 restored position0/beam clear/outputFALSE. |
-| 4 / Batch_Process_Main, OB/FB/FC | Valid type and count request gate fresh detection edges; enabling a gate with detection already held must not manufacture an edge. Count/readout advances to5, validity lamp turns on. | Process28244: invalid detection count0; enabled gates with held detection remained0; fresh edges counted1–5, held input retained1, threshold scan9427 showed validTRUE and green lamp. | Main.TransferCartonReview.cs checks actual action→same-scan numeric output/readout, held detection, loss of validity and retained counter memory. Native Stop11338 outputcount0/validFALSE; Reset0 initial inputs/count. This is a manual detection/count lesson, not a commanded pallet transport animation. |
-| 5 / Palletizing_Cell_Main, OB/2FB/2FC/2DB | Fresh Start with pallet permissive commands pickup, vacuum attachment, carry, release and home. Placement feedback counts real transfers; four complete the layer. Lost permissive holds motion; restore alone cannot restart. Full layer rejects fifth Load. | Process28244: four cartons visibly retained, placed1/2/3/4, cycleinactive/faultFALSE, fourth layer_completeTRUE at13614. Missing permissive blocked second Start6114; restore6900 idle, fresh Start7616 cycled. Fifth Load22016 explicitly blocked; Start22374 no extra placement. | Main.PalletizerAudit.cs drives actual loaded ladder and plant, checks attached carton/tool alignment, away/place/completion/home feedback and count after each transfer, Stop in pickup/carry/release/return, explicit resume and Reset. Native Stop22638 outputsFALSE/placed4 retained; Reset0 initial home/placed0. Native endpoint screenshots are supplemented by controller-driven phase/transform checks. |
+| 3 / Height_Sorting_Main, 600 mm boundary | App Run alone is idle. System Enable plus machine Start admits the repeatable 420/820/600 mm sequence. Cartons above 600 mm divert to the side line; cartons at or below 600 mm pass the main line. Stop, simulated trip, overload, and Reset are scan-visible. | Current headless `--verify-demo-sequence` passed all 25 checks: 420 mm main, 820 mm side, 600 mm main, PLC pusher command on the tall carton, machine Stop pose hold, trip fresh-start inhibition, Reset, and repeat. | The authored ladder owns run state, compare, divert memory, commands, FB calls, and faults. `ConveyorPlantModel` only integrates commands and publishes height, limits, and exit sensors. This is offline modeled evidence, not native visual or safety proof. |
+| 4 / Batch_Process_Main, parameterized FB/FC and DB101 | Valid type and count request gate fresh detection edges. `FB_ValidPalletCounter` stores its CTU in Static `CountState` within assigned DB101 and copies typed count/done outputs to Main; `FC_BatchValidation` gates validity. | Current controller and five-demo checks counted 1–5, rejected invalid/held events, published same-scan DINT count, retained state across Stop, cleared on machine Reset, and began a repeat batch at 1. | The real instance DB, typed bindings, FC call, monitorable outputs, and restart behavior are source- and scan-verified. This is a count/inspection lesson, not pallet motion. |
+| 5 / Palletizing_Cell_Main, Main plus axis/gripper/encoder FBs | Fresh Start with pallet permissive commands pickup, attachment, measured transfer, release, and home. Main consumes encoder-FB position/home/fault outputs and process feedback to advance four placements. | Current `--verify-five-demo-learner` passed the four-carton 20 ms scan trace through steps 10–100, all six axis directions, four placement/home edges, Stop, trip, permissive loss, Reset, wrong-program, and invalid-current cases. | X/Y/Z axis DB101–DB103, gripper DB104, and X/Y/Z encoder DB105–DB107 are distinct. The plant remains kinematic/feedback-only. Offline success does not prove native appearance, installed TIA parity, hardware, or safety. |
 
 ## Current verification records
 
@@ -92,32 +92,40 @@ scanned ladder or called PLC blocks. If a lesson intentionally models a
 device-local behavior outside the PLC (for example, continuous mechanical
 coast-down), document that behavior and keep it bounded to the plant model.
 
-The five starter lessons below should show a clear progression rather than
-hiding their learning objective in scene code. Extend the same PLC-ownership
-and appropriate-control audit to each additional demo in the gallery:
+The five authored demos form one progressive curriculum. Complexity must grow
+through added control concepts and plant behavior, not by inflating tag or rung
+counts. Every signal must correspond to a real modeled control, sensor,
+actuator, process value, or PLC state used by the program. Each demo must be
+repeatable from its own machine-level controls; app playback Reset is not a
+substitute for a PLC reset rung.
 
-| Demo | Learner-visible control and PLC lesson | Hard acceptance check |
+| Demo | Intended progression and meaningful behavior | Hard acceptance check |
 | --- | --- | --- |
-| 1 — Press count | Machine-level pulse/count/reset controls; CTU owns the count and lamp decision. | Operate each control and trace it through the input tag, scanned counter/output logic, and lamp. Reset must clear the counter through the authored project. |
-| 2 — Delayed lamp | Request, Stop, and Reset; TON owns the delay and output decision. | Prove the timer starts, resets on the defined condition, and cannot be cleared only by app lifecycle controls. |
-| 3 — Conveyor | Start/Stop/Reset plus simulated safety-trip status; seal-in and restart interlocks own conveyor permission. | Trace safety trip, blocked restart, reset/clear, and fresh start through ladder scans and measured conveyor/photoeye feedback. The safety simulation is not safety-rated. |
-| 4 — Batch process | Start/Stop/Reset and explicit type/count permissives; visible FB/FC calls own edge qualification, counting, and publication. | Operate permissives and reset; prove held detection does not fabricate edges and no background script performs the count or decision. |
-| 5 — Palletizing cell | System Enable, Start/Stop/Reset, simulated safety status, axis permissions/interlocks, and separate X/Y/Z and vacuum/gripper FB instances with DBs. | Main owns sequence and each scanned motor command. Encoder/limit and gripper feedback advance it. Trace stop, permissive/safety loss, reset/restart inhibit, pickup, four placements, and layer completion. No plant-owned phase enum or `gantry_cycle` request may select the movement sequence. |
+| 1 — Press count | First scan-level lesson: a momentary operator pulse increments a CTU; the threshold drives a visible lamp; a dedicated machine Reset clears the counter and output so the exercise can be repeated without resetting the scene. | Press 1–2 times, verify lamp off; press 3, verify lamp on; pulse Reset and verify CV/lamp clear; repeat the full cycle. A held button counts once per accepted rising edge. No E-stop is added to this non-motion exercise. |
+| 2 — Delayed lamp | Add maintained request, a TON, elapsed-time observation, a distinct Stop and machine Reset. Teach request drop, Stop, and Reset effects as separate control paths. | Verify the exact scan boundary, request-off timer reset, Stop output removal, Reset timer clear, and a repeat cycle without app Reset. No E-stop is added to this non-motion exercise. |
+| 3 — Height sorting pusher cell | Replace the stop-only lesson with a real material-routing decision. A measured carton height is compared against a documented threshold in LAD. Tall cartons are diverted by a pusher to a side takeaway line; shorter cartons continue on the main line. Add feed/transfer sensing, pusher extended/retracted feedback, system enable, Start/Stop/Reset, and a simulated motion-trip interlock with fresh-start inhibition. | Exercise short, tall, and boundary-height cartons. Trace measured height → PLC compare/state → conveyor and pusher FB/DB outputs → plant movement → destination feedback. Verify short cartons pass, tall cartons transfer once, pusher retracts before the next feed, blocked sensors inhibit restart, trip requires clear+Reset+fresh Start, and Reset restores a repeatable test state. The simulated trip is not safety-rated. |
+| 4 — Batch inspection and accumulation | Add reusable FB/FC boundaries, typed interfaces, instance state, validated product inputs, edge qualification, batch target/ready logic, and PLC-owned count publication. The physical lesson remains a count/inspection cell, not an invented pallet-moving machine. | Verify invalid products do not count; enabling a permissive while detection is held does not invent an edge; only a new accepted event increments the count. Stop policy and Reset policy are explicit, repeatable, and visible; FB instances are called from Main with inspectable DBs where stateful. Verify batch completion and start a second batch using machine Reset. |
+| 5 — Integrated palletizing cell | Capstone: multi-axis motion, measured encoder/limit feedback, gripper process feedback, multiple FB instances with distinct DBs, coordinated sequence in Main, permissives, faults, layer pattern/count, and recovery. I/O scale follows the actual equipment; no arbitrary tag target. | Prove each sequence transition is decided by scanned LAD and called blocks; each actuator command reaches the plant and feedback returns on a later scan. Exercise all axes/directions, grip/release, four placements, Stop/restart, trip/permissive/fault inhibition, Reset and a second complete layer. No plant-owned phase enum or high-level `gantry_cycle` command may sequence motion. |
+
+The catalog currently contains five authored demo entries. The demo menu,
+checked-in project fixtures, scene bindings, PLC tags, and functional checks
+must all describe the same five projects. Any additional practice scenes in the
+larger gallery are not silently counted as authored demos or used as a proxy
+for one of these five acceptance rows.
 
 ### Static source inventory — current implementation
 
-This is a static source review, not a running-scene or functional pass. It is a
-baseline for the changes above; each row stays open until its controls are
-operated and the ladder, accepted scans, scene response, and feedback are
-inspected together.
+This is a static source review, not a running-scene or functional pass. It
+records the current source state; every behavior remains open until its
+controls, ladder scans, scene response, and feedback are verified together.
 
 | Demo | Source-confirmed baseline and gap |
 | --- | --- |
-| 1 — Press count | `pulse_received` drives the CTU and `threshold_lamp`; the scene has a pulse button and lamp. No machine Reset input/rung is authored. No E-stop is needed for this non-motion exercise. |
-| 2 — Delayed lamp | `timer_request` drives TON and `delayed_lamp`; the scene has a selector and lamp. There is no distinct machine Reset control/rung. No E-stop is needed for this non-motion exercise. |
-| 3 — Conveyor | Main has Start/Stop seal-in and photoeye logic and the plant follows `conveyor_running`. System Enable, Reset, safety-trip/restart inhibit, motor fault feedback, and a dedicated motor FB/instance DB are absent from the current authored logic. |
-| 4 — Batch process | Validation and edge-qualified counting use FB/FC logic, but no Reset input/rung is authored and the legacy FB call has no assigned instance DB. This scene is a count station, not a pallet-motion cell. |
-| 5 — Palletizing cell | **Superseded baseline:** Main formerly latched `gantry_cycle` and `PalletizerPlantModel` owned the phases. Current source uses a visible numeric sequence, machine controls, encoder/process transitions, three X/Y/Z axis FB instances, one vacuum/gripper FB instance, distinct DB101–DB104, and six direction outputs. See the dated implementation evidence below. |
+| 1 — Press count | `pulse_received` drives the CTU and `threshold_lamp`; the scene has a pulse button, lamp, and `reset_pressed` input/rung. The focused workflow review exercises reset and a repeated count cycle. No E-stop is needed for this non-motion exercise. |
+| 2 — Delayed lamp | `timer_request` drives TON and `delayed_lamp`; visible machine Stop/Reset inputs clear the timer and disarm restart until a fresh request-off/request-on cycle. The timer review exercises exact scan boundaries and repeat. No E-stop is needed for this non-motion exercise. |
+| 3 — Height sorting pusher cell | Authored project targets `scene-2-conveyor-pusher`; the 600 mm compare, 420/820/600 mm route sequence, main/side feedback, machine controls, trip/overload recovery, pusher/conveyor FBs, and DB101/DB102 passed current offline verification. Native visual inspection remains separate. |
+| 4 — Batch inspection and accumulation | The counter is now a parameterized FB with Static CTU state in assigned DB101, explicit typed inputs/outputs, a called FC validation stage, correct raw detection-edge qualification, machine controls, and repeatable Reset behavior. The learner-facing `NEW PALLET` input is a momentary event: one press produces at most one accepted rising edge and releases automatically, while TYPE VALID and COUNT REQUEST remain maintained permissives. Current offline controller and five-demo checks pass. |
+| 5 — Palletizing cell | Main owns the numeric sequence. Axis/gripper calls use DB101–DB104; three encoder FB calls use DB105–DB107 and pass measured position/home/fault status into Main. Current offline controller, palletizer, fixture, and five-demo checks pass; native and installed-TIA evidence remain separate. |
 
 The specific Demo 5 plant interface and scene controls are also documented in
 `docs/TIA_PORTAL_PARITY_AUDIT.md`. Static inspection alone does not establish
@@ -200,3 +208,115 @@ network origins, hidden/shown supplementary tag information, TON Q/ET row
 alignment, and an explicitly unassigned PT operand. See the dated evidence
 section in `TIA_PORTAL_PARITY_AUDIT.md`; those captures are references, not proof
 that the current RungProof view passes.
+
+### Demo 4 current production-path screen evidence — 2026-10-21
+
+The deterministic `operator-demo4-active` review state now advances only the
+same production **NEXT ACTION** control exposed to the learner. It loads and
+runs the current Demo 4 draft, issues machine Start, enables Type OK and Count
+Request, submits five momentary New Pallet edges, performs the required machine
+Reset, starts again, and submits the first valid event of batch two. The route
+is idempotent so repeated capture initialization cannot advance the lesson a
+second time.
+
+The inspected 1600×900 normal-renderer capture
+`outputs/demo4-current-functional-pass.png` shows the real completion dialog,
+local runtime RUNNING, maintained permissives ON, and the captured proof:
+first batch count 5, machine Reset to 0, and batch-two count 1. The focused
+capture now waits for the route's explicit prepared state, preventing the
+former in-progress fourth-event frame from being saved as evidence. The focused
+build passed with 0 warnings and 0 errors. This is local production-handler,
+offline scan, and rendered UI evidence; PLC transport remained disconnected.
+
+### Demo 1 current production-path screen evidence — 2026-10-21
+
+Demo 1 no longer awards a curriculum pass at the first CTU threshold alone.
+Its session gate now requires first count 3, the dedicated machine Reset to
+publish both lamp OFF and count 0, and a second three-edge count. The progress
+bar distinguishes first-count, reset, and repeat-count phases. Pass evidence is
+deferred until the controller CTU snapshot and the visible published count
+describe the same accepted scan, preventing a misleading `CV=2` / visible
+`COUNT 3` dialog.
+
+The idempotent `operator-demo1-active` review state uses only the learner's
+production **NEXT ACTION** control to load/run, submit the two three-edge
+cycles, and operate machine Reset. The inspected 1600×900 normal-renderer
+capture `outputs/demo1-passed-reset-repeat.png` shows the real pass dialog with
+`press_count=CV=3 Q=TRUE`, `press_count_value=3`, the threshold lamp ON, and
+recovery proof `first count 3 + machine RESET to 0 + repeat count 3`. The
+focused build passed with 0 warnings and 0 errors. PLC transport remained
+disconnected.
+
+### Demo 2 current production-path screen evidence — 2026-10-21
+
+Demo 2 no longer awards a curriculum pass when the delayed lamp first reaches
+Q. Its session gate now requires a complete first 2000 ms TON, a dedicated
+machine Stop with the lamp de-energized, machine Reset with ET returned to 0,
+REQUEST OFF to clear the maintained command, REQUEST ON again, and a second
+complete 2000 ms TON. The progress presentation distinguishes all five phases.
+
+The idempotent `operator-demo2-active` review state drives the same production
+**NEXT ACTION** control and waits on accepted runtime state between each phase.
+The inspected 1600×900 normal-renderer capture
+`outputs/demo2-passed-stop-reset-repeat.png` shows the real pass dialog with
+`delay_timer=ET=2000ms Q=TRUE`, visible elapsed 2000, delayed lamp TRUE, and
+the complete Stop/Reset/request-clear/repeat proof. The focused build passed
+with 0 warnings and 0 errors. PLC transport remained disconnected.
+
+### Demo 3 current production-path screen evidence — 2026-10-21
+
+Demo 3 no longer awards a curriculum pass after the three carton routes alone.
+Its session gate now requires the 420 mm main-line route, 820 mm side divert,
+and inclusive 600 mm main-line route, followed by machine Stop/fresh Start,
+simulated trip clear/machine Reset/fresh Start, and simulated drive-overload
+clear/machine Reset/fresh Start. The progress presentation names each recovery
+phase, and PLC-owned `machine_run` gates are read from the accepted controller
+snapshot rather than the scene's projected copy.
+
+The idempotent `operator-demo3-active` review state uses only the learner's
+production **NEXT ACTION** control. Its capture is held until the full recovery
+route explicitly reports prepared/passed, preventing a fixed-frame screenshot
+from recording an in-progress state. The inspected 1600×900 normal-renderer
+capture `outputs/demo3-passed-full-recovery.png` shows the real pass dialog,
+`machine_run=TRUE`, both simulated faults OFF, and recovery proof `three carton
+routes + machine STOP/restart + trip clear/RESET/restart + overload
+clear/RESET/restart`. The focused build passed with 0 warnings and 0 errors.
+This is local production-handler, offline scan, and rendered UI evidence; PLC
+transport remained disconnected.
+
+### Five-demo cumulative production-path evidence — 2026-10-21
+
+The deterministic `operator-five-demo-active` route now runs Demos 1–5 in one
+continuous curriculum session. It changes scenes through the normal scene
+request path, invokes each lesson's idempotent production **NEXT ACTION** route,
+and refuses to advance until that lesson is present in the session completion
+set. The generic screenshot timer is held until all five lessons report passed.
+
+The inspected 1600×900 normal-renderer capture
+`outputs/five-demo-current-complete.png` shows the application's own
+**Five-demo curriculum complete** dialog, `All five demos passed this session`,
+and the bottom status `DEMO 5/5 · 5 PASSED`. The final proof remains the real
+Demo 5 scan with `placed_cartons=4`, `layer_complete=TRUE`, and its complete
+recovery history. This current-build rerun followed the Demo 3 infeed and Demo 4
+capture-timing corrections. The focused build passed with 0 warnings and 0 errors. This
+is cumulative local production-handler/offline-scan/rendered evidence, not
+installed-TIA, OS pointer, live-PLC, commissioning, or safety proof.
+
+### Demo 5 current production-path screen evidence — 2026-10-21
+
+Demo 5 no longer treats a Reset and repeated layer alone as the full recovery
+exercise. After the first PLC-owned four-carton layer, the learner must Reset
+the completed layer, restart, prove machine Stop/fresh Start, prove simulated
+trip clear/Reset/fresh Start, remove and restore the pallet-position permissive,
+Reset again, issue a final fresh Start, and complete the second four-carton
+layer. The ordering matches the authored PLC: `layer_complete` inhibits a new
+Start until the completed layer is Reset.
+
+The idempotent `operator-demo5-active` review state advances only the learner's
+production **NEXT ACTION** control and waits for each PLC-owned state transition
+and measured pick/place sequence. The inspected 1600×900 normal-renderer
+capture `outputs/demo5-passed-full-recovery.png` shows the real pass dialog with
+`placed_cartons=4`, `layer_complete=TRUE`, both recovery inputs restored, and
+the complete two-layer Stop/trip/pallet-loss recovery proof. The focused build
+passed with 0 warnings and 0 errors. This is local production-handler, offline
+scan, and rendered UI evidence; PLC transport remained disconnected.

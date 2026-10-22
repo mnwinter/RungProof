@@ -1,0 +1,1 @@
+[{"name": "lab1002-completed", "monitor_only": true, "keep_monitor": true, "expected": {"product_weighed": true, "printer_ready": true, "label_data_valid": true, "label_applied": true, "product_present": true, "print_complete": true, "application_complete": true, "print_request": false, "apply_request": false, "weight_kg": 1.237, "label_text": "CHICKEN 1.237 kg"}}]

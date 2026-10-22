@@ -1,0 +1,22 @@
+[
+  {
+    "scene_id": "lab-4-05-dual-input-count-window",
+    "invalid_original": "lab-4-05-dual-input-count-window.rpproj.json",
+    "invalid_archive": "lab-4-05-dual-input-count-window-invalid-v1.json",
+    "invalid_v1_sha256": "5cda3fd6f4b0d5d733893257da5f0f7297ac3c52e8287c0428355aeb064fd7ea",
+    "replacement": "lab-4-05-dual-input-count-window-v2.rpproj.json",
+    "replacement_sha256": "37e7e74b1749761656b80fbd376d253430e6628331200acc39739db0c10dbb1c",
+    "change": "Counter qa_count_a and its reset share DB101/QA_CountA_DB; qa_count_b and its reset share DB102/QA_CountB_DB. All other fixture content retained.",
+    "status": "DECLARATIVE_REPAIR_ONLY_UI_LOAD_REQUIRED"
+  },
+  {
+    "scene_id": "lab-4-06-multi-press-confirmation",
+    "invalid_original": "lab-4-06-multi-press-confirmation.rpproj.json",
+    "invalid_archive": "lab-4-06-multi-press-confirmation-invalid-v1.json",
+    "invalid_v1_sha256": "3108b4bc972df6c85c77b3dfa29ed265ef1f37438e731cbc8f918a943e7428e3",
+    "replacement": "lab-4-06-multi-press-confirmation-v2.rpproj.json",
+    "replacement_sha256": "dd0941ab6a3312a582cca5a8bb9bf9a5432ffd60c961d36543c1c57f9b09708b",
+    "change": "Counter qa_count_a and its reset share DB101/QA_CountA_DB; qa_count_b and its reset share DB102/QA_CountB_DB. All other fixture content retained.",
+    "status": "DECLARATIVE_REPAIR_ONLY_UI_LOAD_REQUIRED"
+  }
+]

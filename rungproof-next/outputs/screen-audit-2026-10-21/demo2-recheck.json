@@ -1,0 +1,9 @@
+[
+ {"click":[467,314],"wait":0.3,"capture":"demo2-recheck-request-off"},
+ {"click":[467,314],"wait":0.7,"capture":"demo2-recheck-before-delay"},
+ {"wait":1.7,"capture":"demo2-recheck-after-delay"},
+ {"click":[855,334],"wait":0.4,"capture":"demo2-recheck-stop"},
+ {"click":[467,314],"wait":0.3},
+ {"click":[467,314],"wait":2.4,"capture":"demo2-recheck-restart"},
+ {"click":[1085,338],"wait":0.4,"capture":"demo2-recheck-reset"}
+]

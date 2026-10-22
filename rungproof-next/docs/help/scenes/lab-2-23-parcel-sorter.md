@@ -14,7 +14,18 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `start_sort_request` | `BOOL` | **PC** | `False` |
 | `conveyors_run` | `BOOL` | **PLC** | `False` |
+| `infeed_run` | `BOOL` | **PLC** | `False` |
+| `table_transfer_run` | `BOOL` | **PLC** | `False` |
+| `infeed_gate_open` | `BOOL` | **PLC** | `False` |
+| `primary_table_loaded` | `BOOL` | **PC** | `False` |
+| `primary_table_clear` | `BOOL` | **PC** | `True` |
+| `primary_table_aligned` | `BOOL` | **PC** | `False` |
+| `infeed_gate_clear` | `BOOL` | **PC** | `False` |
+| `transfer_inhibited` | `BOOL` | **PC** | `False` |
+| `misroute_detected` | `BOOL` | **PC** | `False` |
+| `all_parcels_received` | `BOOL` | **PC** | `False` |
 | `large_detected` | `BOOL` | **PC** | `False` |
 | `medium_detected` | `BOOL` | **PC** | `False` |
 | `small_detected` | `BOOL` | **PC** | `False` |
@@ -27,9 +38,11 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Sort three-parcel batch` | `start` | `sort-batch` |
+| `Sort three-parcel batch` | `start` | Loaded controller: pulse `start_sort_request` (legacy preview: `sort-batch`) |
 | `Stop sorter` | `stop` | `` |
 | `Reset parcels` | `reset` | `` |
+
+With a loaded ladder controller, each Start action pulses the named PC-owned BOOL request binding; the learner program decides actuator commands. A legacy preview sequence name does not imply that the loaded controller automatically executes that sequence.
 
 ## Equipment bindings
 
@@ -77,7 +90,7 @@ Declared simulation safe state:
 
 ## Machine guide
 
-Illustrative three-parcel transfer: load, index the flat primary table, then send each parcel onto its supported takeaway path. A secondary table carries the medium route. This is scripted plant geometry, not a validated conveyor contact or real PLC process model.
+Illustrative three-parcel transfer: load, index the flat primary table, then send each parcel onto its supported takeaway path. A secondary table carries the medium route. Loaded-controller operation uses the command-driven mechanism contract below; legacy standalone preview remains scripted geometry.
 
 ### Start conditions
 
@@ -104,4 +117,13 @@ Illustrative three-parcel transfer: load, index the flat primary table, then sen
 ### Expected observations
 
 - One parcel reaches each lane and the sorted count ends at three.
-- The cartons pause at the table center before indexing. Scripted queue holds and size feedback do not prove physical sensing, friction or throughput.
+- The learner stops each carton at the table-center sensor before indexing. The explicit escapement meters the queue. Rigid-load support samples and height classification do not prove hardware sensing, friction or throughput.
+
+
+## Command-driven transfer contract
+
+Loaded-controller operation adds independently commanded infeed and primary transfer drives plus a visible retractable escapement at x=-2.7. The height bank is mounted at x=-2.75 so a queued parcel retains its geometry-derived size indication. `conveyors_run` enables the transfer/takeaway belt group; `infeed_run` enables the infeed belt; `table_transfer_run` enables parcel motion while on the primary deck. `infeed_gate_open` retracts the visible stop. Opening a gate does not start a belt. The original common command and legacy sequence remain declared; existing ladder projects must explicitly add the new actuator outputs and feedback to run this full cell.
+
+LAD must latch the observed class, open the gate, wait for rear-clear, close it, stop at the primary center sensor, command angle 0/0.5/1 (0/45/90 degrees), wait for actual alignment, transfer until the primary is clear, then return the table home before feeding the next parcel. The plant does not choose a route from size. The secondary table is the fixed diagonal transfer datum. Transfer at an unsupported intermediate angle is inhibited without changing PLC commands. A centered parcel follows the actual commanded table angle; full 90-degree slew takes 1.2 s.
+
+`primary_table_loaded` is the 25 mm radius center sensor, not a motor-stop command. `primary_table_clear` means no parcel intersects the primary deck. `infeed_gate_clear` resets on each opening and sets after the released parcel rear clears the stop. `all_parcels_received` reports three correctly received parcels, allowing LAD to stop the group explicitly. SIM count/completion never issue stop or route commands. Wrong-lane arrival sets `misroute_detected`. The scene uses a bounded rigid-carton contact/support approximation, not calibrated friction or rated conveyor throughput. Active Stop freezes mechanisms; Reset restores the queue/table/counts. No private timed sequence runs in controller mode.

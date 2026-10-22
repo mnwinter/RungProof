@@ -1,0 +1,1 @@
+[{"name": "lab1106-calibration-0", "click": [1049, 599], "expected": {}, "monitor_only": true, "keep_monitor": true}, {"name": "lab1106-calibration-1", "click": [1063, 603], "expected": {}, "monitor_only": true, "keep_monitor": true}, {"name": "lab1106-calibration-2", "click": [1076, 607], "expected": {}, "monitor_only": true, "keep_monitor": true}]

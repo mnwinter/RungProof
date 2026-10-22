@@ -1,0 +1,10 @@
+[
+ {"click":[1512,669],"wait":0.3},
+ {"click":[1258,616],"wait":3,"capture":"demo3-start-motion"},
+ {"wait":12,"capture":"demo3-normal-progress"},
+ {"click":[1334,558],"wait":0.6,"capture":"demo3-trip"},
+ {"click":[1258,616],"wait":1,"capture":"demo3-trip-blocked-start"},
+ {"click":[1334,558],"wait":0.5},
+ {"click":[1418,648],"wait":0.5},
+ {"click":[1258,616],"wait":4,"capture":"demo3-trip-recover"}
+]

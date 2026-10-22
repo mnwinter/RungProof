@@ -1,0 +1,4 @@
+[
+ {"click":[595,39],"wait":0.2},
+ {"click":[694,38],"wait":0.5,"capture":"demo3-operator-console"}
+]

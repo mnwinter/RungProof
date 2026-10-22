@@ -1,6 +1,6 @@
 # Installed TIA capture pack
 
-Updated: 2026-10-15
+Updated: 2026-10-21
 
 This checklist collects the external evidence that local RungProof automation
 cannot create. It is not a commissioning procedure and does not require a live
@@ -18,7 +18,7 @@ Record these values once for every capture session:
 
 | Field | Required value |
 | --- | --- |
-| TIA Portal version and full build | Exact installed version/build, not only “V21” |
+| TIA Portal version and full build | Exact installed version/build, not only “V17” |
 | CPU target | Exact CPU family and order number used by the project |
 | CPU firmware | Exact configured firmware |
 | Execution source | PLCSIM, test PLC, or offline editor only |
@@ -33,6 +33,32 @@ Record these values once for every capture session:
 | Date/time | Local time and time zone |
 
 If TIA does not expose an exact value, record `not exposed`; do not infer it.
+
+### 2026-10-21 installed V17 offline session
+
+| Field | Recorded value |
+| --- | --- |
+| TIA executable file/product version | `1700.0.4302.1` |
+| Installed product | `Siemens Totally Integrated Automation Portal V17` |
+| Project | `Winters_TIA_Bench.ap17` |
+| CPU shown in project tree | `CPU 1512SP-1 PN`; order number and configured firmware not exposed in these captures |
+| Execution source | Offline editor only |
+| Safety boundary | No Save, download, connection, force, PLCSIM, or PLC action |
+| Captured objects | Project View; expanded PLC project tree; `Pulse_Cycle_DB [DB6]`; Default tag table; Watch table 1 |
+
+Accepted capture hashes:
+
+| File | SHA-256 |
+| --- | --- |
+| `tia-v17-project-view.png` | `AA99F7A33CF338DC7DBD448581A6ABD45C0988A2926D1B9244AE7E5732893FE5` |
+| `tia-v17-instance-db-properties.png` | `990A09BB6A283A1EEE31189F4EC3240C061CA29FE38F8A3AAE39CFB13DB18D14` |
+| `tia-v17-plc-tag-table-properties.png` | `0AC9E4E2B69E60BA843D90D596869F762FA5423DC88CD4E8E7A8E713A66E3EA4` |
+| `tia-v17-watch-table.png` | `26A9C00E86608E25A67CB523A86E2E7B49293254BDAE9F2D719BCFC913DFA7A9` |
+
+These files are stored in
+`C:\Users\matt.winter\Documents\Codex\2026-10-20\rungproof\outputs`.
+They establish the installed V17 side only; same-object/same-state pairing to
+RungProof remains open.
 
 ## Required fixture rules
 
@@ -63,9 +89,9 @@ tia-<version>-<cpu>-<key>-<state>-z<zoom>-<tagmode>-<sequence>.png
 Examples:
 
 ```text
-tia-v21-1516-no-offline-z100-symbolic-01.png
-tia-v21-1516-ton-accumulating-z100-symbolic-02.png
-tia-v21-1516-call-edit-z100-symbolic-01.png
+tia-v17-1512-project-view-offline-z100-symbolic-01.png
+tia-v17-1512-db-declarations-offline-z100-symbolic-01.png
+tia-v17-1512-watch-table-offline-z100-symbolic-01.png
 ```
 
 For every accepted file, add its SHA-256, session record, matrix key, gate,

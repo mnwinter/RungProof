@@ -1,0 +1,1 @@
+[{"click": [913, 532], "wait": 0.9}, {"click": [957, 550], "wait": 0.15, "capture": "lab1002-ready-loss-paused-early"}, {"wait": 1.2, "capture": "lab1002-ready-loss-paused-late"}, {"click": [957, 550], "wait": 1.5, "capture": "lab1002-ready-restored-complete"}]

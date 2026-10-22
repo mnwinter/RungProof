@@ -1,0 +1,658 @@
+[
+  {
+    "image": "lab1006-v2-flow-fast-00.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      28.292,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-01.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      28.292,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-02.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-03.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-04.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-05.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-06.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-07.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-08.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-09.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-10.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-11.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-12.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-13.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-14.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-15.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-16.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      26.852,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-17.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      26.852,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-18.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      26.852,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-19.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      26.852,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-fast-20.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      26.852,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-00.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-01.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-02.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-03.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-04.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-05.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-06.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      27.919,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-07.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      27.919,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-08.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      27.919,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-09.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      27.919,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-10.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      27.919,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-11.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-12.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-13.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-14.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-15.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-16.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-17.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      25.949,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-18.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      27.734,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  },
+  {
+    "image": "lab1006-v2-flow-resume-19.png",
+    "visible_value_pixel_differences": [
+      37.075,
+      36.962,
+      41.796,
+      26.574,
+      24.604,
+      25.983,
+      27.734,
+      25.857,
+      26.153,
+      25.68
+    ],
+    "max_difference": 41.796
+  }
+]

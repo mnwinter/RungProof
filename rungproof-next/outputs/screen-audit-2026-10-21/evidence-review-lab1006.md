@@ -1,0 +1,11 @@
+# Lab 10.6 independent native review
+
+Reviewed9proper v2-r3 truth frames plus48 flow/recovery capture actions (57 native frames) and enlarged fresh-flow panel. Five compact motion sheets retain physical product progression; native originals/enlarged panel resolve array values. Loaded reviewer fixture scope only; no reviewer UI/backend operations. Earlier r2 OCR splits/tail expectation failures excluded.
+
+All eight request/ready/alarm-clear combinations are present. Seven incomplete combinations show ten False motor_commands and legacy motor_0_run through motor_9_run/motor_array_runFalse. All permissives443 and later516 show ten True array commands while legacy outputs stayFalse. Physical panel green indication lights only with the complete permissives. Fixture writes startup_sequence_active=True alongside the commands; this is not evidence of a sequential startup algorithm.
+
+Reset before fresh flow returns STOPPED0/all commandsFalse and product upstream. Early fresh-flow native75 shows all ten commandsTrue and zone_occupied_0=True; the enlarged lab1006-fresh-flow-panel.png directly confirms this. Product visibly advances along the first conveyor section, then zone_occupied_1 becomesTrue near181 and staysTrue through208. Other inspected occupancy fields remainFalse in those frames. Thus movement is supported through the array route while legacy outputsFalse; individual motor shaft rotation or all ten-zone traversal is not proved.
+
+Alarm-clear loss early221/held268 clears all ten commands and startup_sequence_active, physically darkens panel indication and leaves product/zone1 fixed across1.2 seconds while runtime continues. Restore281 republishes all commands/startup flagTrue. AppStop early/held both STOPPED295 with commands/startupFalse and the same product pose/zone1. Run299 republishes all tenTrue. Subsequent resume frames show visible downstream product progression, including zone2True at489/502 and zone3True at555; final562 is still in transit. Full conveyor exit/completion is not captured.
+
+No new issue. Sequential startup ordering/delays, independent array-element gating, all ten motor animations/zone transitions, complete product traversal, fault injection and long-duration flow remain unproven. No whole-scene PASS.

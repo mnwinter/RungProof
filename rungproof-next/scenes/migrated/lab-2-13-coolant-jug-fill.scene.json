@@ -139,7 +139,17 @@
   ],
   "simulation": {
     "type": "sequence",
+    "jugFillPlant": true,
+    "jugExitX": 3.5,
+    "jugFillFractionPerSecond": 0.45454545454545453,
     "points": [
+      {
+        "name": "start_fill_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
       {
         "name": "conveyor_run",
         "type": "BOOL",
@@ -193,6 +203,7 @@
     "actions": [
       {
         "id": "start-fill",
+        "controllerStartBinding": "start_fill_request",
         "label": "Start jug fill",
         "type": "start",
         "sequence": "fill-cycle"
@@ -321,7 +332,7 @@
   "training": {
     "hints": [
       "Define the required result before writing logic: The valve cannot remain open after the high probe; the filled jug exits and the conveyor stops.",
-      "Treat jug_present, high_level_probe as simulator-to-PLC inputs. The PLC should command only conveyor_run, fill_valve_open, fill_skid_run.",
+      "Treat jug_present, high_level_probe as simulator-to-PLC inputs. The PLC should command only conveyor_run, fill_valve_open, fill_skid_run. The leading-edge index sensor is placed from delivered jug/nozzle geometry so detection aligns the open neck. Fill rises at 100/2.2 percent per second only while stopped, with valve and skid commanded and the nozzle physically inside the neck. High probe indicates full; PLC decides valve closure and discharge. Belt command remains active independently of the displayed jug endpoint.",
       "Use a step/state approach and prove the transition order: indexing \u2192 filling \u2192 level reached \u2192 discharging \u2192 ready."
     ],
     "solution": {

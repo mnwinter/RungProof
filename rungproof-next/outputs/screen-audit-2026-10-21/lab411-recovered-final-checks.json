@@ -1,0 +1,1 @@
+[{"name": "lab411-recovered-150L-final", "expected": {"barrel_litres": 150, "source_litres": 50, "barrel_parked": true, "fill_complete": true, "cycle_complete": true, "cycle_active": false, "fill_valve_open": false, "infeed_run": false, "flow_lps": 0, "fill_fault": false}, "monitor_only": true, "keep_monitor": true}]

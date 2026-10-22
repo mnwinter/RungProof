@@ -1,0 +1,1 @@
+[{"name":"fix-tankhighlow-r3-drain-signals","expected":{"pump_request":true,"drain_request":true,"inlet_pump_run":false,"drain_valve_open":true},"keep_monitor":true}]

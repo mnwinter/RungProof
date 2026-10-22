@@ -1,0 +1,1 @@
+[{"click":[1057,648],"wait":0.3,"capture":"fix-tanklevel-r1-filling"},{"click":[496,39],"wait":0.35},{"click":[525,102],"wait":0.2,"capture":"fix-tanklevel-r1-active-stop"},{"wait":2,"capture":"fix-tanklevel-r1-held"}]

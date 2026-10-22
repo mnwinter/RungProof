@@ -1,0 +1,12 @@
+[
+  {
+    "file": "fixture-tank-high-low-operator-requests.rpproj.json",
+    "sourceSceneId": "tank-high-low",
+    "sha256": "32b640e0638f20ffb5ecd33ea90a48454857fdab13b0439cd3420ca9cea45b29"
+  },
+  {
+    "file": "fixture-tank-level-operator-requests.rpproj.json",
+    "sourceSceneId": "tank-level",
+    "sha256": "f0d52de754a37c25add5c4078b906ae93d0a3627a68efe22407f492efc5cac84"
+  }
+]

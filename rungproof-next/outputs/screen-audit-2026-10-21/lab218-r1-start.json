@@ -1,0 +1,1 @@
+[{"name": "lab218-r1-jog-blocked-auto", "click": [1061, 574], "expected": {"auto_mode": true, "manual_jog_request": false, "conveyor_run": false}, "monitor_only": true, "keep_monitor": true}, {"name": "lab218-r1-auto-start", "click": [1040, 567], "expected": {"auto_mode": true, "conveyor_run": true, "pickup_sensor": false}, "monitor_only": true, "keep_monitor": true}]

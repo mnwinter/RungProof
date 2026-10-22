@@ -117,7 +117,7 @@ public partial class Main
     private string ScanInspectionAmbientPose()=>_demoEnvironment is null?string.Empty:string.Join("|",_demoEnvironment.FindChildren("*","Node3D",true,false).OfType<Node3D>().Select(n=>n.GetPath()+":"+n.Transform));
     private void QueueScanInspectionStart(string kind)
     {
-        var actions=kind switch{"demo1"=>new[]{"toggle-pulse_received"},"demo2"=>new[]{"toggle-timer_request"},"demo3"=>new[]{"scene-toggle"},"demo4"=>new[]{"toggle-count_request","toggle-pallet_type_valid","toggle-pallet_detected"},"demo5"=>new[]{"start-palletizer"},"belt"=>new[]{"workspace-press"},_=>new[]{"roller-workspace-press"}};
+        var actions=kind switch{"demo1"=>new[]{"toggle-pulse_received"},"demo2"=>new[]{"toggle-timer_request"},"demo3"=>new[]{"scene-toggle"},"demo4"=>new[]{"toggle-count_request","toggle-pallet_type_valid","pulse-pallet_detected"},"demo5"=>new[]{"start-palletizer"},"belt"=>new[]{"workspace-press"},_=>new[]{"roller-workspace-press"}};
         foreach(var action in actions)if(!ExecuteSelectedControllerAction(action))throw new InvalidOperationException("Paused mapped PC action rejected: "+action);
     }
     private bool ScanInspectionStartAccepted(string kind,VirtualControllerScanCompleted row)

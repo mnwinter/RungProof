@@ -23,17 +23,25 @@ public partial class LadderProgramTree : Tree
                 rowMetadata, item.GetMetadata(1).AsString());
     }
 
-    public override Variant _GetDragData(Vector2 atPosition)
+    /// <summary>
+    /// Exercise the production payload contract without asking Godot to create
+    /// a drag preview. Review gates call this outside an active GUI drag.
+    /// </summary>
+    internal Variant ReviewDragDataForItem(TreeItem? item)
     {
         ReviewDragDataRequests++;
-        var item = GetItemAtPosition(atPosition);
-        if (item is null) return default;
-
         var payload = DragPayloadForItem(item);
-        if (payload is null) return default;
+        return payload is null ? default : Variant.From(payload);
+    }
+
+    public override Variant _GetDragData(Vector2 atPosition)
+    {
+        var item = GetItemAtPosition(atPosition);
+        var data = ReviewDragDataForItem(item);
+        if (item is null || data.VariantType == Variant.Type.Nil) return default;
 
         var preview = new Label { Text = item.GetText(0), ThemeTypeVariation = "TooltipLabel" };
         SetDragPreview(preview);
-        return Variant.From(payload);
+        return data;
     }
 }

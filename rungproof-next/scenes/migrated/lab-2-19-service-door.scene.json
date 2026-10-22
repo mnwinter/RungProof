@@ -119,6 +119,20 @@
     "type": "sequence",
     "points": [
       {
+        "name": "close_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
+      {
+        "name": "open_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
+      {
         "name": "motor_open",
         "type": "BOOL",
         "owner": "PLC",
@@ -159,12 +173,14 @@
     "actions": [
       {
         "id": "open-door",
+        "controllerStartBinding": "open_request",
         "label": "Open service door",
         "type": "start",
         "sequence": "open"
       },
       {
         "id": "close-door",
+        "controllerStartBinding": "close_request",
         "label": "Close service door",
         "type": "start",
         "sequence": "close"
@@ -220,7 +236,12 @@
               "equipmentId": "service_shutter",
               "from": 1,
               "fromCurrent": true,
-              "positionFeedback": { "point": "door_position", "scale": 100, "lowNcPoint": "open_limit_nc", "highNcPoint": "closed_limit_nc" },
+              "positionFeedback": {
+                "point": "door_position",
+                "scale": 100,
+                "lowNcPoint": "open_limit_nc",
+                "highNcPoint": "closed_limit_nc"
+              },
               "to": 0
             }
           ]
@@ -251,7 +272,12 @@
               "equipmentId": "service_shutter",
               "from": 0,
               "fromCurrent": true,
-              "positionFeedback": { "point": "door_position", "scale": 100, "lowNcPoint": "open_limit_nc", "highNcPoint": "closed_limit_nc" },
+              "positionFeedback": {
+                "point": "door_position",
+                "scale": 100,
+                "lowNcPoint": "open_limit_nc",
+                "highNcPoint": "closed_limit_nc"
+              },
               "to": 1
             }
           ]
@@ -274,13 +300,15 @@
       "motor_close": false
     },
     "completionState": {},
-    "conveyorSpeedMps": 0.75
+    "conveyorSpeedMps": 0.75,
+    "serviceDoorPlant": true,
+    "doorFullTravelSeconds": 3
   },
   "training": {
     "hints": [
       "Define the required result before writing logic: Each direction stops at its limit; open and close outputs are never on together.",
       "Treat open_limit_nc, closed_limit_nc as simulator-to-PLC inputs. The PLC should command only motor_open, motor_close.",
-      "Use a step/state approach and prove the transition order: opening \u2192 open limit.",
+      "Use a step/state approach and prove the transition order: opening → open limit.",
       "The freestanding beacons show raw NC input states: illuminated means TRUE (limit not reached); off means FALSE (limit reached in this reference). They are signal displays, not physical limit switches or cable-fault monitoring."
     ],
     "solution": {

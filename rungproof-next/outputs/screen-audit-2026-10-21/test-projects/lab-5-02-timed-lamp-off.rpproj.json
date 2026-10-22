@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-screen-lab-5-02-timed-lamp-off",
+  "name": "QA_Lab502_Main",
+  "sourceSceneId": "lab-5-02-timed-lamp-off",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 1000,
+  "tags": [
+    {
+      "symbolId": "qa-symbol-1",
+      "name": "start_pulse",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "start_pulse",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit exact scene point; no physical address."
+    },
+    {
+      "symbolId": "qa-symbol-2",
+      "name": "timed_lamp",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "timed_lamp",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit exact scene point; no physical address."
+    },
+    {
+      "symbolId": "qa-symbol-3",
+      "name": "qa_pulse_timer",
+      "type": "Timer",
+      "role": "Memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": "Disposable controller-owned internal state; not a scene binding."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "QA_Lab502_Main",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-10",
+          "label": "QA timer TP3000ms",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "qa_pulse_timer",
+          "timerPresetMs": 3000,
+          "timerKind": "Pulse",
+          "timerInstanceDataBlock": {
+            "number": 1,
+            "name": "IEC_Timer_0_DB"
+          },
+          "isTimer": true,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "node-11",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "node-12",
+                "kind": 0,
+                "variable": "start_pulse",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-10-action",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-13",
+          "label": "QA timer output timed_lamp",
+          "coilVariable": "timed_lamp",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "node-14",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "node-15",
+                "kind": 0,
+                "variable": "qa_pulse_timer.Q",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-13-action",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "start_pulse",
+    "timed_lamp",
+    "qa_pulse_timer"
+  ],
+  "watchTables": [
+    {
+      "id": "qa-lab-5-02-timed-lamp-off-watch",
+      "name": "Watch table 1",
+      "variables": [
+        "start_pulse",
+        "timed_lamp",
+        "qa_pulse_timer"
+      ],
+      "rows": [
+        {
+          "id": "qa-watch-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "start_pulse",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit observation only"
+        },
+        {
+          "id": "qa-watch-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "timed_lamp",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit observation only"
+        },
+        {
+          "id": "qa-watch-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "qa_pulse_timer",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit observation only"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

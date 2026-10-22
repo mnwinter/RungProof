@@ -1,0 +1,1 @@
+[{"name": "fix-reference-r1-final-signals", "expected": {"operand_a": 2, "operand_b": 5, "sum_result": 7, "event_count": 2, "result_valid": true}}]

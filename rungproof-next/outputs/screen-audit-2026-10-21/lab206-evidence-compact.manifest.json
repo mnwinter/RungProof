@@ -1,0 +1,95 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    660,
+    305,
+    980,
+    490
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    245
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab206-normal",
+      "source": "lab206-normal.png",
+      "sha256": "cee2ca7389bba2bd2d2cfdd1e90dd903cb765321f598f4d0f2232c4756e82ad6",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-pressed",
+      "source": "lab206-pressed.png",
+      "sha256": "5ecd02b9de81ee8b5539433a0ad4c3511c3c4ccd15eaa76c1266f56b92f0f852",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-released-toggle",
+      "source": "lab206-released-toggle.png",
+      "sha256": "4dcb6e4ef4402db9950941021c3da5d603fea7e3413a61ebbada9fda1db1b4dc",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-pressed-repeat",
+      "source": "lab206-pressed-repeat.png",
+      "sha256": "0c693b4335f4532eb621031a2ddc4420c3082352306d1a919347584f515e3df3",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-app-stop",
+      "source": "lab206-app-stop.png",
+      "sha256": "792b6b5ff4d7e400d9bbb769c84da455e78a9557aa15a477120e7e9dc2585cdc",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-app-run",
+      "source": "lab206-app-run.png",
+      "sha256": "8ce4d4ddcd8ff37dfafdf1cb1ed132a1b4a9c0612bbb8063505fb24442050708",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-active-reset",
+      "source": "lab206-active-reset.png",
+      "sha256": "3be7dada1b1cc2d580ce9472b8a2eed2f0520185e893e92f2a5a22bf6219db46",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab206-reset-run",
+      "source": "lab206-reset-run.png",
+      "sha256": "fcfb7bebc9c388981edd6bb83b26fd7804a3edb8742ad9b9942b9d8d0f6ed3eb",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

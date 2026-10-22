@@ -1,0 +1,108 @@
+{
+  "credential_pattern_paths": [
+    ".\\rungproof-next\\assets\\catalog\\production.catalog.json",
+    ".\\rungproof-next\\assets\\training_accessories\\collection_tank_bank\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\training_accessories\\destination_conveyor_bank\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\training_accessories\\bag_product_load\\review\\historical_invalid_identity_20261006\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\training_accessories\\indexing_conveyor\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\material_handling\\belt_conveyor_600x6000\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\scene_loads\\rectangular_machining_blank\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\training_accessories\\product_counter\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\training_accessories\\package_spacing_sensor\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\scene_core\\vertical_process_tank\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\scene_core\\pneumatic_pusher\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\scene_core\\through_beam_photoeye\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\scene_core\\flanged_pipe_spool\\review\\independent_recognition.json",
+    ".\\rungproof-next\\assets\\scene_core\\ac_induction_motor\\review\\independent_recognition.json"
+  ],
+  "local_bridge_capability_paths": [
+    "rungproof-next/outputs/screen-audit-2026-10-21\\SESSION-STATE.json"
+  ],
+  "scope": "Read-only regex filenames only; not complete secret audit. LocaltokenislocalhostUIbridgecapability,notaccountcredential.",
+  "credential_match_classification": [
+    {
+      "path": ".\\rungproof-next\\assets\\catalog\\production.catalog.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\training_accessories\\collection_tank_bank\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\training_accessories\\destination_conveyor_bank\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\training_accessories\\bag_product_load\\review\\historical_invalid_identity_20261006\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\training_accessories\\indexing_conveyor\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\material_handling\\belt_conveyor_600x6000\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\scene_loads\\rectangular_machining_blank\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\training_accessories\\product_counter\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\training_accessories\\package_spacing_sensor\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\scene_core\\vertical_process_tank\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\scene_core\\pneumatic_pusher\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\scene_core\\through_beam_photoeye\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\scene_core\\flanged_pipe_spool\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    },
+    {
+      "path": ".\\rungproof-next\\assets\\scene_core\\ac_induction_motor\\review\\independent_recognition.json",
+      "matches": 1,
+      "embedded_task_identifiers": 1,
+      "unexplained_matches": 0
+    }
+  ]
+}

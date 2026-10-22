@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.01}, {"click": [525, 102], "capture": "lab411-stop-filling-early"}, {"wait": 1.2, "capture": "lab411-stop-filling-late"}, {"click": [496, 39], "wait": 0.01}, {"click": [525, 80], "wait": 1, "capture": "lab411-run-alone"}, {"click": [1029, 571], "wait": 0.7, "capture": "lab411-fresh-start-resume"}]

@@ -1,0 +1,1 @@
+[{"name": "standalone-radar-r2-reset-signals", "monitor_only": false, "keep_monitor": true, "expected": {"cycle_request": false, "manual_drain_request": false, "inlet_pump_run": false, "drain_valve_open": false, "radar_level": 35, "radar_signal": 9.6}}]

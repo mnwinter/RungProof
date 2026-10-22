@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-diagnostic-lab216-start-binding",
+  "name": "QA_DIAGNOSTIC_Lab216_StartBinding",
+  "sourceSceneId": "lab-2-16-safe-drill",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "probe-lab216-main",
+  "nextId": 40,
+  "tags": [
+    {
+      "symbolId": "probe-lab216-scene-symbol-1",
+      "name": "left_hand_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "left_hand_request",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab216-scene-symbol-2",
+      "name": "right_hand_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "right_hand_request",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab216-scene-symbol-3",
+      "name": "workpiece_present",
+      "type": "Bool",
+      "role": "Input",
+      "initial": true,
+      "binding": "workpiece_present",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab216-scene-symbol-4",
+      "name": "drill_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "drill_run",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PLC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab216-scene-symbol-5",
+      "name": "drill_at_bottom",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "drill_at_bottom",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab216-scene-symbol-6",
+      "name": "drill_at_top",
+      "type": "Bool",
+      "role": "Input",
+      "initial": true,
+      "binding": "drill_at_top",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab216-false-symbol",
+      "name": "qa_probe_false",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": "Diagnostic-only unbound false memory; no rung writes this value. Do not modify/force it."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "probe-lab216-main",
+      "name": "QA_DIAGNOSTIC_Lab216_StartBinding",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "probe-lab216-rung",
+          "label": "DIAGNOSTIC ONLY: hold drill_run FALSE; no process sequence",
+          "coilVariable": "drill_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "probe-lab216-series",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "probe-lab216-contact",
+                "kind": 0,
+                "variable": "qa_probe_false",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "probe-lab216-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "probe-lab216-task",
+      "name": "DiagnosticMainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "probe-lab216-main"
+    }
+  ],
+  "watchVariables": [
+    "left_hand_request",
+    "right_hand_request",
+    "workpiece_present",
+    "drill_run",
+    "drill_at_bottom",
+    "drill_at_top",
+    "qa_probe_false"
+  ],
+  "watchTables": [
+    {
+      "id": "probe-lab216-watch",
+      "name": "Diagnostic watch",
+      "variables": [
+        "left_hand_request",
+        "right_hand_request",
+        "workpiece_present",
+        "drill_run",
+        "drill_at_bottom",
+        "drill_at_top",
+        "qa_probe_false"
+      ],
+      "rows": [
+        {
+          "id": "probe-lab216-watch-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "left_hand_request",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab216-watch-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "right_hand_request",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab216-watch-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "workpiece_present",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab216-watch-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "drill_run",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab216-watch-row-5",
+          "referenceKind": "Symbolic",
+          "reference": "drill_at_bottom",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab216-watch-row-6",
+          "referenceKind": "Symbolic",
+          "reference": "drill_at_top",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab216-watch-row-7",
+          "referenceKind": "Symbolic",
+          "reference": "qa_probe_false",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

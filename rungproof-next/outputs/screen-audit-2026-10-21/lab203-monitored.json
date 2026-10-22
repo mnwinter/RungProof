@@ -1,0 +1,11 @@
+[
+ {"name":"lab203-normal","expected":{"marker_inhibit_pressed":false,"service_marker_on":true}},
+ {"name":"lab203-inhibit","click":[798,362],"expected":{"marker_inhibit_pressed":true,"service_marker_on":false}},
+ {"name":"lab203-release","click":[798,362],"expected":{"marker_inhibit_pressed":false,"service_marker_on":true}},
+ {"name":"lab203-inhibit-repeat","click":[798,362],"expected":{"marker_inhibit_pressed":true,"service_marker_on":false}},
+ {"name":"lab203-release-repeat","click":[798,362],"expected":{"marker_inhibit_pressed":false,"service_marker_on":true}},
+ {"name":"lab203-app-stop","click":[131,884],"expected":{"marker_inhibit_pressed":false,"service_marker_on":false}},
+ {"name":"lab203-app-run","click":[52,884],"expected":{"marker_inhibit_pressed":false,"service_marker_on":true}},
+ {"name":"lab203-app-reset","click":[215,884],"expected":{"marker_inhibit_pressed":false}},
+ {"name":"lab203-reset-run","click":[52,884],"expected":{"marker_inhibit_pressed":false,"service_marker_on":true}}
+]

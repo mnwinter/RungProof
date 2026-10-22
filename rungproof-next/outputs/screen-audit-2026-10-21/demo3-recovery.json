@@ -1,0 +1,10 @@
+[
+ {"click":[1334,631],"wait":0.6,"capture":"demo3-machine-stop"},
+ {"click":[1334,558],"wait":0.4},
+ {"click":[1258,616],"wait":0.8,"capture":"demo3-stop-trip-start-blocked"},
+ {"click":[1334,558],"wait":0.4},
+ {"click":[1418,648],"wait":0.5,"capture":"demo3-reset-no-auto-restart"},
+ {"click":[1258,616],"wait":13,"capture":"demo3-second-routing-run"},
+ {"click":[595,39],"wait":0.2},
+ {"click":[701,15],"wait":0.5,"capture":"demo3-recovery-progress"}
+]

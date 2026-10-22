@@ -1,0 +1,131 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    610,
+    300,
+    1050,
+    555
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    270
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab210-idle",
+      "source": "lab210-idle.png",
+      "sha256": "7f0f094cf80d2bbeedc944f5a4fe2eec9524107ad14f1970ed161de25de3daad",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-start-release-sealed",
+      "source": "lab210-start-release-sealed.png",
+      "sha256": "1da0d2c5eedaf405db927fa5d311f87dcf0c590ed311e7d5e33c28e6be971163",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-retained-idle",
+      "source": "lab210-retained-idle.png",
+      "sha256": "adbd0dc9290a98fea7cfb264fbc6a55666a77e88182e362337cb1353b4bcd638",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-machine-stop",
+      "source": "lab210-machine-stop.png",
+      "sha256": "cd8b89a99624da7e234d3b5278668705ff33b086d404e7179766e24583ad2dfa",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-fresh-start",
+      "source": "lab210-fresh-start.png",
+      "sha256": "d624b056ce59159418752ea7cfe3ce805663998f30672aa7ed80e05ed70c06a8",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-machine-stop-repeat",
+      "source": "lab210-machine-stop-repeat.png",
+      "sha256": "edf67c8a835ec94413fecccda63e4e2d2c353cc1d71dead2dd64400c762f7a2a",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-fresh-start-repeat",
+      "source": "lab210-fresh-start-repeat.png",
+      "sha256": "eb9fcebdf39cde8c44186096ae8491f3e88fd4cc96d75bc8cb6ae24dffec057e",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-app-stop-observed",
+      "source": "lab210-app-stop-observed.png",
+      "sha256": "9eaa816b35439d52704431335b980745c33f8bb0a2423559bb019ec41d965543",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-app-run-cleared-latch",
+      "source": "lab210-app-run-cleared-latch.png",
+      "sha256": "a2d2888472b44dc362c29353ce91b91ae25025839763366abb80b2383ce3b2cf",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-restart-start",
+      "source": "lab210-restart-start.png",
+      "sha256": "a498d816e546c55d506200672ce0e0b4577374fc80b37a4b91be2ec16ef49d74",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-active-reset",
+      "source": "lab210-active-reset.png",
+      "sha256": "7e0cc597cbac1ab2b0f1acc0c766b0e3a457564eed8bd94576019d79cf611be7",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab210-reset-run",
+      "source": "lab210-reset-run.png",
+      "sha256": "cf0835f99db4af8c1563cabf26ed547aef72d582868c52d376f62880e827f7f6",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

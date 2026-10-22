@@ -1,0 +1,1 @@
+[{"name": "standalone-level-r1-baseline-signals", "expected": {"inlet_pump_run": false, "drain_valve_open": false, "tank_level": 42, "level_transmitter": 10.72, "low_level_switch": true, "high_level_switch": false}}]

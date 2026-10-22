@@ -1,0 +1,1 @@
+[{"click": [499, 491], "wait": 0.3}, {"click": [507, 496], "wait": 7, "capture": "lab508-r2-repeat-raised"}, {"click": [499, 491], "wait": 7, "capture": "lab508-r2-repeat-home"}]

@@ -1,0 +1,177 @@
+[
+  {
+    "name": "robot_target_x",
+    "type": "REAL",
+    "owner": "PLC",
+    "initial": 0,
+    "purpose": "Explicit world-metre robot tool target; no autonomous waypoint sequencing."
+  },
+  {
+    "name": "robot_target_y",
+    "type": "REAL",
+    "owner": "PLC",
+    "initial": 2.8,
+    "purpose": "Explicit world-metre robot tool target; no autonomous waypoint sequencing."
+  },
+  {
+    "name": "robot_target_z",
+    "type": "REAL",
+    "owner": "PLC",
+    "initial": -1.4,
+    "purpose": "Explicit world-metre robot tool target; no autonomous waypoint sequencing."
+  },
+  {
+    "name": "robot_grip_close",
+    "type": "BOOL",
+    "owner": "PLC",
+    "initial": false,
+    "purpose": "Explicit maintained actuator command owned by learner ladder."
+  },
+  {
+    "name": "cnc_access_open",
+    "type": "BOOL",
+    "owner": "PLC",
+    "initial": false,
+    "purpose": "Explicit maintained actuator command owned by learner ladder."
+  },
+  {
+    "name": "cnc_clamp_close",
+    "type": "BOOL",
+    "owner": "PLC",
+    "initial": false,
+    "purpose": "Explicit maintained actuator command owned by learner ladder."
+  },
+  {
+    "name": "robot_actual_x",
+    "type": "REAL",
+    "owner": "PC",
+    "initial": 0,
+    "purpose": "Actual solved robot tool world coordinate."
+  },
+  {
+    "name": "robot_actual_y",
+    "type": "REAL",
+    "owner": "PC",
+    "initial": 2.8,
+    "purpose": "Actual solved robot tool world coordinate."
+  },
+  {
+    "name": "robot_actual_z",
+    "type": "REAL",
+    "owner": "PC",
+    "initial": -1.4,
+    "purpose": "Actual solved robot tool world coordinate."
+  },
+  {
+    "name": "robot_at_target",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "robot_grip_confirmed",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cnc_access_is_open",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cnc_access_is_closed",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": true,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cnc_tool_clear",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cnc_clamp_closed",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cnc_clamp_open",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": true,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "stock_on_vise",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "stock_on_outfeed",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "robot_clear_of_enclosure",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": true,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cnc_cut_permitted",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "cell_motion_inhibited",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "part_at_exit",
+    "type": "BOOL",
+    "owner": "PC",
+    "initial": false,
+    "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+  },
+  {
+    "name": "stock_actual_x",
+    "type": "REAL",
+    "owner": "PC",
+    "initial": -6.1,
+    "purpose": "Actual supported/carried stock world coordinate for feedback-driven robot pickup target."
+  },
+  {
+    "name": "stock_actual_y",
+    "type": "REAL",
+    "owner": "PC",
+    "initial": 0.9,
+    "purpose": "Actual supported/carried stock world coordinate for feedback-driven robot pickup target."
+  },
+  {
+    "name": "stock_actual_z",
+    "type": "REAL",
+    "owner": "PC",
+    "initial": 0.55,
+    "purpose": "Actual supported/carried stock world coordinate for feedback-driven robot pickup target."
+  }
+]

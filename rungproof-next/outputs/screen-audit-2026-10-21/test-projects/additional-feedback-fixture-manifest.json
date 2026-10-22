@@ -1,0 +1,13 @@
+{
+  "purpose": "Disposable declarative learner fixture; no runtime/compiler execution",
+  "entries": [
+    {
+      "file": "fixture-lab-4-03-completed-strokes.rpproj.json",
+      "sourceSceneId": "lab-4-03-repeat-cycle-counter",
+      "sha256": "8139e1301c0fdcd59edc8a325f2af6f0f5864aede7d40de4202a8edb10519fbe",
+      "status": "NOT_UI_LOADED_OR_VALIDATED",
+      "choice": "Sealed request and low command while PC cycle_done high;3 completed feedback edges, AppReset for new batch",
+      "source": "docs/help/scenes/lab-4-03-repeat-cycle-counter.md;scenes/migrated/lab-4-03-repeat-cycle-counter.scene.json"
+    }
+  ]
+}

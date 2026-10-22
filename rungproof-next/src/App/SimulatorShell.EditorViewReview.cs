@@ -86,7 +86,7 @@ public partial class SimulatorShell
                 GD.Print($"BLOCK_VIEW_STATE vendor={vendor} B.expected={savedB} B.actual={canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical)}");
                 Check(canvas.CaptureViewState(scroll.ScrollHorizontal, scroll.ScrollVertical) == savedB, vendor + "BStableTargetScrollZoom");
                 Navigate(0); await Frames();
-                var pending = true; syntheticPending = new PendingEditorForm(() => pending, () => false, () => pending = false);
+                var pending = true; syntheticPending = new PendingEditorForm(() => "Synthetic view-state edit", () => pending, () => false, () => pending = false);
                 _pendingEditorForms.Add(syntheticPending); var beforeStore = _blockViewRememberCount;
                 Navigate(1); await Frames(); Check(_ladderDocument.Blocks[_ladderDocument.ActiveBlockIndex].Id == "view-a" && _blockViewRememberCount == beforeStore, vendor + "PendingGuardBeforeStore");
                 _pendingEditorDialog!.EmitSignal(ConfirmationDialog.SignalName.Canceled); _pendingEditorDialog.Hide(); await Frames();

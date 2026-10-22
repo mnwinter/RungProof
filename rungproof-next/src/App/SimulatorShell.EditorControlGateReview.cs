@@ -309,15 +309,18 @@ public partial class SimulatorShell
         }
 
         var pending = true; var applyCalls = 0; var continuationCalls = 0;
-        var failed = new PendingEditorForm(() => pending, () => { applyCalls++; return false; }, () => pending = false);
+        var failed = new PendingEditorForm(() => "Synthetic failed edit", () => pending, () => { applyCalls++; return false; }, () => pending = false);
         _pendingEditorForms.Add(failed);
         ResolvePendingEditorForms(() => continuationCalls++);
+        Check("SyntheticPendingDialogNamesForm", _pendingEditorDialog!.DialogText.Contains("Pending edit: Synthetic failed edit", StringComparison.Ordinal)
+            && _pendingEditorDialog.OkButtonText == "APPLY AND CONTINUE"
+            && _pendingEditorDialog.CancelButtonText == "CANCEL");
         _pendingEditorDialog!.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
         Check("SyntheticFailedApplyBlocksContinuation", applyCalls == 1 && continuationCalls == 0 && pending);
         Cleanup(failed);
 
         pending = true; applyCalls = 0; continuationCalls = 0;
-        var applied = new PendingEditorForm(() => pending, () => { applyCalls++; pending = false; return true; }, () => pending = false);
+        var applied = new PendingEditorForm(() => "Synthetic applied edit", () => pending, () => { applyCalls++; pending = false; return true; }, () => pending = false);
         _pendingEditorForms.Add(applied);
         ResolvePendingEditorForms(() => continuationCalls++);
         _pendingEditorDialog!.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
@@ -325,7 +328,7 @@ public partial class SimulatorShell
         Cleanup(applied);
 
         pending = true; var discardCalls = 0; continuationCalls = 0;
-        var discarded = new PendingEditorForm(() => pending, () => false, () => { discardCalls++; pending = false; });
+        var discarded = new PendingEditorForm(() => "Synthetic discarded edit", () => pending, () => false, () => { discardCalls++; pending = false; });
         _pendingEditorForms.Add(discarded);
         ResolvePendingEditorForms(() => continuationCalls++);
         _pendingEditorDialog!.EmitSignal(ConfirmationDialog.SignalName.CustomAction, "discard");
@@ -334,7 +337,7 @@ public partial class SimulatorShell
         Cleanup(discarded);
 
         pending = true; continuationCalls = 0; var cancelCalls = 0;
-        var cancelled = new PendingEditorForm(() => pending, () => false, () => pending = false);
+        var cancelled = new PendingEditorForm(() => "Synthetic cancelled edit", () => pending, () => false, () => pending = false);
         _pendingEditorForms.Add(cancelled);
         ResolvePendingEditorForms(() => continuationCalls++, () => cancelCalls++);
         _pendingEditorDialog!.EmitSignal(ConfirmationDialog.SignalName.Canceled);
@@ -343,10 +346,13 @@ public partial class SimulatorShell
         Cleanup(cancelled);
 
         var firstPending = true; var secondPending = true; applyCalls = 0; continuationCalls = 0;
-        var first = new PendingEditorForm(() => firstPending, () => { applyCalls++; firstPending = false; return true; }, () => firstPending = false);
-        var second = new PendingEditorForm(() => secondPending, () => { applyCalls++; secondPending = false; return false; }, () => secondPending = false);
+        var first = new PendingEditorForm(() => "Synthetic first edit", () => firstPending, () => { applyCalls++; firstPending = false; return true; }, () => firstPending = false);
+        var second = new PendingEditorForm(() => "Synthetic second edit", () => secondPending, () => { applyCalls++; secondPending = false; return false; }, () => secondPending = false);
         _pendingEditorForms.Add(first); _pendingEditorForms.Add(second);
         ResolvePendingEditorForms(() => continuationCalls++);
+        Check("SyntheticMultiplePendingDialogNamesForms", _pendingEditorDialog!.DialogText.Contains("- Synthetic first edit", StringComparison.Ordinal)
+            && _pendingEditorDialog.DialogText.Contains("- Synthetic second edit", StringComparison.Ordinal)
+            && _pendingEditorDialog.GetOkButton().Disabled);
         _pendingEditorDialog!.EmitSignal(ConfirmationDialog.SignalName.Confirmed);
         Check("SyntheticMultipleFormsRejectBeforeApply", applyCalls == 0 && continuationCalls == 0 && firstPending && secondPending
             && LadderEditorProjectJson.Save(_ladderDocument) == baseline && _ladderHistory.CanUndo == baselineCanUndo);

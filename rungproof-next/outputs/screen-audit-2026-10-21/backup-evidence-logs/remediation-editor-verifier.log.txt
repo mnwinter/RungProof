@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+RungProof Next ready. Production assets: 63.
+Candidate assets: 232.
+Legacy primitive assets intentionally excluded.
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+ERROR: LADDER_EDITOR_INTERACTION_VERIFY FAIL projectTree=True instructionTree=True contextualProperties=True addRung=True addNo=True addTimer=True addOffDelay=True addPulseTimer=True addRetentiveTimer=True addTimerReset=True addCounter=True addCounterDown=True addCounterLoad=True addCounterReset=True addCompare=True addMove=True addCall=True addReturn=True addJump=True addLabel=True addBlock=True verify=True errorList=True watchTable=False bindingBrowser=True addTask=True addSet=True addReset=True remove=True undo=True redo=True search=True help=True toolRail=True docks=True
+   at: void RungProof.Next.App.Main.VerifyLadderEditor() (res://src/App/Main.cs:1892)
+   C# backtrace (most recent call first):
+       [0] void Godot.GD.PushError(string) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/GD.cs:366)
+       [1] void RungProof.Next.App.Main.VerifyLadderEditor() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:1892)
+       [2] bool RungProof.Next.App.Main.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (C:\Users\matt.winter\Documents\RungProof\rungproof-next\.godot\mono\temp\obj\Debug\Godot.SourceGenerators\Godot.SourceGenerators.ScriptMethodsGenerator\RungProof.Next.App.Main_ScriptMethods.generated.cs:1877)
+       [3] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+ERROR: 1 RID allocations of type 'N16RendererViewport8ViewportE' were leaked at exit.
+WARNING: 1 RID of type "Canvas" was leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2733)
+WARNING: 23 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 218 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 28 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 43 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.

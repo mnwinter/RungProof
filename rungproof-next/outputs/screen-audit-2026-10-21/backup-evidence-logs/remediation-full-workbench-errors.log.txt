@@ -1,0 +1,32 @@
+ERROR: SCENARIO_LOAD_FAILED id=lab-2-13-coolant-jug-fill error=System.InvalidOperationException: Station request provenance drift: lab-2-13-coolant-jug-fill/fill_start
+   at RungProof.Next.Scenes.SceneComposer.ConfigureAdditionalStationIdentification(Node3D root, SceneDefinition scene, Node3D installation, InstallationPlan plan) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.InstallationLegends.cs:line 432
+   at RungProof.Next.Scenes.SceneComposer.ConfigureInstallationIdentification(Node3D root, SceneDefinition scene, Node3D installation) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.InstallationLegends.cs:line 262
+   at RungProof.Next.Scenes.SceneComposer.ConfigureControlInstallation(Node3D root, SceneDefinition scene) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.ControlInstallations.cs:line 396
+   at RungProof.Next.Scenes.SceneComposer.Compose(SceneDefinition scene, AssetCatalogDocument candidates, Boolean runCommands) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.cs:line 185
+   at RungProof.Next.App.Main.AddMigratedScene(String sceneId, AssetCatalogDocument candidates, Camera3D camera, Boolean showRuntimeControls, Boolean autoRun, WorkspaceTemplateOverride templateOverride, WorkspaceDocument finiteBeltWorkspace, WorkspaceDocument finiteRollerWorkspace, WorkspaceDocument driveWorkspace) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:line 4445
+   at RungProof.Next.App.Main.<>c__DisplayClass194_0.<AddSimulatorShell>b__1(String sceneId) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:line 578
+   at: void RungProof.Next.App.Main+<>c__DisplayClass194_0.<AddSimulatorShell>b__1(string) (res://src/App/Main.cs:578)
+   C# backtrace (most recent call first):
+       [0] void Godot.GD.PushError(string) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/GD.cs:366)
+       [1] void RungProof.Next.App.Main+<>c__DisplayClass194_0.<AddSimulatorShell>b__1(string) (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:578)
+       [2] void RungProof.Next.App.SimulatorShell+<>c__DisplayClass567_0.<RequestSceneChange>b__0() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\SimulatorShell.cs:4238)
+       [3] void RungProof.Next.App.Main.CompletePendingWorkspaceAction() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.WorkspaceGuard.cs:45)
+       [4] void RungProof.Next.App.SimulatorShell+<>c__DisplayClass554_0.<BuildInterface>b__26() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\SimulatorShell.cs:4006)
+       [5] void Godot.Callable.<From>g__Trampoline|1_0(object, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Callable.generics.cs:39)
+       [6] void Godot.DelegateUtils.InvokeWithVariantArgs(nint, System.Void*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/DelegateUtils.cs:86)
+ERROR: SCENARIO_LOAD_FAILED id=lab-2-13-coolant-jug-fill error=System.InvalidOperationException: Station request provenance drift: lab-2-13-coolant-jug-fill/fill_start
+   at RungProof.Next.Scenes.SceneComposer.ConfigureAdditionalStationIdentification(Node3D root, SceneDefinition scene, Node3D installation, InstallationPlan plan) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.InstallationLegends.cs:line 432
+   at RungProof.Next.Scenes.SceneComposer.ConfigureInstallationIdentification(Node3D root, SceneDefinition scene, Node3D installation) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.InstallationLegends.cs:line 262
+   at RungProof.Next.Scenes.SceneComposer.ConfigureControlInstallation(Node3D root, SceneDefinition scene) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.ControlInstallations.cs:line 396
+   at RungProof.Next.Scenes.SceneComposer.Compose(SceneDefinition scene, AssetCatalogDocument candidates, Boolean runCommands) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\Scenes\SceneComposer.cs:line 185
+   at RungProof.Next.App.Main.AddMigratedScene(String sceneId, AssetCatalogDocument candidates, Camera3D camera, Boolean showRuntimeControls, Boolean autoRun, WorkspaceTemplateOverride templateOverride, WorkspaceDocument finiteBeltWorkspace, WorkspaceDocument finiteRollerWorkspace, WorkspaceDocument driveWorkspace) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:line 4445
+   at RungProof.Next.App.Main.<>c__DisplayClass194_0.<AddSimulatorShell>b__1(String sceneId) in C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:line 578
+   at: void RungProof.Next.App.Main+<>c__DisplayClass194_0.<AddSimulatorShell>b__1(string) (res://src/App/Main.cs:578)
+   C# backtrace (most recent call first):
+       [0] void Godot.GD.PushError(string) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/GD.cs:366)
+       [1] void RungProof.Next.App.Main+<>c__DisplayClass194_0.<AddSimulatorShell>b__1(string) (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.cs:578)
+       [2] void RungProof.Next.App.SimulatorShell+<>c__DisplayClass567_0.<RequestSceneChange>b__0() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\SimulatorShell.cs:4238)
+       [3] void RungProof.Next.App.Main.CompletePendingWorkspaceAction() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\Main.WorkspaceGuard.cs:45)
+       [4] void RungProof.Next.App.SimulatorShell+<>c__DisplayClass554_0.<BuildInterface>b__26() (C:\Users\matt.winter\Documents\RungProof\rungproof-next\src\App\SimulatorShell.cs:4006)
+       [5] void Godot.Callable.<From>g__Trampoline|1_0(object, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Callable.generics.cs:39)
+       [6] void Godot.DelegateUtils.InvokeWithVariantArgs(nint, System.Void*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/DelegateUtils.cs:86)

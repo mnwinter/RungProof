@@ -1,0 +1,1 @@
+[{"name":"fix-plant212-r1-bottom-signals","expected":{"top_limit":false,"bottom_limit":true,"lift_up":false,"lift_down":false,"cycle_complete":true}}]

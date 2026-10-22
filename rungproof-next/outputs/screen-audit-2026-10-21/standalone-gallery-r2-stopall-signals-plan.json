@@ -1,0 +1,1 @@
+[{"name": "standalone-gallery-r2-stopall-signals", "expected": {"gallery_animation": false, "industrial_fan_run": false, "emergency_stop": true}}]

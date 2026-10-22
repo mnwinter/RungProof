@@ -23,7 +23,7 @@ public sealed record LadderEditorProjectLoadResult(
 /// </summary>
 public static class LadderEditorProjectJson
 {
-    public const int SchemaVersion = 9;
+    public const int SchemaVersion = 10;
     public const string Kind = "rungproof-ladder-project";
 
     private static readonly JsonSerializerOptions Options = new()
@@ -106,6 +106,15 @@ public static class LadderEditorProjectJson
                 TagTable = constant.TagTable,
                 Comment = constant.Comment,
             }).ToList(),
+            SystemConstants = (snapshot.SystemConstants ?? []).Select(constant => new SystemConstantDto
+            {
+                Id = constant.Id,
+                Name = constant.Name,
+                DataType = constant.DataType,
+                Value = constant.Value,
+                HardwareSource = constant.HardwareSource,
+                Comment = constant.Comment,
+            }).ToList(),
         };
         return JsonSerializer.Serialize(dto, Options);
     }
@@ -128,6 +137,8 @@ public static class LadderEditorProjectJson
                 return Invalid(tagTableError);
             if (dto.SchemaVersion >= 8 && dto.UserConstants is null)
                 return Invalid("Schema 8 or later requires userConstants.");
+            if (dto.SchemaVersion >= 10 && dto.SystemConstants is null)
+                return Invalid("Schema 10 or later requires systemConstants.");
             if (dto.SchemaVersion >= 5 && dto.WatchTables is null)
                 return Invalid("Schema 5 requires watchTables.");
             if (dto.Blocks.Count == 0)
@@ -140,6 +151,8 @@ public static class LadderEditorProjectJson
                 return Invalid("Editor project collections must not contain null entries.");
             if (dto.UserConstants?.Any(constant => constant is null) == true)
                 return Invalid("PLC user constants must not contain null entries.");
+            if (dto.SystemConstants?.Any(constant => constant is null) == true)
+                return Invalid("PLC system constants must not contain null entries.");
             if (dto.WatchTables?.Any(table => table is null || table.Name is null
                     || (dto.SchemaVersion < 9 && (table.Variables is null || table.Variables.Any(name => name is null)))
                     || (dto.SchemaVersion >= 9 && (table.Rows is null || table.Rows.Any(row => row is null)))) == true)
@@ -277,7 +290,8 @@ public static class LadderEditorProjectJson
                         .Distinct(StringComparer.OrdinalIgnoreCase))
                         .Distinct(StringComparer.OrdinalIgnoreCase).ToArray(),
                 watchTables, Math.Clamp(dto.ActiveWatchTableIndex, 0, watchTables.Length - 1),
-                (dto.UserConstants ?? []).Select((constant, index) => ParseUserConstant(constant, index)).ToArray());
+                (dto.UserConstants ?? []).Select((constant, index) => ParseUserConstant(constant, index)).ToArray(),
+                (dto.SystemConstants ?? []).Select((constant, index) => ParseSystemConstant(constant, index)).ToArray());
             var document = new LadderEditorDocument();
             document.RestoreSnapshot(snapshot);
             return new(document, []) { SourceSchemaVersion = dto.SchemaVersion };
@@ -300,6 +314,16 @@ public static class LadderEditorProjectJson
         if (!Enum.TryParse<PlcVariableType>(dto.DataType, true, out var type) || !Enum.IsDefined(type))
             throw new ArgumentException($"PLC user constant '{dto.Name}' has unknown data type '{dto.DataType}'.");
         return new PlcUserConstant(dto.Id, dto.Name, type, dto.Value, dto.TagTable, dto.Comment ?? string.Empty);
+    }
+
+    private static PlcSystemConstant ParseSystemConstant(SystemConstantDto dto, int index)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Id) || string.IsNullOrWhiteSpace(dto.Name)
+            || string.IsNullOrWhiteSpace(dto.DataType) || string.IsNullOrWhiteSpace(dto.Value)
+            || string.IsNullOrWhiteSpace(dto.HardwareSource))
+            throw new ArgumentException($"PLC system constant at index {index} is missing required hardware metadata.");
+        return new PlcSystemConstant(dto.Id, dto.Name, dto.DataType, dto.Value,
+            dto.HardwareSource, dto.Comment ?? string.Empty);
     }
 
     private static EditableWatchRow ParseWatchRow(WatchRowDto dto, int tableIndex, int rowIndex)
@@ -748,6 +772,7 @@ public static class LadderEditorProjectJson
         public List<LadderInstance> Instances { get; set; } = [];
         public List<string>? TagTables { get; set; }
         public List<UserConstantDto>? UserConstants { get; set; }
+        public List<SystemConstantDto>? SystemConstants { get; set; }
     }
 
     private sealed class UserConstantDto
@@ -757,6 +782,16 @@ public static class LadderEditorProjectJson
         public string? DataType { get; set; }
         public string? Value { get; set; }
         public string? TagTable { get; set; }
+        public string? Comment { get; set; }
+    }
+
+    private sealed class SystemConstantDto
+    {
+        public string? Id { get; set; }
+        public string? Name { get; set; }
+        public string? DataType { get; set; }
+        public string? Value { get; set; }
+        public string? HardwareSource { get; set; }
         public string? Comment { get; set; }
     }
 

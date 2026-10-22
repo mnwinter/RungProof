@@ -1,0 +1,1 @@
+[{"name":"fix-vision-r5-preconditions","expected":{"vision_class":4,"destination_clear":false,"vision_result_valid":true,"package_present":true,"sort_complete":false},"keep_monitor":true}]

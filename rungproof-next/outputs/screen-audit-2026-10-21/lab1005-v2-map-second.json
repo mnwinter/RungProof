@@ -1,0 +1,1 @@
+[{"name": "lab1005-v2-second-button-observe", "click": [966, 575], "expected": {"temperature_valid": true, "motor_command.enable": false}, "monitor_only": true, "keep_monitor": true}]

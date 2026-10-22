@@ -1,0 +1,7 @@
+[
+ {"click":[1178,674],"wait":2,"capture":"demo5-start-lowering"},
+ {"wait":10,"capture":"demo5-cycle-12s"},
+ {"wait":10,"capture":"demo5-cycle-22s"},
+ {"wait":10,"capture":"demo5-cycle-32s"},
+ {"wait":10,"capture":"demo5-cycle-42s"}
+]

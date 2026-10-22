@@ -7,7 +7,7 @@
   "scanPeriodMs": 20,
   "activeBlockIndex": 0,
   "entryBlockId": "block-1",
-  "nextId": 261,
+  "nextId": 275,
   "tags": [
     {
       "symbolId": "system_enable",
@@ -18,7 +18,7 @@
       "binding": "system_enable",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -31,7 +31,7 @@
       "binding": "start_command",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -44,7 +44,7 @@
       "binding": "stop_command",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -57,7 +57,7 @@
       "binding": "reset_command",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -70,7 +70,7 @@
       "binding": "safety_trip",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -83,7 +83,7 @@
       "binding": "pallet_position_valid",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -96,7 +96,7 @@
       "binding": "carton_at_pick",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -109,7 +109,7 @@
       "binding": "gantry_home",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -122,7 +122,7 @@
       "binding": "at_pickup",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -135,7 +135,7 @@
       "binding": "at_place",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -148,7 +148,7 @@
       "binding": "carton_attached",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -161,7 +161,7 @@
       "binding": "pick_complete",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -174,7 +174,7 @@
       "binding": "cycle_in_progress",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -187,7 +187,7 @@
       "binding": "palletizer_fault",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -200,7 +200,7 @@
       "binding": "placed_cartons",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -213,7 +213,7 @@
       "binding": "gantry_x_encoder_counts",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -226,7 +226,7 @@
       "binding": "gantry_y_encoder_counts",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -239,7 +239,7 @@
       "binding": "gantry_z_encoder_counts",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -252,7 +252,7 @@
       "binding": "gantry_x_positive",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -265,7 +265,7 @@
       "binding": "gantry_x_negative",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -278,7 +278,7 @@
       "binding": "gantry_y_positive",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -291,7 +291,7 @@
       "binding": "gantry_y_negative",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -304,7 +304,7 @@
       "binding": "gantry_z_positive",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -317,7 +317,7 @@
       "binding": "gantry_z_negative",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -330,7 +330,7 @@
       "binding": "vacuum_pick",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -343,7 +343,7 @@
       "binding": "palletizer_reset",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -356,7 +356,7 @@
       "binding": "layer_complete",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -595,6 +595,84 @@
       "comment": ""
     },
     {
+      "symbolId": "x_encoder_fault",
+      "name": "x_encoder_fault",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": ""
+    },
+    {
+      "symbolId": "y_encoder_fault",
+      "name": "y_encoder_fault",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": ""
+    },
+    {
+      "symbolId": "z_encoder_fault",
+      "name": "z_encoder_fault",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": ""
+    },
+    {
+      "symbolId": "x_position_counts",
+      "name": "x_position_counts",
+      "type": "DInt",
+      "role": "Memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": ""
+    },
+    {
+      "symbolId": "y_position_counts",
+      "name": "y_position_counts",
+      "type": "DInt",
+      "role": "Memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": ""
+    },
+    {
+      "symbolId": "z_position_counts",
+      "name": "z_position_counts",
+      "type": "DInt",
+      "role": "Memory",
+      "initial": 0,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": ""
+    },
+    {
       "symbolId": "cell_active",
       "name": "cell_active",
       "type": "Bool",
@@ -603,7 +681,20 @@
       "binding": "cell_active",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": ""
+    },
+    {
+      "symbolId": "sequence_step_value",
+      "name": "sequence_step_value",
+      "type": "DInt",
+      "role": "Output",
+      "initial": 0,
+      "binding": "sequence_step_value",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
       "address": "",
       "comment": ""
     },
@@ -695,7 +786,421 @@
       "interface": [],
       "rungs": [
         {
-          "id": "rung-31",
+          "id": "rung-43",
+          "label": "X encoder FB call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": true,
+          "callTarget": "block-5",
+          "callSemanticMode": "Parameterized",
+          "callInstanceId": "instance-x_encoder",
+          "callBindings": [
+            {
+              "parameterId": "fb_encoderchannel.rawcounts",
+              "kind": 0,
+              "symbol": "global:gantry_x_encoder_counts",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homeminimum",
+              "kind": 1,
+              "symbol": "",
+              "literal": -50,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homemaximum",
+              "kind": 1,
+              "symbol": "",
+              "literal": 50,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.travelminimum",
+              "kind": 1,
+              "symbol": "",
+              "literal": -100,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.travelmaximum",
+              "kind": 1,
+              "symbol": "",
+              "literal": 13000,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.positioncounts",
+              "kind": 0,
+              "symbol": "global:x_position_counts",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homewindow",
+              "kind": 0,
+              "symbol": "global:x_home_window",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.fault",
+              "kind": 0,
+              "symbol": "global:x_encoder_fault",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            }
+          ],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-44",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-45",
+                "kind": 0,
+                "variable": "always_scan",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-43-call",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-46",
+          "label": "Y encoder FB call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": true,
+          "callTarget": "block-5",
+          "callSemanticMode": "Parameterized",
+          "callInstanceId": "instance-y_encoder",
+          "callBindings": [
+            {
+              "parameterId": "fb_encoderchannel.rawcounts",
+              "kind": 0,
+              "symbol": "global:gantry_y_encoder_counts",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homeminimum",
+              "kind": 1,
+              "symbol": "",
+              "literal": -50,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homemaximum",
+              "kind": 1,
+              "symbol": "",
+              "literal": 50,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.travelminimum",
+              "kind": 1,
+              "symbol": "",
+              "literal": -9000,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.travelmaximum",
+              "kind": 1,
+              "symbol": "",
+              "literal": 100,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.positioncounts",
+              "kind": 0,
+              "symbol": "global:y_position_counts",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homewindow",
+              "kind": 0,
+              "symbol": "global:y_home_window",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.fault",
+              "kind": 0,
+              "symbol": "global:y_encoder_fault",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            }
+          ],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-47",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-48",
+                "kind": 0,
+                "variable": "always_scan",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-46-call",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-49",
+          "label": "Z encoder FB call",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": true,
+          "callTarget": "block-5",
+          "callSemanticMode": "Parameterized",
+          "callInstanceId": "instance-z_encoder",
+          "callBindings": [
+            {
+              "parameterId": "fb_encoderchannel.rawcounts",
+              "kind": 0,
+              "symbol": "global:gantry_z_encoder_counts",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homeminimum",
+              "kind": 1,
+              "symbol": "",
+              "literal": -50,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homemaximum",
+              "kind": 1,
+              "symbol": "",
+              "literal": 50,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.travelminimum",
+              "kind": 1,
+              "symbol": "",
+              "literal": -100,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.travelmaximum",
+              "kind": 1,
+              "symbol": "",
+              "literal": 7000,
+              "literalType": 2,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.positioncounts",
+              "kind": 0,
+              "symbol": "global:z_position_counts",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.homewindow",
+              "kind": 0,
+              "symbol": "global:z_home_window",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            },
+            {
+              "parameterId": "fb_encoderchannel.fault",
+              "kind": 0,
+              "symbol": "global:z_encoder_fault",
+              "literal": null,
+              "literalType": null,
+              "enumMembers": null
+            }
+          ],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-50",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-51",
+                "kind": 0,
+                "variable": "always_scan",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-49-call",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-52",
           "label": "Cell permission: enabled, pallet valid, no simulated trip or diagnosed fault",
           "coilVariable": "machine_permissive",
           "coilMode": "Assign",
@@ -735,13 +1240,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-32",
+            "id": "branch-53",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-33",
+                "id": "contact-54",
                 "kind": 0,
                 "variable": "system_enable",
                 "normallyClosed": false,
@@ -754,7 +1259,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-34",
+                "id": "contact-55",
                 "kind": 0,
                 "variable": "pallet_position_valid",
                 "normallyClosed": false,
@@ -767,7 +1272,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-35",
+                "id": "contact-56",
                 "kind": 0,
                 "variable": "safety_trip",
                 "normallyClosed": true,
@@ -780,7 +1285,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-36",
+                "id": "contact-57",
                 "kind": 0,
                 "variable": "palletizer_fault",
                 "normallyClosed": true,
@@ -793,7 +1298,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-37",
+                "id": "contact-58",
                 "kind": 0,
                 "variable": "x_axis_fault",
                 "normallyClosed": true,
@@ -806,7 +1311,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-38",
+                "id": "contact-59",
                 "kind": 0,
                 "variable": "y_axis_fault",
                 "normallyClosed": true,
@@ -819,7 +1324,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-39",
+                "id": "contact-60",
                 "kind": 0,
                 "variable": "z_axis_fault",
                 "normallyClosed": true,
@@ -832,9 +1337,48 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-40",
+                "id": "contact-61",
                 "kind": 0,
                 "variable": "vacuum_fault",
+                "normallyClosed": true,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "contact-62",
+                "kind": 0,
+                "variable": "x_encoder_fault",
+                "normallyClosed": true,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "contact-63",
+                "kind": 0,
+                "variable": "y_encoder_fault",
+                "normallyClosed": true,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "contact-64",
+                "kind": 0,
+                "variable": "z_encoder_fault",
                 "normallyClosed": true,
                 "children": null,
                 "compareOperator": 0,
@@ -852,14 +1396,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-31-coil",
+          "terminalActionId": "rung-52-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-41",
+          "id": "rung-65",
           "label": "Start seal-in; Stop, Reset, trip, permissive loss or completion requires a fresh Start",
           "coilVariable": "machine_run",
           "coilMode": "Assign",
@@ -899,19 +1443,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-41-parallel",
+            "id": "rung-65-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-42",
+                "id": "branch-66",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-43",
+                    "id": "contact-67",
                     "kind": 0,
                     "variable": "start_command",
                     "normallyClosed": false,
@@ -924,7 +1468,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-46",
+                    "id": "contact-70",
                     "kind": 0,
                     "variable": "machine_permissive",
                     "normallyClosed": false,
@@ -937,7 +1481,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-47",
+                    "id": "contact-71",
                     "kind": 0,
                     "variable": "stop_command",
                     "normallyClosed": true,
@@ -950,7 +1494,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-48",
+                    "id": "contact-72",
                     "kind": 0,
                     "variable": "reset_command",
                     "normallyClosed": true,
@@ -963,7 +1507,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-49",
+                    "id": "contact-73",
                     "kind": 0,
                     "variable": "layer_complete",
                     "normallyClosed": true,
@@ -984,13 +1528,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-44",
+                "id": "branch-68",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-45",
+                    "id": "contact-69",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -1003,7 +1547,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-50",
+                    "id": "contact-74",
                     "kind": 0,
                     "variable": "machine_permissive",
                     "normallyClosed": false,
@@ -1016,7 +1560,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-51",
+                    "id": "contact-75",
                     "kind": 0,
                     "variable": "stop_command",
                     "normallyClosed": true,
@@ -1029,7 +1573,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-52",
+                    "id": "contact-76",
                     "kind": 0,
                     "variable": "reset_command",
                     "normallyClosed": true,
@@ -1042,7 +1586,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-53",
+                    "id": "contact-77",
                     "kind": 0,
                     "variable": "layer_complete",
                     "normallyClosed": true,
@@ -1070,14 +1614,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-41-coil",
+          "terminalActionId": "rung-65-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-54",
+          "id": "rung-78",
           "label": "Machine Reset command to the kinematic plant",
           "coilVariable": "palletizer_reset",
           "coilMode": "Assign",
@@ -1117,13 +1661,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-55",
+            "id": "branch-79",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-56",
+                "id": "contact-80",
                 "kind": 0,
                 "variable": "reset_command",
                 "normallyClosed": false,
@@ -1143,272 +1687,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-54-coil",
+          "terminalActionId": "rung-78-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-57",
-          "label": "X encoder home window (\u00B15 mm)",
-          "coilVariable": "x_home_window",
-          "coilMode": "Assign",
-          "timerVariable": "",
-          "timerPresetMs": 1000,
-          "timerKind": "OnDelay",
-          "timerInstanceDataBlock": null,
-          "isTimer": false,
-          "isTimerReset": false,
-          "isCounter": false,
-          "isCounterReset": false,
-          "isCounterLoad": false,
-          "counterKind": "CountUp",
-          "counterVariable": "",
-          "counterPreset": 10,
-          "counterValueType": "Int",
-          "counterInstanceDataBlock": null,
-          "isNumericOperation": false,
-          "numericOperationKind": "Move",
-          "numericSourceA": "0",
-          "numericSourceB": "0",
-          "numericSourceC": "0",
-          "numericDestination": "",
-          "numericInputDataType": null,
-          "numericOutputDataType": null,
-          "isCall": false,
-          "callTarget": "",
-          "callSemanticMode": "Legacy",
-          "callInstanceId": "",
-          "callBindings": [],
-          "isReturn": false,
-          "returnValueKind": "Rlo",
-          "returnValueOperand": "",
-          "isJump": false,
-          "isLabel": false,
-          "networkLabelId": "",
-          "networkLabelName": "",
-          "programControlLabel": "",
-          "root": {
-            "id": "branch-58",
-            "kind": 2,
-            "variable": "",
-            "normallyClosed": false,
-            "children": [
-              {
-                "id": "compare-59",
-                "kind": 1,
-                "variable": "gantry_x_encoder_counts",
-                "normallyClosed": false,
-                "children": null,
-                "compareOperator": 3,
-                "rightOperand": "-50",
-                "edgeMode": 0,
-                "comparisonValueType": 0,
-                "edgeMemoryOperand": null,
-                "isLeaf": true
-              },
-              {
-                "id": "compare-60",
-                "kind": 1,
-                "variable": "gantry_x_encoder_counts",
-                "normallyClosed": false,
-                "children": null,
-                "compareOperator": 5,
-                "rightOperand": "50",
-                "edgeMode": 0,
-                "comparisonValueType": 0,
-                "edgeMemoryOperand": null,
-                "isLeaf": true
-              }
-            ],
-            "compareOperator": 0,
-            "rightOperand": "",
-            "edgeMode": 0,
-            "comparisonValueType": 0,
-            "edgeMemoryOperand": null,
-            "isLeaf": false
-          },
-          "terminalActionId": "rung-57-coil",
-          "hasTerminalAction": true,
-          "hasEmptyInstructionPlaceholder": false,
-          "legacyEmptyBranchSemantics": false,
-          "branches": []
-        },
-        {
-          "id": "rung-61",
-          "label": "Y encoder home window (\u00B15 mm)",
-          "coilVariable": "y_home_window",
-          "coilMode": "Assign",
-          "timerVariable": "",
-          "timerPresetMs": 1000,
-          "timerKind": "OnDelay",
-          "timerInstanceDataBlock": null,
-          "isTimer": false,
-          "isTimerReset": false,
-          "isCounter": false,
-          "isCounterReset": false,
-          "isCounterLoad": false,
-          "counterKind": "CountUp",
-          "counterVariable": "",
-          "counterPreset": 10,
-          "counterValueType": "Int",
-          "counterInstanceDataBlock": null,
-          "isNumericOperation": false,
-          "numericOperationKind": "Move",
-          "numericSourceA": "0",
-          "numericSourceB": "0",
-          "numericSourceC": "0",
-          "numericDestination": "",
-          "numericInputDataType": null,
-          "numericOutputDataType": null,
-          "isCall": false,
-          "callTarget": "",
-          "callSemanticMode": "Legacy",
-          "callInstanceId": "",
-          "callBindings": [],
-          "isReturn": false,
-          "returnValueKind": "Rlo",
-          "returnValueOperand": "",
-          "isJump": false,
-          "isLabel": false,
-          "networkLabelId": "",
-          "networkLabelName": "",
-          "programControlLabel": "",
-          "root": {
-            "id": "branch-62",
-            "kind": 2,
-            "variable": "",
-            "normallyClosed": false,
-            "children": [
-              {
-                "id": "compare-63",
-                "kind": 1,
-                "variable": "gantry_y_encoder_counts",
-                "normallyClosed": false,
-                "children": null,
-                "compareOperator": 3,
-                "rightOperand": "-50",
-                "edgeMode": 0,
-                "comparisonValueType": 0,
-                "edgeMemoryOperand": null,
-                "isLeaf": true
-              },
-              {
-                "id": "compare-64",
-                "kind": 1,
-                "variable": "gantry_y_encoder_counts",
-                "normallyClosed": false,
-                "children": null,
-                "compareOperator": 5,
-                "rightOperand": "50",
-                "edgeMode": 0,
-                "comparisonValueType": 0,
-                "edgeMemoryOperand": null,
-                "isLeaf": true
-              }
-            ],
-            "compareOperator": 0,
-            "rightOperand": "",
-            "edgeMode": 0,
-            "comparisonValueType": 0,
-            "edgeMemoryOperand": null,
-            "isLeaf": false
-          },
-          "terminalActionId": "rung-61-coil",
-          "hasTerminalAction": true,
-          "hasEmptyInstructionPlaceholder": false,
-          "legacyEmptyBranchSemantics": false,
-          "branches": []
-        },
-        {
-          "id": "rung-65",
-          "label": "Z encoder home window (\u00B15 mm)",
-          "coilVariable": "z_home_window",
-          "coilMode": "Assign",
-          "timerVariable": "",
-          "timerPresetMs": 1000,
-          "timerKind": "OnDelay",
-          "timerInstanceDataBlock": null,
-          "isTimer": false,
-          "isTimerReset": false,
-          "isCounter": false,
-          "isCounterReset": false,
-          "isCounterLoad": false,
-          "counterKind": "CountUp",
-          "counterVariable": "",
-          "counterPreset": 10,
-          "counterValueType": "Int",
-          "counterInstanceDataBlock": null,
-          "isNumericOperation": false,
-          "numericOperationKind": "Move",
-          "numericSourceA": "0",
-          "numericSourceB": "0",
-          "numericSourceC": "0",
-          "numericDestination": "",
-          "numericInputDataType": null,
-          "numericOutputDataType": null,
-          "isCall": false,
-          "callTarget": "",
-          "callSemanticMode": "Legacy",
-          "callInstanceId": "",
-          "callBindings": [],
-          "isReturn": false,
-          "returnValueKind": "Rlo",
-          "returnValueOperand": "",
-          "isJump": false,
-          "isLabel": false,
-          "networkLabelId": "",
-          "networkLabelName": "",
-          "programControlLabel": "",
-          "root": {
-            "id": "branch-66",
-            "kind": 2,
-            "variable": "",
-            "normallyClosed": false,
-            "children": [
-              {
-                "id": "compare-67",
-                "kind": 1,
-                "variable": "gantry_z_encoder_counts",
-                "normallyClosed": false,
-                "children": null,
-                "compareOperator": 3,
-                "rightOperand": "-50",
-                "edgeMode": 0,
-                "comparisonValueType": 0,
-                "edgeMemoryOperand": null,
-                "isLeaf": true
-              },
-              {
-                "id": "compare-68",
-                "kind": 1,
-                "variable": "gantry_z_encoder_counts",
-                "normallyClosed": false,
-                "children": null,
-                "compareOperator": 5,
-                "rightOperand": "50",
-                "edgeMode": 0,
-                "comparisonValueType": 0,
-                "edgeMemoryOperand": null,
-                "isLeaf": true
-              }
-            ],
-            "compareOperator": 0,
-            "rightOperand": "",
-            "edgeMode": 0,
-            "comparisonValueType": 0,
-            "edgeMemoryOperand": null,
-            "isLeaf": false
-          },
-          "terminalActionId": "rung-65-coil",
-          "hasTerminalAction": true,
-          "hasEmptyInstructionPlaceholder": false,
-          "legacyEmptyBranchSemantics": false,
-          "branches": []
-        },
-        {
-          "id": "rung-69",
+          "id": "rung-81",
           "label": "X target window selected from the PLC placement index",
           "coilVariable": "x_target_reached",
           "coilMode": "Assign",
@@ -1448,19 +1734,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-69-parallel",
+            "id": "rung-81-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-70",
+                "id": "branch-82",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-71",
+                    "id": "compare-83",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1473,9 +1759,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-72",
+                    "id": "compare-84",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1486,9 +1772,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-73",
+                    "id": "compare-85",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1507,13 +1793,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-74",
+                "id": "branch-86",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-75",
+                    "id": "compare-87",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1526,9 +1812,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-76",
+                    "id": "compare-88",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1539,9 +1825,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-77",
+                    "id": "compare-89",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1560,13 +1846,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-78",
+                "id": "branch-90",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-79",
+                    "id": "compare-91",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1579,9 +1865,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-80",
+                    "id": "compare-92",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1592,9 +1878,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-81",
+                    "id": "compare-93",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1613,13 +1899,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-82",
+                "id": "branch-94",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-83",
+                    "id": "compare-95",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1632,9 +1918,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-84",
+                    "id": "compare-96",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1645,9 +1931,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-85",
+                    "id": "compare-97",
                     "kind": 1,
-                    "variable": "gantry_x_encoder_counts",
+                    "variable": "x_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1673,14 +1959,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-69-coil",
+          "terminalActionId": "rung-81-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-86",
+          "id": "rung-98",
           "label": "Z target window selected from the PLC placement index",
           "coilVariable": "z_target_reached",
           "coilMode": "Assign",
@@ -1720,19 +2006,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-86-parallel",
+            "id": "rung-98-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-87",
+                "id": "branch-99",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-88",
+                    "id": "compare-100",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1745,9 +2031,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-89",
+                    "id": "compare-101",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1758,9 +2044,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-90",
+                    "id": "compare-102",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1779,13 +2065,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-91",
+                "id": "branch-103",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-92",
+                    "id": "compare-104",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1798,9 +2084,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-93",
+                    "id": "compare-105",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1811,9 +2097,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-94",
+                    "id": "compare-106",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1832,13 +2118,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-95",
+                "id": "branch-107",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-96",
+                    "id": "compare-108",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1851,9 +2137,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-97",
+                    "id": "compare-109",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1864,9 +2150,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-98",
+                    "id": "compare-110",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1885,13 +2171,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-99",
+                "id": "branch-111",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-100",
+                    "id": "compare-112",
                     "kind": 1,
                     "variable": "placed_cartons",
                     "normallyClosed": false,
@@ -1904,9 +2190,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-101",
+                    "id": "compare-113",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 3,
@@ -1917,9 +2203,9 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "compare-102",
+                    "id": "compare-114",
                     "kind": 1,
-                    "variable": "gantry_z_encoder_counts",
+                    "variable": "z_position_counts",
                     "normallyClosed": false,
                     "children": null,
                     "compareOperator": 5,
@@ -1945,14 +2231,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-86-coil",
+          "terminalActionId": "rung-98-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-103",
+          "id": "rung-115",
           "label": "Start accepted at measured home with a carton available",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -1992,13 +2278,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-104",
+            "id": "branch-116",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-105",
+                "id": "compare-117",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2011,7 +2297,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-106",
+                "id": "contact-118",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2024,7 +2310,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-107",
+                "id": "contact-119",
                 "kind": 0,
                 "variable": "gantry_home",
                 "normallyClosed": false,
@@ -2037,7 +2323,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-108",
+                "id": "contact-120",
                 "kind": 0,
                 "variable": "carton_at_pick",
                 "normallyClosed": false,
@@ -2050,7 +2336,7 @@
                 "isLeaf": true
               },
               {
-                "id": "compare-109",
+                "id": "compare-121",
                 "kind": 1,
                 "variable": "placed_cartons",
                 "normallyClosed": false,
@@ -2070,14 +2356,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-103-numeric",
+          "terminalActionId": "rung-115-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-110",
+          "id": "rung-122",
           "label": "Pickup height reached",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2117,13 +2403,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-111",
+            "id": "branch-123",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-112",
+                "id": "compare-124",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2136,7 +2422,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-113",
+                "id": "contact-125",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2149,7 +2435,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-114",
+                "id": "contact-126",
                 "kind": 0,
                 "variable": "at_pickup",
                 "normallyClosed": false,
@@ -2169,14 +2455,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-110-numeric",
+          "terminalActionId": "rung-122-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-115",
+          "id": "rung-127",
           "label": "Vacuum attachment confirmed",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2216,13 +2502,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-116",
+            "id": "branch-128",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-117",
+                "id": "compare-129",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2235,7 +2521,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-118",
+                "id": "contact-130",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2248,7 +2534,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-119",
+                "id": "contact-131",
                 "kind": 0,
                 "variable": "carton_attached",
                 "normallyClosed": false,
@@ -2268,14 +2554,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-115-numeric",
+          "terminalActionId": "rung-127-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-120",
+          "id": "rung-132",
           "label": "Lift reached carry height",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2315,13 +2601,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-121",
+            "id": "branch-133",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-122",
+                "id": "compare-134",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2334,7 +2620,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-123",
+                "id": "contact-135",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2347,7 +2633,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-124",
+                "id": "contact-136",
                 "kind": 0,
                 "variable": "y_home_window",
                 "normallyClosed": false,
@@ -2367,14 +2653,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-120-numeric",
+          "terminalActionId": "rung-132-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-125",
+          "id": "rung-137",
           "label": "Supported place height reached",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2414,13 +2700,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-126",
+            "id": "branch-138",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-127",
+                "id": "compare-139",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2433,7 +2719,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-128",
+                "id": "contact-140",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2446,7 +2732,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-129",
+                "id": "contact-141",
                 "kind": 0,
                 "variable": "at_place",
                 "normallyClosed": false,
@@ -2466,14 +2752,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-125-numeric",
+          "terminalActionId": "rung-137-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-130",
+          "id": "rung-142",
           "label": "Vacuum release confirmed",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2513,13 +2799,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-131",
+            "id": "branch-143",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-132",
+                "id": "compare-144",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2532,7 +2818,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-133",
+                "id": "contact-145",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2545,7 +2831,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-134",
+                "id": "contact-146",
                 "kind": 0,
                 "variable": "carton_attached",
                 "normallyClosed": true,
@@ -2565,14 +2851,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-130-numeric",
+          "terminalActionId": "rung-142-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-135",
+          "id": "rung-147",
           "label": "Tool cleared pallet at carry height",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2612,13 +2898,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-136",
+            "id": "branch-148",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-137",
+                "id": "compare-149",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2631,7 +2917,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-138",
+                "id": "contact-150",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2644,7 +2930,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-139",
+                "id": "contact-151",
                 "kind": 0,
                 "variable": "y_home_window",
                 "normallyClosed": false,
@@ -2664,14 +2950,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-135-numeric",
+          "terminalActionId": "rung-147-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-140",
+          "id": "rung-152",
           "label": "Both horizontal encoders reached the selected pallet slot",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2711,13 +2997,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-141",
+            "id": "branch-153",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-142",
+                "id": "compare-154",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2730,7 +3016,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-143",
+                "id": "contact-155",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2743,7 +3029,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-144",
+                "id": "contact-156",
                 "kind": 0,
                 "variable": "x_target_reached",
                 "normallyClosed": false,
@@ -2756,7 +3042,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-145",
+                "id": "contact-157",
                 "kind": 0,
                 "variable": "z_target_reached",
                 "normallyClosed": false,
@@ -2776,14 +3062,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-140-numeric",
+          "terminalActionId": "rung-152-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-146",
+          "id": "rung-158",
           "label": "Home return starts the next carton automatically",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2823,13 +3109,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-147",
+            "id": "branch-159",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-148",
+                "id": "compare-160",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2842,7 +3128,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-149",
+                "id": "contact-161",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2855,7 +3141,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-150",
+                "id": "contact-162",
                 "kind": 0,
                 "variable": "gantry_home",
                 "normallyClosed": false,
@@ -2868,7 +3154,7 @@
                 "isLeaf": true
               },
               {
-                "id": "compare-151",
+                "id": "compare-163",
                 "kind": 1,
                 "variable": "placed_cartons",
                 "normallyClosed": false,
@@ -2888,14 +3174,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-146-numeric",
+          "terminalActionId": "rung-158-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-152",
+          "id": "rung-164",
           "label": "Fourth measured home return completes the layer",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -2935,13 +3221,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-153",
+            "id": "branch-165",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-154",
+                "id": "compare-166",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -2954,7 +3240,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-155",
+                "id": "contact-167",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -2967,7 +3253,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-156",
+                "id": "contact-168",
                 "kind": 0,
                 "variable": "gantry_home",
                 "normallyClosed": false,
@@ -2980,7 +3266,7 @@
                 "isLeaf": true
               },
               {
-                "id": "compare-157",
+                "id": "compare-169",
                 "kind": 1,
                 "variable": "placed_cartons",
                 "normallyClosed": false,
@@ -3000,14 +3286,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-152-numeric",
+          "terminalActionId": "rung-164-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-158",
+          "id": "rung-170",
           "label": "Pickup vacuum dwell before attachment",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -3050,13 +3336,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-159",
+            "id": "branch-171",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-160",
+                "id": "compare-172",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -3069,7 +3355,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-161",
+                "id": "contact-173",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -3082,7 +3368,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-162",
+                "id": "contact-174",
                 "kind": 0,
                 "variable": "at_pickup",
                 "normallyClosed": false,
@@ -3102,14 +3388,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-158-timer",
+          "terminalActionId": "rung-170-timer",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-163",
+          "id": "rung-175",
           "label": "X positive request during pallet transfer",
           "coilVariable": "x_positive_request",
           "coilMode": "Assign",
@@ -3149,13 +3435,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-164",
+            "id": "branch-176",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-165",
+                "id": "compare-177",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -3168,7 +3454,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-166",
+                "id": "contact-178",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -3181,7 +3467,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-167",
+                "id": "contact-179",
                 "kind": 0,
                 "variable": "x_target_reached",
                 "normallyClosed": true,
@@ -3201,14 +3487,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-163-coil",
+          "terminalActionId": "rung-175-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-168",
+          "id": "rung-180",
           "label": "X negative request during measured home return",
           "coilVariable": "x_negative_request",
           "coilMode": "Assign",
@@ -3248,13 +3534,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-169",
+            "id": "branch-181",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-170",
+                "id": "compare-182",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -3267,7 +3553,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-171",
+                "id": "contact-183",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -3280,7 +3566,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-172",
+                "id": "contact-184",
                 "kind": 0,
                 "variable": "x_home_window",
                 "normallyClosed": true,
@@ -3300,14 +3586,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-168-coil",
+          "terminalActionId": "rung-180-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-173",
+          "id": "rung-185",
           "label": "Z positive request during pallet transfer",
           "coilVariable": "z_positive_request",
           "coilMode": "Assign",
@@ -3347,13 +3633,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-174",
+            "id": "branch-186",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-175",
+                "id": "compare-187",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -3366,7 +3652,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-176",
+                "id": "contact-188",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -3379,7 +3665,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-177",
+                "id": "contact-189",
                 "kind": 0,
                 "variable": "z_target_reached",
                 "normallyClosed": true,
@@ -3399,14 +3685,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-173-coil",
+          "terminalActionId": "rung-185-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-178",
+          "id": "rung-190",
           "label": "Z negative request during measured home return",
           "coilVariable": "z_negative_request",
           "coilMode": "Assign",
@@ -3446,13 +3732,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-179",
+            "id": "branch-191",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-180",
+                "id": "compare-192",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -3465,7 +3751,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-181",
+                "id": "contact-193",
                 "kind": 0,
                 "variable": "machine_run",
                 "normallyClosed": false,
@@ -3478,7 +3764,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-182",
+                "id": "contact-194",
                 "kind": 0,
                 "variable": "z_home_window",
                 "normallyClosed": true,
@@ -3498,14 +3784,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-178-coil",
+          "terminalActionId": "rung-190-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-183",
+          "id": "rung-195",
           "label": "Y down request for pickup or supported place",
           "coilVariable": "y_negative_request",
           "coilMode": "Assign",
@@ -3545,19 +3831,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-183-parallel",
+            "id": "rung-195-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-184",
+                "id": "branch-196",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-185",
+                    "id": "compare-197",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3570,7 +3856,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-186",
+                    "id": "contact-198",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -3583,7 +3869,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-187",
+                    "id": "contact-199",
                     "kind": 0,
                     "variable": "at_pickup",
                     "normallyClosed": true,
@@ -3604,13 +3890,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-188",
+                "id": "branch-200",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-189",
+                    "id": "compare-201",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3623,7 +3909,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-190",
+                    "id": "contact-202",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -3636,7 +3922,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-191",
+                    "id": "contact-203",
                     "kind": 0,
                     "variable": "at_place",
                     "normallyClosed": true,
@@ -3664,14 +3950,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-183-coil",
+          "terminalActionId": "rung-195-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-192",
+          "id": "rung-204",
           "label": "Y up request after pickup or release",
           "coilVariable": "y_positive_request",
           "coilMode": "Assign",
@@ -3711,19 +3997,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-192-parallel",
+            "id": "rung-204-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-193",
+                "id": "branch-205",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-194",
+                    "id": "compare-206",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3736,7 +4022,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-195",
+                    "id": "contact-207",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -3749,7 +4035,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-196",
+                    "id": "contact-208",
                     "kind": 0,
                     "variable": "y_home_window",
                     "normallyClosed": true,
@@ -3770,13 +4056,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-197",
+                "id": "branch-209",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-198",
+                    "id": "compare-210",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3789,7 +4075,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-199",
+                    "id": "contact-211",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -3802,7 +4088,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-200",
+                    "id": "contact-212",
                     "kind": 0,
                     "variable": "y_home_window",
                     "normallyClosed": true,
@@ -3830,14 +4116,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-192-coil",
+          "terminalActionId": "rung-204-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-201",
+          "id": "rung-213",
           "label": "Vacuum request after dwell and through the supported carry",
           "coilVariable": "vacuum_request",
           "coilMode": "Assign",
@@ -3877,19 +4163,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-201-parallel",
+            "id": "rung-213-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-202",
+                "id": "branch-214",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-203",
+                    "id": "compare-215",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3902,7 +4188,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-204",
+                    "id": "contact-216",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -3915,7 +4201,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-205",
+                    "id": "contact-217",
                     "kind": 0,
                     "variable": "pick_timer.Q",
                     "normallyClosed": false,
@@ -3936,13 +4222,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-206",
+                "id": "branch-218",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-207",
+                    "id": "compare-219",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3955,7 +4241,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-208",
+                    "id": "contact-220",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -3976,13 +4262,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-209",
+                "id": "branch-221",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-210",
+                    "id": "compare-222",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -3995,7 +4281,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-211",
+                    "id": "contact-223",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -4016,13 +4302,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-212",
+                "id": "branch-224",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "compare-213",
+                    "id": "compare-225",
                     "kind": 1,
                     "variable": "sequence_step",
                     "normallyClosed": false,
@@ -4035,7 +4321,7 @@
                     "isLeaf": true
                   },
                   {
-                    "id": "contact-214",
+                    "id": "contact-226",
                     "kind": 0,
                     "variable": "machine_run",
                     "normallyClosed": false,
@@ -4063,14 +4349,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-201-coil",
+          "terminalActionId": "rung-213-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-215",
+          "id": "rung-227",
           "label": "X axis FB call",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4175,13 +4461,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-216",
+            "id": "branch-228",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-217",
+                "id": "contact-229",
                 "kind": 0,
                 "variable": "always_scan",
                 "normallyClosed": false,
@@ -4201,14 +4487,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-215-call",
+          "terminalActionId": "rung-227-call",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-218",
+          "id": "rung-230",
           "label": "Y axis FB call",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4313,13 +4599,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-219",
+            "id": "branch-231",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-220",
+                "id": "contact-232",
                 "kind": 0,
                 "variable": "always_scan",
                 "normallyClosed": false,
@@ -4339,14 +4625,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-218-call",
+          "terminalActionId": "rung-230-call",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-221",
+          "id": "rung-233",
           "label": "Z axis FB call",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4451,13 +4737,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-222",
+            "id": "branch-234",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-223",
+                "id": "contact-235",
                 "kind": 0,
                 "variable": "always_scan",
                 "normallyClosed": false,
@@ -4477,14 +4763,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-221-call",
+          "terminalActionId": "rung-233-call",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-224",
+          "id": "rung-236",
           "label": "Vacuum gripper FB call",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4581,13 +4867,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-225",
+            "id": "branch-237",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-226",
+                "id": "contact-238",
                 "kind": 0,
                 "variable": "always_scan",
                 "normallyClosed": false,
@@ -4607,14 +4893,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-224-call",
+          "terminalActionId": "rung-236-call",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-227",
+          "id": "rung-239",
           "label": "Count measured placement and home-return edges",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4657,13 +4943,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-228",
+            "id": "branch-240",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "edge-229",
+                "id": "edge-241",
                 "kind": 0,
                 "variable": "pick_complete",
                 "normallyClosed": false,
@@ -4683,14 +4969,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-227-counter",
+          "terminalActionId": "rung-239-counter",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-230",
+          "id": "rung-242",
           "label": "Machine Reset clears completed transfer count",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4733,13 +5019,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-231",
+            "id": "branch-243",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-232",
+                "id": "contact-244",
                 "kind": 0,
                 "variable": "reset_command",
                 "normallyClosed": false,
@@ -4759,14 +5045,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-230-counter-reset",
+          "terminalActionId": "rung-242-counter-reset",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-233",
+          "id": "rung-245",
           "label": "Layer complete follows the fourth physical placement and terminal state",
           "coilVariable": "layer_complete",
           "coilMode": "Assign",
@@ -4806,13 +5092,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-234",
+            "id": "branch-246",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "compare-235",
+                "id": "compare-247",
                 "kind": 1,
                 "variable": "placed_cartons",
                 "normallyClosed": false,
@@ -4825,7 +5111,7 @@
                 "isLeaf": true
               },
               {
-                "id": "compare-236",
+                "id": "compare-248",
                 "kind": 1,
                 "variable": "sequence_step",
                 "normallyClosed": false,
@@ -4845,14 +5131,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-233-coil",
+          "terminalActionId": "rung-245-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-237",
+          "id": "rung-249",
           "label": "Publish one completed layer",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4892,13 +5178,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-238",
+            "id": "branch-250",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-239",
+                "id": "contact-251",
                 "kind": 0,
                 "variable": "layer_complete",
                 "normallyClosed": false,
@@ -4918,14 +5204,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-237-numeric",
+          "terminalActionId": "rung-249-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-240",
+          "id": "rung-252",
           "label": "Machine Reset clears layer count",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -4965,13 +5251,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-241",
+            "id": "branch-253",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-242",
+                "id": "contact-254",
                 "kind": 0,
                 "variable": "reset_command",
                 "normallyClosed": false,
@@ -4991,14 +5277,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-240-numeric",
+          "terminalActionId": "rung-252-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-243",
+          "id": "rung-255",
           "label": "Machine Reset returns the PLC sequence to idle",
           "coilVariable": "",
           "coilMode": "Assign",
@@ -5038,13 +5324,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-244",
+            "id": "branch-256",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-245",
+                "id": "contact-257",
                 "kind": 0,
                 "variable": "reset_command",
                 "normallyClosed": false,
@@ -5064,14 +5350,73 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-243-numeric",
+          "terminalActionId": "rung-255-numeric",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-246",
+          "id": "rung-258",
+          "label": "Publish current sequence state to the machine STEP display",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "sequence_step",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "sequence_step_value",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-259",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-258-numeric",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-260",
           "label": "Cell active when an axis or vacuum command is energized",
           "coilVariable": "cell_active",
           "coilMode": "Assign",
@@ -5111,19 +5456,19 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "rung-246-parallel",
+            "id": "rung-260-parallel",
             "kind": 3,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "branch-247",
+                "id": "branch-261",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-248",
+                    "id": "contact-262",
                     "kind": 0,
                     "variable": "gantry_x_positive",
                     "normallyClosed": false,
@@ -5144,13 +5489,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-249",
+                "id": "branch-263",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-250",
+                    "id": "contact-264",
                     "kind": 0,
                     "variable": "gantry_x_negative",
                     "normallyClosed": false,
@@ -5171,13 +5516,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-251",
+                "id": "branch-265",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-252",
+                    "id": "contact-266",
                     "kind": 0,
                     "variable": "gantry_y_positive",
                     "normallyClosed": false,
@@ -5198,13 +5543,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-253",
+                "id": "branch-267",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-254",
+                    "id": "contact-268",
                     "kind": 0,
                     "variable": "gantry_y_negative",
                     "normallyClosed": false,
@@ -5225,13 +5570,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-255",
+                "id": "branch-269",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-256",
+                    "id": "contact-270",
                     "kind": 0,
                     "variable": "gantry_z_positive",
                     "normallyClosed": false,
@@ -5252,13 +5597,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-257",
+                "id": "branch-271",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-258",
+                    "id": "contact-272",
                     "kind": 0,
                     "variable": "gantry_z_negative",
                     "normallyClosed": false,
@@ -5279,13 +5624,13 @@
                 "isLeaf": false
               },
               {
-                "id": "branch-259",
+                "id": "branch-273",
                 "kind": 2,
                 "variable": "",
                 "normallyClosed": false,
                 "children": [
                   {
-                    "id": "contact-260",
+                    "id": "contact-274",
                     "kind": 0,
                     "variable": "vacuum_pick",
                     "normallyClosed": false,
@@ -5313,7 +5658,7 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-246-coil",
+          "terminalActionId": "rung-260-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
@@ -5418,7 +5763,7 @@
       ],
       "rungs": [
         {
-          "id": "rung-5",
+          "id": "rung-6",
           "label": "Positive direction command with mutual exclusion and end limit",
           "coilVariable": "local:fb_axisdrive.positivecommand",
           "coilMode": "Assign",
@@ -5458,13 +5803,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-6",
+            "id": "branch-7",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-7",
+                "id": "contact-8",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.enable",
                 "normallyClosed": false,
@@ -5477,7 +5822,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-8",
+                "id": "contact-9",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.positiverequest",
                 "normallyClosed": false,
@@ -5490,7 +5835,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-9",
+                "id": "contact-10",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.negativerequest",
                 "normallyClosed": true,
@@ -5503,7 +5848,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-10",
+                "id": "contact-11",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.positivelimit",
                 "normallyClosed": true,
@@ -5523,14 +5868,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-5-coil",
+          "terminalActionId": "rung-6-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-11",
+          "id": "rung-12",
           "label": "Negative direction command with mutual exclusion and end limit",
           "coilVariable": "local:fb_axisdrive.negativecommand",
           "coilMode": "Assign",
@@ -5570,13 +5915,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-12",
+            "id": "branch-13",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-13",
+                "id": "contact-14",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.enable",
                 "normallyClosed": false,
@@ -5589,7 +5934,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-14",
+                "id": "contact-15",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.negativerequest",
                 "normallyClosed": false,
@@ -5602,7 +5947,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-15",
+                "id": "contact-16",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.positiverequest",
                 "normallyClosed": true,
@@ -5615,7 +5960,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-16",
+                "id": "contact-17",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.negativelimit",
                 "normallyClosed": true,
@@ -5635,14 +5980,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-11-coil",
+          "terminalActionId": "rung-12-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-17",
+          "id": "rung-18",
           "label": "Opposed requests are an axis command fault",
           "coilVariable": "local:fb_axisdrive.fault",
           "coilMode": "Assign",
@@ -5682,13 +6027,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-18",
+            "id": "branch-19",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-19",
+                "id": "contact-20",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.positiverequest",
                 "normallyClosed": false,
@@ -5701,7 +6046,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-20",
+                "id": "contact-21",
                 "kind": 0,
                 "variable": "local:fb_axisdrive.negativerequest",
                 "normallyClosed": false,
@@ -5721,7 +6066,7 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-17-coil",
+          "terminalActionId": "rung-18-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
@@ -5815,7 +6160,7 @@
       ],
       "rungs": [
         {
-          "id": "rung-21",
+          "id": "rung-22",
           "label": "Vacuum follows the PLC request until the supported place",
           "coilVariable": "local:fb_vacuumgripper.vacuumcommand",
           "coilMode": "Assign",
@@ -5855,13 +6200,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-22",
+            "id": "branch-23",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-23",
+                "id": "contact-24",
                 "kind": 0,
                 "variable": "local:fb_vacuumgripper.enable",
                 "normallyClosed": false,
@@ -5874,7 +6219,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-24",
+                "id": "contact-25",
                 "kind": 0,
                 "variable": "local:fb_vacuumgripper.pickrequest",
                 "normallyClosed": false,
@@ -5887,7 +6232,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-25",
+                "id": "contact-26",
                 "kind": 0,
                 "variable": "local:fb_vacuumgripper.atplace",
                 "normallyClosed": true,
@@ -5907,14 +6252,14 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-21-coil",
+          "terminalActionId": "rung-22-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
           "branches": []
         },
         {
-          "id": "rung-26",
+          "id": "rung-27",
           "label": "Vacuum request must begin at pickup or continue with an attached carton",
           "coilVariable": "local:fb_vacuumgripper.fault",
           "coilMode": "Assign",
@@ -5954,13 +6299,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-27",
+            "id": "branch-28",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-28",
+                "id": "contact-29",
                 "kind": 0,
                 "variable": "local:fb_vacuumgripper.pickrequest",
                 "normallyClosed": false,
@@ -5973,7 +6318,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-29",
+                "id": "contact-30",
                 "kind": 0,
                 "variable": "local:fb_vacuumgripper.atpickup",
                 "normallyClosed": true,
@@ -5986,7 +6331,7 @@
                 "isLeaf": true
               },
               {
-                "id": "contact-30",
+                "id": "contact-31",
                 "kind": 0,
                 "variable": "local:fb_vacuumgripper.attached",
                 "normallyClosed": true,
@@ -6006,7 +6351,364 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-26-coil",
+          "terminalActionId": "rung-27-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    },
+    {
+      "id": "block-5",
+      "name": "FB_EncoderChannel",
+      "blockType": "FunctionBlock",
+      "semanticMode": "Parameterized",
+      "interface": [
+        {
+          "id": "fb_encoderchannel.rawcounts",
+          "enumMembers": null,
+          "name": "RawCounts",
+          "type": "DInt",
+          "section": "Input",
+          "initial": 0,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.homeminimum",
+          "enumMembers": null,
+          "name": "HomeMinimum",
+          "type": "DInt",
+          "section": "Input",
+          "initial": 0,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.homemaximum",
+          "enumMembers": null,
+          "name": "HomeMaximum",
+          "type": "DInt",
+          "section": "Input",
+          "initial": 0,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.travelminimum",
+          "enumMembers": null,
+          "name": "TravelMinimum",
+          "type": "DInt",
+          "section": "Input",
+          "initial": 0,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.travelmaximum",
+          "enumMembers": null,
+          "name": "TravelMaximum",
+          "type": "DInt",
+          "section": "Input",
+          "initial": 0,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.positioncounts",
+          "enumMembers": null,
+          "name": "PositionCounts",
+          "type": "DInt",
+          "section": "Output",
+          "initial": 0,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.homewindow",
+          "enumMembers": null,
+          "name": "HomeWindow",
+          "type": "Bool",
+          "section": "Output",
+          "initial": false,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        },
+        {
+          "id": "fb_encoderchannel.fault",
+          "enumMembers": null,
+          "name": "Fault",
+          "type": "Bool",
+          "section": "Output",
+          "initial": false,
+          "dataType": "",
+          "retain": false,
+          "comment": ""
+        }
+      ],
+      "rungs": [
+        {
+          "id": "rung-32",
+          "label": "Publish measured encoder position",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "local:fb_encoderchannel.rawcounts",
+          "numericSourceB": "",
+          "numericSourceC": "0",
+          "numericDestination": "local:fb_encoderchannel.positioncounts",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-33",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-32-numeric",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-34",
+          "label": "Encoder home window",
+          "coilVariable": "local:fb_encoderchannel.homewindow",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-35",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "compare-36",
+                "kind": 1,
+                "variable": "local:fb_encoderchannel.rawcounts",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 3,
+                "rightOperand": "local:fb_encoderchannel.homeminimum",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "compare-37",
+                "kind": 1,
+                "variable": "local:fb_encoderchannel.rawcounts",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 5,
+                "rightOperand": "local:fb_encoderchannel.homemaximum",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-34-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-38",
+          "label": "Encoder outside configured travel is a diagnosed fault",
+          "coilVariable": "local:fb_encoderchannel.fault",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "rung-38-parallel",
+            "kind": 3,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "branch-39",
+                "kind": 2,
+                "variable": "",
+                "normallyClosed": false,
+                "children": [
+                  {
+                    "id": "compare-40",
+                    "kind": 1,
+                    "variable": "local:fb_encoderchannel.rawcounts",
+                    "normallyClosed": false,
+                    "children": null,
+                    "compareOperator": 4,
+                    "rightOperand": "local:fb_encoderchannel.travelminimum",
+                    "edgeMode": 0,
+                    "comparisonValueType": 0,
+                    "edgeMemoryOperand": null,
+                    "isLeaf": true
+                  }
+                ],
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": false
+              },
+              {
+                "id": "branch-41",
+                "kind": 2,
+                "variable": "",
+                "normallyClosed": false,
+                "children": [
+                  {
+                    "id": "compare-42",
+                    "kind": 1,
+                    "variable": "local:fb_encoderchannel.rawcounts",
+                    "normallyClosed": false,
+                    "children": null,
+                    "compareOperator": 2,
+                    "rightOperand": "local:fb_encoderchannel.travelmaximum",
+                    "edgeMode": 0,
+                    "comparisonValueType": 0,
+                    "edgeMemoryOperand": null,
+                    "isLeaf": true
+                  }
+                ],
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": false
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-38-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
@@ -6030,12 +6732,16 @@
     "safety_trip",
     "machine_run",
     "sequence_step",
+    "sequence_step_value",
     "pallet_position_valid",
     "carton_at_pick",
     "gantry_home",
     "gantry_x_encoder_counts",
+    "x_position_counts",
     "gantry_y_encoder_counts",
+    "y_position_counts",
     "gantry_z_encoder_counts",
+    "z_position_counts",
     "gantry_x_positive",
     "gantry_x_negative",
     "gantry_y_positive",
@@ -6056,12 +6762,16 @@
         "safety_trip",
         "machine_run",
         "sequence_step",
+        "sequence_step_value",
         "pallet_position_valid",
         "carton_at_pick",
         "gantry_home",
         "gantry_x_encoder_counts",
+        "x_position_counts",
         "gantry_y_encoder_counts",
+        "y_position_counts",
         "gantry_z_encoder_counts",
+        "z_position_counts",
         "gantry_x_positive",
         "gantry_x_negative",
         "gantry_y_positive",
@@ -6109,7 +6819,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-5",
           "referenceKind": "Symbolic",
-          "reference": "pallet_position_valid",
+          "reference": "sequence_step_value",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6117,7 +6827,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-6",
           "referenceKind": "Symbolic",
-          "reference": "carton_at_pick",
+          "reference": "pallet_position_valid",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6125,7 +6835,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-7",
           "referenceKind": "Symbolic",
-          "reference": "gantry_home",
+          "reference": "carton_at_pick",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6133,7 +6843,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-8",
           "referenceKind": "Symbolic",
-          "reference": "gantry_x_encoder_counts",
+          "reference": "gantry_home",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6141,7 +6851,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-9",
           "referenceKind": "Symbolic",
-          "reference": "gantry_y_encoder_counts",
+          "reference": "gantry_x_encoder_counts",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6149,7 +6859,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-10",
           "referenceKind": "Symbolic",
-          "reference": "gantry_z_encoder_counts",
+          "reference": "x_position_counts",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6157,7 +6867,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-11",
           "referenceKind": "Symbolic",
-          "reference": "gantry_x_positive",
+          "reference": "gantry_y_encoder_counts",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6165,7 +6875,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-12",
           "referenceKind": "Symbolic",
-          "reference": "gantry_x_negative",
+          "reference": "y_position_counts",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6173,7 +6883,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-13",
           "referenceKind": "Symbolic",
-          "reference": "gantry_y_positive",
+          "reference": "gantry_z_encoder_counts",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6181,7 +6891,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-14",
           "referenceKind": "Symbolic",
-          "reference": "gantry_y_negative",
+          "reference": "z_position_counts",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6189,7 +6899,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-15",
           "referenceKind": "Symbolic",
-          "reference": "gantry_z_positive",
+          "reference": "gantry_x_positive",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6197,7 +6907,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-16",
           "referenceKind": "Symbolic",
-          "reference": "gantry_z_negative",
+          "reference": "gantry_x_negative",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6205,7 +6915,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-17",
           "referenceKind": "Symbolic",
-          "reference": "vacuum_pick",
+          "reference": "gantry_y_positive",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6213,7 +6923,7 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-18",
           "referenceKind": "Symbolic",
-          "reference": "placed_cartons",
+          "reference": "gantry_y_negative",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
@@ -6221,13 +6931,45 @@
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-19",
           "referenceKind": "Symbolic",
-          "reference": "cycle_count",
+          "reference": "gantry_z_positive",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
         },
         {
           "id": "demo-5-integrated-palletizer-watch-1-row-20",
+          "referenceKind": "Symbolic",
+          "reference": "gantry_z_negative",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-21",
+          "referenceKind": "Symbolic",
+          "reference": "vacuum_pick",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-22",
+          "referenceKind": "Symbolic",
+          "reference": "placed_cartons",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-23",
+          "referenceKind": "Symbolic",
+          "reference": "cycle_count",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-5-integrated-palletizer-watch-1-row-24",
           "referenceKind": "Symbolic",
           "reference": "layer_complete",
           "displayFormat": "Auto",
@@ -6239,6 +6981,33 @@
   ],
   "activeWatchTableIndex": 0,
   "instances": [
+    {
+      "id": "instance-x_encoder",
+      "name": "X_Encoder",
+      "blockId": "block-5",
+      "instanceDataBlock": {
+        "number": 105,
+        "name": "X_Encoder_DB"
+      }
+    },
+    {
+      "id": "instance-y_encoder",
+      "name": "Y_Encoder",
+      "blockId": "block-5",
+      "instanceDataBlock": {
+        "number": 106,
+        "name": "Y_Encoder_DB"
+      }
+    },
+    {
+      "id": "instance-z_encoder",
+      "name": "Z_Encoder",
+      "blockId": "block-5",
+      "instanceDataBlock": {
+        "number": 107,
+        "name": "Z_Encoder_DB"
+      }
+    },
     {
       "id": "instance-x_axis",
       "name": "X_Axis",
@@ -6277,7 +7046,8 @@
     }
   ],
   "tagTables": [
-    "Default tag table"
+    "Default tag table",
+    "SceneIO"
   ],
   "userConstants": []
 }

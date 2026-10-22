@@ -1,0 +1,91 @@
+{
+  "utc": "2026-10-22T21:26:40.4338613Z",
+  "root": "C:\\Users\\matt.winter\\Documents\\RungProof",
+  "branch": "main",
+  "origin": "https://github.com/mnwinter/RungProof.git",
+  "tracked_modified_count": 108,
+  "untracked_count": 8225,
+  "file_count": 8333,
+  "bytes": 2296307173.0,
+  "groups": [
+    {
+      "name": "audit",
+      "count": 8170,
+      "bytes": 2275236517.0
+    },
+    {
+      "name": "other-output",
+      "count": 23,
+      "bytes": 15834174.0
+    },
+    {
+      "name": "source-doc-config",
+      "count": 140,
+      "bytes": 5236482.0
+    }
+  ],
+  "largest": [
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab55-cycle-recovery-plan-checkpoints.jpg",
+      "bytes": 5240102,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab1112-flow-checkpoints.jpg",
+      "bytes": 4844853,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab1112-b-flow-checkpoints.jpg",
+      "bytes": 3679988,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab1006-v2-flow-recovery-plan-checkpoints.jpg",
+      "bytes": 3584385,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab54-cycle-recovery-plan-checkpoints.jpg",
+      "bytes": 3568902,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab53-cycle-recovery-plan-checkpoints.jpg",
+      "bytes": 3268587,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab49-motion-plan-checkpoints.jpg",
+      "bytes": 3241850,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab1112-r2-stop-run-checkpoints.jpg",
+      "bytes": 3216606,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab49-motion-r2-plan-checkpoints.jpg",
+      "bytes": 3190931,
+      "group": "audit",
+      "tracked": false
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/lab1111-r2-recovery-checkpoints.jpg",
+      "bytes": 3163338,
+      "group": "audit",
+      "tracked": false
+    }
+  ],
+  "sensitive_named_candidates": [],
+  "ignored_policy": "Toolchains/.godot/bin/obj/build/artifacts/caches/*.log ignored; do not force-addbulk. Selected requiredlogs canbeexportedverbatimtocurated.txt w/hash."
+}

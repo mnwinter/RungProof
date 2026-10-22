@@ -8,19 +8,24 @@ their machine-control architecture has passed the expanded PLC-ownership
 acceptance gate in `docs/TIA_PORTAL_PARITY_AUDIT.md` and
 `docs/DEMO_FUNCTIONAL_ACCEPTANCE.md`.
 
+Each project retains TIA's built-in `Default tag table` and includes a
+`SceneIO` table populated from the associated scene's declared PC/PLC points.
+These rows use symbolic bindings and have no physical I/O addresses.
+
 | Demo | Project | Focus | Associated scene |
 |---|---|---|---|
 | 1 | `01-press-count-starter.rpproj.json` | Rising edge, CTU, output coil | Lab 4.1 Press-Count Lamp |
 | 2 | `02-delayed-lamp-timer.rpproj.json` | TON timer, `.Q` status, output coil | Lab 5.1 Delayed Lamp |
-| 3 | `03-conveyor-sequence.rpproj.json` | Seal-in, NC interlocks, photoeye edge, CTU | Conveyor Stop |
-| 4 | `04-batch-process-blocks.rpproj.json` | FB/FC calls, rising detection edge, CTU, type/count permissives, DINT count publication with MOVE | Lab 9.11 Pallet Counting |
-| 5 | `05-integrated-cell-multi-fb-fc.rpproj.json` | Main sequence plus parameterized X/Y/Z axis FB instances and a vacuum/gripper FB, each with a distinct instance DB; TON pickup dwell, CTU completed returns, comparisons and MOVE state transitions | Lab 11.13 XY Palletizing |
+| 3 | `03-conveyor-sequence.rpproj.json` | Height measurement, 600 mm compare boundary, main/side routing, machine Start/Stop/Reset, trip/overload interlocks, and parameterized conveyor/pusher FBs in DB101/DB102 | Height Sorting Pusher Cell |
+| 4 | `04-batch-process-blocks.rpproj.json` | Parameterized counter FB with Static CTU state in DB101, typed inputs/outputs, FC validation, rising detection edge, type/count permissives, and DINT count publication | Lab 9.11 Pallet Counting |
+| 5 | `05-integrated-cell-multi-fb-fc.rpproj.json` | Main-owned palletizer sequence; parameterized X/Y/Z axis, vacuum/gripper, and X/Y/Z encoder FB instances in distinct DB101–DB107; measured position/status, TON dwell, CTU returns, comparisons, and state moves | Lab 11.13 XY Palletizing |
 
 Demo 5 now combines explicit machine Enable/Start/Stop/Reset and simulated-trip
 inputs with a PLC-owned four-carton sequence. Main advances `sequence_step` only
 from simulated encoder, position, attachment, release, and home feedback. Three
 calls to `FB_AxisDrive` use distinct X/Y/Z instance DBs; `FB_VacuumGripper` has a
-fourth instance DB. Six direction outputs and the vacuum output drive a plant
+fourth instance DB. Three calls to `FB_EncoderChannel` use DB105–DB107 and pass
+measured position, home-window status, and range faults into Main. Six direction outputs and the vacuum output drive a plant
 model that only integrates commands and reports measurements; it no longer owns
 a palletizing phase enum or accepts a whole-cycle command. This is verified
 offline simulation architecture, not live Siemens execution or safety approval.

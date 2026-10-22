@@ -1,0 +1,13 @@
+{
+  "file": "fixture-new-binding-lab-2-24-v3.rpproj.json",
+  "sha256": "d00b7717588a1a7cd910726f3b6961d8df1a777736770bb6ae2da98920f48741",
+  "supersedes": "fixture-new-binding-lab-2-24-v2.rpproj.json",
+  "preserved_v2_sha256": "9a9f5a7a6d0dfbec1d5db48bf02c69d2480c3e608b265baf622b8a0c519b8536",
+  "status": "B3 existing-DLL compile/current scene declarations only; CNC source ahead of running B3. Native full-cycle acceptance pending.",
+  "policy": "Every33phase target/grip/clamp/access/spindle/outfeed decision lives in LAD; qa_scan_step/qa_last_step prevent stale at-target on first phase scan. No timers fabricate feedback. Reset after interruption/completion. Pickup X consumes actual stock coordinate, because leading-edge pickup beam occurs before stock center reaches beam.",
+  "validation": {
+    "exit_code": 0,
+    "log": "fixture-cnc224-v3-compile-1792702731787995700.log",
+    "log_sha256": "ca739ae2f44d63f1fc81c4f237f536bd37818efe7e48b951c06afafe82d88f33"
+  }
+}

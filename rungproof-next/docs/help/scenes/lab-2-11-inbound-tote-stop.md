@@ -14,6 +14,7 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `start_cycle_request` | `BOOL` | **PC** | `False` |
 | `conveyor_run` | `BOOL` | **PLC** | `False` |
 | `tote_at_scanner` | `BOOL` | **PC** | `False` |
 | `scan_complete` | `BOOL` | **PC** | `False` |
@@ -24,9 +25,11 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Start tote cycle` | `start` | `scan-cycle` |
+| `Start tote cycle` | `start` | Loaded controller: pulse `start_cycle_request` (legacy preview: `scan-cycle`) |
 | `Stop conveyor safely` | `stop` | `` |
 | `Reset tote` | `reset` | `` |
+
+With a loaded ladder controller, each Start action pulses the named PC-owned BOOL request binding; the learner program decides actuator commands. A legacy preview sequence name does not imply that the loaded controller automatically executes that sequence.
 
 ## Equipment bindings
 
@@ -77,3 +80,4 @@ A tote advances to a scan photoeye, pauses for identification, then clears the s
 ### Expected observations
 
 - The tote stops at the scanner, records completion, clears, and leaves the conveyor stopped.
+

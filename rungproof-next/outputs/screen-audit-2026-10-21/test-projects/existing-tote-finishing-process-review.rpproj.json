@@ -1,0 +1,851 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "review-tote-finishing-process",
+  "name": "Tote_Full_Process_QA",
+  "sourceSceneId": "lab-2-21-tote-finishing",
+  "scanPeriodMs": 10,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 157,
+  "tags": [
+    {
+      "name": "start_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operator.start"
+    },
+    {
+      "name": "qa_cycle",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": ""
+    },
+    {
+      "name": "position",
+      "type": "Real",
+      "role": "Input",
+      "initial": 0,
+      "binding": "tote_position"
+    },
+    {
+      "name": "tote_at_fill",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "tote_at_fill"
+    },
+    {
+      "name": "tote_at_cap",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "tote_at_cap"
+    },
+    {
+      "name": "tote_at_exit",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "tote_at_exit"
+    },
+    {
+      "name": "fill_complete",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "fill_complete"
+    },
+    {
+      "name": "cap_applied",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "cap_applied"
+    },
+    {
+      "name": "cap_home",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "cap_home"
+    },
+    {
+      "name": "conveyor_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "conveyor_run"
+    },
+    {
+      "name": "fill_valve_open",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "fill_valve_open"
+    },
+    {
+      "name": "capper_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "capper_run"
+    },
+    {
+      "name": "labeler_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "labeler_run"
+    },
+    {
+      "name": "inspection_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "inspection_run"
+    },
+    {
+      "name": "label_applied",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "label_applied"
+    },
+    {
+      "name": "label_home",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "label_home"
+    },
+    {
+      "name": "inspection_done",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "inspection_done"
+    },
+    {
+      "name": "inspection_ok",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "inspection_ok"
+    },
+    {
+      "name": "tote_at_label",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "tote_at_label"
+    },
+    {
+      "name": "tote_at_inspection",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "tote_at_inspection"
+    },
+    {
+      "name": "tote_label_aligned",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "tote_label_aligned"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "Tote_Fill_Cap_QA",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-15",
+          "label": "Start seals cycle until supported exit",
+          "coilVariable": "qa_cycle",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-16",
+              "contacts": [
+                {
+                  "id": "contact-11",
+                  "variable": "start_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-12",
+                  "variable": "tote_at_exit",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-17",
+              "contacts": [
+                {
+                  "id": "contact-13",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-14",
+                  "variable": "tote_at_exit",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-122",
+          "label": "Travel to each precise station; wait for actual process feedback",
+          "coilVariable": "conveyor_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-123",
+              "contacts": [
+                {
+                  "id": "contact-101",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-102",
+                  "variable": "fill_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-103",
+                  "variable": "position",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessThan",
+                  "rightOperand": "-2.603",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-124",
+              "contacts": [
+                {
+                  "id": "contact-104",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-105",
+                  "variable": "fill_complete",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-106",
+                  "variable": "cap_applied",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-107",
+                  "variable": "position",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessThan",
+                  "rightOperand": "-0.003",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-125",
+              "contacts": [
+                {
+                  "id": "contact-108",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-109",
+                  "variable": "cap_applied",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-110",
+                  "variable": "cap_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-111",
+                  "variable": "label_applied",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-112",
+                  "variable": "tote_label_aligned",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-126",
+              "contacts": [
+                {
+                  "id": "contact-113",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-114",
+                  "variable": "label_applied",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-115",
+                  "variable": "label_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-116",
+                  "variable": "inspection_done",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-117",
+                  "variable": "position",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "LessThan",
+                  "rightOperand": "4.597",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "branch-127",
+              "contacts": [
+                {
+                  "id": "contact-118",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-119",
+                  "variable": "inspection_done",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-120",
+                  "variable": "inspection_ok",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-121",
+                  "variable": "tote_at_exit",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-132",
+          "label": "Fill stationary tote until measured full",
+          "coilVariable": "fill_valve_open",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-133",
+              "contacts": [
+                {
+                  "id": "contact-128",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-129",
+                  "variable": "conveyor_run",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-130",
+                  "variable": "tote_at_fill",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-131",
+                  "variable": "fill_complete",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-139",
+          "label": "Cap filled tote and wait for release/retraction",
+          "coilVariable": "capper_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-140",
+              "contacts": [
+                {
+                  "id": "contact-134",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-135",
+                  "variable": "conveyor_run",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-136",
+                  "variable": "tote_at_cap",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-137",
+                  "variable": "fill_complete",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-138",
+                  "variable": "cap_applied",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-147",
+          "label": "Apply label only to filled capped stationary tote",
+          "coilVariable": "labeler_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-148",
+              "contacts": [
+                {
+                  "id": "contact-141",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-142",
+                  "variable": "conveyor_run",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-143",
+                  "variable": "tote_label_aligned",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-144",
+                  "variable": "cap_applied",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-145",
+                  "variable": "cap_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-146",
+                  "variable": "label_applied",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rung-155",
+          "label": "Acquire modeled quality result at inspection station",
+          "coilVariable": "inspection_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "branch-156",
+              "contacts": [
+                {
+                  "id": "contact-149",
+                  "variable": "qa_cycle",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-150",
+                  "variable": "conveyor_run",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-151",
+                  "variable": "tote_at_inspection",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-152",
+                  "variable": "label_applied",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-153",
+                  "variable": "label_home",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "contact-154",
+                  "variable": "inspection_done",
+                  "normallyClosed": true,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 10,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "start_request",
+    "qa_cycle",
+    "position",
+    "tote_at_fill",
+    "tote_at_cap",
+    "tote_at_exit",
+    "fill_complete",
+    "cap_applied",
+    "cap_home",
+    "conveyor_run",
+    "fill_valve_open",
+    "capper_run",
+    "labeler_run",
+    "inspection_run"
+  ]
+}

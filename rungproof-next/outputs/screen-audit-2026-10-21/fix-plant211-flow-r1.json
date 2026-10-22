@@ -1,0 +1,1 @@
+[{"click": [422, 39], "wait": 0.4}, {"click": [485, 146], "wait": 0.4}, {"click": [1137, 551], "wait": 1, "capture": "fix-plant211-r1-feed"}, {"wait": 2.9, "capture": "fix-plant211-r1-scanner"}, {"wait": 1.2, "capture": "fix-plant211-r1-clearing"}, {"wait": 10, "capture": "fix-plant211-r1-complete"}]

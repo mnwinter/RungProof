@@ -117,6 +117,13 @@
     "type": "sequence",
     "points": [
       {
+        "name": "start_drill_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
+      {
         "name": "left_hand_request",
         "type": "BOOL",
         "owner": "PC",
@@ -163,6 +170,27 @@
         "type": "BOOL",
         "owner": "SIM",
         "initial": false
+      },
+      {
+        "name": "drill_feed_down",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "purpose": "Explicit downward feed motor command. Requires actual spindle, two hands and workpiece; no automatic feed from drill_run."
+      },
+      {
+        "name": "drill_retract_up",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "purpose": "Explicit motorized upward retract command; no automatic spring return."
+      },
+      {
+        "name": "drill_motion_inhibited",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Actual simulator motion inhibition: conflicting directions or descent without required physical permissives."
       }
     ],
     "actions": [
@@ -180,6 +208,7 @@
       },
       {
         "id": "start-drill",
+        "controllerStartBinding": "start_drill_request",
         "label": "Start guarded drill cycle",
         "type": "start",
         "sequence": "drill-cycle",
@@ -290,17 +319,21 @@
     "defaultSequence": "drill-cycle",
     "safeState": {
       "drill_run": false,
-      "cycle_color": "red"
+      "cycle_color": "red",
+      "drill_feed_down": false,
+      "drill_retract_up": false
     },
     "completionState": {},
-    "conveyorSpeedMps": 0.75
+    "conveyorSpeedMps": 0.75,
+    "guardedDrillPlant": true,
+    "drillFullTravelSeconds": 1.4
   },
   "training": {
     "hints": [
       "The two hand requests are latched demonstration inputs, checked at Start with workpiece presence and drill_at_top. This scene does not model a safety-rated two-hand or guard interlock.",
       "Define the required result before writing logic: Start is blocked without both requests; a valid cycle drills, retracts, and stops at top.",
       "Treat left_hand_request, right_hand_request, workpiece_present, drill_at_top, drill_at_bottom as simulator-to-PLC inputs. The PLC should command only drill_run.",
-      "Use a step/state approach and prove the transition order: spindle start \u2192 drilling \u2192 bottom dwell \u2192 retracting \u2192 cycle complete."
+      "Use a step/state approach and prove the transition order: spindle start → drilling → bottom dwell → retracting → cycle complete."
     ],
     "solution": {
       "summary": "This is one valid functional reference. The same behavior may be implemented in LAD, FBD, or SCL; the rung layout is not prescribed.",
@@ -369,11 +402,24 @@
       {
         "name": "stop-holds-bottom-and-blocks-restart",
         "phases": [
-          { "action": "toggle-left-hand" },
-          { "action": "toggle-right-hand" },
-          { "action": "start-drill", "runForS": 1.9 },
-          { "action": "stop-drill", "runForS": 2 },
-          { "action": "start-drill", "runForS": 0.5 }
+          {
+            "action": "toggle-left-hand"
+          },
+          {
+            "action": "toggle-right-hand"
+          },
+          {
+            "action": "start-drill",
+            "runForS": 1.9
+          },
+          {
+            "action": "stop-drill",
+            "runForS": 2
+          },
+          {
+            "action": "start-drill",
+            "runForS": 0.5
+          }
         ],
         "expect": {
           "drill_run": false,
@@ -385,11 +431,22 @@
       {
         "name": "reset-after-stop-restores-home",
         "phases": [
-          { "action": "toggle-left-hand" },
-          { "action": "toggle-right-hand" },
-          { "action": "start-drill", "runForS": 1.9 },
-          { "action": "stop-drill" },
-          { "action": "reset-drill" }
+          {
+            "action": "toggle-left-hand"
+          },
+          {
+            "action": "toggle-right-hand"
+          },
+          {
+            "action": "start-drill",
+            "runForS": 1.9
+          },
+          {
+            "action": "stop-drill"
+          },
+          {
+            "action": "reset-drill"
+          }
         ],
         "expect": {
           "drill_run": false,

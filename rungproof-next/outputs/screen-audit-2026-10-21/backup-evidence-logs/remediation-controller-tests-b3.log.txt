@@ -1,0 +1,425 @@
+PASS TiaEmptyInstructionPlaceholderPersistsAndUndoes
+PASS OutputDeletePreservesConditionsAndUndo
+PASS OutputPasteRestoresTerminalPresence
+PASS DiagnosticContentRevisionSurvivesNavigation
+PASS BoundaryMoveIsRejectedByPredicate
+PASS NamedBlockAndTaskCreation
+PASS ExactDiagnosticTargetsOperand
+PASS StaleTargetIsRejected
+PASS NetworkDeleteNeverDeletesFinalContact
+PASS AllRoutesHonorMutationLock
+PASS WirePopupPreservesSlot
+PASS OutputCopyIsOutputOnly
+PASS LaterMoveDoesNotRewriteEarlierObservation
+PASS SameValueWriteIsStillWrite
+PASS FalseTimerStillEvaluates
+PASS RetentiveTimerResetInputClearsAndBlocksTime
+PASS TimerBooleanLiteralOperandsAreCapturedAsValues
+PASS ObservationCatalogSetEquality
+PASS ObservationContextOverflowKeepsGlobalLast
+PASS ObservationTraceOverflowKeepsCounts
+PASS ObservationTextTruncationPreservesSurrogates
+PASS EveryRuntimeInstructionFamilyProducesObservation
+PASS MonitoringOnOffGoldenResultsMatch
+PASS SharedCounterShowsInstructionAndInstanceValues
+PASS RecoverableNumericFaultWritesDefinedErrorValue
+PASS ObservationDispositionsNormalizeAndClear
+PASS InvocationPathsDoNotSubstituteOtherTasks
+PASS IncomingContinuityIsSeparateFromLocalResult
+PASS OriginBindingSharesImmutableEventsWithoutChangingSource
+PASS InternedTaskPathsRemainImmutableAcrossScansAndReset
+PASS OriginBindingDoesNotEagerlyCloneEveryRetainedEvent
+PASS FrozenViewsSurviveCollectorReuseWithExactTraceCounts
+PASS DenseFrozenMapsPreserveMissingKeysOrderAndOldCounts
+PASS SparseFrozenCaptureChargesOwnedCapacity
+PASS UnmaterializedCompactRuntimeCaptureSurvivesScanAndReset
+PASS MixedCompactAndRichSlotsSurviveEvictionAndReset
+PASS CompactNullableFieldsRoundTripIndependently
+PASS ConcurrentCompactReadersKeepOriginsIsolated
+PASS VisibleInstructionDoesNotMaterializeWholeCapture
+PASS LazyRichRuntimePayloadSurvivesScanAndReset
+PASS LazyRichSlotsRetainPayloadAcrossRecycling
+PASS DenseObservationMapsPreserveSparseFirstObservationOrder
+PASS ObservationRegistryOwnsItsInputArray
+PASS ForceHasSeparatePublication
+PASS ResetRejectsLatePublication
+PASS WatchdogIsAbortedNotCompleted
+PASS CommitFailureRecordsActualPhases
+PASS PlantFailureRecordsActualPhases
+PASS LifecycleRevisionNeverResets
+PASS ObservationHistoryEvictsWholeImmutableEnvelopes
+PASS ForcePublicationPreservesConsumedOrigin
+PASS ObservationCyclePreservesCallbackOrder
+PASS InterruptedAttemptsRetainOriginalIdentityAtEachPhase
+PASS PartialOutputCommitFailureHasImagesAndSpecificPhase
+PASS WatchdogProgressSurvivesMonitoringDisabled
+PASS WatchdogProgressSurvivesObservationCapacityExceeded
+PASS EachFailurePhasePreservesAvailableImages
+PASS AttemptCallbackLifecycleDoesNotPublishOlderEnvelope
+PASS FailureAttemptCallbackKeepsFailureEnvelopeIndependent
+PASS ForceCallbacksNeverSupersedeNewerForcePublication
+PASS DesktopUiScaleOffersManualAndResolutionAwareChoices
+PASS BlockViewStateRetainsStableSelectionAndScroll
+PASS LadderZoomGeometryPreservesLogicalTargets
+PASS RecursiveNavigationIncludesTerminalAndSlots
+PASS ParallelConnectionWireTargetsExactPath
+PASS LegacyIgnoredEmptyPathsHaveExplicitLayoutDisposition
+PASS DeletedTerminalNeverExportsHiddenActionAndLabelRemainsMetadata
+PASS NestedLegacyContactCommandsUseAtomicTreePath
+PASS UnsupportedRecursiveImportNamesExactPath
+PASS RecursiveCommandsRejectStaleAndLockedTargets
+PASS OpenBranchUsesExactSelectedWireSlot
+PASS CloseBranchMovesJoinToExactDownstreamSlot
+PASS CloseOnePathOfMultiPathParallelCreatesExplicitNestedJoin
+PASS ClosePowerRailBranchMovesJoinEarlier
+PASS MultipleOpenPathsCloseIndependentlyWithoutConsumingSiblings
+PASS RecursiveMoveAndRootPruneAreAtomic
+PASS PasteRegeneratesAllIds
+PASS UnrelatedIdsSurviveEdit
+PASS NestedLegacyMutationRejectsWithoutFlattening
+PASS NestedEdgeVisitedOnce
+PASS NestedEmptyShapesPreserved
+PASS RecursiveImportPreservesAllInstructionIds
+PASS Depth32Accepted33Rejected
+PASS LabelMetadataAndReturnJumpActionsRoundTrip
+PASS CurrentEditorSchemaWritesAndReadsLegacyDemos
+PASS UserConstantsValidatePersistAndUndo
+PASS HardwareSystemConstantsPersistReadOnlyProvenance
+PASS WatchTableDocumentIdentitySurvivesRenameReorderHistoryAndMigration
+PASS OpenBranchStatePersistsButCannotExportExecutableProgram
+PASS TagTablesPersistAndLegacyTagsUseDefaultTable
+PASS ReplacingProgramRebuildsTagTableDeclarations
+PASS TagTableOperationsPreserveIdentityAndHistory
+PASS TagTableDuplicateCopiesDeclarationsWithoutIoOwnership
+PASS TagTableRejectedOperationsAndMalformedDeclarationsAreAtomic
+PASS HierarchicalAggregateCommentsPersist
+PASS UnassignedTimerPresetPersistsAndFailsLoadValidation
+PASS RetentiveTimerResetOperandPersistsAndValidates
+PASS SiemensTimeLiteralParsingAndRoundTrip
+PASS ComparatorDataTypePersistsAndDefaultsForLegacyNodes
+PASS RecursiveProjectRoundTripPreservesTreeAndActions
+PASS FutureEditorVersionRejectedWithoutDocument
+PASS DuplicateProjectIdsRejected
+PASS AllocatorRepairDoesNotMakeSavedDocumentDirty
+PASS Schema2EmptyCompositeSemanticsAndDepth
+PASS watch rows retain identity through symbolic compatibility operations
+FAIL watch rows persist schema 9 authoring fields and table identity: Expected 9; actual 10.
+PASS watch rows migrate schema 8 and legacy watchVariables
+PASS watch row history deep-clones and reorders authored rows
+PASS watch rows reject duplicate aliases and invalid absolute addresses
+PASS S7 watch address aliases resolve and deduplicate by bit span
+PASS watch display formats validate by type and preserve numeric width
+PASS simulator watch modify updates typed runtime values without force
+PASS PrivateTimerMembersCannotAliasScalarGlobals
+PASS PrivateCounterMemberReadsCannotAliasScalarGlobals
+PASS BareScopeIsRejectedWithoutResolvableSentinels
+PASS LegacyAndInstanceEdgeMemoryAreDisjointIdentities
+PASS LegacyAndInstanceCounterEdgeMemoryAreDisjoint
+PASS TypedValidationPrivateNamespacePreservesLegalGlobals
+PASS CallPrivateStorageNeverOverwritesLegalGlobalNames
+PASS ImplicitTypedEntryIsRejectedBeforeExecution
+PASS QualifiedGlobalRtoRetainsOnStopInFcAndFb
+PASS TypedBlocksRejectBareTimerAndCounterMembers
+PASS ScopeRejectionCannotAccidentallyBindToLegalDiagnosticLikeGlobal
+PASS CallTransferHistoryChargeIncludesMonitoringOffPayload
+PASS TypedOutputClipboardPreservesExecutableCallMetadata
+PASS ParameterizedBodyRejectsBareAggregateLeaf
+PASS MalformedTypedJsonFailsClosedWithoutNullDereference
+PASS FbTimerResetCannotGrantAnotherSameScanQuantum
+PASS FbTimerTimeIsSharedAcrossTasksAndNotCaughtUpAfterSkippedScans
+PASS RuntimeDefendsAgainstAlreadyActiveFbInstance
+PASS QualifiedInstanceStorageCannotCollideAcrossIdSegments
+PASS NestedFcEdgesShareOwningInstanceAcrossOuterCallSites
+PASS FbResetDoesNotCreateUnqualifiedGhostStorage
+PASS FcStaticCallPathSharesEdgeMemoryAcrossSerialTasks
+PASS ParameterizedBoolOutputRespectsForcePublication
+PASS CallObservationShowsActualCopyOutAndInstance
+PASS GlobalInstanceMemberReadsRemainQualifiedInsideFc
+PASS AggregateLeafActualUsesStableRootIdentity
+PASS ForwardedInOutOverlapAbortsBeforeNestedBody
+PASS AbortedFbRetainsInternalOutputButSuppressesCopyOut
+PASS ParameterizedEditorPersistenceNeverDropsBindings
+PASS FbStaticTimersConsumeOneQuantumPerScan
+PASS FbCounterEdgesAreInstanceScoped
+PASS FbEdgesAreInstanceScopedAndStopPrimes
+PASS CallDepthBoundary32And33
+PASS TypedFcExecutesAndCopiesOutputOnlyAtReturn
+PASS FbInstancesRetainSeparatelyAndReset
+PASS FalseParameterizedCallHasNoStorageEffect
+PASS FcInputIsSampledBeforeOutputAndTempInitializes
+PASS TypedCallCompilesAndRoundTripsStableScope
+PASS TypedCallBindingCompletenessAndExactTypes
+PASS TypedCallRejectsInvalidSectionsAndInstance
+PASS ParameterizedModeNeverSilentlyFallsBackToLegacy
+PASS TypedScalarLiteralAndOutputBoundaries
+PASS ParameterizedMonitoringDoesNotChangeInstanceExecution
+PASS FbTimersProcessTrueFalseTrueWithoutSecondQuantum
+PASS AllFbTimerKindsResetWithoutRegrantingQuantum
+PASS AllFbTimerKindsShareTaskQuantumAndSkipPeriodicTime
+PASS FcOutputAndTempInitialValuesResetForEachInvocation
+PASS AbortedFbRetainsStaticAndImmediateInOutWithoutCopyOut
+PASS Tag rename updates only resolved symbolic CALL actuals with exact undo and persistence
+PASS CALL symbolic tag actual blocks deletion but literal and unresolved actuals do not
+PASS OperandSuggestionsUseDeclaredTypesAndInstanceMembers
+PASS ParameterizedOperandsRequireScopedIdentity
+PASS EscapeLeavesDocumentAndHistoryUnchanged
+PASS FocusLossKeepsPendingDraft
+PASS CreateTagAndAssignIsAtomic
+PASS InvalidPropertyHasNoPartialEdit
+PASS StaleOrLockedTransactionCannotCommit
+PASS ArrayResizeAndTypeChangesPreservePendingText
+PASS ProgramBlockDragPayloadOnlyComesFromProgramRows
+PASS TagOperandDragPayloadCarriesStableIdentity
+PASS TagOperandDragResolvesRenamedAndParameterizedDeclarationsById
+PASS CallConversionPreservesGlobalScopeAndIdentity
+PASS CallBindingWrongDirectionAndTypeFindExactFormal
+PASS CallInterfaceRejectsUnsupportedDirectionsAndTypes
+PASS CallConversionLeavesOtherSitesExplicitlyUnresolved
+PASS ReopenedCallPersistsNewGlobalIdentitiesBeforeBinding
+PASS ReusedGlobalNameAllocatesDistinctIdentity
+PASS ScalarIdentityCannotCaptureAggregateLeaf
+PASS ReopenedCallBindingExecutesAfterNewGlobalRename
+PASS ExistingConflictingGlobalIdentitiesBlockCallApply
+PASS LegacyConversionIsExplicit
+PASS MissingBindingNavigatesExactField
+PASS CallFormCancelIsAtomic
+PASS InstanceRenamePreservesBindings
+PASS TwoInstancesRemainDistinctAfterReopen
+PASS InstanceDbCanBeAssignedAndCannotCollide
+PASS LegacyFbInstanceWithoutDbMigratesOnDocumentLoad
+PASS PresenterEveryCatalogKeyAndDisposition
+PASS PresenterRealRuntimeCatalogCoverage
+PASS PresenterRealDisabledAndFaultEffects
+PASS PresenterParameterizedActualTransfers
+PASS PresenterConsumedIsNotFinal
+PASS PresenterDoesNotSubstituteContext
+PASS PresenterSharedCounterUsesInstructionState
+PASS PresenterLifecycleIdentityAndAbort
+PASS PresenterTypedEmptyFalseZeroAndTruncation
+PASS TiaTimerAndCounterOutputFlowUsesQ
+PASS TiaNumericInstructionPortsMatchSiemensLad
+PASS TiaMonitorValuesOmitRedundantBoolType
+PASS SceneOperatorCommandBinding lab-2-11-inbound-tote-stop/start-cycle
+PASS SceneOperatorCommandBinding lab-2-12-assembly-lift/raise-lift
+PASS SceneOperatorCommandBinding lab-2-12-assembly-lift/lower-lift
+PASS SceneOperatorCommandBinding lab-2-13-coolant-jug-fill/start-fill
+PASS SceneOperatorCommandBinding lab-2-16-safe-drill/start-drill
+PASS SceneOperatorCommandBinding lab-2-19-service-door/open-door
+PASS SceneOperatorCommandBinding lab-2-19-service-door/close-door
+PASS SceneOperatorCommandBinding lab-2-23-parcel-sorter/start-sort
+PASS SceneOperatorCommandBinding lab-2-24-robot-cnc/start-cnc
+PASS SceneOperatorCommandBinding existing draft migration
+PASS TankOperatorRequests maintained inputs and ladder ownership
+PASS Service door follows PLC direction and real NC endpoints
+PASS Service door rejects invalid physical time parameters
+PASS Jug fill obeys physical eligibility and independent actuator commands
+PASS Assembly lift obeys separate commands and hard limits
+PASS Inbound scanner mechanics follow command and stopped identification
+PASS Vision class readout exposes the PC class cycle action
+PASS Scene common stop has a physical input route
+PASS Fume command indication follows output image and clears stale lamps
+PASS Guarded drill has explicit feed and retract with real limits
+PASS audit supplied sum-counter reference validates and counts qualified edges
+PASS flat imported CALL chains compile without process stack exhaustion
+PASS STRING and ENUM are declared controller types
+PASS scene text initial data is validated before construction
+PASS malformed enum member JSON returns a diagnostic
+PASS text MOVE preserves data and lifecycle through JSON and scene mapping
+PASS text samples reject unknown and oversized values atomically
+PASS FORMAT_TEXT clears stale results on malformed templates
+PASS ENUM validates members and rejects incompatible domains
+PASS drive matching executes editable STRING logic
+PASS chicken formatting executes editable STRING logic
+PASS motor transitions execute editable ENUM logic
+PASS typed aggregate declarations execute and persist
+PASS aggregate malformed declarations and operands fail closed
+PASS NO contact follows false/true
+PASS NC contact inverts false/true
+PASS rising edge contact pulses for exactly one scan
+PASS falling edge contact pulses for exactly one scan
+PASS legacy edges without explicit memory suppress startup and restart pulses
+PASS explicit operator pulse primes legacy edge state without held startup edges
+PASS edge memory is isolated by stable instruction ID
+PASS edge contacts survive JSON and editor round-trip
+PASS TIA P/N edge memory is a persistent writable BOOL operand
+PASS series logic is AND
+PASS parallel branches are OR
+PASS coil assigns rung result
+PASS seal-in persists across scans
+PASS Stop breaks seal-in
+PASS photoeye stops conveyor
+PASS restart is blocked while photoeye active
+PASS repeated runs are deterministic
+PASS missing variable is rejected
+PASS invalid type usage is rejected
+PASS duplicate element ID is rejected
+PASS input coil target is rejected
+PASS malformed parallel branch is rejected
+PASS unknown contact type is rejected
+PASS missing program identity is rejected
+PASS Reset restores controller memory
+PASS fixed scan order is sample-execute-commit-plant-publish
+PASS Stop cancels an unscanned momentary command
+PASS typed numeric scene I/O follows deterministic scan order
+PASS editor document builds arbitrary rungs
+PASS editor inserts instructions at an exact series position
+PASS editor parallel branches execute as OR
+PASS editor document remains compiler validated
+PASS editor program JSON save/load round-trips
+PASS editor project save/load preserves invalid work in progress
+PASS TIA block types and declarations persist
+PASS editor project loader rejects unreadable structure
+PASS editor project rejects null elements at every collection boundary
+PASS scan coordinator rejects nonfinite time without poisoning future scans
+PASS scan coordinator bounds batches without dropping pending time
+PASS compiler rejects unsupported sub-millisecond scan periods
+PASS new project reset clears all prior engineering state
+PASS typed tag initial values parse persist and initialize runtime
+PASS S7-1500 PLC tag addresses validate type, role, range, and overlap
+PASS editor project load validates persisted Siemens tag addresses
+PASS watch table persists and follows tag lifecycle
+PASS watch table validates symbols and participates in undo
+PASS named watch tables persist independently and follow tag lifecycle
+PASS scene I/O bindings enforce direction type and uniqueness
+PASS TON remains timing before preset
+PASS TON completes exactly at preset
+PASS TON resets when rung becomes false
+PASS TON done member drives a later coil
+PASS Stop and Reset clear TON state
+PASS TOF holds done through the off delay
+PASS TP pulses once per rising edge
+PASS TONR RTO pauses retains resumes and survives Stop
+PASS timer reset clears retentive accumulated and done state
+PASS timer program JSON save/load round-trips
+PASS symbolic TIME tags persist and drive timer presets at scan time
+PASS invalid timer instance and preset are rejected
+PASS invalid timer reset instance is rejected
+PASS shared timer instruction instances are rejected
+PASS set coil latches across false scans
+PASS reset coil clears a latched value
+PASS later reset coil wins in scan order
+PASS latched coil modes survive JSON and editor round-trip
+PASS unknown coil mode is rejected
+PASS CTU counts only false-to-true transitions
+PASS TIA CTU R pin is editable, monitored, and overrides CU while reset is active
+PASS counter load and CTD decrement on rising edges
+PASS CTD done becomes true at zero
+PASS counter edge memory is isolated per instruction
+PASS CTD and counter load survive JSON and editor round-trip
+PASS CTU done member drives a later coil
+PASS counter reset instruction clears accumulated and done
+PASS Stop preserves counter while Reset clears it
+PASS counter program JSON and editor round-trip
+PASS invalid counter instance and preset are rejected
+PASS TIA counter data-type choices preserve Siemens order and untyped state
+PASS all numeric comparison operators execute
+PASS TIA REAL comparators return false for invalid values
+PASS numeric input samples participate in comparisons
+PASS counter ACC and CV are numeric operands
+PASS timer ET and PT are numeric operands
+PASS comparison JSON and editor round-trip
+PASS invalid comparison operand is rejected
+PASS MOV writes only while rung is true
+PASS MOVE rejects implicit numeric type conversions
+PASS ADD SUB MUL DIV and MOD execute deterministically
+PASS TIA ADD data type selection persists and drives typed overflow behavior
+PASS TIA SUB MUL DIV MOD data type selection drives the supported typed arithmetic subset
+PASS TIA ABS and NEG type selectors validate and execute the supported typed subset
+PASS TIA SQRT type selector and invalid REAL result follow Siemens behavior
+PASS TIA EXPT enforces REAL base/result and selectable exponent type
+PASS TIA LN and trigonometry use REAL selectors, radians, and invalid-result semantics
+PASS TIA TRUNC keeps a REAL input and independently selected output type
+PASS TIA CONVERT keeps independent input and output types through compile, execution, and persistence
+PASS ABS NEG and SQRT execute deterministically
+PASS scientific math and TRUNC execute deterministically
+PASS TIA NORM_X and SCALE_X preserve independent input and output type sides
+PASS NORM_X and SCALE_X execute deterministic three-operand scaling
+PASS TIA ROUND CEIL FLOOR use REAL input and independently selected output types
+PASS numeric conversion instructions execute deterministic vendor-compatible semantics
+PASS INT numeric destination rounds nearest-even
+PASS DINT output rounds clamps publishes and resets safely
+PASS DIV by zero follows STEP 7 V21 type-specific results
+PASS literal DIV by zero compiles and executes
+PASS MOD zero writes its defined error value and SQRT domain writes invalid REAL
+PASS literal MOD zero executes while invalid SQRT is rejected before load
+PASS scientific unary domain faults write invalid REAL results
+PASS invalid literal scientific domains are rejected before load
+PASS scaling range faults preserve destination and reject invalid literals
+PASS math accepts counter and timer numeric members
+PASS numeric operation JSON and editor round-trip
+PASS called block executes inline before later main logic
+PASS false CALL rung skips target block
+PASS missing block call target is rejected
+PASS recursive block call cycle is rejected
+PASS multi-block program JSON and editor round-trip
+PASS continuous task executes every base scan
+PASS periodic task executes on configured base-scan multiple
+PASS task priority determines deterministic write order
+PASS invalid task schedule and target are rejected
+PASS task configuration JSON and editor round-trip
+PASS block and routine lifecycle preserves stable references and undo
+PASS block duplication remaps every stable identity and local operand
+PASS referenced block deletion is blocked and unused deletion succeeds
+PASS task and OB lifecycle supports rename delete and undo
+PASS editor undo restores exact rung state and stable IDs
+PASS editor redo reapplies changes and exposes descriptions
+PASS new editor mutation clears redo history
+PASS selected contact edits preserve stable identity and undo
+PASS selected contacts move to an exact series position
+PASS rung clipboard paste regenerates every stable identity and undoes
+PASS instruction clipboard paste preserves operands at an exact slot
+PASS parallel branch removal preserves one required logic path
+PASS tag rename updates every symbolic reference atomically
+PASS referenced tag deletion is blocked and unused deletion succeeds
+PASS tag assignment uses canonical tag-table casing
+PASS PLC tag and block names are unique across the CPU namespace
+PASS editor block document identity survives rename, delete, undo, and redo
+PASS compiler rejects case-insensitive tag and block name collisions
+PASS simulator input force overrides sampled BOOL input
+PASS input force release restores unforced image without new samples
+PASS forced input retains latest sampled held and pulsed operator image
+PASS simulator output force overrides logic until removed
+PASS Stop deenergizes forced output and Reset clears forces
+PASS force rejects memory and non-BOOL targets
+PASS session publishes force state changes
+PASS cross-reference indexes tag declarations reads and writes
+PASS cross-reference resolves timer and counter members to root tags
+PASS cross-reference indexes calls and scheduled entry blocks
+PASS cross-reference indexes JMP targets and LBL declarations
+PASS project search is case-insensitive across rung labels and details
+PASS instruction help catalog has unique complete entries
+PASS TIA evidence matrix covers every catalog key and state gate
+PASS TIA evidence registry separates local and vendor state for every catalog key
+PASS TIA editor-control registry binds exact structured evidence for all 21 non-catalog gates
+FAIL TIA local run evidence binds exact local gate coverage: tia-project-tree-gate-sweep hash does not match its recorded local artifact.
+PASS TIA renderer visual review is hash-bound and covers every Siemens-facing key
+PASS TIA unselected renderer visual review is hash-bound and covers every Siemens-facing key
+PASS instruction help covers every comparison and numeric operation
+PASS instruction help presents distinct TIA and Logix terminology
+PASS instruction help rejects unknown keys
+PASS true RETURN exits called block and resumes caller
+PASS false RETURN continues called block
+PASS TIA RET return values drive the caller ENO
+PASS TIA RET Value requires a declared BOOL operand
+PASS TIA RET property transactions preserve values through undo and redo
+PASS RETURN in task entry ends only that due task
+PASS RETURN JSON and editor round-trip
+PASS true JMP skips to block-local LBL and false JMP falls through
+PASS JMP LBL validation rejects missing and duplicate labels
+PASS TIA jump label grammar accepts letters then digits only
+PASS JMP LBL JSON editor round-trip preserves targets
+PASS backward JMP loop watchdog stops and drives outputs safe
+PASS offline engineering workflow persists validates loads exchanges monitors and forces
+PASS authored palletizer enforces phase-specific permissives and explicit resume
+PASS authored palletizer counts one layer per completion edge
+PASS authored demos 1 through 4 execute their documented behavior
+PASS authored batch publishes count through numeric scene I/O and lifecycle
+SCENE_EXERCISE_CATALOG scenes=77 unsupportedIOTypes=0
+PASS scene exercise projects bind declared I/O across the catalog
+PASS bottle shuttle reference owns reversal and retains its step across playback Stop
+PASS ladder dirty state ignores block browsing but retains project edits
+PASS authored block demos include their promised executable instruction mix
+VIRTUAL_CONTROLLER_TESTS_PASS 418
+VIRTUAL_CONTROLLER_TESTS_FAIL 2
+REAL_PLC_TRANSPORT_CONSTRUCTED FALSE
+REAL_PLC_CONNECTION_ATTEMPTED FALSE

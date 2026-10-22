@@ -105,7 +105,17 @@
   ],
   "simulation": {
     "type": "sequence",
+    "inboundScanPlant": true,
+    "inboundExitX": 3.4,
+    "scannerIdentificationSeconds": 0.8,
     "points": [
+      {
+        "name": "start_cycle_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
       {
         "name": "conveyor_run",
         "type": "BOOL",
@@ -140,6 +150,7 @@
     "actions": [
       {
         "id": "start-cycle",
+        "controllerStartBinding": "start_cycle_request",
         "label": "Start tote cycle",
         "type": "start",
         "sequence": "scan-cycle"
@@ -244,7 +255,7 @@
   "training": {
     "hints": [
       "Define the required result before writing logic: The tote stops at the scanner, records completion, clears, and leaves the conveyor stopped.",
-      "Treat tote_at_scanner, scan_complete as simulator-to-PLC inputs. The PLC should command only conveyor_run.",
+      "Treat tote_at_scanner, scan_complete as simulator-to-PLC inputs. The PLC should command only conveyor_run. The automatic scanner finishes identification after 0.8 s continuously stopped with the tote blocking its beam; moving before completion restarts identification. Commanded belt speed is 0.75 m/s until the PLC removes conveyor_run. The displayed tote remains at the supported route endpoint after arrival; that position limit does not stop the commanded belt.",
       "Use a step/state approach and prove the transition order: feeding \u2192 scanning \u2192 clearing \u2192 ready."
     ],
     "solution": {

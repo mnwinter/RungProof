@@ -1,0 +1,1 @@
+[{"name": "newbinding212-r1-raise-signals", "expected": {"lift_up": true, "lift_down": false, "top_limit": false, "bottom_limit": true}}]

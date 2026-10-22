@@ -1,0 +1,7 @@
+# Additional feedback fixture preparation
+
+fixture-lab-4-03-completed-strokes.rpproj.json: select Lab4.3 FIRST, normal File>Open folder+leaf then Verify/Load/Run. Enable then START. Watch actual machine_busy/head_position/home/cycle_done, controller batch_count and complete. Expect three real feed/dwell/return completions, COUNT3 and no fourth stroke; AppReset required for a new batch. Disable/Stop pose hold/restart are additional screen cases; no blanket outcome asserted.
+
+Fixture implementation choice: seal request into internal BOOL; CTU actual cycle_done rising edges, preset3/DB103; command low while cycle_done high to permit PC sampled-low handshake; publish ACC to batch_count. No timer or invented completion feedback. Held START cannot produce fourth stroke because count remains done until AppReset. Default20ms scan is test parameter. Prepared by cloning existing supported saved-project structures; JSON syntax only checked, no compiler/runtime/API execution. Load validation may still reveal fixture errors; those are not app defects.
+
+4.7 and4.8 not generated here: arrival/departure accounting/barrier-retention and group-release latching require careful multi-network ordering and actual PC handshake inspection before a reliable declarative controller is supplied. This is fixture-preparation work remaining, not a declared app specification defect. Exact source points and documented normal path already available in remaining-ui-test-contracts.md. Do not substitute timer completion or PC-precomputed counts.

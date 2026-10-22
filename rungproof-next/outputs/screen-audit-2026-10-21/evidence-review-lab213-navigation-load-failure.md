@@ -1,0 +1,7 @@
+# Lab2.13 selected navigation after Discard
+
+Native same-build/same1600px target-highlight shows Lab2.13 Coolant Jug Filling Cell selected from currentLab2.12, then unsaved-workspace dialog; post-Discard remains oldLab2.12 geometry/header with controller stopped. Compact selected pixels: `lab213-navigation-review.jpg`.
+
+Crucially, current `remediation-full-workbench-errors.log` records SCENARIO_LOAD_FAILED id=lab-2-13-coolant-jug-fill, Station request provenance drift.../fill_start at SceneComposer.InstallationLegends.cs432. Stack explicitly passes through CompletePendingWorkspaceAction then SceneRequested→AddMigratedScene→Compose. Therefore the Discard continuation executes with the correct target: this reproduction does NOT prove a lost workspace callback. Composition rejects the newly added start_fill_request because the identification provenance table still expects an empty binding. Controller shutdown occurs before this rejection, explaining old scene stopped.
+
+Authorized narrow fix updates three stale provenance expectations: fill_start→start_fill_request, sorter_start→start_sort_request, cnc_cell_start→start_cnc_request. Lab2.13 is native-confirmed;2.23/2.24 are same-table static risks until composed. No WorkspaceGuard or draft-cache change was made. Post-fix build/composition/native navigation remains pending. Earlier ambiguous discard/cached-draft candidate is not resolved by this different failure.

@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-screen-lab-2-03-service-marker-inhibit",
+  "name": "QA_Lab203_Main",
+  "sourceSceneId": "lab-2-03-service-marker-inhibit",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 20,
+  "tags": [
+    {
+      "symbolId": "qa-symbol-1",
+      "name": "marker_inhibit_pressed",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "marker_inhibit_pressed",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit PC-owned scene point; no physical address."
+    },
+    {
+      "symbolId": "qa-symbol-2",
+      "name": "service_marker_on",
+      "type": "Bool",
+      "role": "Output",
+      "initial": true,
+      "binding": "service_marker_on",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable screen-audit PLC-owned scene point; no physical address."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "QA_Lab203_Main",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-3",
+          "label": "Service marker follows NOT inhibit",
+          "coilVariable": "service_marker_on",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-4",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-5",
+                "kind": 0,
+                "variable": "marker_inhibit_pressed",
+                "normallyClosed": true,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-3-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "marker_inhibit_pressed",
+    "service_marker_on"
+  ],
+  "watchTables": [
+    {
+      "id": "qa-lab-2-03-service-marker-inhibit-watch",
+      "name": "Watch table 1",
+      "variables": [
+        "marker_inhibit_pressed",
+        "service_marker_on"
+      ],
+      "rows": [
+        {
+          "id": "qa-watch-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "marker_inhibit_pressed",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen-audit observation only"
+        },
+        {
+          "id": "qa-watch-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "service_marker_on",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen-audit observation only"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

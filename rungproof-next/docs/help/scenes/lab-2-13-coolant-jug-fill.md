@@ -14,6 +14,7 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `start_fill_request` | `BOOL` | **PC** | `False` |
 | `conveyor_run` | `BOOL` | **PLC** | `False` |
 | `jug_present` | `BOOL` | **PC** | `False` |
 | `fill_valve_open` | `BOOL` | **PLC** | `False` |
@@ -27,7 +28,7 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Start jug fill` | `start` | `fill-cycle` |
+| `Start jug fill` | `start` | Accepted-scan pulse to PC `start_fill_request`; standalone preview sequence `fill-cycle` |
 | `Stop fill cell` | `stop` | `` |
 | `Reset jug` | `reset` | `` |
 
@@ -87,3 +88,7 @@ An empty coolant jug indexes under a fill valve, fills to a high probe, and then
 ### Expected observations
 
 - The valve cannot remain open after the high probe; the filled jug exits and the conveyor stops.
+
+## Command-driven plant contract
+
+The leading-edge index sensor is positioned from delivered jug/nozzle geometry so detection aligns the open neck. Belt speed is 0.75 m/s while commanded. Filling requires a stopped jug, both PLC valve/skid commands, and the nozzle tip inside the open neck; idealized filling takes 2.2 s from empty to full. High probe reports full and retains until Reset. LAD decides stop, fill, valve closure and discharge; the plant never writes PLC commands. The displayed jug is bounded at its supported endpoint, which does not stop a commanded belt. Stop freezes mechanics; Reset restores empty jug upstream.

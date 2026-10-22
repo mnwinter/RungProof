@@ -1,0 +1,1 @@
+[{"name": "lab222-final-home", "expected": {"drill_a_home": true, "drill_b_home": true, "drill_a_run": false, "drill_b_run": false, "drill_a_feed": false, "drill_b_feed": false, "drill_a_retract": false, "drill_b_retract": false, "transfer_home": true, "transfer_extend": false, "transfer_retract": false}, "monitor_only": true, "keep_monitor": true}]

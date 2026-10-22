@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-diagnostic-lab223-start-binding",
+  "name": "QA_DIAGNOSTIC_Lab223_StartBinding",
+  "sourceSceneId": "lab-2-23-parcel-sorter",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "probe-lab223-main",
+  "nextId": 40,
+  "tags": [
+    {
+      "symbolId": "probe-lab223-scene-symbol-1",
+      "name": "conveyors_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "conveyors_run",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PLC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab223-scene-symbol-2",
+      "name": "large_detected",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "large_detected",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab223-scene-symbol-3",
+      "name": "medium_detected",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "medium_detected",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab223-scene-symbol-4",
+      "name": "small_detected",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "small_detected",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab223-scene-symbol-5",
+      "name": "route_position",
+      "type": "Real",
+      "role": "Output",
+      "initial": 0,
+      "binding": "route_position",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Diagnostic probe: exact PLC-owned scene declaration; no physical address."
+    },
+    {
+      "symbolId": "probe-lab223-false-symbol",
+      "name": "qa_probe_false",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": "Diagnostic-only unbound false memory; no rung writes this value. Do not modify/force it."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "probe-lab223-main",
+      "name": "QA_DIAGNOSTIC_Lab223_StartBinding",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "probe-lab223-rung",
+          "label": "DIAGNOSTIC ONLY: hold conveyors_run FALSE; no process sequence",
+          "coilVariable": "conveyors_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "probe-lab223-series",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "probe-lab223-contact",
+                "kind": 0,
+                "variable": "qa_probe_false",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "probe-lab223-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "probe-lab223-task",
+      "name": "DiagnosticMainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "probe-lab223-main"
+    }
+  ],
+  "watchVariables": [
+    "conveyors_run",
+    "large_detected",
+    "medium_detected",
+    "small_detected",
+    "route_position",
+    "qa_probe_false"
+  ],
+  "watchTables": [
+    {
+      "id": "probe-lab223-watch",
+      "name": "Diagnostic watch",
+      "variables": [
+        "conveyors_run",
+        "large_detected",
+        "medium_detected",
+        "small_detected",
+        "route_position",
+        "qa_probe_false"
+      ],
+      "rows": [
+        {
+          "id": "probe-lab223-watch-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "conveyors_run",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab223-watch-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "large_detected",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab223-watch-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "medium_detected",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab223-watch-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "small_detected",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab223-watch-row-5",
+          "referenceKind": "Symbolic",
+          "reference": "route_position",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        },
+        {
+          "id": "probe-lab223-watch-row-6",
+          "referenceKind": "Symbolic",
+          "reference": "qa_probe_false",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observation only; do not force/modify during START diagnostic"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

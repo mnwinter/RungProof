@@ -1,0 +1,1 @@
+[{"name": "fix-reference-r2-restored-signals", "expected": {"event_count": 2, "result_valid": true, "sum_result": 7}}]

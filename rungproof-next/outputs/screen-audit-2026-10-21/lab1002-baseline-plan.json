@@ -1,0 +1,1 @@
+[{"name": "lab1002-baseline", "expected": {"product_weighed": false, "printer_ready": false, "label_data_valid": false, "print_request": false, "label_applied": false, "product_present": false, "print_complete": false, "application_complete": false, "apply_request": false, "weight_kg": 0, "label_text": ""}, "keep_monitor": true}]

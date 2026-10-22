@@ -23,8 +23,8 @@
     ]
   },
   "id": "tank-level",
-  "name": "Tank Level / 4\u201320 mA",
-  "description": "Run the scene, start the inlet pump, and open or close the drain. Fluid level, discrete low/high switches, and a linear 4\u201320 mA transmitter update together.",
+  "name": "Tank Level / 4–20 mA",
+  "description": "Run the scene, start the inlet pump, and open or close the drain. Fluid level, discrete low/high switches, and a linear 4–20 mA transmitter update together.",
   "camera": {
     "position": [
       10.5,
@@ -256,15 +256,15 @@
       },
       {
         "id": "toggle-pump",
-        "label": "Toggle inlet pump (simulated)",
+        "label": "Toggle inlet pump request",
         "type": "toggle",
-        "point": "inlet_pump_run"
+        "point": "pump_request"
       },
       {
         "id": "toggle-drain",
-        "label": "Toggle drain valve (simulated)",
+        "label": "Toggle drain request",
         "type": "toggle",
-        "point": "drain_valve_open"
+        "point": "drain_request"
       },
       {
         "id": "stop-simulation",
@@ -318,6 +318,20 @@
         "owner": "PC",
         "initial": false,
         "purpose": "Simulator high-level switch feedback read by the PLC."
+      },
+      {
+        "name": "pump_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Maintained local operator request. Learner ladder owns the actual pump/drain outputs."
+      },
+      {
+        "name": "drain_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Maintained local operator request. Learner ladder owns the actual pump/drain outputs."
       }
     ],
     "tankId": "process_tank",
@@ -336,8 +350,55 @@
         "point": "drain_valve_open",
         "equipmentId": "drain_valve",
         "mode": "position"
+      },
+      {
+        "point": "pump_request",
+        "equipmentId": "pump_station",
+        "mode": "switch"
+      },
+      {
+        "point": "drain_request",
+        "equipmentId": "drain_station",
+        "mode": "switch"
       }
-    ]
+    ],
+    "rules": [
+      {
+        "when": {
+          "pump_request": false
+        },
+        "set": {
+          "inlet_pump_run": false
+        }
+      },
+      {
+        "when": {
+          "pump_request": true,
+          "drain_request": false
+        },
+        "set": {
+          "inlet_pump_run": true
+        }
+      },
+      {
+        "when": {
+          "drain_request": false
+        },
+        "set": {
+          "drain_valve_open": false
+        }
+      },
+      {
+        "when": {
+          "drain_request": true
+        },
+        "set": {
+          "inlet_pump_run": false,
+          "drain_valve_open": true
+        }
+      }
+    ],
+    "manualTankRequestsRequireRun": true
   },
   "verification": {
     "cases": [
@@ -378,6 +439,46 @@
           "drain_valve_open": false,
           "tank_level": 49.05833333333316,
           "level_transmitter": 11.849333333333306
+        }
+      },
+      {
+        "name": "maintained manual request cannot restore output after Stop",
+        "actions": [
+          "run-simulation",
+          "toggle-pump",
+          "stop-simulation"
+        ],
+        "expect": {
+          "pump_request": true,
+          "inlet_pump_run": false,
+          "drain_valve_open": false
+        }
+      },
+      {
+        "name": "Run reevaluates retained manual request after Stop",
+        "actions": [
+          "run-simulation",
+          "toggle-pump",
+          "stop-simulation",
+          "run-simulation"
+        ],
+        "expect": {
+          "pump_request": true,
+          "inlet_pump_run": true,
+          "drain_valve_open": false
+        }
+      },
+      {
+        "name": "drain request stays maintained but command stays off after Stop",
+        "actions": [
+          "run-simulation",
+          "toggle-drain",
+          "stop-simulation"
+        ],
+        "expect": {
+          "drain_request": true,
+          "inlet_pump_run": false,
+          "drain_valve_open": false
         }
       }
     ]

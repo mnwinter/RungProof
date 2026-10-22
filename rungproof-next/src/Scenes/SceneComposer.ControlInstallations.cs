@@ -12,7 +12,24 @@ public static partial class SceneComposer
     {
         if (!ControlInstallationPlans.TryGetValue(scene.Id, out var plan))
             throw new InvalidOperationException($"No installation inventory for {scene.Id}");
-        var equipment = plan.EquipmentIds.Select(id => scene.Equipment.Single(e => e.Id == id)).ToArray();
+        var installationIds = plan.EquipmentIds.ToList();
+        if (plan.Bench && scene.Simulation.TryGetProperty("pointBindings", out var pointBindings)
+            && pointBindings.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            // A teaching bench is the physical home for every declared local
+            // operator device and readout. Hand-maintained inventories had left
+            // valid STOP/RESET buttons on their delivered floor pedestals.
+            var boundEquipmentIds = pointBindings.EnumerateArray()
+                .Select(binding => Text(binding, "equipmentId", ""))
+                .Where(id => id.Length > 0)
+                .ToHashSet(StringComparer.Ordinal);
+            foreach (var item in scene.Equipment.Where(item =>
+                         boundEquipmentIds.Contains(item.Id)
+                         && item.Type is "switch" or "rotarySwitch" or "indicator" or "trainingAccessory"))
+                if (!installationIds.Contains(item.Id, StringComparer.Ordinal))
+                    installationIds.Add(item.Id);
+        }
+        var equipment = installationIds.Select(id => scene.Equipment.Single(e => e.Id == id)).ToArray();
         if (equipment.Length == 0) return;
         // A tall teaching tower must not pass through an upper display shelf.
         // Put it on the last tier; keep paired count displays together below.
@@ -42,7 +59,12 @@ public static partial class SceneComposer
         }
         var wiring = Material(new Color("363c36").SrgbToLinear(), .1f, .7f);
         var compactDryerService = scene.Id == "lab-6-08-hand-dryer";
-        var columns = Math.Min(plan.Bench ? 5 : compactDryerService ? 2 : 4, equipment.Length);
+        var palletizerStation = scene.Id == "lab-11-13-xy-palletizing";
+        var palletCounterStation = scene.Id == "lab-9-11-pallet-counting";
+        var heightSorterStation = scene.Id == "scene-2-conveyor-pusher";
+        var prominentCurriculumPanel = !plan.Bench && scene.Id is
+            "scene-2-conveyor-pusher" or "lab-9-11-pallet-counting" or "lab-11-13-xy-palletizing";
+        var columns = Math.Min(plan.Bench ? 5 : compactDryerService ? 2 : palletizerStation ? 3 : 4, equipment.Length);
         var rows = (equipment.Length + columns - 1) / columns;
         var pitch = plan.Bench || equipment.Any(e => e.Type == "trainingAccessory") ? .70f : .38f;
         var compactColumnWidths = Vector2.Zero;
@@ -77,12 +99,16 @@ public static partial class SceneComposer
             or "lab-4-07-parking-garage-entry" or "lab-4-08-package-grouping"
             or "lab-4-09-chain-drive-lift" or "lab-4-10-cookie-packaging"
             or "lab-4-12-cable-cut-length" or "lab-6-07-luggage-weight-sort"
-            or "lab-9-11-pallet-counting" or "lab-9-12-ev-charging-manager";
+            or "lab-9-11-pallet-counting" or "lab-9-12-ev-charging-manager"
+            or "lab-11-13-xy-palletizing" or "scene-2-conveyor-pusher";
         if (measuredMountRevision)
         {
             foreach (var item in equipment)
             {
                 var device = root.GetNode<Node3D>(SafeNodeName(item.Id));
+                if (prominentCurriculumPanel
+                    && device.FindChild("BUTTON_legend_plate", true, false) is MeshInstance3D measuredPlate)
+                    measuredPlate.Scale = new Vector3(3.20f, 2.60f, 1);
                 foreach (var mesh in device.FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>())
                     if (IsOriginalControlMount(item, mesh.Name.ToString())
                         || IsPanelControlShell(item, mesh.Name.ToString())) mesh.Visible = false;
@@ -111,7 +137,7 @@ public static partial class SceneComposer
         var frontSign = scene.Camera.Position[2] >= scene.Camera.Target[2] ? 1f : -1f;
         if (!plan.Bench)
         {
-            var field = scene.Equipment.Where(e => !plan.EquipmentIds.Contains(e.Id))
+            var field = scene.Equipment.Where(e => !installationIds.Contains(e.Id, StringComparer.Ordinal))
                 .Select(e => root.GetNodeOrNull<Node3D>(SafeNodeName(e.Id)))
                 .Where(n => n is not null && n.FindChildren("*", "MeshInstance3D", true, false).Count > 0)
                 .Select(n => InstallationBounds(n!)).ToArray();
@@ -119,8 +145,8 @@ public static partial class SceneComposer
                 : field.Aggregate((a, b) => a.Merge(b));
             var side = scene.Camera.Position[0] >= scene.Camera.Target[0] ? 1f : -1f;
             if (scene.Id is "lab-2-14-sump-pump" or "lab-10-03-vision-package-sorter") side = -1;
-            var margin = scene.Id is "lab-11-13-xy-palletizing" or "lab-2-17-pallet-robot"
-                or "lab-2-24-robot-cnc" or "lab-3-02-robot-cell-safe-restart" ? 1.75f : .75f;
+            var margin = scene.Id is "lab-2-17-pallet-robot" or "lab-2-24-robot-cnc"
+                or "lab-3-02-robot-cell-safe-restart" ? 1.75f : .75f;
             // Place the cabinet beyond the field installation, on the visible
             // side. It must not sit in a conveyor lane or swept machine body.
             origin = new Vector3(side > 0 ? bounds.End.X + width / 2 + margin
@@ -138,6 +164,16 @@ public static partial class SceneComposer
                 origin = new Vector3(bounds.Position.X - width / 2 - 1.1f, 0, bounds.End.Z + 1.60f);
             if (scene.Id == "lab-11-11-service-elevator")
                 origin = new Vector3(bounds.End.X + width / 2 + 1.0f, 0, bounds.End.Z + .75f);
+            if (palletizerStation)
+            {
+                // Locate this operator station from the actual cell, not the
+                // room-wide equipment envelope. The operator belongs at the
+                // front-right service corner with the gantry in direct view.
+                var gantry = InstallationBounds(root.GetNode<Node3D>("training_accessory_4"));
+                var stock = InstallationBounds(root.GetNode<Node3D>("training_accessory_7"));
+                origin = new Vector3(gantry.End.X + width / 2 + .35f, 0,
+                    MathF.Max(gantry.End.Z, stock.End.Z) + .55f);
+            }
             if (scene.Id == "lab-10-06-ten-motor-array-startup")
                 // Keep both transport endpoints clear. The operator station
                 // belongs in the open service aisle, away from the drive row;
@@ -193,7 +229,8 @@ public static partial class SceneComposer
         }
         else
         {
-            var height = MathF.Max(1.85f, 1.10f + rows * rowPitch + .12f);
+            var height = palletizerStation ? 2.55f : heightSorterStation ? 2.35f
+                : MathF.Max(1.85f, 1.10f + rows * rowPitch + .12f);
             AddBox(installation, new Vector3(width, height - .14f, .46f), new Vector3(0, (height + .14f) / 2, -.39f), panel).Name = "OperatorCabinet_Body";
             AddBox(installation, new Vector3(width - .10f, height - .28f, .035f), new Vector3(0, (height + .14f) / 2, -.1425f), door).Name = "OperatorCabinet_Door";
             AddBox(installation, new Vector3(width - .10f, .14f, .40f), new Vector3(0, .07f, -.39f), frame).Name = "CabinetPlinth";
@@ -224,12 +261,20 @@ public static partial class SceneComposer
                     bezel.Position = pilot.Position + new Vector3(0, -.023f, 0);
                 }
             }
-            if (!plan.Bench && node.FindChild("OperatorFaceLabel", true, false) is Label3D legend)
+            if (node.FindChild("OperatorFaceLabel", true, false) is Label3D legend)
             {
-                legend.PixelSize = .0018f;
+                // Bench components need readable operator identification just
+                // as much as cabinet-mounted devices. The old cabinet-only gate
+                // left REQUEST/START/STOP labels tiny on otherwise empty faces.
+                legend.FontSize = Math.Max(legend.FontSize, 56);
+                legend.PixelSize = plan.Bench ? .00165f : prominentCurriculumPanel ? .0028f : .0018f;
+                legend.OutlineSize = Math.Max(legend.OutlineSize, 4);
+                legend.OutlineModulate = Colors.Black;
                 if (node.FindChild("BUTTON_legend_plate", true, false) is MeshInstance3D plate)
                 {
-                    plate.Scale = new Vector3(2.0f, 1.65f, 1);
+                    plate.Scale = prominentCurriculumPanel
+                        ? new Vector3(3.20f, 2.60f, 1)
+                        : new Vector3(plan.Bench ? 2.25f : 2.0f, plan.Bench ? 1.85f : 1.65f, 1);
                     // Imported Blender text uses a left-side origin. The live
                     // Label3D is centred, so use the actual plate centre in the
                     // label parent's coordinate frame instead of that origin.
@@ -258,7 +303,7 @@ public static partial class SceneComposer
                     // The retained plate supplies the contrast area. Fit the
                     // actual configured text with inset margins; never shorten
                     // its operator function or rewrite its configuration.
-                    legend.PixelSize = MathF.Min(.0018f, MathF.Min(
+                    legend.PixelSize = MathF.Min(plan.Bench ? .00165f : prominentCurriculumPanel ? .0028f : .0018f, MathF.Min(
                         MathF.Max(.001f, plateBounds.Size.X - .020f) / textWidth,
                         MathF.Max(.001f, plateBounds.Size.Y - .010f) / textHeight));
                 }
@@ -274,7 +319,9 @@ public static partial class SceneComposer
             var row = i / columns;
             var inRow = Math.Min(columns, equipment.Length - row * columns);
             var localX = (i % columns - (inRow - 1) / 2f) * pitch;
-            var desiredBottom = (plan.Bench ? topHeight : 1.10f) + row * rowPitch;
+            var desiredBottom = palletizerStation || heightSorterStation ? .62f + row * .44f
+                : palletCounterStation ? .58f + row * .44f
+                : (plan.Bench ? topHeight : 1.10f) + row * rowPitch;
             // Cabinet door is behind retained device heads. Their rear faces
             // contact its fascia; a head is never suspended in front of it.
             var desiredZ = plan.Bench ? (row == 0 ? 0 : -.12f)
@@ -327,10 +374,20 @@ public static partial class SceneComposer
             }
             GD.Print($"CONTROL_INSTALLATION_COMPONENT scene={scene.Id} equipment={item.Id} kind={(plan.Bench ? "studentBench" : "operatorPanel")} pose={node.Position} scale={node.Scale}");
         }
+        if (palletizerStation)
+            MountPalletizerHmiReadouts(root, installation, origin, width, frontSign, wiring);
+        if (palletCounterStation)
+            MountPalletCounterHmiReadout(root, installation, origin, width, frontSign, wiring);
+        if (heightSorterStation)
+            MountHeightSorterHmiReadouts(root, installation, origin, width, frontSign, wiring);
         if (!plan.Bench) MountCabinetStatusTowers(root, scene, installation);
         MountChickenReadoutToMachineFrame(root, scene);
         var associated = new Godot.Collections.Array<string>();
-        foreach (var id in plan.EquipmentIds) associated.Add(id);
+        foreach (var id in installationIds) associated.Add(id);
+        if (palletizerStation)
+            foreach (var id in PalletizerHmiReadoutIds) associated.Add(id);
+        if (palletCounterStation)
+            associated.Add("training_accessory_6");
         if (!plan.Bench && CabinetStatusTowers.TryGetValue(scene.Id, out var towerIds))
             foreach (var id in towerIds)
                 if (!associated.Contains(id)) associated.Add(id);
@@ -338,6 +395,114 @@ public static partial class SceneComposer
         installation.SetMeta("installationKind", plan.Bench ? "studentBench" : "operatorPanel");
         ConfigureInstallationIdentification(root, scene, installation);
         GD.Print($"CONTROL_INSTALLATION_READY scene={scene.Id} kind={(plan.Bench ? "studentBench" : "operatorPanel")} components={equipment.Length}");
+    }
+
+    private static readonly string[] PalletizerHmiReadoutIds =
+        ["training_accessory_17", "training_accessory_18", "training_accessory_19", "training_accessory_20", "training_accessory_21"];
+
+    private static readonly string[] HeightSorterHmiReadoutIds =
+        ["scene2_height_display", "scene2_completed_display"];
+
+    private static void MountPalletCounterHmiReadout(Node3D root, Node3D installation,
+        Vector3 origin, float cabinetWidth, float frontSign, Material screenMaterial)
+    {
+        const float screenCenterY = 1.78f;
+        const float screenHeight = .62f;
+        var screenZ = frontSign > 0 ? -.105f : .105f;
+        AddBox(installation, new Vector3(cabinetWidth - .22f, screenHeight, .025f),
+            new Vector3(0, screenCenterY, screenZ), screenMaterial).Name = "PalletCounterHmiScreen";
+
+        var node = root.GetNode<Node3D>("training_accessory_6");
+        foreach (var mesh in node.FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>())
+            mesh.Visible = false;
+        var readout = node.GetNode<Label3D>("NumericReadout");
+        readout.Position = Vector3.Zero;
+        readout.FontSize = 68;
+        readout.PixelSize = .0022f;
+        readout.OutlineSize = 4;
+        readout.OutlineModulate = Colors.Black;
+        readout.HorizontalAlignment = HorizontalAlignment.Center;
+        readout.VerticalAlignment = VerticalAlignment.Center;
+        node.Scale = Vector3.One;
+        node.RotationDegrees = new Vector3(0, frontSign < 0 ? 180 : 0, 0);
+        node.Position = origin + new Vector3(0, screenCenterY,
+            frontSign > 0 ? -.075f : .075f);
+        node.SetMeta("installationKind", "operatorPanel");
+        node.SetMeta("sharedDisplay", "PalletCounterHmiScreen");
+    }
+
+    private static void MountHeightSorterHmiReadouts(Node3D root, Node3D installation,
+        Vector3 origin, float cabinetWidth, float frontSign, Material screenMaterial)
+    {
+        const float screenCenterY = 1.88f;
+        const float screenHeight = .58f;
+        var screenZ = frontSign > 0 ? -.105f : .105f;
+        AddBox(installation, new Vector3(cabinetWidth - .18f, screenHeight, .025f),
+            new Vector3(0, screenCenterY, screenZ), screenMaterial).Name = "HeightSorterHmiScreen";
+
+        var slots = new[] { new Vector2(-.37f, screenCenterY), new Vector2(.37f, screenCenterY) };
+        for (var index = 0; index < HeightSorterHmiReadoutIds.Length; index++)
+        {
+            var node = root.GetNode<Node3D>(HeightSorterHmiReadoutIds[index]);
+            foreach (var mesh in node.FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>())
+                mesh.Visible = false;
+            var readout = node.GetNode<Label3D>("NumericReadout");
+            readout.Position = Vector3.Zero;
+            readout.FontSize = 50;
+            readout.PixelSize = .00135f;
+            readout.OutlineSize = 4;
+            readout.OutlineModulate = Colors.Black;
+            readout.HorizontalAlignment = HorizontalAlignment.Center;
+            readout.VerticalAlignment = VerticalAlignment.Center;
+            node.Scale = Vector3.One;
+            node.RotationDegrees = new Vector3(0, frontSign < 0 ? 180 : 0, 0);
+            node.Position = origin + new Vector3(frontSign * slots[index].X, slots[index].Y,
+                frontSign > 0 ? -.075f : .075f);
+            node.SetMeta("installationKind", "operatorPanel");
+            node.SetMeta("sharedDisplay", "HeightSorterHmiScreen");
+        }
+    }
+
+    private static void MountPalletizerHmiReadouts(Node3D root, Node3D installation,
+        Vector3 origin, float cabinetWidth, float frontSign, Material screenMaterial)
+    {
+        // Keep the HMI wholly above the third-row VACUUM/ACTIVE/LAYER pilot
+        // heads. The former 1.43 m lower edge physically crossed that row,
+        // making the black screen and green lamps compete in the same area.
+        const float screenCenterY = 2.075f;
+        const float screenHeight = .70f;
+        var screenZ = frontSign > 0 ? -.105f : .105f;
+        AddBox(installation, new Vector3(cabinetWidth - .20f, screenHeight, .025f),
+            new Vector3(0, screenCenterY, screenZ), screenMaterial).Name = "PalletizerHmiScreen";
+
+        var slots = new[]
+        {
+            new Vector2(-.58f, 2.19f), new Vector2(0, 2.19f), new Vector2(.58f, 2.19f),
+            new Vector2(-.29f, 1.88f), new Vector2(.29f, 1.88f),
+        };
+        for (var index = 0; index < PalletizerHmiReadoutIds.Length; index++)
+        {
+            var node = root.GetNode<Node3D>(PalletizerHmiReadoutIds[index]);
+            foreach (var mesh in node.FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>())
+                mesh.Visible = false;
+            var readout = node.GetNode<Label3D>("NumericReadout");
+            readout.Position = Vector3.Zero;
+            // Five live values share a large HMI surface. The former label
+            // scale used only a small fraction of each slot and was unreadable
+            // from the authored operator viewpoint despite abundant space.
+            readout.FontSize = 60;
+            readout.PixelSize = .0017f;
+            readout.OutlineSize = 4;
+            readout.OutlineModulate = Colors.Black;
+            readout.HorizontalAlignment = HorizontalAlignment.Center;
+            readout.VerticalAlignment = VerticalAlignment.Center;
+            node.Scale = Vector3.One;
+            node.RotationDegrees = new Vector3(0, frontSign < 0 ? 180 : 0, 0);
+            node.Position = origin + new Vector3(frontSign * slots[index].X, slots[index].Y,
+                frontSign > 0 ? -.075f : .075f);
+            node.SetMeta("installationKind", "operatorPanel");
+            node.SetMeta("sharedDisplay", "PalletizerHmiScreen");
+        }
     }
 
     private static bool IsOriginalControlMount(SceneEquipment item, string name)

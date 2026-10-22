@@ -1,0 +1,14 @@
+{
+  "file": "fixture-new-binding-lab-2-23-v3.rpproj.json",
+  "sourceSceneId": "lab-2-23-parcel-sorter",
+  "sha256": "23526133ab0534e65b833b1fa8275f04a9a27d10835448afcc68fb85c6d3eae4",
+  "supersedes": "fixture-new-binding-lab-2-23-v2.rpproj.json",
+  "preserved_v2_sha256": "3bed7b717f910c1eeb88f262c57c4a62a7786361f73cc627bd0ae228fda2062f",
+  "policy": "LAD actualclass latch; gate admit until rearclear; independent belts until measuredtablecenter; stop/index toclassroute; transfer until physicallytableclear; home/next. Common takeaway enable until actualallreceived. One-scan phase qualification prevents stale feedback; no phase timers.",
+  "status": "B3 existing-DLL project load/compiler/current scene bindings validation only; pending root newphysicsbuild/nativeacceptance.",
+  "validation": {
+    "exit_code": 0,
+    "log": "fixture-parcel223-v3-compile-1792704383242007800.log",
+    "log_sha256": "e03ac2fddc842e135f058b0ec84a73028fe79dd59058fde3070df5ba316b9d4f"
+  }
+}

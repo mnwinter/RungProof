@@ -15,20 +15,28 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
 | `timer_request` | `BOOL` | **PC** | `False` |
+| `machine_stop` | `BOOL` | **PC** | `False` |
+| `reset_pressed` | `BOOL` | **PC** | `False` |
 | `delayed_lamp` | `BOOL` | **PLC** | `False` |
+| `delay_elapsed_ms` | `DINT` | **PLC** | `0` |
 
 ## Operator actions
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Turn request OFF / ON` | `toggle` | `timer_request` |
+| `Timer REQUEST selector` | `toggle` | `timer_request` |
+| `Machine Stop pushbutton` | `pulse` | `machine_stop` |
+| `Machine Reset pushbutton` | `pulse` | `reset_pressed` |
 
 ## Equipment bindings
 
 | Symbolic point | Equipment | Mode |
 | --- | --- | --- |
 | `timer_request` | `switch_0` | `selector` |
+| `machine_stop` | `switch_2` | `switch` |
+| `reset_pressed` | `switch_3` | `switch` |
 | `delayed_lamp` | `indicator_1` | `indicator` |
+| `delay_elapsed_ms` | `training_accessory_4` | `numericDisplay` (`ELAPSED MS`) |
 
 ## Expected equipment
 
@@ -36,6 +44,11 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | --- | --- | --- |
 | `switch_0` | `rotarySwitch` | Timer REQUEST selector OFF / ON |
 | `indicator_1` | `indicator` | PLC timed lamp |
+| `switch_2` | `switch` | Delayed Lamp machine stop |
+| `switch_3` | `switch` | Delayed Lamp machine reset |
+| `training_accessory_4` | `trainingAccessory` | TON elapsed-time display |
+
+The timed output is one green bench lamp bound to `delayed_lamp`; it is not a three-color machine-status tower.
 
 ## Stop and safety boundary
 

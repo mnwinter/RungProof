@@ -1,6 +1,6 @@
 # TIA parity batch execution plan
 
-Updated: 2026-10-20
+Updated: 2026-10-21
 
 This is the current execution dashboard. `TIA_INSTRUCTION_EVIDENCE_MATRIX.md`
 remains the requirement ledger and `TIA_PORTAL_PARITY_AUDIT.md` remains the
@@ -19,6 +19,9 @@ chronological engineering record.
   local gates. Installed-TIA same-state pairing remains incomplete.
 - `.tools` is an ignored scratch directory. Current screenshots are useful local
   review evidence, but they are not a portable evidence archive.
+- On 2026-10-21 the user selected installed TIA Portal V17 as the authoritative
+  UI/workflow baseline. Historical V21 blocker statements are superseded; V21
+  documentation remains reference-only where useful.
 
 ## Main-screen and property-management sequence
 
@@ -29,12 +32,12 @@ the GUI/property exit criteria are closed.
 
 | Order | Status | Exit condition |
 | --- | --- | --- |
-| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Partial | **Latest evidence (2026-10-20):** the fresh normal-renderer `interaction` profile passed all 15 commands; controller/editor tests and all interaction gates passed, including editor-control 7/7 (36 assertions) and project-tree 14/14 (103 assertions). Artifacts are recorded in `docs/tia/tia-local-run-evidence.json` and remain local/offline. Source gates verify User Constants type-compatible defaults and compact edit layout. A separate current-source screen pass at 1600×900 exercised User Constants Add, opening Edit on an existing INT=0 constant, Cancel, Delete, Undo, and Redo; Apply/Cancel were visible in the viewport. That pass did not apply edited values, so full User Constants CRUD is still open. Screen control also rejected invalid `%I0.8`, preserved the five-row Watch table, opened/canceled Save Workspace As, exercised User Constants Undo/Redo, and showed the System Constants hardware-unavailable disclosure. A fresh native-input pass created, renamed, and deleted an empty custom table; Delete returned to Default without confirmation. A measured-image-local DB pass opened `+ MEMBER`, canceled `cancel_probe`, applied `applied_probe` as BOOL/FALSE, and verified Undo/Redo; a final Undo left the scratch DB without that row. Prior fresh screen passes recorded Demo 5 DB101/DB102's six-column grouped layout and the visible custom-table lifecycle. **Still partial:** installed TIA V21 pairing, applying an edit to an existing User Constant, disk Save/Load and staged-form prompts, running-scan Monitor behavior, physical tag-to-operand drag, and unresolved display-format feedback. Watch row reorder/remove, Add All, supported `Bool` format, invalid-address feedback, and simulator-only modify while offline were previously observed; unsupported-format feedback remains unresolved. Source and offline gates cover valid same-scene Open preserving the running program/scan, Verify + Load replacing it, and rejecting unknown/mismatched scenes before mutation. Runtime remained STOPPED and PLC DISCONNECTED in the referenced scratch screen sessions; no Save, Load, Run, or Connect action was used except the previously recorded explicit Save Workspace As cancel check. |
+| Screen-control matrix for Global DB, PLC tags, Watch controls, and project Open | Partial | **Latest evidence (2026-10-20):** the fresh normal-renderer `interaction` profile passed all 15 commands; controller/editor tests and all interaction gates passed, including editor-control 7/7 (36 assertions) and project-tree 14/14 (103 assertions). Artifacts are recorded in `docs/tia/tia-local-run-evidence.json` and remain local/offline. Source gates verify User Constants type-compatible defaults and compact edit layout. A bounded current-source 1600×900 screen pass created a session-local scratch User Constant, opened that existing row, changed its name, applied the edit, reopened it to confirm the committed name, and used Undo to restore the prior value; the visible status reported `UNDO · UPDATE PLC USER CONSTANT · OFFLINE` and enabled Redo. The bridge repeated submitted text batches, so the probe spelling is excluded from text-input evidence, but the form transaction and history transition are visible. Earlier passes exercised User Constants Add, Edit-open, Cancel, Delete, Undo, and Redo and kept Apply/Cancel visible. Screen control also rejected invalid `%I0.8`, preserved the five-row Watch table, opened/canceled Save Workspace As, and showed the System Constants hardware-unavailable disclosure. A fresh native-input pass created, renamed, and deleted an empty custom table; Delete returned to Default without confirmation. A measured-image-local DB pass opened `+ MEMBER`, canceled `cancel_probe`, applied `applied_probe` as BOOL/FALSE, and verified Undo/Redo; a final Undo left the scratch DB without that row. Prior fresh screen passes recorded Demo 5 DB101/DB102's six-column grouped layout and the visible custom-table lifecycle. Current source fixes the Watch rejection-feedback ordering defect: rejected cells are restored before the persistent 14 px high-contrast message is published. A fresh 1600×900 `ladder-watch-format-feedback` capture shows the rejected BOOL `Float` format directly above the unchanged `Auto` row. The `ladder-watch-running` state then invokes the production Verify + Load and Run handlers; its regenerated 1600×900 frame shows Demo 3 running at scan 660 with live BOOL values, `SIMULATOR ONLY`, `NO PHYSICAL PLC`, and the full global transport visible after clipping the large project tree to the Ladder viewport. The file-backed `ladder-watch-persistence` route saves a named Watch table, destroys its in-memory content, and reopens it through the production project Open path; a fresh 1600×900 frame shows the reopened filename, table, rows, `Bool` format, `TRUE` modify value, persisted comment, and identity-preserved status. **Still partial:** installed TIA V21 pairing, staged-form prompts, a running-scan OS-level pointer walkthrough, and physical tag-to-operand drag. Watch row reorder/remove, Add All, supported `Bool` format, invalid-address feedback, unsupported-format feedback, simulator-only modify, normal-renderer running monitor state, and file-backed Watch persistence have local visible evidence. Source and offline gates cover valid same-scene Open preserving the running program/scan, Verify + Load replacing it, and rejecting unknown/mismatched scenes before mutation. The referenced manual scratch sessions remained PLC DISCONNECTED; the deterministic routes also used no physical PLC transport. |
 | Tag-reference lifecycle integrity | Fixed in source; local regression suite passes | Symbolic CALL actuals block referenced-tag deletion and follow rename, including aggregate leaves, while literals, discards, stable IDs, and unresolved references remain unchanged. |
-| Remaining declared property features | Partial | Tag-table add/rename/empty-delete, watch-table lifecycle, and member/tag transactions already have source coverage. Remaining work includes block and tag-table duplication; visible User Constants create/edit/delete verification and using constants as executable LAD operands; a hardware-sourced, read-only System constants view when project metadata exists; physical tag-to-operand drag; and screen verification of Watch-table persistence. Watch monitor/modify was visibly exercised with an offline program loaded and no physical PLC. Keep undeveloped behavior disclosed. |
-| Instance DB presentation and semantics | Layout locally verified; editing remains read-only | Pair the six-column grouped table with installed TIA V21; add overrides only as a complete identity, validation, persistence, history, and runtime-initialization slice. |
-| Installed TIA V21 comparison | Open | Capture matched project objects and states using the controlled installed-TIA capture pack. |
-| Demo sequence and ladder-owned safety logic | Deferred until GUI/property work closes | Implement and verify the demo requirements only after the preceding GUI/property gates pass. |
+| Remaining declared property features | Partial | Tag-table add/rename/empty-delete/duplicate, block duplicate, watch-table lifecycle, and member/tag transactions have source coverage. Duplication regenerates stable identities; copied tag tables receive unique CPU symbols and intentionally lose I/O bindings/absolute addresses, while generated `SceneIO` is protected. User Constants are executable immutable LAD inputs, including typed literal lowering, read-only destination enforcement, rename following, referenced-delete blocking, and CALL Input selection; visible edit/Apply/reopen/Undo is now screen-verified in a session-local current-source project. Hardware-sourced System constants are now modeled as read-only project metadata with validated identity, type, value, comment, hardware provenance, history, and schema-10 persistence; the normal-renderer source gate passes. Watch-table file persistence now has a current normal-renderer Save/destroy/Open proof with stable table and row identities plus row metadata. Remaining work includes physical tag-to-operand drag and installed-TIA comparison. Watch monitor/modify was visibly exercised with an offline program loaded and no physical PLC. Keep undeveloped behavior disclosed. |
+| Instance DB presentation and semantics | Layout locally verified; V17 editor captured; editing remains read-only | Pair the six-column grouped table with the installed TIA V17 `Pulse_Cycle_DB [DB6]` declaration/property capture; add overrides only as a complete identity, validation, persistence, history, and runtime-initialization slice. |
+| Installed TIA V17 comparison | Partial; seven matched corrections rendered | V17 Project View, project tree, instance DB, PLC tag table, and Watch table are captured offline. The RungProof project dock now uses the verified 250 px V17-style default at 1600×900, hides duplicate OPEN/PROPS header actions, and preserves full elided identities in tooltips. The document and Global DB headers also hide redundant LOCATE/PROPS actions while retaining compact declaration editing controls. The Watch document removes duplicate table navigation/lifecycle controls and collapses absolute-address entry until requested; the global `SCENARIO` and `LOGIC EDITOR` switches retain their complete labels at 1600×900. The PLC-tag document similarly leaves table lifecycle in the project tree and selected-row Properties/Cross-reference on its context menu, retaining compact Add/Edit/Verify actions plus compact declaration selectors and a concise offline boundary. The instance-DB and User constants views remove duplicate permanent property/lifecycle controls while preserving double-click/right-click property access. `VERIFY + LOAD` is now scoped to Tags instead of appearing in the User/System constants views. Focused assertions and property-route captures pass. Continue same-object/same-state pairing using the controlled installed-TIA capture pack. |
+| Demo sequence and ladder-owned safety logic | Offline acceptance complete; visual/TIA/live-PLC evidence remains separate | At the user's explicit revised work order, all five demos were reconciled before parity resumed. Fixture checks pass for all five; `--verify-demo-sequence` passes 25/25; `--verify-five-demo-learner` reports zero failures; and `--audit-palletizer` reports zero failures. Demo 3 is the conveyor/pusher cell, Demo 4 uses parameterized counter FB state in DB101, and Demo 5 calls three encoder FB instances in DB105–DB107 in addition to axis/gripper DB101–DB104. This is local offline evidence only. |
 
 An independent screen-control retry after the latest calibrated DB1 pass tried
 **Add new block** and **File** from the OB workspace. The bridge acknowledged
@@ -49,8 +52,9 @@ only selected the tree row; a real Windows double-click opened the block dialog.
 The disposable DB member screen visibly confirmed Cancel, Apply, Undo, Redo, and
 selected-row Remove with a surviving `KeepFlag` declaration. This confirms
 RungProof-side behavior only. Tag/table and User constants controls, project
-Save/Load and staged prompts, running-scan Monitor, and installed-TIA V21
-pairing remain open.
+Save/Load and staged prompts, a running-scan OS-level pointer walkthrough, and
+installed-TIA V21 pairing remain open. A separate deterministic production-
+handler route now covers the local rendered running Watch state.
 
 ## Work lanes
 
@@ -388,7 +392,7 @@ The complete acceptance ledger for the main workbench and property-management
 scope is [`TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md`](TIA_MAIN_SCREEN_PROPERTY_REQUIREMENTS.md).
 It owns the detailed requirements and dependencies below.
 
-1. **Main workbench parity:** finish TIA V21-style shell, project tree, document
+1. **Main workbench parity:** finish TIA V17-style shell, project tree, document
    tabs, editor/inspector panes, diagnostics, and online/offline status. Capture
    the same screens at the same window size and record all intentional
    differences.
@@ -418,7 +422,7 @@ It owns the detailed requirements and dependencies below.
    Cancel/Apply, Save/Load, tag-to-operand drag, and broader walkthrough
    coverage remain open. The bridge is local-only and is not a browser build
    of RungProof.
-7. **Installed TIA V21 comparison:** execute the controlled capture pack and
+7. **Installed TIA V17 comparison:** execute the controlled capture pack and
    pair by exact screen/object/state/settings. Do not claim a visual match from
    RungProof captures or automated gates.
 8. Retain structured evidence durably when the source tree is placed under
@@ -446,14 +450,15 @@ is active. Local Windows mouse/keyboard input verified creating a DB, adding a
 BOOL member, editing its comment and Retain state, and returning to the tree.
 This is local app behavior, not installed-TIA comparison.
 
-The remaining local gaps are Watch-table Save/Load persistence and
-running-scan Monitor verification; User constants as executable LAD operands
-and physical tag-to-operand drag; block and tag-table duplication; full screen
+The remaining local gaps are physical tag-to-operand drag; current-screen
+block/tag-table duplication and User Constant verification; full screen
 coverage for property validation, history, and project persistence; the
 instance DB Comment column at constrained widths; and matched installed-TIA
 V21 captures. Track these by the requirement IDs in the linked acceptance
 ledger, not as isolated fixes. The Watch display-format feedback observation
 also needs a current-source screen retest before it can be marked resolved.
+Watch-table file persistence and running-scan Monitor now have later current-
+source normal-renderer evidence recorded at the top of this plan.
 
 ## External blockers
 
@@ -465,7 +470,74 @@ also needs a current-source screen retest before it can be marked resolved.
 - live S7-1500 execution and commissioning evidence;
 - deliberately unsupported Siemens features already named in the matrix.
 
+The Watch-table workspace keeps secondary row lifecycle commands under ROW
+ACTIONS. In the Siemens workbench, table selection and lifecycle now remain in
+the project tree and editor tabs instead of being repeated by a selector and
+TABLE ACTIONS control inside the document. Symbol authoring and SIM MODIFY stay
+directly visible; absolute-address authoring expands only after `ADDRESS…` is
+selected and collapses again after a successful or blank submission. A fresh
+1600x900 local capture confirms the reduced control density and full primary
+view-switch labels. This is a GUI usability improvement only: Watch-table disk persistence screen evidence and
+installed-TIA comparison remain open.
+
 Overall Siemens parity remains **OPEN**.
+
+On 2026-10-21 the current Demo 3 `ladder-watch-running` frame was regenerated
+and visually inspected. Its workbench, Watch document, and global runtime
+statuses consistently show the loaded offline runtime running at scan 660; the
+older contradictory `PROGRAM LOADED` / `PROGRAM NOT LOADED` combination did
+not reproduce. A real-pointer retry could not reach the Godot surface because
+the execution desktop captured wallpaper at the responsive window's rectangle,
+so physical tag-to-operand drag remains open and was not inferred from input
+delivery. Installed TIA Portal V17 is now the user-selected comparison baseline.
+
+Current-source duplication now also has direct normal-renderer evidence. The
+`ladder-duplication` route drives the existing block and tag-table duplication
+handlers, checks regenerated identities and cleared copied I/O ownership, and
+leaves both copied objects visible in the project tree and active tag grid. The
+fresh 1600x900 frame shows `FB_ConveyorDrive Copy`, `Default tag table Copy`,
+unique copied symbols, and blank copied addresses. This closes the local visible
+duplication slice only; matched TIA V21 comparison remains open.
+
+The staged-form Project Open guard now also has direct current-source renderer
+evidence. `ladder-pending-tag-open` stages a real PLC-tag comment change, invokes
+the production Open command, and requires the named Apply/Discard/Cancel prompt
+before the file picker. The readable 1600x900 frame closes the local rendered
+prompt gap; an OS-level pointer walkthrough, installed TIA V21 comparison, and
+live-PLC proof remain separate.
+
+PLC-tag and User Constant CRUD now have a direct current-source production-
+handler route. `ladder-tag-constant-crud` creates, edits, undoes, redoes, and
+deletes an unreferenced PLC tag, then creates and edits an existing BOOL User
+Constant through visible Apply and Undo/Redo controls. The inspected 1600x900
+frame shows the selected constant with its committed TRUE value and completion
+status. The same route now saves through the production serializer, removes the
+constant from memory, reopens the saved project, and requires the same stable
+row, value, type, and complete readable comment before capture. This closes
+those local rendered and file-backed persistence slices only; physical pointer
+drag, the OS-level walkthrough, installed TIA V21 comparison, and live PLC remain
+separate.
+
+The final reopened frame also revealed the User Constants action row clipped by
+the Diagnostics splitter. Reducing only the non-edit grid minimum from 180 px to
+120 px preserves its expandable table while keeping **+ CONSTANT**, **EDIT**,
+**PROPS**, **DELETE**, and the scope disclosure fully visible at 1600x900. The
+fresh current-build capture was inspected after the change.
+
+Installed TIA Portal V17 is the user-selected comparison baseline. The V17-native
+`Winters_TIA_Bench.ap17` project opened offline without Save, download,
+connection, force, or PLC action. Current captures cover Project View, the
+expanded PLC tree, `Pulse_Cycle_DB [DB6]`, Default tag table, and Watch table 1.
+The remaining capture work is same-object/same-state pairing to RungProof, not
+acquisition of TIA V21.
+
+The tag-to-operand source drawer now has a focused drag-ready state and readable
+column sizing: the tag-name column receives 190 px and Data type a fixed 92 px,
+so the selected source is unambiguous beside the visible BOOL target. Native
+window-message and `SendInput` attempts did not produce the application-owned
+post-drop evidence image because the current desktop provider cannot expose the
+Godot window on its interactive capture desktop. Physical pointer acceptance
+therefore remains open; transport delivery alone was not counted as success.
 
 ## 2026-10-18 recovery and verification update
 
@@ -560,6 +632,16 @@ now confirms Global DB Remove deletes the selected member and preserves its
 sibling; inline Global DB cell commits, instance-DB editing, remaining
 screen-control coverage, and matched installed-TIA V21 comparison remain open.
 
+## 2026-10-21 Global DB scope-band visual follow-up
+
+The production `ladder-global-db` surface now presents its offline capability
+boundary as a 42 px bordered information band with 14 px high-contrast text.
+The fresh 1600×900 normal-renderer capture
+`tia-global-db-scope-band.png` keeps the five-column declaration table readable
+and closes the local helper-note contrast issue. Project Save/Load through the
+visible screen and matched installed-TIA V21 comparison remain open; this is
+local renderer evidence only.
+
 ## 2026-10-19 constrained DB layout and splitter-cache review
 
 The independent diff review found that the two vendor workbenches shared one
@@ -592,3 +674,66 @@ editor-control artifact records 7 gates / 36 assertions; both are current-source
 offline evidence. Earlier stalled runs remain historical and are superseded by
 this completed run. Matched installed-TIA V21 comparison, remaining
 screen-control coverage, and ladder-owned demo remediation remain open.
+
+## 2026-10-20 hardware System constants continuation
+
+The local property model now accepts hardware-sourced System constants only as
+read-only project metadata. Each row carries a stable ID, CPU-wide unique name,
+data type, value, comment, and required hardware-source provenance. Validation
+rejects missing provenance and collisions with PLC tags, User constants, and
+block names. History and schema-10 project Save/Load preserve the complete row.
+The Default/All-tags System constants grid renders Name, Data type, Value, and
+Comment. Selecting a row exposes exact hardware provenance and comment in a
+persistent high-contrast read-only panel; no edit action is provided. Projects
+without hardware metadata retain the explicit unavailable disclosure instead
+of receiving invented constants.
+
+The focused persistence regression passed, the build completed with 0 warnings
+and 0 errors, and the normal-renderer project-tree sweep passed 15/15 gates and
+105/105 assertions. Its local artifact is
+`.tools/tia-project-tree-system-constants.json`; it records
+`installedTiaExecuted=false` and `livePlcExecuted=false`. This closes the local
+source/persistence/rendering slice only. Physical tag-to-operand drag,
+Watch-table persistence screen evidence, matched installed-TIA V21 comparison,
+and live-PLC proof remain open.
+
+The visible PLC-tag detail-row gate now invokes the rendered row's production
+`_GetDragData` method instead of constructing its payload through a helper. The
+normal-renderer sweep passed 15/15 gates and 105/105 assertions and recorded one
+production drag request with the exact stable `pulse_received` identity. Ladder
+target validation and Apply/Undo/Redo remain covered. This strengthens the local
+application route but does not replace the still-open OS-level pointer drag or
+matched installed-TIA comparison.
+
+The normal demo operator rail is intentionally separate from the engineering
+property workbench. Curriculum/report/navigation/trace/monitor/engineering
+controls remain hidden from the default run surface, and the duplicate Machine
+Guide button now lives with those secondary routes because Curriculum already
+owns the complete guide. The visible run surface is limited to the current
+lesson action, lesson inputs, runtime state, and PLC-logic handoff.
+
+## 2026-10-21 Global DB transaction and isolation continuation
+
+The deterministic `ladder-global-db-transaction` route now exercises the
+production Global DB form through invalid-value rejection, case-insensitive
+duplicate-name rejection, Cancel, Apply, actual ladder Undo/Redo, production
+Save/Open, and stable block/member identity. It also creates two Global DBs with
+a same-index `BatchTarget`, proves a stale form from the first DB cannot mutate
+the second, then applies a second-DB-only edit through that DB's visible form.
+Both in-memory declaration collections are destroyed before Open so the final
+state must come from disk.
+
+The inspected 1600×900 normal-renderer capture
+`outputs/tia-global-db-property-transaction.png` visibly shows both DB objects
+and tabs, the readable high-contrast selected row, and the complete passing
+transaction status. The focused build passed with 0 warnings and 0 errors. This
+closes the deterministic local Global DB transaction/two-DB-isolation slice;
+physical pointer repetition and matched installed-TIA V21 comparison remain
+open.
+
+That transaction now also uses the production Tree cell editor for Global DB
+Name, Start Value, and Comment. The same stable member reopens visibly as
+`LineSpeed`, REAL `1300`, with comment `Inline edit persisted` after both DB
+member collections were destroyed. This closes the current-build local inline
+cell route without treating normal-renderer automation as physical-pointer or
+installed-TIA evidence.

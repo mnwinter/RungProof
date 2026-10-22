@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.01}, {"click": [525, 102], "capture": "lab410-stop-active-head-early"}, {"wait": 1.2, "capture": "lab410-stop-active-head-late"}, {"click": [496, 39], "wait": 0.01}, {"click": [525, 80], "wait": 1, "capture": "lab410-run-alone-observe"}, {"click": [989, 561], "wait": 0.7, "capture": "lab410-fresh-start-resume"}]

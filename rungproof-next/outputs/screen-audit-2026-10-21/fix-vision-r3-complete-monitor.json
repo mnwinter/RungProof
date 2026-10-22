@@ -1,0 +1,1 @@
+[{"name":"fix-vision-r3-class2-complete-signals","monitor_only":true,"keep_monitor":true,"expected":{"vision_class":2,"sort_complete":true,"sort_conveyor_run":false,"diverter_enable":false}}]

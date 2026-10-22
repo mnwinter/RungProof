@@ -1,0 +1,359 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-screen-lab-2-10-dust-collector-seal-in",
+  "name": "QA_Lab210_Main",
+  "sourceSceneId": "lab-2-10-dust-collector-seal-in",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "block-1",
+  "nextId": 100,
+  "tags": [
+    {
+      "symbolId": "qa-symbol-1",
+      "name": "collector_start_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "collector_start_request",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PC-owned scene binding; run_latched is output-role per SceneLadderProject owner mapping."
+    },
+    {
+      "symbolId": "qa-symbol-2",
+      "name": "collector_stop_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "collector_stop_request",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PC-owned scene binding; run_latched is output-role per SceneLadderProject owner mapping."
+    },
+    {
+      "symbolId": "qa-symbol-3",
+      "name": "run_latched",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "run_latched",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PLC-owned scene binding; run_latched is output-role per SceneLadderProject owner mapping."
+    },
+    {
+      "symbolId": "qa-symbol-4",
+      "name": "collector_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "collector_run",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PLC-owned scene binding; run_latched is output-role per SceneLadderProject owner mapping."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-1",
+      "name": "QA_Lab210_Main",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "rung-3",
+          "label": "Fixture Stop-priority seal-in; simultaneous policy not an acceptance claim",
+          "coilVariable": "run_latched",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-4",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-5",
+                "kind": 0,
+                "variable": "collector_stop_request",
+                "normallyClosed": true,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "branch-6",
+                "kind": 3,
+                "variable": "",
+                "normallyClosed": false,
+                "children": [
+                  {
+                    "id": "branch-7",
+                    "kind": 2,
+                    "variable": "",
+                    "normallyClosed": false,
+                    "children": [
+                      {
+                        "id": "contact-8",
+                        "kind": 0,
+                        "variable": "collector_start_request",
+                        "normallyClosed": false,
+                        "children": null,
+                        "compareOperator": 0,
+                        "rightOperand": "",
+                        "edgeMode": 0,
+                        "comparisonValueType": 0,
+                        "edgeMemoryOperand": null,
+                        "isLeaf": true
+                      }
+                    ],
+                    "compareOperator": 0,
+                    "rightOperand": "",
+                    "edgeMode": 0,
+                    "comparisonValueType": 0,
+                    "edgeMemoryOperand": null,
+                    "isLeaf": false
+                  },
+                  {
+                    "id": "branch-9",
+                    "kind": 2,
+                    "variable": "",
+                    "normallyClosed": false,
+                    "children": [
+                      {
+                        "id": "contact-10",
+                        "kind": 0,
+                        "variable": "run_latched",
+                        "normallyClosed": false,
+                        "children": null,
+                        "compareOperator": 0,
+                        "rightOperand": "",
+                        "edgeMode": 0,
+                        "comparisonValueType": 0,
+                        "edgeMemoryOperand": null,
+                        "isLeaf": true
+                      }
+                    ],
+                    "compareOperator": 0,
+                    "rightOperand": "",
+                    "edgeMode": 0,
+                    "comparisonValueType": 0,
+                    "edgeMemoryOperand": null,
+                    "isLeaf": false
+                  }
+                ],
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": false
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-3-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-11",
+          "label": "Collector command follows scanned seal-in state",
+          "coilVariable": "collector_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-12",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-13",
+                "kind": 0,
+                "variable": "run_latched",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-11-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-2",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "block-1"
+    }
+  ],
+  "watchVariables": [
+    "collector_start_request",
+    "collector_stop_request",
+    "run_latched",
+    "collector_run"
+  ],
+  "watchTables": [
+    {
+      "id": "qa-lab210-watch",
+      "name": "Watch table 1",
+      "variables": [
+        "collector_start_request",
+        "collector_stop_request",
+        "run_latched",
+        "collector_run"
+      ],
+      "rows": [
+        {
+          "id": "qa-watch-row-1",
+          "referenceKind": "Symbolic",
+          "reference": "collector_start_request",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit only"
+        },
+        {
+          "id": "qa-watch-row-2",
+          "referenceKind": "Symbolic",
+          "reference": "collector_stop_request",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit only"
+        },
+        {
+          "id": "qa-watch-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "run_latched",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit only"
+        },
+        {
+          "id": "qa-watch-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "collector_run",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Screen audit only"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

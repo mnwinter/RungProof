@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-22T21:40:53.4098810Z",
+  "proposal_paths": 663,
+  "missing_paths": [],
+  "current_source_paths": 140,
+  "unlisted_current_source": [],
+  "state": "PreB5snapshot;finalcontenthashes/logscopies/capabilityscanrefreshafterB5",
+  "git_mutations": false
+}

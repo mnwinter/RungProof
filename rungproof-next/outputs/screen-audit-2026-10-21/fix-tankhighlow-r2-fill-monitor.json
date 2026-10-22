@@ -1,0 +1,1 @@
+[{"name":"fix-tankhighlow-r2-fill-signals","click":[1067,643],"wait":1,"expected":{"pump_request":true,"inlet_pump_run":true,"drain_valve_open":false}}]

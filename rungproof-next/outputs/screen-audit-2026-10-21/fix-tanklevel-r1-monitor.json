@@ -1,0 +1,1 @@
+[{"name":"fix-tanklevel-r1-stop-signals","expected":{"pump_request":true,"inlet_pump_run":false,"drain_valve_open":false}},{"name":"fix-tanklevel-r1-run-signals","clicks":[[496,39],[525,80]],"wait":0.2,"expected":{"pump_request":true,"inlet_pump_run":true,"drain_valve_open":false},"keep_monitor":true}]

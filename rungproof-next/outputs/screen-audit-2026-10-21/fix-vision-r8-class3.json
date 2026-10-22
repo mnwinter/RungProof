@@ -1,0 +1,1 @@
+[{"click":[501,330]},{"click":[501,330]},{"click":[481,325]},{"click":[460,318]},{"click":[439,311],"wait":0.5,"capture":"fix-vision-r8-class3-start"},{"wait":8,"capture":"fix-vision-r8-class3-transfer-a"},{"wait":2.5,"capture":"fix-vision-r8-class3-transfer-b"},{"wait":5.5,"capture":"fix-vision-r8-class3-lane"},{"wait":9,"capture":"fix-vision-r8-class3-end"}]

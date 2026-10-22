@@ -1,0 +1,1 @@
+[{"name": "lab910-cal-left-current", "expected": {"length_mm": 0, "width_mm": 250, "height_mm": 0}}, {"name": "lab910-cal-middle", "click": [1123, 497], "expected": {}}, {"name": "lab910-cal-right", "click": [1189, 517], "expected": {}}]

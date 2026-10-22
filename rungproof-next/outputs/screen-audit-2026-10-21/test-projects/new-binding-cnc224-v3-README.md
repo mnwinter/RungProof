@@ -1,0 +1,11 @@
+# CNC learner V3 native acceptance input
+
+Use fixture-new-binding-lab-2-24-v3.rpproj.json. V2 is preserved as the earlier infeed-only boundary fixture. V3 compiles through the existing B3 project-validation seam with current declarations; this is not execution proof of newly edited CNC code. Root must rebuild and verify scene composition first.
+
+Normal route: Reset, Verify/Load, Run, actual START. Observe qa_step and actual feedback rather than assuming a fixed animation timer. Expected phases:10 infeed/real pickup beam;20 access open;30..60 actual pickup target and grip;70..120 carried corridor/seat/release;130..160 withdraw/park/clamp/access close;170 actual permitted cut;180..220 access/unclamp/regrip;230..280 unload corridor/outfeed release;290..320 withdraw/park/access close;330 outfeed to actual part exit;0 all command outputsOFF. Reset before another stock.
+
+Pickup X comes from stock_actual_x, because a real0.4m stock interrupts the beam before its centre reaches the beam line. robot_at_target is measured actual IK pose. A one-scan qa_scan_step/qa_last_step handshake avoids accepting old target feedback when a new phase first writes targets. No timer advances a robot waypoint. The plant2-second permitted exposure is the documented simulated cutting process parameter.
+
+Lean evidence: baseline, actual pickup/grip, actual supported vise release, cut with closedaccess/clamp/robotclear, actual outfeed release, final exited stock/outputsOFF. Use native bounded wait on part_at_exitTRUE with a generous120s timeout; absence is a diagnostic, not permission to modify feedback. Capture intermediate actual movement if it stalls, reading qa_step, robot_actualXYZ, stock_actualXYZ and cell_motion_inhibited.
+
+Unsafe-command checks need separate disposable learner drafts edited through normal UI: enclosure target with accessclosed, release away from support, cut without clamped seatedstock/closedaccess/robotclear, clampclose while robotinside, conflicting enabledprocess commands. Expected: actual forbidden motion absent, cell_motion_inhibitedTRUE, PLC requested image remains visible; no invented safe command rewrite. These are educational simulation guards, not hardware safety proof.

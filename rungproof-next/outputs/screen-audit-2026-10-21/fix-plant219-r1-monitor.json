@@ -1,0 +1,1 @@
+[{"name":"fix-plant219-r1-open-signals","expected":{"motor_open":false,"motor_close":false,"open_limit_nc":false,"closed_limit_nc":true,"door_position":0},"keep_monitor":true}]

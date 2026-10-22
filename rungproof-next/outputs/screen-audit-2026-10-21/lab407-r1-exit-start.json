@@ -1,0 +1,1 @@
+[{"click": [565, 649], "wait": 0.3, "capture": "lab407-r1-third-entry-attempt"}, {"click": [544, 620], "wait": 0.3, "capture": "lab407-r1-remove-parked-attempt"}, {"click": [1280, 101], "wait": 0.3, "capture": "lab407-r1-capacity-guard-health"}, {"click": [1418, 101], "wait": 0.3}, {"click": [584, 661], "wait": 0.3, "capture": "lab407-r1-exit-request"}]

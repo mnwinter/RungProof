@@ -1,0 +1,9 @@
+# Lab3.1 independent bounded native review
+
+Reviewed baseline,7permissivecases,r2reset/recovery6midtravelcheckpoints,finalactualSignals. Two lab31-review sheets preservephysicalcartonand9Signals. Firstinterruptionplanoccurredaftercompletion andisnotmidtravelcredit. ExplicitQAlearnerfixture scope; fixtureauto-resumepolicyisassumption, notapprequirement. No reviewerUI/backend.
+
+Baseline000/allFalse atposition-5.9. All7remaining guard/entryclear/exitclear combinationscaptured; only111gives transfer_permissiveTrue/runTrue, allotherFalse/False withposition-5.9. With111positionstarts-5.72, confirmingmotionratherthanstaticoutputalone.
+
+AppResetclearsinputs/output/completion,position-5.9,STOPPEDscan0. Inr2midtravelguardloss,position-5.666isunchangedacrossRUNNING60/120 withrun/permissiveFalse; restoringguardTrue at140givesrun/permissiveTrue andposition-5.54901. AppStop early/late bothSTOPPEDscan167/position-5.30601,run/permissiveFalse andsamephysicalcartonposition acrossplanned1.2secondwait. Run181republishespermissive/runTrue andposition-5.18001, entry_carton_presentTrue. Thisisobservedfixtureauto-resume, notassertedrealmachinesafety.
+
+Final1500 cartonphysicallyatexitside,position-0.479584,exit_carton_presentTrue,transfer_completeTrue,transfer_runFalse,permissiveTrue,entrypresentFalse,all3manualpermissivesTrue. Thus boundedphysicaltransferandarrival-stopproved. DetailedLEDcolorsnotindependentlyreadatthiscamera; noindicatorcolorclaim. No newissue. Fullmotiontrajectory/exactlatency/machineStopdistinctpath,allinterruptionpositionsandrealphysical safetyunproven; no whole-scenePASS.

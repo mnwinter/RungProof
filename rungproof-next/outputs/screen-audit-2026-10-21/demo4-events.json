@@ -1,0 +1,18 @@
+[
+ {"click":[1072,558],"wait":0.3},
+ {"click":[1488,612],"wait":0.4,"capture":"demo4-invalid-event"},
+ {"click":[1075,463],"wait":0.3},
+ {"click":[1200,475],"wait":0.3},
+ {"click":[1488,612],"wait":0.3,"capture":"demo4-valid-first-event"},
+ {"click":[1488,612],"wait":0.3},
+ {"click":[1488,612],"wait":0.3},
+ {"click":[1488,612],"wait":0.3},
+ {"click":[1488,612],"wait":0.3,"capture":"demo4-five-events"},
+ {"click":[1197,575],"wait":0.4,"capture":"demo4-machine-stop"},
+ {"click":[1072,558],"wait":0.4,"capture":"demo4-machine-restart"},
+ {"click":[1334,591],"wait":0.4,"capture":"demo4-machine-reset"},
+ {"click":[1072,558],"wait":0.3},
+ {"click":[1488,612],"wait":0.4,"capture":"demo4-second-batch-first-event"},
+ {"click":[595,39],"wait":0.2},
+ {"click":[701,15],"wait":0.4,"capture":"demo4-curriculum-progress"}
+]

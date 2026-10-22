@@ -176,12 +176,14 @@ public static partial class SceneComposer
         if (scene.Id == "lab-5-10-coating-line") ConfigureCoatingInstallation(root);
         if (scene.Id == "lab-6-08-hand-dryer") ConfigureHandDryerInstallation(root);
         if (scene.Id == "lab-6-07-luggage-weight-sort") ConfigureLuggageInstallation(root);
+        ConfigureMaterialEntryPortal(root, scene);
         // Establish supported operator installations before Ready, runtime
         // initial-pose capture, and ray-pick/feedback bindings are constructed.
         ConfigureContextInstallation(root, scene);
         ConfigureMotorTestFixtures(root, scene);
         ConfigureMotorConveyorZones(root, scene);
         ConfigureControlInstallation(root, scene);
+        HideUnboundDecorativeMachineControls(root, scene);
         ConfigureAccessorySupports(root, scene);
         ApplyTemplateOverride(root,scene,scene.TemplateOverride);
         return new SceneComposition(root, rendered, deferred);
@@ -323,6 +325,8 @@ public static partial class SceneComposer
 
     private static Node3D? CreateTrainingAccessory(SceneEquipment equipment, AssetCatalogDocument candidates)
     {
+        if (Text(equipment.Config, "installation", "") == "palletInspectionScanner")
+            return CreatePalletInspectionScanner(equipment, candidates);
         if (Text(equipment.Config, "installation", "") == "visionSorterHandoffBridge") return CreateVisionSorterBridge(equipment);
         if (Text(equipment.Config, "installation", "") == "luggageTransferBridge") return CreateLuggageTransferBridge();
         if (Text(equipment.Config, "installation", "") is "groupingLine" or "groupingStop") return CreatePackageGroupingPart(Text(equipment.Config, "installation", ""));
@@ -365,6 +369,41 @@ public static partial class SceneComposer
                 TravelM = 0.7f,
                 TravelTimeSeconds = 1.5f,
             });
+        if (model is not null && Text(equipment.Config, "motion", string.Empty) == "slideGatePosition")
+            model.AddChild(new EquipmentMotionController
+            {
+                Name = "SlideGateMotion",
+                Kind = EquipmentMotionController.MotionKind.LinearX,
+                TargetPrefix = "KIN_SLIDE_GATE",
+                TravelM = 0.4f,
+                PositionInputSlewSeconds = (float)Number(equipment.Config, "positionSlewSeconds", 1.15),
+                PositionInputSlewRequiresRunCommand = false,
+                AutonomousPositionTravel = false,
+            });
+        return model;
+    }
+
+    private static Node3D CreatePalletInspectionScanner(
+        SceneEquipment equipment,
+        AssetCatalogDocument candidates)
+    {
+        var model = CreateMappedAsset(equipment, candidates,
+            "sensing.identification.fixed-barcode-scanner.v1");
+
+        // The reusable catalog preview includes a loose demonstration parcel,
+        // printed barcode and a fixed beam aimed at that parcel. Demo 4 already
+        // has its real conveyor load and manually supplied inspection event, so
+        // retaining those preview pieces would show a second box on the floor
+        // and falsely imply an automatic barcode decode.
+        foreach (var node in model.FindChildren("*", "Node3D", true, false).OfType<Node3D>())
+        {
+            var name = node.Name.ToString();
+            if (name == "PARCEL" || name == "BARCODE_target"
+                || name.StartsWith("BARCODE_bar_", StringComparison.Ordinal)
+                || name == "SCAN_beam")
+                node.Visible = false;
+        }
+
         return model;
     }
 
@@ -567,6 +606,9 @@ public static partial class SceneComposer
             TravelDegrees = travelDegrees,
             TravelTimeSeconds = travelTimeSeconds,
             PositionInputInverted = positionInputInverted,
+            PositionInputSlewSeconds = (float)Number(equipment.Config, "positionSlewSeconds", 0),
+            PositionInputSlewRequiresRunCommand = !equipment.Config.TryGetProperty("positionSlewRequiresRunCommand", out var slewRequiresRun)
+                || slewRequiresRun.ValueKind != JsonValueKind.False,
             RotationAxis = rotationAxis == default ? Vector3.Up : rotationAxis,
         });
         return model;
@@ -644,7 +686,8 @@ public static partial class SceneComposer
                 // Put numbers beyond the dial rim so a projecting handle does
                 // not cover its selected number in an oblique operator view.
                 Position = new Vector3(0, 1.15f, 0.198f) + radial * 0.153f,
-                FontSize = 32, PixelSize = 0.00085f, OutlineSize = 0, Modulate = Colors.White,
+                FontSize = 42, PixelSize = 0.00115f, OutlineSize = 3,
+                OutlineModulate = Colors.Black, Modulate = Colors.White,
             });
         }
         var faceLabel = Text(equipment.Config, "faceLabel", string.Empty);
@@ -652,7 +695,8 @@ public static partial class SceneComposer
             model.AddChild(new Label3D
             {
                 Name = "OperatorFaceLabel", Text = faceLabel, Position = new Vector3(0, 1.39f, .205f),
-                FontSize = 40, PixelSize = .001f, OutlineSize = 0, Modulate = Colors.White,
+                FontSize = 56, PixelSize = .00165f, OutlineSize = 4,
+                OutlineModulate = Colors.Black, Modulate = Colors.White,
             });
         var controller = new SelectorSwitchController { Name = "SelectorSwitchController" };
         model.AddChild(controller);
@@ -682,8 +726,8 @@ public static partial class SceneComposer
             {
                 Name = "OperatorFaceLabel", Text = faceLabel,
                 Position = plateText.Position + new Vector3(0, 0, 0.003f),
-                FontSize = 32, PixelSize = 0.0006f, OutlineSize = 0,
-                Modulate = Colors.White,
+                FontSize = 52, PixelSize = 0.00125f, OutlineSize = 3,
+                OutlineModulate = Colors.Black, Modulate = Colors.White,
             });
         }
         return model;

@@ -1,0 +1,7 @@
+# Integrated workspace Discard navigation candidate
+
+Independently reviewed three savedimages only; no UIoperations. conveyor-target-highlight-review.png explicitlyhighlights Conveyor Inspection Cell inScenario menu. fixture-conveyor-cell-navigation-intermediate.png identifiespriorLab2.1andshows Unsaved scene workspace modal. Footer independentlysays OPENING SCENARIO: Conveyor Inspection Cell. Modalwording promises save/discardedits beforecontinuing; Discardbutton isgroundednear666,538.
+
+AfterreportedDiscardclick, conveyor-after-discard-own-workspace.png visiblyshowsLab9.1SumFunctionBlock/STOPPED/LADDERNOTLOADED, nativeoperatorlayout, ratherthanrequestedConveyor. This is an observed target/result discrepancy. However preimage1600x900 andpostimage2560x1369 differ inlayout/surface extent; sameappinstance/window/provenance andnointerveningqueuednavigation have notbeenindependentlyestablished bytheseimages. Therefore this does notyetprove the app's Discardhandler selects the wrongscene. Sourceinvestigation/dedicatedrepeat mustresolve whether targetwaslost, savedworkspacewasrestored, or capture/selectionswitchedsurface.
+
+DeduplicateasadditionalQA-NAV-CANDIDATE-001evidence (Discard/navigation semantics), not a newconfirmeddefect or a repairplan. Earliercandidate concernedapparentlyretainedLab2.1rungafterDiscard; thisnewobservationdoesnotprove sharedcause. No change to confirmedissuecounts or Conveyorbehaviorcoverage.

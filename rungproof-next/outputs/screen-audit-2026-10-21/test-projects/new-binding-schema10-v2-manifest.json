@@ -1,0 +1,74 @@
+[
+  {
+    "file": "fixture-new-binding-lab-2-11-v2.rpproj.json",
+    "sourceSceneId": "lab-2-11-inbound-tote-stop",
+    "sha256": "979c86968d911a2f7b52ee70fc8d612517aab36f2768a09dc492019462259869",
+    "supersedes": "fixture-new-binding-lab-2-11.rpproj.json",
+    "preserved_v1_sha256": "e7ee045e54a463a74276687977b621122e85a214162d86e62ea392910da0a80d",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-12-v2.rpproj.json",
+    "sourceSceneId": "lab-2-12-assembly-lift",
+    "sha256": "b85e6e26f088019c024d0dc372ef086f1485111baea88bc3f1163bfeeb30d60e",
+    "supersedes": "fixture-new-binding-lab-2-12.rpproj.json",
+    "preserved_v1_sha256": "ca6ff4854993b0b79978a7c9f07d0d6a70bf1573afc9d7d5c8765a379be92d1a",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-13-v2.rpproj.json",
+    "sourceSceneId": "lab-2-13-coolant-jug-fill",
+    "sha256": "86a67fa6e763c30618d997f536fdd418cf3714a0ecc878038b1fbf79a039655e",
+    "supersedes": "fixture-new-binding-lab-2-13.rpproj.json",
+    "preserved_v1_sha256": "45a67ab3a3d52b919b9d76d284a2cdf2fbcd549673bf7882e8da3f8489a5a06c",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-16-v2.rpproj.json",
+    "sourceSceneId": "lab-2-16-safe-drill",
+    "sha256": "4fe61bfd101147cab53ed4b6f79eb8c2064d1c5c965393bb491d9cac2d271dae",
+    "supersedes": "fixture-new-binding-lab-2-16.rpproj.json",
+    "preserved_v1_sha256": "e3ed9e26e0c0d5417a6e5cef979b78bae613f06179d298a007edadae75c5f983",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-19-v2.rpproj.json",
+    "sourceSceneId": "lab-2-19-service-door",
+    "sha256": "69edede681979852e122213c5a7ef00305575e4ee2f863fab561a72798871480",
+    "supersedes": "fixture-new-binding-lab-2-19.rpproj.json",
+    "preserved_v1_sha256": "6c5e3223b1656a3e62161f7122a7eb189ab2da498ab05b2eb10b20307ab60ce5",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-23-v2.rpproj.json",
+    "sourceSceneId": "lab-2-23-parcel-sorter",
+    "sha256": "3bed7b717f910c1eeb88f262c57c4a62a7786361f73cc627bd0ae228fda2062f",
+    "supersedes": "fixture-new-binding-lab-2-23.rpproj.json",
+    "preserved_v1_sha256": "a98f13a9fb9aa11dac0ed8e6e41df9ceedd72fc4d5c22d2faada7d6187cd6f21",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-24-v2.rpproj.json",
+    "sourceSceneId": "lab-2-24-robot-cnc",
+    "sha256": "9a9f5a7a6d0dfbec1d5db48bf02c69d2480c3e608b265baf622b8a0c519b8536",
+    "supersedes": "fixture-new-binding-lab-2-24.rpproj.json",
+    "preserved_v1_sha256": "40d64a560449cb57160cfcdad1fb99633b7a173960c47dc19275756364537134",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-tank-high-low-operator-requests-v2.rpproj.json",
+    "sourceSceneId": "tank-high-low",
+    "sha256": "2d40cd9b5ebc65668afc52f00ad3f5a507b73010261b90c7e4f191b9c056ba64",
+    "supersedes": "fixture-tank-high-low-operator-requests.rpproj.json",
+    "preserved_v1_sha256": "32b640e0638f20ffb5ecd33ea90a48454857fdab13b0439cd3420ca9cea45b29",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  },
+  {
+    "file": "fixture-tank-level-operator-requests-v2.rpproj.json",
+    "sourceSceneId": "tank-level",
+    "sha256": "098ad80112754e6cfb5f9323907cba0eb994c697decbf0c19f0af64bcdb70922",
+    "supersedes": "fixture-tank-level-operator-requests.rpproj.json",
+    "preserved_v1_sha256": "f0d52de754a37c25add5c4078b906ae93d0a3627a68efe22407f492efc5cac84",
+    "correction": "QA input schema10 requires explicit systemConstants; no controller logic changes."
+  }
+]

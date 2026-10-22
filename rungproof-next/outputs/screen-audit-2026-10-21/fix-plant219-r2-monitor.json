@@ -1,0 +1,1 @@
+[{"name":"fix-plant219-r2-stop-signals","expected":{"motor_open":false,"motor_close":false,"open_limit_nc":true,"closed_limit_nc":true},"keep_monitor":true}]

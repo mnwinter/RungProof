@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.01}, {"click": [525, 102], "capture": "lab214-stop-pumping-early"}, {"wait": 1.2, "capture": "lab214-stop-pumping-late"}, {"click": [496, 39], "wait": 0.01}, {"click": [525, 80], "wait": 0.7, "capture": "lab214-apprun-retained-cycle"}]

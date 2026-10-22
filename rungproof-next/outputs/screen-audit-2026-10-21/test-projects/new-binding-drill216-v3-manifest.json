@@ -1,0 +1,10 @@
+{
+  "file": "fixture-new-binding-lab-2-16-v3.rpproj.json",
+  "sourceSceneId": "lab-2-16-safe-drill",
+  "sha256": "edb8fc48045e092bfd5f79364d6f2e3f8111ad098add54a6de35a4656575ec8f",
+  "supersedes": "fixture-new-binding-lab-2-16-v2.rpproj.json",
+  "preserved_v2_sha256": "4fe61bfd101147cab53ed4b6f79eb8c2064d1c5c965393bb491d9cac2d271dae",
+  "compile_status": "Existing built app --mcp-project/--mcp-scene validation passed:true issueCount0 (schema/compiler/current declared SceneIO only; no rebuilt drill physics or behavior execution).",
+  "expected": "Both handsON, workpiecepresent/topTRUE -> START -> spindle350ms -> downfeed actualbottom -> dwell350ms -> explicit retract actualtop -> alloutputsOFF. handloss cancels; Reset for midstroke recovery.",
+  "parameters": "350ms spinup/dwell QA parameters; DB216/217 distinct. No PC/SIM writes, no sequence API; timer choices not hardware claims."
+}

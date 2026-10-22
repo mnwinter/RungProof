@@ -1,0 +1,140 @@
+{
+  "scope": "Derived image pixels only; no app input or pass assertions",
+  "physical_roi": [
+    660,
+    305,
+    980,
+    490
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    245
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab402-after-held-first-r2",
+      "source": "lab402-after-held-first-r2.png",
+      "sha256": "897be9945fea77f5c18f74b8e9e29bbf855c4da54d48be4ffd4294f2b19fca88",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-count2-r2",
+      "source": "lab402-count2-r2.png",
+      "sha256": "58c660cc9f2fff6ad0cbaf5b4ce1e0b8887e20780b5ea37e749fcb9831cd509a",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-count3-r2",
+      "source": "lab402-count3-r2.png",
+      "sha256": "99a441368638e95e642998cb4efd35e7177fe5ad5658c8e52fd7e877da8a63ad",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-count4-r2",
+      "source": "lab402-count4-r2.png",
+      "sha256": "fd933bb181f188fa9038db5c1a5a0ddb821d20f68707753e532ff0b0549a5a8d",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-machine-reset-r2",
+      "source": "lab402-machine-reset-r2.png",
+      "sha256": "dca6044a2f909487745fd94e2e4f2f41657e2de841ea7354057359e331e56c65",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-repeat1-r2",
+      "source": "lab402-repeat1-r2.png",
+      "sha256": "24a141df4c744d53526da423cef84e7dae679ce92e29a5ce539697df1d130e81",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-repeat2-r2",
+      "source": "lab402-repeat2-r2.png",
+      "sha256": "42245a84fb2f75ca9b9428898f9c283d26ea7868fc4a3f0fd71d1f99c0994708",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-repeat3-r2",
+      "source": "lab402-repeat3-r2.png",
+      "sha256": "7961b7adc1a6c0b894631f6cb14f2b0102ce41f9e6cf90db293cc0a99c4e7284",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-app-stop-r2",
+      "source": "lab402-app-stop-r2.png",
+      "sha256": "e8dbb7f82e43ef0390901ad686c0553a8d00780d2745081969c1a432d82d2822",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-app-run-retained-r2",
+      "source": "lab402-app-run-retained-r2.png",
+      "sha256": "bc6fb1fdc2d4e81c1a8b68c1478b0cd9b3fb7bf414f9b71ff31247d1d2cbf3f8",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-app-reset-r2",
+      "source": "lab402-app-reset-r2.png",
+      "sha256": "f426e4f227a485797b67b762e62290a23ceb7b49929feb3274f7157392b2fab6",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-reset-run-r2",
+      "source": "lab402-reset-run-r2.png",
+      "sha256": "9d9671ac997335811727cc9059ff48d692ddda657b430ec3b8d8b1bb6d09bf85",
+      "image_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "case": "lab402-new-count1-r2",
+      "source": "lab402-new-count1-r2.png",
+      "sha256": "3de29859fb318c523b5802533c76479fc724d1b8a013b85b4f43f13ae892fc8a",
+      "image_size": [
+        1600,
+        900
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+[{"click": [528, 625], "wait": 0.3, "capture": "lab407-r2-enable-loss"}, {"wait": 1.2, "capture": "lab407-r2-enable-held"}, {"click": [528, 625], "wait": 0.5, "capture": "lab407-r2-enable-restored"}, {"wait": 12, "capture": "lab407-r2-replacement-parked"}]

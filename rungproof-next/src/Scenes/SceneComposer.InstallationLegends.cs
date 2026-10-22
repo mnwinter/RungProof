@@ -8,6 +8,12 @@ namespace RungProof.Next.Scenes;
 
 public static partial class SceneComposer
 {
+    private const float IdentificationPlateDepth = .012f;
+    private const float IdentificationSurfaceClearance = .003f;
+
+    private static float IdentificationPlateCenterZ(float mountingSurfaceFront)
+        => mountingSurfaceFront + IdentificationPlateDepth / 2 + IdentificationSurfaceClearance;
+
     // Presentation contracts only. These do not become equipment or I/O.
     private sealed record FaceContract(string Action, string ActionType, string Point, string Text);
     private static readonly IReadOnlyDictionary<string, FaceContract> InstallationFaceContracts =
@@ -23,7 +29,12 @@ public static partial class SceneComposer
             ["lab-2-24-robot-cnc/cnc_cell_start"] = new("start-cnc", "start", "", "CNC CELL\nSTART"),
             ["lab-2-18-pallet-pickup/auto_start"] = new("start-auto", "start", "", "AUTO\nSTART"),
             ["scene-1-conveyor-stop/scene1_station"] = new("scene-toggle", "toggle", "conveyor_running", "START / STOP"),
-            ["scene-2-conveyor-pusher/scene2_station"] = new("scene-toggle", "toggle", "conveyor_running", "START / STOP"),
+            ["scene-2-conveyor-pusher/scene2_station"] = new("pulse-start_command", "pulse", "start_command", "START"),
+            ["scene-2-conveyor-pusher/switch_1"] = new("pulse-reset_command", "pulse", "reset_command", "RESET"),
+            ["scene-2-conveyor-pusher/switch_2"] = new("toggle-system_enable", "toggle", "system_enable", "ENABLE"),
+            ["scene-2-conveyor-pusher/switch_3"] = new("toggle-safety_trip", "toggle", "safety_trip", "TRIP SIM"),
+            ["scene-2-conveyor-pusher/switch_4"] = new("pulse-stop_command", "pulse", "stop_command", "STOP"),
+            ["scene-2-conveyor-pusher/switch_5"] = new("toggle-drive_overload", "toggle", "drive_overload", "OVERLOAD"),
             ["lab-10-03-vision-package-sorter/switch_9"] = new("toggle-package_present", "toggle", "package_present", "PACKAGE\nPRESENT"),
             ["lab-10-03-vision-package-sorter/switch_10"] = new("toggle-vision_result_valid", "toggle", "vision_result_valid", "VISION\nVALID"),
             ["lab-10-03-vision-package-sorter/switch_11"] = new("toggle-destination_clear", "toggle", "destination_clear", "DEST\nCLEAR"),
@@ -44,7 +55,7 @@ public static partial class SceneComposer
             ["lab-6-07-luggage-weight-sort/switch_9"] = new("toggle-scale_ready", "toggle", "scale_ready", "SCALE\nREADY"),
             ["lab-6-07-luggage-weight-sort/switch_10"] = new("cycle-fixture_mass_kg", "cycle", "fixture_mass_kg", "NEXT\nMASS"),
             ["lab-6-08-hand-dryer/switch_7"] = new("toggle-hands_inserted", "toggle", "hands_inserted", "HANDS\nIN"),
-            ["lab-9-11-pallet-counting/switch_7"] = new("toggle-pallet_detected", "toggle", "pallet_detected", "PALLET\nPRESENT"),
+            ["lab-9-11-pallet-counting/switch_7"] = new("pulse-pallet_detected", "pulse", "pallet_detected", "NEW\nPALLET"),
             ["lab-9-11-pallet-counting/switch_8"] = new("toggle-pallet_type_valid", "toggle", "pallet_type_valid", "TYPE\nVALID"),
             ["lab-9-11-pallet-counting/switch_9"] = new("toggle-count_request", "toggle", "count_request", "COUNT\nREQUEST"),
             ["lab-9-12-ev-charging-manager/switch_1"] = new("toggle-bay_occupied", "toggle", "bay_occupied", "A BAY\nOCCUPIED"),
@@ -55,8 +66,8 @@ public static partial class SceneComposer
             ["lab-9-12-ev-charging-manager/fixture_bay_b_customer_authorized"] = new("toggle-bay_b_customer_authorized", "toggle", "bay_b_customer_authorized", "B AUTH\nVALID"),
             ["lab-9-12-ev-charging-manager/fixture_bay_b_charger_ready"] = new("toggle-bay_b_charger_ready", "toggle", "bay_b_charger_ready", "B CHARGE\nREADY"),
             ["lab-9-12-ev-charging-manager/fixture_bay_b_connector_inserted"] = new("toggle-bay_b_connector_inserted", "toggle", "bay_b_connector_inserted", "B PLUG\nIN"),
-            ["tank-high-low/hl_drain_station"] = new("toggle-drain", "toggle", "drain_valve_open", "DRAIN"),
-            ["tank-level/drain_station"] = new("toggle-drain", "toggle", "drain_valve_open", "DRAIN"),
+            ["tank-high-low/hl_drain_station"] = new("toggle-drain", "toggle", "drain_request", "DRAIN"),
+            ["tank-level/drain_station"] = new("toggle-drain", "toggle", "drain_request", "DRAIN"),
             ["tank-radar/radar_pump_station"] = new("toggle-pump", "toggle", "cycle_request", "AUTO\nCYCLE"),
             ["tank-radar/radar_drain_station"] = new("toggle-drain", "toggle", "manual_drain_request", "DRAIN\nREQUEST"),
         };
@@ -103,8 +114,10 @@ public static partial class SceneComposer
             ["lab-2-09-maintenance-beacon/maintenance_beacon"] = new("indicator", "Maintenance beacon", "", "", "amber_beacon|indicator;green_beacon|indicator;red_beacon|indicator", "MAINTENANCE BEACON\nOUTPUT"),
             ["lab-2-25-inspection-toggle/inspection_toggle_button"] = new("switch", "Inspection light toggle", "TOGGLE", "toggle-inspection-light", "toggle_button_pressed|switch", "TOGGLE\nPULSE"),
             ["lab-2-25-inspection-toggle/inspection_light"] = new("indicator", "Machine inspection light", "", "", "inspection_light_on|indicator", "INSPECTION LIGHT\nOUTPUT"),
-            ["lab-4-01-press-count-lamp/switch_0"] = new("switch", "Press-Count Lamp switch", "PULSE", "toggle-pulse_received", "pulse_received|switch", "PULSE\nPULSE"),
-            ["lab-4-01-press-count-lamp/indicator_1"] = new("indicator", "Press-Count Lamp indicator", "", "", "threshold_lamp|indicator", "COUNT REACHED\nOUTPUT"),
+            ["lab-4-01-press-count-lamp/switch_0"] = new("switch", "Press count event input", "PULSE", "toggle-pulse_received", "pulse_received|switch", "PULSE\nPULSE"),
+            ["lab-4-01-press-count-lamp/indicator_1"] = new("indicator", "Threshold lamp - count reached three", "", "", "threshold_lamp|indicator", "COUNT REACHED\nOUTPUT"),
+            ["lab-4-01-press-count-lamp/switch_2"] = new("switch", "Press-Count Lamp machine reset", "RESET", "pulse-reset_pressed", "reset_pressed|switch", "RESET\nPULSE"),
+            ["lab-4-01-press-count-lamp/training_accessory_3"] = new("trainingAccessory", "Press-count accumulator display", "", "", "press_count_value|numericDisplay", "COUNT\nOUTPUT"),
             ["lab-4-02-counter-reset-lamp/switch_0"] = new("switch", "Count pulse button", "COUNT", "pulse-count", "pulse_received|switch", "COUNT\nPULSE"),
             ["lab-4-02-counter-reset-lamp/indicator_1"] = new("indicator", "Counter Reset Lamp indicator", "", "", "counter_lamp|indicator", "COUNT REACHED\nOUTPUT"),
             ["lab-4-02-counter-reset-lamp/switch_2"] = new("switch", "Counter reset button", "RESET", "pulse-reset", "reset_pressed|switch", "RESET\nPULSE"),
@@ -187,6 +200,7 @@ public static partial class SceneComposer
             ["lab-2-09-maintenance-beacon/beacon_selector"] = new("next-beacon-state", "cycle", "beacon_position", ""),
             ["lab-2-25-inspection-toggle/inspection_toggle_button"] = new("toggle-inspection-light", "pulse", "toggle_button_pressed", ""),
             ["lab-4-01-press-count-lamp/switch_0"] = new("toggle-pulse_received", "pulse", "pulse_received", ""),
+            ["lab-4-01-press-count-lamp/switch_2"] = new("pulse-reset_pressed", "pulse", "reset_pressed", ""),
             ["lab-4-02-counter-reset-lamp/switch_0"] = new("pulse-count", "pulse", "pulse_received", ""),
             ["lab-4-02-counter-reset-lamp/switch_2"] = new("pulse-reset", "pulse", "reset_pressed", ""),
             ["lab-4-05-dual-input-count-window/switch_0"] = new("pulse-a", "pulse", "channel_a_pulse", ""),
@@ -264,6 +278,15 @@ public static partial class SceneComposer
                 if (BenchActionContracts.TryGetValue(scene.Id + "/" + id, out var benchAction))
                     ValidateFaceAction(scene, item, benchAction);
                 var device = root.GetNode<Node3D>(SafeNodeName(id));
+                // Do not put a second sign below a control that already names
+                // itself. Pushbuttons/selectors use OperatorFaceLabel and live
+                // displays use their own readout label. Keep one fascia legend
+                // only for outputs such as lamps whose physical head cannot
+                // communicate the PLC function by itself.
+                if (device.FindChild("OperatorFaceLabel", true, false) is Label3D
+                    || device.FindChild("NumericReadout", true, false) is Label3D
+                    || device.FindChild("StaticReadout", true, false) is Label3D)
+                    continue;
                 var deviceBounds = InstallationBounds(device);
                 // Transform measured head to the support frame, including camera-facing rotation.
                 var relative = installation.Transform.AffineInverse();
@@ -284,8 +307,9 @@ public static partial class SceneComposer
                 // Their explicit contracts are concise two-line output identities.
                 var stripHeight = bearing.End.Y > 1.1f ? .12f : .24f;
                 AddIdentificationStrip(installation, device, id, c.Text,
-                    new Vector3(head.GetCenter().X, bearing.End.Y - stripHeight / 2 - .005f, bearing.End.Z - .006f), width, stripHeight,
-                    c.Action, c.BindingSignature);
+                    new Vector3(head.GetCenter().X, bearing.End.Y - stripHeight / 2 - .005f,
+                        IdentificationPlateCenterZ(bearing.End.Z)), width, stripHeight,
+                    bearing.End.Z, c.Action, c.BindingSignature);
             }
         }
         foreach (var (id, point, text) in scene.Id switch
@@ -300,8 +324,12 @@ public static partial class SceneComposer
             if (!binding) throw new InvalidOperationException("Pilot identification binding drift: " + scene.Id + "/" + id);
             var device = root.GetNode<Node3D>(SafeNodeName(id));
             var head = installation.Transform.AffineInverse() * InstallationBounds(device);
-            AddIdentificationStrip(installation, device, id, text, new Vector3(head.GetCenter().X, head.Position.Y - .10f, -.110f),
-                MathF.Min(.48f, (installation.HasMeta("measuredHeadPitch") ? installation.GetMeta("measuredHeadPitch").AsSingle() : .38f) - .025f), .16f, "", point + "|indicator");
+            var door = installation.GetNode<MeshInstance3D>("OperatorCabinet_Door");
+            var doorFront = (door.Transform * door.GetAabb()).End.Z;
+            AddIdentificationStrip(installation, device, id, text,
+                new Vector3(head.GetCenter().X, head.Position.Y - .10f, IdentificationPlateCenterZ(doorFront)),
+                MathF.Min(.48f, (installation.HasMeta("measuredHeadPitch") ? installation.GetMeta("measuredHeadPitch").AsSingle() : .38f) - .025f),
+                .16f, doorFront, "", point + "|indicator");
         }
     }
 
@@ -354,7 +382,7 @@ public static partial class SceneComposer
             // Keep all geometry in support coordinates: the cabinet rotation
             // handles the opposite camera side without moving picked devices.
             var at = new Vector3(ringBounds.GetCenter().X,
-                ringBounds.End.Y + ringGap + height / 2, doorBounds.End.Z + .006f);
+                ringBounds.End.Y + ringGap + height / 2, IdentificationPlateCenterZ(doorBounds.End.Z));
             if (at.X - width / 2 < doorBounds.Position.X || at.X + width / 2 > doorBounds.End.X
                 || at.Y - height / 2 < doorBounds.Position.Y || at.Y + height / 2 > doorBounds.End.Y)
                 throw new InvalidOperationException("Mapped operator strip exceeds cabinet fascia: " + scene.Id + "/" + item.Id);
@@ -363,7 +391,7 @@ public static partial class SceneComposer
                 .Select(b => Text(b, "point", "") + "|" + Text(b, "mode", ""))
                 .OrderBy(s => s, StringComparer.Ordinal);
             AddIdentificationStrip(installation, device, item.Id, contract.Text, at, width, height,
-                contract.Action, string.Join(";", sourceBindings));
+                doorBounds.End.Z, contract.Action, string.Join(";", sourceBindings));
             var plate = installation.GetNode<MeshInstance3D>("InstallationIdentification_" + SafeNodeName(item.Id));
             plate.SetMeta("installationLegendKind", "mappedOperatorFace");
             plate.SetMeta("sourceActionType", contract.ActionType);
@@ -386,13 +414,15 @@ public static partial class SceneComposer
             var key = scene.Id + "/" + item.Id;
             var expected = key switch
             {
-                "lab-2-13-coolant-jug-fill/fill_start" or "lab-2-23-parcel-sorter/sorter_start"
-                    or "lab-2-24-robot-cnc/cnc_cell_start" => (true, "", ""),
+                "lab-2-13-coolant-jug-fill/fill_start" => (true, "start_fill_request", ""),
+                "lab-2-23-parcel-sorter/sorter_start" => (true, "start_sort_request", ""),
+                "lab-2-24-robot-cnc/cnc_cell_start" => (true, "start_cnc_request", ""),
                 "lab-2-14-sump-pump/sump_start" => (true, "start_sump", ""),
                 "lab-2-17-pallet-robot/robot_cycle_start" or "lab-2-20-bottle-shuttle/shuttle_start"
                     or "lab-2-21-tote-finishing/line_start" or "lab-2-22-dual-spindle/dual_drill_start" => (true, "operator.start", ""),
                 "lab-2-18-pallet-pickup/auto_start" => (true, "auto_start_request", ""),
-                "scene-1-conveyor-stop/scene1_station" or "scene-2-conveyor-pusher/scene2_station" => (true, "operator.start", "operator.stop"),
+                "scene-1-conveyor-stop/scene1_station" => (true, "operator.start", "operator.stop"),
+                "scene-2-conveyor-pusher/scene2_station" => (true, "", ""),
                 _ => (false, "", ""),
             };
             if (!expected.Item1) continue;
@@ -461,6 +491,13 @@ public static partial class SceneComposer
             "lab-6-08-hand-dryer" => new[] {
                 ("indicator_2", "blower_run", "PLC", "green", "BLOWER CMD\nOUTPUT", false, .01f, .14f),
                 ("indicator_9", "heater_enable", "PLC", "amber", "HEATER CMD\nOUTPUT", true, .04f, .16f) },
+            "lab-9-11-pallet-counting" => new[] {
+                ("machine_running_lamp", "machine_running", "PLC", "amber", "RUNNING", false, .02f, .16f),
+                ("indicator_3", "pallet_count_valid", "PLC", "green", "BATCH VALID", false, .02f, .16f) },
+            "lab-11-13-xy-palletizing" => new[] {
+                ("indicator_3", "vacuum_pick", "PLC", "green", "VACUUM", false, .02f, .16f),
+                ("indicator_12", "cell_active", "PLC", "green", "ACTIVE", false, .02f, .16f),
+                ("indicator_13", "layer_complete", "PLC", "green", "LAYER", false, .02f, .16f) },
             _ => System.Array.Empty<(string, string, string, string, string, bool, float, float)>(),
         })
         {
@@ -468,7 +505,12 @@ public static partial class SceneComposer
             var expectedLabel = point switch {
                 "open_limit_nc" => "Open limit NC signal", "closed_limit_nc" => "Closed limit NC signal",
                 "conveyor_run" => "PLC run-enable command", "conveyor_reverse" => "PLC reverse-direction command",
-                "blower_run" => "BLOWER command", _ => "HEATER command" };
+                "blower_run" => "BLOWER command", "heater_enable" => "HEATER command",
+                "machine_running" => "Batch counter running lamp",
+                "pallet_count_valid" => "Valid five-pallet batch lamp",
+                "vacuum_pick" => "Vacuum gripper command lamp",
+                "cell_active" => "Palletizer cell active lamp",
+                _ => "Four-carton layer complete lamp" };
             if (item.Type != "indicator" || !item.Config.TryGetProperty("colors", out var colors)
                 || colors.GetArrayLength() != 1 || colors[0].GetString() != color || item.Label != expectedLabel
                 || item.Config.TryGetProperty("action", out _) || item.Config.TryGetProperty("faceLabel", out _))
@@ -562,7 +604,8 @@ public static partial class SceneComposer
         var pitch = installation.HasMeta("measuredHeadPitch") ? installation.GetMeta("measuredHeadPitch").AsSingle() : .38f;
         var width = MathF.Min(.48f, pitch - .025f);
         var at = new Vector3(head.GetCenter().X,
-            above ? head.End.Y + gap + height / 2 : head.Position.Y - gap - height / 2, fascia.End.Z + .006f);
+            above ? head.End.Y + gap + height / 2 : head.Position.Y - gap - height / 2,
+            IdentificationPlateCenterZ(fascia.End.Z));
         var bounds = new Aabb(at - new Vector3(width / 2, height / 2, .006f), new Vector3(width, height, .012f));
         if (bounds.Position.X < fascia.Position.X || bounds.End.X > fascia.End.X
             || bounds.Position.Y < fascia.Position.Y || bounds.End.Y > fascia.End.Y)
@@ -583,7 +626,8 @@ public static partial class SceneComposer
                 && bounds.Position.Y < other.End.Y && bounds.End.Y > other.Position.Y)
                 throw new InvalidOperationException("Additional identification overlaps strip: " + id);
         }
-        AddIdentificationStrip(installation, device, id, text, at, width, height, action, binding);
+        AddIdentificationStrip(installation, device, id, text, at, width, height,
+            fascia.End.Z, action, binding);
         var plate = installation.GetNode<MeshInstance3D>("InstallationIdentification_" + SafeNodeName(id));
         plate.SetMeta("installationLegendKind", "additionalStationIdentification");
         plate.SetMeta("measuredHeadGap", gap);
@@ -592,17 +636,22 @@ public static partial class SceneComposer
     }
 
     private static void AddIdentificationStrip(Node3D support, Node3D device, string id, string text,
-        Vector3 at, float width, float height, string action, string binding)
+        Vector3 at, float width, float height, float mountingSurfaceFront, string action, string binding)
     {
         var name = "InstallationIdentification_" + SafeNodeName(id);
         if (support.GetNodeOrNull<Node3D>(name) is not null)
             throw new InvalidOperationException("Duplicate identification: " + id);
-        var plate = AddBox(support, new Vector3(width, height, .012f), at, Material(new Color("17242b"), .15f, .35f));
+        if (at.Z - IdentificationPlateDepth / 2 - mountingSurfaceFront < IdentificationSurfaceClearance - .0001f)
+            throw new InvalidOperationException("Identification plate lacks mounting-surface clearance: " + id);
+        var plate = AddBox(support, new Vector3(width, height, IdentificationPlateDepth), at,
+            Material(new Color("17242b"), .15f, .35f));
         plate.Name = name;
         plate.SetMeta("equipmentId", id);
         plate.SetMeta("sourceAction", action);
         plate.SetMeta("sourceBindings", binding);
         plate.SetMeta("passivePresentation", true);
+        plate.SetMeta("mountingSurfaceFront", mountingSurfaceFront);
+        plate.SetMeta("mountingSurfaceClearance", IdentificationSurfaceClearance);
         // Use measured ink width, not character count, at the fixed readable
         // glyph scale. Upper fascias retain their .12m clearance envelope:
         // compose the function and INPUT/OUTPUT role on one line when it fits.

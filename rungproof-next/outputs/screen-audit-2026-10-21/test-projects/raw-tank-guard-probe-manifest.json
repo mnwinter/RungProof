@@ -1,0 +1,22 @@
+{
+  "entries": [
+    {
+      "file": "probe-tank-high-low-manual-output-guard.rpproj.json",
+      "sourceSceneId": "tank-high-low",
+      "targetCoil": "inlet_pump_run",
+      "schemaVersion": 9,
+      "sha256": "edc6cd3e23a2097ef0328a602193b1bc42edd2e4945a0a089a894121e4d9eb02",
+      "purpose": "GUARD_DIAGNOSTIC_ONLY_NO_NORMAL_FLOW_CREDIT",
+      "runtimeStatus": "NOT_TESTED"
+    },
+    {
+      "file": "probe-tank-level-manual-output-guard.rpproj.json",
+      "sourceSceneId": "tank-level",
+      "targetCoil": "inlet_pump_run",
+      "schemaVersion": 9,
+      "sha256": "8ed03634c5e6f5c319edc04abb4563511fca8daf83aa0cf0a91b74087943d752",
+      "purpose": "GUARD_DIAGNOSTIC_ONLY_NO_NORMAL_FLOW_CREDIT",
+      "runtimeStatus": "NOT_TESTED"
+    }
+  ]
+}

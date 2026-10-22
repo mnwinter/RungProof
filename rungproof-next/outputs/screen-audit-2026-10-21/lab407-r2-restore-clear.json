@@ -1,0 +1,1 @@
+[{"name": "lab407-r2-clear-blocked-check", "expected": {"exit_clear": false, "vehicle_run": false, "occupancy_count": 1}, "monitor_only": true, "keep_monitor": true}, {"name": "lab407-r2-clear-restored-check", "click": [546, 637], "expected": {"exit_clear": true, "vehicle_run": true}, "monitor_only": true, "keep_monitor": true}]

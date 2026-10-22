@@ -1,0 +1,1 @@
+[{"click": [642, 711]}, {"key": "Ctrl+A"}, {"text": "fixture-lab-11-07-multi-conveyor-pallet-route.rpproj.json"}, {"click": [596, 754], "wait": 0.8}, {"click": [52, 884], "wait": 0.5}, {"click": [1265, 39], "wait": 0.5}, {"wheel": [850, 430, 600], "wait": 0.5, "capture": "fix-commonstop-controls-r1"}]

@@ -14,9 +14,13 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Point | Type | Owner | Initial value |
 | --- | --- | --- | --- |
+| `start_command` | `BOOL` | **PC** | `False` |
+| `machine_stop` | `BOOL` | **PC** | `False` |
+| `reset_pressed` | `BOOL` | **PC** | `False` |
 | `pallet_detected` | `BOOL` | **PC** | `False` |
 | `pallet_type_valid` | `BOOL` | **PC** | `False` |
 | `count_request` | `BOOL` | **PC** | `False` |
+| `machine_running` | `BOOL` | **PLC** | `False` |
 | `pallet_count_valid` | `BOOL` | **PLC** | `False` |
 | `pallet_count` | `DINT` | **PLC** | `0` |
 
@@ -24,7 +28,10 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Action | Type | Bound point/sequence |
 | --- | --- | --- |
-| `Toggle pallet detected` | `toggle` | `pallet_detected` |
+| `Machine Start pushbutton` | `pulse` | `start_command` |
+| `Machine Stop pushbutton` | `pulse` | `machine_stop` |
+| `Machine Reset pushbutton` | `pulse` | `reset_pressed` |
+| `New pallet detection event` | `pulse` | `pallet_detected` |
 | `Toggle pallet type valid` | `toggle` | `pallet_type_valid` |
 | `Toggle count request` | `toggle` | `count_request` |
 
@@ -32,10 +39,15 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 
 | Symbolic point | Equipment | Mode |
 | --- | --- | --- |
+| `start_command` | `switch_10` | `switch` |
+| `machine_stop` | `switch_11` | `switch` |
+| `reset_pressed` | `switch_12` | `switch` |
 | `pallet_detected` | `switch_7` | `switch` |
 | `pallet_type_valid` | `switch_8` | `switch` |
 | `count_request` | `switch_9` | `switch` |
+| `machine_running` | `conveyor_0` | `running` |
 | `pallet_count_valid` | `indicator_3` | `indicator` |
+| `machine_running` | `machine_running_lamp` | `indicator` |
 | `pallet_count` | `training_accessory_6` | `numericDisplay` |
 
 ## Expected equipment
@@ -45,13 +57,19 @@ All entries below are symbolic scene points. They are not `%I`, `%Q`, DB, or har
 | `conveyor_0` | `conveyor` | Pallet Count Function conveyor |
 | `box_1` | `box` | Pallet Count Function box |
 | `machine_2` | `machine` | Pallet Count Function machine |
-| `indicator_3` | `indicator` | Pallet Count Function indicator |
+| `indicator_3` | `indicator` | Valid five-pallet batch lamp |
+| `machine_running_lamp` | `indicator` | Batch counter running lamp |
 | `training_accessory_4` | `trainingAccessory` | Pallet Count Function - pallet load |
 | `training_accessory_5` | `trainingAccessory` | Pallet Count Function - optical profile fixture (static) |
 | `training_accessory_6` | `trainingAccessory` | Pallet Count Function - current count display |
 | `switch_7` | `switch` | Pallet Count Function operator input |
 | `switch_8` | `switch` | Pallet Count Function operator input |
 | `switch_9` | `switch` | Pallet Count Function operator input |
+| `switch_10` | `switch` | Batch counter machine Start |
+| `switch_11` | `switch` | Batch counter machine Stop |
+| `switch_12` | `switch` | Batch counter machine Reset |
+
+The adjacent operator cabinet uses separate amber `RUNNING` and green `BATCH VALID` pilot lights. It has no unbound red stack-light segment or floor-mounted controls.
 
 ## Stop and safety boundary
 
@@ -68,8 +86,8 @@ A reusable block counts manually validated pallet detection edges and publishes 
 
 ### Normal sequence
 
-- Enable pallet type valid and count request.
-- Toggle pallet detected off and on for each new valid event. The DINT count and 3D display advance once per rising detection edge.
+- Run the authored program, press machine START, then enable pallet type valid and count request.
+- Press NEW PALLET once for each new valid event, allowing the momentary input to release between presses. The DINT count and 3D display advance once per fresh detection pulse; NEW PALLET is not a maintained OFF/ON toggle.
 - The batch-valid lamp turns on at five valid events. Invalid events are not counted; held detection does not recount.
 
 ### Expected observations

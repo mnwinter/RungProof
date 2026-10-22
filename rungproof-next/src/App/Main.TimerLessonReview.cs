@@ -39,14 +39,19 @@ public partial class Main
         var action = delayed ? "toggle-timer_request" : "press-start";
         Check(LogBoundsCandidates(root) == 0 && root.GetChildren().OfType<Node3D>().Where(n => ReviewMeshes(n).Length > 0)
             .All(n => ReviewBounds(n).Position.Y >= -.005f), "equipment_separated_and_grounded");
-        Check(runtime.Points.Count == 2 && runtime.Points[input] is false && runtime.Points[output] is false
+        Check(runtime.Points.Count == (delayed ? 4 : 2) && runtime.Points[input] is false && runtime.Points[output] is false
             && !runtime.Points.ContainsKey(delayed ? "delay_complete" : "time_active"), "raw_input_only_no_manual_timer_result");
         if (delayed)
+        {
             Check(operatorNode.GetNode<Label3D>("OperatorFaceLabel").Text == "REQUEST"
                 && operatorNode.GetNode<Label3D>("SelectorOrdinal_0").Text == "OFF"
                 && operatorNode.GetNode<Label3D>("SelectorOrdinal_1").Text == "ON"
                 && operatorNode.FindChild("KIN_selector_handle", true, false) is Node3D,
                 "maintained_selector_identifies_request_off_on");
+            Check(root.GetNode<Node3D>("switch_2").GetNode<Label3D>("OperatorFaceLabel").Text == "STOP"
+                && root.GetNode<Node3D>("switch_3").GetNode<Label3D>("OperatorFaceLabel").Text == "RESET",
+                "delayed_lamp_machine_stop_and_reset_are_visible");
+        }
         else
             Check(operatorNode.GetNode<Label3D>("OperatorFaceLabel").Text == "START"
                 && root.GetNodeOrNull<Node3D>("switch_2") is null, "one_start_button_replaces_precomputed_time_switch");
@@ -102,6 +107,31 @@ public partial class Main
                 RunActiveController(); Tick(99); Check(!Lamp() && Time(1.98), "run_with_retained_on_restarts_full_delay");
                 Tick(); Check(Lamp() && Time(2), "restarted_ton_completes_at_new_100th_scan");
                 Action(); Tick(); Check(!Lamp() && Time(0), "off_after_restart_clears_again");
+
+                Action(); Tick(25);
+                Check(!Lamp() && Time(.5), "machine_stop_case_starts_a_partial_delay");
+                if (!ExecuteSelectedControllerAction("pulse-machine_stop"))
+                    throw new InvalidOperationException("Machine Stop input rejected.");
+                Tick();
+                Check(!Lamp() && Time(0) && runtime.Points["timer_request"] is true
+                    && runtime.Points["timer_armed"] is false,
+                    "machine_stop_cancels_timer_and_disarms_while_request_remains_on");
+                Tick(20);
+                Check(!Lamp() && Time(0), "machine_stop_does_not_restart_while_request_is_held_on");
+                Action(); Tick();
+                Check(runtime.Points["timer_armed"] is true && Time(0),
+                    "request_off_rearms_after_machine_stop");
+                Action(); Tick(25);
+                if (!ExecuteSelectedControllerAction("pulse-reset_pressed"))
+                    throw new InvalidOperationException("Machine Reset input rejected.");
+                Tick();
+                Check(!Lamp() && Time(0) && runtime.Points["timer_armed"] is false
+                    && runtime.Points["timer_request"] is true,
+                    "machine_reset_clears_partial_timer_and_disarms_held_request");
+                Tick(20);
+                Check(!Lamp() && Time(0), "machine_reset_requires_request_off_before_rearming");
+                Action(); Tick(); Action(); Tick(100);
+                Check(Lamp() && Time(2), "machine_reset_allows_a_repeat_cycle_after_off_on_request");
             }
             else
             {

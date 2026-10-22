@@ -1,0 +1,1 @@
+[{"click": [550, 475]}, {"key": "Ctrl+A"}, {"text": "CHICKEN {0:F2} kg"}, {"click": [310, 574]}, {"click": [295, 594], "wait": 0.5}, {"click": [215, 884]}, {"click": [52, 884]}, {"click": [550, 227], "capture": "lab1002-F2-loaded-ladder"}, {"click": [1265, 39]}, {"click": [422, 39], "capture": "lab1002-view-menu"}]

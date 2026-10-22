@@ -1,0 +1,1 @@
+[{"name": "fix-reference-r4-repeat-signals", "expected": {"event_count": 1, "sum_result": 7, "result_valid": true, "operand_a": 2, "operand_b": 5}}]

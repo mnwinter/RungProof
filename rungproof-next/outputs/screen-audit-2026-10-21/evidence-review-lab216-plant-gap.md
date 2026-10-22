@@ -1,0 +1,6 @@
+# QA-PLANT-001: Lab2.16 drill native instance
+
+Actual `newbinding216-gap-review.jpg` shows drill feed head/tool unchanged at top through controls/before, START+1s and later6s interval. Native Signals reads both hand requestsTrue/workpieceTrue/drill_runTrue while topTrue/bottomFalse/cycleFalse. This confirms missing command-driven feed response, distinct from the previously repaired START request delivery. Rotation alone is not assessed by these images. Bridge agent owns explicit feed/retract actuator-contract correction; post-fix native evidence pending. No general unsafe-equipment/real-machine claim.
+
+## Post-fix bounded native evidence
+B4 actual selected feed/bottom/retract/complete frames (`fix-plant216-review-compact.jpg`) show changing spindle-feed extension and return, with completed native topTrue/bottomFalse/cycleTrue/feedFalse/retractFalse/drill_runFalse. R2 feed→hand-loss→held preserves intermediate feed pose; native leftFalse/rightTrue, topFalse/bottomFalse and all three commandsFalse confirms a midstroke qualification-loss stop. This supports the repaired command-driven normal cycle and hand-loss hold, not physical cutting/rotation quality or full lifecycle closure. AppStop/Run/Reset/repeat follow-up remains pending unless separately supplied. No precise dwell boundary inferred from filenames.

@@ -56,6 +56,13 @@ internal static partial class Program
         RegisterEditorTransactionTests();
         RegisterCallEditorTests();
         RegisterInstructionPresentationTests();
+        RegisterSceneOperatorCommandBindingTests();
+        RegisterServiceDoorPlantTests();
+        RegisterScenePlantFeedbackRegressionTests();
+        RegisterGuardedDrillPlantTests();
+        RegisterCncTendingPlantTests();
+        RegisterParcelTransferPlantTests();
+        RegisterAuditReferenceRegressionTests();
         Test("flat imported CALL chains compile without process stack exhaustion", TestDeepCallChainProcess);
         Test("STRING and ENUM are declared controller types", TestTextTypeSupport);
         Test("scene text initial data is validated before construction", TestSceneTextBoundary);
@@ -194,6 +201,7 @@ internal static partial class Program
         Test("invalid task schedule and target are rejected", TestInvalidTask);
         Test("task configuration JSON and editor round-trip", TestTaskRoundTrip);
         Test("block and routine lifecycle preserves stable references and undo", TestBlockLifecycle);
+        Test("block duplication remaps every stable identity and local operand", TestBlockDuplication);
         Test("referenced block deletion is blocked and unused deletion succeeds", TestBlockDeletionProtection);
         Test("task and OB lifecycle supports rename delete and undo", TestTaskLifecycle);
         Test("editor undo restores exact rung state and stable IDs", TestEditorUndo);
@@ -328,16 +336,31 @@ internal static partial class Program
         True(AuthoredDemoLadderPrograms.TryCreate("lab-9-11-pallet-counting", out var batch));
         True(batch.Blocks.Any(block => block.BlockType == LadderBlockType.FunctionBlock));
         True(batch.Blocks.Any(block => block.BlockType == LadderBlockType.Function));
+        var batchCounter = batch.Blocks.Single(block => block.Name == "FB_ValidPalletCounter");
+        Equal(LadderSemanticMode.Parameterized, batchCounter.SemanticMode);
+        True(batchCounter.Interface.Any(parameter => parameter.Name == "CountState"
+            && parameter.Type == PlcVariableType.Counter
+            && parameter.Section == LadderInterfaceSection.Static));
+        var batchInstance = batch.Instances.Single(instance => instance.BlockId == batchCounter.Id);
+        Equal(101, batchInstance.InstanceDataBlock!.Number);
+        True(batch.Blocks[0].Rungs.Any(rung => rung.CallTarget == batchCounter.Id
+            && rung.CallInstanceId == batchInstance.Id
+            && rung.CallBindings.Count == 5));
         True(LadderCompiler.Compile(batch.BuildProgram()).IsValid);
         True(AuthoredDemoLadderPrograms.TryCreate("lab-11-13-xy-palletizing", out var cell));
         True(cell.Blocks.Count(block => block.BlockType == LadderBlockType.FunctionBlock) >= 2);
         False(cell.Tags.Any(tag => tag.Name == "gantry_cycle"));
         var axis = cell.Blocks.Single(block => block.Name == "FB_AxisDrive");
         var gripper = cell.Blocks.Single(block => block.Name == "FB_VacuumGripper");
+        var encoder = cell.Blocks.Single(block => block.Name == "FB_EncoderChannel");
         Equal(3, cell.Instances.Count(instance => instance.BlockId == axis.Id));
         Equal(1, cell.Instances.Count(instance => instance.BlockId == gripper.Id));
-        Equal(4, cell.Instances.Select(instance => instance.InstanceDataBlock!.Number).Distinct().Count());
-        True(cell.Instances.All(instance => instance.InstanceDataBlock is { Number: >= 101 and <= 104 }));
+        Equal(3, cell.Instances.Count(instance => instance.BlockId == encoder.Id));
+        Equal(7, cell.Instances.Select(instance => instance.InstanceDataBlock!.Number).Distinct().Count());
+        True(cell.Instances.All(instance => instance.InstanceDataBlock is { Number: >= 101 and <= 107 }));
+        True(cell.Blocks[0].Rungs.Count(rung => rung.CallTarget == encoder.Id) == 3);
+        True(cell.Blocks[0].Rungs.Where(rung => rung.CallTarget == encoder.Id)
+            .All(rung => rung.CallBindings.Any(binding => binding.ParameterId.EndsWith(".positioncounts", StringComparison.Ordinal))));
         var rungs = cell.Blocks.SelectMany(block => block.Rungs).ToArray();
         True(rungs.Any(rung => rung.IsTimer));
         True(rungs.Any(rung => rung.IsCounter));
@@ -401,6 +424,7 @@ internal static partial class Program
             var document = SceneLadderProject.Create(id, "Exercise", points, initial, out var unsupported);
             unsupportedCount += unsupported.Count;
             Equal(id, document.SourceSceneId);
+            Equal("Default tag table,SceneIO", string.Join(",", document.TagTables));
             True(document.Blocks.All(block => block.Rungs.Count == 0));
             var program = document.BuildProgram();
             True(LadderCompiler.Compile(program).IsValid);
@@ -410,8 +434,88 @@ internal static partial class Program
                 var point = points.Single(point => point.Name == tag.Binding);
                 Equal(point.Owner == "PC" ? PlcVariableRole.Input : PlcVariableRole.Output, tag.Role);
                 True(SceneIoBindingValidator.TypesCompatible(tag.Type, point.Type));
+                Equal(SceneLadderProject.SceneIoTagTableName, tag.TagTable);
             }
+            foreach (var tag in document.Tags.Where(tag => tag.Role is PlcVariableRole.Input or PlcVariableRole.Output))
+                True(document.WatchVariables.Contains(tag.Name, StringComparer.Ordinal));
             foreach (var point in unsupported) False(document.Tags.Any(tag => tag.Binding == point.Name));
+
+            if (id == "lab-2-01-workstation-call")
+            {
+                document.AddTagTable("Custom_IO");
+                var original = document.Tags[0];
+                var originalPoint = points.Single(point => point.Name == original.Binding);
+                document.Tags[0] = original with { TagTable = "Custom_IO" };
+                var tagCount = document.Tags.Count;
+                // A cached legacy project may use noncanonical table casing,
+                // have stale metadata, or contain bindings from another scene.
+                document.TagTables[1] = "sceneio";
+                document.Tags[0] = document.Tags[0] with
+                {
+                    Role = document.Tags[0].Role == PlcVariableRole.Input ? PlcVariableRole.Output : PlcVariableRole.Input,
+                    Type = originalPoint.Type.Equals("BOOL", StringComparison.OrdinalIgnoreCase)
+                        ? PlcVariableType.Int : PlcVariableType.Bool,
+                    TagTable = "sceneio",
+                };
+                document.AddTag("legacy_unrelated", PlcVariableRole.Output, "other.scene.output");
+                SceneLadderProject.EnsureSceneIoTable(document, points, initial, out _);
+                SceneLadderProject.EnsureSceneIoTable(document, points, initial, out _);
+                Equal(tagCount + 1, document.Tags.Count);
+                var migrated = document.Tags.Single(tag => tag.Name == original.Name);
+                Equal(original.Role, migrated.Role);
+                True(SceneIoBindingValidator.TypesCompatible(migrated.Type, points.Single(point => point.Name == migrated.Binding).Type));
+                Equal(SceneLadderProject.SceneIoTagTableName, migrated.TagTable);
+                Equal(originalPoint.Purpose, migrated.Comment);
+                Equal("Default tag table", document.Tags.Single(tag => tag.Name == "legacy_unrelated").TagTable);
+                True(document.TagTables.Contains(SceneLadderProject.SceneIoTagTableName, StringComparer.OrdinalIgnoreCase));
+                True(document.TagTables.Contains("Default tag table", StringComparer.OrdinalIgnoreCase));
+
+                var duplicatePoint = points.First(point => (point.Owner is "PC" or "PLC")
+                    && !point.Type.Equals("STRUCT", StringComparison.OrdinalIgnoreCase)
+                    && !point.Type.Equals("ARRAY", StringComparison.OrdinalIgnoreCase));
+                var duplicateRole = duplicatePoint.Owner == "PC" ? PlcVariableRole.Input : PlcVariableRole.Output;
+                var duplicateDocument = new LadderEditorDocument();
+                duplicateDocument.ResetProject("duplicate-sceneio-test", "Duplicate SceneIO", TimeSpan.FromMilliseconds(20));
+                duplicateDocument.AddTag("duplicate_a", duplicateRole, duplicatePoint.Name);
+                duplicateDocument.AddTag("duplicate_b", duplicateRole, duplicatePoint.Name);
+                var duplicateRejected = false;
+                try
+                {
+                    SceneLadderProject.EnsureSceneIoTable(duplicateDocument, points, initial, out _);
+                }
+                catch (SceneIoTableConflictException exception)
+                {
+                    duplicateRejected = exception.Binding == duplicatePoint.Name && exception.DeclarationCount == 2;
+                }
+                True(duplicateRejected);
+                Equal("Default tag table", string.Join(",", duplicateDocument.TagTables));
+            }
+
+            var authored = AuthoredDemoLadderPrograms.TryCreate(id, out var authoredDocument)
+                || AuthoredLessonLadderPrograms.TryCreate(id, out authoredDocument);
+            if (authored)
+            {
+                SceneLadderProject.EnsureSceneIoTable(authoredDocument, points, initial, out var authoredUnsupported);
+                Equal(0, authoredUnsupported.Count);
+                foreach (var point in points.Where(point => point.Owner is "PC" or "PLC"))
+                {
+                    var tag = authoredDocument.Tags.Single(candidate => candidate.Binding == point.Name);
+                    Equal(SceneLadderProject.SceneIoTagTableName, tag.TagTable);
+                    Equal(point.Owner == "PC" ? PlcVariableRole.Input : PlcVariableRole.Output, tag.Role);
+                    True(SceneIoBindingValidator.TypesCompatible(tag.Type, point.Type));
+                }
+            }
+            if (id == "lab-11-13-xy-palletizing")
+            {
+                var runtimeWidthInitials = initial.ToDictionary(pair => pair.Key,
+                    pair => points.Single(point => point.Name == pair.Key).Type == "DINT"
+                        ? (object?)Convert.ToInt32(pair.Value) : pair.Value, StringComparer.Ordinal);
+                var reopened = new LadderEditorDocument();
+                reopened.ResetProject("runtime-width-dint", "Runtime width DINT", TimeSpan.FromMilliseconds(20));
+                reopened.SourceSceneId = id;
+                SceneLadderProject.EnsureSceneIoTable(reopened, points, runtimeWidthInitials, out _);
+                True(reopened.Tags.Where(tag => tag.Type == PlcVariableType.DInt).All(tag => tag.InitialValue is long));
+            }
         }
         Console.WriteLine($"SCENE_EXERCISE_CATALOG scenes={files.Length} unsupportedIOTypes={unsupportedCount}");
     }
@@ -426,6 +530,11 @@ internal static partial class Program
             Equal((long)count, snapshot.Counters["press_count"].Accumulated);
             Equal(count == 3, snapshot.Outputs["threshold_lamp"]);
         }
+        var pressReset = press.Scan(Inputs(("reset_pressed", true)));
+        Equal(0L, pressReset.Counters["press_count"].Accumulated);
+        False(pressReset.Outputs["threshold_lamp"]);
+        press.Scan(Inputs(("reset_pressed", false), ("pulse_received", false)));
+        Equal(1L, press.Scan(Inputs(("pulse_received", true))).Counters["press_count"].Accumulated);
         False(press.Reset().Outputs["threshold_lamp"]);
 
         var timer = AuthoredRuntime("lab-5-01-delayed-lamp");
@@ -433,14 +542,70 @@ internal static partial class Program
             False(timer.Scan(Inputs(("timer_request", true))).Outputs["delayed_lamp"]);
         True(timer.Scan(Inputs(("timer_request", true))).Outputs["delayed_lamp"]);
         False(timer.Scan(Inputs(("timer_request", false))).Outputs["delayed_lamp"]);
+        for (var scan = 0; scan < 25; scan++) timer.Scan(Inputs(("timer_request", true)));
+        var timerStop = timer.Scan(Inputs(("timer_request", true), ("machine_stop", true)));
+        False(timerStop.Outputs["delayed_lamp"]);
+        Equal(TimeSpan.Zero, timerStop.Timers["delay_timer"].Accumulated);
+        False(timerStop.Variables["timer_armed"]);
+        False(timer.Scan(Inputs(("timer_request", true), ("machine_stop", false))).Outputs["delayed_lamp"]);
+        True(timer.Scan(Inputs(("timer_request", false), ("machine_stop", false))).Variables["timer_armed"]);
+        for (var scan = 0; scan < 25; scan++) timer.Scan(Inputs(("timer_request", true)));
+        var timerReset = timer.Scan(Inputs(("timer_request", true), ("reset_pressed", true)));
+        False(timerReset.Outputs["delayed_lamp"]);
+        Equal(TimeSpan.Zero, timerReset.Timers["delay_timer"].Accumulated);
+        False(timerReset.Variables["timer_armed"]);
+        False(timer.Scan(Inputs(("timer_request", true), ("reset_pressed", false))).Outputs["delayed_lamp"]);
 
-        var conveyor = AuthoredRuntime("scene-1-conveyor-stop");
-        True(conveyor.Scan(Inputs(("start_command", true))).Outputs["conveyor_running"]);
-        True(conveyor.Scan(Inputs(("start_command", false))).Outputs["conveyor_running"]);
-        False(conveyor.Scan(Inputs(("stop_command", true))).Outputs["conveyor_running"]);
-        False(conveyor.Scan(Inputs(("start_command", true), ("simulated_photoeye", true))).Outputs["conveyor_running"]);
+        var sorter = AuthoredRuntime("scene-2-conveyor-pusher");
+        var sorterInputs = Inputs(("system_enable", true), ("start_command", false), ("stop_command", false),
+            ("reset_command", false), ("safety_trip", false), ("part_at_pusher", false),
+            ("pusher_extended", false), ("pusher_retracted", true), ("main_line_exit", false),
+            ("side_line_exit", false), ("drive_overload", false));
+        var shortHeight = NumericInputs(("carton_height_mm", 420));
+        sorter.Scan(sorterInputs, shortHeight);
+        sorterInputs["start_command"] = true;
+        True(sorter.Scan(sorterInputs, shortHeight).Variables["machine_run"]);
+        sorterInputs["start_command"] = false;
+        sorterInputs["part_at_pusher"] = true;
+        var shortDecision = sorter.Scan(sorterInputs, shortHeight);
+        False(shortDecision.Variables["divert_latched"]);
+        False(shortDecision.Outputs["pusher_extend"]);
+        True(shortDecision.Outputs["conveyor_running"]);
+
+        sorterInputs["part_at_pusher"] = false;
+        sorter.Scan(sorterInputs, NumericInputs(("carton_height_mm", 820)));
+        sorterInputs["part_at_pusher"] = true;
+        var tallDecision = sorter.Scan(sorterInputs, NumericInputs(("carton_height_mm", 820)));
+        True(tallDecision.Variables["divert_latched"]);
+        True(tallDecision.Outputs["pusher_extend"]);
+        False(tallDecision.Outputs["conveyor_running"]);
+        sorterInputs["part_at_pusher"] = false;
+        sorterInputs["side_line_exit"] = true;
+        var diverted = sorter.Scan(sorterInputs, NumericInputs(("carton_height_mm", 0)));
+        False(diverted.Variables["divert_latched"]);
+
+        sorterInputs["side_line_exit"] = false;
+        sorterInputs["safety_trip"] = true;
+        var trip = sorter.Scan(sorterInputs, NumericInputs(("carton_height_mm", 0)));
+        False(trip.Variables["machine_run"]);
+        False(trip.Outputs["conveyor_running"]);
+        False(trip.Outputs["pusher_extend"]);
+        sorterInputs["safety_trip"] = false;
+        True(sorter.Scan(sorterInputs, NumericInputs(("carton_height_mm", 0))).Variables["machine_run"] is false);
+        sorterInputs["reset_command"] = true;
+        sorter.Scan(sorterInputs, NumericInputs(("carton_height_mm", 0)));
+        sorterInputs["reset_command"] = false;
+        sorterInputs["start_command"] = true;
+        True(sorter.Scan(sorterInputs, shortHeight).Variables["machine_run"]);
+        True(AuthoredDemoLadderPrograms.TryCreate("scene-2-conveyor-pusher", out var sorterDocument));
+        var sorterDoc = sorterDocument!;
+        True(sorterDoc.Blocks.Any(block => block.Name == "FB_ConveyorDrive"));
+        True(sorterDoc.Blocks.Any(block => block.Name == "FB_SorterPusher"));
+        Equal(2, sorterDoc.Instances.Count(instance => instance.InstanceDataBlock?.Number is 101 or 102));
 
         var batch = AuthoredRuntime("lab-9-11-pallet-counting");
+        batch.Scan(Inputs(("start_command", true)));
+        True(batch.Snapshot.Variables["machine_running"]);
         // Reject invalid pallet events, including ones received before the
         // count request. Later permissives must not validate those old events.
         foreach (var (validType, request) in new[] { (false, false), (false, true), (true, false) })
@@ -449,18 +614,27 @@ internal static partial class Program
             batch.Scan(Inputs(("pallet_detected", false), ("pallet_type_valid", validType), ("count_request", request)));
             batch.Scan(Inputs(("pallet_detected", true), ("pallet_type_valid", validType), ("count_request", request)));
         }
-        Equal(0L, batch.Snapshot.Counters["batch_count"].Accumulated);
+        Equal(0L, batch.Snapshot.Counters.Values.Single().Accumulated);
         False(batch.Scan(Inputs(("pallet_detected", true), ("pallet_type_valid", true),
             ("count_request", true))).Outputs["pallet_count_valid"]);
-        Equal(0L, batch.Snapshot.Counters["batch_count"].Accumulated);
+        Equal(0L, batch.Snapshot.Counters.Values.Single().Accumulated);
         for (var count = 1; count <= 5; count++)
         {
             batch.Scan(Inputs(("pallet_detected", false), ("pallet_type_valid", true), ("count_request", true)));
             batch.Scan(Inputs(("pallet_detected", true), ("pallet_type_valid", true), ("count_request", true)));
-            Equal((long)count, batch.Snapshot.Counters["batch_count"].Accumulated);
+            Equal((long)count, batch.Snapshot.Counters.Values.Single().Accumulated);
             Equal(count == 5, batch.Snapshot.Outputs["pallet_count_valid"]);
         }
         False(batch.Scan(Inputs(("pallet_type_valid", false), ("count_request", true))).Outputs["pallet_count_valid"]);
+        var batchReset = batch.Scan(Inputs(("reset_pressed", true), ("pallet_detected", false),
+            ("pallet_type_valid", true), ("count_request", true)));
+        Equal(0L, batchReset.Counters.Values.Single().Accumulated);
+        False(batchReset.Outputs["pallet_count_valid"]);
+        False(batchReset.Variables["machine_running"]);
+        batch.Scan(Inputs(("start_command", false), ("reset_pressed", false), ("pallet_detected", false)));
+        batch.Scan(Inputs(("start_command", true)));
+        Equal(1L, batch.Scan(Inputs(("start_command", false), ("pallet_detected", true),
+            ("pallet_type_valid", true), ("count_request", true))).Counters.Values.Single().Accumulated);
     }
 
     private static void TestBatchCountNumericOutput()
@@ -472,6 +646,7 @@ internal static partial class Program
         Equal(PlcVariableRole.Output, output.Role);
         Equal("pallet_count", output.Binding);
         var runtime = AuthoredRuntime("lab-9-11-pallet-counting");
+        runtime.Scan(Inputs(("start_command", true)));
         var invalid = Inputs(("pallet_detected", false), ("pallet_type_valid", false), ("count_request", true));
         runtime.Scan(invalid);
         invalid["pallet_detected"] = true;
@@ -486,11 +661,11 @@ internal static partial class Program
         // Preserve the existing controller policy: Stop clears numeric output
         // images, while the counter memory remains available when Run resumes.
         Equal(0.0, runtime.Stop().NumericOutputs["pallet_count"]);
-        Equal(5L, runtime.Snapshot.Counters["batch_count"].Accumulated);
+        Equal(5L, runtime.Snapshot.Counters.Values.Single().Accumulated);
         runtime.Run();
         Equal(5.0, runtime.Scan(Inputs(("pallet_detected", true), ("pallet_type_valid", true), ("count_request", true))).NumericOutputs["pallet_count"]);
         Equal(0.0, runtime.Reset().NumericOutputs["pallet_count"]);
-        Equal(0L, runtime.Snapshot.Counters["batch_count"].Accumulated);
+        Equal(0L, runtime.Snapshot.Counters.Values.Single().Accumulated);
     }
 
     private static void TestPalletizerPermissives()
@@ -3995,6 +4170,42 @@ internal static partial class Program
         True(LadderCompiler.Compile(editor.BuildProgram()).IsValid);
     }
 
+    private static void TestBlockDuplication()
+    {
+        var editor = new LadderEditorDocument { Id = "duplicate-block", Name = "Duplicate block" };
+        editor.AddBlock("Main", LadderBlockType.OrganizationBlock);
+        var worker = editor.AddBlock("Worker", LadderBlockType.FunctionBlock);
+        worker.SemanticMode = LadderSemanticMode.Parameterized;
+        var enable = editor.AddInterfaceParameter(worker.Id, "Enable", PlcVariableType.Bool, LadderInterfaceSection.Input);
+        var done = editor.AddInterfaceParameter(worker.Id, "Done", PlcVariableType.Bool, LadderInterfaceSection.Output);
+        editor.SelectBlock(1);
+        editor.AddRung("Pass input", "local:" + done.Id);
+        editor.AddContact(0, 0, "local:" + enable.Id, false);
+
+        var history = new LadderEditorHistory();
+        EditableBlock duplicate = null!;
+        history.Execute(editor, "Duplicate program block", () => duplicate = editor.DuplicateBlock(worker.Id));
+        Equal("Worker Copy", duplicate.Name);
+        True(duplicate.Id != worker.Id && duplicate.SemanticMode == LadderSemanticMode.Parameterized);
+        Equal(worker.Interface.Count, duplicate.Interface.Count);
+        True(worker.Interface.Zip(duplicate.Interface).All(pair => pair.First.Id != pair.Second.Id));
+        Equal(1, duplicate.Rungs.Count);
+        True(duplicate.Rungs[0].Id != worker.Rungs[0].Id);
+        var duplicateEnable = duplicate.Interface.Single(parameter => parameter.Name == "Enable");
+        var duplicateDone = duplicate.Interface.Single(parameter => parameter.Name == "Done");
+        Equal("local:" + duplicateEnable.Id, duplicate.Rungs[0].Branches[0].Contacts[0].Variable);
+        Equal("local:" + duplicateDone.Id, duplicate.Rungs[0].CoilVariable);
+        Equal(worker.Id, editor.Blocks[1].Id);
+        Equal("Main", editor.Blocks[0].Name);
+        Equal(0, LadderCompiler.Validate(editor.BuildProgram()).Count);
+
+        True(history.Undo(editor, out _));
+        Equal(2, editor.Blocks.Count);
+        True(history.Redo(editor, out _));
+        Equal(3, editor.Blocks.Count);
+        Equal("Worker Copy", editor.Blocks[2].Name);
+    }
+
     private static void TestBlockDeletionProtection()
     {
         var editor = LadderEditorDocument.CreateConveyorExample();
@@ -5264,7 +5475,7 @@ internal static partial class Program
         foreach (var expected in new[]
         {
             (Property: "editorControlArtifact", Kind: "tia-editor-control-gate-sweep", Gates: 7, Assertions: 36,
-                Status: "historical-pass", CurrentSource: false),
+                Status: "passed", CurrentSource: true),
             (Property: "projectTreeArtifact", Kind: "tia-project-tree-gate-sweep", Gates: 14, Assertions: 103,
                 Status: "passed", CurrentSource: true),
         })

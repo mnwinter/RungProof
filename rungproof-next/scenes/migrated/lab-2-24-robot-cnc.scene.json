@@ -3,7 +3,7 @@
   "version": 1,
   "id": "lab-2-24-robot-cnc",
   "name": "Lab 2.24 - Robot CNC Tending Cell",
-  "description": "Offline reference: a joint-driven robot carries one blank through open CNC access, seats it on a supported vise, waits for a machining timer and delivers it to outfeed. Feedback-driven door/clamp interlocks and normal controller operation remain unverified.",
+  "description": "Joint-driven controller exercise with explicit robot targets, grip, access and clamp commands; actual pose/interlock feedback. Standalone scripted reference remains separate.",
   "camera": {
     "position": [
       14,
@@ -164,6 +164,13 @@
     "type": "sequence",
     "points": [
       {
+        "name": "start_cnc_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Momentary operator request; learner ladder owns the commanded outputs and sequence."
+      },
+      {
         "name": "infeed_run",
         "type": "BOOL",
         "owner": "PLC",
@@ -216,11 +223,187 @@
         "type": "BOOL",
         "owner": "SIM",
         "initial": false
+      },
+      {
+        "name": "robot_target_x",
+        "type": "REAL",
+        "owner": "PLC",
+        "initial": 0,
+        "purpose": "Explicit world-metre robot tool target; no autonomous waypoint sequencing."
+      },
+      {
+        "name": "robot_target_y",
+        "type": "REAL",
+        "owner": "PLC",
+        "initial": 2.8,
+        "purpose": "Explicit world-metre robot tool target; no autonomous waypoint sequencing."
+      },
+      {
+        "name": "robot_target_z",
+        "type": "REAL",
+        "owner": "PLC",
+        "initial": -1.4,
+        "purpose": "Explicit world-metre robot tool target; no autonomous waypoint sequencing."
+      },
+      {
+        "name": "robot_grip_close",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "purpose": "Explicit maintained actuator command owned by learner ladder."
+      },
+      {
+        "name": "cnc_access_open",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "purpose": "Explicit maintained actuator command owned by learner ladder."
+      },
+      {
+        "name": "cnc_clamp_close",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "purpose": "Explicit maintained actuator command owned by learner ladder."
+      },
+      {
+        "name": "robot_actual_x",
+        "type": "REAL",
+        "owner": "PC",
+        "initial": 0,
+        "purpose": "Actual solved robot tool world coordinate."
+      },
+      {
+        "name": "robot_actual_y",
+        "type": "REAL",
+        "owner": "PC",
+        "initial": 2.8,
+        "purpose": "Actual solved robot tool world coordinate."
+      },
+      {
+        "name": "robot_actual_z",
+        "type": "REAL",
+        "owner": "PC",
+        "initial": -1.4,
+        "purpose": "Actual solved robot tool world coordinate."
+      },
+      {
+        "name": "robot_at_target",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "robot_grip_confirmed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cnc_access_is_open",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cnc_access_is_closed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cnc_tool_clear",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cnc_clamp_closed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cnc_clamp_open",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "stock_on_vise",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "stock_on_outfeed",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "robot_clear_of_enclosure",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": true,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cnc_cut_permitted",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "cell_motion_inhibited",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "part_at_exit",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Measured simulated mechanism/stock geometry or interlock feedback; never a phase alias."
+      },
+      {
+        "name": "stock_actual_x",
+        "type": "REAL",
+        "owner": "PC",
+        "initial": -6.1,
+        "purpose": "Actual supported/carried stock world coordinate for feedback-driven robot pickup target."
+      },
+      {
+        "name": "stock_actual_y",
+        "type": "REAL",
+        "owner": "PC",
+        "initial": 0.9,
+        "purpose": "Actual supported/carried stock world coordinate for feedback-driven robot pickup target."
+      },
+      {
+        "name": "stock_actual_z",
+        "type": "REAL",
+        "owner": "PC",
+        "initial": 0.55,
+        "purpose": "Actual supported/carried stock world coordinate for feedback-driven robot pickup target."
       }
     ],
     "actions": [
       {
         "id": "start-cnc",
+        "controllerStartBinding": "start_cnc_request",
         "label": "Start robot/CNC cycle",
         "type": "start",
         "sequence": "cnc-cycle",
@@ -841,17 +1024,21 @@
       "outfeed_run": false,
       "robot_run": false,
       "cnc_run": false,
-      "status_color": "red"
+      "status_color": "red",
+      "robot_grip_close": false,
+      "cnc_access_open": false,
+      "cnc_clamp_close": false
     },
     "completionState": {},
     "conveyorSpeedMps": 0.75,
-    "requireHomeForReferenceStart": true
+    "requireHomeForReferenceStart": true,
+    "cncTendingPlant": true
   },
   "training": {
     "hints": [
       "Define the required result before writing logic: The CNC runs only while the robot is stopped; the part exits after machining complete.",
       "Treat blank_at_pickup, cnc_ready, machining_complete as simulator-to-PLC inputs. The PLC should command only infeed_run, outfeed_run, robot_run, cnc_run.",
-      "Use a step/state approach and prove the transition order: infeed blank \u2192 pickup \u2192 machining \u2192 machine complete \u2192 unload \u2192 outfeed \u2192 ready."
+      "Use a step/state approach and prove the transition order: infeed blank → pickup → machining → machine complete → unload → outfeed → ready."
     ],
     "solution": {
       "summary": "This is one valid functional reference. The same behavior may be implemented in LAD, FBD, or SCL; the rung layout is not prescribed.",

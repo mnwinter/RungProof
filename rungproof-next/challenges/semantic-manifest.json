@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "identityFormat": "RP-CANON-1",
   "engineRevision": "conveyor-engine-v1",
-  "engineSha256": "51e5d8e7eba4a0cdedaab162a8a296ac96da06559fa8af6bab0045ba8081eabf",
+  "engineSha256": "1542165264e5d9c7496ea543b75b1cdb7ffc38f94bda66789cc93f7090d17ddc",
   "evaluatorRevision": "conveyor-evaluator-v1",
   "evaluatorSha256": "bbadd6d76ea00444aeda273c762c09222eaf2127e083b390bcd236d8c87f9461",
   "generatorSha256": "45cb58c54eecb1384022b7cce05277ef9ef50dc696c9f6736956909792550751",
@@ -68,9 +68,9 @@
       "sha256": "b2d76c5c28b20f2ebead6735a7c0ef12f40a53c4491620633d30d67e2971d5f9"
     },
     {
-      "byteLength": 4892,
+      "byteLength": 6248,
       "relativePath": "src/Scenes/ConveyorPlantModel.cs",
-      "sha256": "a10b1990f2855990a91d43e8a6a7cd0b291d527a08ebbd970f41762b39a5c9f6"
+      "sha256": "0f8941d8662fe123da0ae0ce528465256730fc72f02d36a814de9a578df84acd"
     },
     {
       "byteLength": 1810,
@@ -78,9 +78,9 @@
       "sha256": "4416d05ba0d401f0be9f6800b2234b257f706470335bfef422aff5344f01892f"
     },
     {
-      "byteLength": 28290,
+      "byteLength": 49931,
       "relativePath": "src/VirtualController/AuthoredDemoLadderPrograms.cs",
-      "sha256": "6e0a527d029abf84cf2412fff3cf44fc3b05fd377479d832e32e124ec549e211"
+      "sha256": "e71ac53d95fe9fa72e36f2420ff62603b309236b76d837894d9864223d68a2e5"
     },
     {
       "byteLength": 7609,
@@ -148,9 +148,9 @@
       "sha256": "1dd16b884858edf32ec799cad68925259eb8a5601a69645a86d8eeaaacf65256"
     },
     {
-      "byteLength": 73602,
+      "byteLength": 73963,
       "relativePath": "src/VirtualController/LadderCompiler.cs",
-      "sha256": "ae78abc8b466ca7f3262e88fcf3f96e33515ef66cce72e82ad24828a6514f22f"
+      "sha256": "943e46c6de8d1acf60312c1fc0ae3bfd105da9cd1e790059c06b6dae0d5dfc87"
     },
     {
       "byteLength": 2170,
@@ -163,19 +163,19 @@
       "sha256": "5c57fdeea1e2e4f07e150f83a5f66c7a66c9b6fa902e7d72de87f7b132f96958"
     },
     {
-      "byteLength": 98288,
+      "byteLength": 115330,
       "relativePath": "src/VirtualController/LadderEditorDocument.cs",
-      "sha256": "67b86702b8be02f31fd7b0be487e601f7f5a8493fa4d44e46c99a9c0008d7aaf"
+      "sha256": "4c5bc39dfe2fd9f42f5b801339c6554fba8cd1e5a3ffc870df28989dae62d439"
     },
     {
-      "byteLength": 12250,
+      "byteLength": 12880,
       "relativePath": "src/VirtualController/LadderEditorHistory.cs",
-      "sha256": "65e1c66a4dff8107783c2619d4e6d96fe3e0374b38d0518fd0750aa735ed2a61"
+      "sha256": "ee27010e5df8445bf869bb6568ea9df601f9bbc2a8cd5de22869229be76d7f7e"
     },
     {
-      "byteLength": 49910,
+      "byteLength": 51757,
       "relativePath": "src/VirtualController/LadderEditorProjectJson.cs",
-      "sha256": "14da113183d5129397afecd853dcca001bd8aeb675d5fd1ea2a6177b61a47c61"
+      "sha256": "46271d1919d49d7d5a18f1b43aa9c0d02976a26411ce5c74380c73465bb0a906"
     },
     {
       "byteLength": 3222,
@@ -188,14 +188,14 @@
       "sha256": "6af5ed4aab81c356bec488b8959ba7b259db30f33fe210de1e8974dcc2d3acf4"
     },
     {
-      "byteLength": 3627,
+      "byteLength": 3782,
       "relativePath": "src/VirtualController/LadderOperandSymbols.cs",
-      "sha256": "be5f6bfd617a5a9409a424a12b83f948edf68693df6dcc292913daa113da64ff"
+      "sha256": "20ea80d0a246df07732b1a31dcc8239548d8ccde334475596cfab95889244b88"
     },
     {
-      "byteLength": 27120,
+      "byteLength": 27599,
       "relativePath": "src/VirtualController/LadderProgram.cs",
-      "sha256": "b840296974ff1087f08546fe533328f87d8aedd825805c78119777b8d0ac2f92"
+      "sha256": "1f8c6afddd493c529d9c957d1b8ae8959649182b3d2c73fef3a6fd61523c8fbd"
     },
     {
       "byteLength": 3967,
@@ -268,9 +268,9 @@
       "sha256": "6f2be2d0e3a37f099060b3aefb64949ce3690b65628c5b2299ad66d436153d4e"
     },
     {
-      "byteLength": 3000,
+      "byteLength": 11541,
       "relativePath": "src/VirtualController/SceneLadderProject.cs",
-      "sha256": "a67c03a238a4296235bbc4dc78444b46fd184379302f7bebb3dbdeddd24e0eda"
+      "sha256": "fc3c004582a7b81289de8d86d53813295e8be38412b8cf72d6e3ab60a255081c"
     },
     {
       "byteLength": 11413,

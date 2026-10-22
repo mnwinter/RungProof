@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-22T22:00:40.8917311Z",
+  "source_paths": 141,
+  "selected_paths": 1317,
+  "bytes": 97436103,
+  "largest_bytes": 1428168,
+  "text_files_scanned": 1046,
+  "redacted_files": 0,
+  "log_copies": 36,
+  "B5_logs_present": 2,
+  "raw_session_excluded": true,
+  "git_mutations": false,
+  "note": "Refresh again after final results/report edits; source+curated backup, raw screenshot bulk retained locally"
+}

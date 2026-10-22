@@ -1,0 +1,539 @@
+{"utc_ns": 1792646629315114600, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646629607874500, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646630379310700, "input": {"keys": ["Home", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646632090841200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646633908075100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646634448868100, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646634991630300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646636426093900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646636707445200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646637562990200, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646639640657900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646641423082600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646641948288200, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646642494364100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646643930094500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646644240690900, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646645165303000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646647306071000, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646649174050600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646649719099300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646650245217800, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646651695643200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646651989941900, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646652990060000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646655057221100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646656957325200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646657483907000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646658028211500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646659449541700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646659741335200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646660789664100, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646662856772200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646664723538200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646665249299700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646665787557400, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646699427422500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646699706426600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646700851326600, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646702907389900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646704690437900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646705226357100, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646705773054500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646707185687600, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646707473251800, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646708664442200, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646710672609100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646712456507700, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646712981134000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646713505279100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646714937946100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646715239924900, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646716513667000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646718939514900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646720723121000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646721269121500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646721794284600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646723187774900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646723490240700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646724822843900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646726822607300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646728572985900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646729097467700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646729646879600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646731026405500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646731306096100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646732726250700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646734722349600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646736505904800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646737050428900, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646737575358200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646738993442200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646739289148100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646740783856500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646742805940100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646744589713900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646745139394500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646745664446300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646747068284300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646747355842200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646748926483300, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646750973136200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646752789226300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646753327964400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646753874381900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646755308629000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646755622896500, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646757268423900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646758973071200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646760755989700, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646761280484400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646761808249600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646763260511900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646763572799300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646765273873400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646766923034900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646768689516300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646769214830500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646769740670700, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646771184472700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646771489316900, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646773253817700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646774906315200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646776706429200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646777231978600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646777758809200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646779220662000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646779523016400, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646781374295700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646783422164500, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646785206736800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646785747070700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646786275046500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646787737299900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646788022629300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646789950217400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646792023398500, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646793805607600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646794347615200, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646794875142000, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646796311556200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646796605455100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646798594872900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646800672044900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646802455509900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646802997774500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646803545838600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646805010642900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646805289233300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646807345827000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646809388457700, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646811173900100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646811722698700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646812267316300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646813705527700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646814006442400, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646816151149000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646818222156900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646820022423900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646820561679400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646821109859500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646822572618300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646822871948000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646825082449200, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646827154578200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646828972693300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646829498721000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646830042852500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646831466057400, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646831756071300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646834025198400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646836038698300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646837855219900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646838400792800, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646838947566700, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646840359761500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646840655744100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646843016285900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646845021644400, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646846804537400, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646847330066000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646847871877200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646849316196800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646849621792700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646852054316500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646854055657800, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646855839433000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646856380091600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646856926320600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646858334582100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646858638689300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646861140242600, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646863189035600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646864955335600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646865481079100, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646866031115100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646867471025200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646867771537700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646870329164400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646872355330500, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646874137697900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646874672569300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646875198307600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646876657571600, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646876971152600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646879615524500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646881638443600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646883422387400, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646883962120900, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646884504798400, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646885934462000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646886221263000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646888928340500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646890954875400, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646892738788200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646893289591200, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646893816722700, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646895243889100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646895521427500, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646898289362100, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646900321769700, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646902104547400, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646902645130900, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646903173049900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646904594470800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646904887886300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646907742454700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646909804325200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646911571536100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646912096921900, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646912622630600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646914057513200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646914371003200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646917310482200, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646919355367500, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646921154777300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646921700714000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646922228368500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646923647517800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646923937591200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646926944336800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646928971456000, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646930738191200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646931272917600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646931797341500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646933219919700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646933504562400, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646936558391400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646938620672200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646940404599000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646940949640100, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646941494043100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646942939372000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646943237779100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646946384463000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646948404088500, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646950188172200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646950714132900, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646951241020500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646952655849500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646952936608000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646956145726000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646958187228300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646959987311100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646960512308500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646961064280400, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646962493309700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646962786621000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646966067275000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646968137388100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646969920767000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646970464543100, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646971006203200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646972479405000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646972786561100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646976141615000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646978137186000, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646979937312200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646980481016800, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646981006643400, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646982456171900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646982770146600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646986183768900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646988203765200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646990004158900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646990539129000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646991065440800, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646992504048500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646992820076800, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646996331837700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646998003819900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792646999803259800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647000352859100, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647000900689600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647002347576300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647002654555100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647006232485900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647008286391600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647010070324000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647010612034000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647011161738600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647012604521500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647012919933700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647016545038700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647018587225200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647020369328000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647020894141500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647021419727500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647022830693100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647023119583800, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647026814518000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647028869782300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647030653221700, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647031195538500, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647031720784200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647033130108300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647033419128400, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647037201092600, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647038852653400, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647040652831700, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647041177636600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647041717363100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647043158231500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647043452390000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647047299821600, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647049303173600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647051068868300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647051593719300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647052118690000, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647053512330800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647053818909200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647057725127800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647059753403600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647061536412300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647062086488400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647062611430700, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647064032562700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647064335386500, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647068312215100, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647070386452300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647072169233600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647072693958800, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647073220602500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647074664749700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647074952257600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647079001907400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647081051987600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647082852709800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647083389816600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647083935006800, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647085387715200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647085702062700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647089823762800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647091435588600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647093201645000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647093746332700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647094271487100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647095723985100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647096001874200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647100212523900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647102236407800, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647104003104400, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647104528739400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647105055201700, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647106474086900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647106785971200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647111048351800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647113118945900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647114885547600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647115436146800, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647115986764500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647117442610700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647117735057200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647122079225200, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647124152344400, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647125935331800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647126460425200, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647126997819900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647128430106700, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647128735387300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647133164740400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647135235512900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647137035382200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647137585192800, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647138129602300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647139599753300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647139901416700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647144403452900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647146485223400, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647148268631100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647148794669300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647149319708600, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647150774573400, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647151068484600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647155641584200, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647157735517700, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647159501368800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647160040841600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647160588529100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647162045069200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647162334652800, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647166974565500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647168968423900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647170733961000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647171270219600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647171814089500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647173211894000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647173500748200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647178214202300, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647180201249900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647182001398800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647182526885600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647183052971100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647184453671200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647184734489100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647189525017000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647191567884900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647193350616600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647193891372700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647194436145400, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647195881424200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647196183815400, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647201043663700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647203117721800, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647204917153600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647205459192200, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647206004464100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647207432694600, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647207717817000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647212659106400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647214685288700, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647216484797300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647217031755000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647217580302700, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647219015001300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647219317159200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647224314238500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647226383978000, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647228184035500, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647228708768900, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647229234931900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647230705798600, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647231000627100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647236079299800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647238151927100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647239933934400, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647240484046300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647241009408900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647242469097300, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647242750439700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647247890659700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647249950275600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647251733561200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647252276743400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647252822893800, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647254399288100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647254685252200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647259896339700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647261984613600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647263783683600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647264308262000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647264850133300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647266329618100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647266634035300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647271922315600, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647273983736800, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647275750277300, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647276293262300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647276818139500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647278257106400, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647278549603800, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647283892217000, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647285933260900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647287717616900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647288248007700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647288786786100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647290189342400, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647290499653600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647295935658800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647297950249100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647299716821100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647300253256600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647300779930900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647302206598600, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647302499846300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647308007037100, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647310032451600, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647311816569200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647312342567300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647312884839100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647314265387100, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647314566208300, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647320145823500, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647322900213100, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647324700577800, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647325226774400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647325752971000, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647327173447800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647327483149800, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647333137713100, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647335149806300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647336933350900, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647337476932200, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647338023406200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647339482054200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647339782848100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647345509970800, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647347549459200, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647349315903400, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647349841506600, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647350367942500, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647351789772900, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647352099850100, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647357909012100, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647359949659700, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647361716401200, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647362267785000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647362810561400, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647364269367000, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647364582308600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647370465804700, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647372515921900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647374315488600, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647374839960400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647375377585300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647376814389500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647377098620000, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647383037572900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647385215416900, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647387015972000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647387555649400, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647388082158300, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647389531343500, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647389832469900, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647395826355600, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647397865332300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647399665637700, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647400201740700, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647400750747900, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647402177877200, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647402465588600, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647408544133400, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647410615587000, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647412382323000, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647412923794000, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647413468602100, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647414943973800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647415248773700, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647421392437900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647423414872300, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647425182292500, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647425709243300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647426236079200, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647427619989800, "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647427914721200, "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647434137126900, "input": {"keys": ["Home", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Return"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647436199067800, "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647437998561100, "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647438535552300, "input": {"x": 131, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792647439082817000, "input": {"x": 215, "y": 884}, "delivery": "Input delivered; verify visible result"}

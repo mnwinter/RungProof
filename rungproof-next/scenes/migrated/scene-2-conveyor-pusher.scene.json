@@ -3,8 +3,8 @@
   "version": 1,
   "id": "scene-2-conveyor-pusher",
   "plcTestProfile": "scene-2-db14-pusher-interface.json",
-  "name": "Conveyor Pusher",
-  "description": "The established production sequence: run to the photoeye, stop, extend the single-solenoid pusher, transfer the package, retract, and admit the next package.",
+  "name": "Height Sorting Pusher Cell",
+  "description": "Measure carton height in the LAD program; divert tall cartons onto the side takeaway conveyor and let shorter cartons pass on the main line.",
   "camera": {
     "position": [
       10.8,
@@ -24,12 +24,12 @@
       "type": "conveyor",
       "label": "Scene 2 conveyor",
       "position": [
-        0,
+        -1.25,
         0,
         0
       ],
       "config": {
-        "length": 7,
+        "length": 9.5,
         "width": 1.55,
         "deckHeight": 0.9,
         "beltColor": 2436137
@@ -40,7 +40,7 @@
       "type": "box",
       "label": "Scene 2 package",
       "position": [
-        -2.9,
+        -3.15,
         0.9,
         0
       ],
@@ -51,6 +51,16 @@
           0.72
         ],
         "color": 13142598
+      }
+    },
+    {
+      "id": "scene2_height_portal",
+      "type": "sizeSensorBank",
+      "label": "Three-beam carton height measurement portal",
+      "position": [-0.4, 0, 0],
+      "config": {
+        "portalClearHeight": 2.3,
+        "beamHeightsM": [0.45, 0.60, 0.75]
       }
     },
     {
@@ -96,15 +106,31 @@
     },
     {
       "id": "scene2_receiver",
-      "type": "containerReceiver",
-      "label": "Flat carton receiving table",
-      "position": [-0.2, 0, 1.78],
-      "config": { "installation": "flatCartonReceiver" }
+      "type": "conveyor",
+      "label": "Tall carton side takeaway conveyor",
+      "position": [-0.2, 0, 3.0],
+      "rotation": [0, 90, 0],
+      "config": { "length": 4.0, "width": 1.1, "deckHeight": 0.9, "beltColor": 2436137 }
+    },
+    {
+      "id": "scene2_main_exit",
+      "type": "photoeye",
+      "label": "Main line short-carton exit sensor",
+      "position": [3.1, 0, 0],
+      "config": { "span": 1.2, "height": 0.95, "blocked": false }
+    },
+    {
+      "id": "scene2_side_exit",
+      "type": "photoeye",
+      "label": "Side line tall-carton transfer sensor",
+      "position": [-0.2, 0, 4.8],
+      "rotation": [0, 90, 0],
+      "config": { "span": 1.2, "height": 0.95, "blocked": false }
     },
     {
       "id": "scene2_station",
       "type": "switch",
-      "label": "Scene Start / Stop",
+      "label": "Height sorter machine Start",
       "position": [
         -3.0,
         0,
@@ -117,14 +143,50 @@
       ],
       "config": {
         "style": "pushbutton",
-        "color": 2200422,
-        "action": "scene-toggle"
+        "color": 2204518,
+        "action": "pulse-start_command",
+        "faceLabel": "START"
       }
+    },
+    {
+      "id": "switch_1",
+      "type": "switch",
+      "label": "Height sorter machine Reset",
+      "position": [-3.0, 0, 3.3],
+      "config": { "style": "pushbutton", "action": "pulse-reset_command", "faceLabel": "RESET", "color": 16755234 }
+    },
+    {
+      "id": "switch_2",
+      "type": "switch",
+      "label": "Height sorter System Enable",
+      "position": [-3.0, 0, 4.4],
+      "config": { "style": "rotary", "action": "toggle-system_enable", "faceLabel": "ENABLE", "color": 2204518 }
+    },
+    {
+      "id": "switch_3",
+      "type": "switch",
+      "label": "Simulated safety trip status",
+      "position": [-3.0, 0, 5.5],
+      "config": { "style": "rotary", "action": "toggle-safety_trip", "faceLabel": "TRIP SIM", "color": 11141120 }
+    },
+    {
+      "id": "switch_4",
+      "type": "switch",
+      "label": "Height sorter machine Stop",
+      "position": [-3.0, 0, 6.6],
+      "config": { "style": "pushbutton", "action": "pulse-stop_command", "faceLabel": "STOP", "color": 11141120 }
+    },
+    {
+      "id": "switch_5",
+      "type": "switch",
+      "label": "Simulated conveyor drive overload",
+      "position": [-3.0, 0, 7.7],
+      "config": { "style": "rotary", "action": "toggle-drive_overload", "faceLabel": "OVERLOAD", "color": 11141120 }
     },
     {
       "id": "scene2_stacklight",
       "type": "indicator",
-      "label": "Scene 2 status light",
+      "label": "Height sorter cell status tower",
       "position": [
         3.15,
         0,
@@ -138,6 +200,30 @@
         ],
         "active": "amber"
       }
+    },
+    {
+      "id": "scene2_height_display",
+      "type": "trainingAccessory",
+      "label": "Height sorter - measured carton height display",
+      "position": [3.15, 0, 2.0],
+      "config": {
+        "assetName": "measured carton height display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "HEIGHT MM"
+      }
+    },
+    {
+      "id": "scene2_completed_display",
+      "type": "trainingAccessory",
+      "label": "Height sorter - completed parts display",
+      "position": [3.15, 0, 4.1],
+      "config": {
+        "assetName": "completed parts display",
+        "catalogAssetId": "training.accessory.count_display.v1",
+        "display": "numeric",
+        "displayLabel": "DONE"
+      }
     }
   ],
   "simulation": {
@@ -149,6 +235,70 @@
         "owner": "PC",
         "initial": false,
         "purpose": "Simulator photoeye feedback that turns TRUE when a package reaches the pusher."
+      },
+      {
+        "name": "carton_height_mm",
+        "type": "DINT",
+        "owner": "PC",
+        "initial": 0,
+        "unit": "mm",
+        "purpose": "Measured carton height from the optical portal while a carton is at the sorter station."
+      },
+      {
+        "name": "main_line_exit",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Short-carton main-line exit sensor pulse retained across accepted PLC scans."
+      },
+      {
+        "name": "side_line_exit",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Tall-carton side-transfer sensor pulse retained across accepted PLC scans."
+      },
+      {
+        "name": "system_enable",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Operator System Enable selector input."
+      },
+      {
+        "name": "start_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine Start pushbutton input."
+      },
+      {
+        "name": "stop_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine Stop pushbutton input."
+      },
+      {
+        "name": "drive_overload",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Simulated conveyor drive overload feedback used to trip the drive FB and inhibit restart."
+      },
+      {
+        "name": "reset_command",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Machine Reset pushbutton input."
+      },
+      {
+        "name": "safety_trip",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Non-certified simulated safety-trip status for ladder restart-inhibit instruction."
       },
       {
         "name": "pusher_extended",
@@ -181,6 +331,14 @@
         "purpose": "PLC solenoid command that extends the spring-return pusher."
       },
       {
+        "name": "sorter_reset",
+        "type": "BOOL",
+        "owner": "PLC",
+        "initial": false,
+        "role": "output",
+        "purpose": "PLC command that restores the offline carton plant to a repeatable initial position."
+      },
+      {
         "name": "pusher_position",
         "type": "REAL",
         "owner": "SIM",
@@ -205,12 +363,40 @@
     ],
     "actions": [
       {
-        "id": "scene-toggle",
-        "label": "Start / stop conveyor",
+        "id": "pulse-start_command",
+        "label": "Machine Start pushbutton",
+        "type": "pulse",
+        "point": "start_command"
+      },
+      {
+        "id": "pulse-stop_command",
+        "label": "Machine Stop pushbutton",
+        "type": "pulse",
+        "point": "stop_command"
+      },
+      {
+        "id": "pulse-reset_command",
+        "label": "Machine Reset pushbutton",
+        "type": "pulse",
+        "point": "reset_command"
+      },
+      {
+        "id": "toggle-system_enable",
+        "label": "System Enable selector",
         "type": "toggle",
-        "point": "conveyor_running",
-        "controllerStartBinding": "operator.start",
-        "controllerStopBinding": "operator.stop"
+        "point": "system_enable"
+      },
+      {
+        "id": "toggle-safety_trip",
+        "label": "Simulated safety trip (training only)",
+        "type": "toggle",
+        "point": "safety_trip"
+      },
+      {
+        "id": "toggle-drive_overload",
+        "label": "Simulated drive overload",
+        "type": "toggle",
+        "point": "drive_overload"
       }
     ],
     "pointBindings": [
@@ -218,6 +404,83 @@
         "point": "conveyor_running",
         "equipmentId": "scene2_conveyor",
         "mode": "running"
+      },
+      {
+        "point": "part_at_pusher",
+        "equipmentId": "scene2_photoeye",
+        "mode": "photoeye"
+      },
+      {
+        "point": "main_line_exit",
+        "equipmentId": "scene2_main_exit",
+        "mode": "photoeye"
+      },
+      {
+        "point": "side_line_exit",
+        "equipmentId": "scene2_side_exit",
+        "mode": "photoeye"
+      },
+      {
+        "point": "reset_command",
+        "equipmentId": "switch_1",
+        "mode": "switch"
+      },
+      {
+        "point": "system_enable",
+        "equipmentId": "switch_2",
+        "mode": "switch"
+      },
+      {
+        "point": "safety_trip",
+        "equipmentId": "switch_3",
+        "mode": "switch"
+      },
+      {
+        "point": "start_command",
+        "equipmentId": "scene2_station",
+        "mode": "switch"
+      },
+      {
+        "point": "stop_command",
+        "equipmentId": "switch_4",
+        "mode": "switch"
+      },
+      {
+        "point": "drive_overload",
+        "equipmentId": "switch_5",
+        "mode": "switch"
+      },
+      {
+        "point": "conveyor_running",
+        "equipmentId": "scene2_stacklight",
+        "mode": "indicatorChannel",
+        "activeColor": "green"
+      },
+      {
+        "point": "safety_trip",
+        "equipmentId": "scene2_stacklight",
+        "mode": "indicatorChannel",
+        "activeColor": "red"
+      },
+      {
+        "point": "drive_overload",
+        "equipmentId": "scene2_stacklight",
+        "mode": "indicatorChannel",
+        "activeColor": "amber"
+      },
+      {
+        "point": "carton_height_mm",
+        "equipmentId": "scene2_height_display",
+        "label": "HEIGHT MM",
+        "mode": "numericDisplay",
+        "format": "F0"
+      },
+      {
+        "point": "parts_completed",
+        "equipmentId": "scene2_completed_display",
+        "label": "DONE",
+        "mode": "numericDisplay",
+        "format": "F0"
       }
     ],
     "sourceBehavior": "Scene 2 - Conveyor Pusher",
@@ -234,7 +497,78 @@
     "minimumPhotoeyeOnS": 0.1,
     "pusherStrokeTimeS": 0.3,
     "transferPositionFraction": 0.8,
-    "repeatLoadSeconds": 2.5
+    "repeatLoadSeconds": 2.5,
+    "materialEntryPortal": {
+      "axis": "x",
+      "coordinate": -2.6,
+      "crossCenter": 0,
+      "wallSpanM": 32.0,
+      "wallHeightM": 7.5,
+      "openingWidthM": 1.95,
+      "openingHeightM": 2.25,
+      "wallThicknessM": 0.18,
+      "sourceRoomDepthM": 10.0,
+      "sourceDirection": -1
+    },
+    "cartonHeightSequenceM": [0.42, 0.82, 0.60],
+    "heightThresholdMm": 600,
+    "cartonBaseHeightM": 0.72,
+    "heightSensorId": "scene2_height_portal",
+    "heightBeamHeightsM": [0.45, 0.60, 0.75],
+    "mainExitFeedbackHoldS": 0.2,
+    "sideExitFeedbackHoldS": 0.2
+  },
+  "training": {
+    "hints": [
+      "Run the built-in controller, turn ENABLE on, clear simulated trip and overload, press machine RESET, then press machine START.",
+      "HEIGHT MM shows the measured carton height. The PLC routes values above 600 mm to the side conveyor and values at or below 600 mm to the main conveyor.",
+      "DONE advances only after destination feedback completes a carton. Clearing a stop, trip, or overload does not restart motion; issue a fresh machine START."
+    ],
+    "solution": {
+      "summary": "The scanned ladder owns machine state, the 600 mm decision, conveyor/pusher FB calls, interlocks, and recovery; the plant integrates commands and reports feedback.",
+      "steps": [
+        "Seal machine run from System Enable and Start while Stop, trip, overload, and Reset permit operation.",
+        "Compare carton_height_mm with the inclusive 600 mm boundary and retain the divert decision through the transfer.",
+        "Command conveyor and pusher FB instances, then use pusher and destination feedback to complete and reset each route."
+      ],
+      "acceptance": "The fixed 420 mm carton exits the main line, 820 mm exits the side line, and the 600 mm boundary carton exits the main line; DONE reaches three."
+    },
+    "assetRequirements": [
+      "height-measurement portal",
+      "main conveyor",
+      "side takeaway conveyor",
+      "single-solenoid pusher",
+      "machine control station",
+      "HEIGHT MM and DONE displays"
+    ],
+    "machineGuide": {
+      "purpose": "Three-carton height-sorting lesson with a PLC-owned 600 mm routing decision, conveyor and pusher FBs, measured feedback, interlocks, and repeatable recovery.",
+      "startConditions": [
+        "Use the built-in offline controller with the matching Demo 3 logic loaded and no active forces.",
+        "App scan is running, ENABLE is on, simulated trip and overload are off, and the pusher is retracted.",
+        "Press machine RESET, then issue a fresh machine START."
+      ],
+      "normalSequence": [
+        "Follow HEIGHT MM through the fixed 420, 820, and 600 mm carton sequence.",
+        "The 420 and 600 mm cartons continue to the main exit; the 820 mm carton is diverted once to the side exit.",
+        "DONE advances after each destination feedback and reaches 3 when all boundary cases complete."
+      ],
+      "stopBehavior": [
+        "Machine STOP removes conveyor and pusher commands while preserving a recoverable plant pose.",
+        "A simulated trip or overload inhibits motion and fresh restart. Clear the cause, press RESET, then issue a new START.",
+        "Application Run alone never asserts the PLC-consumed machine START input."
+      ],
+      "faultBehavior": [
+        "Missing retracted/extended feedback or an occupied route blocks the next unsafe transition and remains visible in the live trace.",
+        "The simulated trip is an instructional interlock only; it is not a safety PLC, E-stop circuit, or validated safety function."
+      ],
+      "expectedObservations": [
+        "HEIGHT MM reports 420, 820, then 600 while each carton is measured; DONE reports 1, 2, then 3 after destination completion.",
+        "The conveyor-running beacon follows the PLC conveyor command, and the physical pusher follows pusher_extend rather than choosing the route itself.",
+        "Machine RESET restores the first carton, DONE 0, HEIGHT MM 0, retracted pusher feedback, and outputs off before a fresh START."
+      ],
+      "acceptance": "DONE reaches 3 after the 420 mm and 600 mm cartons use the main exit and the 820 mm carton uses the side exit."
+    }
   },
   "migration": {
     "sourceFile": "prototype/scenes/scene-2-conveyor-pusher.plcscene",

@@ -1,0 +1,1 @@
+[{"name": "lab407-r1-enable", "click": [528, 625], "expected": {"machine_enabled": true, "exit_clear": false, "vehicle_run": false}, "monitor_only": true, "keep_monitor": true}, {"name": "lab407-r1-clear", "click": [546, 637], "expected": {"machine_enabled": true, "exit_clear": true, "garage_available": true, "occupancy_count": 0}, "monitor_only": true, "keep_monitor": true}]

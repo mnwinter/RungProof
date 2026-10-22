@@ -1,0 +1,78 @@
+[
+  {
+    "source": "lab1001-baseline-r2.png",
+    "sha256": "5dcb703ee14a1c037b9d2aec20c38bd06da33e28a3fd435d4649b54ff953c1b3"
+  },
+  {
+    "source": "lab1001-valid-empty-r2.png",
+    "sha256": "ca64a03d804a255ef2370e4c24304144b2c2211a78471547f6ea15fe6af6f25f"
+  },
+  {
+    "source": "lab1001-F003-r2.png",
+    "sha256": "1c23f3bc25f6df658ee05d72754762a369bc9d5c46cd28041c9adb899a8344e6"
+  },
+  {
+    "source": "lab1001-F030-rejected-r2.png",
+    "sha256": "d32d8022011748204b2b9c1035d1df6461e9c8a2a94b2f1bffaf5225cfbcf4d3"
+  },
+  {
+    "source": "lab1001-F0030-rejected-r2.png",
+    "sha256": "735b5c2b65543ab24d35415c515567fa8ce5658851d413ff508bd529b593d9b1"
+  },
+  {
+    "source": "lab1001-XF003-rejected-r2.png",
+    "sha256": "4e33b5e96290ef0642713bc20ae1f44fcd50833d41ce2e6be334718df2ab05c6"
+  },
+  {
+    "source": "lab1001-lowercase-rejected-r2.png",
+    "sha256": "26c47fb5c3561d6d1437f57de7c3ab281ee23d1f6decccd4ef67d18497751808"
+  },
+  {
+    "source": "lab1001-empty-wrap-r2.png",
+    "sha256": "feb2619b2f5a2e4c2735d6203bb39e1c5123f59d7b13dcdae2ea147dc0d845a3"
+  },
+  {
+    "source": "lab1001-F003-repeat-r2.png",
+    "sha256": "d9640e82619f7aaf323153e24c18c6ed3e0f9b4c13791307d3b1545cc5dac45b"
+  },
+  {
+    "source": "lab1001-valid-off-r2.png",
+    "sha256": "0e0309dbbce7e3f391c696484aace36afdd0aafe352428e8ec609d22392f0008"
+  },
+  {
+    "source": "lab1001-valid-on-r2.png",
+    "sha256": "c541e66e77d2ad7b5deb6b2c8bed5f6b482684ac31fd12457911b9898d4dfb29"
+  },
+  {
+    "source": "lab1001-reset-on-r2.png",
+    "sha256": "d3447fdc843829d5dc8e0d61eeb22655b5177ed3c47f40ee0758bd4062b677f6"
+  },
+  {
+    "source": "lab1001-reset-off-r2.png",
+    "sha256": "906a1de27fb5b7a03f6871d35b22c01017c459e183b60b96449dcccc9dc56c50"
+  },
+  {
+    "source": "lab1001-app-stop-r2.png",
+    "sha256": "1db293235a3c986d4c543e75befef3fc29e4e009c87afa26d928bd3634073092"
+  },
+  {
+    "source": "lab1001-app-run-r2.png",
+    "sha256": "7c7baaf823e787813e133afe331bf37138e64a68f597cd1f88eb8a00a95d75a6"
+  },
+  {
+    "source": "lab1001-app-reset-r2.png",
+    "sha256": "7e21eca8be80497dff574f24a050c68a7e0e1454df9b0e9d31b0fada899f0f2c"
+  },
+  {
+    "source": "lab1001-reset-run-r2.png",
+    "sha256": "38072d358291b7b30d61b87b50a34770d79d0b612963325122a2c55af1fcedf1"
+  },
+  {
+    "source": "lab1001-fresh-valid-empty-r2.png",
+    "sha256": "06766f6d9cc7fdffe63703a3905b17992aa05d2e214aef399df5173e86d111e2"
+  },
+  {
+    "source": "lab1001-fresh-F003-r2.png",
+    "sha256": "2d3b8f138b5f2c8cca4e7ce45b8e50e4a28f5e1f2539f747a2d0cca6cfcca08f"
+  }
+]

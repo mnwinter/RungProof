@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-diagnostic-tank-high-low-guard",
+  "name": "QA_DIAGNOSTIC_tank_high_low",
+  "sourceSceneId": "tank-high-low",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "probe-tank-high-low-main",
+  "nextId": 40,
+  "tags": [
+    {
+      "symbolId": "probe-tank-high-low-symbol-0",
+      "name": "inlet_pump_run",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "inlet_pump_run",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PC/PLC declaration for guard-only probe; not a process solution."
+    },
+    {
+      "symbolId": "probe-tank-high-low-symbol-1",
+      "name": "drain_valve_open",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "drain_valve_open",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PC/PLC declaration for guard-only probe; not a process solution."
+    },
+    {
+      "symbolId": "probe-tank-high-low-symbol-2",
+      "name": "low_level_switch",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "low_level_switch",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PC/PLC declaration for guard-only probe; not a process solution."
+    },
+    {
+      "symbolId": "probe-tank-high-low-symbol-3",
+      "name": "high_level_switch",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "high_level_switch",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Exact PC/PLC declaration for guard-only probe; not a process solution."
+    },
+    {
+      "symbolId": "probe-tank-high-low-false-symbol",
+      "name": "qa_probe_false",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": false,
+      "binding": "",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "Default tag table",
+      "address": "",
+      "comment": "Unbound false memory; do not modify or force"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "probe-tank-high-low-main",
+      "name": "QA_DIAGNOSTIC_tank_high_low",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "probe-tank-high-low-rung",
+          "label": "DIAGNOSTIC ONLY: hold inlet_pump_run FALSE; no tank control",
+          "coilVariable": "inlet_pump_run",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "probe-tank-high-low-series",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "probe-tank-high-low-contact",
+                "kind": 0,
+                "variable": "qa_probe_false",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "probe-tank-high-low-coil",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "probe-tank-high-low-task",
+      "name": "DiagnosticMainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "probe-tank-high-low-main"
+    }
+  ],
+  "watchVariables": [
+    "inlet_pump_run",
+    "drain_valve_open",
+    "low_level_switch",
+    "high_level_switch",
+    "qa_probe_false"
+  ],
+  "watchTables": [
+    {
+      "id": "probe-tank-high-low-watch",
+      "name": "Diagnostic watch",
+      "variables": [
+        "inlet_pump_run",
+        "drain_valve_open",
+        "low_level_switch",
+        "high_level_switch",
+        "qa_probe_false"
+      ],
+      "rows": [
+        {
+          "id": "probe-tank-high-low-watch-0",
+          "referenceKind": "Symbolic",
+          "reference": "inlet_pump_run",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; no forcing"
+        },
+        {
+          "id": "probe-tank-high-low-watch-1",
+          "referenceKind": "Symbolic",
+          "reference": "drain_valve_open",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; no forcing"
+        },
+        {
+          "id": "probe-tank-high-low-watch-2",
+          "referenceKind": "Symbolic",
+          "reference": "low_level_switch",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; no forcing"
+        },
+        {
+          "id": "probe-tank-high-low-watch-3",
+          "referenceKind": "Symbolic",
+          "reference": "high_level_switch",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; no forcing"
+        },
+        {
+          "id": "probe-tank-high-low-watch-4",
+          "referenceKind": "Symbolic",
+          "reference": "qa_probe_false",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; no forcing"
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

@@ -1,0 +1,1 @@
+[{"name": "lab607-r2-prepare22-stopped", "clicks": [[496, 39], [525, 102], [558, 445], [597, 462]], "expected": {"fixture_mass_kg": 22, "bag_at_entry": true, "infeed_run": false, "discharge_run": false}, "monitor_only": true, "keep_monitor": true}]

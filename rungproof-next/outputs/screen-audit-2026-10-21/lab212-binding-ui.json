@@ -1,0 +1,1 @@
+[{"click": [969, 542], "wait": 0.2}, {"click": [422, 39]}, {"click": [485, 125]}, {"click": [1280, 101], "capture": "lab212-raise-health"}, {"click": [1265, 39]}, {"click": [999, 553], "wait": 0.2}, {"click": [422, 39]}, {"click": [485, 125]}, {"click": [1280, 101], "capture": "lab212-lower-health"}, {"click": [1265, 39]}]

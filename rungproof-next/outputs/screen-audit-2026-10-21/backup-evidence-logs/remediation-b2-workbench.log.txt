@@ -1,0 +1,221 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.348 - Forward+ - Using Device #0: Intel - Intel(R) Arc(TM) 140T GPU (16GB)
+
+RungProof Next ready. Production assets: 63.
+Candidate assets: 232.
+Legacy primitive assets intentionally excluded.
+CONTROL_INSTALLATION_ACCESS scene=lab-4-01-press-count-lamp illustrativeBounds=(-1.55, 0, 0.6) size=(3.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_0 kind=studentBench pose=(-1.05, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=indicator_1 kind=studentBench pose=(-0.35, 0.25840002, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=switch_2 kind=studentBench pose=(0.35, 0.621, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-4-01-press-count-lamp equipment=training_accessory_3 kind=studentBench pose=(1.05, 0.06100005, 0) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-4-01-press-count-lamp kind=studentBench components=4
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=4 actions=2
+SCENE_ENVIRONMENT_READY scene=lab-4-01-press-count-lamp family=TrainingWorkshop variant=controls yaw=0 protectedBounds=(-1.55, 0, -0.5825), (3.1, 1.62, 1.165)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-4-01-press-count-lamp rendered=4 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-4-01-press-count-lamp transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-11-inbound-tote-stop illustrativeBounds=(4.8899994, 0, 0.1) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-11-inbound-tote-stop equipment=inbound_start kind=operatorPanel pose=(5.4399996, 0.6632, -0.244) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=lab-2-11-inbound-tote-stop equipment=inbound_status role=machine-status support=operator-cabinet pose=(5.4399996, 0.7440001, -0.39) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=lab-2-11-inbound-tote-stop kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=6 actions=3
+SCENE_ENVIRONMENT_READY scene=lab-2-11-inbound-tote-stop family=DispatchWarehouse variant=receiving yaw=0 protectedBounds=(-5.059, -4.656613E-10, -2), (10.118, 2.8040004, 4)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-11-inbound-tote-stop rendered=5 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-11-inbound-tote-stop transport=none
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-12-assembly-lift illustrativeBounds=(2.25, 0, 0.1) size=(1.8199999,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-12-assembly-lift equipment=raise_button kind=operatorPanel pose=(2.59, 0.6632, -0.244) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-12-assembly-lift equipment=lower_button kind=operatorPanel pose=(2.9699998, 0.6632, -0.244) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-12-assembly-lift equipment=top_limit_lamp kind=operatorPanel pose=(3.35, 1.1525, -0.8887) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-12-assembly-lift equipment=bottom_limit_lamp kind=operatorPanel pose=(3.7299998, 1.1525, -0.8887) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-2-12-assembly-lift kind=operatorPanel components=4
+Equipment motion controller ScissorLift bound 52 nodes for 'KIN_'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=8 actions=4
+SCENE_ENVIRONMENT_READY scene=lab-2-12-assembly-lift family=MachineShop variant=assembly yaw=0 protectedBounds=(-4.3849998, -2.7, -3.65), (8.7699995, 7.04, 7.3)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-12-assembly-lift rendered=6 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-12-assembly-lift transport=none
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=tank-high-low illustrativeBounds=(4.054, 0, 0.6153046) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=tank-high-low equipment=hl_pump_station kind=operatorPanel pose=(4.414, 0.6632, 0.27130455) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=tank-high-low equipment=hl_drain_station kind=operatorPanel pose=(4.794, 0.6632, 0.27130455) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=tank-high-low equipment=hl_stacklight role=machine-status support=operator-cabinet pose=(4.604, 0.7440001, 0.12530458) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=tank-high-low kind=operatorPanel components=2
+Equipment motion controller ContinuousRotation bound 1 nodes for 'KIN_pump_shaft'.
+Equipment motion controller PositionRotation bound 1 nodes for 'KIN_valve_stem'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=tank points=7 actions=4
+SCENE_ENVIRONMENT_READY scene=tank-high-low family=ProcessUtility variant=water yaw=0 protectedBounds=(-6.4039373, -0.5, -7.669179), (12.807875, 7.728572, 15.338358)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED tank-high-low rendered=10 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=tank-high-low transport=none
+SCENE_ACTION_EXECUTED toggle-pump
+SCENE_ACTION_EXECUTED toggle-drain
+SCENE_RUNTIME_RESET
+SCENE_ACTION_EXECUTED toggle-pump
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=tank-level illustrativeBounds=(4.054, 0, 0.6153046) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=tank-level equipment=pump_station kind=operatorPanel pose=(4.414, 0.6632, 0.27130455) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=tank-level equipment=drain_station kind=operatorPanel pose=(4.794, 0.6632, 0.27130455) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=tank-level equipment=tank_stacklight role=machine-status support=operator-cabinet pose=(4.604, 0.7440001, 0.12530458) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=tank-level kind=operatorPanel components=2
+Equipment motion controller ContinuousRotation bound 1 nodes for 'KIN_pump_shaft'.
+Equipment motion controller PositionRotation bound 1 nodes for 'KIN_valve_stem'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=tank points=8 actions=4
+SCENE_ENVIRONMENT_READY scene=tank-level family=ProcessUtility variant=water yaw=0 protectedBounds=(-6.4039373, -0.5, -7.669179), (12.807875, 8.168334, 15.338358)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED tank-level rendered=11 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=tank-level transport=none
+SCENE_ACTION_EXECUTED toggle-pump
+SCENE_ACTION_EXECUTED toggle-drain
+SCENE_RUNTIME_RESET
+SCENE_ACTION_EXECUTED toggle-pump
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-10-03-vision-package-sorter illustrativeBounds=(-10.72, 0, 0.45008907) size=(3.316,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-10-03-vision-package-sorter equipment=switch_9 kind=operatorPanel pose=(-10.193001, 0.6632, 0.10608907) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-10-03-vision-package-sorter equipment=switch_10 kind=operatorPanel pose=(-9.439, 0.6632, 0.10608907) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-10-03-vision-package-sorter equipment=switch_11 kind=operatorPanel pose=(-8.685, 0.6632, 0.10608907) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-10-03-vision-package-sorter equipment=training_accessory_6 kind=operatorPanel pose=(-7.931, 0.21100008, 0.35108906) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=lab-10-03-vision-package-sorter equipment=indicator_4 role=machine-status support=operator-cabinet pose=(-9.2960005, 0.7440001, -0.039910913) authored-head-basis=preserved
+STATUS_TOWER_MOUNT_READY scene=lab-10-03-vision-package-sorter equipment=indicator_12 role=machine-status support=operator-cabinet pose=(-8.828, 0.7440001, -0.039910913) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=lab-10-03-vision-package-sorter kind=operatorPanel components=4
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Equipment motion controller PositionRotation bound 1 nodes for 'KIN_table'.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=booleanPanel points=9 actions=4
+SCENE_ENVIRONMENT_READY scene=lab-10-03-vision-package-sorter family=DispatchWarehouse variant=inspection yaw=0 protectedBounds=(-11.061912, -0.8, -7.2217555), (22.123823, 4.4040003, 14.443511)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-10-03-vision-package-sorter rendered=20 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-10-03-vision-package-sorter transport=none
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED toggle-destination_clear
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED toggle-vision_result_valid
+SCENE_ACTION_EXECUTED toggle-package_present
+SCENE_RUNTIME_RESET
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED toggle-vision_result_valid
+SCENE_ACTION_EXECUTED toggle-package_present
+SCENE_RUNTIME_RESET
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED toggle-vision_result_valid
+SCENE_ACTION_EXECUTED toggle-package_present
+SCENE_ACTION_EXECUTED toggle-destination_clear
+SCENE_RUNTIME_RESET
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED cycle-vision_class
+SCENE_ACTION_EXECUTED toggle-destination_clear
+SCENE_ACTION_EXECUTED toggle-vision_result_valid
+SCENE_ACTION_EXECUTED toggle-package_present
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTEXT_INSTALLATION_READY scene=lab-2-19-service-door anchor=service_shutter
+CONTROL_INSTALLATION_ACCESS scene=lab-2-19-service-door illustrativeBounds=(4.66, 0, 0.16749999) size=(1.8199999,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-19-service-door equipment=door_open_button kind=operatorPanel pose=(4.9999995, 0.6632, -0.17650001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-19-service-door equipment=door_stop_button kind=operatorPanel pose=(5.3799996, 0.6632, -0.17650001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-19-service-door equipment=door_close_button kind=operatorPanel pose=(5.7599998, 0.6632, -0.17650001) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-19-service-door equipment=door_open_lamp kind=operatorPanel pose=(6.14, 1.1525, -0.8212) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-19-service-door equipment=door_closed_lamp kind=operatorPanel pose=(5.5699997, 1.6725, -0.8212) scale=(0.7, 0.7, 0.7)
+CONTROL_INSTALLATION_READY scene=lab-2-19-service-door kind=operatorPanel components=5
+Equipment motion controller RollerShutter bound 19 nodes for 'KIN_'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=8 actions=4
+SCENE_ENVIRONMENT_READY scene=lab-2-19-service-door family=PublicInterior variant=access yaw=0 protectedBounds=(-6.0424995, -3.3, -3.7075), (12.084999, 10.7, 7.415)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-19-service-door rendered=6 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-19-service-door transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-13-coolant-jug-fill illustrativeBounds=(4.8899994, 0, -0.6624998) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-13-coolant-jug-fill equipment=fill_start kind=operatorPanel pose=(5.4399996, 0.6632, -1.0064998) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=lab-2-13-coolant-jug-fill equipment=fill_status role=machine-status support=operator-cabinet pose=(5.4399996, 0.7440001, -1.1524998) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=lab-2-13-coolant-jug-fill kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Equipment motion controller LinearY bound 1 nodes for 'KIN_fill_nozzle'.
+Equipment motion controller ContinuousRotation bound 1 nodes for 'KIN_metering_pump_shaft'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=9 actions=3
+SCENE_ENVIRONMENT_READY scene=lab-2-13-coolant-jug-fill family=DispatchWarehouse variant=chemical yaw=0 protectedBounds=(-5.059, -0.12, -3.32), (10.118, 3.6850002, 6.64)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-13-coolant-jug-fill rendered=7 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-13-coolant-jug-fill transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-16-safe-drill illustrativeBounds=(4.104, 0, -0.35200003) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-16-safe-drill equipment=drill_cycle_button kind=operatorPanel pose=(4.6540003, 0.6632, -0.69600004) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=lab-2-16-safe-drill equipment=drill_status role=machine-status support=operator-cabinet pose=(4.6540003, 0.7440001, -0.842) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=lab-2-16-safe-drill kind=operatorPanel components=1
+Equipment motion controller SpindleFeed bound 1 nodes for 'KIN_spindle'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=9 actions=5
+SCENE_ENVIRONMENT_READY scene=lab-2-16-safe-drill family=MachineShop variant=machining yaw=0 protectedBounds=(-4.7120004, -0.5, -1.411), (9.424001, 5.15, 2.822)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-16-safe-drill rendered=6 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-16-safe-drill transport=none
+SCENE_ACTION_EXECUTED toggle-left-hand
+SCENE_ACTION_EXECUTED toggle-right-hand
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-23-parcel-sorter illustrativeBounds=(10.882841, 0, -3.6599932) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-23-parcel-sorter equipment=sorter_start kind=operatorPanel pose=(11.432841, 0.6632, -4.003993) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=lab-2-23-parcel-sorter equipment=sorter_status role=machine-status support=operator-cabinet pose=(11.432841, 0.7440001, -4.149993) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=lab-2-23-parcel-sorter kind=operatorPanel components=1
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Equipment motion controller PositionRotation bound 1 nodes for 'KIN_table'.
+Equipment motion controller PositionRotation bound 1 nodes for 'KIN_table'.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=9 actions=3
+SCENE_ENVIRONMENT_READY scene=lab-2-23-parcel-sorter family=DispatchWarehouse variant=dispatch yaw=0 protectedBounds=(-10.806921, -0.8, -7.456868), (21.613842, 4.4040003, 14.913736)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-23-parcel-sorter rendered=13 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-23-parcel-sorter transport=none
+SCENE_RUNTIME_STOP
+VIRTUAL_CONTROLLER_DISABLED
+CONTROL_INSTALLATION_ACCESS scene=lab-2-24-robot-cnc illustrativeBounds=(8.8550005, 0, -0.5999998) size=(1.1,2,1) compliance=not-assessed
+CONTROL_INSTALLATION_COMPONENT scene=lab-2-24-robot-cnc equipment=cnc_cell_start kind=operatorPanel pose=(9.405001, 0.6632, -0.9439998) scale=(0.7, 0.7, 0.7)
+STATUS_TOWER_MOUNT_READY scene=lab-2-24-robot-cnc equipment=cnc_cell_status role=machine-status support=operator-cabinet pose=(9.405001, 0.7440001, -1.0899998) authored-head-basis=preserved
+CONTROL_INSTALLATION_READY scene=lab-2-24-robot-cnc kind=operatorPanel components=1
+UNBOUND_MACHINE_CONTROLS_HIDDEN scene=lab-2-24-robot-cnc equipment=cnc_machine count=7
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Conveyor controller bound 7 rotating nodes and 1 belt material surfaces.
+Equipment motion controller ContinuousRotation bound 1 nodes for 'KIN_spindle'.
+Equipment motion controller LinearX bound 1 nodes for 'KIN_cnc_door_left'.
+Equipment motion controller LinearX bound 1 nodes for 'KIN_cnc_door_right'.
+Equipment motion controller LinearY bound 1 nodes for 'KIN_cnc_tool_clearance'.
+SCENE_RUNTIME_RESET
+SCENE_RUNTIME_READY type=sequence points=10 actions=3
+SCENE_ENVIRONMENT_READY scene=lab-2-24-robot-cnc family=MachineShop variant=machining yaw=0 protectedBounds=(-10.0255, -2.28, -4.89), (20.051, 7.74, 9.78)
+DISPATCH_LOOK_APPLIED structuralSurfaces=0 signalColors=preserved lighting=scene-local
+MIGRATED_SCENE_LOADED lab-2-24-robot-cnc rendered=8 deferred=0
+VIRTUAL_CONTROLLER_ENABLED mode=offline scene=lab-2-24-robot-cnc transport=none

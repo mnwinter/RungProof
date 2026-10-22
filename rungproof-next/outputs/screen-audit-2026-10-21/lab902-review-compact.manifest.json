@@ -1,0 +1,110 @@
+[
+  {
+    "source": "lab902-00-initial.png",
+    "sha256": "33e1563681e72ae8e5bf9ae561774a03ded22ac97da5c8d654bcc2a5a6c2ed8f"
+  },
+  {
+    "source": "lab902-01-selected2-5.png",
+    "sha256": "c6d9b4613cff931d15b7bd8df3b889ca466c1ebb0cdd869a963e98c1be04953e"
+  },
+  {
+    "source": "lab902-02-perm-100.png",
+    "sha256": "b0a1c9312ea61aa6f9dc9c163d41ffbf262428e4d24154494c2334a06511cc29"
+  },
+  {
+    "source": "lab902-03-perm-110.png",
+    "sha256": "6e9a0fc4a381597f2ffa3c312ef22cb593820429af9a90aec9e72c75848be2af"
+  },
+  {
+    "source": "lab902-04-perm-010.png",
+    "sha256": "c6f9ecd04c6924bd5d742aba1cd366427e3fad4503938de4f5f84ead21271133"
+  },
+  {
+    "source": "lab902-05-perm-011.png",
+    "sha256": "655ace6cb6027baa60feae3f45954c4df41f6afb8d3db849426283a0f2d714e1"
+  },
+  {
+    "source": "lab902-06-perm-111.png",
+    "sha256": "5a4e6ac4b57c9e32a98e93093a65384efee432bd4ed7efe29858b8edbe48d5cb"
+  },
+  {
+    "source": "lab902-07-perm-101.png",
+    "sha256": "1dafc7b6f73f56a5ed778eea51e17c22bd4dab438769bdd9f9a461cecfabda90"
+  },
+  {
+    "source": "lab902-08-perm-001.png",
+    "sha256": "ae779f2bb35d75178c28bbe6d11c2f4427fe65d226ee98a4e4e13f1a9830d746"
+  },
+  {
+    "source": "lab902-09-perm-000.png",
+    "sha256": "8997475ef5d0618297ccd56e99358b4fdd0ddd4012d32649fc09808cfa422ad3"
+  },
+  {
+    "source": "lab902-10-perm-100-again.png",
+    "sha256": "ce754b416e5e17a17d89cf7e7cc833c7153adb141b4c1fb9b59522106ce377b4"
+  },
+  {
+    "source": "lab902-11-perm-110-again.png",
+    "sha256": "7b35a7531316d2e1037a62e8391e583984434c4420600d41133e038df54aae89"
+  },
+  {
+    "source": "lab902-12-perm-111-again.png",
+    "sha256": "b5e95966dd799f5a83631a61aaee0dd48dac5cf974d095175d578d2606bb63c4"
+  },
+  {
+    "source": "lab902-13-A5-B5.png",
+    "sha256": "0f5db0811e7993ca33c52d28d99cf395e23144f1c30da83488d9bdc364fc2686"
+  },
+  {
+    "source": "lab902-14-A10-B5.png",
+    "sha256": "feb9b7a9f4baf6b96a9d2694f9501a70d4944c362ae80d641516e7a0abfbbba9"
+  },
+  {
+    "source": "lab902-15-A0-B5.png",
+    "sha256": "63820329bbfc19c2fcbc3fb702d60654790758f085da0d660d4398e69cf706e4"
+  },
+  {
+    "source": "lab902-16-A1-B5.png",
+    "sha256": "d847fbcdaff3a1d7823946f63612225a8f50c106ea7ec499730681a87731b4d2"
+  },
+  {
+    "source": "lab902-17-A2-B5.png",
+    "sha256": "d8e7eeb6906d9cde92bcbea83e770f87a9c0df37a020a235f68d9346e7bb28ca"
+  },
+  {
+    "source": "lab902-18-A2-B10.png",
+    "sha256": "f267098cfcd33798dc468ad29d1961b2e64607b486343c15258f48d158321c75"
+  },
+  {
+    "source": "lab902-19-A2-B0.png",
+    "sha256": "0e4fe1d9120a559e5786757b44ae52d6d82258e7edcebd5428bbcd73f789929b"
+  },
+  {
+    "source": "lab902-20-A2-B1.png",
+    "sha256": "54548861589b0721873cb6c08077aa6e491c7c78528123b76aaba8d689a5c801"
+  },
+  {
+    "source": "lab902-21-A2-B2.png",
+    "sha256": "f81e54f9bcc3d8d11df22c3e5cbb6d4a6ae86e2c476373e99c07cba01c30b01d"
+  },
+  {
+    "source": "lab902-22-A2-B5.png",
+    "sha256": "59a72665bbe029a78cf02b9c0231c1740e51fdc905c5f77056624eaa1860ec1d"
+  },
+  {
+    "source": "lab902-23-app-stop.png",
+    "sha256": "5175065fe8acfcc07e510948b4df78dfa92a49e4b8426939e1edc3fde3d15098"
+  },
+  {
+    "source": "lab902-24-app-run.png",
+    "sha256": "8c8a410a0459147f4b27e543928928aba84ca4b9697e17bd76c5da3dde3bd7e6"
+  },
+  {
+    "source": "lab902-25-active-reset.png",
+    "sha256": "0a4ab47ef22d632b6715c79affa5f2e234832bc3b8a67f17fd58b62b7bdcadca"
+  },
+  {
+    "source": "lab902-26-reset-run.png",
+    "sha256": "fff60ce08e7d25da9d195dcb8a993003b52af97e390f1307a4116ef6cd982f7c"
+  }
+]

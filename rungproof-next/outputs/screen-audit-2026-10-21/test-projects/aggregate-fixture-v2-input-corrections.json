@@ -1,0 +1,33 @@
+[
+  {
+    "original": "fixture-lab-10-05-motor-struct-data.rpproj.json",
+    "archive": "fixture-lab-10-05-motor-struct-data-invalid-v1.json",
+    "replacement": "fixture-lab-10-05-motor-struct-data-v2.rpproj.json",
+    "beforeSha256": "1f79aa9c9451bc230097cea7be57a99dea88e65d7687379c39d991716542d306",
+    "afterSha256": "5dd233ba1b68f62fe0b46ee4bb38bd59f3bfc4e3859e8ea1ad7a39630d7bd20f",
+    "changes": [
+      "motor_feedback.record_valid: Bool->0",
+      "motor_feedback.temperature_valid: Bool->0",
+      "motor_feedback.alarm_clear: Bool->0",
+      "motor_feedback.power_valid: Bool->0",
+      "motor_feedback.power: Real->3",
+      "motor_feedback.temperature: Real->3",
+      "motor_command.enable: Bool->0",
+      "motor_command.record_ready: Bool->0"
+    ],
+    "evidence": "10.5 native UI project-open rejected malformed editor JSON;10.6 same static serialization pattern not executed",
+    "sourceContract": "LadderEditorProjectJson.Options has no JsonStringEnumConverter; PlcAggregateSchema uses PlcVariableType enum. Scene ParseSchema separately accepts strings; saved editor nested aggregate does not."
+  },
+  {
+    "original": "fixture-lab-10-06-ten-motor-array-startup.rpproj.json",
+    "archive": "fixture-lab-10-06-ten-motor-array-startup-invalid-v1.json",
+    "replacement": "fixture-lab-10-06-ten-motor-array-startup-v2.rpproj.json",
+    "beforeSha256": "fe0ef02100f49efd8a468170493869c59517309f973378f969e081166fed59e5",
+    "afterSha256": "d6f28a958a555acbba06db2135ee25f531ab03141112aa41b873cd87f5ec7a8e",
+    "changes": [
+      "motor_commands.elementType: Bool->0"
+    ],
+    "evidence": "10.5 native UI project-open rejected malformed editor JSON;10.6 same static serialization pattern not executed",
+    "sourceContract": "LadderEditorProjectJson.Options has no JsonStringEnumConverter; PlcAggregateSchema uses PlcVariableType enum. Scene ParseSchema separately accepts strings; saved editor nested aggregate does not."
+  }
+]

@@ -1,0 +1,523 @@
+{
+  "schemaVersion": 1,
+  "kind": "rungproof-ladder-project",
+  "id": "example-09-function-selector",
+  "name": "Function Selector - offline reference",
+  "sourceSceneId": "lab-9-04-function-selector",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "main",
+  "nextId": 900,
+  "tags": [
+    {
+      "name": "operand_set_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "operand_set_valid"
+    },
+    {
+      "name": "function_select_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "function_select_valid"
+    },
+    {
+      "name": "calculate_request",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "calculate_request"
+    },
+    {
+      "name": "selected_result_valid",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "selected_result_valid"
+    },
+    {
+      "name": "operand_a",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "operand_a"
+    },
+    {
+      "name": "operand_b",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "operand_b"
+    },
+    {
+      "name": "function_choice",
+      "type": "DInt",
+      "role": "Input",
+      "initial": 0,
+      "binding": "function_choice"
+    },
+    {
+      "name": "selected_result",
+      "type": "DInt",
+      "role": "Output",
+      "initial": 0,
+      "binding": "selected_result"
+    },
+    {
+      "name": "always_scan",
+      "type": "Bool",
+      "role": "Memory",
+      "initial": true,
+      "binding": ""
+    }
+  ],
+  "blocks": [
+    {
+      "id": "main",
+      "name": "Main",
+      "blockType": "OrganizationBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "r4",
+          "label": "Always scan selector",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "fb-selector",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "b4",
+              "contacts": [
+                {
+                  "id": "c4-0",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fb-selector",
+      "name": "FB_Selector",
+      "blockType": "FunctionBlock",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "route-1",
+          "label": "Call only selected Sum",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "fc-sum",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "route-1-b0",
+              "contacts": [
+                {
+                  "id": "route-1-b0-c0",
+                  "variable": "operand_set_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "route-1-b0-c1",
+                  "variable": "function_select_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "route-1-b0-c2",
+                  "variable": "calculate_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "route-1-b0-c3",
+                  "variable": "function_choice",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "1",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "route-2",
+          "label": "Call only selected Product",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": true,
+          "callTarget": "fc-product",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "route-2-b0",
+              "contacts": [
+                {
+                  "id": "route-2-b0-c0",
+                  "variable": "operand_set_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "route-2-b0-c1",
+                  "variable": "function_select_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "route-2-b0-c2",
+                  "variable": "calculate_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "route-2-b0-c3",
+                  "variable": "function_choice",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "2",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "result-valid",
+          "label": "Publish supported selected result validity",
+          "coilVariable": "selected_result_valid",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "result-valid-b1",
+              "contacts": [
+                {
+                  "id": "result-valid-b1-c0",
+                  "variable": "operand_set_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "result-valid-b1-c1",
+                  "variable": "function_select_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "result-valid-b1-c2",
+                  "variable": "calculate_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "result-valid-b1-c3",
+                  "variable": "function_choice",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "1",
+                  "edgeMode": "None"
+                }
+              ]
+            },
+            {
+              "id": "result-valid-b2",
+              "contacts": [
+                {
+                  "id": "result-valid-b2-c0",
+                  "variable": "operand_set_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "result-valid-b2-c1",
+                  "variable": "function_select_valid",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "result-valid-b2-c2",
+                  "variable": "calculate_request",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                },
+                {
+                  "id": "result-valid-b2-c3",
+                  "variable": "function_choice",
+                  "normallyClosed": false,
+                  "isComparison": true,
+                  "compareOperator": "Equal",
+                  "rightOperand": "2",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fc-sum",
+      "name": "FC_Sum",
+      "blockType": "Function",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "math-1",
+          "label": "Sum selected values",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Add",
+          "numericSourceA": "operand_a",
+          "numericSourceB": "operand_b",
+          "numericSourceC": "0",
+          "numericDestination": "selected_result",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "math-1-b0",
+              "contacts": [
+                {
+                  "id": "math-1-b0-c0",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fc-product",
+      "name": "FC_Product",
+      "blockType": "Function",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "math-2",
+          "label": "Product selected values",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "isNumericOperation": true,
+          "numericOperationKind": "Multiply",
+          "numericSourceA": "operand_a",
+          "numericSourceB": "operand_b",
+          "numericSourceC": "0",
+          "numericDestination": "selected_result",
+          "isCall": false,
+          "callTarget": "",
+          "isReturn": false,
+          "isJump": false,
+          "isLabel": false,
+          "programControlLabel": "",
+          "branches": [
+            {
+              "id": "math-2-b0",
+              "contacts": [
+                {
+                  "id": "math-2-b0-c0",
+                  "variable": "always_scan",
+                  "normallyClosed": false,
+                  "isComparison": false,
+                  "compareOperator": "Equal",
+                  "rightOperand": "",
+                  "edgeMode": "None"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-main",
+      "name": "MainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "main"
+    }
+  ],
+  "watchVariables": [
+    "operand_set_valid",
+    "function_select_valid",
+    "calculate_request",
+    "selected_result_valid",
+    "operand_a",
+    "operand_b",
+    "function_choice",
+    "selected_result",
+    "always_scan"
+  ]
+}

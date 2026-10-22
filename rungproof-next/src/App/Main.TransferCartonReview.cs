@@ -59,7 +59,7 @@ public partial class Main
             _virtualController!.Run();
             runtime.ExecuteAction("toggle-count_request");
             _PhysicsProcess(0.04);
-            runtime.ExecuteAction("toggle-pallet_detected");
+            runtime.ExecuteAction("pulse-pallet_detected");
             _PhysicsProcess(0.04);
             GD.Print($"PALLET_COUNT_READOUT_PROBE type={runtime.Points["pallet_count"]?.GetType().Name} value={runtime.Points["pallet_count"]} text={readout?.Text.Replace('\n', '|')}");
             check(Equals(runtime.Points["pallet_count"], 0L) && readout?.Text == "COUNT\n0",
@@ -71,9 +71,7 @@ public partial class Main
             var correct = true;
             for (var count = 1; count <= 5; count++)
             {
-                runtime.ExecuteAction("toggle-pallet_detected"); // release old detection
-                _PhysicsProcess(0.04);
-                runtime.ExecuteAction("toggle-pallet_detected"); // next detection edge
+                runtime.ExecuteAction("pulse-pallet_detected"); // next momentary detection edge
                 _PhysicsProcess(0.04);
                 correct &= Equals(runtime.Points["pallet_count"], (long)count)
                     && readout?.Text == $"COUNT\n{count}"
@@ -82,7 +80,7 @@ public partial class Main
             check(correct, "pallet_count_five_valid_scene_edges_publish_same_scan_count_and_readout");
             _PhysicsProcess(1.0);
             check(Equals(runtime.Points["pallet_count"], 5L) && readout?.Text == "COUNT\n5",
-                "pallet_count_held_detection_keeps_five_on_display");
+                "pallet_count_idle_after_momentary_event_keeps_five_on_display");
             runtime.ExecuteAction("toggle-pallet_type_valid");
             _PhysicsProcess(0.04);
             check(runtime.Points["pallet_count_valid"] is false

@@ -1,0 +1,1 @@
+[{"name": "lab1006-v2-array-tail-bits", "expected": {"motor_commands[8]": true, "motor_commands[9]": true, "startup_sequence_active": false}, "monitor_only": true, "keep_monitor": true}]

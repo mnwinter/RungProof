@@ -23,7 +23,7 @@
     ]
   },
   "id": "tank-high-low",
-  "name": "Water Tank \u2014 High/Low Switches",
+  "name": "Water Tank — High/Low Switches",
   "description": "A discrete level-control example with separate low and high point level switches. Run the scene, then operate the inlet pump and drain to cross each switch elevation.",
   "camera": {
     "position": [
@@ -219,15 +219,15 @@
       },
       {
         "id": "toggle-pump",
-        "label": "Toggle inlet pump (simulated)",
+        "label": "Toggle inlet pump request",
         "type": "toggle",
-        "point": "inlet_pump_run"
+        "point": "pump_request"
       },
       {
         "id": "toggle-drain",
-        "label": "Toggle drain valve (simulated)",
+        "label": "Toggle drain request",
         "type": "toggle",
-        "point": "drain_valve_open"
+        "point": "drain_request"
       },
       {
         "id": "stop-simulation",
@@ -273,6 +273,20 @@
         "owner": "PC",
         "initial": false,
         "purpose": "Simulator high-level switch feedback read by the PLC."
+      },
+      {
+        "name": "pump_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Maintained local operator request. Learner ladder owns the actual pump/drain outputs."
+      },
+      {
+        "name": "drain_request",
+        "type": "BOOL",
+        "owner": "PC",
+        "initial": false,
+        "purpose": "Maintained local operator request. Learner ladder owns the actual pump/drain outputs."
       }
     ],
     "tankId": "water_tank_hl",
@@ -290,8 +304,55 @@
         "point": "drain_valve_open",
         "equipmentId": "hl_drain_valve",
         "mode": "position"
+      },
+      {
+        "point": "pump_request",
+        "equipmentId": "hl_pump_station",
+        "mode": "switch"
+      },
+      {
+        "point": "drain_request",
+        "equipmentId": "hl_drain_station",
+        "mode": "switch"
       }
-    ]
+    ],
+    "rules": [
+      {
+        "when": {
+          "pump_request": false
+        },
+        "set": {
+          "inlet_pump_run": false
+        }
+      },
+      {
+        "when": {
+          "pump_request": true,
+          "drain_request": false
+        },
+        "set": {
+          "inlet_pump_run": true
+        }
+      },
+      {
+        "when": {
+          "drain_request": false
+        },
+        "set": {
+          "drain_valve_open": false
+        }
+      },
+      {
+        "when": {
+          "drain_request": true
+        },
+        "set": {
+          "inlet_pump_run": false,
+          "drain_valve_open": true
+        }
+      }
+    ],
+    "manualTankRequestsRequireRun": true
   },
   "migration": {
     "sourceFile": "prototype/scenes/tank-high-low.json",
@@ -333,5 +394,49 @@
     "visualStatus": "mapped",
     "productionApproved": false,
     "reason": "Production approval requires every reusable asset and the complete scene to pass visual review."
+  },
+  "verification": {
+    "cases": [
+      {
+        "name": "maintained manual request cannot restore output after Stop",
+        "actions": [
+          "run-simulation",
+          "toggle-pump",
+          "stop-simulation"
+        ],
+        "expect": {
+          "pump_request": true,
+          "inlet_pump_run": false,
+          "drain_valve_open": false
+        }
+      },
+      {
+        "name": "Run reevaluates retained manual request after Stop",
+        "actions": [
+          "run-simulation",
+          "toggle-pump",
+          "stop-simulation",
+          "run-simulation"
+        ],
+        "expect": {
+          "pump_request": true,
+          "inlet_pump_run": true,
+          "drain_valve_open": false
+        }
+      },
+      {
+        "name": "drain request stays maintained but command stays off after Stop",
+        "actions": [
+          "run-simulation",
+          "toggle-drain",
+          "stop-simulation"
+        ],
+        "expect": {
+          "drain_request": true,
+          "inlet_pump_run": false,
+          "drain_valve_open": false
+        }
+      }
+    ]
   }
 }

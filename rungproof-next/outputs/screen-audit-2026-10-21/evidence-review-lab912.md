@@ -1,0 +1,13 @@
+# Lab 9.12 independent native review
+
+Reviewed13r1allocation cases, sixr2guard/lifecycle cases, five meter checkpoints and native Health (25frames), using four lab912-review sheets plus lab912-meter-review.png. Actual cars/connectors, charger cabinets, status stacks and native Signals reviewed. Loaded learner fixture scope only; no reviewer UI/backend operations.
+
+Reset empties both physical bays. A-occupied presents one car; plugging visibly attaches its connector; occupation/plug/authorization without ready allocate0. A-ready allocates/delivers6kW and lights the charging indication. With Bfullyeligible, two cars/connectors are present and both allocations/delivery are3kW. Loss of Aauthorization yields A0/B6; loss of Bready then yields0/0; Aauthorization restore gives6/0; Bready restore3/3. Stop clears both allocations/delivery/charge enables and physical indications; Run republishes3/3. Total captured allocation never exceeds6kW.
+
+Both meter paths show native accumulation: Aenergy_count3 during A-only metering,6 with Bnewlyeligible; Benergy_count1/energy_kwh.001 atAauthloss,3/.003 atBready loss,4/.004 afterRun, and107/.107 inlaterguardretained. Bphysical meter ledger is separately displayed (e.g. meter_pulse_count107 and meter_energy_kwh.107183). Exact projected charger display digits are too small for numeric claims.
+
+Dedicated A meter checkpoints show beforeStop chargeTrue/delivered3, PLCcount20/.020kWh and meter_pulse_count20/meter_energy_kwh.0202167. Stop early/held clears PLC-visiblecount/kWh0, delivery/sessionoff, but preserves physical ledger count20 and .0206667kWh unchanged across1.2 seconds. Run early republishes PLCcount20/.020 while ledger20/.0207333; later count21/.021 and ledger21/.0215833. No duplicate pulse is visible at republish. The early/late stopped ledger equality supports bounded no-energy accrual while stopped, not calibration accuracy or long-term billing integrity. Units are kWh (.0206667kWh is about20.67Wh).
+
+Two active disconnect/removal attempts produce explicit native guard history: 'Unplug before vehicle removal; insert only in an occupied bay, with the charge command and allocation off'. Subsequent guard-retained frame keeps the occupied/connected charging state. After both authorizations clear, unplug actions make both inserted/connectedFalse; removal empties both physical bays. Reset clears both counts/ledgers; fresh B-only repeat physically presents Bcar/connector and allocates/delivers6kW whileA0.
+
+No new issue. Full eligibility truth tables, simultaneous competing requests, meter precision/pulse timing, long-run reconciliation, every guard permutation and connector animation continuity remain unproven. No whole-scene PASS.

@@ -1,0 +1,1 @@
+[{"name": "lab509-r1-start-forward", "click": [986, 505], "expected": {"conveyor_run": true, "conveyor_reverse": false, "pause_clear": false}, "monitor_only": true, "keep_monitor": true}]

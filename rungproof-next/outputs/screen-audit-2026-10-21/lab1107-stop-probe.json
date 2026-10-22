@@ -1,0 +1,1 @@
+[{"click": [664, 438], "wait": 0.3, "capture": "lab1107-stop-retry"}, {"click": [1280, 101], "capture": "lab1107-stop-health"}, {"click": [1418, 101], "wait": 0.2}]

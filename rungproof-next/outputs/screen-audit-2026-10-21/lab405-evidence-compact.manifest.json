@@ -1,0 +1,125 @@
+{
+  "scope": "Derived preserved native image pixels only; no input/pass assertions",
+  "display_roi": [
+    840,
+    450,
+    1035,
+    555
+  ],
+  "display_scale": 1.6,
+  "lamp_roi": [
+    795,
+    315,
+    845,
+    415
+  ],
+  "points_roi": [
+    1235,
+    145,
+    1595,
+    310
+  ],
+  "runtime_roi": [
+    1420,
+    10,
+    1595,
+    65
+  ],
+  "cases": [
+    {
+      "case": "lab405-zero",
+      "source": "lab405-zero.png",
+      "sha256": "48ae884d10b42148b4dcf065c8832999f3a2d5aa55cd1fce4f77d920b292e530"
+    },
+    {
+      "case": "lab405-a1",
+      "source": "lab405-a1.png",
+      "sha256": "5155b3e8cbfd001ed1f151e9834f252a8b06a94d61e42f4ab2bc5360b057690c"
+    },
+    {
+      "case": "lab405-a2",
+      "source": "lab405-a2.png",
+      "sha256": "559056c1e244834bf7b201b056de3144ee6cdf4ec6538e7f0d2b1612ceb36084"
+    },
+    {
+      "case": "lab405-b1",
+      "source": "lab405-b1.png",
+      "sha256": "60c7712e303f7ee2255a414784f4035c6b9da95fbc5fdc525c0b1b1c50a1a7c1"
+    },
+    {
+      "case": "lab405-b2",
+      "source": "lab405-b2.png",
+      "sha256": "3721c11d1fcdc87464983a08ebf463eaec5ff1303dab7bd8151f65d38f0ce907"
+    },
+    {
+      "case": "lab405-b3-lower",
+      "source": "lab405-b3-lower.png",
+      "sha256": "4a6321fd3fbaa3f214fc19c1cea0a58c03c538639978afc9fd540fda41d855ee"
+    },
+    {
+      "case": "lab405-a3-upper",
+      "source": "lab405-a3-upper.png",
+      "sha256": "67aaa07ab0711ad030bddeaad5c7fffe95a5385c47769df9b1cf85794858cc03"
+    },
+    {
+      "case": "lab405-b4-upper",
+      "source": "lab405-b4-upper.png",
+      "sha256": "ab12ea3a55cc44e9c50ccaff82c81e001e475b5faef7d07873aa40c7752639f5"
+    },
+    {
+      "case": "lab405-a4-outside",
+      "source": "lab405-a4-outside.png",
+      "sha256": "bda6db4df9ee022f610af09cd42e131d40ce5d9faa3f2a4d9fba24ebe3dab8fa"
+    },
+    {
+      "case": "lab405-reset",
+      "source": "lab405-reset.png",
+      "sha256": "77219958fe26b3a805f55d18acc9f4d584ed976f2cf1c4b15eed9c0a4b646bb4"
+    },
+    {
+      "case": "lab405-reverse-b1",
+      "source": "lab405-reverse-b1.png",
+      "sha256": "aa48af61f27b2cdb2754b978a996fcbf2f68621914666ae0d9add4e03920b7d6"
+    },
+    {
+      "case": "lab405-reverse-b2",
+      "source": "lab405-reverse-b2.png",
+      "sha256": "a6190077bf36f8dacf043c418bf1ec9e317e416d4ab5e355ced631a9e69884fb"
+    },
+    {
+      "case": "lab405-reverse-b3",
+      "source": "lab405-reverse-b3.png",
+      "sha256": "313ddd48e693db9c2392e3b0a1ba30e142b81aa306fcb9121e6c3adeb8381356"
+    },
+    {
+      "case": "lab405-reverse-a1",
+      "source": "lab405-reverse-a1.png",
+      "sha256": "81bbac6ad8b5da349b66b55062860cbc79d514e03eb62b3fc374b03e71ec52df"
+    },
+    {
+      "case": "lab405-reverse-a2",
+      "source": "lab405-reverse-a2.png",
+      "sha256": "ab687689ce4be597930995ca814c3560b5a027915bbedf89a229ea422fb863bf"
+    },
+    {
+      "case": "lab405-app-stop",
+      "source": "lab405-app-stop.png",
+      "sha256": "86424e32079fd180ec29aae7e505d4775e96f9dc053241562cbedb5d2d290676"
+    },
+    {
+      "case": "lab405-app-run-retained",
+      "source": "lab405-app-run-retained.png",
+      "sha256": "fa4758b1572d482cce0258826e67943011046d9b3a92c677ef80159678713736"
+    },
+    {
+      "case": "lab405-app-reset",
+      "source": "lab405-app-reset.png",
+      "sha256": "9a93256d91247694117dbd7e3b962c6d60ca13d9a309f0d31d67e03255f4a6e3"
+    },
+    {
+      "case": "lab405-reset-run",
+      "source": "lab405-reset-run.png",
+      "sha256": "c09906e5a942ba966044f2c457a5f83284278beac732d07041423ab97d7aa574"
+    }
+  ]
+}

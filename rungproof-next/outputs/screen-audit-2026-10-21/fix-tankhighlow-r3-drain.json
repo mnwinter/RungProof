@@ -1,0 +1,1 @@
+[{"click":[422,39],"wait":0.4},{"click":[485,146],"wait":0.4},{"wheel":[1000,550,120]},{"wheel":[1000,550,120]},{"wheel":[1000,550,120]},{"click":[1090,653],"wait":1,"capture":"fix-tankhighlow-r3-drain"}]

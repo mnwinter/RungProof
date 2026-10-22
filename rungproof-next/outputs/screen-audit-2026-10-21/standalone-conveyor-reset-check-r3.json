@@ -1,0 +1,1 @@
+[{"name": "standalone-conveyor-r3-reset", "monitor_only": true, "keep_monitor": true, "expected": {"estop_ok": true, "conveyor_run": false, "parts_completed": 0}}]

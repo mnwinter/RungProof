@@ -1,0 +1,1 @@
+[{"click": [422, 39], "wait": 0.4}, {"click": [485, 146], "wait": 0.4}, {"wheel": [850, 430, 120]}, {"wheel": [850, 430, 120]}, {"wheel": [850, 430, 120]}, {"click": [529, 418], "wait": 0.7, "capture": "standalone-gallery-r3-repeat-on-a"}, {"wait": 0.37, "capture": "standalone-gallery-r3-repeat-on-b"}]

@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 9,
+  "kind": "rungproof-ladder-project",
+  "id": "qa-learner-lab-10-05-motor-struct-data",
+  "name": "QA_LEARNER_Lab1005",
+  "sourceSceneId": "lab-10-05-motor-struct-data",
+  "scanPeriodMs": 20,
+  "activeBlockIndex": 0,
+  "entryBlockId": "fixture-lab1005-main",
+  "nextId": 500,
+  "tags": [
+    {
+      "symbolId": "fixture-lab1005-sym-0",
+      "name": "motor_record_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "motor_record_valid",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    },
+    {
+      "symbolId": "fixture-lab1005-sym-1",
+      "name": "temperature_valid",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "temperature_valid",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    },
+    {
+      "symbolId": "fixture-lab1005-sym-2",
+      "name": "alarm_clear",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "alarm_clear",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    },
+    {
+      "symbolId": "fixture-lab1005-sym-3",
+      "name": "motor_enable",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "motor_enable",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    },
+    {
+      "symbolId": "fixture-lab1005-sym-4",
+      "name": "record_ready",
+      "type": "Bool",
+      "role": "Output",
+      "initial": false,
+      "binding": "record_ready",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    },
+    {
+      "symbolId": "fixture-lab1005-sym-5",
+      "name": "motor_feedback",
+      "type": "Struct",
+      "role": "Input",
+      "initial": {
+        "record_valid": false,
+        "temperature": 0.0,
+        "power": 0.0,
+        "temperature_valid": false,
+        "alarm_clear": false,
+        "power_valid": false
+      },
+      "binding": "motor_feedback",
+      "aggregate": {
+        "fields": [
+          {
+            "name": "record_valid",
+            "type": 0
+          },
+          {
+            "name": "temperature_valid",
+            "type": 0
+          },
+          {
+            "name": "alarm_clear",
+            "type": 0
+          },
+          {
+            "name": "power_valid",
+            "type": 0
+          },
+          {
+            "name": "power",
+            "type": 3
+          },
+          {
+            "name": "temperature",
+            "type": 3
+          }
+        ]
+      },
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    },
+    {
+      "symbolId": "fixture-lab1005-sym-6",
+      "name": "motor_command",
+      "type": "Struct",
+      "role": "Output",
+      "initial": {
+        "record_ready": false,
+        "enable": false
+      },
+      "binding": "motor_command",
+      "aggregate": {
+        "fields": [
+          {
+            "name": "enable",
+            "type": 0
+          },
+          {
+            "name": "record_ready",
+            "type": 0
+          }
+        ]
+      },
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Disposable QA learner project; no physical address."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "fixture-lab1005-main",
+      "name": "QA_LEARNER_Lab1005",
+      "blockType": "OrganizationBlock",
+      "semanticMode": "Legacy",
+      "interface": [],
+      "rungs": [
+        {
+          "id": "fixture-lab1005-rung-1",
+          "label": "STRUCT field permissives to enable",
+          "coilVariable": "motor_command.enable",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "fixture-lab1005-series-1",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "fixture-lab1005-node-1",
+                "kind": 0,
+                "variable": "motor_feedback.record_valid",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "fixture-lab1005-node-2",
+                "kind": 0,
+                "variable": "motor_feedback.temperature_valid",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "fixture-lab1005-node-3",
+                "kind": 0,
+                "variable": "motor_feedback.alarm_clear",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "fixture-lab1005-term-1",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "fixture-lab1005-rung-2",
+          "label": "STRUCT field permissives to record_ready",
+          "coilVariable": "motor_command.record_ready",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "fixture-lab1005-series-2",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "fixture-lab1005-node-4",
+                "kind": 0,
+                "variable": "motor_feedback.record_valid",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "fixture-lab1005-node-5",
+                "kind": 0,
+                "variable": "motor_feedback.temperature_valid",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              },
+              {
+                "id": "fixture-lab1005-node-6",
+                "kind": 0,
+                "variable": "motor_feedback.alarm_clear",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "fixture-lab1005-term-2",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "fixture-lab1005-task",
+      "name": "LearnerMainTask",
+      "kind": "Continuous",
+      "periodMs": 20,
+      "priority": 10,
+      "entryBlock": "fixture-lab1005-main"
+    }
+  ],
+  "watchVariables": [
+    "motor_record_valid",
+    "temperature_valid",
+    "alarm_clear",
+    "motor_enable",
+    "record_ready",
+    "motor_feedback",
+    "motor_command"
+  ],
+  "watchTables": [
+    {
+      "id": "fixture-lab1005-watch",
+      "name": "QA fixture watch",
+      "variables": [
+        "motor_record_valid",
+        "temperature_valid",
+        "alarm_clear",
+        "motor_enable",
+        "record_ready",
+        "motor_feedback",
+        "motor_command"
+      ],
+      "rows": [
+        {
+          "id": "fixture-lab1005-watch-0",
+          "referenceKind": "Symbolic",
+          "reference": "motor_record_valid",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        },
+        {
+          "id": "fixture-lab1005-watch-1",
+          "referenceKind": "Symbolic",
+          "reference": "temperature_valid",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        },
+        {
+          "id": "fixture-lab1005-watch-2",
+          "referenceKind": "Symbolic",
+          "reference": "alarm_clear",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        },
+        {
+          "id": "fixture-lab1005-watch-3",
+          "referenceKind": "Symbolic",
+          "reference": "motor_enable",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        },
+        {
+          "id": "fixture-lab1005-watch-4",
+          "referenceKind": "Symbolic",
+          "reference": "record_ready",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        },
+        {
+          "id": "fixture-lab1005-watch-5",
+          "referenceKind": "Symbolic",
+          "reference": "motor_feedback",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        },
+        {
+          "id": "fixture-lab1005-watch-6",
+          "referenceKind": "Symbolic",
+          "reference": "motor_command",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": "Observe only; do not force."
+        }
+      ]
+    }
+  ],
+  "activeWatchTableIndex": 0,
+  "instances": [],
+  "tagTables": [
+    "Default tag table",
+    "SceneIO"
+  ],
+  "userConstants": []
+}

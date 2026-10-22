@@ -1,0 +1,1 @@
+[{"name":"fix-plant212-r3-repeat-signals","expected":{"top_limit":false,"bottom_limit":true,"lift_up":false,"lift_down":false,"cycle_complete":true}},{"name":"fix-plant212-r3-reset-signals","clicks":[[496,39],[525,125]],"wait":0.5,"expected":{"top_limit":false,"bottom_limit":true,"lift_up":false,"lift_down":false,"cycle_complete":false}}]

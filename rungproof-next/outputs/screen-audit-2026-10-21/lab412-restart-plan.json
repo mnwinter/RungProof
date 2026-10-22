@@ -1,0 +1,1 @@
+[{"click": [496, 39], "wait": 0.01}, {"click": [525, 125], "capture": "lab412-reset-cleared"}, {"click": [496, 39], "wait": 0.01}, {"click": [525, 80]}, {"click": [1015, 584], "wait": 0.05}]

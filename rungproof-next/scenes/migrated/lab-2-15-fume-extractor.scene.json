@@ -102,6 +102,7 @@
   ],
   "simulation": {
     "type": "booleanPanel",
+    "fumeSpeedFeedback": true,
     "points": [
       {
         "name": "hood_light_request",

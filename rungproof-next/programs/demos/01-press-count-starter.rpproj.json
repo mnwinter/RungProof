@@ -7,7 +7,7 @@
   "scanPeriodMs": 20,
   "activeBlockIndex": 0,
   "entryBlockId": "block-1",
-  "nextId": 9,
+  "nextId": 14,
   "tags": [
     {
       "symbolId": "",
@@ -18,9 +18,22 @@
       "binding": "pulse_received",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
-      "comment": ""
+      "comment": "One scan pulse for each learner-operated press event."
+    },
+    {
+      "symbolId": "",
+      "name": "reset_pressed",
+      "type": "Bool",
+      "role": "Input",
+      "initial": false,
+      "binding": "reset_pressed",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "Machine-level reset pushbutton input for the PLC counter."
     },
     {
       "symbolId": "",
@@ -31,9 +44,22 @@
       "binding": "threshold_lamp",
       "aggregate": null,
       "enumMembers": null,
-      "tagTable": "Default tag table",
+      "tagTable": "SceneIO",
       "address": "",
-      "comment": ""
+      "comment": "PLC output energized when the counter reaches its preset of three."
+    },
+    {
+      "symbolId": "",
+      "name": "press_count_value",
+      "type": "DInt",
+      "role": "Output",
+      "initial": 0,
+      "binding": "press_count_value",
+      "aggregate": null,
+      "enumMembers": null,
+      "tagTable": "SceneIO",
+      "address": "",
+      "comment": "PLC-owned numeric status published from the CTU accumulator for the scene display."
     },
     {
       "symbolId": "",
@@ -46,20 +72,7 @@
       "enumMembers": null,
       "tagTable": "Default tag table",
       "address": "",
-      "comment": ""
-    },
-    {
-      "symbolId": "",
-      "name": "lamp_enable",
-      "type": "Bool",
-      "role": "Memory",
-      "initial": false,
-      "binding": "",
-      "aggregate": null,
-      "enumMembers": null,
-      "tagTable": "Default tag table",
-      "address": "",
-      "comment": ""
+      "comment": "CTU state: accumulated press count and done status."
     }
   ],
   "blocks": [
@@ -148,6 +161,141 @@
         },
         {
           "id": "rung-6",
+          "label": "Machine Reset clears the count",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": true,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "press_count",
+          "counterPreset": 3,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": {
+            "number": 1,
+            "name": "IEC_Counter_0_DB"
+          },
+          "isNumericOperation": false,
+          "numericOperationKind": "Move",
+          "numericSourceA": "0",
+          "numericSourceB": "0",
+          "numericSourceC": "0",
+          "numericDestination": "",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-7",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [
+              {
+                "id": "contact-8",
+                "kind": 0,
+                "variable": "reset_pressed",
+                "normallyClosed": false,
+                "children": null,
+                "compareOperator": 0,
+                "rightOperand": "",
+                "edgeMode": 0,
+                "comparisonValueType": 0,
+                "edgeMemoryOperand": null,
+                "isLeaf": true
+              }
+            ],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-6-counter-reset",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-9",
+          "label": "Publish current press count",
+          "coilVariable": "",
+          "coilMode": "Assign",
+          "timerVariable": "",
+          "timerPresetMs": 1000,
+          "timerKind": "OnDelay",
+          "timerInstanceDataBlock": null,
+          "isTimer": false,
+          "isTimerReset": false,
+          "isCounter": false,
+          "isCounterReset": false,
+          "isCounterLoad": false,
+          "counterKind": "CountUp",
+          "counterVariable": "",
+          "counterPreset": 10,
+          "counterValueType": "Int",
+          "counterInstanceDataBlock": null,
+          "isNumericOperation": true,
+          "numericOperationKind": "Move",
+          "numericSourceA": "press_count.ACC",
+          "numericSourceB": "",
+          "numericSourceC": "0",
+          "numericDestination": "press_count_value",
+          "numericInputDataType": null,
+          "numericOutputDataType": null,
+          "isCall": false,
+          "callTarget": "",
+          "callSemanticMode": "Legacy",
+          "callInstanceId": "",
+          "callBindings": [],
+          "isReturn": false,
+          "returnValueKind": "Rlo",
+          "returnValueOperand": "",
+          "isJump": false,
+          "isLabel": false,
+          "networkLabelId": "",
+          "networkLabelName": "",
+          "programControlLabel": "",
+          "root": {
+            "id": "branch-10",
+            "kind": 2,
+            "variable": "",
+            "normallyClosed": false,
+            "children": [],
+            "compareOperator": 0,
+            "rightOperand": "",
+            "edgeMode": 0,
+            "comparisonValueType": 0,
+            "edgeMemoryOperand": null,
+            "isLeaf": false
+          },
+          "terminalActionId": "rung-9-numeric",
+          "hasTerminalAction": true,
+          "hasEmptyInstructionPlaceholder": false,
+          "legacyEmptyBranchSemantics": false,
+          "branches": []
+        },
+        {
+          "id": "rung-11",
           "label": "Turn on threshold lamp",
           "coilVariable": "threshold_lamp",
           "coilMode": "Assign",
@@ -187,13 +335,13 @@
           "networkLabelName": "",
           "programControlLabel": "",
           "root": {
-            "id": "branch-7",
+            "id": "branch-12",
             "kind": 2,
             "variable": "",
             "normallyClosed": false,
             "children": [
               {
-                "id": "contact-8",
+                "id": "contact-13",
                 "kind": 0,
                 "variable": "press_count.DN",
                 "normallyClosed": false,
@@ -213,7 +361,7 @@
             "edgeMemoryOperand": null,
             "isLeaf": false
           },
-          "terminalActionId": "rung-6-coil",
+          "terminalActionId": "rung-11-coil",
           "hasTerminalAction": true,
           "hasEmptyInstructionPlaceholder": false,
           "legacyEmptyBranchSemantics": false,
@@ -234,7 +382,9 @@
   ],
   "watchVariables": [
     "pulse_received",
+    "reset_pressed",
     "press_count",
+    "press_count_value",
     "threshold_lamp"
   ],
   "watchTables": [
@@ -243,7 +393,9 @@
       "name": "Watch table 1",
       "variables": [
         "pulse_received",
+        "reset_pressed",
         "press_count",
+        "press_count_value",
         "threshold_lamp"
       ],
       "rows": [
@@ -258,13 +410,29 @@
         {
           "id": "demo-1-press-count-watch-1-row-2",
           "referenceKind": "Symbolic",
-          "reference": "press_count",
+          "reference": "reset_pressed",
           "displayFormat": "Auto",
           "modifyValue": null,
           "comment": ""
         },
         {
           "id": "demo-1-press-count-watch-1-row-3",
+          "referenceKind": "Symbolic",
+          "reference": "press_count",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-1-press-count-watch-1-row-4",
+          "referenceKind": "Symbolic",
+          "reference": "press_count_value",
+          "displayFormat": "Auto",
+          "modifyValue": null,
+          "comment": ""
+        },
+        {
+          "id": "demo-1-press-count-watch-1-row-5",
           "referenceKind": "Symbolic",
           "reference": "threshold_lamp",
           "displayFormat": "Auto",
@@ -277,7 +445,8 @@
   "activeWatchTableIndex": 0,
   "instances": [],
   "tagTables": [
-    "Default tag table"
+    "Default tag table",
+    "SceneIO"
   ],
   "userConstants": []
 }

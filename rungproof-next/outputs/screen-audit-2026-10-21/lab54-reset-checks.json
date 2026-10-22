@@ -1,0 +1,1 @@
+[{"name": "lab54-reset-check", "expected": {"alternate_enable": false, "lamp_a": false, "lamp_b": false}, "monitor_only": true, "keep_monitor": true}]

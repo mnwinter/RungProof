@@ -1,0 +1,1 @@
+[{"name":"newbinding213-r1-start-signals","expected":{"conveyor_run":true,"jug_present":false,"high_level_probe":false,"fill_valve_open":false,"fill_skid_run":false},"keep_monitor":true}]

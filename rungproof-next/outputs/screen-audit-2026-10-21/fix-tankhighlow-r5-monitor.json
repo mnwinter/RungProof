@@ -1,0 +1,1 @@
+[{"name":"fix-tankhighlow-r5-high-held-on-run","monitor_only":true,"expected":{"pump_request":true,"high_level_switch":true,"inlet_pump_run":false,"drain_valve_open":false}},{"name":"fix-tankhighlow-r5-reset-signals","clicks":[[496,39],[525,125]],"wait":0.4,"expected":{"pump_request":false,"drain_request":false,"inlet_pump_run":false,"drain_valve_open":false,"tank_level":50}}]

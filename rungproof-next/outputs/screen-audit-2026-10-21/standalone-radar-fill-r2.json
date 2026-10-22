@@ -1,0 +1,1 @@
+[{"click": [1094, 728]}, {"click": [1070, 717], "wait": 2, "capture": "standalone-radar-r2-fill-before-stop"}, {"click": [496, 39], "wait": 0.4}, {"click": [525, 102], "wait": 0.5, "capture": "standalone-radar-r2-stop"}, {"wait": 3, "capture": "standalone-radar-r2-stop-held"}]

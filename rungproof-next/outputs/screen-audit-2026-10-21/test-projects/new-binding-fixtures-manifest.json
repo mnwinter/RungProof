@@ -1,0 +1,44 @@
+[
+  {
+    "file": "fixture-new-binding-lab-2-11.rpproj.json",
+    "sourceSceneId": "lab-2-11-inbound-tote-stop",
+    "sha256": "e7ee045e54a463a74276687977b621122e85a214162d86e62ea392910da0a80d",
+    "limitations": "No exit sensor exists; Reset ends/rearms fixture. No completion claim. Await actual scanner/scan_complete feedback; never synthesize it."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-12.rpproj.json",
+    "sourceSceneId": "lab-2-12-assembly-lift",
+    "sha256": "ca6ff4854993b0b79978a7c9f07d0d6a70bf1573afc9d7d5c8765a379be92d1a",
+    "limitations": "Endpoints must come from actual plant PC feedback; if static, do not force them. Simultaneous requests give LOWER precedence only after RAISE clears; QA directional policy."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-13.rpproj.json",
+    "sourceSceneId": "lab-2-13-coolant-jug-fill",
+    "sha256": "45a67ab3a3d52b919b9d76d284a2cdf2fbcd549673bf7882e8da3f8489a5a06c",
+    "limitations": "Reset between cycles. 5-second discharge is explicit QA parameter, not scene specification. No fabricated jug/probe/fill percentage."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-16.rpproj.json",
+    "sourceSceneId": "lab-2-16-safe-drill",
+    "sha256": "e3ed9e26e0c0d5417a6e5cef979b78bae613f06179d298a007edadae75c5f983",
+    "limitations": "Normal feed-to-bottom and hand-release cancellation only; no retract command exists. Full down/up completion cannot be expressed from declared PLC output alone without plant behavior evidence. New START required after loss."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-19.rpproj.json",
+    "sourceSceneId": "lab-2-19-service-door",
+    "sha256": "6c5e3223b1656a3e62161f7122a7eb189ab2da498ab05b2eb10b20307ab60ce5",
+    "limitations": "NC polarity follows exact scene declarations: false at endpoint. Requires actual loaded-controller feedback/motion. No state writes or reference sequence."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-23.rpproj.json",
+    "sourceSceneId": "lab-2-23-parcel-sorter",
+    "sha256": "a98f13a9fb9aa11dac0ed8e6e41df9ceedd72fc4d5c22d2faada7d6187cd6f21",
+    "limitations": "Route policy exact legacy targets0/0.5/1; only real size sensors select. No timer-generated parcel detections/counts; Reset rearm. If sensors never present, output enables but batch completion unproven."
+  },
+  {
+    "file": "fixture-new-binding-lab-2-24.rpproj.json",
+    "sourceSceneId": "lab-2-24-robot-cnc",
+    "sha256": "40d64a560449cb57160cfcdad1fb99633b7a173960c47dc19275756364537134",
+    "limitations": "BOUNDARY fixture only: legitimate START-to-pickup infeed. No PLC positions/grip/door inputs or loading feedback declared; cannot invent safe robot/CNC full sequence. Do not credit full completion."
+  }
+]

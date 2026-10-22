@@ -1,0 +1,1 @@
+[{"name": "lab508-r1-raised-check", "expected": {"bridge_raised": true, "bridge_angle": 70, "bridge_raise": false, "bridge_lower": false, "barriers_closed": true, "traffic_stop": true, "traffic_release": false}, "monitor_only": true, "keep_monitor": true}]

@@ -58,7 +58,7 @@ Directly launching an incomplete package can crash or display a native error
 dialog: missing-assembly and missing-PCK probes reproduced these failures.
 Graceful direct-EXE recovery remains unqualified.
 
-1. Select **START DEMO 1**, then **Run**.
+1. RungProof opens on Demo 1; select **APP RUN**.
 2. Press the count control three times; the lamp should turn green.
 3. Select **Stop**, then **Reset**; outputs/count should return to their initial state.
 4. Use **Scenario** to select Demos 2–5, which now appear first.

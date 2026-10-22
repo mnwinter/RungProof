@@ -1,0 +1,87 @@
+[
+  {
+    "case": "lab406-zero",
+    "source": "lab406-zero.png",
+    "sha256": "8edc1a5729123eb434790c83ad1f29586528d5db25bd967418594058fdc341eb"
+  },
+  {
+    "case": "lab406-a1",
+    "source": "lab406-a1.png",
+    "sha256": "ca8414905cf9abd05b8ac55e2abc035519ca2ff7e0649f7cb4afd1d075b4ecb9"
+  },
+  {
+    "case": "lab406-a2",
+    "source": "lab406-a2.png",
+    "sha256": "d6baa29688d94a9c77bca856f51c593a6467d2efe053cd67e37892e95c3ac413"
+  },
+  {
+    "case": "lab406-b1",
+    "source": "lab406-b1.png",
+    "sha256": "fe9a5f021ebdac54b276da26c41a72dac148471dd990301c7653197b67e5b78e"
+  },
+  {
+    "case": "lab406-b2-not-yet",
+    "source": "lab406-b2-not-yet.png",
+    "sha256": "7ee7c58d9ba9ce23556ae83760d31ac596f96d3e4798292832a3a0d8b19c58f6"
+  },
+  {
+    "case": "lab406-b3-exact",
+    "source": "lab406-b3-exact.png",
+    "sha256": "a3976d735677a9e606ecb562bf0d6250ef6652943382ac874268623705cb87ad"
+  },
+  {
+    "case": "lab406-a3-exceeded",
+    "source": "lab406-a3-exceeded.png",
+    "sha256": "054cb5eb9e1052a9f71b8a3a412f291cfb62a34718aa8355ed264625d45dcf20"
+  },
+  {
+    "case": "lab406-reset",
+    "source": "lab406-reset.png",
+    "sha256": "d819ffc535bc013e074d33b04554c3347f08f39ba993295cefd590114dd8b62f"
+  },
+  {
+    "case": "lab406-reverse-b1",
+    "source": "lab406-reverse-b1.png",
+    "sha256": "dfaec5981a0bfbc2d3d365c8d663761fc5960cd0e3ab35b0380902172b951ed8"
+  },
+  {
+    "case": "lab406-reverse-b2",
+    "source": "lab406-reverse-b2.png",
+    "sha256": "09cab55d6e062bb31742b12b256037f777f5aa569716a74bf7327959bd7562a4"
+  },
+  {
+    "case": "lab406-reverse-b3",
+    "source": "lab406-reverse-b3.png",
+    "sha256": "536f391b80fe711ca118bb1a7ffc860bbb47091a5fe398dcf25ec83dc7d96c9d"
+  },
+  {
+    "case": "lab406-reverse-a1",
+    "source": "lab406-reverse-a1.png",
+    "sha256": "6385ba3b04f732468b3a82da65ea71b657e3edda93648f4ac345507617c094c2"
+  },
+  {
+    "case": "lab406-reverse-a2",
+    "source": "lab406-reverse-a2.png",
+    "sha256": "68ab5af9d2f844d055d6ec521a9f91cc81816a8f8748919c00935e35d8d1558a"
+  },
+  {
+    "case": "lab406-app-stop",
+    "source": "lab406-app-stop.png",
+    "sha256": "6a9d0ba0378ee7b1b030e329f343f9de02d3fb9618a31213e2968ea3650f7d14"
+  },
+  {
+    "case": "lab406-app-run-retained",
+    "source": "lab406-app-run-retained.png",
+    "sha256": "8d483ed458dc251a793eae4806afa8dd14a758b59fa35b5dc0ae4ff8aa8fefc6"
+  },
+  {
+    "case": "lab406-app-reset",
+    "source": "lab406-app-reset.png",
+    "sha256": "56be63773352f84d61e1fed718fb028eb31ab1574e207b7d2bea2fe3df2b567e"
+  },
+  {
+    "case": "lab406-reset-run",
+    "source": "lab406-reset-run.png",
+    "sha256": "7c77488bc2c3436b09572b0091071436ee2cca8a4b2f774e5c548d3b391df0f9"
+  }
+]

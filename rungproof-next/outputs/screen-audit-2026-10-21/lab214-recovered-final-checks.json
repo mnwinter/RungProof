@@ -1,0 +1,1 @@
+[{"name": "lab214-recovered-final", "expected": {"cycle_complete": true, "low_float_active": true, "high_float_active": false, "pump_run": false, "cycle_enable": true}, "monitor_only": true, "keep_monitor": true}]

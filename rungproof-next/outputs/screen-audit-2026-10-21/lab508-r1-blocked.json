@@ -1,0 +1,1 @@
+[{"name": "lab508-r1-open-without-stopped", "expected": {"bridge_request": true, "traffic_stopped": false, "barriers_closed": true, "bridge_home": true, "bridge_angle": 0, "bridge_raise": false, "traffic_stop": true, "traffic_release": false}, "monitor_only": true, "keep_monitor": true}]
