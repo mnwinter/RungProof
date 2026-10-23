@@ -10,7 +10,14 @@ Pin the toolchain before authoring production assets:
 5. Extract the full Godot .NET bundle, including its console executable and
    `GodotSharp` folder, into the Godot directory below. Install/extract the
    x64 .NET SDK into `.tools/dotnet`; a runtime-only installation cannot build.
-6. Double-click `RUN-RUNGPROOF-NEXT.cmd`. It restores NuGet packages, builds
+6. Install/restore **PowerShell7 (`pwsh.exe`) on PATH** before using the normal
+   launcher. `RungProof.Next.csproj` invokes it twice before CoreCompile for UTF8
+   validation and semantic-manifest generation. The backed-up full7.6.5 runtime
+   is a replacement dependency; copying its executable alone is insufficient.
+   An explicit build may use `-p:RungProofPowerShell=<full-pwsh-path>`; the normal
+   CMD launcher does not set that property. Do not change global configuration
+   or credentials to make a restore appear to work.
+7. Double-click `RUN-RUNGPROOF-NEXT.cmd`. It restores NuGet packages, builds
    the C# assembly, imports runtime assets, then opens the application. The
    first launch requires package access and can take several minutes to import
    the full catalog. Later launches reuse unchanged imports. Blender is not
@@ -52,3 +59,16 @@ cannot bind the C# scene scripts.
 Run `python .\tools\validate_asset_evidence.py` before any catalog promotion.
 It is intentionally advisory for unfinished candidates and mandatory for every
 entry admitted to `production.catalog.json`.
+
+## Verified recovery boundary —2026-10-23
+
+An isolated exact copied-main project compile passed on the oldOS:423 C# source
+files/427 inputs,15 gates,0 warnings/errors, empty NuGet cache using only bundled
+GodotSharp/Tools/nupkgs and actual D-backed PowerShell7.6.5. Both precompile
+scripts executed; generated manifest stayed inside the isolated copy. The earlier
+minimal Node bootstrap passed12 gates. These prove local-source/package/build
+feasibility, not engine/import/tests/GUI or post-wipe OS operation. Old
+project.assets.json absolute user paths are regenerable, not required source.
+A fully offline restore must explicitly configure the local bundled package
+source/cache; the default launcher still documents package access. Rehearsal
+commands/receipts are evidence, not a global NuGet configuration change.

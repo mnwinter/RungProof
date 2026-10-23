@@ -38,7 +38,7 @@ userdata was independently hashed with PowerShell. Use native
 `Godot-userdata-RungProof` for the application. The Python-view copy is
 supplementary evidence, not a replacement.
 
-The current difference is144 native files versus97 Python files. Launching
+The demonstrated namespace difference is144 native files versus97 Python files. An early immutable native D backup now passed144 files/33,592,160 bytes; it is no longer merely C-only staging. The immutable COPY_ALL and independent canonical native verification subsequently passed; consult the final index for current-file addenda. Launching
 PowerShell from Python inherits the Python view. Later native copies may be
 staged in a receipt-owned `private-owned-launch/native-userdata-*/userdata`
 tree inside the immutable COPY_ALL snapshot. Its private native receipt has
@@ -104,3 +104,50 @@ expansion. The final release checksum/index identifies the exact archive set.
 
 The handoff does not authorize a real PLC connection or any external message,
 deployment or unrelated repository mutation.
+
+## Final current-files restoration
+
+Read LATEST-RESTORE-FIRST.md and the VERIFIED LATEST-CHECKPOINT.json on the backup
+root. They name the exact final source commit, all-refs bundle, immutable parent,
+chained final receipt and their SHA256 pins. The later current-file receipt owns
+changed bytes and references only immutable parent copies for unchanged bytes.
+Old C provenance paths are not required on a replacement computer.
+
+For a D restoration, clone the matching final bundle with --no-checkout into a
+NEW NTFS target containing only .git. Preview scripts/restore_selected_tree.py
+with --incremental-root, --receipt-relative, --receipt-sha256, --tree RungProof,
+--target, --protected-root (entire backup root) and --expected-head from the final
+index. The preview validates every selected source hash. Apply only to that same
+new target after a successful preview. The helper refuses existing ordinary files
+and protects the backup. Then git read-tree HEAD establishes the matching index.
+Restore the recorded aliases separately after ordinary files, on NTFS.
+Use a short destination path and verify long-path support for the replacement
+OS/Python/Git/7z tools; old-OS long-path rehearsals are not new-OS proof.
+
+For public GitHub recovery, keep raw historical/base/delta extraction in separate
+staging. Verify the new delta with scripts/verify_public_delta.py, explicit receipt
+and 7z executable SHA256 pins, and a NEW workroot. It tests/extracts and hashes the
+actual complete file set. Its PASS is local package proof; remote verification
+has a separate receipt. Preserve the final Git tracked source when merging older
+raw staging; do not blindly overlay older tracked metadata onto newer main.
+The historical content-addressed toolchain still needs its path-map restore step.
+
+Use the private companion release for original redacted state, selected task
+context, native userdata and external recovery work. It complements the public
+Git/base/delta artifacts; it is not the complete public application by itself.
+Use its plain verifier/support scripts and pinned private receipt to test a fresh
+download without old D/C paths. Follow the final index for all required assets.
+Do not automatically extract intentionally malformed nested negative-test archives.
+
+The current native userdata corpus is 144 files, not the separate Python97 view.
+Prefer the final verified RootOwned native userdata payload and review old paths
+before copying to the new user's Godot app_userdata folder. Install the complete
+nine-file continuation skill and full PowerShell7 runtime (not pwsh.exe alone).
+Put PowerShell7 on PATH for normal CMD launch. RungProofPowerShell is an existing
+explicit build property, not an automatic CMD setting.
+
+D reported exFAT Warning/Full Repair Needed/dirty while hardware reported Healthy.
+No repair was performed and no cause inferred. Preserve C originals and independent
+cloud recovery; use the final status for the last check. The 15-gate isolated main
+build and 12-gate bootstrap were performed on the old OS. A full clean-machine
+engine/import/GUI restoration remains untested.

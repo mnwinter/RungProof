@@ -2379,27 +2379,46 @@ current local GUI. This does not claim a matched installed-TIA capture or live
 PLC behavior.
 
 
-### Screen audit remediation checkpoint —2026-10-22
+### Screen audit and migration closeout - 2026-10-23
 
-Current scope and evidence are maintained in
-[`SCREEN_AUDIT_REMEDIATION_PLAN.md`](rungproof-next/docs/SCREEN_AUDIT_REMEDIATION_PLAN.md)
-and its linked audit ledger/index. All77 scenes have a tested normal-route
-disposition:67 bounded normal reviews, five blocked legacy routes and five
-partial demo workflows. This is not full functional acceptance; independent
-case gaps and remaining native fix retests remain open. The original fume,
-common-stop, supplied-reference and2.11/2.12 plant subcases have bounded native
-verification; both tank request routes now have reviewed flow/lifecycle/scaling
-evidence. Documentation inventory/pulse-procedure fixes are source-verified.
-Visionclass2/3/4 selection/routing is verified; exact native
-invalid-author-Run diagnostic reproduction remain pending. Do not classify the
-weak earlier navigation candidate as a confirmed Discard callback defect.
+The complete 77-scene list and prioritized future repairs are in
+`rungproof-next/outputs/screen-audit-2026-10-23/scene-issue-compendium.md` and
+`repair-plan.md`. All 616 cells have dispositions: 610 SCOPED_PASS, three FAIL,
+three PARTIAL, zero READY. Confirmed issues are parcel Reset/repeat, Demo3
+Engineering Frame Process, Lab2.1 outer status footer and maintained-toggle
+wording in 2.1/2.6. Radar access remains a candidate; gallery belt visibility is
+an observation limit. All original finite cases are accounted for. No full-app
+acceptance or new application repair is claimed.
 
-Final B5 build is clean; full controller checks report424PASS/2existingFAIL
-(watch schema/TIA evidence hash), not a green suite. Historical app-shell
-failure remains recorded despite its targeted diagnostics subcheck passing.
-Current root-confirmed GUI44956/bridgePID81220 is live; handles and active work
-belong to audit SESSION-STATE.json, not this durable note. Preserve unrelated
-dirty work and all historical failure/exclusion evidence; no full-goal
-completion, installed-TIA parity or live-PLC proof is claimed.
+Application implementation remains `41188c70bb86e3305f7cd7c8759f000f9c396729`. Raw evidence snapshot/public delta
+is tied to `db9eb2b293ef97553fa108509ca5d1a38b963fe0`. Later commits change recovery metadata and the handoff skill.
+The hard causal analyses specify pose-before-measurement, effective projection
+and room occlusion, and lifecycle-safe status publication regression designs.
+Read the plan/challenge before implementation; do not repeat the menu sweep.
 
+Historical B5 tests remain 424 passed/two failed. A source review supports a
+stale Watch schema assertion and a separate TIA artifact-provenance mismatch;
+neither was fixed or rerun. Actual isolated main build passed 15 gates/427 inputs,
+including 423 C# sources, with zero warnings/errors. Minimal bootstrap passed
+12 gates. Neither was a post-wipe build or engine/import/GUI acceptance run.
+Normal source launch also requires PowerShell7 on PATH; the complete backed-up
+7.6.5 runtime and existing explicit build property are documented in setup.
 
+Immutable COPY_ALL passed 124,150 files/24,563,710,597 bytes with zero linked rows.
+Independent direct-native verification passed all 123,822 canonical files. Early
+native userdata D backup passed 144 files/33,592,160 bytes; the Python97-file view
+is separate. The new 6,636-file public delta passed actual fresh extraction and
+remote SHA256 verification. Final current-file/private-context/Git receipts live
+in the latest VERIFIED D `LATEST-CHECKPOINT.json` and `LATEST-RESTORE-FIRST.md`.
+They name the exact final source commit, bundle and chained immutable receipt.
+Historical d0/a2 receipts remain history; this commit cannot attest itself.
+
+D Winter_Bkup exFAT reported Warning/Full Repair Needed/dirty while hardware
+reported Healthy. No cause or repair is established. Preserve C originals and
+independent cloud recovery. Private userdata/task context/original redacted state
+belongs only in verified private destinations, including the private companion
+`mnwinter/RungProof-Migration-Private`; consult its actual final release proof.
+The nine-file continuation skill supplies portable restore and public-package
+verification helpers. Project work stops at 04:00 Pacific/11:00 UTC; only final
+backup/skill closeout follows, then pause until a fresh human work order.
+No installed-TIA or live-PLC proof is claimed.

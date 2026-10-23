@@ -132,3 +132,27 @@
   Toolchain archives can store unique SHA-256 contents with a complete path map;
   restoration must create independent files, verify hashes and preserve any
   existing different file rather than silently overwrite it.
+
+- **Build and launch prerequisites differ.** Main csproj invokes PowerShell7 twice;
+  normal CMD depends on PATH, explicit RungProofPowerShell only affects that build.
+  Keep the full658file runtime. An exact copied-main423C#/427input local-only
+  emptycache compile passed15 gates on oldOS; it did not launch engine/import/GUI.
+- **Do not repurpose HOME.** Corrected bootstrap/main rehearsal inherited HOME
+  unchanged and isolated child CLI/NuGet/temp configuration. Oldassets absolute
+  paths are regenerated; bundled four4.7.2 nupkgs provide local bootstrap.
+- **Historical test debt is not a new green run.** Watch9 assertion conflicts with
+  current10 contract; later roundtripassertions remain unexecuted after failure.
+  TIA artifact/summary hash mismatch is provenance debt and absentartifact skip
+  could hide it. Preserve artifact and targeted future discriminator.
+- **Hashes cannot diagnose disk health.** D exFAT warning/dirty state and hardware
+  Healthy can coexist. No cause or repair follows; retain originals and publish
+  backup status as pending until final gates actually complete.
+
+
+- **Find an existing draft before retrying release creation.** GitHub's release
+  tag endpoint did not return our authenticated draft before publication. The
+  paginated release list did. Resolve its exact tag and target, reject duplicates,
+  and reuse it; never blindly create another release or clobber uploaded assets.
+  Check visibility and target before upload, before publish and afterward. A
+  local creation manifest's false upload flag is historical; remote verification
+  belongs in a separate receipt.

@@ -69,3 +69,15 @@ a sequence in renderer scripts to make a scene appear to pass.
 
 Suggested companion skills: `rungproof-development` for the project;
 `plc-tia-wincc` for controls semantics; `skill-creator` when changing this skill.
+
+## Final restoration proof boundary
+
+Read the current restoration-validation summary and latest VERIFIED D pointer,
+not an older interim marker. No pending receipt/upload is a PASS. The final
+9-file skill includes restore_selected_tree.py and verify_public_delta.py after
+root verifies their copy/parity. Main source launch requires PowerShell7 on PATH;
+the isolated15-gate main compile and12-gate bootstrap are oldOS compile proofs,
+not clean-machine app/import/GUI acceptance. Retain C originals while the D
+exFAT warning and final backup gates are unresolved. Private supplemental
+context/credentials/userdata belong only in the private repository/verifiedD,
+not public source. Obtain fresh work authorization after cutoff/pause.

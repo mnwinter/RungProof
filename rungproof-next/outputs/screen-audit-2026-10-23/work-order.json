@@ -17,6 +17,6 @@
     "Pause the goal and cutoff automation, then stop until fresh human authorization"
   ],
   "evidence_boundary": "Do not implement repairs during discovery, hide sequence logic in plant/render code, or substitute model experiments for actual screen interactions",
-  "private_data": "Live screen capabilities and private session/userdata records remain local and on D:, outside public Git",
+  "private_data": "Private capability-bearing state, userdata and task context remain outside public Git; verified D and the private mnwinter/RungProof-Migration-Private companion are authorized recovery destinations.",
   "backup_provenance": "The earlier verified d0c4566b snapshot remains valid; later work requires its own verified incremental backup receipt"
 }

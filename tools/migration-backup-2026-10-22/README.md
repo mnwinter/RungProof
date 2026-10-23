@@ -1,7 +1,20 @@
 # Migration backup execution records
 
-These are task-specific scripts used for the2026-10-22 laptop migration, retained so the next Codex can inspect/reproduce the backup and its checks. They contain historical C:/D: paths, source lists and a release ID; do not run them blindly on a new machine. Several initial approaches were superseded; the final archive index and FINAL-BACKUP-STATUS.json on D: identify authoritative results.
+These helpers retain historical paths and attempts; do not rerun them blindly.
+Start with skills/rungproof-playtest-handoff/SKILL.md and the latest VERIFIED D
+LATEST-CHECKPOINT.json/LATEST-RESTORE-FIRST.md. Exact immutable receipts/pins and
+the final source commit define restoration. Older d0/a2 records remain history.
 
-For normal restoration use skills/rungproof-playtest-handoff/SKILL.md and its portable restore scripts. Copy verification and archive-building scripts use Python3.14; the restore scripts use Windows PowerShell. The temporary PyYAML validation dependency was stored on D:, not vendored here. The GitHub helper retrieves an existing mnwinter login into its process environment; no credential is embedded in these files and it does not switch the global account.
+The db9 immutable parent and direct-native canonical verification passed; public
+raw delta also passed actual extraction and remote SHA256 verification. Later
+metadata/private-context addenda and the final Git bundle have separate receipts.
+Preserve C originals and the private companion cloud recovery because the D exFAT
+volume reported Warning/Full Repair Needed/dirty. No repair or cause is asserted.
+Private original state, credentials, userdata and transcripts must stay outside
+public artifacts. The nine-file handoff skill carries portable selected-tree and
+public-delta verification helpers. See the final index for private download tools.
 
-The primary complete D: folder copy is independent of public archive deduplication. Raw private session state, application userdata and the chat transcript are local-only. See public archive scan/redaction records for the exact public scope. All temporary content blobs represent already verified source files; the final archive includes the complete path/hash map.
+Normal source launch needs PowerShell7 on PATH as well as bundled Godot.NET/.NET10.
+The isolated main compile (15 gates) and minimal bootstrap (12 gates) passed on
+the old OS, without engine/import/GUI or post-wipe acceptance. The historical
+controller suite still records 424 passed/two failed. All app work remains stopped.

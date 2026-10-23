@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "audit": {
+    "unique_scenes": 77,
+    "cells": 616,
+    "SCOPED_PASS": 610,
+    "FAIL": 3,
+    "PARTIAL": 3,
+    "READY": 0
+  },
+  "application_implementation_commit": "41188c70bb86e3305f7cd7c8759f000f9c396729",
+  "pushed_evidence_commit": "db9eb2b293ef97553fa108509ca5d1a38b963fe0",
+  "verified_proofs": {
+    "minimal_bootstrap": {
+      "gates": 12,
+      "proof_sha256": "7278ce068e06faad545ba999a189556f5255b692c5e0c2570d91e3d874ad392d",
+      "Dcopy": {
+        "relative_D_receipt": "external-rehearsals/RungProof-Offline-Package-Rehearsal-20261023T084800Z/PRIVATE-D-COPY-PROOF.json",
+        "receipt_sha256": "77f565b3f33cfe38018a05235b8412bb02afb2fb4699e2634af62e21811cd234",
+        "recorded_result": "PASS"
+      }
+    },
+    "isolated_main_compile": {
+      "gates": 15,
+      "inputs": 427,
+      "source_cs_files": 423,
+      "warnings": 0,
+      "errors": 0,
+      "proof_sha256": "fd8933ad5398bccbef53a427efa5e6a532b035187f07796460cea69b9435b62d",
+      "Dcopy": {
+        "relative_D_receipt": "external-rehearsals/isolated-main-build-proof-20261023T094500Z/PRIVATE-D-COPY-PROOF.json",
+        "receipt_sha256": "bb784f05a2d757692e47da4a93a63bd29312085ef95e907d1589d34b0641b9e7",
+        "recorded_result": "PASS"
+      },
+      "Dcopy_scope": "Six proof/driver files only; whole external rehearsal folder final private addendum pending"
+    },
+    "early_native_userdata": {
+      "files": 144,
+      "bytes": 33592160,
+      "proof": {
+        "relative_D_receipt": "native-userdata-early-20261023T093000Z/PRIVATE-NATIVE-D-VERIFICATION.json",
+        "receipt_sha256": "46f83db0126eac934b427abfcbba6d1ce2479326791b40f7a3d741e539743202",
+        "recorded_result": "PASS"
+      }
+    },
+    "whole_COPY_ALL": {
+      "result": "PASS",
+      "files": 124150,
+      "bytes": 24563710597,
+      "receipt_relative": "incremental-2026-10-23/precutoff-db9eb2b2/PRIVATE-CLOSEOUT-RECEIPT.json",
+      "receipt_sha256": "db78e628c7afa3746e379382d2f8782cd9cf56ecd899d5c60b6f34c552814bc0",
+      "git_head": "db9eb2b293ef97553fa108509ca5d1a38b963fe0",
+      "linked_base_files": 0
+    },
+    "native_canonical_corpus": {
+      "result": "PASS",
+      "files": 123822,
+      "reparse_aliases_excluded": 18,
+      "receipt_sha256": "6598418ca687824a6913c84a0dcf8c43dfcca850d2cfe54355d5b1d188cce00c",
+      "boundary": "Per-file stable source/recorded/owned-D hashes, exact source path-size set before/after and metadata stability; not an atomic application/database snapshot."
+    },
+    "final_native_userdata": {
+      "result": "PASS",
+      "files": 144,
+      "bytes": 33592160,
+      "receipt_sha256": "6acd9d3df9ae691e55d741412554314303d5c99c9235ba54bc2c7491fbd6bc1c",
+      "relative_receipt": "incremental-2026-10-23/native-userdata-final-db9eb2b2/PRIVATE-FINAL-NATIVE-USERDATA.json",
+      "boundary": "Direct native current/recorded/immutable-D complete path-size-SHA256 match with before/after metadata; not restored-app proof."
+    },
+    "public_delta": {
+      "result": "PASS",
+      "files": 6636,
+      "bytes": 611779162,
+      "actual_fresh_extraction": true,
+      "readback_receipt_sha256": "27f3bb54639f734eff09e9980e20535dc572fef961aab6dd04042ab0e6ac1059",
+      "release": "https://github.com/mnwinter/RungProof/releases/tag/backup-2026-10-23-playtest-closeout",
+      "remote_asset_count": 7,
+      "remote_receipt_sha256": "a833173d01233ff21e81a980383974f7a61c6e3ddfcefc0f22fef193ef8f7a62"
+    }
+  },
+  "not_proved": [
+    "post-wipe main build",
+    "engine asset import",
+    "clean-machine GUI/native behavior",
+    "full-app acceptance"
+  ],
+  "pending": {
+    "final_current_files_private_closeout": "Resolve latest VERIFIED D LATEST-CHECKPOINT.json and LATEST-RESTORE-FIRST.md, which are outside this source commit.",
+    "post_wipe_environment": "NOT_TESTED"
+  },
+  "private_repository": {
+    "url": "https://github.com/mnwinter/RungProof-Migration-Private",
+    "visibility": "private",
+    "upload_status": "Resolve final D index and private release; creation alone is not upload proof."
+  },
+  "disk": {
+    "volume": "Winter_Bkup",
+    "filesystem": "exFAT",
+    "volume_health": "Warning",
+    "operational_status": "Full Repair Needed",
+    "dirty": true,
+    "hardware_disk_health": "Healthy",
+    "cause": "Not established",
+    "repair_performed": false,
+    "C_originals_retained": true
+  },
+  "historical_suite": {
+    "pass": 424,
+    "fail": 2,
+    "rerun": false,
+    "source_only_disposition": [
+      "Watch expected9/current10 stale expectation candidate; remaining assertions not newlyexecuted",
+      "TIA raw artifact recordedhash mismatch, actual historical/C/D bytes agree; provenance not neweditorregression"
+    ]
+  },
+  "cutoff_utc": "2026-10-23T11:00:00Z",
+  "restore_identity_rule": "Final all-refs bundle and chained current-file receipt must name the same source commit. Older public raw overlays must not replace later tracked Git source.",
+  "status": "VERIFIED_PARENT_AND_PUBLIC_DELTA; FINAL_CURRENT_FILES_PRIVATE_CLOSEOUT_USES_D_INDEX"
+}
