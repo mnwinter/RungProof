@@ -1,0 +1,66 @@
+[
+  {
+    "input": {
+      "x": 527,
+      "y": 264
+    },
+    "wait": 0.2,
+    "capture": "marker-reset-r2-inhibit-active-dark",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.15,
+    "capture": "marker-reset-r2-inhibit-active-signals",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 230,
+      "y": 110
+    },
+    "wait": 0.2,
+    "capture": "marker-reset-r2-reset-defaults",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.2,
+    "capture": "marker-reset-r2-run-default-released",
+    "ocr": true
+  }
+]

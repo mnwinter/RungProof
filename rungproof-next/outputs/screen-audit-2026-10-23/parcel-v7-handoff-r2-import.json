@@ -1,0 +1,57 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 354,
+      "y": 161
+    },
+    "wait": 0.25
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 456,
+      "y": 512
+    },
+    "wait": 0.05
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.05
+  },
+  {
+    "input": {
+      "text": "fixture-diagnostic-parcel223-v7-retentive-class-metered.rpproj.json"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.3,
+    "capture": "parcel-v7-handoff-r2-import-by-file-field",
+    "ocr": true
+  }
+]

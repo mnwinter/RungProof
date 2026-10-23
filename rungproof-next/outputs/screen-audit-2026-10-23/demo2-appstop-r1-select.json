@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 103,
+      "y": 281
+    },
+    "wait": 0.35,
+    "capture": "demo2-appstop-r1-selected",
+    "ocr": true
+  }
+]

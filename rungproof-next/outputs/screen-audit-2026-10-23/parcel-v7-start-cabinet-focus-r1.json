@@ -1,0 +1,125 @@
+[
+  {
+    "input": {
+      "x": 500,
+      "y": 350,
+      "phase": "down",
+      "button": "middle"
+    }
+  },
+  {
+    "input": {
+      "x": 424,
+      "y": 300,
+      "phase": "move"
+    }
+  },
+  {
+    "input": {
+      "x": 424,
+      "y": 300,
+      "phase": "up",
+      "button": "middle"
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "capture": "parcel-v7-r1-start-cabinet-focus",
+    "ocr": true
+  }
+]

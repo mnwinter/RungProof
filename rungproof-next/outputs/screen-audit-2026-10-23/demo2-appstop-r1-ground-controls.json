@@ -1,0 +1,10 @@
+[
+  {
+    "input": {
+      "key": "Escape"
+    },
+    "wait": 0.35,
+    "capture": "demo2-appstop-r1-native-controls",
+    "ocr": true
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.1,
+    "capture": "demo2-r1-run-retained-request-early",
+    "ocr": true
+  },
+  {
+    "wait": 0.5,
+    "capture": "demo2-r1-run-retained-request-intermediate",
+    "ocr": true
+  },
+  {
+    "wait": 1.3,
+    "capture": "demo2-r1-run-retained-request-complete",
+    "ocr": true
+  }
+]

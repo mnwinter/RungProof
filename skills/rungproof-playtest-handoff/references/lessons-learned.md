@@ -37,6 +37,32 @@
 - **Source experiments explain, not certify.** Parcel V4 diagnostic LAD and
   isolated model reproducers separated admission effects; count2 is still a
   failed batch. Keep original fixtures immutable and version diagnostic changes.
+- **Reset equivalence needs adapter geometry.** V7 fresh-load success and two
+  failed Reset repeats isolated history-dependent initialization. Rebuilding a
+  model from a previously rotated world AABB can retain the wrong footprint
+  after the rendered root looks home. Pure models that omit the actual delivered
+  support callback do not test this seam. Restore only owned transforms; do not
+  weaken support/clearance checks or overwrite unrelated workspace edits.
+- **Qualify the phase before Stop.** Parcel public rows matched multiple phases;
+  actual Watch30/30/class2 disambiguated the successful native handoff case.
+  Coating's complete public predicate separates initial index from discharge.
+  Group count3 alone precedes staging. Cable authorization is an Output cleared
+  by Stop, so its reference requires fresh START; grouping/coating retain phase
+  and resume on Run. These are different learner policies.
+- **Do not invent stricter proof gates.** A visibly acknowledged physical timer
+  retrigger plus expiry before another full interval proves the UI behavior;
+  sampling the20ms input peak is not an extra required test. Conversely, absent
+  class0 OCR or simulator/sirnulator recognition safely blocked early observers;
+  those sent no Stop and were QA misses. Keep exact numerical corrections local.
+- **Reset is not universally all-zero.** Marker2.3 deliberately declares its
+  initial OutputTrue. Native Reset restores white/True while STOPPED, then NC
+  logic maintains it on Run. Preserve each scene's actual initial-state contract.
+- **Keep camera changes small.** Layout switches reframe the scene; non-demo
+  framing includes room geometry. Zoom moves toward that deeper target and can
+  pass nearer equipment. Reframe, take small native pan/zoom steps, and re-ground
+  controls. Each camera wheel event applies one factor; a large delta is not a
+  reliable number of zoom steps. A normal File-picker filename plus Return
+  commits selection without relying on changing list-row positions.
 - **Preserve honest history.** Later native reviews can supersede ledger cells
   without deleting original failed attempts. Avoid an expanding pile of broad
   chronologies; keep a focused current requirements view with exact references.

@@ -1,0 +1,17 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "key": "Home"
+    },
+    "wait": 0.2,
+    "capture": "demo2-appstop-r1-scenario-top",
+    "ocr": true
+  }
+]

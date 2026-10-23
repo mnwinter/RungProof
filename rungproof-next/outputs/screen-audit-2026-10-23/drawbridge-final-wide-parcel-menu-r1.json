@@ -1,0 +1,24 @@
+[
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "capture": "drawbridge-r1-home-final-wide",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "capture": "parcel-r1-scenario-menu",
+    "ocr": true
+  }
+]

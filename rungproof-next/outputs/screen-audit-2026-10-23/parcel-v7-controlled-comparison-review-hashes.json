@@ -1,0 +1,174 @@
+{
+  "fixture_sha256": "36de084f73c356c761440e21609b44dbb71a339573837349dc8422212c63fd6a",
+  "originals": [
+    {
+      "file": "parcel-v7-fresh-reload-leave.png",
+      "sha256": "2f943b3cf7de14b72d48ec6d737e981c75148449864efa4df319af329ff33c28",
+      "logged_sha256": "2f943b3cf7de14b72d48ec6d737e981c75148449864efa4df319af329ff33c28",
+      "utc": "2026-10-23T04:41:06.446419+00:00",
+      "plan": "parcel-v7-fresh-reload-leave.json",
+      "step_number": 1,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-fresh-reload-owned-discard.png",
+      "sha256": "8bc481e896801be77b1b683f063bb3e6e60ba663af121e79176a3ec49109c7da",
+      "logged_sha256": "8bc481e896801be77b1b683f063bb3e6e60ba663af121e79176a3ec49109c7da",
+      "utc": "2026-10-23T04:41:30.547985+00:00",
+      "plan": "parcel-v7-fresh-reload-switch.json",
+      "step_number": 0,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-fresh-reload-select-parcel.png",
+      "sha256": "69e5a3a4a793ce1d289b9f0e40abb8bf54e29ab404c9bb57ad9175c3107a5ada",
+      "logged_sha256": "69e5a3a4a793ce1d289b9f0e40abb8bf54e29ab404c9bb57ad9175c3107a5ada",
+      "utc": "2026-10-23T04:41:44.511289+00:00",
+      "plan": "parcel-v7-fresh-reload-select.json",
+      "step_number": 1,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-fresh-reload-scene.png",
+      "sha256": "29d0a054b77d74321cf08d66bed8e24a33ddb9acea783ea614745dfcea04927a",
+      "logged_sha256": "29d0a054b77d74321cf08d66bed8e24a33ddb9acea783ea614745dfcea04927a",
+      "utc": "2026-10-23T04:41:56.372855+00:00",
+      "plan": "parcel-v7-fresh-reload-open.json",
+      "step_number": 0,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-fresh-reload-imported.png",
+      "sha256": "b3e882a753b9a160bd35276bf6c6ceaaf8f6154f86c95e4b3af72db34933a8c1",
+      "logged_sha256": "b3e882a753b9a160bd35276bf6c6ceaaf8f6154f86c95e4b3af72db34933a8c1",
+      "utc": "2026-10-23T04:42:34.683137+00:00",
+      "plan": "parcel-v7-fresh-reload-import.json",
+      "step_number": 1,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-fresh-reload-progress-5.png",
+      "sha256": "9c782564d77d5a6ebcd73191d87846d9b3b3d2b9e68fca3f94452fae752fe02f",
+      "logged_sha256": "9c782564d77d5a6ebcd73191d87846d9b3b3d2b9e68fca3f94452fae752fe02f",
+      "utc": "2026-10-23T04:43:22.250681+00:00",
+      "plan": "parcel-v7-fresh-reload-cycle.json",
+      "step_number": 5,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-fresh-reload-progress-6.png",
+      "sha256": "4261de0ce718fbb26dd1fefbb30d4ab105b92b60ce0bc1daa2aeef3a38c3d029",
+      "logged_sha256": "4261de0ce718fbb26dd1fefbb30d4ab105b92b60ce0bc1daa2aeef3a38c3d029",
+      "utc": "2026-10-23T04:43:26.805688+00:00",
+      "plan": "parcel-v7-fresh-reload-cycle.json",
+      "step_number": 6,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-controlled-reset-zero.png",
+      "sha256": "162e41c0b026aee09c22c3d0b1a43dd60f121add60d8f6a6764e09454abdb71a",
+      "logged_sha256": "162e41c0b026aee09c22c3d0b1a43dd60f121add60d8f6a6764e09454abdb71a",
+      "utc": "2026-10-23T04:43:57.319888+00:00",
+      "plan": "parcel-v7-controlled-reset-cycle.json",
+      "step_number": 1,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-controlled-reset-run.png",
+      "sha256": "ebb8ea76ad007a55f98280524e428a5453c66a65c61a78a679facf68cc3e823e",
+      "logged_sha256": "ebb8ea76ad007a55f98280524e428a5453c66a65c61a78a679facf68cc3e823e",
+      "utc": "2026-10-23T04:43:58.421817+00:00",
+      "plan": "parcel-v7-controlled-reset-cycle.json",
+      "step_number": 3,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-controlled-reset-progress-3.png",
+      "sha256": "2b28575d3316a96825aadc3d3bfddcf0800e1f39e2992b0c1f10cc362444f100",
+      "logged_sha256": "2b28575d3316a96825aadc3d3bfddcf0800e1f39e2992b0c1f10cc362444f100",
+      "utc": "2026-10-23T04:44:09.199335+00:00",
+      "plan": "parcel-v7-controlled-reset-cycle.json",
+      "step_number": 7,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-controlled-reset-progress-6.png",
+      "sha256": "85261dd71ca2e4af81d7a2dd3df9a5a85ae30584f7d71cea3ff1c5e3f5711de5",
+      "logged_sha256": "85261dd71ca2e4af81d7a2dd3df9a5a85ae30584f7d71cea3ff1c5e3f5711de5",
+      "utc": "2026-10-23T04:44:22.821088+00:00",
+      "plan": "parcel-v7-controlled-reset-cycle.json",
+      "step_number": 10,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-controlled-reset-stall-held.png",
+      "sha256": "5d154fc88167f2d9d941bf6f55ea4ce1b1da64a2b1dd4e9a147bc843430e5f72",
+      "logged_sha256": "5d154fc88167f2d9d941bf6f55ea4ce1b1da64a2b1dd4e9a147bc843430e5f72",
+      "utc": "2026-10-23T04:45:11.306732+00:00",
+      "plan": "parcel-v7-controlled-reset-watch.json",
+      "step_number": 0,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    },
+    {
+      "file": "parcel-v7-controlled-reset-private-live.png",
+      "sha256": "535bf2f5fe8b112f54ee75ece3e38bb67755ba64da3b7485f39c171606d45fc7",
+      "logged_sha256": "535bf2f5fe8b112f54ee75ece3e38bb67755ba64da3b7485f39c171606d45fc7",
+      "utc": "2026-10-23T04:45:32.942516+00:00",
+      "plan": "parcel-v7-controlled-reset-private.json",
+      "step_number": 2,
+      "app_pid": 12768,
+      "client": [
+        1021,
+        660
+      ]
+    }
+  ]
+}

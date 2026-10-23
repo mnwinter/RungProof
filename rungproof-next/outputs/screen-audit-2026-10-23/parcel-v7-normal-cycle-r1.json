@@ -1,0 +1,50 @@
+[
+  {
+    "input": {
+      "x": 539,
+      "y": 396
+    },
+    "wait": 0.4,
+    "capture": "parcel-v7-r1-physical-start",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "capture": "parcel-v7-r1-process-started-wide",
+    "ocr": true
+  },
+  {
+    "wait": 5,
+    "capture": "parcel-v7-r1-progress-1",
+    "ocr": true
+  },
+  {
+    "wait": 5,
+    "capture": "parcel-v7-r1-progress-2",
+    "ocr": true
+  },
+  {
+    "wait": 5,
+    "capture": "parcel-v7-r1-progress-3",
+    "ocr": true
+  },
+  {
+    "wait": 5,
+    "capture": "parcel-v7-r1-progress-4",
+    "ocr": true
+  },
+  {
+    "wait": 5,
+    "capture": "parcel-v7-r1-progress-5",
+    "ocr": true
+  }
+]

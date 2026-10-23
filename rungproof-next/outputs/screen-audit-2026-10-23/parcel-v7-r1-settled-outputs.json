@@ -1,0 +1,30 @@
+[
+  {
+    "input": {
+      "x": 900,
+      "y": 350,
+      "phase": "wheel",
+      "delta": -120
+    }
+  },
+  {
+    "input": {
+      "x": 900,
+      "y": 350,
+      "phase": "wheel",
+      "delta": -120
+    }
+  },
+  {
+    "input": {
+      "x": 900,
+      "y": 350,
+      "phase": "wheel",
+      "delta": -120
+    }
+  },
+  {
+    "capture": "parcel-v7-r1-complete-lower-signals",
+    "ocr": true
+  }
+]

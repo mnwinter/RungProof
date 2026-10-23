@@ -1,0 +1,29 @@
+{
+  "source": "v7-retentive-20ms.jsonl",
+  "nativeProof": false,
+  "homeRequired": true,
+  "windows": [
+    {
+      "key": [
+        30,
+        30,
+        2
+      ],
+      "firstScan": 535,
+      "lastScan": 575,
+      "firstSecond": 10.7,
+      "lastSecond": 11.5
+    },
+    {
+      "key": [
+        30,
+        30,
+        3
+      ],
+      "firstScan": 814,
+      "lastScan": 908,
+      "firstSecond": 16.28,
+      "lastSecond": 18.16
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "wait": 0.4,
+    "capture": "coating-r1-scene-selected",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 456,
+      "y": 512
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "text": "fixture-lab-5-10-coating-line.rpproj.json"
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.3,
+    "capture": "coating-r1-reference-opened",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 45,
+      "y": 646
+    },
+    "wait": 0.35,
+    "capture": "coating-r1-running-initial-controls",
+    "ocr": true
+  }
+]

@@ -1,0 +1,2087 @@
+{
+  "Name": "v7-stop-phase20-class2",
+  "ScanMs": 20,
+  "SpeedFactor": 1,
+  "QueueGap": 0,
+  "Geometry": "double",
+  "HandoffMs": 1,
+  "ClassSpecific": true,
+  "Retentive": true,
+  "StopPhase": 20,
+  "StopClass": 2,
+  "didStop": true,
+  "stopWitness": {
+    "StopPhase": 20,
+    "StopClass": 2,
+    "scan": 405,
+    "heldScans": 0,
+    "heldPose": true,
+    "allBoolOutputsOff": true,
+    "allNumericOutputsZero": true,
+    "timesBefore": {
+      "qa_admission_travel_1": 0,
+      "qa_admission_travel_2": 0,
+      "qa_admission_travel_3": 0
+    },
+    "timesAfter": {
+      "qa_admission_travel_1": 0,
+      "qa_admission_travel_2": 0,
+      "qa_admission_travel_3": 0
+    }
+  },
+  "fixtureSha256": "a6a7422019e7a9f85e7f527ddee859f98aa09b1dfa6a1e6a70338c33301fc7fb",
+  "actualScans": 1248,
+  "Complete": true,
+  "SortedCount": 3,
+  "firstFollowerOverlap": {
+    "kind": "first-closed-command-gate-occupied-by-follower",
+    "scan": 455,
+    "seconds": 9.1,
+    "phase": 30,
+    "snapshotPhase": 30,
+    "lastPhase": 30,
+    "klass": 2,
+    "sampledFeedback": {
+      "primary_table_loaded": false,
+      "primary_table_clear": false,
+      "primary_table_aligned": true,
+      "infeed_gate_clear": true,
+      "transfer_inhibited": false,
+      "misroute_detected": false,
+      "all_parcels_received": false,
+      "large_detected": false,
+      "medium_detected": false,
+      "small_detected": true,
+      "start_sort_request": false
+    },
+    "commands": {
+      "infeed_run": true,
+      "table_transfer_run": true,
+      "infeed_gate_open": false,
+      "conveyors_run": true
+    },
+    "numericCommands": {
+      "route_position": 0
+    },
+    "TablePosition": 0,
+    "TableAligned": true,
+    "TableLoaded": false,
+    "TableClear": false,
+    "GateOpen": true,
+    "GateClear": true,
+    "Inhibited": true,
+    "SortedCount": 0,
+    "Misroute": false,
+    "Complete": false,
+    "parcels": [
+      {
+        "X": 3.499999999999957,
+        "Z": -0,
+        "Route": 0,
+        "Outbound": 3.499999999999957,
+        "Arrived": false,
+        "front": 4.149999999999957,
+        "rear": 2.849999999999957
+      },
+      {
+        "X": -2.1960000000000113,
+        "Z": 0,
+        "Route": -1,
+        "Outbound": 0,
+        "Arrived": false,
+        "front": -1.7460000000000113,
+        "rear": -2.6460000000000115
+      },
+      {
+        "X": -2.9660000000000113,
+        "Z": 0,
+        "Route": -1,
+        "Outbound": 0,
+        "Arrived": false,
+        "front": -2.6660000000000115,
+        "rear": -3.266000000000011
+      }
+    ]
+  },
+  "final": {
+    "kind": "final",
+    "scan": 1248,
+    "seconds": 24.96,
+    "phase": 0,
+    "snapshotPhase": 10,
+    "lastPhase": 10,
+    "klass": 3,
+    "sampledFeedback": {
+      "primary_table_loaded": false,
+      "primary_table_clear": true,
+      "primary_table_aligned": true,
+      "infeed_gate_clear": true,
+      "transfer_inhibited": false,
+      "misroute_detected": false,
+      "all_parcels_received": true,
+      "large_detected": false,
+      "medium_detected": false,
+      "small_detected": false,
+      "start_sort_request": false
+    },
+    "commands": {
+      "infeed_run": false,
+      "table_transfer_run": false,
+      "infeed_gate_open": false,
+      "conveyors_run": false
+    },
+    "numericCommands": {
+      "route_position": 0
+    },
+    "TablePosition": 0,
+    "TableAligned": true,
+    "TableLoaded": false,
+    "TableClear": true,
+    "GateOpen": false,
+    "GateClear": true,
+    "Inhibited": false,
+    "SortedCount": 3,
+    "Misroute": false,
+    "Complete": true,
+    "parcels": [
+      {
+        "X": 4.935,
+        "Z": -0,
+        "Route": 0,
+        "Outbound": 4.935,
+        "Arrived": true,
+        "front": 5.585,
+        "rear": 4.284999999999999
+      },
+      {
+        "X": 7.520080617918933,
+        "Z": -7.520080617918933,
+        "Route": 1,
+        "Outbound": 10.635,
+        "Arrived": true,
+        "front": 7.970080617918933,
+        "rear": 7.070080617918933
+      },
+      {
+        "X": 3.021815976896094E-16,
+        "Z": -4.935,
+        "Route": 2,
+        "Outbound": 4.935,
+        "Arrived": true,
+        "front": 0.30000000000000027,
+        "rear": -0.2999999999999997
+      }
+    ]
+  },
+  "events": [
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 1,
+      "seconds": 0.02,
+      "phase": 10,
+      "snapshotPhase": 0,
+      "lastPhase": 0,
+      "klass": 0,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": false,
+        "infeed_gate_clear": false,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": false
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": false,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": -4.6,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.9499999999999997,
+          "rear": -5.25
+        },
+        {
+          "X": -5.8,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -5.35,
+          "rear": -6.25
+        },
+        {
+          "X": -6.65,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -6.3500000000000005,
+          "rear": -6.95
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 69,
+      "seconds": 1.38,
+      "phase": 20,
+      "snapshotPhase": 10,
+      "lastPhase": 10,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": false,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": true,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": false,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": -3.3760000000000137,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7260000000000137,
+          "rear": -4.026000000000014
+        },
+        {
+          "X": -4.576000000000014,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -4.126000000000014,
+          "rear": -5.026000000000014
+        },
+        {
+          "X": -5.426000000000014,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -5.1260000000000145,
+          "rear": -5.726000000000014
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 145,
+      "seconds": 2.9,
+      "phase": 30,
+      "snapshotPhase": 20,
+      "lastPhase": 20,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": true,
+        "infeed_gate_open": true,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": -2.0080000000000293,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -1.3580000000000294,
+          "rear": -2.6580000000000292
+        },
+        {
+          "X": -3.2080000000000295,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7580000000000293,
+          "rear": -3.6580000000000297
+        },
+        {
+          "X": -4.05800000000003,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.75800000000003,
+          "rear": -4.35800000000003
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 257,
+      "seconds": 5.14,
+      "phase": 40,
+      "snapshotPhase": 30,
+      "lastPhase": 30,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": true,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": true,
+      "TableClear": false,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": -0.01000000000002764,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": 0.6399999999999724,
+          "rear": -0.6600000000000277
+        },
+        {
+          "X": -3.1500000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7,
+          "rear": -3.6000000000000005
+        },
+        {
+          "X": -3.9200000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.6200000000000006,
+          "rear": -4.220000000000001
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 259,
+      "seconds": 5.18,
+      "phase": 50,
+      "snapshotPhase": 40,
+      "lastPhase": 40,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": true,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": true,
+      "TableClear": false,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": -0.01000000000002764,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": 0.6399999999999724,
+          "rear": -0.6600000000000277
+        },
+        {
+          "X": -3.1500000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7,
+          "rear": -3.6000000000000005
+        },
+        {
+          "X": -3.9200000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.6200000000000006,
+          "rear": -4.220000000000001
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 260,
+      "seconds": 5.2,
+      "phase": 50,
+      "snapshotPhase": 50,
+      "lastPhase": 50,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": true,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": -0.01000000000002764,
+          "Z": 0,
+          "Route": 0,
+          "Outbound": -0.01000000000002764,
+          "Arrived": false,
+          "front": 0.6399999999999724,
+          "rear": -0.6600000000000277
+        },
+        {
+          "X": -3.1500000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7,
+          "rear": -3.6000000000000005
+        },
+        {
+          "X": -3.9200000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.6200000000000006,
+          "rear": -4.220000000000001
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 398,
+      "seconds": 7.96,
+      "phase": 60,
+      "snapshotPhase": 50,
+      "lastPhase": 50,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": true,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 2.4739999999999687,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 2.4739999999999687,
+          "Arrived": false,
+          "front": 3.1239999999999686,
+          "rear": 1.8239999999999688
+        },
+        {
+          "X": -3.1500000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7,
+          "rear": -3.6000000000000005
+        },
+        {
+          "X": -3.9200000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.6200000000000006,
+          "rear": -4.220000000000001
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 400,
+      "seconds": 8,
+      "phase": 10,
+      "snapshotPhase": 60,
+      "lastPhase": 60,
+      "klass": 1,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": true,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 2.5099999999999683,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 2.5099999999999683,
+          "Arrived": false,
+          "front": 3.159999999999968,
+          "rear": 1.8599999999999683
+        },
+        {
+          "X": -3.1500000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7,
+          "rear": -3.6000000000000005
+        },
+        {
+          "X": -3.9200000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.6200000000000006,
+          "rear": -4.220000000000001
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 402,
+      "seconds": 8.04,
+      "phase": 20,
+      "snapshotPhase": 10,
+      "lastPhase": 10,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": true,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 2.545999999999968,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 2.545999999999968,
+          "Arrived": false,
+          "front": 3.1959999999999678,
+          "rear": 1.895999999999968
+        },
+        {
+          "X": -3.1500000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.7,
+          "rear": -3.6000000000000005
+        },
+        {
+          "X": -3.9200000000000004,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -3.6200000000000006,
+          "rear": -4.220000000000001
+        }
+      ]
+    },
+    {
+      "StopPhase": 20,
+      "StopClass": 2,
+      "scan": 405,
+      "heldScans": 0,
+      "heldPose": true,
+      "allBoolOutputsOff": true,
+      "allNumericOutputsZero": true,
+      "timesBefore": {
+        "qa_admission_travel_1": 0,
+        "qa_admission_travel_2": 0,
+        "qa_admission_travel_3": 0
+      },
+      "timesAfter": {
+        "qa_admission_travel_1": 0,
+        "qa_admission_travel_2": 0,
+        "qa_admission_travel_3": 0
+      }
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 454,
+      "seconds": 9.08,
+      "phase": 30,
+      "snapshotPhase": 20,
+      "lastPhase": 20,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": true,
+        "infeed_gate_open": true,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 3.481999999999957,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 3.481999999999957,
+          "Arrived": false,
+          "front": 4.131999999999957,
+          "rear": 2.831999999999957
+        },
+        {
+          "X": -2.214000000000011,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -1.7640000000000111,
+          "rear": -2.6640000000000112
+        },
+        {
+          "X": -2.984000000000011,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.6840000000000113,
+          "rear": -3.284000000000011
+        }
+      ]
+    },
+    {
+      "kind": "first-closed-command-gate-occupied-by-follower",
+      "scan": 455,
+      "seconds": 9.1,
+      "phase": 30,
+      "snapshotPhase": 30,
+      "lastPhase": 30,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 0,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 3.499999999999957,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 3.499999999999957,
+          "Arrived": false,
+          "front": 4.149999999999957,
+          "rear": 2.849999999999957
+        },
+        {
+          "X": -2.1960000000000113,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -1.7460000000000113,
+          "rear": -2.6460000000000115
+        },
+        {
+          "X": -2.9660000000000113,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.6660000000000115,
+          "rear": -3.266000000000011
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 535,
+      "seconds": 10.7,
+      "phase": 30,
+      "snapshotPhase": 30,
+      "lastPhase": 30,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": -0.7560000000000122,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -0.3060000000000122,
+          "rear": -1.2060000000000122
+        },
+        {
+          "X": -2.552000000000016,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.252000000000016,
+          "rear": -2.852000000000016
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 577,
+      "seconds": 11.54,
+      "phase": 40,
+      "snapshotPhase": 30,
+      "lastPhase": 30,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": true,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": -0.018000000000011646,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": 0.4319999999999884,
+          "rear": -0.46800000000001163
+        },
+        {
+          "X": -2.552000000000016,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.252000000000016,
+          "rear": -2.852000000000016
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 608,
+      "seconds": 12.16,
+      "phase": 50,
+      "snapshotPhase": 40,
+      "lastPhase": 40,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0.5
+      },
+      "TablePosition": 0.5,
+      "TableAligned": true,
+      "TableLoaded": true,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": -0.01272792206136608,
+          "Z": 0.012727922061366082,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": 0.43727207793863393,
+          "rear": -0.4627279220613661
+        },
+        {
+          "X": -2.552000000000016,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.252000000000016,
+          "rear": -2.852000000000016
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 609,
+      "seconds": 12.18,
+      "phase": 50,
+      "snapshotPhase": 50,
+      "lastPhase": 50,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0.5
+      },
+      "TablePosition": 0.5,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": -0.01272792206136608,
+          "Z": 0.012727922061366082,
+          "Route": 1,
+          "Outbound": -0.01800000000001163,
+          "Arrived": false,
+          "front": 0.43727207793863393,
+          "rear": -0.4627279220613661
+        },
+        {
+          "X": -2.552000000000016,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.252000000000016,
+          "rear": -2.852000000000016
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 737,
+      "seconds": 14.74,
+      "phase": 60,
+      "snapshotPhase": 50,
+      "lastPhase": 50,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0.5
+      },
+      "TablePosition": 0.5,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 1.6164461017924383,
+          "Z": -1.6164461017924383,
+          "Route": 1,
+          "Outbound": 2.2859999999999867,
+          "Arrived": false,
+          "front": 2.0664461017924385,
+          "rear": 1.1664461017924384
+        },
+        {
+          "X": -2.552000000000016,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.252000000000016,
+          "rear": -2.852000000000016
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 768,
+      "seconds": 15.36,
+      "phase": 10,
+      "snapshotPhase": 60,
+      "lastPhase": 60,
+      "klass": 2,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 2.0110116856945273,
+          "Z": -2.0110116856945273,
+          "Route": 1,
+          "Outbound": 2.8439999999999803,
+          "Arrived": false,
+          "front": 2.4610116856945274,
+          "rear": 1.5610116856945273
+        },
+        {
+          "X": -2.552000000000016,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.252000000000016,
+          "rear": -2.852000000000016
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 770,
+      "seconds": 15.4,
+      "phase": 20,
+      "snapshotPhase": 10,
+      "lastPhase": 10,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": true,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": true,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": true,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 2.036467529817243,
+          "Z": -2.036467529817243,
+          "Route": 1,
+          "Outbound": 2.87999999999998,
+          "Arrived": false,
+          "front": 2.486467529817243,
+          "rear": 1.586467529817243
+        },
+        {
+          "X": -2.5160000000000164,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.2160000000000166,
+          "rear": -2.8160000000000163
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 779,
+      "seconds": 15.58,
+      "phase": 30,
+      "snapshotPhase": 20,
+      "lastPhase": 20,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": true,
+        "infeed_gate_open": true,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": true,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 2.151018828369462,
+          "Z": -2.151018828369462,
+          "Route": 1,
+          "Outbound": 3.041999999999978,
+          "Arrived": false,
+          "front": 2.601018828369462,
+          "rear": 1.701018828369462
+        },
+        {
+          "X": -2.3540000000000183,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": -2.0540000000000185,
+          "rear": -2.654000000000018
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 910,
+      "seconds": 18.2,
+      "phase": 40,
+      "snapshotPhase": 30,
+      "lastPhase": 30,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": true,
+      "TableClear": false,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 3.8183766184073225,
+          "Z": -3.8183766184073225,
+          "Route": 1,
+          "Outbound": 5.3999999999999515,
+          "Arrived": false,
+          "front": 4.268376618407323,
+          "rear": 3.3683766184073223
+        },
+        {
+          "X": -0.014000000000020538,
+          "Z": 0,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": 0.28599999999997944,
+          "rear": -0.31400000000002054
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 971,
+      "seconds": 19.42,
+      "phase": 50,
+      "snapshotPhase": 40,
+      "lastPhase": 40,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 1
+      },
+      "TablePosition": 1,
+      "TableAligned": true,
+      "TableLoaded": true,
+      "TableClear": false,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 4.594779864150143,
+          "Z": -4.594779864150143,
+          "Route": 1,
+          "Outbound": 6.497999999999939,
+          "Arrived": false,
+          "front": 5.044779864150144,
+          "rear": 4.144779864150143
+        },
+        {
+          "X": -4.336808689942018E-19,
+          "Z": 0.014000000000020515,
+          "Route": -1,
+          "Outbound": 0,
+          "Arrived": false,
+          "front": 0.3,
+          "rear": -0.3
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 972,
+      "seconds": 19.44,
+      "phase": 50,
+      "snapshotPhase": 50,
+      "lastPhase": 50,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": true,
+        "primary_table_clear": false,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 1
+      },
+      "TablePosition": 1,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": false,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 4.6075077862115,
+          "Z": -4.6075077862115,
+          "Route": 1,
+          "Outbound": 6.515999999999939,
+          "Arrived": false,
+          "front": 5.0575077862115005,
+          "rear": 4.1575077862115
+        },
+        {
+          "X": -4.336808689942018E-19,
+          "Z": 0.014000000000020515,
+          "Route": 2,
+          "Outbound": -0.014000000000020515,
+          "Arrived": false,
+          "front": 0.3,
+          "rear": -0.3
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 1091,
+      "seconds": 21.82,
+      "phase": 60,
+      "snapshotPhase": 50,
+      "lastPhase": 50,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": true,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 1
+      },
+      "TablePosition": 1,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 6.122130511513091,
+          "Z": -6.122130511513091,
+          "Route": 1,
+          "Outbound": 8.657999999999946,
+          "Arrived": false,
+          "front": 6.572130511513091,
+          "rear": 5.672130511513091
+        },
+        {
+          "X": 1.3030241942927713E-16,
+          "Z": -2.1279999999999797,
+          "Route": 2,
+          "Outbound": 2.1279999999999797,
+          "Arrived": false,
+          "front": 0.3000000000000001,
+          "rear": -0.2999999999999999
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 1152,
+      "seconds": 23.04,
+      "phase": 10,
+      "snapshotPhase": 60,
+      "lastPhase": 60,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 1,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 6.898533757255949,
+          "Z": -6.898533757255949,
+          "Route": 1,
+          "Outbound": 9.755999999999988,
+          "Arrived": false,
+          "front": 7.348533757255949,
+          "rear": 6.448533757255949
+        },
+        {
+          "X": 1.9753552870246607E-16,
+          "Z": -3.225999999999967,
+          "Route": 2,
+          "Outbound": 3.225999999999967,
+          "Arrived": false,
+          "front": 0.3000000000000002,
+          "rear": -0.29999999999999977
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 1201,
+      "seconds": 24.02,
+      "phase": 10,
+      "snapshotPhase": 10,
+      "lastPhase": 10,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 2,
+      "Misroute": false,
+      "Complete": false,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 7.520080617918933,
+          "Z": -7.520080617918933,
+          "Route": 1,
+          "Outbound": 10.635,
+          "Arrived": true,
+          "front": 7.970080617918933,
+          "rear": 7.070080617918933
+        },
+        {
+          "X": 2.515424525448637E-16,
+          "Z": -4.107999999999957,
+          "Route": 2,
+          "Outbound": 4.107999999999957,
+          "Arrived": false,
+          "front": 0.30000000000000027,
+          "rear": -0.2999999999999997
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 1247,
+      "seconds": 24.94,
+      "phase": 10,
+      "snapshotPhase": 10,
+      "lastPhase": 10,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": false,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": true,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": true
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 3,
+      "Misroute": false,
+      "Complete": true,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 7.520080617918933,
+          "Z": -7.520080617918933,
+          "Route": 1,
+          "Outbound": 10.635,
+          "Arrived": true,
+          "front": 7.970080617918933,
+          "rear": 7.070080617918933
+        },
+        {
+          "X": 3.021815976896094E-16,
+          "Z": -4.935,
+          "Route": 2,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 0.30000000000000027,
+          "rear": -0.2999999999999997
+        }
+      ]
+    },
+    {
+      "kind": "phase-count-route-transition",
+      "scan": 1248,
+      "seconds": 24.96,
+      "phase": 0,
+      "snapshotPhase": 10,
+      "lastPhase": 10,
+      "klass": 3,
+      "sampledFeedback": {
+        "primary_table_loaded": false,
+        "primary_table_clear": true,
+        "primary_table_aligned": true,
+        "infeed_gate_clear": true,
+        "transfer_inhibited": false,
+        "misroute_detected": false,
+        "all_parcels_received": true,
+        "large_detected": false,
+        "medium_detected": false,
+        "small_detected": false,
+        "start_sort_request": false
+      },
+      "commands": {
+        "infeed_run": false,
+        "table_transfer_run": false,
+        "infeed_gate_open": false,
+        "conveyors_run": false
+      },
+      "numericCommands": {
+        "route_position": 0
+      },
+      "TablePosition": 0,
+      "TableAligned": true,
+      "TableLoaded": false,
+      "TableClear": true,
+      "GateOpen": false,
+      "GateClear": true,
+      "Inhibited": false,
+      "SortedCount": 3,
+      "Misroute": false,
+      "Complete": true,
+      "parcels": [
+        {
+          "X": 4.935,
+          "Z": -0,
+          "Route": 0,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 5.585,
+          "rear": 4.284999999999999
+        },
+        {
+          "X": 7.520080617918933,
+          "Z": -7.520080617918933,
+          "Route": 1,
+          "Outbound": 10.635,
+          "Arrived": true,
+          "front": 7.970080617918933,
+          "rear": 7.070080617918933
+        },
+        {
+          "X": 3.021815976896094E-16,
+          "Z": -4.935,
+          "Route": 2,
+          "Outbound": 4.935,
+          "Arrived": true,
+          "front": 0.30000000000000027,
+          "rear": -0.2999999999999997
+        }
+      ]
+    }
+  ]
+}

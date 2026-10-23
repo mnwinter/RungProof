@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.15,
+    "capture": "timed-lamp-r1-scenario-menu",
+    "ocr": true
+  }
+]

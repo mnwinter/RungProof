@@ -1,0 +1,25 @@
+[
+  {
+    "input": {
+      "x": 220,
+      "y": 90
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-repeat-stall-appstop",
+    "ocr": true
+  },
+  {
+    "wait": 1.5,
+    "capture": "parcel-v7-repeat-stall-held",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 809,
+      "y": 34
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-repeat-stall-editor",
+    "ocr": true
+  }
+]

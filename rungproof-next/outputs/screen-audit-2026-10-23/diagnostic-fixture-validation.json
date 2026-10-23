@@ -1,0 +1,62 @@
+[
+  {
+    "file": "fixture-new-binding-lab-2-23-v3.rpproj.json",
+    "sha256": "23526133ab0534e65b833b1fa8275f04a9a27d10835448afcc68fb85c6d3eae4",
+    "schema": 10,
+    "readable": true,
+    "compilerIssues": 0,
+    "bindingIssues": 0,
+    "programSurvivesEditorRoundtrip": true,
+    "networks": 21,
+    "variables": 20,
+    "nativeAcceptance": false
+  },
+  {
+    "file": "fixture-new-binding-lab-2-23-v4.rpproj.json",
+    "sha256": "a6a7422019e7a9f85e7f527ddee859f98aa09b1dfa6a1e6a70338c33301fc7fb",
+    "schema": 10,
+    "readable": true,
+    "compilerIssues": 0,
+    "bindingIssues": 0,
+    "programSurvivesEditorRoundtrip": true,
+    "networks": 21,
+    "variables": 20,
+    "nativeAcceptance": false
+  },
+  {
+    "file": "fixture-diagnostic-parcel223-v5-metered700.rpproj.json",
+    "sha256": "21c01949e7ea3097ff7bc64a18965aaf44ee5996d1bdf050d93731181020d28b",
+    "schema": 10,
+    "readable": true,
+    "compilerIssues": 0,
+    "bindingIssues": 0,
+    "programSurvivesEditorRoundtrip": true,
+    "networks": 22,
+    "variables": 21,
+    "nativeAcceptance": false
+  },
+  {
+    "file": "fixture-diagnostic-parcel223-v6-class-metered.rpproj.json",
+    "sha256": "234cda74c80e55d5484c977f7333346b056ed8e6363261d71317f3be54229cd1",
+    "schema": 10,
+    "readable": true,
+    "compilerIssues": 0,
+    "bindingIssues": 0,
+    "programSurvivesEditorRoundtrip": true,
+    "networks": 24,
+    "variables": 23,
+    "nativeAcceptance": false
+  },
+  {
+    "file": "fixture-diagnostic-parcel223-v7-retentive-class-metered.rpproj.json",
+    "sha256": "36de084f73c356c761440e21609b44dbb71a339573837349dc8422212c63fd6a",
+    "schema": 10,
+    "readable": true,
+    "compilerIssues": 0,
+    "bindingIssues": 0,
+    "programSurvivesEditorRoundtrip": true,
+    "networks": 27,
+    "variables": 23,
+    "nativeAcceptance": false
+  }
+]

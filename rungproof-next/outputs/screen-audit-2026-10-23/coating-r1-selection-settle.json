@@ -1,0 +1,7 @@
+[
+  {
+    "wait": 0.5,
+    "capture": "coating-r1-selection-settled",
+    "ocr": true
+  }
+]

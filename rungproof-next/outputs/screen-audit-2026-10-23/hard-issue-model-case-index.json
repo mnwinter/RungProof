@@ -1,0 +1,470 @@
+[
+  {
+    "group": "baseline",
+    "case": "v3-20ms-authored",
+    "count": 1,
+    "physicalComplete": false,
+    "phase": 40,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-authored",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-float32",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-world-aabb",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-1ms-authored",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-5ms-authored",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-10ms-authored",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-40ms-authored",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-slow-quarter",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-gap50mm",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-gap100mm",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "baseline",
+    "case": "v4-20ms-gap200mm",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "scan-sweep",
+    "case": "v4-2ms-authored",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "scan-sweep",
+    "case": "v4-2point5ms-authored",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "scan-sweep",
+    "case": "v4-3ms-authored",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "scan-sweep",
+    "case": "v4-4ms-authored",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 50,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter600-20ms",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter700-20ms",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter800-20ms",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter1000-20ms",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter700-10ms",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter700-40ms",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter700-slow95percent",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "meter",
+    "case": "v5-meter700-fast105percent",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "class-meter",
+    "case": "v6-class-meter-20ms",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "class-meter",
+    "case": "v6-class-meter-10ms",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "class-meter",
+    "case": "v6-class-meter-40ms",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "class-meter",
+    "case": "v6-class-meter-slow95percent",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "class-meter",
+    "case": "v6-class-meter-fast105percent",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-retentive-20ms",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": false
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase20-class1",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase20-class2",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase20-class3",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase30-class1",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase30-class2",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase30-class3",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase40-class2",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase40-class3",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase50-class1",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase50-class2",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase50-class3",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase60-class2",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v7-stop-phase60-class3",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "retentive-meter",
+    "case": "v6-stop-phase30-class2",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v6-late-stop-class2-after15",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v6-late-stop-class2-after25",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v6-late-stop-class2-after50",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v6-late-stop-class2-after90",
+    "count": 2,
+    "physicalComplete": false,
+    "phase": 10,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v7-late-stop-class2-after15",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v7-late-stop-class2-after25",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v7-late-stop-class2-after50",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  },
+  {
+    "group": "late-stop",
+    "case": "v7-late-stop-class2-after90",
+    "count": 3,
+    "physicalComplete": true,
+    "phase": 0,
+    "nativeAcceptance": false,
+    "stopPerformed": true
+  }
+]

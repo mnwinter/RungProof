@@ -1,0 +1,63 @@
+[
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-frame-process-baseline"
+  },
+  {
+    "input": {
+      "x": 610,
+      "y": 374,
+      "phase": "down",
+      "button": "middle"
+    },
+    "wait": 0.03
+  },
+  {
+    "input": {
+      "x": 570,
+      "y": 374,
+      "phase": "move"
+    },
+    "wait": 0.03
+  },
+  {
+    "input": {
+      "x": 570,
+      "y": 374,
+      "phase": "up",
+      "button": "middle"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-two-step-controls",
+    "ocr": true
+  }
+]

@@ -1,0 +1,94 @@
+[
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.06
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-handoff-r3-stopped-physical",
+    "ocr": true
+  },
+  {
+    "wait": 1.5,
+    "capture": "parcel-v7-handoff-r3-stopped-physical-held",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-handoff-r3-run-alone",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-handoff-r3-recovery-1",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-handoff-r3-recovery-2",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-handoff-r3-recovery-3",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-handoff-r3-recovery-4",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-handoff-r3-recovery-5",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-handoff-r3-recovery-6",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 891,
+      "y": 246,
+      "phase": "wheel",
+      "delta": 600
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-handoff-r3-recovery-upper-signals",
+    "ocr": true
+  }
+]

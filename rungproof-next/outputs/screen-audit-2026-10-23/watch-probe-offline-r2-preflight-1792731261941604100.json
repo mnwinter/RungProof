@@ -1,0 +1,120 @@
+{
+  "no_bridge_endpoints": true,
+  "native_actions_executed": false,
+  "initial_actual_header_context": true,
+  "initial_actual_watch": {
+    "values": {
+      "qa_step": 10,
+      "qa_scan_step": 10,
+      "qa_class": null
+    },
+    "row_witnesses": {
+      "qa_step": [
+        {
+          "name_text": "qa_step",
+          "monitor_text": "10",
+          "value": 10,
+          "name_center_y": 444.0,
+          "monitor_word": {
+            "text": "10",
+            "x": 340,
+            "y": 424,
+            "w": 39,
+            "h": 30
+          }
+        }
+      ],
+      "qa_scan_step": [
+        {
+          "name_text": "qa_scan_step -",
+          "monitor_text": "10",
+          "value": 10,
+          "name_center_y": 512.0,
+          "monitor_word": {
+            "text": "10",
+            "x": 339,
+            "y": 494,
+            "w": 40,
+            "h": 29
+          }
+        }
+      ],
+      "qa_class": []
+    },
+    "names_seen": [
+      "qa_class",
+      "qa_scan_step",
+      "qa_step"
+    ],
+    "target_rows_matched": false,
+    "screen_watch_only": true,
+    "physical_pose_acceptance": false
+  },
+  "initial_preflight_qualified": true,
+  "initial_class_value_unproven": true,
+  "prior_actual_stall_watch": {
+    "values": {
+      "qa_step": 50,
+      "qa_scan_step": 50,
+      "qa_class": 2
+    },
+    "row_witnesses": {
+      "qa_step": [
+        {
+          "name_text": "qa_step",
+          "monitor_text": "50",
+          "value": 50,
+          "name_center_y": 444.0,
+          "monitor_word": {
+            "text": "50",
+            "x": 339,
+            "y": 424,
+            "w": 40,
+            "h": 30
+          }
+        }
+      ],
+      "qa_scan_step": [
+        {
+          "name_text": "qa_scan_step -",
+          "monitor_text": "50",
+          "value": 50,
+          "name_center_y": 512.0,
+          "monitor_word": {
+            "text": "50",
+            "x": 338,
+            "y": 494,
+            "w": 41,
+            "h": 29
+          }
+        }
+      ],
+      "qa_class": [
+        {
+          "name_text": "qa_class",
+          "monitor_text": "2",
+          "value": 2,
+          "name_center_y": 651.0,
+          "monitor_word": {
+            "text": "2",
+            "x": 338,
+            "y": 633,
+            "w": 20,
+            "h": 30
+          }
+        }
+      ]
+    },
+    "names_seen": [
+      "qa_class",
+      "qa_scan_step",
+      "qa_step"
+    ],
+    "target_rows_matched": false,
+    "screen_watch_only": true,
+    "physical_pose_acceptance": false
+  },
+  "missing_required_names_or_step_values_rejected": true,
+  "helper_sha256": "11e2a512b6db01144d555e133fadfa010b459f3471210b47db70be82b88092ed",
+  "r1_preserved_sha256": "fd84492fc149e77f22040d4d705a39ac5f9cf9254b657af265f7011ebdcd257e"
+}

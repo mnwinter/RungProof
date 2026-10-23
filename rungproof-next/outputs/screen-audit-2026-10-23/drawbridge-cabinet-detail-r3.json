@@ -1,0 +1,77 @@
+[
+  {
+    "input": {
+      "x": 500,
+      "y": 350,
+      "phase": "down",
+      "button": "middle"
+    }
+  },
+  {
+    "input": {
+      "x": 478,
+      "y": 357,
+      "phase": "move"
+    }
+  },
+  {
+    "input": {
+      "x": 478,
+      "y": 357,
+      "phase": "up",
+      "button": "middle"
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "capture": "drawbridge-cabinet-detail-r3",
+    "ocr": true
+  }
+]

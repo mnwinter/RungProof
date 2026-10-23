@@ -1,0 +1,27 @@
+[
+  {
+    "input": {
+      "x": 131,
+      "y": 538
+    },
+    "wait": 0.06
+  },
+  {
+    "input": {
+      "x": 131,
+      "y": 538
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 578,
+      "y": 460,
+      "phase": "wheel",
+      "delta": -1200
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-controlled-reset-private-live",
+    "ocr": true
+  }
+]

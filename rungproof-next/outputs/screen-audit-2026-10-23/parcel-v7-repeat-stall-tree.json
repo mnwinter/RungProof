@@ -1,0 +1,13 @@
+[
+  {
+    "input": {
+      "x": 151,
+      "y": 469,
+      "phase": "wheel",
+      "delta": -600
+    },
+    "wait": 0.3,
+    "capture": "parcel-v7-repeat-stall-tree-bottom",
+    "ocr": true
+  }
+]

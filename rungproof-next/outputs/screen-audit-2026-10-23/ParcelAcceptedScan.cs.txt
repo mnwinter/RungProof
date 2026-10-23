@@ -1,0 +1,237 @@
+using System.Security.Cryptography;
+using System.Text.Json;
+using RungProof.Next.Scenes;
+using RungProof.Next.VirtualController;
+
+// QA-only causal experiment. Links actual, unmodified compiler/runtime/session,
+// mapper and plant sources. Does not construct Godot, an app or a PLC transport.
+// No simulator/UI state is accessed or changed. Scenario perturbations occur
+// only in fresh local model objects and never modify saved learner fixtures.
+var root = Path.GetFullPath(args[0]);
+var output = Path.GetFullPath(args[1]);
+var evidence = Path.Combine(root, "outputs/screen-audit-2026-10-21/test-projects");
+var json = new JsonSerializerOptions { WriteIndented = true };
+var summaries = new List<object>();
+var mode = args.Length>2 ? args[2] : "baseline";
+if(mode=="validate") {
+ using var scene=JsonDocument.Parse(File.ReadAllText(Path.Combine(root,"scenes/migrated/lab-2-23-parcel-sorter.scene.json")));
+ var points=scene.RootElement.GetProperty("simulation").GetProperty("points").EnumerateArray().Select(p=>new SceneIoPoint(p.GetProperty("name").GetString()!,p.GetProperty("type").GetString()!,p.GetProperty("owner").GetString()!,"","")).ToArray();
+ var records=new List<object>();
+ foreach(var path in new[]{Path.Combine(evidence,"fixture-new-binding-lab-2-23-v3.rpproj.json"),Path.Combine(evidence,"fixture-new-binding-lab-2-23-v4.rpproj.json")}.Concat(Directory.GetFiles(output,"fixture-diagnostic-parcel223-*.rpproj.json"))) {
+  var raw=File.ReadAllText(path);var result=LadderEditorProjectJson.Load(raw);
+  if(!result.IsReadable)throw new Exception("Fixture is unreadable: "+path);
+  var program=result.Document!.BuildProgram();var compiler=LadderCompiler.Compile(program);
+  var bindingIssues=SceneIoBindingValidator.Validate(program,points);
+  var saved=LadderEditorProjectJson.Save(result.Document);var round=LadderEditorProjectJson.Load(saved);
+  var stable=round.IsReadable&&LadderProgramJson.Save(program)==LadderProgramJson.Save(round.Document!.BuildProgram());
+  var hash=Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(path))).ToLowerInvariant();
+  if(path.EndsWith("v3.rpproj.json")&&hash!="23526133ab0534e65b833b1fa8275f04a9a27d10835448afcc68fb85c6d3eae4")throw new Exception("Original V3 changed");
+  if(path.EndsWith("v4.rpproj.json")&&hash!="a6a7422019e7a9f85e7f527ddee859f98aa09b1dfa6a1e6a70338c33301fc7fb")throw new Exception("Original V4 changed");
+  if(path.EndsWith("v7-retentive-class-metered.rpproj.json")&&hash!="36de084f73c356c761440e21609b44dbb71a339573837349dc8422212c63fd6a")throw new Exception("Frozen V7 changed");
+  var record=new{file=Path.GetFileName(path),sha256=hash,schema=result.SourceSchemaVersion,readable=result.IsReadable,compilerIssues=compiler.Issues.Count,bindingIssues=bindingIssues.Count,programSurvivesEditorRoundtrip=stable,networks=program.Networks.Count,variables=program.Variables.Count,nativeAcceptance=false};records.Add(record);Console.WriteLine(JsonSerializer.Serialize(record));
+  if(!compiler.IsValid||bindingIssues.Count>0||!stable)throw new Exception("Fixture validation failed: "+path);
+ }
+ File.WriteAllText(Path.Combine(output,"diagnostic-fixture-validation.json"),JsonSerializer.Serialize(records,json));
+ return;
+}
+var scenarios = new List<Scenario> {
+    new("v3-20ms-authored", "v3", 20, 1, 0, true),
+    new("v4-20ms-authored", "v4", 20, 1, 0, true),
+    new("v4-20ms-float32", "v4", 20, 1, 0, false, "float32"),
+    new("v4-20ms-world-aabb", "v4", 20, 1, 0, false, "world-aabb"),
+    new("v4-1ms-authored", "v4", 1, 1, 0),
+    new("v4-5ms-authored", "v4", 5, 1, 0),
+    new("v4-10ms-authored", "v4", 10, 1, 0),
+    new("v4-40ms-authored", "v4", 40, 1, 0),
+    new("v4-20ms-slow-quarter", "v4", 20, .25, 0),
+    new("v4-20ms-gap50mm", "v4", 20, 1, .05),
+    new("v4-20ms-gap100mm", "v4", 20, 1, .1),
+    new("v4-20ms-gap200mm", "v4", 20, 1, .2),
+};
+if (mode=="meter") scenarios = [
+  new("v5-meter600-20ms", "v4", 20, 1, 0, HandoffMs:600),
+  new("v5-meter700-20ms", "v4", 20, 1, 0, Trace:true, HandoffMs:700),
+  new("v5-meter800-20ms", "v4", 20, 1, 0, HandoffMs:800),
+  new("v5-meter1000-20ms", "v4", 20, 1, 0, HandoffMs:1000),
+  new("v5-meter700-10ms", "v4", 10, 1, 0, HandoffMs:700),
+  new("v5-meter700-40ms", "v4", 40, 1, 0, HandoffMs:700),
+  new("v5-meter700-slow95percent", "v4", 20, .95, 0, HandoffMs:700),
+  new("v5-meter700-fast105percent", "v4", 20, 1.05, 0, HandoffMs:700),
+];
+if (mode=="scan-sweep") scenarios = [
+  new("v4-2ms-authored", "v4", 2, 1, 0),
+  new("v4-2point5ms-authored", "v4", 2.5, 1, 0),
+  new("v4-3ms-authored", "v4", 3, 1, 0),
+  new("v4-4ms-authored", "v4", 4, 1, 0),
+];
+if(mode=="class-meter") scenarios = [
+  new("v6-class-meter-20ms", "v4", 20, 1, 0, Trace:true, HandoffMs:1, ClassSpecific:true),
+  new("v6-class-meter-10ms", "v4", 10, 1, 0, HandoffMs:1, ClassSpecific:true),
+  new("v6-class-meter-40ms", "v4", 40, 1, 0, HandoffMs:1, ClassSpecific:true),
+  new("v6-class-meter-slow95percent", "v4", 20, .95, 0, HandoffMs:1, ClassSpecific:true),
+  new("v6-class-meter-fast105percent", "v4", 20, 1.05, 0, HandoffMs:1, ClassSpecific:true),
+];
+if(mode=="retentive-meter") {
+ scenarios=[new("v7-retentive-20ms", "v4", 20, 1, 0, Trace:true, HandoffMs:1, ClassSpecific:true, Retentive:true)];
+ foreach(var (phase,klass) in new[]{(20,1),(20,2),(20,3),(30,1),(30,2),(30,3),(40,2),(40,3),(50,1),(50,2),(50,3),(60,2),(60,3)})
+   scenarios.Add(new($"v7-stop-phase{phase}-class{klass}","v4",20,1,0,HandoffMs:1,ClassSpecific:true,Retentive:true,StopPhase:phase,StopClass:klass));
+ scenarios.Add(new("v6-stop-phase30-class2","v4",20,1,0,HandoffMs:1,ClassSpecific:true,StopPhase:30,StopClass:2));
+}
+if(mode=="late-stop") scenarios=[];
+if(mode=="late-stop") foreach(var ret in new[]{false,true}) foreach(var after in new[]{15,25,50,90})
+  scenarios.Add(new($"{(ret?"v7":"v6")}-late-stop-class2-after{after}","v4",20,1,0,HandoffMs:1,ClassSpecific:true,Retentive:ret,StopPhase:30,StopClass:2,StopAfterScans:after));
+foreach (var scenario in scenarios) {
+    var fixturePath = Path.Combine(evidence, $"fixture-new-binding-lab-2-23-{scenario.Fixture}.rpproj.json");
+    var loaded = LadderEditorProjectJson.Load(File.ReadAllText(fixturePath));
+    if (!loaded.IsReadable) throw new Exception(string.Join(";", loaded.Issues));
+    var document = loaded.Document!;
+    if (scenario.HandoffMs>0) {
+      document.Id = "qa-parcel223-v5-metered-handoff";
+      document.Name = "QA diagnostic parcel V5 finite infeed handoff - not a product requirement";
+      document.Tags.Add(new PlcVariable("qa_admission_travel",PlcVariableType.Timer,PlcVariableRole.Memory,TimeSpan.Zero,Id:"qa-admission-travel-tag"));
+      var timer = document.AddTimerRung("Diagnostic primary-drive handoff after rear-clear", "qa_admission_travel",TimeSpan.FromMilliseconds(scenario.HandoffMs));
+      timer.SetRoot(new("qa-admission-timer-logic",LadderNodeKind.Compare,"qa_scan_step",RightOperand:"30",ComparisonValueType:LadderComparisonValueType.DInt));
+      document.Rungs.Remove(timer); document.Rungs.Insert(6,timer);
+      var feed = document.Rungs.Single(r=>r.CoilVariable=="infeed_run");
+      EditableLadderNode Phase(int value)=>new("qa-admission-phase-"+value,LadderNodeKind.Compare,"qa_scan_step",RightOperand:value.ToString(),ComparisonValueType:LadderComparisonValueType.DInt);
+      feed.SetRoot(new("qa-admission-feed-root",LadderNodeKind.Series,Children:[
+        new("qa-admission-phases",LadderNodeKind.Parallel,Children:[Phase(10),Phase(20),
+          new("qa-admission-remaining-time",LadderNodeKind.Series,Children:[Phase(30),new("qa-admission-timer-not-done",LadderNodeKind.Contact,"qa_admission_travel.Q",true)])]),
+        new("qa-admission-not-complete",LadderNodeKind.Contact,"all_parcels_received",true)]));
+      feed.Label="Diagnostic finite infeed handoff; primary transfer owns remaining centering";
+      if (scenario.ClassSpecific) {
+        // Replace the exploratory single dwell with three explicit LAD TONs.
+        // Current class still comes solely from the existing measured size beams.
+        document.Rungs.Remove(timer); document.Tags.RemoveAll(t=>t.Name=="qa_admission_travel");
+        document.Id="qa-parcel223-v6-class-metered-handoff";
+        document.Name="QA diagnostic parcel V6 class-specific handoff - not a product requirement";
+        var classBranches = new List<EditableLadderNode>();
+        int[] presets=[300,500,700];
+        for(var klass=1;klass<=3;klass++) {
+          var variable="qa_admission_travel_"+klass;
+          document.Tags.Add(new PlcVariable(variable,PlcVariableType.Timer,PlcVariableRole.Memory,TimeSpan.Zero,Id:variable+"-tag"));
+          var t=document.AddTimerRung("Diagnostic measured class "+klass+" handoff",variable,TimeSpan.FromMilliseconds(presets[klass-1]));
+          if(scenario.Retentive) t.TimerKind=LadderTimerKind.RetentiveOnDelay;
+          t.SetRoot(new(variable+"-enabled",LadderNodeKind.Series,Children:[
+            new(variable+"-phase",LadderNodeKind.Compare,"qa_scan_step",RightOperand:"30",ComparisonValueType:LadderComparisonValueType.DInt),
+            new(variable+"-class",LadderNodeKind.Compare,"qa_class",RightOperand:klass.ToString(),ComparisonValueType:LadderComparisonValueType.DInt)]));
+          document.Rungs.Remove(t);document.Rungs.Insert(5+klass,t);
+          if(scenario.Retentive) {
+            var reset=document.AddTimerResetRung("Reset class "+klass+" handoff outside its phase",variable);
+            reset.SetRoot(new(variable+"-reset-outside",LadderNodeKind.Parallel,Children:[
+              new(variable+"-reset-phase",LadderNodeKind.Compare,"qa_scan_step",CompareOperator:LadderCompareOperator.NotEqual,RightOperand:"30",ComparisonValueType:LadderComparisonValueType.DInt),
+              new(variable+"-reset-class",LadderNodeKind.Compare,"qa_class",CompareOperator:LadderCompareOperator.NotEqual,RightOperand:klass.ToString(),ComparisonValueType:LadderComparisonValueType.DInt)]));
+            document.Rungs.Remove(reset);document.Rungs.Insert(document.Rungs.IndexOf(t),reset);
+          }
+          classBranches.Add(new(variable+"-feed-branch",LadderNodeKind.Series,Children:[
+            new(variable+"-feed-class",LadderNodeKind.Compare,"qa_class",RightOperand:klass.ToString(),ComparisonValueType:LadderComparisonValueType.DInt),
+            new(variable+"-feed-unexpired",LadderNodeKind.Contact,variable+".Q",true)]));
+        }
+        feed.SetRoot(new("qa-class-admission-feed-root",LadderNodeKind.Series,Children:[
+          new("qa-class-admission-phases",LadderNodeKind.Parallel,Children:[
+            new("qa-class-admission-phase10",LadderNodeKind.Compare,"qa_scan_step",RightOperand:"10",ComparisonValueType:LadderComparisonValueType.DInt),
+            new("qa-class-admission-phase20",LadderNodeKind.Compare,"qa_scan_step",RightOperand:"20",ComparisonValueType:LadderComparisonValueType.DInt),
+            new("qa-class-admission-phase30-window",LadderNodeKind.Series,Children:[
+              new("qa-class-admission-phase30",LadderNodeKind.Compare,"qa_scan_step",RightOperand:"30",ComparisonValueType:LadderComparisonValueType.DInt),
+              new("qa-class-admission-window",LadderNodeKind.Parallel,Children:classBranches)])]),
+          new("qa-class-admission-not-complete",LadderNodeKind.Contact,"all_parcels_received",true)]));
+      }
+      if(scenario.Retentive) {
+        document.Id="qa-parcel223-v7-retentive-class-handoff";
+        document.Name="QA diagnostic parcel V7 retentive handoff - not a product requirement";
+        document.Blocks[0].Name=document.Name;
+      }
+      if (scenario.Name=="v5-meter700-20ms"||scenario.Name=="v6-class-meter-20ms"||scenario.Name=="v7-retentive-20ms") {
+        var candidate=Path.Combine(output,scenario.Retentive?"fixture-diagnostic-parcel223-v7-retentive-class-metered.rpproj.json":scenario.ClassSpecific?"fixture-diagnostic-parcel223-v6-class-metered.rpproj.json":"fixture-diagnostic-parcel223-v5-metered700.rpproj.json");
+        File.WriteAllText(candidate,LadderEditorProjectJson.Save(document));
+        var roundtrip=LadderEditorProjectJson.Load(File.ReadAllText(candidate));
+        if(!roundtrip.IsReadable||!LadderCompiler.Compile(roundtrip.Document!.BuildProgram()).IsValid)
+          throw new Exception("Diagnostic V5 fixture failed supported editor roundtrip/compiler validation");
+      }
+    }
+    var original = document.BuildProgram();
+    var program = original with { ScanPeriod = TimeSpan.FromMilliseconds(scenario.ScanMs) };
+    var compiled = LadderCompiler.Compile(program);
+    if (!compiled.IsValid) throw new Exception(string.Join(";", compiled.Issues));
+    double[] homes = [-4.6, -5.8, -6.65], lengths = [1.3, .9, .6], widths = [1, .8, .6], heights = [1.1, .8, .5];
+    if (scenario.Geometry != "double") {
+        for (var i=0;i<3;i++) { homes[i]=(float)homes[i]; lengths[i]=(float)lengths[i]; widths[i]=(float)widths[i]; heights[i]=(float)heights[i]; }
+        if (scenario.Geometry == "world-aabb") for (var i=0;i<3;i++) { float center=(float)homes[i], half=(float)lengths[i]/2; lengths[i]=(float)((float)(center+half)-(float)(center-half)); }
+    }
+    // Perturbed queue initialization is a counterfactual physical-spacing case,
+    // not a repair and not a claim about the delivered native geometry.
+    if (scenario.QueueGap > 0) for (var i=1;i<3;i++) homes[i] = homes[i-1]-lengths[i-1]/2-lengths[i]/2-scenario.QueueGap;
+    var plant = new ParcelTransferPlantModel(homes,lengths,widths,heights,.9*scenario.SpeedFactor,-2.7,-2.75,1.8,1.2,[.245,.595,.995],[4.935,10.635,4.935]);
+    var session = new VirtualControllerSession(new VirtualControllerRuntime(compiled.Program!)) { HistoryRecordingEnabled = false };
+    IReadOnlyDictionary<string,bool> commands = new Dictionary<string,bool>();
+    IReadOnlyDictionary<string,double> numbers = new Dictionary<string,double>();
+    Dictionary<string,bool> Feedback() => new() {
+        ["primary_table_loaded"]=plant.TableLoaded,["primary_table_clear"]=plant.TableClear,["primary_table_aligned"]=plant.TableAligned,
+        ["infeed_gate_clear"]=plant.GateClear,["transfer_inhibited"]=plant.Inhibited,["misroute_detected"]=plant.Misroute,
+        ["all_parcels_received"]=plant.Complete,["large_detected"]=plant.DetectedClass==1,["medium_detected"]=plant.DetectedClass==2,
+        ["small_detected"]=plant.DetectedClass==3,["start_sort_request"]=false
+    };
+    bool Cmd(string name) => commands.GetValueOrDefault(name);
+    object State(string kind, Dictionary<string,bool> before) {
+        var snap=session.Snapshot;
+        return new { kind, scan=snap.ScanNumber, seconds=snap.SimulatedTime.TotalSeconds,
+          phase=snap.NumericVariables.GetValueOrDefault("qa_step"), snapshotPhase=snap.NumericVariables.GetValueOrDefault("qa_scan_step"),
+          lastPhase=snap.NumericVariables.GetValueOrDefault("qa_last_step"), klass=snap.NumericVariables.GetValueOrDefault("qa_class"),
+          sampledFeedback=before, commands, numericCommands=numbers, plant.TablePosition, plant.TableAligned,plant.TableLoaded,plant.TableClear,
+          plant.GateOpen,plant.GateClear,plant.Inhibited,plant.SortedCount,plant.Misroute,plant.Complete,
+          parcels=plant.Parcels.Select(p=>new{p.X,p.Z,p.Route,p.Outbound,p.Arrived,front=p.X+p.HalfLength,rear=p.X-p.HalfLength}).ToArray() };
+    }
+    using var trace = scenario.Trace ? new StreamWriter(Path.Combine(output,scenario.Name+".jsonl")) : null;
+    var events = new List<object>();
+    session.Run(); session.PulseInput("start_sort_request");
+    double priorPhase=-1; int priorCount=-1; int[] priorRoutes=[-1,-1,-1]; bool recordedLeak=false; object? leak=null;
+    object? stopWitness=null; bool didStop=false; int stopPhaseScans=0;
+    var maxScans=(int)Math.Ceiling(100/scenario.ScanMs*1000); var actualScans=0;
+    for(var scan=0;scan<maxScans;scan++) {
+        var before=Feedback();
+        if(!didStop&&scenario.StopPhase>0&&session.Snapshot.NumericVariables.GetValueOrDefault("qa_scan_step")==scenario.StopPhase&&session.Snapshot.NumericVariables.GetValueOrDefault("qa_class")==scenario.StopClass) {
+          stopPhaseScans++;
+          if(stopPhaseScans>=scenario.StopAfterScans) {
+            var poseBefore=JsonSerializer.Serialize(plant.Parcels.Select(p=>new{p.X,p.Z,p.Angle,p.Route,p.Outbound,p.Arrived}));
+            var timesBefore=session.Snapshot.Timers.ToDictionary(p=>p.Key,p=>p.Value.Accumulated.TotalMilliseconds);
+            var stopped=session.Stop();
+            commands=SceneIoImageMapper.CommitBoolOutputs(program,stopped.Outputs);
+            numbers=SceneIoImageMapper.CommitNumericOutputs(program,stopped.NumericOutputs);
+            var heldScans=session.Advance(5,()=>throw new Exception("Stopped sampler unexpectedly called"),_=>throw new Exception("Stopped output unexpectedly committed"),_=>throw new Exception("Stopped plant unexpectedly advanced"));
+            var poseAfter=JsonSerializer.Serialize(plant.Parcels.Select(p=>new{p.X,p.Z,p.Angle,p.Route,p.Outbound,p.Arrived}));
+            var timesAfter=stopped.Timers.ToDictionary(p=>p.Key,p=>p.Value.Accumulated.TotalMilliseconds);
+            stopWitness=new{scenario.StopPhase,scenario.StopClass,scan=stopped.ScanNumber,heldScans,heldPose=poseBefore==poseAfter,allBoolOutputsOff=stopped.Outputs.Values.All(v=>!v),allNumericOutputsZero=stopped.NumericOutputs.Values.All(v=>v==0),timesBefore,timesAfter};
+            if(heldScans!=0||poseBefore!=poseAfter||stopped.Outputs.Values.Any(v=>v))throw new Exception("Stop hold contract failed");
+            events.Add(stopWitness); didStop=true;session.Run();
+          }
+        }
+        var accepted=session.Advance(scenario.ScanMs/1000,
+          ()=>SceneIoImageMapper.SampleBoolInputs(program,before),
+          static ()=>new Dictionary<string,double>(),
+          o=>commands=SceneIoImageMapper.CommitBoolOutputs(program,o),
+          o=>numbers=SceneIoImageMapper.CommitNumericOutputs(program,o),
+          dt=>plant.Advance(dt,Cmd("conveyors_run"),Cmd("infeed_run"),Cmd("table_transfer_run"),Cmd("infeed_gate_open"),numbers.GetValueOrDefault("route_position")));
+        if(accepted!=1)throw new Exception($"Expected one accepted scan, got {accepted}");
+        actualScans++;
+        var state=State("scan",before); trace?.WriteLine(JsonSerializer.Serialize(state));
+        var phase=session.Snapshot.NumericVariables.GetValueOrDefault("qa_step");
+        var routes=plant.Parcels.Select(p=>p.Route).ToArray();
+        if(phase!=priorPhase||plant.SortedCount!=priorCount||!routes.SequenceEqual(priorRoutes)) events.Add(State("phase-count-route-transition",before));
+        priorPhase=phase;priorCount=plant.SortedCount;priorRoutes=routes;
+        var activeClass=(int)session.Snapshot.NumericVariables.GetValueOrDefault("qa_class");
+        if(!Cmd("infeed_gate_open")&&plant.GateOpen&&activeClass is 1 or 2&&plant.Parcels[activeClass].Route<0&&plant.Parcels[activeClass].X+plant.Parcels[activeClass].HalfLength> -2.7&&!recordedLeak) {
+            recordedLeak=true;leak=State("first-closed-command-gate-occupied-by-follower",before);events.Add(leak);
+        }
+        if(plant.Complete&&session.Snapshot.NumericVariables.GetValueOrDefault("qa_step")==0&&commands.Values.All(v=>!v))break;
+    }
+    var summary=new { scenario.Name,scenario.ScanMs,scenario.SpeedFactor,scenario.QueueGap,scenario.Geometry,scenario.HandoffMs,scenario.ClassSpecific,scenario.Retentive,scenario.StopPhase,scenario.StopClass,scenario.StopAfterScans,didStop,stopWitness,fixtureSha256=Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(fixturePath))).ToLowerInvariant(),
+        
+        actualScans,plant.Complete,plant.SortedCount,firstFollowerOverlap=leak,final=State("final",Feedback()),events };
+    summaries.Add(summary);
+    File.WriteAllText(Path.Combine(output,scenario.Name+"-summary.json"),JsonSerializer.Serialize(summary,json));
+    Console.WriteLine(JsonSerializer.Serialize(new{scenario.Name,actualScans,plant.SortedCount,plant.Complete,phase=session.Snapshot.NumericVariables.GetValueOrDefault("qa_step"),plant.TableLoaded,plant.TableClear,plant.TableAligned,plant.Inhibited,recordedLeak}));
+}
+File.WriteAllText(Path.Combine(output,"parcel-accepted-scan-"+mode+"-summary.json"),JsonSerializer.Serialize(summaries,json));
+Console.WriteLine("PURE_MODEL_EXPERIMENTS_FINISHED no-Godot no-app-state no-real-PLC");
+record Scenario(string Name,string Fixture,double ScanMs,double SpeedFactor,double QueueGap,bool Trace=false,string Geometry="double",double HandoffMs=0,bool ClassSpecific=false,bool Retentive=false,int StopPhase=0,int StopClass=0,int StopAfterScans=3);
+

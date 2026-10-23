@@ -1,0 +1,29 @@
+[
+  {
+    "input": {
+      "x": 190,
+      "y": 646
+    },
+    "wait": 0.4,
+    "capture": "parcel-v7-r1-appreset-initial",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 45,
+      "y": 646
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-r1-run-loaded-editor",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 946,
+      "y": 98
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-r1-initial-scene",
+    "ocr": true
+  }
+]

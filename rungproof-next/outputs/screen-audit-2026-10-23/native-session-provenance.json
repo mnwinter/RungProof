@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-23T04:33:24.943888+00:00",
+  "source_head": "d0c4566bc956706ab3430e25d4142b03f4431e9c",
+  "application_baseline": "41188c70bb86e3305f7cd7c8759f000f9c396729",
+  "application_scope_diff": "EMPTY in committed and tracked working src/tests/scenes/project.godot scope",
+  "binary_files": [
+    {
+      "path": "rungproof-next/.godot/mono/temp/bin/Debug/RungProof.Next.dll",
+      "sha256": "1f000c78f99268b2f54df75c4913f3c6d96ee1e72cb5cd59d5114697a458b098",
+      "matches_verified_D_baseline": true
+    },
+    {
+      "path": "rungproof-next/.tools/godot/Godot_v4.7.2-stable_mono_win64/Godot_v4.7.2-stable_mono_win64.exe",
+      "sha256": "45336315eb6f1a52a8923bc4f2ce8079a03dc4939dcb7d531047890f1f7cdfab",
+      "matches_verified_D_baseline": true
+    }
+  ],
+  "native_client": [
+    1021,
+    660
+  ],
+  "bridge_version": 11,
+  "native_process_id_historical": 12768,
+  "transport_process_id_historical": 8020,
+  "cutoff_utc": "2026-10-23T11:00:00Z",
+  "transport": "Actual foreground unoccluded screenDC pixels and OS input to one pinned process; no simulator API",
+  "session_capabilities": "Private temporary state; never restore old handles or publish tokens",
+  "build_boundary": "Unchanged cached assembly matching the verified backup; no new application build or full-suite claim"
+}

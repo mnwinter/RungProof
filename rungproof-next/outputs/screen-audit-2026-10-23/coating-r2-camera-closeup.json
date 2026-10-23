@@ -1,0 +1,114 @@
+[
+  {
+    "input": {
+      "x": 610,
+      "y": 374,
+      "phase": "down",
+      "button": "middle"
+    },
+    "wait": 0.03
+  },
+  {
+    "input": {
+      "x": 465,
+      "y": 340,
+      "phase": "move"
+    },
+    "wait": 0.03
+  },
+  {
+    "input": {
+      "x": 465,
+      "y": 340,
+      "phase": "up",
+      "button": "middle"
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.04
+  },
+  {
+    "wait": 0.2,
+    "capture": "coating-r2-cabinet-closeup",
+    "ocr": true
+  }
+]

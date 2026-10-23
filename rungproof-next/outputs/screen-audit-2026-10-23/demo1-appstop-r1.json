@@ -1,0 +1,61 @@
+[
+  {
+    "input": {
+      "x": 314,
+      "y": 234
+    },
+    "wait": 0.5,
+    "capture": "demo1-r1-count1-before-appstop",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 113,
+      "y": 646
+    },
+    "wait": 0.5,
+    "capture": "demo1-r1-appstop",
+    "ocr": true
+  },
+  {
+    "wait": 2,
+    "capture": "demo1-r1-appstop-held",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 45,
+      "y": 646
+    },
+    "wait": 0.5,
+    "capture": "demo1-r1-apprun-resumed",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 314,
+      "y": 234
+    },
+    "wait": 0.5,
+    "capture": "demo1-r1-after-second-event",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 314,
+      "y": 234
+    },
+    "wait": 0.5,
+    "capture": "demo1-r1-after-third-event",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 190,
+      "y": 646
+    },
+    "wait": 0.5,
+    "capture": "demo1-r1-appreset",
+    "ocr": true
+  }
+]

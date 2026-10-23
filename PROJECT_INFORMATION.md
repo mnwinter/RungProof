@@ -11,6 +11,20 @@
 
 ### October 2026 playtest and laptop migration
 
+Current explicit work limit: stop project testing, discovery, repairs and agent
+work at **2026-10-23 04:00 America/Los_Angeles (11:00 UTC)**. The user authorized
+only final checkpoint/skill updates and verified D:/Git backup closeout after
+that time, then pause the active goal. Do not resume automatically after this
+cutoff. See `rungproof-next/outputs/screen-audit-2026-10-23/work-order.json`.
+
+Current October23 discovery is indexed by that folder's
+`native-continuation-checkpoint.md`, `hard-issue-index.md` and finite native
+queue. Frozen parcel V7 completes three deliveries on fresh scene load and
+after a qualified handoff Stop/Run, but two actual Reset repeats stall at
+medium outbound phase50. Source analysis isolates a transform/world-AABB reset
+ordering hazard; no repaired application build is claimed. Read later scoped
+reviews before using historical broad failures or pending-case lists.
+
 The next-agent entry point is `skills/rungproof-playtest-handoff/SKILL.md`.
 The migration record is `RUNGPROOF-MIGRATION-2026-10-22.md`. The full native
 77-scene acceptance audit remains incomplete; read the skill's current-state

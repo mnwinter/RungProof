@@ -1,0 +1,18 @@
+[
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 45,
+      "y": 646
+    },
+    "wait": 0.35,
+    "capture": "timed-lamp-r1-running-controls",
+    "ocr": true
+  }
+]

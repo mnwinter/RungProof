@@ -1,0 +1,18 @@
+[
+  {
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-fresh-reload-select-parcel",
+    "ocr": true
+  }
+]

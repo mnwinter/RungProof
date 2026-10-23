@@ -1,0 +1,32 @@
+[
+  {
+    "input": {
+      "x": 538,
+      "y": 405
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.2,
+    "capture": "timed-lamp-r2-engineering-input-grounded",
+    "ocr": true
+  }
+]

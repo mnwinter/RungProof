@@ -1,0 +1,18 @@
+[
+  {
+    "input": {
+      "x": 131,
+      "y": 538
+    },
+    "wait": 0.06
+  },
+  {
+    "input": {
+      "x": 131,
+      "y": 538
+    },
+    "wait": 0.3,
+    "capture": "parcel-v7-repeat-stall-watch-document",
+    "ocr": true
+  }
+]

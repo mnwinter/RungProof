@@ -1,0 +1,52 @@
+{
+  "no_bridge_endpoints": true,
+  "native_actions_executed": false,
+  "source_ocr": "parcel-v7-watch-handoff-r2-1792731284452001600\\watch-menu-armed-menu2x.ocr.json",
+  "actual_saved_menu_qualified": true,
+  "actual_stop_row": "Stop sirnulator scan",
+  "exact_alias_tests": [
+    {
+      "text": "Stop scan",
+      "expected": true,
+      "matched": true
+    },
+    {
+      "text": "Stop simulator scan",
+      "expected": true,
+      "matched": true
+    },
+    {
+      "text": "Stop sirnulator scan",
+      "expected": true,
+      "matched": true
+    },
+    {
+      "text": "Run simulator scan",
+      "expected": false,
+      "matched": false
+    },
+    {
+      "text": "Reset simulator scene",
+      "expected": false,
+      "matched": false
+    },
+    {
+      "text": "Stop sirnulator scene",
+      "expected": false,
+      "matched": false
+    },
+    {
+      "text": "Do not Stop simulator scan",
+      "expected": false,
+      "matched": false
+    },
+    {
+      "text": "Stop simulator scan was not found",
+      "expected": false,
+      "matched": false
+    }
+  ],
+  "helper_sha256": "a412c324b26740ab641be9f83e9dd9a8b970f84c7da308fe6d8325fe85b3e9c8",
+  "r2_preserved_sha256": "11e2a512b6db01144d555e133fadfa010b459f3471210b47db70be82b88092ed",
+  "stop_target_guard_unchanged": "qa_step30 + qa_scan_step30 + qa_class2 in same fresh image; advancing scan; image age <=1s; pinned native session and deadline"
+}

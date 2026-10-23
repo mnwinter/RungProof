@@ -1,0 +1,21 @@
+[
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "capture": "drawbridge-r1-held-wide-first",
+    "ocr": true
+  },
+  {
+    "wait": 2,
+    "capture": "drawbridge-r1-held-wide-second",
+    "ocr": true
+  }
+]

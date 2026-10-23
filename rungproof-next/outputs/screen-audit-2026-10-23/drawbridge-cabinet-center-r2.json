@@ -1,0 +1,29 @@
+[
+  {
+    "input": {
+      "x": 500,
+      "y": 350,
+      "phase": "down",
+      "button": "middle"
+    }
+  },
+  {
+    "input": {
+      "x": 450,
+      "y": 372,
+      "phase": "move"
+    }
+  },
+  {
+    "input": {
+      "x": 450,
+      "y": 372,
+      "phase": "up",
+      "button": "middle"
+    }
+  },
+  {
+    "capture": "drawbridge-cabinet-center-r2",
+    "ocr": true
+  }
+]

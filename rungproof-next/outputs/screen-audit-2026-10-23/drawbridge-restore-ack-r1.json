@@ -1,0 +1,21 @@
+[
+  {
+    "input": {
+      "x": 489,
+      "y": 263
+    },
+    "wait": 0.5,
+    "capture": "drawbridge-r1-ack-restored-lowering",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "drawbridge-r1-home-recovery-progress",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "drawbridge-r1-home-recovered",
+    "ocr": true
+  }
+]

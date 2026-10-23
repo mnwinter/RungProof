@@ -1,0 +1,37 @@
+[
+  {
+    "input": {
+      "x": 506,
+      "y": 286
+    },
+    "wait": 0.3,
+    "capture": "parcel-v7-repeat-stall-watch-initial",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 802,
+      "y": 375,
+      "wheel": -120
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 802,
+      "y": 375,
+      "wheel": -120
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 802,
+      "y": 375,
+      "wheel": -120
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-repeat-stall-watch-scrolled",
+    "ocr": true
+  }
+]

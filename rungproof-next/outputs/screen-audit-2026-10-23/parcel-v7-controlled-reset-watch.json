@@ -1,0 +1,16 @@
+[
+  {
+    "wait": 3,
+    "capture": "parcel-v7-controlled-reset-stall-held",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 809,
+      "y": 34
+    },
+    "wait": 0.25,
+    "capture": "parcel-v7-controlled-reset-live-watch",
+    "ocr": true
+  }
+]

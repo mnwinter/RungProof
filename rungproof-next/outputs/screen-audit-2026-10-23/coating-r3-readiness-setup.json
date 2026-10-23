@@ -1,0 +1,36 @@
+[
+  {
+    "input": {
+      "x": 527,
+      "y": 381
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-spray-ready-selected",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 539,
+      "y": 386
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-both-ready-selected",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-wide-ready-before-start",
+    "ocr": true
+  }
+]

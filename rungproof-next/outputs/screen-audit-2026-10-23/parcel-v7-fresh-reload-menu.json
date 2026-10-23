@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-fresh-reload-menu",
+    "ocr": true
+  }
+]

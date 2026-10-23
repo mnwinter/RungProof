@@ -1,0 +1,19 @@
+[
+  {
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "wait": 0.5,
+    "capture": "parcel-r1-selected-scene",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "capture": "parcel-r1-file-menu",
+    "ocr": true
+  }
+]

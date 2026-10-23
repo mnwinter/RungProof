@@ -1,0 +1,84 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 358,
+      "y": 387
+    },
+    "wait": 0.2,
+    "capture": "marker-reset-r2-owned-draft-prompt",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "wait": 0.4,
+    "capture": "marker-reset-r2-selected",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 456,
+      "y": 512
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "text": "lab-2-03-service-marker-inhibit.rpproj.json"
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.3,
+    "capture": "marker-reset-r2-reference-opened",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 45,
+      "y": 646
+    },
+    "wait": 0.3,
+    "capture": "marker-reset-r2-running-controls",
+    "ocr": true
+  }
+]

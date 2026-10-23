@@ -1,0 +1,17 @@
+[
+  {
+    "input": {
+      "x": 480,
+      "y": 222
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-existing-row-enter-result",
+    "ocr": true
+  }
+]

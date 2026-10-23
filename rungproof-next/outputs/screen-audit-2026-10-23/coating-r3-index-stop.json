@@ -1,0 +1,42 @@
+[
+  {
+    "input": {
+      "x": 589,
+      "y": 368
+    },
+    "wait": 0.25,
+    "capture": "coating-r3-started-same-camera"
+  },
+  {
+    "input": {
+      "x": 502,
+      "y": 338,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.25,
+    "capture": "coating-r3-active-initial-index",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 90
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-index-appstop",
+    "ocr": true
+  },
+  {
+    "wait": 1.5,
+    "capture": "coating-r3-index-appstop-held",
+    "ocr": true
+  }
+]

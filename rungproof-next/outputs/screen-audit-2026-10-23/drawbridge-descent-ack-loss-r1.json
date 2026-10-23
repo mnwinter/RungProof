@@ -1,0 +1,25 @@
+[
+  {
+    "input": {
+      "x": 467,
+      "y": 257
+    },
+    "wait": 0.7,
+    "capture": "drawbridge-r1-actual-descent-before-ack-loss",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 489,
+      "y": 263
+    },
+    "wait": 0.3,
+    "capture": "drawbridge-r1-descent-ack-lost",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "drawbridge-r1-descent-ack-lost-held",
+    "ocr": true
+  }
+]

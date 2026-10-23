@@ -1,4 +1,15 @@
-# Current state at the 2026-10-22 migration
+# Current playtest and migration state
+
+## Subsequent time limit
+
+The user resumed discovery and requested deeper analysis of the harder issues
+until **2026-10-23 04:00 America/Los_Angeles (11:00 UTC)**. At that instant stop
+testing, discovery, repairs and delegated work; only final evidence/skill and
+verified D:/Git backup closeout may continue. Then pause the goal, leaving the
+77-scene audit incomplete if requirements remain. A recurring goal continuation
+is not fresh human authorization to work past this cutoff. The task's cutoff
+automation is `rungproof-4-a-m-stop-and-backup`; its final disposition and work
+order are recorded under `outputs/screen-audit-2026-10-23/`.
 
 ## Provenance and entry points
 
@@ -9,7 +20,11 @@
 - Active application: `rungproof-next/` (Godot .NET plus integrated LAD editor).
 - Project guidance: `AGENTS.md`, `PROJECT_INFORMATION.md`, `CONTEXT.md`, root and
   application `README.md`, `skills/rungproof-development/SKILL.md`.
-- QA root: `rungproof-next/outputs/screen-audit-2026-10-21/`.
+- Current QA root: `rungproof-next/outputs/screen-audit-2026-10-23/`.
+- Current checkpoint: `native-continuation-checkpoint.md` under that root.
+- Current exhaustive cells/finite queue: `coverage-reconciliation.json` and
+  `native-test-queue.json`. Check their later individual reviews before replay.
+- Historical QA root: `rungproof-next/outputs/screen-audit-2026-10-21/`.
 - Exact catalogue identities: `route-reconciliation.md` under that QA root.
 - Remaining cases: `postbackup-remaining-requirements.md`. Some cells lag newer
   reports below; reconcile them rather than treating the whole file as current.
@@ -34,15 +49,20 @@ were included. Refer to the commit diff for exact code scope.
 
 ## Confirmed open problems
 
-1. **Parcel Lab2.23 full batch fails.** V3 native attempt stalls at count1;
-   the versioned diagnostic V4 LAD fixture reaches count2 then stalls with
-   table alignedTrue, loadedFalse/clearFalse, transferTrue/inhibitedTrue and
-   completionFalse. V4 is not a successful workaround. Read
-   `postbackup-parcel-v4-isolation.md`, `postbackup-parcel-boundary-analysis.md`
-   and `postbackup-parcel-review.md`. A pure actual-source model experiment
-   reproduces gate over-admission with20mm queue gap,15mm clearance and18mm
-   travel per accepted scan; floating-touch was ruled out for the authored
-   geometry. This is cause evidence, not native observation of private positions.
+1. **Parcel Lab2.23 Reset/repeat fails.** Historical V3 count1 and V4 count2
+   stalls remain outcomes of those exact LAD controllers. Frozen diagnostic V7
+   completes all three supported receiver deliveries on a fresh scene load,
+   with complete/receivedTrue and commandsOff; this has been observed twice.
+   The same V7 after real AppReset/Run/physicalStart stalls at count1; native
+   Watch identifies medium outbound qa_step50/qa_class2. The controlled Reset
+   comparison reproduces the failure without a Stop probe. Read the current
+   `parcel-v7-native-review.md`, `parcel-v7-repeat-review.md` and their later
+   controlled-comparison addendum. Do not repeat the blanket claim that normal
+   completion is impossible. `parcel-sensor-reset-decision-table.md` traces a
+   source-supported Reset ordering hazard: retained parcel yaw is measured as
+   world-AABB dimensions before the visual root is restored. Static asset/contact
+   math supplies a counterexample, not a native private-dimension measurement.
+   V7 remains diagnostic learner LAD, not a shipped application repair.
 2. **Diagnostics footer QA-UI-002 remains misleading.** Blank Run reports
    EDIT001; authoring a valid Network+NO rung and running it clears ErrorList
    to0ERRORS and executes the ladder, while the outer footer still says
@@ -56,6 +76,18 @@ were included. Refer to the commit diff for exact code scope.
 
 ## Later native evidence superseding older blocked/gap cells
 
+- Demo1 AppStop at actual count1 clears projected output while stopped; Run
+  restores the retained count without an extra event, further pulses reach2/3,
+  and AppReset returns stopped0. Current `demo1-appstop-review.md`; no extra
+  count2 Stop test is required for this bounded closure.
+- Drawbridge5.8 actual descending STOPPED-acknowledgement loss holds the tilted
+  deck at45.85; restoration reaches home, opens barriers and releases traffic.
+  Current `drawbridge-descent-review.md`; the old pending case below is closed.
+- Current October23 reviews additionally close parcel phase30/class2 AppStop
+  and Run-alone completion, Demo2 retained-REQUEST AppStop/full timer restart,
+  Lab5.2 acknowledged active pulse nonextension, marker2.3 active-input Reset,
+  and coating5.10 initial-index Stop/Run recovery. Their exact reviews are linked
+  from the current checkpoint and queue. Parcel Reset/repeat still fails.
 - Jug2.13:100percent fill/high signal and supported discharge; partial-fill
   AppStop hold, Run completion, Reset and fresh repeat.
   `postbackup-jug-review.md`.
@@ -91,15 +123,23 @@ were included. Refer to the commit diff for exact code scope.
 
 ## Resume efficiently
 
-The user switched priority to wipe-safe backup and a next-Codex skill. Do not
-restart testing before verifying the migration/backup handoff. After restoring
-and agreeing the current repair work order, address the parcel failure and
-stale footer using their exact repros. Complete only genuinely outstanding
-native cases, not another77-entry menu sweep or already-proved truth tables.
-A concrete remaining screen case is drawbridge5.8: during actual descent,
-remove exposed STOPPED acknowledgement, verify lowering stops/pose holds,
-restore acknowledgement and observe home. Existing fixture:
-`test-projects/fixture-lab-5-08-drawbridge-control.rpproj.json`.
+The user resumed deeper discovery until the explicit cutoff above. Preserve
+the verified migration base, and use the current finite native queue rather
+than another77-entry menu sweep. The drawbridge descent case is closed. Moving
+parcel handoff Stop/recovery is separate from the confirmed Reset failure; read
+the latest native checkpoint/reviews for whether that case subsequently ran.
+Do not implement application repairs during discovery. Candidate subsystem
+boundaries are recorded separately from the deferred final all-scene repair plan.
+
+Current `qa-ui-002-causal-analysis.md` traces the stale footer to separate outer
+and ladder status fields: successful local Run clears only the latter. Existing
+automated diagnostic coverage omits the outer status. Current
+`reset-transform-impact-analysis.md` found no equally direct duplicate of the
+parcel transform/geometry ordering seam in the other inspected plant adapters.
+
+The verified D:/Git base at d0c4566b does not yet cover subsequent October23
+evidence/userdata/skill changes. The final closeout must create a separate
+verified incremental addendum and pause the goal/automation at the cutoff.
 
 Before devising the final prioritized all-scene remediation plan, reconcile
 the full remaining requirements and issue list. No full-application PASS,

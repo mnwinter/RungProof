@@ -1,0 +1,33 @@
+[
+  {
+    "input": {
+      "x": 491,
+      "y": 343
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.4,
+    "capture": "parcel-v7-fresh-reload-imported",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-fresh-reload-view-menu",
+    "ocr": true
+  }
+]

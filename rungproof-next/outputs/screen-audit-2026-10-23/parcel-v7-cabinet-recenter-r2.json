@@ -1,0 +1,29 @@
+[
+  {
+    "input": {
+      "x": 500,
+      "y": 350,
+      "phase": "down",
+      "button": "middle"
+    }
+  },
+  {
+    "input": {
+      "x": 580,
+      "y": 475,
+      "phase": "move"
+    }
+  },
+  {
+    "input": {
+      "x": 580,
+      "y": 475,
+      "phase": "up",
+      "button": "middle"
+    }
+  },
+  {
+    "capture": "parcel-v7-r1-start-cabinet-recentered",
+    "ocr": true
+  }
+]

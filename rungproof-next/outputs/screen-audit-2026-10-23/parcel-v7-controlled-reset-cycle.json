@@ -1,0 +1,73 @@
+[
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 230,
+      "y": 110
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-controlled-reset-zero",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-controlled-reset-run",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 612,
+      "y": 386
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-controlled-reset-start",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-controlled-reset-progress-1",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-controlled-reset-progress-2",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-controlled-reset-progress-3",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-controlled-reset-progress-4",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-controlled-reset-progress-5",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-controlled-reset-progress-6",
+    "ocr": true
+  }
+]

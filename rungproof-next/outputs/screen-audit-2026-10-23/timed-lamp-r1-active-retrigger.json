@@ -1,0 +1,33 @@
+[
+  {
+    "input": {
+      "x": 527,
+      "y": 265
+    },
+    "wait": 0.25,
+    "capture": "timed-lamp-r1-first-pulse-on"
+  },
+  {
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "x": 527,
+      "y": 265
+    },
+    "wait": 0.1,
+    "capture": "timed-lamp-r1-active-second-pulse"
+  },
+  {
+    "wait": 2.15,
+    "capture": "timed-lamp-r1-expired-before-second-interval"
+  },
+  {
+    "input": {
+      "x": 527,
+      "y": 265
+    },
+    "wait": 0.15,
+    "capture": "timed-lamp-r1-fresh-after-expiry-on"
+  }
+]

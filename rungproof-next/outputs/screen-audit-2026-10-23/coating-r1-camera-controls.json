@@ -1,0 +1,60 @@
+[
+  {
+    "input": {
+      "x": 790,
+      "y": 371,
+      "phase": "down",
+      "button": "middle"
+    },
+    "wait": 0.03
+  },
+  {
+    "input": {
+      "x": 620,
+      "y": 340,
+      "phase": "move"
+    },
+    "wait": 0.03
+  },
+  {
+    "input": {
+      "x": 620,
+      "y": 340,
+      "phase": "up",
+      "button": "middle"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 617,
+      "y": 340,
+      "phase": "wheel",
+      "delta": 360
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.2,
+    "capture": "coating-r1-engineering-controls-ground",
+    "ocr": true
+  }
+]

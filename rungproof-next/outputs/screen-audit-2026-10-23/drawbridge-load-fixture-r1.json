@@ -1,0 +1,51 @@
+[
+  {
+    "input": {
+      "x": 500,
+      "y": 109
+    }
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "input": {
+      "text": "C:/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-21/test-projects"
+    }
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 443,
+      "y": 512
+    }
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "input": {
+      "text": "fixture-lab-5-08-drawbridge-control.rpproj.json"
+    },
+    "capture": "drawbridge-fixture-file-entered",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 379,
+      "y": 550
+    },
+    "wait": 0.5,
+    "capture": "drawbridge-fixture-open-result",
+    "ocr": true
+  }
+]

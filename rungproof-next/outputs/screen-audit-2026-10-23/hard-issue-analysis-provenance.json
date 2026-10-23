@@ -1,0 +1,350 @@
+{
+  "kind": "READ_ONLY_SOURCE_AND_NEW_DIAGNOSTIC_PROVENANCE",
+  "nativeAcceptance": false,
+  "sourceCommit": "d0c4566bc956706ab3430e25d4142b03f4431e9c",
+  "applicationChanges": false,
+  "realPlcConstructed": false,
+  "fixturesAndSource": [
+    {
+      "path": "src/Scenes/ParcelTransferPlantModel.cs",
+      "bytes": 8073,
+      "sha256": "ad2b8f8699aeb66f3e5fa653ead0cf22ceb71721ff863dce2c12f5053e9f5d56"
+    },
+    {
+      "path": "src/Scenes/SceneSimulationRuntime.ParcelTransfer.cs",
+      "bytes": 12853,
+      "sha256": "a32df614153e95321072ea047983c40acaf171ce2c8f28b5c23604607a59547f"
+    },
+    {
+      "path": "src/App/Main.cs",
+      "bytes": 291635,
+      "sha256": "b9a0e6acfc9396d4d215c728487c8c75c7bb4627db395772adfcb7a6addcedf2"
+    },
+    {
+      "path": "src/App/SimulatorShell.cs",
+      "bytes": 1428168,
+      "sha256": "f3d2ed820e249ebf3db0300f52d4d1014facf8ad84badb670cf6c444bf14c31a"
+    },
+    {
+      "path": "src/App/SimulatorShell.AuditDiagnosticsReview.cs",
+      "bytes": 2293,
+      "sha256": "9dbc1e9272b821247d6150a4d80c38f0a481dc73f128032ae5e28738c218c256"
+    },
+    {
+      "path": "tests/ParcelTransferPlantTests.cs",
+      "bytes": 3335,
+      "sha256": "52760f7979f2155469a93f124414d5a3bec9b3e30d1a769911c8a3b0bb6fd136"
+    },
+    {
+      "path": "scenes/migrated/lab-2-23-parcel-sorter.scene.json",
+      "bytes": 21026,
+      "sha256": "cc56b5ce79c0fd60ed7be36c0688bbe20a06a4ff9e250021cec7df990924f816"
+    },
+    {
+      "path": "src/VirtualController/AggregateArrayDraft.cs",
+      "bytes": 1850,
+      "sha256": "26a257f148bbfa1b8861ef36bfc5ff1847a51c019f0f2bb1b1379b7c6203019f"
+    },
+    {
+      "path": "src/VirtualController/AuthoredDemoLadderPrograms.cs",
+      "bytes": 50655,
+      "sha256": "cd49fdf223799cf94c3e39de080a968ab0c48d78ef5f799cabe3060bb8466b2b"
+    },
+    {
+      "path": "src/VirtualController/AuthoredLessonLadderPrograms.cs",
+      "bytes": 7725,
+      "sha256": "c7dbbb835a40a32f3b83a0515d9f19acfc6fb208087d384acfdb471ede3b7cd0"
+    },
+    {
+      "path": "src/VirtualController/DemoPrograms.cs",
+      "bytes": 294,
+      "sha256": "0cf55aece2058f5455f20ddeb82402a96f1e7b1d6f81dcef373f30b6778510e4"
+    },
+    {
+      "path": "src/VirtualController/EditableLadderLayout.cs",
+      "bytes": 10757,
+      "sha256": "d60433b4d114027c04595c81753ac3d4a60e2bd956c3589f6cccf93f92a59c0f"
+    },
+    {
+      "path": "src/VirtualController/EditableLadderTree.cs",
+      "bytes": 20069,
+      "sha256": "a28799e3165522c94a4c9527a63fc5765f8ecf914a131c34089b152aaadb9439"
+    },
+    {
+      "path": "src/VirtualController/EditableWatchRow.cs",
+      "bytes": 4326,
+      "sha256": "dbdb02a561c0da2b188e08fbbed3a14b92cef0e08282a05742f7f8a31a997015"
+    },
+    {
+      "path": "src/VirtualController/EditorDiagnosticTarget.cs",
+      "bytes": 2576,
+      "sha256": "104002108eb157eb48cac1b64ab3e1ae7ea65e52fdeecae2f3fdc0a36daf16a4"
+    },
+    {
+      "path": "src/VirtualController/FrozenObservationTable.cs",
+      "bytes": 15690,
+      "sha256": "770832a0bc12563bd4c2ed54f3575c3cec76e3a50199e01defc20d09eeac3dae"
+    },
+    {
+      "path": "src/VirtualController/FrozenRegisteredMap.cs",
+      "bytes": 2093,
+      "sha256": "0a73a3e0c16c4929e8c3d96f58ec6775a131ea9088f1be443006cf7a689a1016"
+    },
+    {
+      "path": "src/VirtualController/InstructionObservation.cs",
+      "bytes": 12886,
+      "sha256": "6506a22c93dad8b392f3f076950bb3f6bae3ef66742aa5c4fd6a4c2a6b979bea"
+    },
+    {
+      "path": "src/VirtualController/InstructionObservationCollector.cs",
+      "bytes": 12185,
+      "sha256": "d6b5749d83f20f3f6ca698b1da52d3362302481a585031262a5476afbf196e41"
+    },
+    {
+      "path": "src/VirtualController/LadderCallAuthoring.cs",
+      "bytes": 14437,
+      "sha256": "0a2ca1fdc5ff7e9ca0aeebf8adc59a27e66e1719da73cc4883ca2211818b772e"
+    },
+    {
+      "path": "src/VirtualController/LadderCallBindings.cs",
+      "bytes": 19286,
+      "sha256": "d4e73dcb6a0cb3007fc7824035a37aae674cf04c06cc8513fee22863939c962b"
+    },
+    {
+      "path": "src/VirtualController/LadderCallFrames.cs",
+      "bytes": 13253,
+      "sha256": "b58d674217684b4b721a8793b865cd0d8f5baf0ce06a26718200d37180eb7551"
+    },
+    {
+      "path": "src/VirtualController/LadderCompiler.cs",
+      "bytes": 75127,
+      "sha256": "f4c0b019d9f75a012fb3fa387046b2a76871d69ccd462ab47d70a819cd1f00ab"
+    },
+    {
+      "path": "src/VirtualController/LadderEditorCommands.cs",
+      "bytes": 16968,
+      "sha256": "54d677e87dda663cd4c84af4e610a55ad79c29c719477397e58cd9efef149e2a"
+    },
+    {
+      "path": "src/VirtualController/LadderEditorDocument.cs",
+      "bytes": 117612,
+      "sha256": "4b642178a411902816c4d8a49a37ff60d7b34fa320e5ab1d23b59c176dc3430a"
+    },
+    {
+      "path": "src/VirtualController/LadderEditorHistory.cs",
+      "bytes": 13176,
+      "sha256": "b80c11d4e0ea7c26612825df3741aecf97603325f96abc5df036435c5011d511"
+    },
+    {
+      "path": "src/VirtualController/LadderEditorProjectJson.cs",
+      "bytes": 52700,
+      "sha256": "d5f17f1330de71a43a01575cb338281fcb52202a30eb7cd6f669d3d9d8feb4e8"
+    },
+    {
+      "path": "src/VirtualController/LadderEditTransaction.cs",
+      "bytes": 2217,
+      "sha256": "e24aa61cb2aa11b957596b511f3b4dbf9653afbeaae70b08d9f43829df27fcae"
+    },
+    {
+      "path": "src/VirtualController/LadderInstanceStorage.cs",
+      "bytes": 3280,
+      "sha256": "341f231ca1a73d22127f6decabe5b6ccdd3260adac8daabcba27e56899eba39c"
+    },
+    {
+      "path": "src/VirtualController/LadderInstructionCatalog.cs",
+      "bytes": 23671,
+      "sha256": "ec19fb35a4f420762a6291f7aab44e85af8f0849bf7f7a66dc968718735b3824"
+    },
+    {
+      "path": "src/VirtualController/LadderOperandSymbols.cs",
+      "bytes": 3846,
+      "sha256": "a729db8e258228bc6acd6acacd6c96b9389a39374b17093df0644ae7d0fcb42c"
+    },
+    {
+      "path": "src/VirtualController/LadderProgram.cs",
+      "bytes": 28328,
+      "sha256": "724035b33e0a5af7628acf164086f2ba2afa7c1ffa5bb728847974b8541cc7a6"
+    },
+    {
+      "path": "src/VirtualController/LadderProgramJson.Calls.cs",
+      "bytes": 4035,
+      "sha256": "2604acde4bb6aa6cc0dfecf8ce890dc2bb024818436b62fe2a05b6a3d307527d"
+    },
+    {
+      "path": "src/VirtualController/LadderProgramJson.cs",
+      "bytes": 37857,
+      "sha256": "87487b7e98ac62de2a67406d8a0b9af7283e3381d316691757a210afa82cf75e"
+    },
+    {
+      "path": "src/VirtualController/LadderProjectFileStore.cs",
+      "bytes": 2724,
+      "sha256": "d3630fa1793beb55686a2b3cb73aa2967b9953c52a970542b981bba3e003fff8"
+    },
+    {
+      "path": "src/VirtualController/LadderProjectIndex.cs",
+      "bytes": 14948,
+      "sha256": "193f08049d11370bbd2ed80e96ba42e19ea031c1e83918e02729dc3c066a1e4c"
+    },
+    {
+      "path": "src/VirtualController/LadderStorageNamespace.cs",
+      "bytes": 1231,
+      "sha256": "bded8aa3a97b3ff88740092bdf8c27c9d8ee19cb71764cd2adf035feeab8a910"
+    },
+    {
+      "path": "src/VirtualController/LadderTagOperandDragPayload.cs",
+      "bytes": 2405,
+      "sha256": "ff7fefa7ad731767b62cab930155156a46a4d4fb64fab75d9497802d1b2e3625"
+    },
+    {
+      "path": "src/VirtualController/LadderTimeLiteral.cs",
+      "bytes": 3609,
+      "sha256": "42d9bfad910c983f4023f1ca5d78721022826cd71951e69a1cbf813781ca07b0"
+    },
+    {
+      "path": "src/VirtualController/LadderTreeEditorCommands.cs",
+      "bytes": 7687,
+      "sha256": "fc5c57bc0ed94b1bf2cfbbb5a6627c8eccd928801650d79130009c3aca4c5853"
+    },
+    {
+      "path": "src/VirtualController/PlcAggregateSchema.cs",
+      "bytes": 8413,
+      "sha256": "fc30cf81b60f95f4c6470f7a9120e89ecc99e8fe78eecbfc8572cb493fcf2b8a"
+    },
+    {
+      "path": "src/VirtualController/PlcTextValues.cs",
+      "bytes": 4375,
+      "sha256": "820f3d654ab8f34c0481594ab840bd1d14d0ee854fbfc0cd72898a521217f04a"
+    },
+    {
+      "path": "src/VirtualController/ProgramBlockDragPayload.cs",
+      "bytes": 1563,
+      "sha256": "91103ea8da8023ecfa257441494ef5afd25ffd7b1a361f4d050ef440c3cca053"
+    },
+    {
+      "path": "src/VirtualController/SceneAggregateContract.cs",
+      "bytes": 7209,
+      "sha256": "d2ef64c5fedf10fa846d553100ee4928fa87c7cdfb316a1a90fcea81f0653c4e"
+    },
+    {
+      "path": "src/VirtualController/SceneIoBindingValidator.cs",
+      "bytes": 7634,
+      "sha256": "550dc1b4af1097cf6e2af7597b2ffdbe899c3276b9e200b298acc27294b9b9ec"
+    },
+    {
+      "path": "src/VirtualController/SceneIoImageMapper.cs",
+      "bytes": 5705,
+      "sha256": "c3ad33dddc279c511159f02741e40b259d0202fede104bc87a3d714d26b322d5"
+    },
+    {
+      "path": "src/VirtualController/SceneLadderProject.cs",
+      "bytes": 11762,
+      "sha256": "94b5fdcf66dcc2f707c52d3fe4846e0eaf7138810a12d31c7a2f56f48f204e8f"
+    },
+    {
+      "path": "src/VirtualController/SiemensPlcTagAddress.cs",
+      "bytes": 11413,
+      "sha256": "d8df952fd14f6fc30b079611d5feaa1e6e890110a62a3aa9f2eab54d9cc3dee8"
+    },
+    {
+      "path": "src/VirtualController/TiaProgramControlLabel.cs",
+      "bytes": 679,
+      "sha256": "c861c7fc0ba9c398802b0cb3ec8cacbd5cca01aae25872f3ef6ae28764bf329e"
+    },
+    {
+      "path": "src/VirtualController/VirtualControllerAcceptedScan.cs",
+      "bytes": 2205,
+      "sha256": "e54455c343b18e98720f8fbe33358a9c1e1e1cb213f649f9f88216e1b4dc7144"
+    },
+    {
+      "path": "src/VirtualController/VirtualControllerRuntime.cs",
+      "bytes": 83658,
+      "sha256": "615b804c4cc3a9ea57d5a9a6c4ddfcba2d097b8dfa0f7b2d4744885a7469f047"
+    },
+    {
+      "path": "src/VirtualController/VirtualControllerRuntime.Observations.cs",
+      "bytes": 19433,
+      "sha256": "cc54d0c19dee996f5fe3e53bf9022cb8f42a202d478b23a269075d526749486e"
+    },
+    {
+      "path": "src/VirtualController/VirtualControllerScanCompleted.cs",
+      "bytes": 1504,
+      "sha256": "62d9c9a60180cc7df55b7dea4ea7438557cfda3bc9d447c460bff12d52fb816f"
+    },
+    {
+      "path": "src/VirtualController/VirtualControllerSession.cs",
+      "bytes": 23076,
+      "sha256": "c8de185b5d4619da60e6e0e7d3204bf4dea4b1cc4fa53c2c4a980d3a467f61d5"
+    },
+    {
+      "path": "src/VirtualController/WatchTableDisplayFormat.cs",
+      "bytes": 2477,
+      "sha256": "26e2d2ac727994acb83ec88dff0f31a76914db28f2469250ee41a09c0027681c"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-21/test-projects/fixture-new-binding-lab-2-23-v3.rpproj.json",
+      "bytes": 82910,
+      "sha256": "23526133ab0534e65b833b1fa8275f04a9a27d10835448afcc68fb85c6d3eae4"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-21/test-projects/fixture-new-binding-lab-2-23-v4.rpproj.json",
+      "bytes": 84831,
+      "sha256": "a6a7422019e7a9f85e7f527ddee859f98aa09b1dfa6a1e6a70338c33301fc7fb"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/ParcelAcceptedScan.csproj",
+      "bytes": 558,
+      "sha256": "c3c563e9dd8dc9270141a7bf7f2386f4b0cf17e450e4915c76921b8a26d89400"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/ParcelAcceptedScan.cs.txt",
+      "bytes": 20758,
+      "sha256": "a49979575784e7bc17472d4dd61e7b5f82aa11c5e7cf0a55cc1aeac0ced2e858"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/Directory.Build.props",
+      "bytes": 488,
+      "sha256": "8d9ac337ea9de8c5476f655e14aa3e21b8e353f49c8e2caab599dbcf9a87f644"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/fixture-diagnostic-parcel223-v5-metered700.rpproj.json",
+      "bytes": 94256,
+      "sha256": "21c01949e7ea3097ff7bc64a18965aaf44ee5996d1bdf050d93731181020d28b"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/fixture-diagnostic-parcel223-v6-class-metered.rpproj.json",
+      "bytes": 108063,
+      "sha256": "234cda74c80e55d5484c977f7333346b056ed8e6363261d71317f3be54229cd1"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/fixture-diagnostic-parcel223-v7-retentive-class-metered.rpproj.json",
+      "bytes": 117387,
+      "sha256": "36de084f73c356c761440e21609b44dbb71a339573837349dc8422212c63fd6a"
+    }
+  ],
+  "reviewedHistoricalNativeFrames": [
+    {
+      "path": "outputs/screen-audit-2026-10-21/small-parcel-v4-final-signals.png",
+      "bytes": 285514,
+      "sha256": "17bf88c315b13f6a64ca01e3f7c13690878bf8dfcd810d794a2159257240b14c"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-21/small-diagnostics-error-list-settled.png",
+      "bytes": 125932,
+      "sha256": "761f4c9d97de8c30aef0e6985db91424c76c9719644cd6ae7c6e39fb1ba3c580"
+    }
+  ],
+  "reportAndChecklist": [
+    {
+      "path": "outputs/screen-audit-2026-10-23/hard-issue-analysis.md",
+      "bytes": 21852,
+      "sha256": "de361d79cb602bf5f4d31639145e73efa431760419b511a9f3b5c47aec2867f4"
+    },
+    {
+      "path": "outputs/screen-audit-2026-10-23/parcel-v7-native-discriminator.md",
+      "bytes": 2420,
+      "sha256": "d3dafee83e4fa2ebcb7ef1b44778f993341ee32c307d1273c98d3cf2f73a0e7b"
+    }
+  ],
+  "allDiagnosticProcessesTerminal": true,
+  "cutoffUtc": "2026-10-23T11:00:00Z"
+}

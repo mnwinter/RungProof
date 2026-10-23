@@ -1,0 +1,77 @@
+[
+  {
+    "input": {
+      "x": 357,
+      "y": 486
+    },
+    "wait": 0.6,
+    "capture": "timed-lamp-r1-selected",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 500,
+      "y": 109
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "text": "C:/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-21/test-projects"
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 456,
+      "y": 512
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.04
+  },
+  {
+    "input": {
+      "text": "lab-5-02-timed-lamp-off.rpproj.json"
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.3,
+    "capture": "timed-lamp-r1-reference-opened",
+    "ocr": true
+  }
+]

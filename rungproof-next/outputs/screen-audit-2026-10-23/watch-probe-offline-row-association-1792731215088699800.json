@@ -1,0 +1,521 @@
+{
+  "no_bridge_endpoints": true,
+  "native_actions_executed": false,
+  "source_ocr": "watch-probe-offline-stall-1792730972333001500\\offline-original-name-and-monitor3x.ocr.json",
+  "source_sha256": "b1394c38ebbb34582148c1b3100ca1794dbfd7d4390a65de5369387fad571632",
+  "helper_sha256": "fd84492fc149e77f22040d4d705a39ac5f9cf9254b657af265f7011ebdcd257e",
+  "synthetic_values_not_native_target_evidence": true,
+  "cases": [
+    {
+      "case": "actual_saved_native_negative_50_50_2",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": 50,
+          "qa_scan_step": 50,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "50",
+              "value": 50,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "50",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "50",
+              "value": 50,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "50",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "synthetic_monitor_values_only_30_30_2",
+      "expected_match": true,
+      "actual": {
+        "values": {
+          "qa_step": 30,
+          "qa_scan_step": 30,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": true,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "missing_qa_step_cannot_borrow_adjacent_monitor_row",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": null,
+          "qa_scan_step": 30,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "shifted_qa_step_outside_row_tolerance_rejected",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": null,
+          "qa_scan_step": 30,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "missing_qa_scan_step_cannot_borrow_adjacent_monitor_row",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": 30,
+          "qa_scan_step": null,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "shifted_qa_scan_step_outside_row_tolerance_rejected",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": 30,
+          "qa_scan_step": null,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "missing_qa_class_cannot_borrow_adjacent_monitor_row",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": 30,
+          "qa_scan_step": 30,
+          "qa_class": null
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": []
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "shifted_qa_class_outside_row_tolerance_rejected",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": 30,
+          "qa_scan_step": 30,
+          "qa_class": null
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": []
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "correct_numbers_centered_in_gap_outside_monitor_column_rejected",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": null,
+          "qa_scan_step": null,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [],
+          "qa_scan_step": [],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    },
+    {
+      "case": "conflicting_value_same_monitor_row_rejected",
+      "expected_match": false,
+      "actual": {
+        "values": {
+          "qa_step": null,
+          "qa_scan_step": 30,
+          "qa_class": 2
+        },
+        "row_witnesses": {
+          "qa_step": [
+            {
+              "name_text": "qa_step",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            },
+            {
+              "name_text": "qa_step",
+              "monitor_text": "99",
+              "value": 99,
+              "name_center_y": 444.0,
+              "monitor_word": {
+                "text": "99",
+                "x": 339,
+                "y": 424,
+                "w": 40,
+                "h": 30
+              }
+            }
+          ],
+          "qa_scan_step": [
+            {
+              "name_text": "qa_scan_step -",
+              "monitor_text": "30",
+              "value": 30,
+              "name_center_y": 512.0,
+              "monitor_word": {
+                "text": "30",
+                "x": 338,
+                "y": 494,
+                "w": 41,
+                "h": 29
+              }
+            }
+          ],
+          "qa_class": [
+            {
+              "name_text": "qa_class",
+              "monitor_text": "2",
+              "value": 2,
+              "name_center_y": 651.0,
+              "monitor_word": {
+                "text": "2",
+                "x": 338,
+                "y": 633,
+                "w": 20,
+                "h": 30
+              }
+            }
+          ]
+        },
+        "target_rows_matched": false,
+        "screen_watch_only": true,
+        "physical_pose_acceptance": false
+      }
+    }
+  ]
+}

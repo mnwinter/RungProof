@@ -1,0 +1,38 @@
+[
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.2,
+    "capture": "coating-r3-run-alone-index-resumes",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "coating-r3-recovery-1",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "coating-r3-recovery-2",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "coating-r3-recovery-3",
+    "ocr": true
+  },
+  {
+    "wait": 3,
+    "capture": "coating-r3-recovery-4",
+    "ocr": true
+  }
+]

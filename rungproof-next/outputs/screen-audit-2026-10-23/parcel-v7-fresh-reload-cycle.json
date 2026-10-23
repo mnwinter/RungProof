@@ -1,0 +1,41 @@
+[
+  {
+    "input": {
+      "x": 612,
+      "y": 386
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-fresh-reload-physical-start",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-fresh-reload-progress-1",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-fresh-reload-progress-2",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-fresh-reload-progress-3",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-fresh-reload-progress-4",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-fresh-reload-progress-5",
+    "ocr": true
+  },
+  {
+    "wait": 4,
+    "capture": "parcel-v7-fresh-reload-progress-6",
+    "ocr": true
+  }
+]

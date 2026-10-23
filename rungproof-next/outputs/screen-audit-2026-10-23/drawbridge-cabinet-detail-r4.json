@@ -1,0 +1,54 @@
+[
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 508,
+      "y": 320,
+      "phase": "wheel",
+      "delta": 120
+    }
+  },
+  {
+    "capture": "drawbridge-cabinet-detail-r4",
+    "ocr": true
+  }
+]

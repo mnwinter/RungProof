@@ -1,0 +1,20 @@
+[
+  {
+    "input": {
+      "x": 355,
+      "y": 161
+    },
+    "wait": 0.4,
+    "capture": "parcel-v7-fresh-reload-scene",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-fresh-reload-file-menu",
+    "ocr": true
+  }
+]

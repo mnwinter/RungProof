@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- Set before SDK imports. All generated C# stays outside the app tree. -->
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)../../../_agent-hard-issue-analysis-20261023/obj/</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)../../../_agent-hard-issue-analysis-20261023/bin/</BaseOutputPath>
+  </PropertyGroup>
+</Project>

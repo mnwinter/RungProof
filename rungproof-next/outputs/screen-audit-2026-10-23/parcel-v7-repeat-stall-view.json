@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 463,
+      "y": 160
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-repeat-stall-view-menu",
+    "ocr": true
+  }
+]

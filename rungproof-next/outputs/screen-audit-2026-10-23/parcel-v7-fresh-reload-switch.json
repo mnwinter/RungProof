@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 357,
+      "y": 201
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-fresh-reload-owned-discard",
+    "ocr": true
+  }
+]

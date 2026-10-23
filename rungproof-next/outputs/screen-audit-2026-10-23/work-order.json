@@ -1,0 +1,22 @@
+{
+  "work_order": "Resume missing native playtest cases and prioritize deep causal reasoning on hard issues before the explicit cutoff",
+  "canonical_repository": "https://github.com/mnwinter/RungProof",
+  "baseline_commit": "d0c4566bc956706ab3430e25d4142b03f4431e9c",
+  "baseline_backup": "D:/RungProof-Backup-2026-10-22",
+  "project_work_cutoff_local": "2026-10-23T04:00:00-07:00",
+  "project_work_cutoff_utc": "2026-10-23T11:00:00Z",
+  "timezone": "America/Los_Angeles",
+  "cutoff_automation": "rungproof-4-a-m-stop-and-backup",
+  "after_cutoff": [
+    "Stop project discovery, testing, repairs and delegated project work; do not start another case",
+    "Consolidate final evidence, known issues and continuation checkpoint",
+    "Update the handoff skill if new lessons or state require it",
+    "Commit and push authorized RungProof changes; archive new large public evidence as needed",
+    "Refresh D: backup including raw evidence, ignored files, native userdata, relevant skills and private task context; preserve C: originals",
+    "Verify final remote Git commit, copied delta, userdata and D: Git integrity; record a backup addendum",
+    "Pause the goal and cutoff automation, then stop until fresh human authorization"
+  ],
+  "evidence_boundary": "Do not implement repairs during discovery, hide sequence logic in plant/render code, or substitute model experiments for actual screen interactions",
+  "private_data": "Live screen capabilities and private session/userdata records remain local and on D:, outside public Git",
+  "backup_provenance": "The earlier verified d0c4566b snapshot remains valid; later work requires its own verified incremental backup receipt"
+}

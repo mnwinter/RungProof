@@ -1,0 +1,39 @@
+[
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 90
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 354,
+      "y": 201
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-handoff-r2-scene-out",
+    "ocr": true
+  }
+]

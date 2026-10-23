@@ -1,0 +1,1 @@
+[{"input": {"x": 45, "y": 646}, "wait": 0.5, "capture": "drawbridge-r1-run-loaded-editor", "ocr": true}, {"input": {"x": 946, "y": 98}, "wait": 0.5, "capture": "drawbridge-r1-run-scene", "ocr": true}]

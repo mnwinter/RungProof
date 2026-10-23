@@ -1,0 +1,19 @@
+[
+  {
+    "input": {
+      "x": 480,
+      "y": 222
+    },
+    "capture": "parcel-v7-existing-row-selected",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 379,
+      "y": 550
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-native-project-opened-r2",
+    "ocr": true
+  }
+]

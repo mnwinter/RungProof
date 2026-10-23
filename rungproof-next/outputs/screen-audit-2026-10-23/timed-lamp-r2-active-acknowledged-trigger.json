@@ -1,0 +1,33 @@
+[
+  {
+    "input": {
+      "x": 471,
+      "y": 305
+    },
+    "wait": 0.25,
+    "capture": "timed-lamp-r2-first-pulse-ack-on"
+  },
+  {
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "x": 471,
+      "y": 305
+    },
+    "wait": 0.1,
+    "capture": "timed-lamp-r2-active-pulse-ack-on"
+  },
+  {
+    "wait": 2.15,
+    "capture": "timed-lamp-r2-off-before-retrigger-deadline"
+  },
+  {
+    "input": {
+      "x": 471,
+      "y": 305
+    },
+    "wait": 0.15,
+    "capture": "timed-lamp-r2-fresh-pulse-ack-on"
+  }
+]

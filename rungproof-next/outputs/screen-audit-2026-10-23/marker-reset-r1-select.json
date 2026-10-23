@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 358,
+      "y": 387
+    },
+    "wait": 0.2,
+    "capture": "marker-reset-r1-owned-draft-prompt",
+    "ocr": true
+  }
+]

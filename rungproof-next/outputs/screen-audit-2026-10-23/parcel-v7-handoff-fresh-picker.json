@@ -1,0 +1,32 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 354,
+      "y": 161
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.25,
+    "capture": "parcel-v7-handoff-fresh-picker",
+    "ocr": true
+  }
+]

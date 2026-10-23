@@ -1,0 +1,26 @@
+[
+  {
+    "input": {
+      "x": 230,
+      "y": 110
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-r3-real-reset-menu",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-r3-real-run-menu",
+    "ocr": true
+  }
+]

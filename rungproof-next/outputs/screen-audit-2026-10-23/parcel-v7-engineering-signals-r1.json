@@ -1,0 +1,23 @@
+[
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 189,
+      "y": 110
+    }
+  },
+  {
+    "input": {
+      "x": 858,
+      "y": 89
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-r1-engineering-signals-initial",
+    "ocr": true
+  }
+]

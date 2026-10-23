@@ -1,0 +1,20 @@
+[
+  {
+    "input": {
+      "x": 281,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 379,
+      "y": 253,
+      "phase": "wheel",
+      "delta": 1200
+    },
+    "wait": 0.15,
+    "capture": "marker-reset-r1-scenario-menu-top",
+    "ocr": true
+  }
+]

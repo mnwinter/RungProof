@@ -1,0 +1,61 @@
+[
+  {
+    "input": {
+      "x": 491,
+      "y": 343
+    },
+    "wait": 0.06
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.3,
+    "capture": "parcel-v7-handoff-fresh-imported",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.08
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.2,
+    "capture": "parcel-v7-handoff-fresh-ready",
+    "ocr": true
+  }
+]

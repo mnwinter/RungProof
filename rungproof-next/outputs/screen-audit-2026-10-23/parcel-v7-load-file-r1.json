@@ -1,0 +1,51 @@
+[
+  {
+    "input": {
+      "x": 500,
+      "y": 109
+    }
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "input": {
+      "text": "C:/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-23"
+    }
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 443,
+      "y": 512
+    }
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "input": {
+      "text": "fixture-diagnostic-parcel223-v7-retentive-class-metered.rpproj.json"
+    },
+    "capture": "parcel-v7-filename-entered",
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 379,
+      "y": 550
+    },
+    "wait": 0.5,
+    "capture": "parcel-v7-project-opened",
+    "ocr": true
+  }
+]
