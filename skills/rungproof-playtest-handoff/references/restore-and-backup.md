@@ -43,6 +43,18 @@ drive letters from these historical values.
 
 ## Restore on the next machine
 
+For GitHub-only restoration, clone the latest `main` first. Raw images,
+evidence records and local extras extract into their repository-relative
+paths. Toolchains use the smaller content-addressed archive:
+`rungproof-toolchain-content.7z.*`. Download every numbered volume and extract
+the first into a temporary folder. Preview
+`scripts/restore-toolchain-content.ps1 -Root <checkout> -BundleRoot <extracted/public-toolchain-content>`
+from this skill, then use `-Apply` to recreate all original toolchain paths.
+It verifies blob/destination hashes and refuses to overwrite different files.
+The map retains every path while identical contents are stored once. Restore
+junction aliases afterward. The full normal folder copy on D: needs no blob
+expansion. The final release checksum/index identifies the exact archive set.
+
 1. Verify the backup manifests/checksums and identify the canonical checkout.
    Copy `RungProof/` to a writable local NTFS project directory, preserving `.git`.
    Git may request a safe-directory entry after owner changes; scope any entry

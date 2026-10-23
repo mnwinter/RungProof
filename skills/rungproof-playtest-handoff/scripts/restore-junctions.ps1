@@ -6,7 +6,7 @@ param(
 # Restore recorded internal aliases after copying to NTFS. Preview by default.
 # Existing directories are never removed or replaced.
 $ErrorActionPreference = 'Stop'
-$rpRoot = (Resolve-Path -LiteralPath $Root).Path.TrimEnd('\', '/')
+$rpRoot = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $Root).Path).TrimEnd('\', '/')
 $rpPrefix = $rpRoot + [IO.Path]::DirectorySeparatorChar
 $rpMapPath = Join-Path $PSScriptRoot '..\references\junction-map.json'
 $rpMappings = Get-Content -LiteralPath $rpMapPath -Raw | ConvertFrom-Json
@@ -29,7 +29,7 @@ foreach ($rpEntry in $rpMappings) {
     if (Test-Path -LiteralPath $rpLink) {
         $rpExisting = Get-Item -LiteralPath $rpLink -Force
         if ($rpExisting.LinkType -eq 'Junction' -and
-            [IO.Path]::GetFullPath([string]$rpExisting.Target).Equals(
+            [IO.Path]::GetFullPath([string]@($rpExisting.Target)[0]).Equals(
                 $rpTarget, [StringComparison]::OrdinalIgnoreCase)) {
             Write-Output "Already correct: $($rpEntry.path)"
             continue

@@ -44,3 +44,13 @@
   raw captures, ignored toolchains, local runtime workspaces and Git internals
   also need a verified local backup. Public uploads require a content scan;
   local session capabilities and private runtime state stay out of public Git.
+- **Verify the GitHub identity.** This workstation's CLI default was the work
+  account while RungProof belongs to `mnwinter`. A per-command environment used
+  that existing personal login, without changing the global default or storing
+  tokens in files. A release error mentioning workflow scope was misleading
+  until the account was checked.
+- **Preserve aliases and repeated content deliberately.** exFAT cannot hold
+  NTFS junctions. Record internal relative targets and rehearse restoration.
+  Toolchain archives can store unique SHA-256 contents with a complete path map;
+  restoration must create independent files, verify hashes and preserve any
+  existing different file rather than silently overwrite it.
