@@ -1,0 +1,52 @@
+[
+  {
+    "input": {
+      "x": 738,
+      "y": 89
+    },
+    "wait": 0.5
+  },
+  {
+    "capture": "pickup-r2-health-before-rejection",
+    "ocr": true,
+    "wait": 0.7,
+    "input": {
+      "y": 182,
+      "delta": 1200,
+      "phase": "wheel",
+      "x": 891
+    }
+  },
+  {
+    "capture": "pickup-r2-qualified-manual-pickup",
+    "ocr": true,
+    "wait": 0.7,
+    "input": {
+      "x": 856,
+      "y": 89
+    }
+  },
+  {
+    "capture": "pickup-r2-endpoint-jog-rejected",
+    "ocr": true,
+    "wait": 0.7,
+    "input": {
+      "x": 618,
+      "y": 477
+    }
+  },
+  {
+    "capture": "pickup-r2-rejected-held",
+    "wait": 5,
+    "ocr": true
+  },
+  {
+    "capture": "pickup-r2-health-new-rejection",
+    "ocr": true,
+    "wait": 0.7,
+    "input": {
+      "x": 738,
+      "y": 89
+    }
+  }
+]

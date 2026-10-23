@@ -1,0 +1,6 @@
+[
+  {"input": {"x": 912, "y": 345, "phase": "wheel", "delta": -840}, "wait": 0.4, "capture": "demo5-appstop-r1-run-alone-complete-signals", "ocr": true},
+  {"wait": 1.2, "capture": "demo5-appstop-r1-run-alone-complete-held", "ocr": true},
+  {"input": {"x": 203, "y": 34}, "wait": 0.25},
+  {"input": {"x": 220, "y": 90}, "wait": 0.4, "capture": "demo5-appstop-r1-checkpoint-stopped", "ocr": true}
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "capture": "traffic-r1-ready-on",
+    "wait": 0.7,
+    "input": {
+      "x": 413,
+      "y": 397
+    },
+    "ocr": true
+  }
+]

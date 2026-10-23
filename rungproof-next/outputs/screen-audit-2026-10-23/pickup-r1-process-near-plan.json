@@ -1,0 +1,31 @@
+[
+  {
+    "input": {
+      "x": 509,
+      "y": 343,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 509,
+      "y": 343,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "wait": 0.7,
+    "capture": "pickup-r1-process-near",
+    "input": {
+      "x": 509,
+      "y": 343,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "ocr": true
+  }
+]

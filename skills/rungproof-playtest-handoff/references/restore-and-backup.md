@@ -2,9 +2,12 @@
 
 The user requested all RungProof work backed up to Git and transferred to D:
 before wiping the laptop. The migration root is
-`D:\RungProof-Backup-2026-10-22`. Consult its final `RESTORE-FIRST.md`, manifests,
-copy/hash verification reports and the repository migration record for actual
-completed backup claims; this document alone is not proof of a verified copy.
+`D:\RungProof-Backup-2026-10-22`. Start with its verified `LATEST-CHECKPOINT.json`
+and named later immutable receipt/restore addendum. Historical root
+`FINAL-BACKUP-STATUS.json`/`RESTORE-FIRST.md` deliberately describe the d0c4566b
+base; they are not proof that later work was included. Check exact manifests,
+copy/hash reports and repository migration records. This skill alone is not a
+verified-copy claim.
 
 ## Local backup contents
 
@@ -34,6 +37,25 @@ during migration. Both views are preserved separately; native application
 userdata was independently hashed with PowerShell. Use native
 `Godot-userdata-RungProof` for the application. The Python-view copy is
 supplementary evidence, not a replacement.
+
+The current difference is144 native files versus97 Python files. Launching
+PowerShell from Python inherits the Python view. Later native copies may be
+staged in a receipt-owned `private-owned-launch/native-userdata-*/userdata`
+tree inside the immutable COPY_ALL snapshot. Its private native receipt has
+the full logical relative-path/size/SHA set; independent Python and D readback
+must match it. Prefer the latest verified native payload for application
+userdata. Keep the separate Python-view history rather than overlaying its
+different bytes blindly. The staging scripts are migration helpers for the old
+workstation, not new-machine restoration commands.
+
+COPY_ALL receipts contain independent regular files under
+`private-snapshot/TREE/RELATIVE_PATH` and a separately verified Git bundle for
+the receipt's source commit. Restore Git from that matching bundle, overlay
+the receipt's `RungProof` tree into the matching checkout, then restore the
+documented junctions/private extras. The flat D mirror is convenient but later
+updates must not redefine an older immutable snapshot. Check portable receipt
+paths and any final metadata addendum; never mix one payload with a different
+commit's Git history and call it an exact restoration.
 
 Preserve C: originals until a verified backup and restore check are complete.
 The D: volume was a separate physical disk, exFAT, labelled `Winter_Bkup` at

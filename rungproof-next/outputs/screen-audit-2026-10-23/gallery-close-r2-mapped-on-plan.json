@@ -1,0 +1,4 @@
+[
+  {"input": {"x": 582, "y": 296}, "wait": 0.7, "capture": "gallery-close-r2-mapped-on", "ocr": true},
+  {"wait": 0.5, "capture": "gallery-close-r2-mapped-on-held", "ocr": true}
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "input": {
+      "y": 343,
+      "phase": "wheel",
+      "delta": 120,
+      "x": 509
+    },
+    "wait": 0.2
+  },
+  {
+    "ocr": true,
+    "capture": "tote-r1-process-near",
+    "input": {
+      "y": 343,
+      "phase": "wheel",
+      "delta": 120,
+      "x": 509
+    },
+    "wait": 0.7
+  }
+]

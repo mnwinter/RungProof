@@ -1,0 +1,38 @@
+[
+  {
+    "capture": "pickup-r2-jog-2-ended",
+    "input": {
+      "x": 618,
+      "y": 477
+    },
+    "ocr": true,
+    "wait": 4.5
+  },
+  {
+    "capture": "pickup-r2-jog-3-ended",
+    "input": {
+      "x": 618,
+      "y": 477
+    },
+    "ocr": true,
+    "wait": 4.5
+  },
+  {
+    "capture": "pickup-r2-jog-4-ended",
+    "input": {
+      "x": 618,
+      "y": 477
+    },
+    "ocr": true,
+    "wait": 4.5
+  },
+  {
+    "capture": "pickup-r2-jog-5-ended",
+    "input": {
+      "x": 618,
+      "y": 477
+    },
+    "ocr": true,
+    "wait": 4.5
+  }
+]

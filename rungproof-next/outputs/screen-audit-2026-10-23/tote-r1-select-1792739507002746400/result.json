@@ -1,0 +1,296 @@
+{
+  "status": "EXACT_LABEL_CLICK_SENT_SELECTED_OR_MODAL_REVIEW_PENDING",
+  "label": null,
+  "identity": "Lab 2.11",
+  "selection_mode": "EXPLICIT_NUMERIC_ID",
+  "selection_sent": true,
+  "screen_only": true,
+  "native_session": true,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "observations": 2,
+  "last_matches": [
+    {
+      "text": "Lab 2.11- Inbound Tote Stop",
+      "words": [
+        {
+          "text": "Lab",
+          "x": 16,
+          "y": 269,
+          "w": 40,
+          "h": 21
+        },
+        {
+          "text": "2.11-",
+          "x": 63,
+          "y": 271,
+          "w": 63,
+          "h": 19
+        },
+        {
+          "text": "Inbound",
+          "x": 133,
+          "y": 269,
+          "w": 95,
+          "h": 21
+        },
+        {
+          "text": "Tote",
+          "x": 236,
+          "y": 271,
+          "w": 51,
+          "h": 19
+        },
+        {
+          "text": "Stop",
+          "x": 293,
+          "y": 271,
+          "w": 51,
+          "h": 25
+        }
+      ],
+      "crop_word_union": [
+        16,
+        269,
+        344,
+        296
+      ],
+      "native_click": [
+        342,
+        141
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "match_image": "menu-01-settle-04.png",
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 4.684,
+  "files": [
+    {
+      "file": "before-menu-input.png",
+      "bytes": 263199,
+      "sha256": "56c8df42471b0ae578e0ac90e7f81af736d0bafb844cdcbe5279e3b18429434a"
+    },
+    {
+      "file": "top-0-settle-00.png",
+      "bytes": 336541,
+      "sha256": "32323e937ac3b73bde8195be71e269271907b953dd2e60e255bc61ba4282baed"
+    },
+    {
+      "file": "top-0-settle-00-scenario-popup2x.png",
+      "bytes": 288448,
+      "sha256": "3a0f3f3df9f2496d656acbcf93191be923d671234e41bb06e24e32a840d0ab42"
+    },
+    {
+      "file": "top-0-settle-00-scenario-popup2x.ocr.json",
+      "bytes": 11176,
+      "sha256": "cb92b8988b99412c07fbcf1493a17aa893d96dbf03aba67deed2cf28b2f457c9"
+    },
+    {
+      "file": "top-0-settle-01.png",
+      "bytes": 342010,
+      "sha256": "e0138d6aaa5985ac5b0bb72b76b1e40cb4db47588c122354a72805f86f26b19f"
+    },
+    {
+      "file": "top-0-settle-01-scenario-popup2x.png",
+      "bytes": 300519,
+      "sha256": "4fbf63d865035d97d1d7f23b65f993c262b43ac927f22c0d4e3db72b3409b584"
+    },
+    {
+      "file": "top-0-settle-01-scenario-popup2x.ocr.json",
+      "bytes": 11343,
+      "sha256": "b8b0e6092f901d76ef4784b4d2dd98feca64c9dfee8d74c6c7aa0a42e275047d"
+    },
+    {
+      "file": "top-0-settle-02.png",
+      "bytes": 342010,
+      "sha256": "e0138d6aaa5985ac5b0bb72b76b1e40cb4db47588c122354a72805f86f26b19f"
+    },
+    {
+      "file": "top-0-settle-02-scenario-popup2x.png",
+      "bytes": 300519,
+      "sha256": "4fbf63d865035d97d1d7f23b65f993c262b43ac927f22c0d4e3db72b3409b584"
+    },
+    {
+      "file": "top-0-settle-02-scenario-popup2x.ocr.json",
+      "bytes": 11343,
+      "sha256": "47552148c6399adb718b285821003ebb448c60c01c33a3323143cebdfd1e9b55"
+    },
+    {
+      "file": "top-0-settle-03.png",
+      "bytes": 342010,
+      "sha256": "e0138d6aaa5985ac5b0bb72b76b1e40cb4db47588c122354a72805f86f26b19f"
+    },
+    {
+      "file": "top-0-settle-03-scenario-popup2x.png",
+      "bytes": 300519,
+      "sha256": "4fbf63d865035d97d1d7f23b65f993c262b43ac927f22c0d4e3db72b3409b584"
+    },
+    {
+      "file": "top-0-settle-03-scenario-popup2x.ocr.json",
+      "bytes": 11343,
+      "sha256": "cc439206bae79a0abf209ccb600d8fffd3d86162f6fcf517610b4357cbc2cce3"
+    },
+    {
+      "file": "top-0-settle-04.png",
+      "bytes": 342010,
+      "sha256": "e0138d6aaa5985ac5b0bb72b76b1e40cb4db47588c122354a72805f86f26b19f"
+    },
+    {
+      "file": "top-0-settle-04-scenario-popup2x.png",
+      "bytes": 300519,
+      "sha256": "4fbf63d865035d97d1d7f23b65f993c262b43ac927f22c0d4e3db72b3409b584"
+    },
+    {
+      "file": "top-0-settle-04-scenario-popup2x.ocr.json",
+      "bytes": 11343,
+      "sha256": "882482b0066c1f5a4950b27cb3a8126fcc1af42c356fc454ff7aa2d384fcec03"
+    },
+    {
+      "file": "top-1-settle-00.png",
+      "bytes": 330124,
+      "sha256": "c98e25e5933473d3a32549cbad8bcdd619269de755e72d58a8b588fa744ad772"
+    },
+    {
+      "file": "top-1-settle-00-scenario-popup2x.png",
+      "bytes": 270083,
+      "sha256": "c1232b82ae95baa711d60e60bb58a7391dd1d0b84d4ed5cee43186c6f0658fef"
+    },
+    {
+      "file": "top-1-settle-00-scenario-popup2x.ocr.json",
+      "bytes": 9954,
+      "sha256": "57bc270fd7a2af2248fdeb98a3fdc165515f5f4b315b1f9b4f3c4665029d14c5"
+    },
+    {
+      "file": "top-1-settle-01.png",
+      "bytes": 330124,
+      "sha256": "c98e25e5933473d3a32549cbad8bcdd619269de755e72d58a8b588fa744ad772"
+    },
+    {
+      "file": "top-1-settle-01-scenario-popup2x.png",
+      "bytes": 270083,
+      "sha256": "c1232b82ae95baa711d60e60bb58a7391dd1d0b84d4ed5cee43186c6f0658fef"
+    },
+    {
+      "file": "top-1-settle-01-scenario-popup2x.ocr.json",
+      "bytes": 9954,
+      "sha256": "a6f91f5100efd351ac44cc0a8f84c3626fe466dbcd05881fb9bf2f863eb730d7"
+    },
+    {
+      "file": "top-1-settle-02.png",
+      "bytes": 330124,
+      "sha256": "c98e25e5933473d3a32549cbad8bcdd619269de755e72d58a8b588fa744ad772"
+    },
+    {
+      "file": "top-1-settle-02-scenario-popup2x.png",
+      "bytes": 270083,
+      "sha256": "c1232b82ae95baa711d60e60bb58a7391dd1d0b84d4ed5cee43186c6f0658fef"
+    },
+    {
+      "file": "top-1-settle-02-scenario-popup2x.ocr.json",
+      "bytes": 9954,
+      "sha256": "bab578a3eb7fcb58376aad4a7d5d0bcd91a3a885ea5fac15969b9c19a51f6c45"
+    },
+    {
+      "file": "top-1-settle-03.png",
+      "bytes": 330124,
+      "sha256": "c98e25e5933473d3a32549cbad8bcdd619269de755e72d58a8b588fa744ad772"
+    },
+    {
+      "file": "top-1-settle-03-scenario-popup2x.png",
+      "bytes": 270083,
+      "sha256": "c1232b82ae95baa711d60e60bb58a7391dd1d0b84d4ed5cee43186c6f0658fef"
+    },
+    {
+      "file": "top-1-settle-03-scenario-popup2x.ocr.json",
+      "bytes": 9954,
+      "sha256": "b0d911660b81e0ca1d93dc5d2b159b8432505da767d739e503a67bd4b2f719d2"
+    },
+    {
+      "file": "menu-01-settle-00.png",
+      "bytes": 330124,
+      "sha256": "c98e25e5933473d3a32549cbad8bcdd619269de755e72d58a8b588fa744ad772"
+    },
+    {
+      "file": "menu-01-settle-00-scenario-popup2x.png",
+      "bytes": 270083,
+      "sha256": "c1232b82ae95baa711d60e60bb58a7391dd1d0b84d4ed5cee43186c6f0658fef"
+    },
+    {
+      "file": "menu-01-settle-00-scenario-popup2x.ocr.json",
+      "bytes": 9956,
+      "sha256": "45765a22277669bbb875353bd21ac12bfe9e376a827b1ea9f953f588f61f187d"
+    },
+    {
+      "file": "menu-01-settle-01.png",
+      "bytes": 345119,
+      "sha256": "f054290d02350452139ec1eaa39f17df1d71d3ec935d49bd9e6bc4eee4ee1ceb"
+    },
+    {
+      "file": "menu-01-settle-01-scenario-popup2x.png",
+      "bytes": 309566,
+      "sha256": "316d4723e17a4952dc05c91474bd0cba0523c85e7c575976e84b81f6d9896c7a"
+    },
+    {
+      "file": "menu-01-settle-01-scenario-popup2x.ocr.json",
+      "bytes": 11475,
+      "sha256": "99628e8e4b0e2fcf805ad4214d4442989a17193792cd09989c282aafeec18cc9"
+    },
+    {
+      "file": "menu-01-settle-02.png",
+      "bytes": 345119,
+      "sha256": "f054290d02350452139ec1eaa39f17df1d71d3ec935d49bd9e6bc4eee4ee1ceb"
+    },
+    {
+      "file": "menu-01-settle-02-scenario-popup2x.png",
+      "bytes": 309566,
+      "sha256": "316d4723e17a4952dc05c91474bd0cba0523c85e7c575976e84b81f6d9896c7a"
+    },
+    {
+      "file": "menu-01-settle-02-scenario-popup2x.ocr.json",
+      "bytes": 11475,
+      "sha256": "83dcc1cb28b9dc11f7cc8e30dffee9da6f74b8980159b292c695adef55d3b211"
+    },
+    {
+      "file": "menu-01-settle-03.png",
+      "bytes": 345119,
+      "sha256": "f054290d02350452139ec1eaa39f17df1d71d3ec935d49bd9e6bc4eee4ee1ceb"
+    },
+    {
+      "file": "menu-01-settle-03-scenario-popup2x.png",
+      "bytes": 309566,
+      "sha256": "316d4723e17a4952dc05c91474bd0cba0523c85e7c575976e84b81f6d9896c7a"
+    },
+    {
+      "file": "menu-01-settle-03-scenario-popup2x.ocr.json",
+      "bytes": 11475,
+      "sha256": "215e15d8c2358055127d13647b4b182cf6ca765e39c75b94a539b8a594545516"
+    },
+    {
+      "file": "menu-01-settle-04.png",
+      "bytes": 345119,
+      "sha256": "f054290d02350452139ec1eaa39f17df1d71d3ec935d49bd9e6bc4eee4ee1ceb"
+    },
+    {
+      "file": "menu-01-settle-04-scenario-popup2x.png",
+      "bytes": 309566,
+      "sha256": "316d4723e17a4952dc05c91474bd0cba0523c85e7c575976e84b81f6d9896c7a"
+    },
+    {
+      "file": "menu-01-settle-04-scenario-popup2x.ocr.json",
+      "bytes": 11475,
+      "sha256": "bd56fd94a7f27950dfaf1392a66fd8b07acb2444ec4607fc5400b939f1c228bd"
+    },
+    {
+      "file": "after-selection-or-modal.png",
+      "bytes": 344994,
+      "sha256": "9b994512f6096ef8c8d2d4be0ce97dea5cdcd2a485391b93e272b442952ed953"
+    }
+  ]
+}

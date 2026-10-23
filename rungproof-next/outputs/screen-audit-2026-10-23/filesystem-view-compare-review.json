@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "result": "PREFREEZE_METADATA_COMPARISON_COMPLETE",
+  "created_utc": "2026-10-23T07:58:01.846009+00:00",
+  "scope": "Direct native PowerShell versus packaged Python metadata; no full per-file hash or backup acceptance",
+  "roots": [
+    {
+      "root": "owned_private_root",
+      "native_files": 34,
+      "python_files": 34,
+      "native_bytes": 159965,
+      "python_bytes": 159965,
+      "native_pathset_sha256": "96bd9fb0a98d540b304885fd7a93ca66ae67c78621836c19b8348f2458be96e5",
+      "python_pathset_sha256": "96bd9fb0a98d540b304885fd7a93ca66ae67c78621836c19b8348f2458be96e5",
+      "native_path_size_sha256": "d2724ef9495cd8c1eb130db154c3ce31c0c12981a4e0c76156bc8a5e5ed9b370",
+      "python_path_size_sha256": "d2724ef9495cd8c1eb130db154c3ce31c0c12981a4e0c76156bc8a5e5ed9b370",
+      "only_native_count": 0,
+      "only_python_count": 0,
+      "same_path_size_difference_count": 0,
+      "native_errors": 0,
+      "python_errors": 0,
+      "native_exclusions": 1,
+      "python_exclusions": 1,
+      "native_interval": [
+        "2026-10-23T07:57:07.2518100Z",
+        "2026-10-23T07:57:07.2928037Z"
+      ],
+      "python_interval": [
+        "2026-10-23T07:56:39.311366+00:00",
+        "2026-10-23T07:56:39.315539+00:00"
+      ],
+      "only_native_followup_visible_in_Python_count": 0
+    },
+    {
+      "root": "installed_handoff_skill",
+      "native_files": 7,
+      "python_files": 7,
+      "native_bytes": 36872,
+      "python_bytes": 36872,
+      "native_pathset_sha256": "551bb540f33ae3b2e1c681a52ea918938b127c131f07a884908cf9b16b821fc2",
+      "python_pathset_sha256": "551bb540f33ae3b2e1c681a52ea918938b127c131f07a884908cf9b16b821fc2",
+      "native_path_size_sha256": "4ebabcef8ea8f209c43ff842a39d51c5b0664aa2c94c8dfbf1e24800cedd0631",
+      "python_path_size_sha256": "4ebabcef8ea8f209c43ff842a39d51c5b0664aa2c94c8dfbf1e24800cedd0631",
+      "only_native_count": 0,
+      "only_python_count": 0,
+      "same_path_size_difference_count": 0,
+      "native_errors": 0,
+      "python_errors": 0,
+      "native_exclusions": 0,
+      "python_exclusions": 0,
+      "native_interval": [
+        "2026-10-23T07:57:07.2943754Z",
+        "2026-10-23T07:57:07.2951977Z"
+      ],
+      "python_interval": [
+        "2026-10-23T07:56:39.315548+00:00",
+        "2026-10-23T07:56:39.315963+00:00"
+      ],
+      "only_native_followup_visible_in_Python_count": 0
+    },
+    {
+      "root": "godot_userdata_control",
+      "native_files": 144,
+      "python_files": 97,
+      "native_bytes": 33538201,
+      "python_bytes": 14879684,
+      "native_pathset_sha256": "3db1d38c612f8252cecc1d4d0813905263c9801ff89ba6481271e09b8a1dfb98",
+      "python_pathset_sha256": "3064a7ec1f1ed20173c02fd95306eba432c48c4fb3d64534fea6d5c4e21cceb1",
+      "native_path_size_sha256": "656a7ba06d6fbe580fb354781f0e7f6b456ea562ff741011ea1794d3a0e00d62",
+      "python_path_size_sha256": "355d43553d1442952f6bad726b130788f2382db7eb5f28d6f8aa7be007245e8f",
+      "only_native_count": 47,
+      "only_python_count": 0,
+      "same_path_size_difference_count": 2,
+      "native_errors": 0,
+      "python_errors": 0,
+      "native_exclusions": 0,
+      "python_exclusions": 0,
+      "native_interval": [
+        "2026-10-23T07:57:07.2952423Z",
+        "2026-10-23T07:57:07.3555248Z"
+      ],
+      "python_interval": [
+        "2026-10-23T07:56:39.315968+00:00",
+        "2026-10-23T07:56:39.327616+00:00"
+      ],
+      "only_native_followup_visible_in_Python_count": 0
+    },
+    {
+      "root": "canonical_repo",
+      "native_files": 123806,
+      "python_files": 123805,
+      "native_bytes": 23708698623,
+      "python_bytes": 23708769969,
+      "native_pathset_sha256": "bd8e602c0343589322da1fa401755345d587759eda36ee0a7ca0bf8b6fdd81da",
+      "python_pathset_sha256": "2aa27c776adcb525c1fae91f456a1f87724742cc0e763d7e9ec6c09e02872f1d",
+      "native_path_size_sha256": "c6c906ca7931059828ed887076f3c7ec827f04bf08223fa671ae630f4928bed3",
+      "python_path_size_sha256": "2d18c5e96c0c636353973762bc775acc8495f814a37e139e2442b6fe67792a61",
+      "only_native_count": 1,
+      "only_python_count": 0,
+      "same_path_size_difference_count": 7,
+      "native_errors": 0,
+      "python_errors": 0,
+      "native_exclusions": 19,
+      "python_exclusions": 19,
+      "native_interval": [
+        "2026-10-23T07:57:07.3555974Z",
+        "2026-10-23T07:57:11.6681230Z"
+      ],
+      "python_interval": [
+        "2026-10-23T07:56:39.327626+00:00",
+        "2026-10-23T07:56:47.681259+00:00"
+      ],
+      "only_native_followup_visible_in_Python_count": 1
+    }
+  ],
+  "policy": {
+    "git": "Exact .git entries excluded at all levels on both sides; bundled separately",
+    "reparse": "No traversal on either side",
+    "observer_exclusion": "Only the newly created filesystem-view-audit-20261023T075500Z directory is excluded from RootOwned to avoid measuring the observer outputs themselves. Final backup must include it.",
+    "live_writers": "Project/UI writers were not stopped; intervals and late-file followup are retained."
+  },
+  "native_namespace_control": "Direct native PowerShell reports144 userdata files; native pwsh.exe launched from Python reports97, matching Python. Use direct native tool for independent native-view backup.",
+  "private_manifest": "C:\\Users\\matt.winter\\AppData\\Local\\Temp\\RungProof-QA-20261023-RootOwned\\filesystem-view-audit-20261023T075500Z\\PRIVATE-FILESYSTEM-VIEW-COMPARISON.json",
+  "post_measurement_artifacts": "Private metadata outputs and this public review were created after source measurement and must enter the final fresh inventory.",
+  "aggregate_hash_encoding": "SHA256 of UTF-8 compact JSON without ASCII escaping; arrays sorted by relative path; path-size array entries are [relative,integer bytes]. No content hashes.",
+  "difference_followup": {
+    "summary": [
+      {
+        "root": "canonical_repo",
+        "targets": 8,
+        "native_present": 8,
+        "python_present": 8,
+        "still_different_metadata_count": 0,
+        "all_prior_differences_now_agree": true
+      },
+      {
+        "root": "godot_userdata_control",
+        "targets": 49,
+        "native_present": 49,
+        "python_present": 2,
+        "still_different_metadata_count": 49,
+        "all_prior_differences_now_agree": false
+      }
+    ],
+    "private_manifest": "C:\\Users\\matt.winter\\AppData\\Local\\Temp\\RungProof-QA-20261023-RootOwned\\filesystem-view-audit-20261023T075500Z\\PRIVATE-FOLLOWUP-COMPARISON.json",
+    "native_utc": "2026-10-23T07:59:03.1789615Z",
+    "python_utc": "2026-10-23T07:59:03.239682+00:00"
+  },
+  "conclusions": [
+    "Installed handoff skill and pre-existing RootOwned files agree on pathset and sizes.",
+    "Canonical repo initial1late file and7changed sizes were resampled; current followup resolves whether those were transient, not full content equivalence.",
+    "Godot userdata has47persistent native-only paths; independent native backup remains required.",
+    "Refresh the final inventory after writers stop and after these observer outputs are created."
+  ]
+}

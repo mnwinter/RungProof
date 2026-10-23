@@ -1,0 +1,10 @@
+[
+  {"input": {"x": 680, "y": 315, "button": "middle", "phase": "down"}, "wait": 0.1},
+  {"input": {"x": 595, "y": 320, "phase": "move"}, "wait": 0.15},
+  {"input": {"x": 595, "y": 320, "button": "middle", "phase": "up"}, "wait": 0.3},
+  {"input": {"x": 595, "y": 320, "phase": "wheel", "delta": 120}, "wait": 0.12},
+  {"input": {"x": 595, "y": 320, "phase": "wheel", "delta": 120}, "wait": 0.12},
+  {"input": {"x": 595, "y": 320, "phase": "wheel", "delta": 120}, "wait": 0.12},
+  {"input": {"x": 595, "y": 320, "phase": "wheel", "delta": 120}, "wait": 0.12},
+  {"input": {"x": 595, "y": 320, "phase": "wheel", "delta": 120}, "wait": 0.5, "capture": "gallery-close-r1-conveyor-approach", "ocr": true}
+]

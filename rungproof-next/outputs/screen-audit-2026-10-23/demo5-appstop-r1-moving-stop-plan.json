@@ -1,0 +1,35 @@
+[
+  {
+    "input": {
+      "y": 399,
+      "x": 578
+    },
+    "wait": 0.25,
+    "capture": "demo5-appstop-r1-moving-a"
+  },
+  {
+    "capture": "demo5-appstop-r1-moving-b",
+    "wait": 0.25
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 203
+    },
+    "wait": 0.25
+  },
+  {
+    "ocr": true,
+    "input": {
+      "y": 90,
+      "x": 220
+    },
+    "wait": 0.7,
+    "capture": "demo5-appstop-r1-stopped-settled"
+  },
+  {
+    "ocr": true,
+    "wait": 1,
+    "capture": "demo5-appstop-r1-stopped-held"
+  }
+]

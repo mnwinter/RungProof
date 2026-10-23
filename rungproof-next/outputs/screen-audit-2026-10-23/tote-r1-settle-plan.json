@@ -1,0 +1,7 @@
+[
+  {
+    "capture": "tote-r1-selected-or-modal",
+    "wait": 0.8,
+    "ocr": true
+  }
+]

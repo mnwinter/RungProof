@@ -1,0 +1,61 @@
+[
+  {
+    "input": {
+      "x": 590,
+      "y": 319,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 590,
+      "y": 319,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 590,
+      "y": 319,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 590,
+      "y": 319,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 590,
+      "y": 319,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 590,
+      "y": 319,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "wait": 0.4,
+    "capture": "gallery-close-r2-controls-near",
+    "ocr": true
+  }
+]

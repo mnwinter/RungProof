@@ -1,0 +1,25 @@
+[
+  {
+    "capture": "pickup-r1-manual-mode",
+    "input": {
+      "x": 543,
+      "y": 410
+    },
+    "wait": 0.7,
+    "ocr": true
+  },
+  {
+    "capture": "pickup-r1-jog-one-active",
+    "input": {
+      "x": 577,
+      "y": 424
+    },
+    "wait": 0.7,
+    "ocr": true
+  },
+  {
+    "capture": "pickup-r1-jog-one-ended",
+    "wait": 4,
+    "ocr": true
+  }
+]

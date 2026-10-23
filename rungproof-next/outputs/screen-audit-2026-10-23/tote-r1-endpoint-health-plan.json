@@ -1,0 +1,21 @@
+[
+  {
+    "capture": "tote-r1-completed-endpoint",
+    "ocr": true,
+    "wait": 0.7
+  },
+  {
+    "capture": "tote-r1-completed-held",
+    "ocr": true,
+    "wait": 0.7
+  },
+  {
+    "capture": "tote-r1-health-start-ack",
+    "ocr": true,
+    "wait": 0.7,
+    "input": {
+      "x": 738,
+      "y": 89
+    }
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "input": {
+      "y": 34,
+      "x": 203
+    },
+    "wait": 0.25
+  },
+  {
+    "capture": "demo5-appstop-r1-run-alone-restores",
+    "input": {
+      "y": 70,
+      "x": 220
+    },
+    "ocr": true,
+    "wait": 0.7
+  },
+  {
+    "capture": "demo5-appstop-r1-run-alone-progress",
+    "ocr": true,
+    "wait": 1
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "demo5-appstop-r1-run-alone-layer-observe-1",
+    "ocr": true,
+    "wait": 4
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "demo5-appstop-r1-run-alone-layer-observe-2",
+    "ocr": true,
+    "wait": 4
+  }
+]

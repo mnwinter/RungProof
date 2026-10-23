@@ -338,14 +338,12 @@
       "physical_control": "Controller READY while actual vehicle occupies crossing",
       "fixture": "test-projects/fixture-lab-11-12-mobile-traffic-lights.rpproj.json",
       "steps": [
-        "Ready/allclear; queue one actual vehicle.",
-        "Wait actual occupied crossing; set READYFalse and capture heads/nativeoutputs/vehicle.",
-        "Restore READY; observe committed-clearance and actual final clear before contradictory green."
+        "Do not rerun; occupied READYloss/restart hold independently closed."
       ],
       "expected_observable": "Loss produces both red commanded; preserve occupied clearance constraints. Capture whether committed vehicle continues per fixture; no new false assumption of emergency vehicle freeze.",
       "scope_justification": "Prior permissive loss was endpoint-only. Exposed READY has actual operational consequence; no all-phase crossproduct expansion.",
       "policy": "Inspect exact loaded traffic phase on restore; no asserted exactsignal timing or physical back-facing A lens claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-11-12-mobile-traffic-lights.md",
         "scenes/migrated/lab-11-12-mobile-traffic-lights.scene.json"
@@ -394,7 +392,9 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "closure_review": "traffic-occupied-ready-review.md",
+      "closure_scope": "Actual occupiedA−2.04/Agreen→acceptedREADYoff/allred→on13308stilloccupied/allred;13368+60scans/13424+116stillallred until13435clearTrue/Agreen; actualcommittedcar reaches supportedendpoint3.6/held.10hashes+Healthoff/on."
     },
     {
       "id": "Q09",
@@ -631,14 +631,12 @@
       "physical_control": "Physical START; observe scanner phase",
       "fixture": "test-projects/fixture-new-binding-lab-2-11-v3.rpproj.json",
       "steps": [
-        "Reset/Run/freshSTART; watch scanner approach.",
-        "Capture actual tote_at_scannerTrue with conveyor stopped before scan_complete.",
-        "Observe release after scan completion/downstream result."
+        "Do not rerun; stationary scan/release independently closed."
       ],
       "expected_observable": "Actual scanner beamTrue and bounded stationary identification phase, then actual release; no demanded exact.8sec timestamp.",
       "scope_justification": "Normal/StopResetrepeat reviewed, but filenames alone did not establish scannerTrue transient.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-2-11-inbound-tote-stop.md",
         "scenes/migrated/lab-2-11-inbound-tote-stop.scene.json"
@@ -655,7 +653,9 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "closure_review": "tote-stationary-scan-review.md",
+      "closure_scope": "42hashes: actualtote stationary atscanner with RUNNING4463→4490/conveyorOff/scanIncomplete; release4503scanComplete/conveyorOn then supportedendpoint7415/7479."
     },
     {
       "id": "Q18",
@@ -663,13 +663,12 @@
       "physical_control": "Manual JOG at actual completed pickup",
       "fixture": "test-projects/fixture-lab-2-18-pallet-pickup.rpproj.json",
       "steps": [
-        "Use already verified manual increments to pickup_sensorTrue/position100.",
-        "Press physical JOG once; read actual Health/action rejection and position."
+        "Do not rerun; exact manual endpoint rejection independently closed."
       ],
       "expected_observable": "Explicit manual guard rejects because pickup_sensorTrue; no motion or queued later jog.",
       "scope_justification": "Declared requires auto_modeFalse AND pickup_sensorFalse; old Health showed accepted JOG only. This is documented guard, not undefined simultaneousinput.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-2-18-pallet-pickup.md",
         "scenes/migrated/lab-2-18-pallet-pickup.scene.json"
@@ -702,7 +701,9 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "closure_review": "pickup-endpoint-jog-review.md",
+      "closure_scope": "Actual manualmode/pickup100/runFalse qualified, fresh JOG explicitlyrejected/newHealth; physicalsupportedpose/state holds276scans/5.52s."
     },
     {
       "id": "Q19",
@@ -21199,5 +21200,39 @@
       "review_level": "Existing independent native report / exact original checkpoint scope; no new full-frame sweep.",
       "not_a_full_family_pass": true
     }
-  ]
+  ],
+  "current_accounting": {
+    "all_original_ids": 24,
+    "scoped_native_closures": [
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "Q06",
+      "Q07",
+      "Q08",
+      "Q09",
+      "Q10",
+      "Q11",
+      "Q12",
+      "Q18",
+      "Q19",
+      "Q20",
+      "Q21",
+      "Q22",
+      "Q24"
+    ],
+    "alias_source_native_reconciliations": [
+      "Q13",
+      "Q14",
+      "Q15",
+      "Q16",
+      "Q17"
+    ],
+    "alias_evidence": "residual-obligations-review.md",
+    "split_case": "Q23 Stop/recovery CLOSED; Reset/repeat FAIL",
+    "additional_genuine_demo5_appstop": "CLOSED_SCOPED_NATIVE:demo5-appstop-recovery-review.md",
+    "ready": 0
+  }
 }

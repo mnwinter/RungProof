@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "created_utc": "2026-10-23T08:11:49.585503+00:00",
+  "native_files": 144,
+  "packaged_python_staged_files": 144,
+  "bytes": 33592160,
+  "native_receipt_sha256": "cf8b575e2f67de84beedb61ee73dc920c93faf18e921b399676159a2c7ed736c",
+  "canonical_path_size_hash_manifest_sha256": "9acbde3b983968762d2ae68f9268b40b2ccb2ae61c3f1a5aa16c9032ca21eb92",
+  "private_staging_child": "native-userdata-precutoff-20261023T081200Z",
+  "checks": {
+    "pathset_exact": true,
+    "sizes_exact": true,
+    "sha256_exact": true
+  },
+  "boundary": "Native source -> fresh private C staging -> independent packaged-Python readback. Final immutable D copy/hash verification remains required; no public userdata publication or app acceptance."
+}

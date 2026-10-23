@@ -101,6 +101,32 @@
   that existing personal login, without changing the global default or storing
   tokens in files. A release error mentioning workflow scope was misleading
   until the account was checked.
+- **Stop semantics follow variable roles.** Demo5 applicationStop clears
+  Outputs but retains Memory run/phase; Run alone resumed to four supported
+  placements/home. ENABLE loss executes ordinary LAD and drops its seal,
+  requiring freshStart. Demo4 stores different state as Output. Do not impose
+  one restart rule on all scenes or infer it from the header alone.
+- **Preserve publication supersession.** Run synchronously notifies subscribers;
+  they can Stop/Reset/Pause or replace/reRun before it returns. A footer repair
+  must not publish a late older success over that outcome. Reuse exact lifecycle
+  identity/epoch rules, not merely `State==Running` or a per-scan text refresh.
+- **Stored home rotations use degrees.** `_initialEquipmentRotations` captures
+  RotationDegrees; parcel projection uses Rotation radians. A zero-only reset
+  case can hide a unit mistake. Restore owned pose before measuring geometry.
+- **A camera fit has multiple constraints.** Check every transformed corner at
+  its actual depth and the effective eye including H/V offsets against actual
+  room/near-plane bounds. Wider lens is not monotonically feasible, and outer
+  room containment cannot prove internal portal non-occlusion. Keep lens state
+  from leaking into WholeScene/other scenes; native useful visibility is the gate.
+- **An immutable receipt must own its bytes.** Default linked snapshot PASS can
+  be invalidated when a later flat mirror replaces a referenced file. Use final
+  `--copy-all`; real small-file and477-character-path7-Zip readback rehearsals
+  passed. Preserve historical receipts, C inventory reports and portable paths.
+- **Executable identity is not filesystem-view proof.** PowerShell spawned
+  from packaged Python still saw the97-file redirected userdata view. Only the
+  directly native tool saw144. Native copy/hash into a NEW shared RootOwned
+  child, independent Python hash readback and final D hash closure bridge the
+  gap; do not merge the two original userdata views blindly on restoration.
 - **Preserve aliases and repeated content deliberately.** exFAT cannot hold
   NTFS junctions. Record internal relative targets and rehearse restoration.
   Toolchain archives can store unique SHA-256 contents with a complete path map;

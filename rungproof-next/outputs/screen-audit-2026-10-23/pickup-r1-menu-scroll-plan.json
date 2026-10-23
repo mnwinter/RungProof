@@ -1,0 +1,13 @@
+[
+  {
+    "capture": "pickup-r1-menu-upper",
+    "ocr": true,
+    "input": {
+      "phase": "wheel",
+      "y": 310,
+      "x": 394,
+      "delta": 600
+    },
+    "wait": 0.8
+  }
+]

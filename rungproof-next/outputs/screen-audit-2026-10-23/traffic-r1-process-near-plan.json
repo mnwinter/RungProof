@@ -1,0 +1,52 @@
+[
+  {
+    "input": {
+      "y": 342,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "y": 342,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "y": 342,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "y": 342,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "y": 342,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "ocr": true,
+    "capture": "traffic-r1-process-near",
+    "wait": 0.7
+  }
+]

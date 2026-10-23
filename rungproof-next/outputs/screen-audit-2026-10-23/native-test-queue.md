@@ -8,7 +8,7 @@ All616 reconciled cells were inspected programmatically for their written scope/
 
 Direct originals confirm count4.5 A2/B4Truegreen→A2/B5False/dark;4.6 A2/B3Truegreen→A2/B4False/dark; ARRAY8True then9True actualnativevalues; Demo4 Reset0/dark, but its named machineSTOP image retainsyellowRunning and cannot prove stoppedstate. CurriculumDemo4 requires only secondbatchcount1. Do not turn that into a completed secondbatch. Demo3/5 curriculumscreens corroborate stated procedures, not all actuator geometry.
 
-## Finite queue —3 ready cases,15 scoped closures,1 split Stop/recovery closure plus Reset/repeat failure
+## Historical finite procedures — CURRENT0 READY;18 native closures +5 alias reconciliations +Q23 split
 
 Q01 and Q06 are closed below. Start with the first remaining READY case; authoritative current statuses are in JSON.
 
@@ -282,16 +282,6 @@ Q23 current split: native Stop/recovery CLOSED; Reset/repeat FAIL recorded. Earl
 Current closures: Q01/Q02/Q03/Q04/Q05/Q06/Q07/Q20/Q22/Q24. Q23 Stop/recovery is closed with Reset/repeat FAIL separate.3 cases remain READY; no required capture of a20ms pulsepeak and no allzeroReset rule.
 
 
-Current reconciliation: Q05 and Q24 are scoped CLOSED by [bag review](bag-forward-pause-review.md) and [operand cycle review](sum-counter-preset-cycle-review.md). Controls66 scoped-pass/11 partial; 25 non-scoped-pass cells remain (not all are executable new tests). Ready queue: Q08, Q09, Q10, Q11, Q12, Q18, Q19, Q21. Previous pending statements for these two cases are superseded. No application/source/UI change.
+## Authoritative current accounting
 
-
-Q19 CURRENT scoped closure: [native chain-lift review](chain-lift-upstroke-stop-review.md) proves loaded upstroke Stop/held15615, Run-alone inactivity, freshStart to supported receiver and actualhome/complete19520+. No sampled lowerTrue or extra downstroke gate. Current ready cases: Q08, Q09, Q10, Q11, Q12, Q18, Q21.
-
-
-Current Q21 [independent closure](pedestrian-active-walk-review.md): acknowledged active WALK CROSS; bounded8s idle/no replay; fresh CROSS works. Ready: Q08, Q09, Q10, Q11, Q12, Q18. This supersedes earlier Q21-pending statements.
-
-
-CURRENT: Q09/Q10 independently scoped CLOSED. Ready Q08, Q11, Q12, Q18. **QA-UI-003 S2 confirmed**: Demo3 Engineering→FrameProcess repeatedly hides process behind flatwall-like view; WholeScene shows exteriorroof; Immersive restores process. [Seven-original independent review](demo3-frame-process-visibility-review.md). Navigation cell FAIL is limited to this viewport workflow; load and controller acceptance are not failed. Camera/wall source hypothesis remains unconfirmed. Current incomplete cells 20; no whole-scene PASS.
-
-
-CURRENT Q11 CLOSED: [independent review](demo3-enable-route-review.md). 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement. Ready: Q08, Q12, Q18. QA-UI-003 Engineering framing failure remains OPEN independently. Current incomplete cells 16.
+24 original IDs accounted:18 scoped native closures, Q13..Q17 exact source/native alias reconciliations, Q23 Stop/recovery closed with Reset/repeat FAIL. Genuine Demo5 isolated AppStop/Run-alone endpoint additionally closed. All earlier pending/READY prose above is historical. See [current77 compendium](scene-issue-compendium.md), [JSON queue](native-test-queue.json), [six remaining cells](remaining-finite-cells.json). No new unchanged native cases or final repair plan.

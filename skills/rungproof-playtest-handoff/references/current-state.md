@@ -24,6 +24,14 @@ order are recorded under `outputs/screen-audit-2026-10-23/`.
 - Current checkpoint: `native-continuation-checkpoint.md` under that root.
 - Current exhaustive cells/finite queue: `coverage-reconciliation.json` and
   `native-test-queue.json`. Check their later individual reviews before replay.
+- Compiled problems and global plan: `scene-issue-compendium.md`,
+  `current-compilation-validation.json` and `repair-plan.md`. All77 IDs/616
+  cells and all24 original finite cases are accounted for:18 native closures,
+  five source/native alias reconciliations and Q23 split. Six cells remain
+  failed/partial; there is no blanket acceptance or implemented new repair.
+- Native input ended; owned app/bridge were identity-checked and stopped at
+  2026-10-23T08:09:01Z. All session handles are historical. Source/design work
+  continues only until the explicit cutoff above.
 - Historical QA root: `rungproof-next/outputs/screen-audit-2026-10-21/`.
 - Exact catalogue identities: `route-reconciliation.md` under that QA root.
 - Remaining cases: `postbackup-remaining-requirements.md`. Some cells lag newer
@@ -47,7 +55,7 @@ diagnostic-list refresh, help corrections, and command-driven plant models
 for tote/lift/door/jug/drill/parcel/CNC. CNC attachment and jug stroke corrections
 were included. Refer to the commit diff for exact code scope.
 
-## Confirmed open problems
+## Open findings and observation limits
 
 1. **Parcel Lab2.23 Reset/repeat fails.** Historical V3 count1 and V4 count2
    stalls remain outcomes of those exact LAD controllers. Frozen diagnostic V7
@@ -73,6 +81,22 @@ were included. Refer to the commit diff for exact code scope.
    and mapped motor motion/stop have bounded native proof. Empty belt is dark;
    unchanged wide pixels do not prove a defect. Source has scrolling belt UVs
    and largely symmetric rollers; the separate splice marker is static.
+   A later finite macro physical-toggle ON/AppStop comparison still has no
+   readable belt witness, while independently showing rear-motor motion/hold.
+   `gallery-close-belt-review.md`; keep its two PARTIAL cells, not a new bug.
+4. **QA-UI-003 S2:Demo3 Engineering Frame Process hides the machinery.** The
+   route repeatedly shows a flat wall; Immersive restores process and controls.
+   `demo3-frame-process-visibility-review.md`, `camera-framing-decision-note.md`
+   and `camera-fit-feasibility-analysis.md` distinguish native failure from
+   conditional camera/room/offset hypotheses. Do not remove the accepted room
+   enclosure or clamp distance and crop the process.
+5. **QA-SPEC-002 S4:Lab2.1/2.6 wording contradicts maintained toggles.** Correct
+   presentation prose/two generated help files while preserving proven input
+   behavior, IDs and bindings. `status-and-control-wording-decision-note.md`.
+6. **QA-UX-CANDIDATE-003:radar inspection lacks a visible route.** Source
+   supports the access gap, not a failed ghost renderer. The recommended
+   narrow route is View > Tank inspection view using the existing SIM action,
+   with actual state/checkmark/lifecycle guards. `radar-visible-route-decision.md`.
 
 ## Later native evidence superseding older blocked/gap cells
 
@@ -128,8 +152,10 @@ the verified migration base, and use the current finite native queue rather
 than another77-entry menu sweep. The drawbridge descent case is closed. Moving
 parcel handoff Stop/recovery is separate from the confirmed Reset failure; read
 the latest native checkpoint/reviews for whether that case subsequently ran.
-Do not implement application repairs during discovery. Candidate subsystem
-boundaries are recorded separately from the deferred final all-scene repair plan.
+The discovery list is now compiled. Read the prepared global `repair-plan.md`
+and `repair-plan-challenge.md` before any later implementation; this window
+still contains no new application repairs. A restored/resumed chat must honor
+the human cutoff rather than automatically starting another case.
 
 Current `qa-ui-002-causal-analysis.md` traces the stale footer to separate outer
 and ladder status fields: successful local Run clears only the latter. Existing
@@ -137,9 +163,10 @@ automated diagnostic coverage omits the outer status. Current
 `reset-transform-impact-analysis.md` found no equally direct duplicate of the
 parcel transform/geometry ordering seam in the other inspected plant adapters.
 
-The verified D:/Git base at d0c4566b has a later verified interim at824f9b56,
-with its own D receipt and latest-checkpoint pointer. Newer October23 work is
-still accumulating. Read the current native checkpoint for scoped closures,
+The verified D:/Git base at d0c4566b has a later verified interim at a2ac82fb,
+with its own D receipt and latest-checkpoint pointer:4122 selected files,
+1,907,784,001bytes,matching heads/skill and fsck PASS at07:10UTC. Newer work
+still needs its own final backup. Read the current native checkpoint for scoped closures,
 including chain-lift upstroke, pedestrian active retrigger and authored Demo4
 retention/full repeat. Do not repeat them based on older queue prose.
 
@@ -159,5 +186,21 @@ The final closeout must refresh native userdata, private root/descendant task
 context, skill, Git and D with new receipts, then pause the goal/automation.
 
 Before devising the final prioritized all-scene remediation plan, reconcile
-the full remaining requirements and issue list. No full-application PASS,
-release readiness, installed-TIA parity or live-PLC conclusion is established.
+the full remaining requirements and issue list. That ordering is now satisfied
+by the compiled77-entry list and prepared `repair-plan.md`; do not repeat the
+audit to satisfy this historical gate again. No full-application PASS, release
+readiness, installed-TIA parity or live-PLC conclusion is established.
+
+Later native closures:Q08 occupiedREADY/allred/committed vehicle, Q12 supported
+stationary scanning/release, Q18 genuinely manual endpoint JOG rejection, and
+the extra Demo5 applicationStop/held/Run-alone four-supported-carton/home/
+step100 case. See their exact named reviews in the current checkpoint. Demo5
+Memory-role retention differs from ENABLE loss; no extra machineStart was
+needed after AppStop, while ENABLE restoration did require one.
+
+Nativeuserdata currently has a real144-file versus Python97-file namespace
+split. Direct native PowerShell staging of144files/33,592,160bytes plus an
+independent Python readback passed at08:11UTC; that is only C staging until the
+final D payload is verified. Final COPY_ALL includes the exact RootOwned
+private extra. The reviewed staging helper and copy/readback procedure are
+under `tools/migration-backup-2026-10-22/incremental-closeout/`.

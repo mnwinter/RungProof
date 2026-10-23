@@ -1,0 +1,152 @@
+{
+  "status": "OFFLINE_PIXELS_ONLY",
+  "manual_physical_health_review_pending": true,
+  "source_sha256": "dc3e891be02505a943f1dd0d5b26b16aa2026a8a6052614ed3b31c23aefcde72",
+  "input_budget": {
+    "queue_a": 0,
+    "ready": 2
+  },
+  "observations": [],
+  "offline": {
+    "image": "offline-original.png",
+    "scan": 242,
+    "running": true,
+    "cycle20": true,
+    "values": {
+      "controller_ready": false,
+      "road_a_clear": false,
+      "road_b_clear": false,
+      "road_a_occupied": false,
+      "road_b_occupied": false,
+      "crossing_clear": true,
+      "signal_conflict": false,
+      "road_a_green": false,
+      "road_a_amber": false,
+      "road_a_red": true,
+      "road_b_green": false,
+      "road_b_amber": false,
+      "road_b_red": true
+    },
+    "witnesses": {
+      "controller_ready": [
+        {
+          "raw": "\u2022 controller_ready False",
+          "value": false,
+          "y": 129.5
+        }
+      ],
+      "road_a_clear": [
+        {
+          "raw": "\u2022 road a clear False",
+          "value": false,
+          "y": 285.0
+        }
+      ],
+      "road_b_clear": [
+        {
+          "raw": "\u2022 road_b_clear False",
+          "value": false,
+          "y": 595.5
+        }
+      ],
+      "road_a_occupied": [
+        {
+          "raw": "\u2022 road_a_occupied False",
+          "value": false,
+          "y": 389.0
+        }
+      ],
+      "road_b_occupied": [
+        {
+          "raw": "\u2022 road_b_occupied False",
+          "value": false,
+          "y": 699.0
+        }
+      ],
+      "crossing_clear": [
+        {
+          "raw": "\u2022 crossing_clear True",
+          "value": true,
+          "y": 182.0
+        }
+      ],
+      "signal_conflict": [
+        {
+          "raw": "\u2022 signal_conflict False",
+          "value": false,
+          "y": 855.0
+        }
+      ],
+      "road_a_green": [
+        {
+          "raw": "\u2022 road_a_green False",
+          "value": false,
+          "y": 336.5
+        }
+      ],
+      "road_a_amber": [
+        {
+          "raw": "\u2022 road_a_amber False",
+          "value": false,
+          "y": 233.5
+        }
+      ],
+      "road_a_red": [
+        {
+          "raw": "\u2022 road a red True",
+          "value": true,
+          "y": 492.0
+        }
+      ],
+      "road_b_green": [
+        {
+          "raw": "\u2022 road_b_green False",
+          "value": false,
+          "y": 647.5
+        }
+      ],
+      "road_b_amber": [
+        {
+          "raw": "\u2022 road_b_amber False",
+          "value": false,
+          "y": 543.5
+        }
+      ],
+      "road_b_red": [
+        {
+          "raw": "\u2022 road_b_red True",
+          "value": true,
+          "y": 803.0
+        }
+      ]
+    },
+    "trigger": false
+  },
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 228147,
+      "sha256": "95884b1ef743f66b16892030fe7804b09f67b29dfc98e78a4bc4ebdee06dd2a8"
+    },
+    {
+      "file": "offline-original-header3x.png",
+      "bytes": 50709,
+      "sha256": "0aa29f0bc064c842d762b6b7d08d45e5daad6be809475363b41e7bef63b8368a"
+    },
+    {
+      "file": "offline-original-header3x.ocr.json",
+      "bytes": 1156,
+      "sha256": "9b5b2df70088726db13f5c1500a76c57be3d321991183644dc362e87fa84982f"
+    },
+    {
+      "file": "offline-original-signals3x.png",
+      "bytes": 311587,
+      "sha256": "de44f1389dd2643a2caf72b9c732a5ccccdf31a47374a6fcb2ba3abaac7a0a82"
+    },
+    {
+      "file": "offline-original-signals3x.ocr.json",
+      "bytes": 3786,
+      "sha256": "e23b072abe70518bcfd9cfa0411bce059cdf1b53de6fb889043b37b6c35044dc"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "wait": 0.8,
+    "capture": "traffic-r1-selected-or-modal",
+    "ocr": true
+  }
+]

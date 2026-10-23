@@ -1,0 +1,12 @@
+# Inbound tote stationary scanner — independent native review
+
+Independent original pixels/action log; no UI input or hidden state queries. PID12768/native1021×660, actual Lab2.11 Inbound Tote Stop/local runtime/PLC disconnected. All40 observation originals plus two endpoint originals rehash-match native-ui-actions.jsonl (42matches). Existing V3 fixture SHA2560c50c49471480ca8d1b7664ed885afe60a74e669be40d929e251f76cd564ea79 matches [grounding](tote-stationary-scanner-grounding.md).
+
+The action plan logs one actual physical START(657,407), then passive observations. [Observation sheet](tote-independent-observation-sheet.jpg) provides offline geometry+Signals crops from all40 originals; it is derived pixel material, not simulator rendering.
+
+- Frames00..16 visibly show blue tote advancing supported along the actual belt toward installed beam, conveyor_runTrue/scan_completeFalse. [10](tote-r1-scan-observation-10.png),4368, directly shows approach with tote_at_scannerFalse.
+- [17](tote-r1-scan-observation-17.png),**4463**, and [19](tote-r1-scan-observation-19.png),**4490**, directly show **RUNNING, tote_at_scannerTrue/conveyor_runFalse/scan_completeFalse**, cycle_completeFalse/amber. The blue tote is in exactly the same physical pose against the fixed beam/belt across these originals. Advancing27scans establishes bounded stationary identification rather than application pause. Frame18 supplies an intervening matching sample.
+- [20](tote-r1-scan-observation-20.png),4503, shows scan_completeTrue/conveyor_runTrue/tote_at_scannerTrue and actual tote beginning release. Subsequent21..34 show supported downstream travel;25onwards actual beam feedback becomesFalse. No one-scan completion-edge capture is required.
+- [Completed endpoint](tote-r1-completed-endpoint.png),7415, and [held](tote-r1-completed-held.png),7479, show cycle_completeTrue/scan_completeTrue, conveyorFalse/tote_at_scannerFalse and actual tote resting supported near output end. Runtime continues scanning; no phantom second Start is logged.
+
+**Q12 closes for actual stationary incomplete identification, completion-triggered release and supported final stop.** No fault demonstrated. The27scan interval is an observed hold bound, not exact scanner-duration measurement; no private phase, simulated numeric position, center-on-beam requirement or all-cycle acceptance is inferred. The formerly missing scanner phase is now directly proved without reopening the already repaired motion contract.

@@ -1,0 +1,119 @@
+[
+  {
+    "ocr": true,
+    "capture": "traffic-r1-correct-scene",
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "x": 456,
+      "y": 512
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "text": "C:/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-21/test-projects/fixture-lab-11-12-mobile-traffic-lights.rpproj.json"
+    },
+    "wait": 0.3
+  },
+  {
+    "ocr": true,
+    "capture": "traffic-r1-fixture-import",
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "x": 203,
+      "y": 34
+    },
+    "wait": 0.25
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "x": 944,
+      "y": 98
+    },
+    "wait": 0.6
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.25
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "delta": 1200,
+      "y": 296,
+      "phase": "wheel",
+      "x": 893
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.25
+  },
+  {
+    "ocr": true,
+    "capture": "traffic-r1-engineering-home",
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "wait": 0.7
+  }
+]

@@ -1,121 +1,25 @@
-#77-scene requirement reconciliation â€”2026-10-23
+#77-scene current requirement reconciliation
 
-Read-only reconciliation at main d0c4566b. D-drive backup immutable. No UI rerun, app/fixture changes, or old evidence edits. The new JSON retains every original case scope/evidence and explicit supersession. This is discovery coverage, not a remediation plan.
-
-## Status and evidence rules
-
-**S = SCOPED_PASS**: cited native observations pass only their written scope. **P = PARTIAL**, **F = FAIL**, **B = BLOCKED**, **N = NOT_TESTED**. A family with S may still have specific missing subcases below. No whole-scene PASS and no inference from curriculum labels. Combined breadth Stop+Reset never proves standalone Stop. Dedicated fault N/A does not mean recovery/playback N/A. Saved project command choices are learner-fixture policy, not built-in machine rules.
-
-Every row expands below into all eight requirement cells, their scope and evidence. JSON additionally preserves superseded old cells and declared scene controls/actions. Review reports link to original frames: this reconciliation reads their bounded conclusions; it does not claim a new independent pixel review of every capture.
-
-## Aggregate scoped evidence
+77 unique catalog IDs;616 cells. Scope is bounded native evidence, not full-app acceptance. JSON retains original/superseded provenance. No UI/application/fixture/Git/D change by this reconciliation.
 
 | Requirement | Status counts |
 |---|---|
 |load|SCOPED_PASS 77|
-|controls|SCOPED_PASS 69, PARTIAL 8|
+|controls|SCOPED_PASS 76, PARTIAL 1|
 |normal_outcome|SCOPED_PASS 76, PARTIAL 1|
-|stop_reset_restart|SCOPED_PASS 76, PARTIAL 1|
-|recovery|SCOPED_PASS 76, PARTIAL 1|
+|stop_reset_restart|SCOPED_PASS 77|
+|recovery|SCOPED_PASS 77|
 |repeat|SCOPED_PASS 76, FAIL 1|
 |navigation|SCOPED_PASS 76, FAIL 1|
-|feedback|SCOPED_PASS 74, PARTIAL 2, FAIL 1|
+|feedback|SCOPED_PASS 75, PARTIAL 1, FAIL 1|
 
-Catalog comparison: 77 migrated scene files;77 unique matrix identities. Missing source IDs: []; unrepresented source IDs: []. Exact case data: [coverage-reconciliation.json](coverage-reconciliation.json).
-
-## Shared coverage and granularity
-
-All77 Scenario-menu entries and subsequent switches have breadth evidence; no extra77Ã—BrowserÃ—Viewer sweep is invented. [postbackup-small-navigation-review.md](../screen-audit-2026-10-21/postbackup-small-navigation-review.md) independently supports Viewer galleryâ†’demoâ†’ordinary lab, Browser demo/ordinary lab, QA-owned Cancel preservation, Discard continuation, Save/reopen stopped draft, then explicit Run/fresh A2/B3 green. These representative shared mechanics do not certify each unclicked row, every logic/help destination, live-count persistence, or unrelated asset serialization. Earlier save/reopen-pending note is stale.
-
-## Per-scene overview
-
-| ID | Load | Controls | Normal | Stop/reset/restart | Recovery | Repeat | Navigation | Feedback |
-|---|---|---|---|---|---|---|---|---|
-|conveyor-cell|S|S|S|S|S|S|S|S|
-|equipment-gallery|S|S|P|S|S|S|S|P|
-|lab-10-01-drive-alarm-code-string|S|S|S|S|S|S|S|S|
-|lab-10-02-chicken-label-print|S|S|S|S|S|S|S|S|
-|lab-10-03-vision-package-sorter|S|S|S|S|S|S|S|S|
-|lab-10-04-motor-enum-state|S|S|S|S|S|S|S|S|
-|lab-10-05-motor-struct-data|S|S|S|S|S|S|S|S|
-|lab-10-06-ten-motor-array-startup|S|S|S|S|S|S|S|S|
-|lab-11-06-wastewater-collection|S|S|S|S|S|S|S|S|
-|lab-11-07-multi-conveyor-pallet-route|S|S|S|S|S|S|S|S|
-|lab-11-11-service-elevator|S|S|S|S|S|S|S|S|
-|lab-11-12-mobile-traffic-lights|S|S|S|S|S|S|S|S|
-|lab-11-13-xy-palletizing|S|S|S|P|S|S|S|S|
-|lab-11-19-powder-batch-mixer|S|S|S|S|S|S|S|S|
-|lab-2-01-workstation-call|S|S|S|S|S|S|S|F|
-|lab-2-02-dual-confirmation|S|S|S|S|S|S|S|S|
-|lab-2-03-service-marker-inhibit|S|S|S|S|S|S|S|S|
-|lab-2-04-two-station-call|S|S|S|S|S|S|S|S|
-|lab-2-05-bay-light-selector|S|S|S|S|S|S|S|S|
-|lab-2-06-ready-attention|S|S|S|S|S|S|S|S|
-|lab-2-07-dual-contact-permissive|S|S|S|S|S|S|S|S|
-|lab-2-08-inspection-vote|S|S|S|S|S|S|S|S|
-|lab-2-09-maintenance-beacon|S|S|S|S|S|S|S|S|
-|lab-2-10-dust-collector-seal-in|S|S|S|S|S|S|S|S|
-|lab-2-11-inbound-tote-stop|S|S|S|S|S|S|S|P|
-|lab-2-12-assembly-lift|S|S|S|S|S|S|S|S|
-|lab-2-13-coolant-jug-fill|S|S|S|S|S|S|S|S|
-|lab-2-14-sump-pump|S|P|S|S|S|S|S|S|
-|lab-2-15-fume-extractor|S|S|S|S|S|S|S|S|
-|lab-2-16-safe-drill|S|S|S|S|S|S|S|S|
-|lab-2-17-pallet-robot|S|P|S|S|S|S|S|S|
-|lab-2-18-pallet-pickup|S|P|S|S|S|S|S|S|
-|lab-2-19-service-door|S|S|S|S|S|S|S|S|
-|lab-2-20-bottle-shuttle|S|P|S|S|P|S|S|S|
-|lab-2-21-tote-finishing|S|P|S|S|S|S|S|S|
-|lab-2-22-dual-spindle|S|P|S|S|S|S|S|S|
-|lab-2-23-parcel-sorter|S|P|S|S|S|F|S|S|
-|lab-2-24-robot-cnc|S|S|S|S|S|S|S|S|
-|lab-2-25-inspection-toggle|S|S|S|S|S|S|S|S|
-|lab-3-01-guarded-pallet-transfer|S|S|S|S|S|S|S|S|
-|lab-3-02-robot-cell-safe-restart|S|S|S|S|S|S|S|S|
-|lab-4-01-press-count-lamp|S|S|S|S|S|S|S|S|
-|lab-4-02-counter-reset-lamp|S|S|S|S|S|S|S|S|
-|lab-4-03-repeat-cycle-counter|S|S|S|S|S|S|S|S|
-|lab-4-04-sequence-light-tower|S|S|S|S|S|S|S|S|
-|lab-4-05-dual-input-count-window|S|S|S|S|S|S|S|S|
-|lab-4-06-multi-press-confirmation|S|S|S|S|S|S|S|S|
-|lab-4-07-parking-garage-entry|S|S|S|S|S|S|S|S|
-|lab-4-08-package-grouping|S|S|S|S|S|S|S|S|
-|lab-4-09-chain-drive-lift|S|S|S|S|S|S|S|S|
-|lab-4-10-cookie-packaging|S|S|S|S|S|S|S|S|
-|lab-4-11-barrel-fill-station|S|S|S|S|S|S|S|S|
-|lab-4-12-cable-cut-length|S|S|S|S|S|S|S|S|
-|lab-5-01-delayed-lamp|S|S|S|S|S|S|S|S|
-|lab-5-02-timed-lamp-off|S|S|S|S|S|S|S|S|
-|lab-5-03-rotary-flasher|S|S|S|S|S|S|S|S|
-|lab-5-04-alternating-lamps|S|S|S|S|S|S|S|S|
-|lab-5-05-variable-flash-rate|S|S|S|S|S|S|S|S|
-|lab-5-06-running-light-tower|S|S|S|S|S|S|S|S|
-|lab-5-07-pedestrian-crossing|S|S|S|S|S|S|S|S|
-|lab-5-08-drawbridge-control|S|S|S|S|S|S|S|S|
-|lab-5-09-bag-indexing-conveyor|S|S|S|S|S|S|S|S|
-|lab-5-10-coating-line|S|S|S|S|S|S|S|S|
-|lab-6-07-luggage-weight-sort|S|S|S|S|S|S|S|S|
-|lab-6-08-hand-dryer|S|S|S|S|S|S|S|S|
-|lab-9-01-sum-function|S|S|S|S|S|S|S|S|
-|lab-9-02-product-function|S|S|S|S|S|S|S|S|
-|lab-9-03-sum-and-counter-function|S|S|S|S|S|S|S|S|
-|lab-9-04-function-selector|S|S|S|S|S|S|S|S|
-|lab-9-10-box-volume|S|S|S|S|S|S|S|S|
-|lab-9-11-pallet-counting|S|S|S|S|S|S|S|S|
-|lab-9-12-ev-charging-manager|S|S|S|S|S|S|S|S|
-|scene-1-conveyor-stop|S|S|S|S|S|S|S|S|
-|scene-2-conveyor-pusher|S|S|S|S|S|S|F|S|
-|tank-high-low|S|S|S|S|S|S|S|S|
-|tank-level|S|S|S|S|S|S|S|S|
-|tank-radar|S|P|S|S|S|S|S|S|
-
-## Exact per-entry scopes and remaining requirements
+[Current77 issue compendium](scene-issue-compendium.md). Queue24:18 native closures +5 exact lifecycle alias reconciliations +Q23 split; genuine Demo5 AppStop additionally closed. Six incomplete cells: [exact list](remaining-finite-cells.json).
 
 ### conveyor-cell
 
-Conveyor Inspection Cell
+Conveyor Inspection Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-conveyor-cell-entry.png](../screen-audit-2026-10-21/breadth-conveyor-cell-entry.png)|
 |controls|SCOPED_PASS|START/STOP and simulated E-stop/reset have distinct native response; remaining generic abnormal/fault wording adds no grounded new control. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-standalone-conveyor.md](../screen-audit-2026-10-21/evidence-review-standalone-conveyor.md)|
@@ -126,18 +30,11 @@ Conveyor Inspection Cell
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-conveyor-cell-entry.png](../screen-audit-2026-10-21/breadth-conveyor-cell-entry.png)|
 |feedback|SCOPED_PASS|Selectedactualnativecartonposes/Signalsphotoeye/count proveboundedplantresponse; no belttexturespeed or latencymeasurement.|[evidence-review-standalone-conveyor.md](../screen-audit-2026-10-21/evidence-review-standalone-conveyor.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. START/STOP and simulated E-stop/reset have distinct native response; remaining generic abnormal/fault wording adds no grounded new control.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/conveyor-cell.scene.json ](../../scenes/migrated/conveyor-cell.scene.json), [rungproof-next/docs/help/scenes/conveyor-cell.md ](../../docs/help/scenes/conveyor-cell.md)
-
-Declared action inventory (3): Start / stop inspection conveyor; Emergency stop conveyor; Reset emergency stop. Exact declarations/point ownership retained in JSON.
-
 ### equipment-gallery
 
-Reusable Equipment Gallery
+Reusable Equipment Gallery — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-equipment-gallery-entry.png](../screen-audit-2026-10-21/breadth-equipment-gallery-entry.png)|
 |controls|SCOPED_PASS|Gallery toggle/stop mapped motor/fan/CNC responses supported; empty belt motion is observation limitation, not an uncaught button or confirmed defect. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-standalone-gallery.md](../screen-audit-2026-10-21/evidence-review-standalone-gallery.md); [postbackup-small-gallery-review.md](../screen-audit-2026-10-21/postbackup-small-gallery-review.md)|
@@ -148,18 +45,11 @@ Reusable Equipment Gallery
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-equipment-gallery-entry.png](../screen-audit-2026-10-21/breadth-equipment-gallery-entry.png)|
 |feedback|PARTIAL|Mapped CNC interior changes ON, stable OFF; earlier motor/fan proof retained. Empty featureless conveyor motion inconclusive, no defect inferred.|[postbackup-small-gallery-review.md](../screen-audit-2026-10-21/postbackup-small-gallery-review.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Gallery toggle/stop mapped motor/fan/CNC responses supported; empty belt motion is observation limitation, not an uncaught button or confirmed defect.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/equipment-gallery.scene.json ](../../scenes/migrated/equipment-gallery.scene.json), [rungproof-next/docs/help/scenes/equipment-gallery.md ](../../docs/help/scenes/equipment-gallery.md)
-
-Declared action inventory (2): Start / stop gallery motion; Emergency stop gallery motion. Exact declarations/point ownership retained in JSON.
-
 ### lab-10-01-drive-alarm-code-string
 
-Lab 10.1 - Drive Alarm-Code String
+Lab 10.1 - Drive Alarm-Code String — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-10-01-drive-alarm-code-string-entry.png](../screen-audit-2026-10-21/breadth-lab-10-01-drive-alarm-code-string-entry.png)|
 |controls|SCOPED_PASS|Physical message cycling, string-valid and maintained alarm_reset controls responded in supplied-string cases. Normal UI tag edit changed selected_alarm_code F003 toF030 and back with Apply/VerifyLoad/Run; arbitrary string limits and held/simultaneous controls remain untested.|[lab1001-baseline-r2.png](../screen-audit-2026-10-21/lab1001-baseline-r2.png); [lab1001-valid-empty-r2.png](../screen-audit-2026-10-21/lab1001-valid-empty-r2.png); [lab1001-F003-r2.png](../screen-audit-2026-10-21/lab1001-F003-r2.png); [lab1001-F030-rejected-r2.png](../screen-audit-2026-10-21/lab1001-F030-rejected-r2.png); [lab1001-F0030-rejected-r2.png](../screen-audit-2026-10-21/lab1001-F0030-rejected-r2.png); [lab1001-XF003-rejected-r2.png](../screen-audit-2026-10-21/lab1001-XF003-rejected-r2.png); [lab1001-lowercase-rejected-r2.png](../screen-audit-2026-10-21/lab1001-lowercase-rejected-r2.png); [lab1001-empty-wrap-r2.png](../screen-audit-2026-10-21/lab1001-empty-wrap-r2.png); [lab1001-F003-repeat-r2.png](../screen-audit-2026-10-21/lab1001-F003-repeat-r2.png); [lab1001-valid-off-r2.png](../screen-audit-2026-10-21/lab1001-valid-off-r2.png); [lab1001-valid-on-r2.png](../screen-audit-2026-10-21/lab1001-valid-on-r2.png); [lab1001-reset-on-r2.png](../screen-audit-2026-10-21/lab1001-reset-on-r2.png); [lab1001-reset-off-r2.png](../screen-audit-2026-10-21/lab1001-reset-off-r2.png); [lab1001-app-stop-r2.png](../screen-audit-2026-10-21/lab1001-app-stop-r2.png); [lab1001-app-run-r2.png](../screen-audit-2026-10-21/lab1001-app-run-r2.png); [lab1001-app-reset-r2.png](../screen-audit-2026-10-21/lab1001-app-reset-r2.png); [lab1001-reset-run-r2.png](../screen-audit-2026-10-21/lab1001-reset-run-r2.png); [lab1001-fresh-valid-empty-r2.png](../screen-audit-2026-10-21/lab1001-fresh-valid-empty-r2.png); [lab1001-fresh-F003-r2.png](../screen-audit-2026-10-21/lab1001-fresh-F003-r2.png); [lab1001-custom-empty.png](../screen-audit-2026-10-21/lab1001-custom-empty.png); [lab1001-custom-valid-empty.png](../screen-audit-2026-10-21/lab1001-custom-valid-empty.png); [lab1001-custom-F003-no-longer-match.png](../screen-audit-2026-10-21/lab1001-custom-F003-no-longer-match.png); [lab1001-custom-F030-selected-match.png](../screen-audit-2026-10-21/lab1001-custom-F030-selected-match.png); [lab1001-custom-F0030-rejected.png](../screen-audit-2026-10-21/lab1001-custom-F0030-rejected.png); [lab1001-custom-prefix-rejected.png](../screen-audit-2026-10-21/lab1001-custom-prefix-rejected.png); [lab1001-custom-lowercase-rejected.png](../screen-audit-2026-10-21/lab1001-custom-lowercase-rejected.png); [lab1001-custom-empty-wrap.png](../screen-audit-2026-10-21/lab1001-custom-empty-wrap.png); [lab1001-custom-F003-repeat-rejected.png](../screen-audit-2026-10-21/lab1001-custom-F003-repeat-rejected.png); [lab1001-custom-F030-repeat-match.png](../screen-audit-2026-10-21/lab1001-custom-F030-repeat-match.png); [lab1001-custom-reset-on.png](../screen-audit-2026-10-21/lab1001-custom-reset-on.png); [lab1001-custom-reset-off.png](../screen-audit-2026-10-21/lab1001-custom-reset-off.png); [lab1001-custom-valid-off.png](../screen-audit-2026-10-21/lab1001-custom-valid-off.png); [lab1001-custom-valid-on.png](../screen-audit-2026-10-21/lab1001-custom-valid-on.png); [lab1001-restored-empty.png](../screen-audit-2026-10-21/lab1001-restored-empty.png); [lab1001-restored-F003-match.png](../screen-audit-2026-10-21/lab1001-restored-F003-match.png); [lab1001-F030-runtime-ladder-value.png](../screen-audit-2026-10-21/lab1001-F030-runtime-ladder-value.png); [lab1001-F003-restored-runtime-value.png](../screen-audit-2026-10-21/lab1001-F003-restored-runtime-value.png); [evidence-review-lab1001-r2.md](../screen-audit-2026-10-21/evidence-review-lab1001-r2.md); [evidence-review-lab1001-editable.md](../screen-audit-2026-10-21/evidence-review-lab1001-editable.md)|
@@ -170,18 +60,11 @@ Lab 10.1 - Drive Alarm-Code String
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-10-01-drive-alarm-code-string-entry.png](../screen-audit-2026-10-21/breadth-lab-10-01-drive-alarm-code-string-entry.png)|
 |feedback|SCOPED_PASS|Actual STRING text in flat Signals and three outputs agreed with cabinet red segment, second stack green segment and separate red pilot. Monitored LAD showed loaded F030 thenF003. Tiny projected VFD text and motor rotation are not independently proved.|[lab1001-baseline-r2.png](../screen-audit-2026-10-21/lab1001-baseline-r2.png); [lab1001-valid-empty-r2.png](../screen-audit-2026-10-21/lab1001-valid-empty-r2.png); [lab1001-F003-r2.png](../screen-audit-2026-10-21/lab1001-F003-r2.png); [lab1001-F030-rejected-r2.png](../screen-audit-2026-10-21/lab1001-F030-rejected-r2.png); [lab1001-F0030-rejected-r2.png](../screen-audit-2026-10-21/lab1001-F0030-rejected-r2.png); [lab1001-XF003-rejected-r2.png](../screen-audit-2026-10-21/lab1001-XF003-rejected-r2.png); [lab1001-lowercase-rejected-r2.png](../screen-audit-2026-10-21/lab1001-lowercase-rejected-r2.png); [lab1001-empty-wrap-r2.png](../screen-audit-2026-10-21/lab1001-empty-wrap-r2.png); [lab1001-F003-repeat-r2.png](../screen-audit-2026-10-21/lab1001-F003-repeat-r2.png); [lab1001-valid-off-r2.png](../screen-audit-2026-10-21/lab1001-valid-off-r2.png); [lab1001-valid-on-r2.png](../screen-audit-2026-10-21/lab1001-valid-on-r2.png); [lab1001-reset-on-r2.png](../screen-audit-2026-10-21/lab1001-reset-on-r2.png); [lab1001-reset-off-r2.png](../screen-audit-2026-10-21/lab1001-reset-off-r2.png); [lab1001-app-stop-r2.png](../screen-audit-2026-10-21/lab1001-app-stop-r2.png); [lab1001-app-run-r2.png](../screen-audit-2026-10-21/lab1001-app-run-r2.png); [lab1001-app-reset-r2.png](../screen-audit-2026-10-21/lab1001-app-reset-r2.png); [lab1001-reset-run-r2.png](../screen-audit-2026-10-21/lab1001-reset-run-r2.png); [lab1001-fresh-valid-empty-r2.png](../screen-audit-2026-10-21/lab1001-fresh-valid-empty-r2.png); [lab1001-fresh-F003-r2.png](../screen-audit-2026-10-21/lab1001-fresh-F003-r2.png); [lab1001-custom-empty.png](../screen-audit-2026-10-21/lab1001-custom-empty.png); [lab1001-custom-valid-empty.png](../screen-audit-2026-10-21/lab1001-custom-valid-empty.png); [lab1001-custom-F003-no-longer-match.png](../screen-audit-2026-10-21/lab1001-custom-F003-no-longer-match.png); [lab1001-custom-F030-selected-match.png](../screen-audit-2026-10-21/lab1001-custom-F030-selected-match.png); [lab1001-custom-F0030-rejected.png](../screen-audit-2026-10-21/lab1001-custom-F0030-rejected.png); [lab1001-custom-prefix-rejected.png](../screen-audit-2026-10-21/lab1001-custom-prefix-rejected.png); [lab1001-custom-lowercase-rejected.png](../screen-audit-2026-10-21/lab1001-custom-lowercase-rejected.png); [lab1001-custom-empty-wrap.png](../screen-audit-2026-10-21/lab1001-custom-empty-wrap.png); [lab1001-custom-F003-repeat-rejected.png](../screen-audit-2026-10-21/lab1001-custom-F003-repeat-rejected.png); [lab1001-custom-F030-repeat-match.png](../screen-audit-2026-10-21/lab1001-custom-F030-repeat-match.png); [lab1001-custom-reset-on.png](../screen-audit-2026-10-21/lab1001-custom-reset-on.png); [lab1001-custom-reset-off.png](../screen-audit-2026-10-21/lab1001-custom-reset-off.png); [lab1001-custom-valid-off.png](../screen-audit-2026-10-21/lab1001-custom-valid-off.png); [lab1001-custom-valid-on.png](../screen-audit-2026-10-21/lab1001-custom-valid-on.png); [lab1001-restored-empty.png](../screen-audit-2026-10-21/lab1001-restored-empty.png); [lab1001-restored-F003-match.png](../screen-audit-2026-10-21/lab1001-restored-F003-match.png); [lab1001-F030-runtime-ladder-value.png](../screen-audit-2026-10-21/lab1001-F030-runtime-ladder-value.png); [lab1001-F003-restored-runtime-value.png](../screen-audit-2026-10-21/lab1001-F003-restored-runtime-value.png); [evidence-review-lab1001-r2.md](../screen-audit-2026-10-21/evidence-review-lab1001-r2.md); [evidence-review-lab1001-editable.md](../screen-audit-2026-10-21/evidence-review-lab1001-editable.md)|
 
-**Remaining / reconciliation:** After restored F003 program, capture F030 rejection if claiming complete restoration symmetry. Tiny projected VFD text remains unread; flat Signals already prove STRING matching. Arbitrary strings are outside the exposed supplied-message set. N1.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-10-01-drive-alarm-code-string.scene.json ](../../scenes/migrated/lab-10-01-drive-alarm-code-string.scene.json), [rungproof-next/docs/help/scenes/lab-10-01-drive-alarm-code-string.md ](../../docs/help/scenes/lab-10-01-drive-alarm-code-string.md)
-
-Declared action inventory (3): Toggle drive alarm string valid; Next received alarm message; Toggle alarm reset. Exact declarations/point ownership retained in JSON.
-
 ### lab-10-02-chicken-label-print
 
-Lab 10.2 - Chicken Label Print
+Lab 10.2 - Chicken Label Print — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-10-02-chicken-label-print-entry.png](../screen-audit-2026-10-21/breadth-lab-10-02-chicken-label-print-entry.png)|
 |controls|SCOPED_PASS|Weigh, data-valid and printer-ready physical actions establish11-point Signals and independent prerequisite effects; alternate weights/unexposed policies untested.|[evidence-review-lab1002.md](../screen-audit-2026-10-21/evidence-review-lab1002.md); [evidence-review-lab1002-followup.md](../screen-audit-2026-10-21/evidence-review-lab1002-followup.md)|
@@ -192,18 +75,11 @@ Lab 10.2 - Chicken Label Print
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-10-02-chicken-label-print-entry.png](../screen-audit-2026-10-21/breadth-lab-10-02-chicken-label-print-entry.png)|
 |feedback|SCOPED_PASS|Native Signals prove formatted strings/requests/completion; paper positions show bounded print/apply animation; floating caption readable at close view. Actual ink caption, exact timing and physical printer fidelity unproven.|[evidence-review-lab1002.md](../screen-audit-2026-10-21/evidence-review-lab1002.md); [evidence-review-lab1002-followup.md](../screen-audit-2026-10-21/evidence-review-lab1002-followup.md)|
 
-**Remaining / reconciliation:** Actual paper ink fidelity remains unverified; floating caption/Signals and label motion are covered. Alternate weights are not exposed by the tested fixed weigh action; do not invent a weight-entry requirement. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-10-02-chicken-label-print.scene.json ](../../scenes/migrated/lab-10-02-chicken-label-print.scene.json), [rungproof-next/docs/help/scenes/lab-10-02-chicken-label-print.md ](../../docs/help/scenes/lab-10-02-chicken-label-print.md)
-
-Declared action inventory (3): Load and weigh product; Toggle printer ready; Toggle label data valid. Exact declarations/point ownership retained in JSON.
-
 ### lab-10-03-vision-package-sorter
 
-Lab 10.3 - Vision Package Sorter
+Lab 10.3 - Vision Package Sorter — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-10-03-vision-package-sorter-entry.png](../screen-audit-2026-10-21/breadth-lab-10-03-vision-package-sorter-entry.png)|
 |controls|SCOPED_PASS|Class1..4 physical routes independently reviewed plus package/valid/destination input cases; in-flight edits are extra phase exploration, not an untested selector position. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-vision-class-route.md](../screen-audit-2026-10-21/evidence-review-vision-class-route.md); [fix-vision-selection-class2-review.jpg](../screen-audit-2026-10-21/fix-vision-selection-class2-review.jpg); [evidence-review-lab1003.md](../screen-audit-2026-10-21/evidence-review-lab1003.md)|
@@ -214,18 +90,11 @@ Lab 10.3 - Vision Package Sorter
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-10-03-vision-package-sorter-entry.png](../screen-audit-2026-10-21/breadth-lab-10-03-vision-package-sorter-entry.png)|
 |feedback|SCOPED_PASS|Native9Signals andactualpackageclass1route/heldposesagree; no classes2..4proof or confirmeddiscoverabilitydefect.|[evidence-review-lab1003.md](../screen-audit-2026-10-21/evidence-review-lab1003.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Class1..4 physical routes independently reviewed plus package/valid/destination input cases; in-flight edits are extra phase exploration, not an untested selector position.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-10-03-vision-package-sorter.scene.json ](../../scenes/migrated/lab-10-03-vision-package-sorter.scene.json), [rungproof-next/docs/help/scenes/lab-10-03-vision-package-sorter.md ](../../docs/help/scenes/lab-10-03-vision-package-sorter.md)
-
-Declared action inventory (4): Select simulated vision class (1-4); Toggle package present; Toggle vision result valid; Toggle destination clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-10-04-motor-enum-state
 
-Lab 10.4 - Motor Operating-State Enum
+Lab 10.4 - Motor Operating-State Enum — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-10-04-motor-enum-state-entry.png](../screen-audit-2026-10-21/breadth-lab-10-04-motor-enum-state-entry.png)|
 |controls|SCOPED_PASS|Start/Stop/fault/reset inputs and seven Signals verified for sampled fresh-edge sequences; simultaneous/unsupported ENUM policies unproven.|[evidence-review-lab1004.md](../screen-audit-2026-10-21/evidence-review-lab1004.md)|
@@ -236,18 +105,11 @@ Lab 10.4 - Motor Operating-State Enum
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-10-04-motor-enum-state-entry.png](../screen-audit-2026-10-21/breadth-lab-10-04-motor-enum-state-entry.png)|
 |feedback|SCOPED_PASS|Flat Signals ENUM/state valid, two physical stack indicators and bounded shaft pose changes match sampled states. Tiny physical state text and continuous speed/exact stop latency unproven.|[evidence-review-lab1004.md](../screen-audit-2026-10-21/evidence-review-lab1004.md)|
 
-**Remaining / reconciliation:** Capture unsupported ENUM behavior only if an actual operator/editor route permits it. Simultaneous fault/reset priority is unspecified, not a failed normal path. Physical tiny state text/shaft continuity remains unproved. N1.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-10-04-motor-enum-state.scene.json ](../../scenes/migrated/lab-10-04-motor-enum-state.scene.json), [rungproof-next/docs/help/scenes/lab-10-04-motor-enum-state.md ](../../docs/help/scenes/lab-10-04-motor-enum-state.md)
-
-Declared action inventory (4): Toggle start request; Toggle stop request; Toggle fault active; Reset motor fault. Exact declarations/point ownership retained in JSON.
-
 ### lab-10-05-motor-struct-data
 
-Lab 10.5 - Motor STRUCT Data
+Lab 10.5 - Motor STRUCT Data — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-10-05-motor-struct-data-entry.png](../screen-audit-2026-10-21/breadth-lab-10-05-motor-struct-data-entry.png)|
 |controls|SCOPED_PASS|All3 exposed BOOL toggles/all8 combinations reviewed. Nonzero STRUCT numerics have no supplied physical editor/setpoint route; numeric fixture semantics are separate typed-data exercise, not missing button. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab1005.md](../screen-audit-2026-10-21/evidence-review-lab1005.md)|
@@ -258,18 +120,11 @@ Lab 10.5 - Motor STRUCT Data
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-10-05-motor-struct-data-entry.png](../screen-audit-2026-10-21/breadth-lab-10-05-motor-struct-data-entry.png)|
 |feedback|SCOPED_PASS|Native14frames scalar/STRUCT/effectivevalues andphysicaltwinstacks agree. Numericfeedback0/power_validFalseonly; physicaldigits/shaftrotation unproven.|[evidence-review-lab1005.md](../screen-audit-2026-10-21/evidence-review-lab1005.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. All3 exposed BOOL toggles/all8 combinations reviewed. Nonzero STRUCT numerics have no supplied physical editor/setpoint route; numeric fixture semantics are separate typed-data exercise, not missing button.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-10-05-motor-struct-data.scene.json ](../../scenes/migrated/lab-10-05-motor-struct-data.scene.json), [rungproof-next/docs/help/scenes/lab-10-05-motor-struct-data.md ](../../docs/help/scenes/lab-10-05-motor-struct-data.md)
-
-Declared action inventory (3): Toggle motor record valid; Toggle temperature valid; Toggle alarm clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-10-06-ten-motor-array-startup
 
-Lab 10.6 - Ten-Motor Array Startup
+Lab 10.6 - Ten-Motor Array Startup — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-10-06-ten-motor-array-startup-entry.png](../screen-audit-2026-10-21/breadth-lab-10-06-ten-motor-array-startup-entry.png)|
 |controls|SCOPED_PASS|All3 exposed toggles/all8 combos and all10occupancies/endhold reviewed. No builtin ordered startup/indexisolation required. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab1006.md](../screen-audit-2026-10-21/evidence-review-lab1006.md); [postbackup-small-array-review.md](../screen-audit-2026-10-21/postbackup-small-array-review.md)|
@@ -280,18 +135,11 @@ Lab 10.6 - Ten-Motor Array Startup
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-10-06-ten-motor-array-startup-entry.png](../screen-audit-2026-10-21/breadth-lab-10-06-ten-motor-array-startup-entry.png)|
 |feedback|SCOPED_PASS|Native occupancy0..9 across runs plus supported finite-end five-second hold/runtime advancing; no built-in sequence or completion flag.|[postbackup-small-array-review.md](../screen-audit-2026-10-21/postbackup-small-array-review.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. All3 exposed toggles/all8 combos and all10occupancies/endhold reviewed. No builtin ordered startup/indexisolation required.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-10-06-ten-motor-array-startup.scene.json ](../../scenes/migrated/lab-10-06-ten-motor-array-startup.scene.json), [rungproof-next/docs/help/scenes/lab-10-06-ten-motor-array-startup.md ](../../docs/help/scenes/lab-10-06-ten-motor-array-startup.md)
-
-Declared action inventory (3): Toggle group start request; Toggle all motors ready; Toggle group alarm clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-11-06-wastewater-collection
 
-Lab 11.6 - Wastewater Collection
+Lab 11.6 - Wastewater Collection — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-11-06-wastewater-collection-entry.png](../screen-audit-2026-10-21/breadth-lab-11-06-wastewater-collection-entry.png)|
 |controls|SCOPED_PASS|Inflow/readiness/outlet actions and active qualification changes reviewed; no operator overflow/sensorforce route established. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab1106.md](../screen-audit-2026-10-21/evidence-review-lab1106.md)|
@@ -302,18 +150,11 @@ Lab 11.6 - Wastewater Collection
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-11-06-wastewater-collection-entry.png](../screen-audit-2026-10-21/breadth-lab-11-06-wastewater-collection-entry.png)|
 |feedback|SCOPED_PASS|NativeR2/R3levels/mA/actualrates/deliveredvalve andvisiblevesselcolumns/cabinetgreen agree. Pump shaft/finevalvelever/internalopaquesurfaceunproven.|[evidence-review-lab1106.md](../screen-audit-2026-10-21/evidence-review-lab1106.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Inflow/readiness/outlet actions and active qualification changes reviewed; no operator overflow/sensorforce route established.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-11-06-wastewater-collection.scene.json ](../../scenes/migrated/lab-11-06-wastewater-collection.scene.json), [rungproof-next/docs/help/scenes/lab-11-06-wastewater-collection.md ](../../docs/help/scenes/lab-11-06-wastewater-collection.md)
-
-Declared action inventory (3): Toggle incoming wastewater; Toggle treatment ready; Toggle outlet clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-11-07-multi-conveyor-pallet-route
 
-Lab 11.7 - Multi-Conveyor Pallet Route
+Lab 11.7 - Multi-Conveyor Pallet Route — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-11-07-multi-conveyor-pallet-route-entry.png](../screen-audit-2026-10-21/breadth-lab-11-07-multi-conveyor-pallet-route-entry.png)|
 |controls|SCOPED_PASS|All3 clears plus actual commonSTOP response/requalification reviewed. Extra imaginary jam/stuck sensor is unsupported. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-fix-commonstop.md](../screen-audit-2026-10-21/evidence-review-fix-commonstop.md); [fix-commonstop-review-compact.jpg](../screen-audit-2026-10-21/fix-commonstop-review-compact.jpg); [evidence-review-lab1107-transport.md](../screen-audit-2026-10-21/evidence-review-lab1107-transport.md)|
@@ -324,18 +165,11 @@ Lab 11.7 - Multi-Conveyor Pallet Route
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-11-07-multi-conveyor-pallet-route-entry.png](../screen-audit-2026-10-21/breadth-lab-11-07-multi-conveyor-pallet-route-entry.png)|
 |feedback|SCOPED_PASS|Physicalpalletroute/nativeSensors/zonegreenstacks agree; commonstoproutefailureseparate, shaftrotation/fulltimingunproven.|[evidence-review-lab1107-transport.md](../screen-audit-2026-10-21/evidence-review-lab1107-transport.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. All3 clears plus actual commonSTOP response/requalification reviewed. Extra imaginary jam/stuck sensor is unsupported.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-11-07-multi-conveyor-pallet-route.scene.json ](../../scenes/migrated/lab-11-07-multi-conveyor-pallet-route.scene.json), [rungproof-next/docs/help/scenes/lab-11-07-multi-conveyor-pallet-route.md ](../../docs/help/scenes/lab-11-07-multi-conveyor-pallet-route.md)
-
-Declared action inventory (4): Toggle common stop request; Toggle zone 1 clear; Toggle zone 2 clear; Toggle zone 3 clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-11-11-service-elevator
 
-Lab 11.11 - Service Elevator
+Lab 11.11 - Service Elevator — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-11-11-service-elevator-entry.png](../screen-audit-2026-10-21/breadth-lab-11-11-service-elevator-entry.png)|
 |controls|SCOPED_PASS|All3 toggles and moving loss/restoration reviewed, plus native upper/descent/lower. No mandatory everyphase×everypermissive expansion. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab1111.md](../screen-audit-2026-10-21/evidence-review-lab1111.md); [postbackup-small-elevator-review.md](../screen-audit-2026-10-21/postbackup-small-elevator-review.md)|
@@ -346,62 +180,41 @@ Lab 11.11 - Service Elevator
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-11-11-service-elevator-entry.png](../screen-audit-2026-10-21/breadth-lab-11-11-service-elevator-entry.png)|
 |feedback|SCOPED_PASS|Actual upperTrue99.9999/bothOff; actual descending door loss settles56.6666 twice; restore to lowerTrue/bothOff. No all-phase qualification crossproduct.|[postbackup-small-elevator-review.md](../screen-audit-2026-10-21/postbackup-small-elevator-review.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. All3 toggles and moving loss/restoration reviewed, plus native upper/descent/lower. No mandatory everyphase×everypermissive expansion.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-11-11-service-elevator.scene.json ](../../scenes/migrated/lab-11-11-service-elevator.scene.json), [rungproof-next/docs/help/scenes/lab-11-11-service-elevator.md ](../../docs/help/scenes/lab-11-11-service-elevator.md)
-
-Declared action inventory (3): Toggle call valid; Toggle doors closed; Toggle landing clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-11-12-mobile-traffic-lights
 
-Lab 11.12 - Mobile Traffic Lights
+Lab 11.12 - Mobile Traffic Lights — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-11-12-mobile-traffic-lights-entry.png](../screen-audit-2026-10-21/breadth-lab-11-12-mobile-traffic-lights-entry.png)|
 |controls|SCOPED_PASS|All5 exposed actions have native responses: READY,Aclear,Bclear drops/restores yield bothred at endpoints; queueA/queueB introduce actual vehicles/crossings. Q08 occupied READYloss remains a named phase-recovery case, not proof that the READY control never worked.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md)|
 |normal_outcome|SCOPED_PASS|ActualAandBrequeuedcrossings; committedBcontinuesamber/reduntilclear beforeopposingphase. Selectedall6colors/noconflict; exactphase/allredtimingunproven.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md)|
 |stop_reset_restart|SCOPED_PASS|OccupiedAppStop8965B-1.548/posesfrozen1.2s/all6off; Runbothred butcommittedBcontinuesclearthenAphase. ResetRunclears3permissives/initialvehicles/bothred.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md)|
-|recovery|SCOPED_PASS|Ready/Aclear/Bclearloss endpointsbothred andrestorestartupred; notoccupancyarrestproof. ActualoccupiedStopRuncommittedclearanceverified.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md)|
+|recovery|SCOPED_PASS|Ready/Aclear/Bclearloss endpointsbothred andrestorestartupred; notoccupancyarrestproof. ActualoccupiedStopRuncommittedclearanceverified. Q08 exact closure: Actual occupiedA−2.04/Agreen→acceptedREADYoff/allred→on13308stilloccupied/allred;13368+60scans/13424+116stillallred until13435clearTrue/Agreen; actualcommittedcar reaches supportedendpoint3.6/held.10hashes+Healthoff/on.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md); [traffic-occupied-ready-review.md](traffic-occupied-ready-review.md)|
 |repeat|SCOPED_PASS|ResetrequalifyfreshqueuesAcrossingthenBcrossing; lastrepeatstillBoccupied, nofinalclearcredit.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-11-12-mobile-traffic-lights-entry.png](../screen-audit-2026-10-21/breadth-lab-11-12-mobile-traffic-lights-entry.png)|
 |feedback|SCOPED_PASS|Native6colors/positions/occupancy/clear/conflict plusphysicalvehicles andBcoloredlensesagree. Aphysicalheadbackfacing, lensesunproven; continuousconflictexclusionunproven.|[evidence-review-lab1112.md](../screen-audit-2026-10-21/evidence-review-lab1112.md)|
 
-**Remaining / reconciliation:** Test exposed permissive loss during occupied crossing, not only endpoint gating; finish last repeated B crossing to clear. View A head from front if claiming its physical lenses. Exact scan-continuous conflict freedom is not established. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-11-12-mobile-traffic-lights.scene.json ](../../scenes/migrated/lab-11-12-mobile-traffic-lights.scene.json), [rungproof-next/docs/help/scenes/lab-11-12-mobile-traffic-lights.md ](../../docs/help/scenes/lab-11-12-mobile-traffic-lights.md)
-
-Declared action inventory (5): Toggle controller ready; Toggle road a clear; Toggle road b clear; Queue road A training vehicle; Queue road B training vehicle. Exact declarations/point ownership retained in JSON.
-
 ### lab-11-13-xy-palletizing
 
-Lab 11.13 - XY Palletizing Cell â€” demo alias demo-5-integrated-palletizer
+Lab 11.13 - XY Palletizing Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Opened this demo through numbered curriculum rail; matching demo title, scene and running local simulator observed. Standalone scenario path not covered. Same underlying scene ID, no duplicate standalone route.|[demo5-ready.png](../screen-audit-2026-10-21/demo5-ready.png)|
-|controls|SCOPED_PASS|Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Latest exact closure: Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff.|[demo5-enable-loss-review.md](demo5-enable-loss-review.md); preserved original evidence in JSON.|
+|controls|SCOPED_PASS|Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Latest exact closure: Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff.|[demo5-layer-settled.png](../screen-audit-2026-10-21/demo5-layer-settled.png); [demo5-stop-recovery-progress.png](../screen-audit-2026-10-21/demo5-stop-recovery-progress.png); [demo5-trip-permissive-progress.png](../screen-audit-2026-10-21/demo5-trip-permissive-progress.png); [demo5-second-layer-final.png](../screen-audit-2026-10-21/demo5-second-layer-final.png); [demo5-enable-loss-review.md](demo5-enable-loss-review.md)|
 |normal_outcome|SCOPED_PASS|First complete four-carton layer observed at PLACED 4, STEP 100 and home counts zero. Does not establish every axis-direction edge case or all geometry behavior.|[demo5-layer-settled.png](../screen-audit-2026-10-21/demo5-layer-settled.png)|
-|stop_reset_restart|PARTIAL|Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.|[breadth-lab-11-13-xy-palletizing-run.png](../screen-audit-2026-10-21/breadth-lab-11-13-xy-palletizing-run.png); [breadth-lab-11-13-xy-palletizing-reset.png](../screen-audit-2026-10-21/breadth-lab-11-13-xy-palletizing-reset.png)|
-|recovery|SCOPED_PASS|Observed machine Stop/fresh Start, simulated trip clear/Reset/fresh Start, and pallet-permissive loss/restore/Reset/fresh Start. Checkpoint and curriculum procedure evidence only; other fault/reset variants remain open. Latest exact closure: Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff.|[demo5-enable-loss-review.md](demo5-enable-loss-review.md); preserved original evidence in JSON.|
+|stop_reset_restart|SCOPED_PASS|Genuine actual AppStop during unloaded Ytravel: STOPPED4246/Y−1980/allaxesOff/samephysicalpose held; AppRun alone resumespickup/carry/placement, nofreshmachineStart. Final14968actualhomeXYZ0/four supportedcartons;16408/16461placed4/layerTrue/step100/vacuumFalse/nofault. ExistingReset evidence retained. Distinct from ENABLEloss/freshStart policy; no allphase/carryingStop claim.|[breadth-lab-11-13-xy-palletizing-run.png](../screen-audit-2026-10-21/breadth-lab-11-13-xy-palletizing-run.png); [breadth-lab-11-13-xy-palletizing-reset.png](../screen-audit-2026-10-21/breadth-lab-11-13-xy-palletizing-reset.png); [demo5-appstop-recovery-review.md](demo5-appstop-recovery-review.md)|
+|recovery|SCOPED_PASS|Observed machine Stop/fresh Start, simulated trip clear/Reset/fresh Start, and pallet-permissive loss/restore/Reset/fresh Start. Checkpoint and curriculum procedure evidence only; other fault/reset variants remain open. Latest exact closure: Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff.|[demo5-stop-recovery-progress.png](../screen-audit-2026-10-21/demo5-stop-recovery-progress.png); [demo5-trip-permissive-progress.png](../screen-audit-2026-10-21/demo5-trip-permissive-progress.png); [demo5-second-layer-final.png](../screen-audit-2026-10-21/demo5-second-layer-final.png); [demo5-enable-loss-review.md](demo5-enable-loss-review.md)|
 |repeat|SCOPED_PASS|After first complete layer and recovery exercises, a second complete four-carton layer reached PLACED 4, STEP 100, home counts zero.|[demo5-layer-settled.png](../screen-audit-2026-10-21/demo5-layer-settled.png); [demo5-trip-permissive-progress.png](../screen-audit-2026-10-21/demo5-trip-permissive-progress.png); [demo5-second-layer-final.png](../screen-audit-2026-10-21/demo5-second-layer-final.png)|
-|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.||
+|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[['breadth-lab-11-13-xy-palletizing-entry.png']](../screen-audit-2026-10-21/['breadth-lab-11-13-xy-palletizing-entry.png'])|
 |feedback|SCOPED_PASS|Demo 5 PASSED THIS SESSION and actual CURRICULUM COMPLETE 5/5 displayed, with first-layer/Stop/trip/pallet-loss/second-layer recovery record. This is scoped learner feedback, not blanket audit completion.|[demo5-second-layer-final.png](../screen-audit-2026-10-21/demo5-second-layer-final.png)|
-
-**Remaining / reconciliation:** Reconcile each exposed ENABLE/START/STOP/RESET/SIM TRIP/PALLET control against existing first/second-layer evidence; do not rerun covered trips merely because controls cell is blank. Missing axis-direction/geometry-specific cases need named checkpoints. N1.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-11-13-xy-palletizing.scene.json ](../../scenes/migrated/lab-11-13-xy-palletizing.scene.json), [rungproof-next/docs/help/scenes/lab-11-13-xy-palletizing.md ](../../docs/help/scenes/lab-11-13-xy-palletizing.md)
-
-Declared action inventory (6): System Enable selector; Start / resume four-carton batch; Machine Stop; Machine Reset; Simulated safety trip (training only); Pallet position permissive. Exact declarations/point ownership retained in JSON.
 
 ### lab-11-19-powder-batch-mixer
 
-Lab 11.19 - Powder Batch Mixer
+Lab 11.19 - Powder Batch Mixer — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-11-19-powder-batch-mixer-entry.png](../screen-audit-2026-10-21/breadth-lab-11-19-powder-batch-mixer-entry.png)|
 |controls|SCOPED_PASS|All3 physical toggles have named native effects; actuator geometry is a separate presentation observation, not an untouched control. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab1119.md](../screen-audit-2026-10-21/evidence-review-lab1119.md)|
@@ -412,18 +225,11 @@ Lab 11.19 - Powder Batch Mixer
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-11-19-powder-batch-mixer-entry.png](../screen-audit-2026-10-21/breadth-lab-11-19-powder-batch-mixer-entry.png)|
 |feedback|SCOPED_PASS|17nativeframes threephysicalpilots matchphaseexclusivity. Independentgate/valvefullstroke/motorshaft/powderflowunproven.|[evidence-review-lab1119.md](../screen-audit-2026-10-21/evidence-review-lab1119.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. All3 physical toggles have named native effects; actuator geometry is a separate presentation observation, not an untouched control.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-11-19-powder-batch-mixer.scene.json ](../../scenes/migrated/lab-11-19-powder-batch-mixer.scene.json), [rungproof-next/docs/help/scenes/lab-11-19-powder-batch-mixer.md ](../../docs/help/scenes/lab-11-19-powder-batch-mixer.md)
-
-Declared action inventory (3): Toggle recipe valid; Toggle dose complete; Toggle mixer ready. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-01-workstation-call
 
-Lab 2.1 - Workstation Call Lamp
+Lab 2.1 - Workstation Call Lamp — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-01-workstation-call-entry.png](../screen-audit-2026-10-21/breadth-lab-2-01-workstation-call-entry.png)|
 |controls|SCOPED_PASS|Namedphysicalbutton/modecontrols testedonlyasspecifiedinreport; otherguard/faultcasesremainopen.|[evidence-review-lab201-normal-followup.md](../screen-audit-2026-10-21/evidence-review-lab201-normal-followup.md)|
@@ -434,18 +240,11 @@ Lab 2.1 - Workstation Call Lamp
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-01-workstation-call-entry.png](../screen-audit-2026-10-21/breadth-lab-2-01-workstation-call-entry.png)|
 |feedback|FAIL|Valid authored ladder RUNNING/ErrorList0 but outer SceneIO footer remains RUNBLOCKED at native scan1343. Same QA-UI-002.|[postbackup-diagnostics-review.md](../screen-audit-2026-10-21/postbackup-diagnostics-review.md); [postbackup-diagnostics-checkpoint.md](../screen-audit-2026-10-21/postbackup-diagnostics-checkpoint.md)|
 
-**Remaining / reconciliation:** Exact QA-UI-002 native repro DONE: ErrorList clears to0ERRORS/verificationpassed and ladder runs, but outerSceneIO RUNBLOCKED footer persists atscan1343. Remaining S3 footer correction/after-fix native validation; preserve genuine invalid-draft warnings. Toggle normal covered; QA-SPEC-002 is wording ambiguity. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-01-workstation-call.scene.json ](../../scenes/migrated/lab-2-01-workstation-call.scene.json), [rungproof-next/docs/help/scenes/lab-2-01-workstation-call.md ](../../docs/help/scenes/lab-2-01-workstation-call.md)
-
-Declared action inventory (1): Press / release material call. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-02-dual-confirmation
 
-Lab 2.2 - Dual Confirmation Lamp
+Lab 2.2 - Dual Confirmation Lamp — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-02-dual-confirmation-entry.png](../screen-audit-2026-10-21/breadth-lab-2-02-dual-confirmation-entry.png)|
 |controls|SCOPED_PASS|Two physical maintained-toggle controls independently changed their declared operator_confirmed and quality_confirmed inputs. Covers the scene inputs only, not every editor/menu control or physical held-mouse behavior.|[lab202-monitored-00.png](../screen-audit-2026-10-21/lab202-monitored-00.png); [lab202-monitored-10.png](../screen-audit-2026-10-21/lab202-monitored-10.png); [lab202-monitored-11.png](../screen-audit-2026-10-21/lab202-monitored-11.png); [lab202-monitored-01.png](../screen-audit-2026-10-21/lab202-monitored-01.png); [lab202-monitored-00-again.png](../screen-audit-2026-10-21/lab202-monitored-00-again.png); [lab202-monitored-11-again.png](../screen-audit-2026-10-21/lab202-monitored-11-again.png)|
@@ -456,40 +255,26 @@ Lab 2.2 - Dual Confirmation Lamp
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-02-dual-confirmation-entry.png](../screen-audit-2026-10-21/breadth-lab-2-02-dual-confirmation-entry.png)|
 |feedback|SCOPED_PASS|Signals showed exact bound input/output values and accepted scan; physical lamp agreed with AND truth table, including both-false afterReset+Run. The unrelated5/5 curriculum display is not Lab2.2completion evidence.|[lab202-monitored-00.png](../screen-audit-2026-10-21/lab202-monitored-00.png); [lab202-monitored-10.png](../screen-audit-2026-10-21/lab202-monitored-10.png); [lab202-monitored-11.png](../screen-audit-2026-10-21/lab202-monitored-11.png); [lab202-monitored-01.png](../screen-audit-2026-10-21/lab202-monitored-01.png); [lab202-monitored-00-again.png](../screen-audit-2026-10-21/lab202-monitored-00-again.png); [lab202-monitored-11-again.png](../screen-audit-2026-10-21/lab202-monitored-11-again.png); [lab202-reset-inputs-cleared.png](../screen-audit-2026-10-21/lab202-reset-inputs-cleared.png)|
 
-**Remaining / reconciliation:** AND all four combinations and Reset/Run input clearing are already reviewed. Empty generic recovery cell is bookkeeping, not evidence of an untested scene fault. Reconcile existing evidence; no new trip control invented. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-02-dual-confirmation.scene.json ](../../scenes/migrated/lab-2-02-dual-confirmation.scene.json), [rungproof-next/docs/help/scenes/lab-2-02-dual-confirmation.md ](../../docs/help/scenes/lab-2-02-dual-confirmation.md)
-
-Declared action inventory (2): Press / release operator confirm; Press / release quality confirm. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-03-service-marker-inhibit
 
-Lab 2.3 - Service Marker Inhibit
+Lab 2.3 - Service Marker Inhibit — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-03-service-marker-inhibit-entry.png](../screen-audit-2026-10-21/breadth-lab-2-03-service-marker-inhibit-entry.png)|
 |controls|SCOPED_PASS|Physical maintained-toggle inhibit control changed marker_inhibit_pressed false/true/false twice and output followed NC logic. Covers declared toggle only, not physical mouse-release semantics or every editor control.|[lab203-normal-r2.png](../screen-audit-2026-10-21/lab203-normal-r2.png); [lab203-inhibit-r2.png](../screen-audit-2026-10-21/lab203-inhibit-r2.png); [lab203-release-r2.png](../screen-audit-2026-10-21/lab203-release-r2.png); [lab203-inhibit-repeat-r2.png](../screen-audit-2026-10-21/lab203-inhibit-repeat-r2.png); [lab203-release-repeat-r2.png](../screen-audit-2026-10-21/lab203-release-repeat-r2.png)|
 |normal_outcome|SCOPED_PASS|With disposable NC learner ladder loaded through UI, marker_inhibit_pressed=false gave service_marker_on=true/white lampON; true gave outputfalse/lampOFF; toggled release restored lampON.|[lab203-normal-r2.png](../screen-audit-2026-10-21/lab203-normal-r2.png); [lab203-inhibit-r2.png](../screen-audit-2026-10-21/lab203-inhibit-r2.png); [lab203-release-r2.png](../screen-audit-2026-10-21/lab203-release-r2.png); [lab203-inhibit-repeat-r2.png](../screen-audit-2026-10-21/lab203-inhibit-repeat-r2.png); [lab203-release-repeat-r2.png](../screen-audit-2026-10-21/lab203-release-repeat-r2.png)|
-|stop_reset_restart|SCOPED_PASS|Active inhibitTrue/outputFalse/dark; AppReset STOPPED0 restores declared inhibitFalse/service_marker_onTrue/whiteON; Run alone8 retains declared released baseline. Reset is not required to force all outputsFalse.|[lab203-app-stop-r2.png](../screen-audit-2026-10-21/lab203-app-stop-r2.png); [lab203-app-run-r2.png](../screen-audit-2026-10-21/lab203-app-run-r2.png); [lab203-app-reset-r2.png](../screen-audit-2026-10-21/lab203-app-reset-r2.png); [lab203-reset-run-r2.png](../screen-audit-2026-10-21/lab203-reset-run-r2.png); [../screen-audit-2026-10-23/marker-inhibit-reset-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/marker-inhibit-reset-review.md)|
-|recovery|SCOPED_PASS|Active inhibitTrue/outputFalse/dark; AppReset STOPPED0 restores declared inhibitFalse/service_marker_onTrue/whiteON; Run alone8 retains declared released baseline. Reset is not required to force all outputsFalse.|[../screen-audit-2026-10-23/marker-inhibit-reset-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/marker-inhibit-reset-review.md)|
+|stop_reset_restart|SCOPED_PASS|Active inhibitTrue/outputFalse/dark; AppReset STOPPED0 restores declared inhibitFalse/service_marker_onTrue/whiteON; Run alone8 retains declared released baseline. Reset is not required to force all outputsFalse.|[lab203-app-stop-r2.png](../screen-audit-2026-10-21/lab203-app-stop-r2.png); [lab203-app-run-r2.png](../screen-audit-2026-10-21/lab203-app-run-r2.png); [lab203-app-reset-r2.png](../screen-audit-2026-10-21/lab203-app-reset-r2.png); [lab203-reset-run-r2.png](../screen-audit-2026-10-21/lab203-reset-run-r2.png); [marker-inhibit-reset-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/marker-inhibit-reset-review.md)|
+|recovery|SCOPED_PASS|Active inhibitTrue/outputFalse/dark; AppReset STOPPED0 restores declared inhibitFalse/service_marker_onTrue/whiteON; Run alone8 retains declared released baseline. Reset is not required to force all outputsFalse.|[marker-inhibit-reset-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/marker-inhibit-reset-review.md)|
 |repeat|SCOPED_PASS|Second inhibit/release toggle cycle reproduced OFF/ON; appReset thenRun returned inputfalse/outputtrue. Reset was applied with inhibit alreadyfalse, so clearing an active inhibit viaReset is not established.|[lab203-inhibit-repeat-r2.png](../screen-audit-2026-10-21/lab203-inhibit-repeat-r2.png); [lab203-release-repeat-r2.png](../screen-audit-2026-10-21/lab203-release-repeat-r2.png); [lab203-app-reset-r2.png](../screen-audit-2026-10-21/lab203-app-reset-r2.png); [lab203-reset-run-r2.png](../screen-audit-2026-10-21/lab203-reset-run-r2.png)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-03-service-marker-inhibit-entry.png](../screen-audit-2026-10-21/breadth-lab-2-03-service-marker-inhibit-entry.png)|
 |feedback|SCOPED_PASS|Visible Signals input/output values and accepted scan matched physical white marker through NC truth states, repeated toggles and playback. Generic5/5curriculum is unrelated to this lab.|[lab203-normal-r2.png](../screen-audit-2026-10-21/lab203-normal-r2.png); [lab203-inhibit-r2.png](../screen-audit-2026-10-21/lab203-inhibit-r2.png); [lab203-release-r2.png](../screen-audit-2026-10-21/lab203-release-r2.png); [lab203-inhibit-repeat-r2.png](../screen-audit-2026-10-21/lab203-inhibit-repeat-r2.png); [lab203-release-repeat-r2.png](../screen-audit-2026-10-21/lab203-release-repeat-r2.png); [lab203-app-stop-r2.png](../screen-audit-2026-10-21/lab203-app-stop-r2.png); [lab203-app-reset-r2.png](../screen-audit-2026-10-21/lab203-app-reset-r2.png); [lab203-reset-run-r2.png](../screen-audit-2026-10-21/lab203-reset-run-r2.png)|
 
-**Remaining / reconciliation:** Q22 active-inhibit Reset/Run default recovery closed. Declared initial markeroutputTrue is visibly restored even STOPPED; no allzeroReset expectation or duplicatefooter finding.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-03-service-marker-inhibit.scene.json ](../../scenes/migrated/lab-2-03-service-marker-inhibit.scene.json), [rungproof-next/docs/help/scenes/lab-2-03-service-marker-inhibit.md ](../../docs/help/scenes/lab-2-03-service-marker-inhibit.md)
-
-Declared action inventory (1): Press / release marker inhibit. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-04-two-station-call
 
-Lab 2.4 - Two-Station Call Beacon
+Lab 2.4 - Two-Station Call Beacon — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-04-two-station-call-entry.png](../screen-audit-2026-10-21/breadth-lab-2-04-two-station-call-entry.png)|
 |controls|SCOPED_PASS|Declared physical toggle/selector controls and exact symbolic bindings responded. All four north/south OR combinations; repeated00/10; active north request appStop/Run and appReset clearing both calls/output. Physical hold/release semantics are not implied by click-toggle checks.|[lab204-00.png](../screen-audit-2026-10-21/lab204-00.png); [lab204-10.png](../screen-audit-2026-10-21/lab204-10.png); [lab204-11.png](../screen-audit-2026-10-21/lab204-11.png); [lab204-01.png](../screen-audit-2026-10-21/lab204-01.png); [lab204-00-repeat.png](../screen-audit-2026-10-21/lab204-00-repeat.png); [lab204-10-repeat.png](../screen-audit-2026-10-21/lab204-10-repeat.png)|
@@ -500,18 +285,11 @@ Lab 2.4 - Two-Station Call Beacon
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-04-two-station-call-entry.png](../screen-audit-2026-10-21/breadth-lab-2-04-two-station-call-entry.png)|
 |feedback|SCOPED_PASS|Visible Signals input/output values, accepted scan and physical lamp states agree for recorded cases. Unrelated5/5curriculum is not lab completion evidence.|[lab204-00.png](../screen-audit-2026-10-21/lab204-00.png); [lab204-10.png](../screen-audit-2026-10-21/lab204-10.png); [lab204-11.png](../screen-audit-2026-10-21/lab204-11.png); [lab204-01.png](../screen-audit-2026-10-21/lab204-01.png); [lab204-00-repeat.png](../screen-audit-2026-10-21/lab204-00-repeat.png); [lab204-10-repeat.png](../screen-audit-2026-10-21/lab204-10-repeat.png); [lab204-app-stop.png](../screen-audit-2026-10-21/lab204-app-stop.png); [lab204-app-run.png](../screen-audit-2026-10-21/lab204-app-run.png); [lab204-app-reset.png](../screen-audit-2026-10-21/lab204-app-reset.png); [lab204-reset-run.png](../screen-audit-2026-10-21/lab204-reset-run.png)|
 
-**Remaining / reconciliation:** OR all four combinations, active-north Reset and repeat already supported. No additional documented normal/lifecycle gap identified from saved scope; remaining navigation is N1, not an invented trip test.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-04-two-station-call.scene.json ](../../scenes/migrated/lab-2-04-two-station-call.scene.json), [rungproof-next/docs/help/scenes/lab-2-04-two-station-call.md ](../../docs/help/scenes/lab-2-04-two-station-call.md)
-
-Declared action inventory (2): Press / release north call; Press / release south call. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-05-bay-light-selector
 
-Lab 2.5 - Bay Light Selector
+Lab 2.5 - Bay Light Selector — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-05-bay-light-selector-entry.png](../screen-audit-2026-10-21/breadth-lab-2-05-bay-light-selector-entry.png)|
 |controls|SCOPED_PASS|Declared physical toggle/selector controls and exact symbolic bindings responded. Physical two-position selector0/1 controls both bay outputs; repeated0/1; Stop/Run retains1 then active appReset restores0 and bothfalse. Physical hold/release semantics are not implied by click-toggle checks.|[lab205-off-r2.png](../screen-audit-2026-10-21/lab205-off-r2.png); [lab205-on-r2.png](../screen-audit-2026-10-21/lab205-on-r2.png); [lab205-off-repeat-r2.png](../screen-audit-2026-10-21/lab205-off-repeat-r2.png); [lab205-on-repeat-r2.png](../screen-audit-2026-10-21/lab205-on-repeat-r2.png)|
@@ -522,18 +300,11 @@ Lab 2.5 - Bay Light Selector
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-05-bay-light-selector-entry.png](../screen-audit-2026-10-21/breadth-lab-2-05-bay-light-selector-entry.png)|
 |feedback|SCOPED_PASS|Visible Signals input/output values, accepted scan and physical lamp states agree for recorded cases. Unrelated5/5curriculum is not lab completion evidence.|[lab205-off-r2.png](../screen-audit-2026-10-21/lab205-off-r2.png); [lab205-on-r2.png](../screen-audit-2026-10-21/lab205-on-r2.png); [lab205-off-repeat-r2.png](../screen-audit-2026-10-21/lab205-off-repeat-r2.png); [lab205-on-repeat-r2.png](../screen-audit-2026-10-21/lab205-on-repeat-r2.png); [lab205-app-stop-r2.png](../screen-audit-2026-10-21/lab205-app-stop-r2.png); [lab205-app-run-r2.png](../screen-audit-2026-10-21/lab205-app-run-r2.png); [lab205-app-reset-r2.png](../screen-audit-2026-10-21/lab205-app-reset-r2.png); [lab205-reset-run-r2.png](../screen-audit-2026-10-21/lab205-reset-run-r2.png)|
 
-**Remaining / reconciliation:** Selector0/1, both outputs, active Reset and repeats are reviewed. No additional exposed selector value is documented; reconcile named controls rather than invent invalid positions. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-05-bay-light-selector.scene.json ](../../scenes/migrated/lab-2-05-bay-light-selector.scene.json), [rungproof-next/docs/help/scenes/lab-2-05-bay-light-selector.md ](../../docs/help/scenes/lab-2-05-bay-light-selector.md)
-
-Declared action inventory (1): Advance selector. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-06-ready-attention
 
-Lab 2.6 - Ready / Attention Button
+Lab 2.6 - Ready / Attention Button — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-06-ready-attention-entry.png](../screen-audit-2026-10-21/breadth-lab-2-06-ready-attention-entry.png)|
 |controls|SCOPED_PASS|Declared physical toggle/selector controls and exact symbolic bindings responded. Declared toggle requestfalse ->readytrue/attentionfalse; true ->readyfalse/attentiontrue; repeated toggle; Stop/Run with active request and active appReset restoredfalse/readytrue. Physical hold/release semantics are not implied by click-toggle checks.|[lab206-normal.png](../screen-audit-2026-10-21/lab206-normal.png); [lab206-pressed.png](../screen-audit-2026-10-21/lab206-pressed.png); [lab206-released-toggle.png](../screen-audit-2026-10-21/lab206-released-toggle.png); [lab206-pressed-repeat.png](../screen-audit-2026-10-21/lab206-pressed-repeat.png)|
@@ -544,18 +315,11 @@ Lab 2.6 - Ready / Attention Button
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-06-ready-attention-entry.png](../screen-audit-2026-10-21/breadth-lab-2-06-ready-attention-entry.png)|
 |feedback|SCOPED_PASS|Visible Signals input/output values, accepted scan and physical lamp states agree for recorded cases. Unrelated5/5curriculum is not lab completion evidence.|[lab206-normal.png](../screen-audit-2026-10-21/lab206-normal.png); [lab206-pressed.png](../screen-audit-2026-10-21/lab206-pressed.png); [lab206-released-toggle.png](../screen-audit-2026-10-21/lab206-released-toggle.png); [lab206-pressed-repeat.png](../screen-audit-2026-10-21/lab206-pressed-repeat.png); [lab206-app-stop.png](../screen-audit-2026-10-21/lab206-app-stop.png); [lab206-app-run.png](../screen-audit-2026-10-21/lab206-app-run.png); [lab206-active-reset.png](../screen-audit-2026-10-21/lab206-active-reset.png); [lab206-reset-run.png](../screen-audit-2026-10-21/lab206-reset-run.png)|
 
-**Remaining / reconciliation:** Current maintained-toggle/complementary outputs and hold/release are proven. Resolve QA-SPEC-002 spring-return wording versus explicit toggle before requiring mouseup to release the symbolic input. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-06-ready-attention.scene.json ](../../scenes/migrated/lab-2-06-ready-attention.scene.json), [rungproof-next/docs/help/scenes/lab-2-06-ready-attention.md ](../../docs/help/scenes/lab-2-06-ready-attention.md)
-
-Declared action inventory (1): Press / release request. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-07-dual-contact-permissive
 
-Lab 2.7 - Dual-Contact Permissive
+Lab 2.7 - Dual-Contact Permissive — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-07-dual-contact-permissive-entry.png](../screen-audit-2026-10-21/breadth-lab-2-07-dual-contact-permissive-entry.png)|
 |controls|SCOPED_PASS|reset_request OR NOT stop_contact_nc across all four combinations; normal(false,true) is off. Both physical NO/NC controls changed correct inputs. GUI-loaded disposable learner LAD only; physical toggle/selector cases do not establish keyboard, persistence, rapid/held-control or all navigation behavior.|[lab207-normal.png](../screen-audit-2026-10-21/lab207-normal.png); [lab207-reset-only.png](../screen-audit-2026-10-21/lab207-reset-only.png); [lab207-both.png](../screen-audit-2026-10-21/lab207-both.png); [lab207-nc-only.png](../screen-audit-2026-10-21/lab207-nc-only.png); [lab207-normal-repeat.png](../screen-audit-2026-10-21/lab207-normal-repeat.png); [lab207-nc-only-repeat.png](../screen-audit-2026-10-21/lab207-nc-only-repeat.png); [lab207-app-stop.png](../screen-audit-2026-10-21/lab207-app-stop.png); [lab207-app-run.png](../screen-audit-2026-10-21/lab207-app-run.png); [lab207-active-reset.png](../screen-audit-2026-10-21/lab207-active-reset.png); [lab207-reset-run.png](../screen-audit-2026-10-21/lab207-reset-run.png); [evidence-review-lab207.md](../screen-audit-2026-10-21/evidence-review-lab207.md)|
@@ -566,18 +330,11 @@ Lab 2.7 - Dual-Contact Permissive
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-07-dual-contact-permissive-entry.png](../screen-audit-2026-10-21/breadth-lab-2-07-dual-contact-permissive-entry.png)|
 |feedback|SCOPED_PASS|reset_request OR NOT stop_contact_nc across all four combinations; normal(false,true) is off. Both physical NO/NC controls changed correct inputs. GUI-loaded disposable learner LAD only; physical toggle/selector cases do not establish keyboard, persistence, rapid/held-control or all navigation behavior.|[lab207-normal.png](../screen-audit-2026-10-21/lab207-normal.png); [lab207-reset-only.png](../screen-audit-2026-10-21/lab207-reset-only.png); [lab207-both.png](../screen-audit-2026-10-21/lab207-both.png); [lab207-nc-only.png](../screen-audit-2026-10-21/lab207-nc-only.png); [lab207-normal-repeat.png](../screen-audit-2026-10-21/lab207-normal-repeat.png); [lab207-nc-only-repeat.png](../screen-audit-2026-10-21/lab207-nc-only-repeat.png); [lab207-app-stop.png](../screen-audit-2026-10-21/lab207-app-stop.png); [lab207-app-run.png](../screen-audit-2026-10-21/lab207-app-run.png); [lab207-active-reset.png](../screen-audit-2026-10-21/lab207-active-reset.png); [lab207-reset-run.png](../screen-audit-2026-10-21/lab207-reset-run.png); [evidence-review-lab207.md](../screen-audit-2026-10-21/evidence-review-lab207.md)|
 
-**Remaining / reconciliation:** Both physical NO/NC inputs, all truth states and NC-default Reset are reviewed; missing help binding was source-corrected. No new normal blocker identified; N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-07-dual-contact-permissive.scene.json ](../../scenes/migrated/lab-2-07-dual-contact-permissive.scene.json), [rungproof-next/docs/help/scenes/lab-2-07-dual-contact-permissive.md ](../../docs/help/scenes/lab-2-07-dual-contact-permissive.md)
-
-Declared action inventory (2): Toggle NO reset; Toggle NC contact. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-08-inspection-vote
 
-Lab 2.8 - Inspection Vote Stacklight
+Lab 2.8 - Inspection Vote Stacklight — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-08-inspection-vote-entry.png](../screen-audit-2026-10-21/breadth-lab-2-08-inspection-vote-entry.png)|
 |controls|SCOPED_PASS|Four vote combinations:neither dark,A-only green,B-only amber,both redonly; corresponding pass/hold/conflict Signals matched and outputs remained exclusive. GUI-loaded disposable learner LAD only; physical toggle/selector cases do not establish keyboard, persistence, rapid/held-control or all navigation behavior.|[lab208-00.png](../screen-audit-2026-10-21/lab208-00.png); [lab208-10.png](../screen-audit-2026-10-21/lab208-10.png); [lab208-11.png](../screen-audit-2026-10-21/lab208-11.png); [lab208-01.png](../screen-audit-2026-10-21/lab208-01.png); [lab208-00-repeat.png](../screen-audit-2026-10-21/lab208-00-repeat.png); [lab208-01-repeat.png](../screen-audit-2026-10-21/lab208-01-repeat.png); [lab208-11-repeat.png](../screen-audit-2026-10-21/lab208-11-repeat.png); [lab208-app-stop.png](../screen-audit-2026-10-21/lab208-app-stop.png); [lab208-app-run.png](../screen-audit-2026-10-21/lab208-app-run.png); [lab208-active-reset.png](../screen-audit-2026-10-21/lab208-active-reset.png); [lab208-reset-run.png](../screen-audit-2026-10-21/lab208-reset-run.png); [evidence-review-lab208-209.md](../screen-audit-2026-10-21/evidence-review-lab208-209.md)|
@@ -588,18 +345,11 @@ Lab 2.8 - Inspection Vote Stacklight
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-08-inspection-vote-entry.png](../screen-audit-2026-10-21/breadth-lab-2-08-inspection-vote-entry.png)|
 |feedback|SCOPED_PASS|Four vote combinations:neither dark,A-only green,B-only amber,both redonly; corresponding pass/hold/conflict Signals matched and outputs remained exclusive. GUI-loaded disposable learner LAD only; physical toggle/selector cases do not establish keyboard, persistence, rapid/held-control or all navigation behavior.|[lab208-00.png](../screen-audit-2026-10-21/lab208-00.png); [lab208-10.png](../screen-audit-2026-10-21/lab208-10.png); [lab208-11.png](../screen-audit-2026-10-21/lab208-11.png); [lab208-01.png](../screen-audit-2026-10-21/lab208-01.png); [lab208-00-repeat.png](../screen-audit-2026-10-21/lab208-00-repeat.png); [lab208-01-repeat.png](../screen-audit-2026-10-21/lab208-01-repeat.png); [lab208-11-repeat.png](../screen-audit-2026-10-21/lab208-11-repeat.png); [lab208-app-stop.png](../screen-audit-2026-10-21/lab208-app-stop.png); [lab208-app-run.png](../screen-audit-2026-10-21/lab208-app-run.png); [lab208-active-reset.png](../screen-audit-2026-10-21/lab208-active-reset.png); [lab208-reset-run.png](../screen-audit-2026-10-21/lab208-reset-run.png); [evidence-review-lab208-209.md](../screen-audit-2026-10-21/evidence-review-lab208-209.md)|
 
-**Remaining / reconciliation:** All four input combinations/exclusive outputs and input-clearing Reset are covered. No extra fault control is declared; N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-08-inspection-vote.scene.json ](../../scenes/migrated/lab-2-08-inspection-vote.scene.json), [rungproof-next/docs/help/scenes/lab-2-08-inspection-vote.md ](../../docs/help/scenes/lab-2-08-inspection-vote.md)
-
-Declared action inventory (2): Toggle inspector A; Toggle inspector B. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-09-maintenance-beacon
 
-Lab 2.9 - Maintenance Beacon Selector
+Lab 2.9 - Maintenance Beacon Selector — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-09-maintenance-beacon-entry.png](../screen-audit-2026-10-21/breadth-lab-2-09-maintenance-beacon-entry.png)|
 |controls|SCOPED_PASS|Physical selector positions0/1/2/3 produced alloff/redonly/amberonly/greenonly; exact numeric Signals and exclusive physical channels observed. GUI-loaded disposable learner LAD only; physical toggle/selector cases do not establish keyboard, persistence, rapid/held-control or all navigation behavior.|[lab209-off.png](../screen-audit-2026-10-21/lab209-off.png); [lab209-cycle1-pos1.png](../screen-audit-2026-10-21/lab209-cycle1-pos1.png); [lab209-cycle1-pos2.png](../screen-audit-2026-10-21/lab209-cycle1-pos2.png); [lab209-cycle1-pos3.png](../screen-audit-2026-10-21/lab209-cycle1-pos3.png); [lab209-cycle1-pos0.png](../screen-audit-2026-10-21/lab209-cycle1-pos0.png); [lab209-cycle2-pos1.png](../screen-audit-2026-10-21/lab209-cycle2-pos1.png); [lab209-cycle2-pos2.png](../screen-audit-2026-10-21/lab209-cycle2-pos2.png); [lab209-cycle2-pos3.png](../screen-audit-2026-10-21/lab209-cycle2-pos3.png); [lab209-cycle2-pos0.png](../screen-audit-2026-10-21/lab209-cycle2-pos0.png); [lab209-active-before-stop.png](../screen-audit-2026-10-21/lab209-active-before-stop.png); [lab209-app-stop.png](../screen-audit-2026-10-21/lab209-app-stop.png); [lab209-app-run.png](../screen-audit-2026-10-21/lab209-app-run.png); [lab209-active-reset.png](../screen-audit-2026-10-21/lab209-active-reset.png); [lab209-reset-run.png](../screen-audit-2026-10-21/lab209-reset-run.png); [evidence-review-lab208-209.md](../screen-audit-2026-10-21/evidence-review-lab208-209.md)|
@@ -610,18 +360,11 @@ Lab 2.9 - Maintenance Beacon Selector
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-09-maintenance-beacon-entry.png](../screen-audit-2026-10-21/breadth-lab-2-09-maintenance-beacon-entry.png)|
 |feedback|SCOPED_PASS|Physical selector positions0/1/2/3 produced alloff/redonly/amberonly/greenonly; exact numeric Signals and exclusive physical channels observed. GUI-loaded disposable learner LAD only; physical toggle/selector cases do not establish keyboard, persistence, rapid/held-control or all navigation behavior.|[lab209-off.png](../screen-audit-2026-10-21/lab209-off.png); [lab209-cycle1-pos1.png](../screen-audit-2026-10-21/lab209-cycle1-pos1.png); [lab209-cycle1-pos2.png](../screen-audit-2026-10-21/lab209-cycle1-pos2.png); [lab209-cycle1-pos3.png](../screen-audit-2026-10-21/lab209-cycle1-pos3.png); [lab209-cycle1-pos0.png](../screen-audit-2026-10-21/lab209-cycle1-pos0.png); [lab209-cycle2-pos1.png](../screen-audit-2026-10-21/lab209-cycle2-pos1.png); [lab209-cycle2-pos2.png](../screen-audit-2026-10-21/lab209-cycle2-pos2.png); [lab209-cycle2-pos3.png](../screen-audit-2026-10-21/lab209-cycle2-pos3.png); [lab209-cycle2-pos0.png](../screen-audit-2026-10-21/lab209-cycle2-pos0.png); [lab209-active-before-stop.png](../screen-audit-2026-10-21/lab209-active-before-stop.png); [lab209-app-stop.png](../screen-audit-2026-10-21/lab209-app-stop.png); [lab209-app-run.png](../screen-audit-2026-10-21/lab209-app-run.png); [lab209-active-reset.png](../screen-audit-2026-10-21/lab209-active-reset.png); [lab209-reset-run.png](../screen-audit-2026-10-21/lab209-reset-run.png); [evidence-review-lab208-209.md](../screen-audit-2026-10-21/evidence-review-lab208-209.md)|
 
-**Remaining / reconciliation:** All exposed positions0/1/2/3 and mutually exclusive colors/lifecycle are covered. Do not invent arbitrary numeric entry; N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-09-maintenance-beacon.scene.json ](../../scenes/migrated/lab-2-09-maintenance-beacon.scene.json), [rungproof-next/docs/help/scenes/lab-2-09-maintenance-beacon.md ](../../docs/help/scenes/lab-2-09-maintenance-beacon.md)
-
-Declared action inventory (1): Advance beacon selector. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-10-dust-collector-seal-in
 
-Lab 2.10 - Dust Collector Seal-In
+Lab 2.10 - Dust Collector Seal-In — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-10-dust-collector-seal-in-entry.png](../screen-audit-2026-10-21/breadth-lab-2-10-dust-collector-seal-in-entry.png)|
 |controls|SCOPED_PASS|Physical machineSTART/STOP pulse routes accepted and released tofalse. Fan motion is not proved from its command or green RUNNING lamp; geometry visible only.|[lab210-idle.png](../screen-audit-2026-10-21/lab210-idle.png); [lab210-start-release-sealed.png](../screen-audit-2026-10-21/lab210-start-release-sealed.png); [lab210-retained-idle.png](../screen-audit-2026-10-21/lab210-retained-idle.png); [lab210-machine-stop.png](../screen-audit-2026-10-21/lab210-machine-stop.png); [lab210-fresh-start.png](../screen-audit-2026-10-21/lab210-fresh-start.png); [lab210-machine-stop-repeat.png](../screen-audit-2026-10-21/lab210-machine-stop-repeat.png); [lab210-fresh-start-repeat.png](../screen-audit-2026-10-21/lab210-fresh-start-repeat.png); [lab210-app-stop-observed.png](../screen-audit-2026-10-21/lab210-app-stop-observed.png); [lab210-app-run-cleared-latch.png](../screen-audit-2026-10-21/lab210-app-run-cleared-latch.png); [lab210-restart-start.png](../screen-audit-2026-10-21/lab210-restart-start.png); [lab210-active-reset.png](../screen-audit-2026-10-21/lab210-active-reset.png); [lab210-reset-run.png](../screen-audit-2026-10-21/lab210-reset-run.png); [evidence-review-lab210.md](../screen-audit-2026-10-21/evidence-review-lab210.md)|
@@ -632,18 +375,11 @@ Lab 2.10 - Dust Collector Seal-In
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-10-dust-collector-seal-in-entry.png](../screen-audit-2026-10-21/breadth-lab-2-10-dust-collector-seal-in-entry.png)|
 |feedback|SCOPED_PASS|Visible run_latched/collector_run and green physical RUNNING lamp matched; no physical fanrotation/acceleration/coast claim.|[lab210-idle.png](../screen-audit-2026-10-21/lab210-idle.png); [lab210-start-release-sealed.png](../screen-audit-2026-10-21/lab210-start-release-sealed.png); [lab210-retained-idle.png](../screen-audit-2026-10-21/lab210-retained-idle.png); [lab210-machine-stop.png](../screen-audit-2026-10-21/lab210-machine-stop.png); [lab210-fresh-start.png](../screen-audit-2026-10-21/lab210-fresh-start.png); [lab210-machine-stop-repeat.png](../screen-audit-2026-10-21/lab210-machine-stop-repeat.png); [lab210-fresh-start-repeat.png](../screen-audit-2026-10-21/lab210-fresh-start-repeat.png); [lab210-app-stop-observed.png](../screen-audit-2026-10-21/lab210-app-stop-observed.png); [lab210-app-run-cleared-latch.png](../screen-audit-2026-10-21/lab210-app-run-cleared-latch.png); [lab210-restart-start.png](../screen-audit-2026-10-21/lab210-restart-start.png); [lab210-active-reset.png](../screen-audit-2026-10-21/lab210-active-reset.png); [lab210-reset-run.png](../screen-audit-2026-10-21/lab210-reset-run.png); [evidence-review-lab210.md](../screen-audit-2026-10-21/evidence-review-lab210.md)|
 
-**Remaining / reconciliation:** Prove physical fan rotation/stop if claiming motor animation, beyond run lamp/latch. Ordinary Start-release-seal/Stop/freshStart is covered; simultaneous priority was an explicit fixture choice. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-10-dust-collector-seal-in.scene.json ](../../scenes/migrated/lab-2-10-dust-collector-seal-in.scene.json), [rungproof-next/docs/help/scenes/lab-2-10-dust-collector-seal-in.md ](../../docs/help/scenes/lab-2-10-dust-collector-seal-in.md)
-
-Declared action inventory (2): Pulse collector start; Pulse collector stop. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-11-inbound-tote-stop
 
-Lab 2.11 - Inbound Tote Stop
+Lab 2.11 - Inbound Tote Stop — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-11-inbound-tote-stop-entry.png](../screen-audit-2026-10-21/breadth-lab-2-11-inbound-tote-stop-entry.png)|
 |controls|SCOPED_PASS|Mapped physical START is accepted and produces actual totefeed/scanner/downstream result with freshrepeat. No separate equipment-mapped Stop/Reset route is established. Q12 exact scannerTrue/identification observation remains separate; no hidden action PASS.|[evidence-review-lab211-plant-gap.md](../screen-audit-2026-10-21/evidence-review-lab211-plant-gap.md)|
@@ -652,20 +388,13 @@ Lab 2.11 - Inbound Tote Stop
 |recovery|SCOPED_PASS|B2actualmovingAppStop/heldfreezespose/conveyorFalse/scanfeedbackFalse;Resetupstream/all4monitoredFalse;freshRun/Startrepeatcompletedendpoint. ExactscannerTrue/dwellnotproved.|[evidence-review-lab211-plant-gap.md](../screen-audit-2026-10-21/evidence-review-lab211-plant-gap.md); [fix-plant211-review-compact.jpg](../screen-audit-2026-10-21/fix-plant211-review-compact.jpg)|
 |repeat|SCOPED_PASS|B2actualmovingAppStop/heldfreezespose/conveyorFalse/scanfeedbackFalse;Resetupstream/all4monitoredFalse;freshRun/Startrepeatcompletedendpoint. ExactscannerTrue/dwellnotproved.|[evidence-review-lab211-plant-gap.md](../screen-audit-2026-10-21/evidence-review-lab211-plant-gap.md); [fix-plant211-review-compact.jpg](../screen-audit-2026-10-21/fix-plant211-review-compact.jpg)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-11-inbound-tote-stop-entry.png](../screen-audit-2026-10-21/breadth-lab-2-11-inbound-tote-stop-entry.png)|
-|feedback|PARTIAL|The selected scene, running local controller and explicit command rejection are visible in Health history. Normal process feedback and completion remain untested.|[lab211-health-history.png](../screen-audit-2026-10-21/lab211-health-history.png); [lab211-start-history-repro-full.png](../screen-audit-2026-10-21/lab211-start-history-repro-full.png); [binding-visual-review.jsonl](../screen-audit-2026-10-21/binding-visual-review.jsonl); [provisional-issues.md](../screen-audit-2026-10-21/provisional-issues.md)|
-
-**Remaining / reconciliation:** Capture actual tote_at_scanner True and stopped identification phase before scan_complete, not phase filenames. Normal downstream/StopResetrepeat is closed. Exact0.8s scan boundary is unproved; do not infer from waits. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-11-inbound-tote-stop.scene.json ](../../scenes/migrated/lab-2-11-inbound-tote-stop.scene.json), [rungproof-next/docs/help/scenes/lab-2-11-inbound-tote-stop.md ](../../docs/help/scenes/lab-2-11-inbound-tote-stop.md)
-
-Declared action inventory (3): Start tote cycle; Stop conveyor safely; Reset tote. Exact declarations/point ownership retained in JSON.
+|feedback|SCOPED_PASS|The selected scene, running local controller and explicit command rejection are visible in Health history. Normal process feedback and completion remain untested. Latest exact Q12 closure: 42hashes: actualtote stationary atscanner with RUNNING4463→4490/conveyorOff/scanIncomplete; release4503scanComplete/conveyorOn then supportedendpoint7415/7479.|[lab211-health-history.png](../screen-audit-2026-10-21/lab211-health-history.png); [lab211-start-history-repro-full.png](../screen-audit-2026-10-21/lab211-start-history-repro-full.png); [binding-visual-review.jsonl](../screen-audit-2026-10-21/binding-visual-review.jsonl); [provisional-issues.md](../screen-audit-2026-10-21/provisional-issues.md); [tote-stationary-scan-review.md](tote-stationary-scan-review.md)|
 
 ### lab-2-12-assembly-lift
 
-Lab 2.12 - Ergonomic Assembly Lift
+Lab 2.12 - Ergonomic Assembly Lift — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-12-assembly-lift-entry.png](../screen-audit-2026-10-21/breadth-lab-2-12-assembly-lift-entry.png)|
 |controls|SCOPED_PASS|Raise/lower/Stop/Reset normal+restart reviewed; no physical conflict input exists. Simultaneous ladder-output forcing is not operator control. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab212-plant-gap.md](../screen-audit-2026-10-21/evidence-review-lab212-plant-gap.md); [fix-plant212-r1-review-compact.jpg](../screen-audit-2026-10-21/fix-plant212-r1-review-compact.jpg); [fix-plant212-r2-review-compact.jpg](../screen-audit-2026-10-21/fix-plant212-r2-review-compact.jpg); [fix-plant212-r3-review-compact.jpg](../screen-audit-2026-10-21/fix-plant212-r3-review-compact.jpg)|
@@ -676,18 +405,11 @@ Lab 2.12 - Ergonomic Assembly Lift
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-12-assembly-lift-entry.png](../screen-audit-2026-10-21/breadth-lab-2-12-assembly-lift-entry.png)|
 |feedback|SCOPED_PASS|Selectedactualscissorlinks/platform/fixturetravelwithfixedbase/nativePCendpoints/SIMpositionagree; ratedload/clearance/timingunproven.|[evidence-review-lab212-plant-gap.md](../screen-audit-2026-10-21/evidence-review-lab212-plant-gap.md); [fix-plant212-r1-review-compact.jpg](../screen-audit-2026-10-21/fix-plant212-r1-review-compact.jpg); [fix-plant212-r2-review-compact.jpg](../screen-audit-2026-10-21/fix-plant212-r2-review-compact.jpg); [fix-plant212-r3-review-compact.jpg](../screen-audit-2026-10-21/fix-plant212-r3-review-compact.jpg)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Raise/lower/Stop/Reset normal+restart reviewed; no physical conflict input exists. Simultaneous ladder-output forcing is not operator control.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-12-assembly-lift.scene.json ](../../scenes/migrated/lab-2-12-assembly-lift.scene.json), [rungproof-next/docs/help/scenes/lab-2-12-assembly-lift.md ](../../docs/help/scenes/lab-2-12-assembly-lift.md)
-
-Declared action inventory (4): Raise to work height; Lower to load height; Stop lift; Reset lift. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-13-coolant-jug-fill
 
-Lab 2.13 - Coolant Jug Filling Cell
+Lab 2.13 - Coolant Jug Filling Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-13-coolant-jug-fill-entry.png](../screen-audit-2026-10-21/breadth-lab-2-13-coolant-jug-fill-entry.png)|
 |controls|SCOPED_PASS|Native fill100/high/discharge, active partial-fill Stop hold/Run completion, Reset0/fresh repeat. Internal stream and opaque liquid not claimed.|[postbackup-jug-review.md](../screen-audit-2026-10-21/postbackup-jug-review.md)|
@@ -698,21 +420,14 @@ Lab 2.13 - Coolant Jug Filling Cell
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-13-coolant-jug-fill-entry.png](../screen-audit-2026-10-21/breadth-lab-2-13-coolant-jug-fill-entry.png)|
 |feedback|SCOPED_PASS|Native fill100/high/discharge, active partial-fill Stop hold/Run completion, Reset0/fresh repeat. Internal stream and opaque liquid not claimed.|[postbackup-jug-review.md](../screen-audit-2026-10-21/postbackup-jug-review.md)|
 
-**Remaining / reconciliation:** Native fill100/high/discharge, active partial-fill Stop hold/Run completion, Reset0/fresh repeat. Internal stream and opaque liquid not claimed. Remaining limitations only those explicitly named in the linked review; old FAIL/BLOCKED cells superseded for these tested paths.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-13-coolant-jug-fill.scene.json ](../../scenes/migrated/lab-2-13-coolant-jug-fill.scene.json), [rungproof-next/docs/help/scenes/lab-2-13-coolant-jug-fill.md ](../../docs/help/scenes/lab-2-13-coolant-jug-fill.md)
-
-Declared action inventory (3): Start jug fill; Stop fill cell; Reset jug. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-14-sump-pump
 
-Lab 2.14 - Sump Dewatering Pump
+Lab 2.14 - Sump Dewatering Pump — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-14-sump-pump-entry.png](../screen-audit-2026-10-21/breadth-lab-2-14-sump-pump-entry.png)|
-|controls|PARTIAL|Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.|[evidence-review-lab214.md](../screen-audit-2026-10-21/evidence-review-lab214.md)|
+|controls|SCOPED_PASS|Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.|[evidence-review-lab214.md](../screen-audit-2026-10-21/evidence-review-lab214.md); [residual-obligations-review.md](residual-obligations-review.md)|
 |normal_outcome|SCOPED_PASS|Actualfillâ†’high78pumpTrueâ†’bothfloatsFalse deadbandpumpTrueâ†’low20pumpFalse/completeTrue; capturedonecycleheld.|[evidence-review-lab214.md](../screen-audit-2026-10-21/evidence-review-lab214.md)|
 |stop_reset_restart|SCOPED_PASS|AppStopduringpumping scan223/level50.6571 frozen; Runresumesfixturecycle/pump. AppResetlevel22/commandsFalse.|[evidence-review-lab214.md](../screen-audit-2026-10-21/evidence-review-lab214.md)|
 |recovery|SCOPED_PASS|PumpingStop/Run autoResume reacheslow20/complete; automaticrestart isfixturepolicy, exactthresholdnotmeasured.|[evidence-review-lab214.md](../screen-audit-2026-10-21/evidence-review-lab214.md)|
@@ -720,18 +435,11 @@ Lab 2.14 - Sump Dewatering Pump
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-14-sump-pump-entry.png](../screen-audit-2026-10-21/breadth-lab-2-14-sump-pump-entry.png)|
 |feedback|SCOPED_PASS|Physicalcyanlevel/statusred-green-amber match8nativeSignals anddeadbandpump state; OCRIow/lowalias notappbug, exactfloatboundary/motorrotationunproven.|[evidence-review-lab214.md](../screen-audit-2026-10-21/evidence-review-lab214.md)|
 
-**Remaining / reconciliation:** Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-14-sump-pump.scene.json ](../../scenes/migrated/lab-2-14-sump-pump.scene.json), [rungproof-next/docs/help/scenes/lab-2-14-sump-pump.md ](../../docs/help/scenes/lab-2-14-sump-pump.md)
-
-Declared action inventory (3): Simulate sump cycle; Stop pump safely; Reset sump. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-15-fume-extractor
 
-Lab 2.15 - Weld Fume Extractor
+Lab 2.15 - Weld Fume Extractor — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-15-fume-extractor-entry.png](../screen-audit-2026-10-21/breadth-lab-2-15-fume-extractor-entry.png)|
 |controls|SCOPED_PASS|Selector0/1/2/3 and independent light physical actions verified twice; fan outputs0/35/65/100 and hoodlight independent.|[evidence-review-lab215.md](../screen-audit-2026-10-21/evidence-review-lab215.md)|
@@ -742,18 +450,11 @@ Lab 2.15 - Weld Fume Extractor
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-15-fume-extractor-entry.png](../screen-audit-2026-10-21/breadth-lab-2-15-fume-extractor-entry.png)|
 |feedback|SCOPED_PASS|Postfixfreshbuiltapp12nativecheckpoints:selector0/1/2/3/0 dark/green/amber/red/dark,SIM000/100/010/001/000 at0/35/65/100;lightTrueindependent;AppStopclearsflags/stack,Runretainedlowgreen,Resetalloff. QA-VIS-002screenverifiedclosedforcommandedspeeddisplayonly, noshaftrate/transientclaim.|[evidence-review-fix-fume.md](../screen-audit-2026-10-21/evidence-review-fix-fume.md); [fix-fume-r1-review-compact.jpg](../screen-audit-2026-10-21/fix-fume-r1-review-compact.jpg); [fix-fume-r2-review-compact.jpg](../screen-audit-2026-10-21/fix-fume-r2-review-compact.jpg)|
 
-**Remaining / reconciliation:** Indicator failure closed across normal/light/StopRunReset. Empty recovery cell can be reconciled from that evidence; no separate scene trip control should be invented. Actual35/65/100 mechanical speed ratio is not claimed. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-15-fume-extractor.scene.json ](../../scenes/migrated/lab-2-15-fume-extractor.scene.json), [rungproof-next/docs/help/scenes/lab-2-15-fume-extractor.md ](../../docs/help/scenes/lab-2-15-fume-extractor.md)
-
-Declared action inventory (2): Toggle hood light request; Advance fan speed. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-16-safe-drill
 
-Lab 2.16 - Fixture-Safe Drill Station
+Lab 2.16 - Fixture-Safe Drill Station — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-16-safe-drill-entry.png](../screen-audit-2026-10-21/breadth-lab-2-16-safe-drill-entry.png)|
 |controls|SCOPED_PASS|Active AppStop hold/Run top completion, Reset/repeat; hand loss and restoration hold; midstroke Start blocked; Reset/fresh qualified completion. QA V3 policy.|[postbackup-small-drill-review.md](../screen-audit-2026-10-21/postbackup-small-drill-review.md)|
@@ -764,21 +465,14 @@ Lab 2.16 - Fixture-Safe Drill Station
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-16-safe-drill-entry.png](../screen-audit-2026-10-21/breadth-lab-2-16-safe-drill-entry.png)|
 |feedback|SCOPED_PASS|Active AppStop hold/Run top completion, Reset/repeat; hand loss and restoration hold; midstroke Start blocked; Reset/fresh qualified completion. QA V3 policy.|[postbackup-small-drill-review.md](../screen-audit-2026-10-21/postbackup-small-drill-review.md)|
 
-**Remaining / reconciliation:** Active AppStop hold/Run top completion, Reset/repeat; hand loss and restoration hold; midstroke Start blocked; Reset/fresh qualified completion. QA V3 policy. Remaining limitations only those explicitly named in the linked review; old FAIL/BLOCKED cells superseded for these tested paths.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-16-safe-drill.scene.json ](../../scenes/migrated/lab-2-16-safe-drill.scene.json), [rungproof-next/docs/help/scenes/lab-2-16-safe-drill.md ](../../docs/help/scenes/lab-2-16-safe-drill.md)
-
-Declared action inventory (5): Toggle left hand request; Toggle right hand request; Start guarded drill cycle; Stop spindle and hold; Reset drill. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-17-pallet-robot
 
-Lab 2.17 - Twin-Container Pallet Cell
+Lab 2.17 - Twin-Container Pallet Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-17-pallet-robot-entry.png](../screen-audit-2026-10-21/breadth-lab-2-17-pallet-robot-entry.png)|
-|controls|PARTIAL|Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.|[evidence-review-lab217.md](../screen-audit-2026-10-21/evidence-review-lab217.md)|
+|controls|SCOPED_PASS|Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.|[evidence-review-lab217.md](../screen-audit-2026-10-21/evidence-review-lab217.md); [residual-obligations-review.md](residual-obligations-review.md)|
 |normal_outcome|SCOPED_PASS|Actualrobotjoint/toolmotion placed0â†’1â†’2, parkTrue/runFalse beforeconveyorTrue/outbound; finalcount2/parkTrue/complete/bothcommandsoff/palletdownstream.|[evidence-review-lab217.md](../screen-audit-2026-10-21/evidence-review-lab217.md)|
 |stop_reset_restart|SCOPED_PASS|Stop3524count1 freezesrobot/toolpose1.2s/commandsoff; Run3540resumesrobot/count1; ResetRun25placed0/palletready+parkTrue/upstream.|[evidence-review-lab217.md](../screen-audit-2026-10-21/evidence-review-lab217.md)|
 |recovery|SCOPED_PASS|Interruptedrobotafterfirstplacement Runresumescount1â†’2/park/conveyor/outboundcomplete; exactcarryingvbetweenplacementphaseunproven.|[evidence-review-lab217.md](../screen-audit-2026-10-21/evidence-review-lab217.md)|
@@ -786,21 +480,14 @@ Lab 2.17 - Twin-Container Pallet Cell
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-17-pallet-robot-entry.png](../screen-audit-2026-10-21/breadth-lab-2-17-pallet-robot-entry.png)|
 |feedback|SCOPED_PASS|19selectednative+baseline actualrobot/tool/pallet motion andeightSignals agree. Occludedcontainerarrangement/exactgripcontact/collisionclearanceunproven.|[evidence-review-lab217.md](../screen-audit-2026-10-21/evidence-review-lab217.md)|
 
-**Remaining / reconciliation:** Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-17-pallet-robot.scene.json ](../../scenes/migrated/lab-2-17-pallet-robot.scene.json), [rungproof-next/docs/help/scenes/lab-2-17-pallet-robot.md ](../../docs/help/scenes/lab-2-17-pallet-robot.md)
-
-Declared action inventory (3): Start pallet unload; Stop robot cell; Reset pallet cell. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-18-pallet-pickup
 
-Lab 2.18 - Shipping Pallet Accumulation
+Lab 2.18 - Shipping Pallet Accumulation — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-18-pallet-pickup-entry.png](../screen-audit-2026-10-21/breadth-lab-2-18-pallet-pickup-entry.png)|
-|controls|PARTIAL|Namedphysicalbutton/modecontrols testedonlyasspecifiedinreport; otherguard/faultcasesremainopen.|[evidence-review-lab218.md](../screen-audit-2026-10-21/evidence-review-lab218.md)|
+|controls|SCOPED_PASS|Namedphysicalbutton/modecontrols testedonlyasspecifiedinreport; otherguard/faultcasesremainopen. Q18 closure: Actual manualmode/pickup100/runFalse qualified, fresh JOG explicitlyrejected/newHealth; physicalsupportedpose/state holds276scans/5.52s.|[evidence-review-lab218.md](../screen-audit-2026-10-21/evidence-review-lab218.md); [pickup-endpoint-jog-review.md](pickup-endpoint-jog-review.md)|
 |normal_outcome|SCOPED_PASS|SupportedpalletAUTO27â†’100pickup/complete/runFalse; manualfreshJOGincrements24.097/48.1939/96.3879â†’100pickupcomplete.2secTPQAparameteronly.|[evidence-review-lab218.md](../screen-audit-2026-10-21/evidence-review-lab218.md)|
 |stop_reset_restart|SCOPED_PASS|Stop3820freeze36.7541.2s/runFalse; Run3834/3888sameoff, freshSTART3913resumes. Reset0/AutoTrue.|[evidence-review-lab218.md](../screen-audit-2026-10-21/evidence-review-lab218.md)|
 |recovery|SCOPED_PASS|JOGinautoblocked; AutoStartmanualblocked; heldJOGtimeoutoffbeforemouseup/releaseaddsnomotion, freshjogsrearm. Explicitpickupguardrejectionnotproved.|[evidence-review-lab218.md](../screen-audit-2026-10-21/evidence-review-lab218.md)|
@@ -808,18 +495,11 @@ Lab 2.18 - Shipping Pallet Accumulation
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-18-pallet-pickup-entry.png](../screen-audit-2026-10-21/breadth-lab-2-18-pallet-pickup-entry.png)|
 |feedback|SCOPED_PASS|18selectednative+baseline/Health/finalcrop actualsupportedpallet/eightSignalsagree; exactTPduration/modeswitchmoving/guardfaultsunproven.|[evidence-review-lab218.md](../screen-audit-2026-10-21/evidence-review-lab218.md)|
 
-**Remaining / reconciliation:** Capture explicit pickup-end guard rejection if asserting it; Health only showed accepted JOG events. Mode switch while moving remains unverified/unspecified. Auto/manual increments and lifecycle are covered; exact2s is a fixture parameter. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-18-pallet-pickup.scene.json ](../../scenes/migrated/lab-2-18-pallet-pickup.scene.json), [rungproof-next/docs/help/scenes/lab-2-18-pallet-pickup.md ](../../docs/help/scenes/lab-2-18-pallet-pickup.md)
-
-Declared action inventory (5): Toggle auto mode; Start automatic travel; Jog pallet one increment; Stop conveyor; Reset pallet. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-19-service-door
 
-Lab 2.19 - Service Door Shutter
+Lab 2.19 - Service Door Shutter — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-19-service-door-entry.png](../screen-audit-2026-10-21/breadth-lab-2-19-service-door-entry.png)|
 |controls|SCOPED_PASS|Open/close NC endpoints, active stationStop hold, Run plus freshClose, Reset and freshOpen repeat.|[evidence-review-fix-service-door.md](../screen-audit-2026-10-21/evidence-review-fix-service-door.md)|
@@ -830,43 +510,29 @@ Lab 2.19 - Service Door Shutter
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-19-service-door-entry.png](../screen-audit-2026-10-21/breadth-lab-2-19-service-door-entry.png)|
 |feedback|SCOPED_PASS|Open/close NC endpoints, active stationStop hold, Run plus freshClose, Reset and freshOpen repeat.|[evidence-review-fix-service-door.md](../screen-audit-2026-10-21/evidence-review-fix-service-door.md)|
 
-**Remaining / reconciliation:** Open/close NC endpoints, active stationStop hold, Run plus freshClose, Reset and freshOpen repeat. Remaining limitations only those explicitly named in the linked review; old FAIL/BLOCKED cells superseded for these tested paths.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-19-service-door.scene.json ](../../scenes/migrated/lab-2-19-service-door.scene.json), [rungproof-next/docs/help/scenes/lab-2-19-service-door.md ](../../docs/help/scenes/lab-2-19-service-door.md)
-
-Declared action inventory (4): Open service door; Close service door; Immediate stop; Reset door. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-20-bottle-shuttle
 
-Lab 2.20 - Bottle Shuttle Conveyor
+Lab 2.20 - Bottle Shuttle Conveyor — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-20-bottle-shuttle-entry.png](../screen-audit-2026-10-21/breadth-lab-2-20-bottle-shuttle-entry.png)|
-|controls|PARTIAL|Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md)|
+|controls|SCOPED_PASS|Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md); [residual-obligations-review.md](residual-obligations-review.md)|
 |normal_outcome|SCOPED_PASS|Actual bottle movedout and back; final left/home sensortrue,motorfalse,direction0,cycle_completetrue and amber/stationary confirmed. Transient right-sensortrue/reversal causal scan was not captured.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md)|
 |stop_reset_restart|SCOPED_PASS|AppStop midtravel showedSTOPPED/amber and samebottleposition/scan after1.2s; Run resumedmovement from interruptedposition. AppReset returnedhome/amber/STOPPED; short nextRun checkpoint remainedhome. No indefinitepause/allphaseReset claim.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md)|
-|recovery|PARTIAL|Appinterruption continuation and homereset supported; dedicatedmachineStop/Reset, startwhilemoving and phase-specific/bothsensor/fault cases unproved. AppStopamber cannot be failed against sceneStopred without pathownership.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md)|
+|recovery|SCOPED_PASS|Existing actual midtravel AppStop holds scan/pose1.2s; AppRun continuation, AppResetHome and shortpostResetRunHome. No separate machineStop/Reset semantic obligation in local loadedLAD alias mode. Actual right_sensor_activeTrue/reversal edge remains an unobserved normalfeedback witness, not failed recovery.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md); [residual-obligations-review.md](residual-obligations-review.md)|
 |repeat|SCOPED_PASS|Earlier settledcomplete/home observation plus later physicallyobserved complete roundtrip support repeated endpointcompletion scope. Not fresh-session/allphase repetition.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-20-bottle-shuttle-entry.png](../screen-audit-2026-10-21/breadth-lab-2-20-bottle-shuttle-entry.png)|
 |feedback|SCOPED_PASS|Observed actual outward/return bottle displacement and measured direction/left-home/finalcompletion agree. Intermediate expected:{} rows are observations, not passedassertions; final explicit expectedvalues matched.|[lab220-evidence-compact.jpg](../screen-audit-2026-10-21/lab220-evidence-compact.jpg); [lab220-settled-observation.png](../screen-audit-2026-10-21/lab220-settled-observation.png); [lab220-interrupt-ui-checkpoints.jpg](../screen-audit-2026-10-21/lab220-interrupt-ui-checkpoints.jpg); [evidence-review-lab220.md](../screen-audit-2026-10-21/evidence-review-lab220.md)|
 
-**Remaining / reconciliation:** Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-20-bottle-shuttle.scene.json ](../../scenes/migrated/lab-2-20-bottle-shuttle.scene.json), [rungproof-next/docs/help/scenes/lab-2-20-bottle-shuttle.md ](../../docs/help/scenes/lab-2-20-bottle-shuttle.md)
-
-Declared action inventory (3): Start bottle shuttle; Stop shuttle; Reset bottle. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-21-tote-finishing
 
-Lab 2.21 - Chemical Tote Finishing Line
+Lab 2.21 - Chemical Tote Finishing Line — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-21-tote-finishing-entry.png](../screen-audit-2026-10-21/breadth-lab-2-21-tote-finishing-entry.png)|
-|controls|PARTIAL|Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.|[evidence-review-lab221.md](../screen-audit-2026-10-21/evidence-review-lab221.md)|
+|controls|SCOPED_PASS|Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.|[evidence-review-lab221.md](../screen-audit-2026-10-21/evidence-review-lab221.md); [residual-obligations-review.md](residual-obligations-review.md)|
 |normal_outcome|SCOPED_PASS|Actual fill100, cap/label applied, inspectiondone/ok and passing tote at exit6.4; all five actuatorsFalse. Repeat captures ordered fill/cap/label then final inspection/discharge. cycle_completeFalse/statusamber unresolved, no fullSIMcompletion claim.|[evidence-review-lab221.md](../screen-audit-2026-10-21/evidence-review-lab221.md)|
 |stop_reset_restart|SCOPED_PASS|AppStopindex freezes scan/pose, clears commands; Run resumes index. AppReset clearsprocess and returns tote upstream.|[evidence-review-lab221.md](../screen-audit-2026-10-21/evidence-review-lab221.md)|
 |recovery|SCOPED_PASS|Index AppStop/Run recovery and full AppReset/fresh repeat passing exit verified. Allstation interruption policies untested.|[evidence-review-lab221.md](../screen-audit-2026-10-21/evidence-review-lab221.md)|
@@ -874,21 +540,14 @@ Lab 2.21 - Chemical Tote Finishing Line
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-21-tote-finishing-entry.png](../screen-audit-2026-10-21/breadth-lab-2-21-tote-finishing-entry.png)|
 |feedback|SCOPED_PASS|Native upper/lower13point final confirms actual passingexit and actuatorsoff; bounded physical tote/station motion. Exact fullinspectionmotion and rates unproven.|[evidence-review-lab221.md](../screen-audit-2026-10-21/evidence-review-lab221.md)|
 
-**Remaining / reconciliation:** Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-21-tote-finishing.scene.json ](../../scenes/migrated/lab-2-21-tote-finishing.scene.json), [rungproof-next/docs/help/scenes/lab-2-21-tote-finishing.md ](../../docs/help/scenes/lab-2-21-tote-finishing.md)
-
-Declared action inventory (3): Start tote finishing; Stop line safely; Reset tote line. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-22-dual-spindle
 
-Lab 2.22 - Dual-Spindle Plate Cell
+Lab 2.22 - Dual-Spindle Plate Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-22-dual-spindle-entry.png](../screen-audit-2026-10-21/breadth-lab-2-22-dual-spindle-entry.png)|
-|controls|PARTIAL|Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.|[evidence-review-lab222.md](../screen-audit-2026-10-21/evidence-review-lab222.md)|
+|controls|SCOPED_PASS|Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.|[evidence-review-lab222.md](../screen-audit-2026-10-21/evidence-review-lab222.md); [residual-obligations-review.md](residual-obligations-review.md)|
 |normal_outcome|SCOPED_PASS|Scoped one-pass motion: both feed/depth100, staggered A then B retract/home, transferout100 and return0 only after bothhome in captured frames. cycle_complete remainsFalse/statusamber: no full SIM completion credited.|[evidence-review-lab222.md](../screen-audit-2026-10-21/evidence-review-lab222.md)|
 |stop_reset_restart|SCOPED_PASS|AppStopscan63 freezes positions55.2941 across wait; Run resumes89.4118. AppReset returns allhome0/off.|[evidence-review-lab222.md](../screen-audit-2026-10-21/evidence-review-lab222.md)|
 |recovery|SCOPED_PASS|AppStop/Run resume and AppReset allhome baseline followed fresh repeat established; forced-interlock challenge unproven.|[evidence-review-lab222.md](../screen-audit-2026-10-21/evidence-review-lab222.md)|
@@ -896,40 +555,26 @@ Lab 2.22 - Dual-Spindle Plate Cell
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-22-dual-spindle-entry.png](../screen-audit-2026-10-21/breadth-lab-2-22-dual-spindle-entry.png)|
 |feedback|SCOPED_PASS|33motion+8interruption frames show supported motion and exact reviewed Signals. No full cycle_complete assertion, exact latency or continuous trajectory proof.|[evidence-review-lab222.md](../screen-audit-2026-10-21/evidence-review-lab222.md)|
 
-**Remaining / reconciliation:** Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-22-dual-spindle.scene.json ](../../scenes/migrated/lab-2-22-dual-spindle.scene.json), [rungproof-next/docs/help/scenes/lab-2-22-dual-spindle.md ](../../docs/help/scenes/lab-2-22-dual-spindle.md)
-
-Declared action inventory (3): Start dual-spindle cycle; Stop both spindles; Reset plate cell. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-23-parcel-sorter
 
-Lab 2.23 - Parcel Size Sorter
+Lab 2.23 - Parcel Size Sorter — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-23-parcel-sorter-entry.png](../screen-audit-2026-10-21/breadth-lab-2-23-parcel-sorter-entry.png)|
-|controls|PARTIAL|Current V4 accepted Start transports two parcels; original unbound-action FAIL is superseded for that input only. Complete batch still fails; no exhaustive control PASS.|[postbackup-parcel-v4-isolation.md](../screen-audit-2026-10-21/postbackup-parcel-v4-isolation.md); [postbackup-parcel-review.md](../screen-audit-2026-10-21/postbackup-parcel-review.md)|
-|normal_outcome|SCOPED_PASS|Frozen diagnostic learnerV7 on unchanged application reaches3 distinct supported physical receivers, sorted_count3/all_parcels_receivedTrue/cycle_completeTrue/misrouteFalse/route0. Four BOOLactuatorcommandsOff directly visible across final upper/lower Signals observations. HistoricalV3/V4 stalls remain controller-specific, not universal impossibility. A second genuine scene reconstruction/reimport of frozenV7 reaches count3 and three supported receivers again (scan2010); completion flags outside this comparison frame are not inferred.|[../screen-audit-2026-10-23/parcel-v7-native-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-native-review.md); [../screen-audit-2026-10-23/parcel-v7-controlled-comparison-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-controlled-comparison-review.md)|
-|stop_reset_restart|SCOPED_PASS|Fresh-reloaded V7 actual RUNNING Watch1315 phase30/scanphase30/class2; accepted AppStop1333 holds actual cartonpose/scan1.5s, count0 (not1), all4BOOLcommandsOff. Run alone, noStart/Reset, resumes to3 supportedreceivers/count3/all_received+cycle_completeTrue/misrouteFalse/route0/all4commandsOff. Separate same-scene Reset/repeat FAIL is not closed.|[phase-qualified native recovery](parcel-v7-handoff-recovery-review.md)|
-|recovery|SCOPED_PASS|Fresh-reloaded V7 actual RUNNING Watch1315 phase30/scanphase30/class2; accepted AppStop1333 holds actual cartonpose/scan1.5s, count0 (not1), all4BOOLcommandsOff. Run alone, noStart/Reset, resumes to3 supportedreceivers/count3/all_received+cycle_completeTrue/misrouteFalse/route0/all4commandsOff. Separate same-scene Reset/repeat FAIL is not closed.|[phase-qualified native recovery](parcel-v7-handoff-recovery-review.md)|
-|repeat|FAIL|Two actual same-scene Reset/Run/Start attempts with frozenV7 stall count1. Controlled no-probe comparison shows scan731→1411→3786 with same route0.5/alignedTrue/clearFalse/loadedFalse/transferTrue/inhibitedTrue. Actual RUNNING Watch4732 shows phase50/class2/route0.5/conveyorsTrue. Fresh scene reconstruction reaches3 again. Geometry rootcause not native-proven.|[../screen-audit-2026-10-23/parcel-v7-repeat-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-repeat-review.md); [../screen-audit-2026-10-23/parcel-v7-controlled-comparison-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-controlled-comparison-review.md)|
+|controls|SCOPED_PASS|Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. V7 START reaches3 supportedreceivers; actualphase30 AppStop/held/Runalone reaches3; actualReset invocation succeeds but two sameinstance repeats FAIL separately.|[postbackup-parcel-v4-isolation.md](../screen-audit-2026-10-21/postbackup-parcel-v4-isolation.md); [postbackup-parcel-review.md](../screen-audit-2026-10-21/postbackup-parcel-review.md); [residual-obligations-review.md](residual-obligations-review.md); [parcel-v7-native-review.md](parcel-v7-native-review.md); [parcel-v7-handoff-recovery-review.md](parcel-v7-handoff-recovery-review.md); [parcel-v7-controlled-comparison-review.md](parcel-v7-controlled-comparison-review.md)|
+|normal_outcome|SCOPED_PASS|Frozen diagnostic learnerV7 on unchanged application reaches3 distinct supported physical receivers, sorted_count3/all_parcels_receivedTrue/cycle_completeTrue/misrouteFalse/route0. Four BOOLactuatorcommandsOff directly visible across final upper/lower Signals observations. HistoricalV3/V4 stalls remain controller-specific, not universal impossibility. A second genuine scene reconstruction/reimport of frozenV7 reaches count3 and three supported receivers again (scan2010); completion flags outside this comparison frame are not inferred.|[parcel-v7-native-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-native-review.md); [parcel-v7-controlled-comparison-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-controlled-comparison-review.md)|
+|stop_reset_restart|SCOPED_PASS|Fresh-reloaded V7 actual RUNNING Watch1315 phase30/scanphase30/class2; accepted AppStop1333 holds actual cartonpose/scan1.5s, count0 (not1), all4BOOLcommandsOff. Run alone, noStart/Reset, resumes to3 supportedreceivers/count3/all_received+cycle_completeTrue/misrouteFalse/route0/all4commandsOff. Separate same-scene Reset/repeat FAIL is not closed.|[parcel-v7-handoff-recovery-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-handoff-recovery-review.md)|
+|recovery|SCOPED_PASS|Fresh-reloaded V7 actual RUNNING Watch1315 phase30/scanphase30/class2; accepted AppStop1333 holds actual cartonpose/scan1.5s, count0 (not1), all4BOOLcommandsOff. Run alone, noStart/Reset, resumes to3 supportedreceivers/count3/all_received+cycle_completeTrue/misrouteFalse/route0/all4commandsOff. Separate same-scene Reset/repeat FAIL is not closed.|[parcel-v7-handoff-recovery-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-handoff-recovery-review.md)|
+|repeat|FAIL|Two actual same-scene Reset/Run/Start attempts with frozenV7 stall count1. Controlled no-probe comparison shows scan731→1411→3786 with same route0.5/alignedTrue/clearFalse/loadedFalse/transferTrue/inhibitedTrue. Actual RUNNING Watch4732 shows phase50/class2/route0.5/conveyorsTrue. Fresh scene reconstruction reaches3 again. Geometry rootcause not native-proven.|[parcel-v7-repeat-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-repeat-review.md); [parcel-v7-controlled-comparison-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-controlled-comparison-review.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-23-parcel-sorter-entry.png](../screen-audit-2026-10-21/breadth-lab-2-23-parcel-sorter-entry.png)|
-|feedback|SCOPED_PASS|Actual queuedparcels→three supported receivers; final count3/receipt/completeTrue/misrouteFalse/route0, tableclear/alignedTrue/loadedFalse. All4BOOLcommandsOff confirmed; adjacent gate_clearTrue is feedback, not gate_open command.|[../screen-audit-2026-10-23/parcel-v7-native-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-native-review.md)|
-
-**Remaining / reconciliation:** V7 normal and actual phase30/count0 AppStop/Run-alone recovery now SCOPED_PASS. Two same-scene Reset/Run/Start attempts still FAIL count1; real scene reconstruction succeeds. Source-supported geometry/reset hypothesis remains separately qualified; no unique native cause or apprepair asserted.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-23-parcel-sorter.scene.json ](../../scenes/migrated/lab-2-23-parcel-sorter.scene.json), [rungproof-next/docs/help/scenes/lab-2-23-parcel-sorter.md ](../../docs/help/scenes/lab-2-23-parcel-sorter.md)
-
-Declared action inventory (3): Sort three-parcel batch; Stop sorter; Reset parcels. Exact declarations/point ownership retained in JSON.
+|feedback|SCOPED_PASS|Actual queuedparcels→three supported receivers; final count3/receipt/completeTrue/misrouteFalse/route0, tableclear/alignedTrue/loadedFalse. All4BOOLcommandsOff confirmed; adjacent gate_clearTrue is feedback, not gate_open command.|[parcel-v7-native-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/parcel-v7-native-review.md)|
 
 ### lab-2-24-robot-cnc
 
-Lab 2.24 - Robot CNC Tending Cell
+Lab 2.24 - Robot CNC Tending Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-24-robot-cnc-entry.png](../screen-audit-2026-10-21/breadth-lab-2-24-robot-cnc-entry.png)|
 |controls|SCOPED_PASS|Normal physical endpoint, active infeed Stop/Run, qualified actual active cut, Reset/fresh repeat. No forced unsafe-command proof.|[postbackup-cnc-review.md](../screen-audit-2026-10-21/postbackup-cnc-review.md); [postbackup-small-cnc-review.md](../screen-audit-2026-10-21/postbackup-small-cnc-review.md)|
@@ -940,18 +585,11 @@ Lab 2.24 - Robot CNC Tending Cell
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-24-robot-cnc-entry.png](../screen-audit-2026-10-21/breadth-lab-2-24-robot-cnc-entry.png)|
 |feedback|SCOPED_PASS|Normal physical endpoint, active infeed Stop/Run, qualified actual active cut, Reset/fresh repeat. No forced unsafe-command proof.|[postbackup-cnc-review.md](../screen-audit-2026-10-21/postbackup-cnc-review.md); [postbackup-small-cnc-review.md](../screen-audit-2026-10-21/postbackup-small-cnc-review.md)|
 
-**Remaining / reconciliation:** Normal physical endpoint, active infeed Stop/Run, qualified actual active cut, Reset/fresh repeat. No forced unsafe-command proof. Remaining limitations only those explicitly named in the linked review; old FAIL/BLOCKED cells superseded for these tested paths.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-24-robot-cnc.scene.json ](../../scenes/migrated/lab-2-24-robot-cnc.scene.json), [rungproof-next/docs/help/scenes/lab-2-24-robot-cnc.md ](../../docs/help/scenes/lab-2-24-robot-cnc.md)
-
-Declared action inventory (3): Start robot/CNC cycle; Stop cell safely; Reset CNC cell. Exact declarations/point ownership retained in JSON.
-
 ### lab-2-25-inspection-toggle
 
-Lab 2.25 - Inspection Light Toggle
+Lab 2.25 - Inspection Light Toggle — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-2-25-inspection-toggle-entry.png](../screen-audit-2026-10-21/breadth-lab-2-25-inspection-toggle-entry.png)|
 |controls|SCOPED_PASS|Held firstdown1.2sec toggles once; mouseup retains; six furtherclicks alternate; settled pulseFalse, exactwidth unproven.|[evidence-review-lab225.md](../screen-audit-2026-10-21/evidence-review-lab225.md)|
@@ -962,18 +600,11 @@ Lab 2.25 - Inspection Light Toggle
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-2-25-inspection-toggle-entry.png](../screen-audit-2026-10-21/breadth-lab-2-25-inspection-toggle-entry.png)|
 |feedback|SCOPED_PASS|ThreeSignals andphysicalwhite/dark agree; no exactlatency claim.|[evidence-review-lab225.md](../screen-audit-2026-10-21/evidence-review-lab225.md)|
 
-**Remaining / reconciliation:** Odd/even pulses, held/released one-event behavior, Stop/Run retained state and Reset repeat are covered. Rapid coalescing has no documented rate contract; do not manufacture one. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-2-25-inspection-toggle.scene.json ](../../scenes/migrated/lab-2-25-inspection-toggle.scene.json), [rungproof-next/docs/help/scenes/lab-2-25-inspection-toggle.md ](../../docs/help/scenes/lab-2-25-inspection-toggle.md)
-
-Declared action inventory (1): Pulse toggle button. Exact declarations/point ownership retained in JSON.
-
 ### lab-3-01-guarded-pallet-transfer
 
-Lab 3.1 - Guarded Pallet Transfer
+Lab 3.1 - Guarded Pallet Transfer — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-3-01-guarded-pallet-transfer-entry.png](../screen-audit-2026-10-21/breadth-lab-3-01-guarded-pallet-transfer-entry.png)|
 |controls|SCOPED_PASS|All8guard/entryclear/exitclear combinations verified, only111permitsrun; exact physicalLEDcolors unresolved.|[evidence-review-lab31.md](../screen-audit-2026-10-21/evidence-review-lab31.md)|
@@ -984,18 +615,11 @@ Lab 3.1 - Guarded Pallet Transfer
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-3-01-guarded-pallet-transfer-entry.png](../screen-audit-2026-10-21/breadth-lab-3-01-guarded-pallet-transfer-entry.png)|
 |feedback|SCOPED_PASS|Native9Signals plusphysicalcartonpositions support boundedmotion/hold/exit; detailedLEDcolors/continuoustrajectory/exactlatency unproven.|[evidence-review-lab31.md](../screen-audit-2026-10-21/evidence-review-lab31.md)|
 
-**Remaining / reconciliation:** Physical indicator colors are unread at the reviewed camera; inspect only if claiming those indicators. All eight permits, actual transfer/complete, guardloss and StopRun are covered; auto-resume is fixture policy, not safety certification. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-3-01-guarded-pallet-transfer.scene.json ](../../scenes/migrated/lab-3-01-guarded-pallet-transfer.scene.json), [rungproof-next/docs/help/scenes/lab-3-01-guarded-pallet-transfer.md ](../../docs/help/scenes/lab-3-01-guarded-pallet-transfer.md)
-
-Declared action inventory (3): Toggle guard closed; Toggle entry clear; Toggle exit clear. Exact declarations/point ownership retained in JSON.
-
 ### lab-3-02-robot-cell-safe-restart
 
-Lab 3.2 - Robot Cell Safe Restart
+Lab 3.2 - Robot Cell Safe Restart — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-3-02-robot-cell-safe-restart-entry.png](../screen-audit-2026-10-21/breadth-lab-3-02-robot-cell-safe-restart-entry.png)|
 |controls|SCOPED_PASS|Gate and ready toggles, separate reset/start pulses affect six Signals and two indicators as reviewed26 frames; exact pulse width not observed.|[evidence-review-lab32.md](../screen-audit-2026-10-21/evidence-review-lab32.md)|
@@ -1006,40 +630,26 @@ Lab 3.2 - Robot Cell Safe Restart
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-3-02-robot-cell-safe-restart-entry.png](../screen-audit-2026-10-21/breadth-lab-3-02-robot-cell-safe-restart-entry.png)|
 |feedback|SCOPED_PASS|Six Signals and two stack indicators match qualification, loss and restart; physical door baseline/Reset and bounded robot poses visible. No continuous trajectory/speed or safety-function proof.|[evidence-review-lab32.md](../screen-audit-2026-10-21/evidence-review-lab32.md)|
 
-**Remaining / reconciliation:** Resolve physical door pose during actual gate trip if claiming animation follows it. Symbolic gate/ready loss, reset/freshStart qualification and actual robot pose change are covered. No physical E-stop safety claim. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-3-02-robot-cell-safe-restart.scene.json ](../../scenes/migrated/lab-3-02-robot-cell-safe-restart.scene.json), [rungproof-next/docs/help/scenes/lab-3-02-robot-cell-safe-restart.md ](../../docs/help/scenes/lab-3-02-robot-cell-safe-restart.md)
-
-Declared action inventory (4): Toggle gate closed; Press reset (momentary); Toggle robot ready; Press Start motion (momentary). Exact declarations/point ownership retained in JSON.
-
 ### lab-4-01-press-count-lamp
 
-Lab 4.1 - Press-Count Lamp â€” demo alias demo-1-press-count
+Lab 4.1 - Press-Count Lamp — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|App launched into Demo 1; correct lesson title, scene inspector and running local simulator observed. Standalone scenario path not covered. Same underlying scene ID, no duplicate standalone route.|[demo1-repeat-check.png](../screen-audit-2026-10-21/demo1-repeat-check.png)|
 |controls|SCOPED_PASS|Physical PULSE count1/2 dark, third3 green; RESET0 dark; repeat3 green with released pulse/reset. These exact original pixels were reviewed in the remaining-requirements reconciliation. No AppStop outcome claimed.|[demo1-current.png](../screen-audit-2026-10-21/demo1-current.png); [demo1-two-pulses.png](../screen-audit-2026-10-21/demo1-two-pulses.png); [demo1-third-event.png](../screen-audit-2026-10-21/demo1-third-event.png); [demo1-reset.png](../screen-audit-2026-10-21/demo1-reset.png); [demo1-repeat-check.png](../screen-audit-2026-10-21/demo1-repeat-check.png)|
 |normal_outcome|SCOPED_PASS|Operator count exercise reached the documented threshold lamp condition.|[demo1-two-pulses.png](../screen-audit-2026-10-21/demo1-two-pulses.png); [demo1-third-event.png](../screen-audit-2026-10-21/demo1-third-event.png); [demo1-repeat-check.png](../screen-audit-2026-10-21/demo1-repeat-check.png)|
-|stop_reset_restart|SCOPED_PASS|Actual count1→AppStop projected0/dark scan10220 frozen2s→Run count1 restored without pulse→fresh events2/3green→AppReset STOPPED0/count0. Inferred retained CTU from visible restoration; no count2 Stop retest required.|[../screen-audit-2026-10-23/demo1-appstop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/demo1-appstop-review.md)|
+|stop_reset_restart|SCOPED_PASS|Actual count1→AppStop projected0/dark scan10220 frozen2s→Run count1 restored without pulse→fresh events2/3green→AppReset STOPPED0/count0. Inferred retained CTU from visible restoration; no count2 Stop retest required.|[demo1-appstop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/demo1-appstop-review.md)|
 |recovery|SCOPED_PASS|Machine RESET0 then repeated threshold3; no simulated trip or separate AppStop evidence inherited.|[demo1-reset.png](../screen-audit-2026-10-21/demo1-reset.png); [demo1-repeat-check.png](../screen-audit-2026-10-21/demo1-repeat-check.png)|
 |repeat|SCOPED_PASS|Machine Reset followed by a repeated count exercise; limited to observed count cycle.|[demo1-reset.png](../screen-audit-2026-10-21/demo1-reset.png); [demo1-repeat-check.png](../screen-audit-2026-10-21/demo1-repeat-check.png)|
-|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.||
+|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[['breadth-lab-4-01-press-count-lamp-entry.png']](../screen-audit-2026-10-21/['breadth-lab-4-01-press-count-lamp-entry.png'])|
 |feedback|SCOPED_PASS|Lesson 1 visibly marked PASSED; not a verdict on every indicator or watch field.|[demo1-repeat-check.png](../screen-audit-2026-10-21/demo1-repeat-check.png)|
-
-**Remaining / reconciliation:** Named AppStop/Run/Reset case now independently verified at count1, followed by2/3threshold. No duplicate count2 retest. Lamp was dark at Stop; no whole-family timing/heldbutton proof.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-01-press-count-lamp.scene.json ](../../scenes/migrated/lab-4-01-press-count-lamp.scene.json), [rungproof-next/docs/help/scenes/lab-4-01-press-count-lamp.md ](../../docs/help/scenes/lab-4-01-press-count-lamp.md)
-
-Declared action inventory (2): Pulse count button; Machine reset pushbutton. Exact declarations/point ownership retained in JSON.
 
 ### lab-4-02-counter-reset-lamp
 
-Lab 4.2 - Counter Reset Lamp
+Lab 4.2 - Counter Reset Lamp — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-02-counter-reset-lamp-entry.png](../screen-audit-2026-10-21/breadth-lab-4-02-counter-reset-lamp-entry.png)|
 |controls|SCOPED_PASS|Physical COUNT and machineRESET pulse routes responded. One held COUNT gesture did not continuously recount to threshold during the tested1.4s hold; settled pulse/reset inputs false. No exact internal numeric CV, simultaneous reset+hold or rapid-pulse limit proved.|[lab402-after-held-first-r2.png](../screen-audit-2026-10-21/lab402-after-held-first-r2.png); [lab402-count2-r2.png](../screen-audit-2026-10-21/lab402-count2-r2.png); [lab402-count3-r2.png](../screen-audit-2026-10-21/lab402-count3-r2.png); [lab402-count4-r2.png](../screen-audit-2026-10-21/lab402-count4-r2.png); [lab402-machine-reset-r2.png](../screen-audit-2026-10-21/lab402-machine-reset-r2.png); [lab402-repeat1-r2.png](../screen-audit-2026-10-21/lab402-repeat1-r2.png); [lab402-repeat2-r2.png](../screen-audit-2026-10-21/lab402-repeat2-r2.png); [lab402-repeat3-r2.png](../screen-audit-2026-10-21/lab402-repeat3-r2.png); [lab402-app-stop-r2.png](../screen-audit-2026-10-21/lab402-app-stop-r2.png); [lab402-app-run-retained-r2.png](../screen-audit-2026-10-21/lab402-app-run-retained-r2.png); [lab402-app-reset-r2.png](../screen-audit-2026-10-21/lab402-app-reset-r2.png); [lab402-reset-run-r2.png](../screen-audit-2026-10-21/lab402-reset-run-r2.png); [lab402-new-count1-r2.png](../screen-audit-2026-10-21/lab402-new-count1-r2.png); [evidence-review-lab402.md](../screen-audit-2026-10-21/evidence-review-lab402.md)|
@@ -1050,18 +660,11 @@ Lab 4.2 - Counter Reset Lamp
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-02-counter-reset-lamp-entry.png](../screen-audit-2026-10-21/breadth-lab-4-02-counter-reset-lamp-entry.png)|
 |feedback|SCOPED_PASS|Physical green lamp and visible counter_lamp agreed; settled pulse/reset states false. Exact internal counter accumulator remains unobserved.|[lab402-after-held-first-r2.png](../screen-audit-2026-10-21/lab402-after-held-first-r2.png); [lab402-count2-r2.png](../screen-audit-2026-10-21/lab402-count2-r2.png); [lab402-count3-r2.png](../screen-audit-2026-10-21/lab402-count3-r2.png); [lab402-count4-r2.png](../screen-audit-2026-10-21/lab402-count4-r2.png); [lab402-machine-reset-r2.png](../screen-audit-2026-10-21/lab402-machine-reset-r2.png); [lab402-repeat1-r2.png](../screen-audit-2026-10-21/lab402-repeat1-r2.png); [lab402-repeat2-r2.png](../screen-audit-2026-10-21/lab402-repeat2-r2.png); [lab402-repeat3-r2.png](../screen-audit-2026-10-21/lab402-repeat3-r2.png); [lab402-app-stop-r2.png](../screen-audit-2026-10-21/lab402-app-stop-r2.png); [lab402-app-run-retained-r2.png](../screen-audit-2026-10-21/lab402-app-run-retained-r2.png); [lab402-app-reset-r2.png](../screen-audit-2026-10-21/lab402-app-reset-r2.png); [lab402-reset-run-r2.png](../screen-audit-2026-10-21/lab402-reset-run-r2.png); [lab402-new-count1-r2.png](../screen-audit-2026-10-21/lab402-new-count1-r2.png); [evidence-review-lab402.md](../screen-audit-2026-10-21/evidence-review-lab402.md)|
 
-**Remaining / reconciliation:** Held press was checked only relative to lamp threshold; exact count checkpoint per physical pulse remains unverified if claiming accumulator increments. Machine reset and active AppReset are covered. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-02-counter-reset-lamp.scene.json ](../../scenes/migrated/lab-4-02-counter-reset-lamp.scene.json), [rungproof-next/docs/help/scenes/lab-4-02-counter-reset-lamp.md ](../../docs/help/scenes/lab-4-02-counter-reset-lamp.md)
-
-Declared action inventory (2): Count pulse; Reset counter. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-03-repeat-cycle-counter
 
-Lab 4.3 - Repeat-Cycle Counter
+Lab 4.3 - Repeat-Cycle Counter — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-03-repeat-cycle-counter-entry.png](../screen-audit-2026-10-21/breadth-lab-4-03-repeat-cycle-counter-entry.png)|
 |controls|SCOPED_PASS|ENABLE/START, heldStart1.2sec/release, midstroke disable/reenable physically tested; nofourthcycle while completedcount3.|[evidence-review-lab43.md](../screen-audit-2026-10-21/evidence-review-lab43.md)|
@@ -1072,18 +675,11 @@ Lab 4.3 - Repeat-Cycle Counter
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-03-repeat-cycle-counter-entry.png](../screen-audit-2026-10-21/breadth-lab-4-03-repeat-cycle-counter-entry.png)|
 |feedback|SCOPED_PASS|Native9Signals andchangingheadpose/amberactive/greencomplete agree; exactpulsewidth/internaledge/continuousmotion unproven.|[evidence-review-lab43.md](../screen-audit-2026-10-21/evidence-review-lab43.md)|
 
-**Remaining / reconciliation:** Capture actual cycle_done edge/released handshake only if claiming edge-to-count causality; actual head/count0â†’3/home complete is covered. Dedicated machineStop is not exposed here; do not treat it as missing testing. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-03-repeat-cycle-counter.scene.json ](../../scenes/migrated/lab-4-03-repeat-cycle-counter.scene.json), [rungproof-next/docs/help/scenes/lab-4-03-repeat-cycle-counter.md ](../../docs/help/scenes/lab-4-03-repeat-cycle-counter.md)
-
-Declared action inventory (2): Start batch; Toggle machine enable. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-04-sequence-light-tower
 
-Lab 4.4 - Sequence Light Tower
+Lab 4.4 - Sequence Light Tower — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-04-sequence-light-tower-entry.png](../screen-audit-2026-10-21/breadth-lab-4-04-sequence-light-tower-entry.png)|
 |controls|SCOPED_PASS|START and STEP physical actions verified22 cases; idle STEP does not advance, active START ignored, extra completed STEP retained; exact width/held/simultaneous unproven.|[evidence-review-lab44.md](../screen-audit-2026-10-21/evidence-review-lab44.md); [lab44-cases.json](../screen-audit-2026-10-21/lab44-cases.json)|
@@ -1094,18 +690,11 @@ Lab 4.4 - Sequence Light Tower
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-04-sequence-light-tower-entry.png](../screen-audit-2026-10-21/breadth-lab-4-04-sequence-light-tower-entry.png)|
 |feedback|SCOPED_PASS|Native tower colors and separate green completion pilot agree with six color/state Signals; settled pulse inputsFalse only, no exact accepted pulsewidth.|[evidence-review-lab44.md](../screen-audit-2026-10-21/evidence-review-lab44.md); [lab44-cases.json](../screen-audit-2026-10-21/lab44-cases.json)|
 
-**Remaining / reconciliation:** START/STEP four states/completion, idle/active extra presses, AppStop freshStart, Reset repeat covered. Initial simultaneous/held STEP contract is not fully specified; N1 remains concrete required navigation.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-04-sequence-light-tower.scene.json ](../../scenes/migrated/lab-4-04-sequence-light-tower.scene.json), [rungproof-next/docs/help/scenes/lab-4-04-sequence-light-tower.md ](../../docs/help/scenes/lab-4-04-sequence-light-tower.md)
-
-Declared action inventory (2): Press sequence Start (momentary); Press sequence Step (momentary). Exact declarations/point ownership retained in JSON.
-
 ### lab-4-05-dual-input-count-window
 
-Lab 4.5 - Dual-Input Count Window
+Lab 4.5 - Dual-Input Count Window — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-05-dual-input-count-window-entry.png](../screen-audit-2026-10-21/breadth-lab-4-05-dual-input-count-window-entry.png)|
 |controls|SCOPED_PASS|A2/B4 valid/green and A2/B5 rejected/dark with released inputs; combines prior normal/lifecycle evidence.|[postbackup-small-count45-review.md](../screen-audit-2026-10-21/postbackup-small-count45-review.md)|
@@ -1116,18 +705,11 @@ Lab 4.5 - Dual-Input Count Window
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-05-dual-input-count-window-entry.png](../screen-audit-2026-10-21/breadth-lab-4-05-dual-input-count-window-entry.png)|
 |feedback|SCOPED_PASS|A2/B4 valid/green and A2/B5 rejected/dark with released inputs; combines prior normal/lifecycle evidence.|[postbackup-small-count45-review.md](../screen-audit-2026-10-21/postbackup-small-count45-review.md)|
 
-**Remaining / reconciliation:** Named A2/B4 and B5 boundary gaps closed by independent postbackup review; reconcile only. Exact simultaneous/pulse timing not claimed; no additional documented normal blocker identified.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-05-dual-input-count-window.scene.json ](../../scenes/migrated/lab-4-05-dual-input-count-window.scene.json), [rungproof-next/docs/help/scenes/lab-4-05-dual-input-count-window.md ](../../docs/help/scenes/lab-4-05-dual-input-count-window.md)
-
-Declared action inventory (3): Press A; Press B; Reset both counters. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-06-multi-press-confirmation
 
-Lab 4.6 - Multi-Press Confirmation
+Lab 4.6 - Multi-Press Confirmation — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-06-multi-press-confirmation-entry.png](../screen-audit-2026-10-21/breadth-lab-4-06-multi-press-confirmation-entry.png)|
 |controls|SCOPED_PASS|A2/B3 valid/green and extraB gives A2/B4 invalid/dark; released inputs. Does not prove all count combinations.|[postbackup-small-count46-review.md](../screen-audit-2026-10-21/postbackup-small-count46-review.md)|
@@ -1138,18 +720,11 @@ Lab 4.6 - Multi-Press Confirmation
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-06-multi-press-confirmation-entry.png](../screen-audit-2026-10-21/breadth-lab-4-06-multi-press-confirmation-entry.png)|
 |feedback|SCOPED_PASS|A2/B3 valid/green and extraB gives A2/B4 invalid/dark; released inputs. Does not prove all count combinations.|[postbackup-small-count46-review.md](../screen-audit-2026-10-21/postbackup-small-count46-review.md)|
 
-**Remaining / reconciliation:** Named A2/B4 rejection gap closed. Representative saved workspace reopened STOPPED and executes fresh A2/B3 after Run; no live-counter retention claim. No additional documented normal blocker identified.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-06-multi-press-confirmation.scene.json ](../../scenes/migrated/lab-4-06-multi-press-confirmation.scene.json), [rungproof-next/docs/help/scenes/lab-4-06-multi-press-confirmation.md ](../../docs/help/scenes/lab-4-06-multi-press-confirmation.md)
-
-Declared action inventory (3): Press A; Press B; Reset both counters. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-07-parking-garage-entry
 
-Lab 4.7 - Parking Garage Entry
+Lab 4.7 - Parking Garage Entry — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-07-parking-garage-entry-entry.png](../screen-audit-2026-10-21/breadth-lab-4-07-parking-garage-entry-entry.png)|
 |controls|SCOPED_PASS|ENABLE/CLEAR/ENTER/EXIT/REMOVE have actual responses/guards/recovery. No stucksensor or gate-obstruction UI action declared. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab407.md](../screen-audit-2026-10-21/evidence-review-lab407.md)|
@@ -1160,62 +735,41 @@ Lab 4.7 - Parking Garage Entry
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-07-parking-garage-entry-entry.png](../screen-audit-2026-10-21/breadth-lab-4-07-parking-garage-entry-entry.png)|
 |feedback|SCOPED_PASS|Actualcars/barrierangle/nativecountspaceavailability agree. AmberREMOVEfunctionalnotocclusionissue; exacttransiententry/exitpulseedgesunproven.|[evidence-review-lab407.md](../screen-audit-2026-10-21/evidence-review-lab407.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. ENABLE/CLEAR/ENTER/EXIT/REMOVE have actual responses/guards/recovery. No stucksensor or gate-obstruction UI action declared.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-07-parking-garage-entry.scene.json ](../../scenes/migrated/lab-4-07-parking-garage-entry.scene.json), [rungproof-next/docs/help/scenes/lab-4-07-parking-garage-entry.md ](../../docs/help/scenes/lab-4-07-parking-garage-entry.md)
-
-Declared action inventory (5): Toggle driver enable; Toggle downstream path clear; Enter vehicle (free bay); Exit one parked vehicle; Clear departed vehicle. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-08-package-grouping
 
-Lab 4.8 - Package Grouping Station
+Lab 4.8 - Package Grouping Station — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-08-package-grouping-entry.png](../screen-audit-2026-10-21/breadth-lab-4-08-package-grouping-entry.png)|
 |controls|SCOPED_PASS|ENABLE/CLEAR/LOAD each has an actual native effect: accepted loads give count1/2/3, premature LOAD explicitly guarded, active CLEAR loss holds and restoration resumes. No other mapped process control is declared. Release-specific AppStop Q02 remains separately untested.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md)|
 |normal_outcome|SCOPED_PASS|Actualone/two/threecartons count1/2/3; groupreadyonly3; raisedgate100/releaseTrue admitsall3receiver; actualtransfercomplete/gate0/alloff/count3retained. Fixturedoesnotresetcountoncomplete.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md)|
-|stop_reset_restart|SCOPED_PASS|Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md); [../screen-audit-2026-10-23/grouping-release-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/grouping-release-stop-review.md)|
-|recovery|SCOPED_PASS|Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md); [../screen-audit-2026-10-23/grouping-release-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/grouping-release-stop-review.md)|
+|stop_reset_restart|SCOPED_PASS|Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md); [grouping-release-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/grouping-release-stop-review.md)|
+|recovery|SCOPED_PASS|Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md); [grouping-release-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/grouping-release-stop-review.md)|
 |repeat|SCOPED_PASS|FreshR3thirdloadcount3 thenactualfinal10456receiver3/completeTrue/gate0/alloff/count3. Namedrelease/transfer9664/9850actuallyprereleaseFalseexcludedreleasecredit.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-08-package-grouping-entry.png](../screen-audit-2026-10-21/breadth-lab-4-08-package-grouping-entry.png)|
 |feedback|SCOPED_PASS|Selectednativephysicalcartons/gate/sensors/receiver matchSignals; exactpulseedge/continuousrollerrotation/faultpathsunproven.|[evidence-review-lab408.md](../screen-audit-2026-10-21/evidence-review-lab408.md)|
 
-**Remaining / reconciliation:** Q02 qualified raised-gate release AppStop/settledhold/Run-alone complete now closed. Existing3loads/guard/clear/enable/repeat evidence retained. No additional arbitraryphase, exactpulse or nonexistentfault gate.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-4-08-package-grouping.scene.json ](../../scenes/migrated/lab-4-08-package-grouping.scene.json), [rungproof-next/docs/help/scenes/lab-4-08-package-grouping.md ](../../docs/help/scenes/lab-4-08-package-grouping.md)
-
-Declared action inventory (3): Toggle conveyor enable; Toggle downstream clear; Load one carton (idle feed). Exact declarations/point ownership retained in JSON.
-
 ### lab-4-09-chain-drive-lift
 
-Lab 4.9 - Chain-Drive Lift
+Lab 4.9 - Chain-Drive Lift — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-09-chain-drive-lift-entry.png](../screen-audit-2026-10-21/breadth-lab-4-09-chain-drive-lift-entry.png)|
 |controls|SCOPED_PASS|Only physical START is mapped; accepted START and freshStart after indexStop visibly advance carton/lift and reach supported receiver/home. No exposed boxAbsent/destinationBlocked/fault selector. Q19 verticalStop/trace remains separate.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md)|
 |normal_outcome|SCOPED_PASS|Actual infeed carton load, rise, upper transfer/receiver and final empty carriagehome, cycle_completeTrue/activeFalse, allcommandsFalse/nofault. Exact descenttrace not captured.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md)|
-|stop_reset_restart|SCOPED_PASS|AppStop freezes scan/pose, clearscommands; Runalone doesnotresume; freshSTART resumes; AppReset restoresinfeed/home clearbaseline.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md)|
-|recovery|SCOPED_PASS|FreshSTART after AppStop/Run recovery completes receiver/home cycle; actual final8checks supersede premature wait screenshot, not an appfailure.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md)|
+|stop_reset_restart|SCOPED_PASS|AppStop freezes scan/pose, clearscommands; Runalone doesnotresume; freshSTART resumes; AppReset restoresinfeed/home clearbaseline. Q19 exact closure: Actual loaded upstroke Stop15615 holds supported midheight carton/tray/allcommandsOff; Run15646→15772 alone inactive; freshStart resumes to actualupper/receivertransfer then19520home/complete/allOff. No lowerTrue frame or continuous descent claim.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md); [chain-lift-upstroke-stop-review.md](chain-lift-upstroke-stop-review.md)|
+|recovery|SCOPED_PASS|FreshSTART after AppStop/Run recovery completes receiver/home cycle; actual final8checks supersede premature wait screenshot, not an appfailure. Q19 exact closure: Actual loaded upstroke Stop15615 holds supported midheight carton/tray/allcommandsOff; Run15646→15772 alone inactive; freshStart resumes to actualupper/receivertransfer then19520home/complete/allOff. No lowerTrue frame or continuous descent claim.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md); [chain-lift-upstroke-stop-review.md](chain-lift-upstroke-stop-review.md)|
 |repeat|SCOPED_PASS|Reset/freshstart plus interrupted-recovered second actual receiver/home complete verified.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-09-chain-drive-lift-entry.png](../screen-audit-2026-10-21/breadth-lab-4-09-chain-drive-lift-entry.png)|
 |feedback|SCOPED_PASS|Native actualSignals and supported carton/platform/receiver poses agree; premature and wrongbaseline images excluded; continuous motion/speed/latency unproven.|[evidence-review-lab49.md](../screen-audit-2026-10-21/evidence-review-lab49.md)|
 
-**Remaining / reconciliation:** Destination-blocked/box-absent qualification and mid-vertical-motion Stop need legitimate exposed cases; captured Stop was initial index. Capture actual lowering trace if claiming it, final home alone is narrower. N1.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-4-09-chain-drive-lift.scene.json ](../../scenes/migrated/lab-4-09-chain-drive-lift.scene.json), [rungproof-next/docs/help/scenes/lab-4-09-chain-drive-lift.md ](../../docs/help/scenes/lab-4-09-chain-drive-lift.md)
-
-Declared action inventory (1): Start carton cycle (momentary). Exact declarations/point ownership retained in JSON.
-
 ### lab-4-10-cookie-packaging
 
-Lab 4.10 - Cookie Packaging Cell
+Lab 4.10 - Cookie Packaging Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-10-cookie-packaging-entry.png](../screen-audit-2026-10-21/breadth-lab-4-10-cookie-packaging-entry.png)|
 |controls|SCOPED_PASS|Only physical START is declared and response/restart reviewed. Distinct machineSTOP/fault button is not exposed by this contract. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab410.md](../screen-audit-2026-10-21/evidence-review-lab410.md)|
@@ -1226,18 +780,11 @@ Lab 4.10 - Cookie Packaging Cell
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-10-cookie-packaging-entry.png](../screen-audit-2026-10-21/breadth-lab-4-10-cookie-packaging-entry.png)|
 |feedback|SCOPED_PASS|Native13Signals plusphysicalcookies/packages supportboundedbatch; exactall6strokeextremes/sealintegrity/exactlatencyunproven.|[evidence-review-lab410.md](../screen-audit-2026-10-21/evidence-review-lab410.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Only physical START is declared and response/restart reviewed. Distinct machineSTOP/fault button is not exposed by this contract.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-4-10-cookie-packaging.scene.json ](../../scenes/migrated/lab-4-10-cookie-packaging.scene.json), [rungproof-next/docs/help/scenes/lab-4-10-cookie-packaging.md ](../../docs/help/scenes/lab-4-10-cookie-packaging.md)
-
-Declared action inventory (1): Start / resume cookie batch. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-11-barrel-fill-station
 
-Lab 4.11 - Barrel Fill Station
+Lab 4.11 - Barrel Fill Station — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-11-barrel-fill-station-entry.png](../screen-audit-2026-10-21/breadth-lab-4-11-barrel-fill-station-entry.png)|
 |controls|SCOPED_PASS|Only START declared and normal/freshStart/fillingStop reviewed. Low-source/obstruction outputs are not operatorfault controls. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab411.md](../screen-audit-2026-10-21/evidence-review-lab411.md)|
@@ -1248,84 +795,56 @@ Lab 4.11 - Barrel Fill Station
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-11-barrel-fill-station-entry.png](../screen-audit-2026-10-21/breadth-lab-4-11-barrel-fill-station-entry.png)|
 |feedback|SCOPED_PASS|Native Signals liquidpairs/conservation, actual fluidlevel/indexedbarrel/parkedpose agree; physicalnumericdisplay nottranscribed.|[evidence-review-lab411.md](../screen-audit-2026-10-21/evidence-review-lab411.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Only START declared and normal/freshStart/fillingStop reviewed. Low-source/obstruction outputs are not operatorfault controls.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-4-11-barrel-fill-station.scene.json ](../../scenes/migrated/lab-4-11-barrel-fill-station.scene.json), [rungproof-next/docs/help/scenes/lab-4-11-barrel-fill-station.md ](../../docs/help/scenes/lab-4-11-barrel-fill-station.md)
-
-Declared action inventory (1): Start / resume barrel batch. Exact declarations/point ownership retained in JSON.
-
 ### lab-4-12-cable-cut-length
 
-Lab 4.12 - Cable Cut-Length Cell
+Lab 4.12 - Cable Cut-Length Cell — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-4-12-cable-cut-length-entry.png](../screen-audit-2026-10-21/breadth-lab-4-12-cable-cut-length-entry.png)|
 |controls|SCOPED_PASS|Only physical START is mapped; accepted normalStart and freshStart after feedStop visibly move cable, execute knife and reach3m/7stock/home. No independent sceneStop/fault button is mapped. Q03 knife-phase AppStop remains separate, not inherited.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md)|
 |normal_outcome|SCOPED_PASS|Actual length0â†’3m/stock10â†’7 conserves10m; feed stops, cutter.275â†’1â†’.2â†’home/cutdone/complete, commandsFalse/nofault. Physical cable retained; severingquality/microscopicseparation unproven.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md)|
-|stop_reset_restart|SCOPED_PASS|Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md); [../screen-audit-2026-10-23/cable-knife-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/cable-knife-stop-review.md)|
-|recovery|SCOPED_PASS|Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md); [../screen-audit-2026-10-23/cable-knife-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/cable-knife-stop-review.md)|
+|stop_reset_restart|SCOPED_PASS|Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md); [cable-knife-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/cable-knife-stop-review.md)|
+|recovery|SCOPED_PASS|Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md); [cable-knife-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/cable-knife-stop-review.md)|
 |repeat|SCOPED_PASS|Reset/freshstart interrupted feed reaches3/7 complete again; repeatedcutswithoutReset/count unproven.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-4-12-cable-cut-length-entry.png](../screen-audit-2026-10-21/breadth-lab-4-12-cable-cut-length-entry.png)|
 |feedback|SCOPED_PASS|Native measuredlength/stock and cutterpose/physicalgreenstacks agree; exactcutcount/packagequality/continuousmotion unproven.|[evidence-review-lab412.md](../screen-audit-2026-10-21/evidence-review-lab412.md)|
 
-**Remaining / reconciliation:** Q03 actual outboundknife Stop/held, Run-alone noresume, freshSTART recovery/home nowclosed. No arbitraryfault, distinctunmappedmachineStop or precision-cut gate.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/lab-4-12-cable-cut-length.scene.json ](../../scenes/migrated/lab-4-12-cable-cut-length.scene.json), [rungproof-next/docs/help/scenes/lab-4-12-cable-cut-length.md ](../../docs/help/scenes/lab-4-12-cable-cut-length.md)
-
-Declared action inventory (1): Start / resume cable cut. Exact declarations/point ownership retained in JSON.
-
 ### lab-5-01-delayed-lamp
 
-Lab 5.1 - Delayed Lamp â€” demo alias demo-2-delayed-lamp
+Lab 5.1 - Delayed Lamp — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Opened this demo through numbered curriculum rail; matching demo title, scene and running local simulator observed. Standalone scenario path not covered. Same underlying scene ID, no duplicate standalone route.|[demo2-curriculum-repeat-pass.png](../screen-audit-2026-10-21/demo2-curriculum-repeat-pass.png)|
 |controls|SCOPED_PASS|REQUEST off0/dark→ON740/dark→2000/green; machineSTOP0/dark; restart2000/green; RESET0/dark. Old misleading machine-stop/request-off filenames excluded in favor of actual recheck pixels.|[demo2-recheck-request-off.png](../screen-audit-2026-10-21/demo2-recheck-request-off.png); [demo2-recheck-before-delay.png](../screen-audit-2026-10-21/demo2-recheck-before-delay.png); [demo2-recheck-after-delay.png](../screen-audit-2026-10-21/demo2-recheck-after-delay.png); [demo2-recheck-stop.png](../screen-audit-2026-10-21/demo2-recheck-stop.png); [demo2-recheck-restart.png](../screen-audit-2026-10-21/demo2-recheck-restart.png); [demo2-recheck-reset.png](../screen-audit-2026-10-21/demo2-recheck-reset.png)|
 |normal_outcome|SCOPED_PASS|Request produced a visible 740 ms intermediate reading and completed delayed output on later checkpoint; exact scan boundary unproven.|[demo2-recheck-before-delay.png](../screen-audit-2026-10-21/demo2-recheck-before-delay.png); [demo2-recheck-after-delay.png](../screen-audit-2026-10-21/demo2-recheck-after-delay.png); [demo2-curriculum-repeat-pass.png](../screen-audit-2026-10-21/demo2-curriculum-repeat-pass.png)|
-|stop_reset_restart|SCOPED_PASS|Retained REQUESTTrue after AppStop4862: elapsed0/lampFalse and frozen scan; Run alone4867 elapsed100,4918 elapsed1120,5011 elapsed2000/actualgreen. Fresh TON interval, no second REQUEST or machineStop/Reset. Exact wallclock boundary not claimed.|[breadth-lab-5-01-delayed-lamp-run.png](../screen-audit-2026-10-21/breadth-lab-5-01-delayed-lamp-run.png); [breadth-lab-5-01-delayed-lamp-reset.png](../screen-audit-2026-10-21/breadth-lab-5-01-delayed-lamp-reset.png); [../screen-audit-2026-10-23/demo2-appstop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/demo2-appstop-review.md)|
+|stop_reset_restart|SCOPED_PASS|Retained REQUESTTrue after AppStop4862: elapsed0/lampFalse and frozen scan; Run alone4867 elapsed100,4918 elapsed1120,5011 elapsed2000/actualgreen. Fresh TON interval, no second REQUEST or machineStop/Reset. Exact wallclock boundary not claimed.|[breadth-lab-5-01-delayed-lamp-run.png](../screen-audit-2026-10-21/breadth-lab-5-01-delayed-lamp-run.png); [breadth-lab-5-01-delayed-lamp-reset.png](../screen-audit-2026-10-21/breadth-lab-5-01-delayed-lamp-reset.png); [demo2-appstop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/demo2-appstop-review.md)|
 |recovery|SCOPED_PASS|Observed request-off, machine Stop, fresh request, and machine Reset routes only.|[demo2-recheck-request-off.png](../screen-audit-2026-10-21/demo2-recheck-request-off.png); [demo2-recheck-stop.png](../screen-audit-2026-10-21/demo2-recheck-stop.png); [demo2-recheck-restart.png](../screen-audit-2026-10-21/demo2-recheck-restart.png); [demo2-recheck-reset.png](../screen-audit-2026-10-21/demo2-recheck-reset.png)|
 |repeat|SCOPED_PASS|Observed repeat delayed-lamp exercise and learner completion.|[demo2-recheck-restart.png](../screen-audit-2026-10-21/demo2-recheck-restart.png); [demo2-curriculum-repeat-pass.png](../screen-audit-2026-10-21/demo2-curriculum-repeat-pass.png)|
-|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.||
+|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[['breadth-lab-5-01-delayed-lamp-entry.png']](../screen-audit-2026-10-21/['breadth-lab-5-01-delayed-lamp-entry.png'])|
 |feedback|SCOPED_PASS|Lesson 2 curriculum repeat-pass displayed; not every UI field checked.|[demo2-curriculum-repeat-pass.png](../screen-audit-2026-10-21/demo2-curriculum-repeat-pass.png)|
-
-**Remaining / reconciliation:** Q07 retained-request AppStop/Run freshTON path now closed. Existing machineSTOP/RESET/repeat evidence separate. No new exactscan/curriculum gate.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-01-delayed-lamp.scene.json ](../../scenes/migrated/lab-5-01-delayed-lamp.scene.json), [rungproof-next/docs/help/scenes/lab-5-01-delayed-lamp.md ](../../docs/help/scenes/lab-5-01-delayed-lamp.md)
-
-Declared action inventory (3): Timer REQUEST selector; Machine Stop pushbutton; Machine Reset pushbutton. Exact declarations/point ownership retained in JSON.
 
 ### lab-5-02-timed-lamp-off
 
-Lab 5.2 - Timed Lamp-Off
+Lab 5.2 - Timed Lamp-Off — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-02-timed-lamp-off-entry.png](../screen-audit-2026-10-21/breadth-lab-5-02-timed-lamp-off-entry.png)|
-|controls|SCOPED_PASS|R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111scans/2220ms later, below3000ms. Fresh acknowledgedSTART9590 lightslampagain. Bounded active retrigger/nonextension path closed; exact20mspeak/privateconsumption scan is not a new acceptance gate.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md); [../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md)|
-|normal_outcome|SCOPED_PASS|R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111scans/2220ms later, below3000ms. Fresh acknowledgedSTART9590 lightslampagain. Bounded active retrigger/nonextension path closed; exact20mspeak/privateconsumption scan is not a new acceptance gate.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md); [../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md)|
+|controls|SCOPED_PASS|R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111scans/2220ms later, below3000ms. Fresh acknowledgedSTART9590 lightslampagain. Bounded active retrigger/nonextension path closed; exact20mspeak/privateconsumption scan is not a new acceptance gate.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md); [timed-lamp-active-retrigger-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md)|
+|normal_outcome|SCOPED_PASS|R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111scans/2220ms later, below3000ms. Fresh acknowledgedSTART9590 lightslampagain. Bounded active retrigger/nonextension path closed; exact20mspeak/privateconsumption scan is not a new acceptance gate.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md); [timed-lamp-active-retrigger-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md)|
 |stop_reset_restart|SCOPED_PASS|AppStop whilelampON cancelled toOFF/STOPPED; Run remainedOFF throughsettledcheckpoint. AppReset whileON cancelled toOFF/SCAN0/STOPPED; Run remainedOFF.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md)|
 |recovery|SCOPED_PASS|AfterStopcancellation freshSTART retriggered; afterResetcancellation freshSTART retriggered andexpired. No unexposed machinefault/safety function claimed.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md)|
-|repeat|SCOPED_PASS|R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111scans/2220ms later, below3000ms. Fresh acknowledgedSTART9590 lightslampagain. Bounded active retrigger/nonextension path closed; exact20mspeak/privateconsumption scan is not a new acceptance gate.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md); [../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md)|
+|repeat|SCOPED_PASS|R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111scans/2220ms later, below3000ms. Fresh acknowledgedSTART9590 lightslampagain. Bounded active retrigger/nonextension path closed; exact20mspeak/privateconsumption scan is not a new acceptance gate.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md); [timed-lamp-active-retrigger-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/timed-lamp-active-retrigger-review.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-02-timed-lamp-off-entry.png](../screen-audit-2026-10-21/breadth-lab-5-02-timed-lamp-off-entry.png)|
 |feedback|SCOPED_PASS|Actual native greenlamp and visible runtimestates/scans showed trigger/expiry/cancellation/repeat. No numericET/Q, acceptedpulsewidth or exactscanboundary observed; unrelated5/5curriculum not counted.|[lab502-idle.png](../screen-audit-2026-10-21/lab502-idle.png); [lab502-first-on.png](../screen-audit-2026-10-21/lab502-first-on.png); [lab502-active-retrigger-attempt.png](../screen-audit-2026-10-21/lab502-active-retrigger-attempt.png); [lab502-original-expired.png](../screen-audit-2026-10-21/lab502-original-expired.png); [lab502-expired-stable.png](../screen-audit-2026-10-21/lab502-expired-stable.png); [lab502-fresh-second-on.png](../screen-audit-2026-10-21/lab502-fresh-second-on.png); [lab502-stop-cancels.png](../screen-audit-2026-10-21/lab502-stop-cancels.png); [lab502-run-after-stop.png](../screen-audit-2026-10-21/lab502-run-after-stop.png); [lab502-after-stop-settled.png](../screen-audit-2026-10-21/lab502-after-stop-settled.png); [lab502-fresh-third-on.png](../screen-audit-2026-10-21/lab502-fresh-third-on.png); [lab502-reset-active.png](../screen-audit-2026-10-21/lab502-reset-active.png); [lab502-reset-run.png](../screen-audit-2026-10-21/lab502-reset-run.png); [lab502-repeat-after-reset-on.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-on.png); [lab502-repeat-after-reset-expired.png](../screen-audit-2026-10-21/lab502-repeat-after-reset-expired.png); [evidence-review-lab502.md](../screen-audit-2026-10-21/evidence-review-lab502.md)|
 
-**Remaining / reconciliation:** Q20 acknowledged activeSTART/nonextension/freshretrigger closed byR2. Exactone-scanpeak/privateconsumption instant not sampled and not demanded; no remaining named physicaltrigger gap.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-02-timed-lamp-off.scene.json ](../../scenes/migrated/lab-5-02-timed-lamp-off.scene.json), [rungproof-next/docs/help/scenes/lab-5-02-timed-lamp-off.md ](../../docs/help/scenes/lab-5-02-timed-lamp-off.md)
-
-Declared action inventory (1): Press START (one accepted scan). Exact declarations/point ownership retained in JSON.
-
 ### lab-5-03-rotary-flasher
 
-Lab 5.3 - Rotary Flasher
+Lab 5.3 - Rotary Flasher — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-03-rotary-flasher-entry.png](../screen-audit-2026-10-21/breadth-lab-5-03-rotary-flasher-entry.png)|
 |controls|SCOPED_PASS|Modeenable/disable/freshEnable physicalcontrols and49nativeframes agree; exacttiming/dutycycle not proven.|[evidence-review-lab53.md](../screen-audit-2026-10-21/evidence-review-lab53.md)|
@@ -1336,18 +855,11 @@ Lab 5.3 - Rotary Flasher
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-03-rotary-flasher-entry.png](../screen-audit-2026-10-21/breadth-lab-5-03-rotary-flasher-entry.png)|
 |feedback|SCOPED_PASS|Physicalgreen/dark matchesactualmode/flash_lamp throughout sampledcycles andlifecycle; no continuous timing/dutycycle claim.|[evidence-review-lab53.md](../screen-audit-2026-10-21/evidence-review-lab53.md)|
 
-**Remaining / reconciliation:** Intercept AppStop during an actual known ON frame; earlier pre-Stop lamp already dark. Ordinary flashing/disable/re-enable/Run/Reset covered. Exact duty cycle/long drift not established by samples. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-03-rotary-flasher.scene.json ](../../scenes/migrated/lab-5-03-rotary-flasher.scene.json), [rungproof-next/docs/help/scenes/lab-5-03-rotary-flasher.md ](../../docs/help/scenes/lab-5-03-rotary-flasher.md)
-
-Declared action inventory (1): Turn mode OFF / FLASH. Exact declarations/point ownership retained in JSON.
-
 ### lab-5-04-alternating-lamps
 
-Lab 5.4 - Alternating Lamps
+Lab 5.4 - Alternating Lamps — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-04-alternating-lamps-entry.png](../screen-audit-2026-10-21/breadth-lab-5-04-alternating-lamps-entry.png)|
 |controls|SCOPED_PASS|Enable/disable/freshenable native49frames; physicalamberA/greenB and3Signals match.|[evidence-review-lab54.md](../screen-audit-2026-10-21/evidence-review-lab54.md)|
@@ -1358,18 +870,11 @@ Lab 5.4 - Alternating Lamps
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-04-alternating-lamps-entry.png](../screen-audit-2026-10-21/breadth-lab-5-04-alternating-lamps-entry.png)|
 |feedback|SCOPED_PASS|PhysicalamberA/greenB agreesexactlywithcapturedSignals, darkwhenstopped/disabled; no betweencaptureoverlapproof.|[evidence-review-lab54.md](../screen-audit-2026-10-21/evidence-review-lab54.md)|
 
-**Remaining / reconciliation:** No missing normal/lifecycle path identified; captured exclusivity is not continuous no-overlap proof. Exact500ms boundary or simultaneous changes need a documented timing method before stronger claims. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-04-alternating-lamps.scene.json ](../../scenes/migrated/lab-5-04-alternating-lamps.scene.json), [rungproof-next/docs/help/scenes/lab-5-04-alternating-lamps.md ](../../docs/help/scenes/lab-5-04-alternating-lamps.md)
-
-Declared action inventory (1): Turn ENABLE OFF / RUN. Exact declarations/point ownership retained in JSON.
-
 ### lab-5-05-variable-flash-rate
 
-Lab 5.5 - Variable Flash Rate
+Lab 5.5 - Variable Flash Rate — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-05-variable-flash-rate-entry.png](../screen-audit-2026-10-21/breadth-lab-5-05-variable-flash-rate-entry.png)|
 |controls|SCOPED_PASS|Enable andfast/slow physicalselectors native75frames; disabled/none/both invalid combinations dark.|[evidence-review-lab55.md](../screen-audit-2026-10-21/evidence-review-lab55.md)|
@@ -1380,18 +885,11 @@ Lab 5.5 - Variable Flash Rate
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-05-variable-flash-rate-entry.png](../screen-audit-2026-10-21/breadth-lab-5-05-variable-flash-rate-entry.png)|
 |feedback|SCOPED_PASS|Physicalgreen/dark agreesfourSignals forvalid/invalid/lifecycle; relativecadenceonly, exactdutycycle/timingunproven.|[evidence-review-lab55.md](../screen-audit-2026-10-21/evidence-review-lab55.md)|
 
-**Remaining / reconciliation:** Intercept known-ON Stop and valid fastâ†”slow change without passing through invalid both/neither if requiring live-rate switching. Existing fast/slow, invalid masking, disable/repeat/lifecycle covered. Exact durations unproved. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-05-variable-flash-rate.scene.json ](../../scenes/migrated/lab-5-05-variable-flash-rate.scene.json), [rungproof-next/docs/help/scenes/lab-5-05-variable-flash-rate.md ](../../docs/help/scenes/lab-5-05-variable-flash-rate.md)
-
-Declared action inventory (3): Turn ENABLE OFF / RUN; Turn FAST OFF / FAST; Turn SLOW OFF / SLOW. Exact declarations/point ownership retained in JSON.
-
 ### lab-5-06-running-light-tower
 
-Lab 5.6 - Running-Light Tower
+Lab 5.6 - Running-Light Tower — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-06-running-light-tower-entry.png](../screen-audit-2026-10-21/breadth-lab-5-06-running-light-tower-entry.png)|
 |controls|SCOPED_PASS|Enable/STEP fresh/held1.2sec/released/disabled action paths verified17frames; simultaneousinitialENABLE+STEP unproven.|[evidence-review-lab56.md](../screen-audit-2026-10-21/evidence-review-lab56.md)|
@@ -1402,21 +900,14 @@ Lab 5.6 - Running-Light Tower
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-06-running-light-tower-entry.png](../screen-audit-2026-10-21/breadth-lab-5-06-running-light-tower-entry.png)|
 |feedback|SCOPED_PASS|NativefiveSignals plusphysicalonecolorred/amber/green agree; settledpulseFalse notwidthproof.|[evidence-review-lab56.md](../screen-audit-2026-10-21/evidence-review-lab56.md)|
 
-**Remaining / reconciliation:** Simultaneous first ENABLE+STEP behavior is unverified and not defined by reviewed normal procedure. Retained phase after appRun is fixture policy; normal separate steps/held one-step/noqueue/reset covered. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-06-running-light-tower.scene.json ](../../scenes/migrated/lab-5-06-running-light-tower.scene.json), [rungproof-next/docs/help/scenes/lab-5-06-running-light-tower.md ](../../docs/help/scenes/lab-5-06-running-light-tower.md)
-
-Declared action inventory (2): Turn ENABLE OFF / RUN; Press STEP (momentary). Exact declarations/point ownership retained in JSON.
-
 ### lab-5-07-pedestrian-crossing
 
-Lab 5.7 - Pedestrian Crossing
+Lab 5.7 - Pedestrian Crossing — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-07-pedestrian-crossing-entry.png](../screen-audit-2026-10-21/breadth-lab-5-07-pedestrian-crossing-entry.png)|
-|controls|PARTIAL|Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen.|[evidence-review-lab507.md](../screen-audit-2026-10-21/evidence-review-lab507.md)|
+|controls|SCOPED_PASS|Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen. Q21 closure: Distinct Health-acknowledged active WALK CROSS preserves current cycle, then37 complete idle observations over400scans/8s/maxgap13 show no queued replay; fresh idle CROSS works and completes.|[evidence-review-lab507.md](../screen-audit-2026-10-21/evidence-review-lab507.md); [pedestrian-active-walk-review.md](pedestrian-active-walk-review.md)|
 |normal_outcome|SCOPED_PASS|Physicalgreen/handâ†’amber/handâ†’allred/handâ†’red/walkâ†’red/handclearanceâ†’idlegreen; unavailableCROSSnotqueued.|[evidence-review-lab507.md](../screen-audit-2026-10-21/evidence-review-lab507.md)|
 |stop_reset_restart|SCOPED_PASS|AppStopduringwalk5734frozen/unlitheads, nativeped_stopTrueheld; Runstartupred/handâ†’idle ratherthanresumewalk. Stoprenderpolicyunspecifiednotdefect.|[evidence-review-lab507.md](../screen-audit-2026-10-21/evidence-review-lab507.md)|
 |recovery|SCOPED_PASS|PATHlosskeepswalkinitiallythenclearancehand/redholds; PATHrestorefinishesidle. ResetRunPATHFalseholdsred/handuntilPATH.|[evidence-review-lab507.md](../screen-audit-2026-10-21/evidence-review-lab507.md)|
@@ -1424,43 +915,29 @@ Lab 5.7 - Pedestrian Crossing
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-07-pedestrian-crossing-entry.png](../screen-audit-2026-10-21/breadth-lab-5-07-pedestrian-crossing-entry.png)|
 |feedback|SCOPED_PASS|22selectednativephysicalphaseindications agree8Signals; no movingpeople/vehicles/flashinghandlesson, exacttiming/conflictcontinuityunproven.|[evidence-review-lab507.md](../screen-audit-2026-10-21/evidence-review-lab507.md)|
 
-**Remaining / reconciliation:** Repeated CROSS during active WALK remains unverified if the documented ignore/noqueue rule covers it; unavailable-clearance CROSS was tested. Stop rendered heads dark while pedestrian_stop point True is unspecified policy, not confirmed defect. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-07-pedestrian-crossing.scene.json ](../../scenes/migrated/lab-5-07-pedestrian-crossing.scene.json), [rungproof-next/docs/help/scenes/lab-5-07-pedestrian-crossing.md ](../../docs/help/scenes/lab-5-07-pedestrian-crossing.md)
-
-Declared action inventory (2): Press CROSS (momentary); Turn PATH BLOCK / CLEAR (manual raw feedback). Exact declarations/point ownership retained in JSON.
-
 ### lab-5-08-drawbridge-control
 
-Lab 5.8 - Drawbridge Control
+Lab 5.8 - Drawbridge Control — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-08-drawbridge-control-entry.png](../screen-audit-2026-10-21/breadth-lab-5-08-drawbridge-control-entry.png)|
-|controls|SCOPED_PASS|Both exposed BRIDGE OPEN/CLOSE and STOPPED YES/NO have direct native command/hinge/barrier/traffic response. Ascent loss/restoration and newly reviewed actual descent loss45.85hold/restorationhome are supported. No independent inhibit control or undefined simultaneous policy required.|[evidence-review-lab508.md](../screen-audit-2026-10-21/evidence-review-lab508.md); [../screen-audit-2026-10-23/drawbridge-descent-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/drawbridge-descent-review.md)|
+|controls|SCOPED_PASS|Both exposed BRIDGE OPEN/CLOSE and STOPPED YES/NO have direct native command/hinge/barrier/traffic response. Ascent loss/restoration and newly reviewed actual descent loss45.85hold/restorationhome are supported. No independent inhibit control or undefined simultaneous policy required.|[evidence-review-lab508.md](../screen-audit-2026-10-21/evidence-review-lab508.md); [drawbridge-descent-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/drawbridge-descent-review.md)|
 |normal_outcome|SCOPED_PASS|OPENwithoutstoppedclosesgates/red/deck0/noRaise; ackraisesactualhingeto70/raisedTrue/commandsoff; CLOSElowers60.55â†’24.15â†’0home/gates90/green.|[evidence-review-lab508.md](../screen-audit-2026-10-21/evidence-review-lab508.md)|
 |stop_reset_restart|SCOPED_PASS|ActiveAppStop5062deck39.2samepose1.2s/commandsoff/unlit; Run5074resumesraise. Resetdeck0/gates0/inputsclear; Runopensgates90/green.|[evidence-review-lab508.md](../screen-audit-2026-10-21/evidence-review-lab508.md)|
-|recovery|SCOPED_PASS|Descent57.05→ackloss45.85/bothdirectionsOff; advancing runtime and paired actual angleddeck hold; restoredack lowers36.4→HOME0→barrier90/open→trafficreleaseTrue.|[../screen-audit-2026-10-23/drawbridge-descent-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/drawbridge-descent-review.md)|
+|recovery|SCOPED_PASS|Descent57.05→ackloss45.85/bothdirectionsOff; advancing runtime and paired actual angleddeck hold; restoredack lowers36.4→HOME0→barrier90/open→trafficreleaseTrue.|[drawbridge-descent-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/drawbridge-descent-review.md)|
 |repeat|SCOPED_PASS|Freshrepeat70raised/off/red thenclose0home/gates90/green confirmed.|[evidence-review-lab508.md](../screen-audit-2026-10-21/evidence-review-lab508.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-08-drawbridge-control-entry.png](../screen-audit-2026-10-21/breadth-lab-5-08-drawbridge-control-entry.png)|
 |feedback|SCOPED_PASS|16selectednativeactualhinge/gates/head and15Signals agree; exactlatency/continuousdirectionexclusion/midinhibitunproven.|[evidence-review-lab508.md](../screen-audit-2026-10-21/evidence-review-lab508.md)|
 
-**Remaining / reconciliation:** Named descent acknowledgement-loss and restore/home/barrier/trafficrelease gap closed. No mandatory undocumented reversal/simultaneous/precision gate added.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-08-drawbridge-control.scene.json ](../../scenes/migrated/lab-5-08-drawbridge-control.scene.json), [rungproof-next/docs/help/scenes/lab-5-08-drawbridge-control.md ](../../docs/help/scenes/lab-5-08-drawbridge-control.md)
-
-Declared action inventory (2): Turn BRIDGE CLOSE / OPEN (maintained); Set manual STOPPED feedback NO / YES. Exact declarations/point ownership retained in JSON.
-
 ### lab-5-09-bag-indexing-conveyor
 
-Lab 5.9 - Bag Indexing Conveyor
+Lab 5.9 - Bag Indexing Conveyor — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-09-bag-indexing-conveyor-entry.png](../screen-audit-2026-10-21/breadth-lab-5-09-bag-indexing-conveyor-entry.png)|
-|controls|SCOPED_PASS|Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 actual midforward transition is now independently reviewed. Latest exact closure: Actual pauseTrue→False midforward keeps speed+.5/runTrue and physical bag advances to EXIT; CLEAR alone remains idle; fresh START returns supported bag to ENTRY.|[bag-forward-pause-review.md](bag-forward-pause-review.md) plus preserved original JSON evidence.|
+|controls|SCOPED_PASS|Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 actual midforward transition is now independently reviewed. Latest exact closure: Actual pauseTrue→False midforward keeps speed+.5/runTrue and physical bag advances to EXIT; CLEAR alone remains idle; fresh START returns supported bag to ENTRY.|[evidence-review-lab509.md](../screen-audit-2026-10-21/evidence-review-lab509.md); [lab509-r1-start-forward.png](../screen-audit-2026-10-21/lab509-r1-start-forward.png); [lab509-r1-clear-alone.png](../screen-audit-2026-10-21/lab509-r1-clear-alone.png); [bag-forward-pause-review.md](bag-forward-pause-review.md)|
 |normal_outcome|SCOPED_PASS|Supportedbagforward.5â†’actualEXIT1.28/off/PAUSEFalse; STARTblockedwithoutCLEAR, CLEARalonedoesnotrun, freshSTARTreverse-.5â†’ENTRY-1.58/off.|[evidence-review-lab509.md](../screen-audit-2026-10-21/evidence-review-lab509.md)|
 |stop_reset_restart|SCOPED_PASS|AppStop4472bag.02samepose1.2s/alloff; Run4484restoresreverse-.5 andeventualENTRYstop. Resetinitial-2/entryTrue/commandsFalse.|[evidence-review-lab509.md](../screen-audit-2026-10-21/evidence-review-lab509.md)|
 |recovery|SCOPED_PASS|CLEARloss4325â†’4399bag.62held74RUNNINGscans/runFalse/speed0; restore4439reverse. Forwardpauseinterruption/midinhibitunproven.|[evidence-review-lab509.md](../screen-audit-2026-10-21/evidence-review-lab509.md)|
@@ -1468,40 +945,26 @@ Lab 5.9 - Bag Indexing Conveyor
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-09-bag-indexing-conveyor-entry.png](../screen-audit-2026-10-21/breadth-lab-5-09-bag-indexing-conveyor-entry.png)|
 |feedback|SCOPED_PASS|16selectednativeactualsupportedbag/beams/tenSignals agree; exactendpointlatency/continuousbeltanimationunproven.|[evidence-review-lab509.md](../screen-audit-2026-10-21/evidence-review-lab509.md)|
 
-**Remaining / reconciliation:** The named exposed-control gap is CLOSED by bag-forward-pause-review.md; retain original bounded lifecycle/precision limits, with no new crossproduct requirement.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-09-bag-indexing-conveyor.scene.json ](../../scenes/migrated/lab-5-09-bag-indexing-conveyor.scene.json), [rungproof-next/docs/help/scenes/lab-5-09-bag-indexing-conveyor.md ](../../docs/help/scenes/lab-5-09-bag-indexing-conveyor.md)
-
-Declared action inventory (2): Press START / return restart; Set manual PAUSE BLOCKED / CLEAR. Exact declarations/point ownership retained in JSON.
-
 ### lab-5-10-coating-line
 
-Lab 5.10 - Coating Line
+Lab 5.10 - Coating Line — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-5-10-coating-line-entry.png](../screen-audit-2026-10-21/breadth-lab-5-10-coating-line-entry.png)|
-|controls|SCOPED_PASS|Physical START plus SPRAY READY and VENT READY each have explicit accepted/native response: missing-readiness start gates, freshqualifiedStart, individual ready losses/restores during spray. Q04 actual indexStop/Run-alone also closed. Undefined activeSTART/fault inputs add no control gap.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md); [../screen-audit-2026-10-23/coating-index-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/coating-index-stop-review.md)|
+|controls|SCOPED_PASS|Physical START plus SPRAY READY and VENT READY each have explicit accepted/native response: missing-readiness start gates, freshqualifiedStart, individual ready losses/restores during spray. Q04 actual indexStop/Run-alone also closed. Undefined activeSTART/fault inputs add no control gap.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md); [coating-index-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/coating-index-stop-review.md)|
 |normal_outcome|SCOPED_PASS|Actualindexupstream-2â†’station.01/spray+ventTrueâ†’ventilationonlypurge765(sprayFalse/ventTrue/indexFalse/stationTrue)â†’exit2.23/alloff/noinhibit.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md)|
-|stop_reset_restart|SCOPED_PASS|Initial index uniquely qualified by actual position-1.64/indexTrue/speed.5/bothReadyTrue/sprayFalse/ventFalse at20937. AppStop20982 holds actual supportedworkpiece at-1.19/all3outputsOff/scanunchanged; Run alone20992 resumesindex→station.01spray+vent→supportedexit2.23/all3Off stable. No privatephase or exact spraytiming claim.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md); [../screen-audit-2026-10-23/coating-index-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/coating-index-stop-review.md)|
-|recovery|SCOPED_PASS|Initial index uniquely qualified by actual position-1.64/indexTrue/speed.5/bothReadyTrue/sprayFalse/ventFalse at20937. AppStop20982 holds actual supportedworkpiece at-1.19/all3outputsOff/scanunchanged; Run alone20992 resumesindex→station.01spray+vent→supportedexit2.23/all3Off stable. No privatephase or exact spraytiming claim.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md); [../screen-audit-2026-10-23/coating-index-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/coating-index-stop-review.md)|
+|stop_reset_restart|SCOPED_PASS|Initial index uniquely qualified by actual position-1.64/indexTrue/speed.5/bothReadyTrue/sprayFalse/ventFalse at20937. AppStop20982 holds actual supportedworkpiece at-1.19/all3outputsOff/scanunchanged; Run alone20992 resumesindex→station.01spray+vent→supportedexit2.23/all3Off stable. No privatephase or exact spraytiming claim.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md); [coating-index-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/coating-index-stop-review.md)|
+|recovery|SCOPED_PASS|Initial index uniquely qualified by actual position-1.64/indexTrue/speed.5/bothReadyTrue/sprayFalse/ventFalse at20937. AppStop20982 holds actual supportedworkpiece at-1.19/all3outputsOff/scanunchanged; Run alone20992 resumesindex→station.01spray+vent→supportedexit2.23/all3Off stable. No privatephase or exact spraytiming claim.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md); [coating-index-stop-review.md](../screen-audit-2026-10-21/../screen-audit-2026-10-23/coating-index-stop-review.md)|
 |repeat|SCOPED_PASS|FreshresetsecondcycleactualSpraytrigger andloss/Stoprecovery finishesexit; earliermissedSpraypollnotfailure.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-5-10-coating-line-entry.png](../screen-audit-2026-10-21/breadth-lab-5-10-coating-line-entry.png)|
 |feedback|SCOPED_PASS|22selectednativeactualworkpiece/station/cabinetpilots/13Signals agree, purgecheckpointconfirmeddespitefilename. Fanrotation/plume/coatingquality/exacttimersunproven.|[evidence-review-lab510.md](../screen-audit-2026-10-21/evidence-review-lab510.md)|
 
-**Remaining / reconciliation:** Q04 actual initial-index Stop/held/Run-alone→supportedexit closed. Existing station readiness/purge cases separate. No new privatephase, exacttiming or all-phase inputpermutation requirement.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-5-10-coating-line.scene.json ](../../scenes/migrated/lab-5-10-coating-line.scene.json), [rungproof-next/docs/help/scenes/lab-5-10-coating-line.md ](../../docs/help/scenes/lab-5-10-coating-line.md)
-
-Declared action inventory (3): START cycle; Manual spray ready; Manual ventilation ready. Exact declarations/point ownership retained in JSON.
-
 ### lab-6-07-luggage-weight-sort
 
-Lab 6.7 - Luggage Weight Sort
+Lab 6.7 - Luggage Weight Sort — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-6-07-luggage-weight-sort-entry.png](../screen-audit-2026-10-21/breadth-lab-6-07-luggage-weight-sort-entry.png)|
 |controls|SCOPED_PASS|LOAD, SCALE READY and masscycle12/22/32 all reviewed. No diverter-ready action or boundarymass selection exists; arbitrary massforce is invented. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab607-partial.md](../screen-audit-2026-10-21/evidence-review-lab607-partial.md)|
@@ -1512,18 +975,11 @@ Lab 6.7 - Luggage Weight Sort
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-6-07-luggage-weight-sort-entry.png](../screen-audit-2026-10-21/breadth-lab-6-07-luggage-weight-sort-entry.png)|
 |feedback|SCOPED_PASS|NativeSignals andphysicalnormal/lateralreceiverbag agree; validweightburstclosesearlierweighgap. Transientrejectselect/fulltrajectory/exactthreshold/continuousdivertermotionunproven.|[evidence-review-lab607-partial.md](../screen-audit-2026-10-21/evidence-review-lab607-partial.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. LOAD, SCALE READY and masscycle12/22/32 all reviewed. No diverter-ready action or boundarymass selection exists; arbitrary massforce is invented.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-6-07-luggage-weight-sort.scene.json ](../../scenes/migrated/lab-6-07-luggage-weight-sort.scene.json), [rungproof-next/docs/help/scenes/lab-6-07-luggage-weight-sort.md ](../../docs/help/scenes/lab-6-07-luggage-weight-sort.md)
-
-Declared action inventory (3): Load next bag after exit; Toggle scale ready; Next fixture mass: 12 / 22 / 32 kg. Exact declarations/point ownership retained in JSON.
-
 ### lab-6-08-hand-dryer
 
-Lab 6.8 - Timed Hand-Dryer
+Lab 6.8 - Timed Hand-Dryer — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-6-08-hand-dryer-entry.png](../screen-audit-2026-10-21/breadth-lab-6-08-hand-dryer-entry.png)|
 |controls|SCOPED_PASS|Only insert/withdraw hands declared; actual timeout/rearm/cancel reviewed. No independent heater-inhibit knob exists. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab68.md](../screen-audit-2026-10-21/evidence-review-lab68.md)|
@@ -1534,18 +990,11 @@ Lab 6.8 - Timed Hand-Dryer
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-6-08-hand-dryer-entry.png](../screen-audit-2026-10-21/breadth-lab-6-08-hand-dryer-entry.png)|
 |feedback|SCOPED_PASS|Actualhands/heaterbars/greenblower+amberheaterpilots/countdowndisplay agree6Signals; exactexpiry/thermalfault/fanrateunproven.|[evidence-review-lab68.md](../screen-audit-2026-10-21/evidence-review-lab68.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Only insert/withdraw hands declared; actual timeout/rearm/cancel reviewed. No independent heater-inhibit knob exists.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-6-08-hand-dryer.scene.json ](../../scenes/migrated/lab-6-08-hand-dryer.scene.json), [rungproof-next/docs/help/scenes/lab-6-08-hand-dryer.md ](../../docs/help/scenes/lab-6-08-hand-dryer.md)
-
-Declared action inventory (1): Insert / withdraw hands. Exact declarations/point ownership retained in JSON.
-
 ### lab-9-01-sum-function
 
-Lab 9.1 - Sum Function Block
+Lab 9.1 - Sum Function Block — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-9-01-sum-function-entry.png](../screen-audit-2026-10-21/breadth-lab-9-01-sum-function-entry.png)|
 |controls|SCOPED_PASS|Physical A/B manual selections observed values 0/1/2/5/10; three permissive controls covered all eight combinations. PASS covers recorded selector/toggle actions only; arbitrary entry, held/simultaneous changes and every navigation control remain untested.|[lab901-initial.png](../screen-audit-2026-10-21/lab901-initial.png); [lab901-selected2-5.png](../screen-audit-2026-10-21/lab901-selected2-5.png); [lab901-perm-100.png](../screen-audit-2026-10-21/lab901-perm-100.png); [lab901-perm-110.png](../screen-audit-2026-10-21/lab901-perm-110.png); [lab901-perm-010.png](../screen-audit-2026-10-21/lab901-perm-010.png); [lab901-perm-011.png](../screen-audit-2026-10-21/lab901-perm-011.png); [lab901-perm-111.png](../screen-audit-2026-10-21/lab901-perm-111.png); [lab901-perm-101.png](../screen-audit-2026-10-21/lab901-perm-101.png); [lab901-perm-001.png](../screen-audit-2026-10-21/lab901-perm-001.png); [lab901-perm-000.png](../screen-audit-2026-10-21/lab901-perm-000.png); [lab901-perm-100-again.png](../screen-audit-2026-10-21/lab901-perm-100-again.png); [lab901-perm-110-again.png](../screen-audit-2026-10-21/lab901-perm-110-again.png); [lab901-perm-111-again.png](../screen-audit-2026-10-21/lab901-perm-111-again.png); [lab901-A5-B5.png](../screen-audit-2026-10-21/lab901-A5-B5.png); [lab901-A10-B5.png](../screen-audit-2026-10-21/lab901-A10-B5.png); [lab901-A0-B5.png](../screen-audit-2026-10-21/lab901-A0-B5.png); [lab901-A1-B5.png](../screen-audit-2026-10-21/lab901-A1-B5.png); [lab901-A2-B10.png](../screen-audit-2026-10-21/lab901-A2-B10.png); [lab901-A2-B0.png](../screen-audit-2026-10-21/lab901-A2-B0.png); [lab901-A2-B1.png](../screen-audit-2026-10-21/lab901-A2-B1.png); [lab901-A2-B2.png](../screen-audit-2026-10-21/lab901-A2-B2.png); [lab901-app-stop.png](../screen-audit-2026-10-21/lab901-app-stop.png); [lab901-app-run.png](../screen-audit-2026-10-21/lab901-app-run.png); [lab901-active-reset.png](../screen-audit-2026-10-21/lab901-active-reset.png); [lab901-reset-run.png](../screen-audit-2026-10-21/lab901-reset-run.png); [lab901-B-wrap5-final.png](../screen-audit-2026-10-21/lab901-B-wrap5-final.png); [evidence-review-lab901.md](../screen-audit-2026-10-21/evidence-review-lab901.md); [lab901-review-unique.json](../screen-audit-2026-10-21/lab901-review-unique.json)|
@@ -1556,18 +1005,11 @@ Lab 9.1 - Sum Function Block
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-9-01-sum-function-entry.png](../screen-audit-2026-10-21/breadth-lab-9-01-sum-function-entry.png)|
 |feedback|SCOPED_PASS|Physical A/B/SUM readouts agreed with visible Signals and green validity lamp for all reviewed unique frames. Invalidity does not necessarily clear the old numeric result; retained SUM7 was observed and is not a demonstrated defect.|[lab901-initial.png](../screen-audit-2026-10-21/lab901-initial.png); [lab901-selected2-5.png](../screen-audit-2026-10-21/lab901-selected2-5.png); [lab901-perm-100.png](../screen-audit-2026-10-21/lab901-perm-100.png); [lab901-perm-110.png](../screen-audit-2026-10-21/lab901-perm-110.png); [lab901-perm-010.png](../screen-audit-2026-10-21/lab901-perm-010.png); [lab901-perm-011.png](../screen-audit-2026-10-21/lab901-perm-011.png); [lab901-perm-111.png](../screen-audit-2026-10-21/lab901-perm-111.png); [lab901-perm-101.png](../screen-audit-2026-10-21/lab901-perm-101.png); [lab901-perm-001.png](../screen-audit-2026-10-21/lab901-perm-001.png); [lab901-perm-000.png](../screen-audit-2026-10-21/lab901-perm-000.png); [lab901-perm-100-again.png](../screen-audit-2026-10-21/lab901-perm-100-again.png); [lab901-perm-110-again.png](../screen-audit-2026-10-21/lab901-perm-110-again.png); [lab901-perm-111-again.png](../screen-audit-2026-10-21/lab901-perm-111-again.png); [lab901-A5-B5.png](../screen-audit-2026-10-21/lab901-A5-B5.png); [lab901-A10-B5.png](../screen-audit-2026-10-21/lab901-A10-B5.png); [lab901-A0-B5.png](../screen-audit-2026-10-21/lab901-A0-B5.png); [lab901-A1-B5.png](../screen-audit-2026-10-21/lab901-A1-B5.png); [lab901-A2-B10.png](../screen-audit-2026-10-21/lab901-A2-B10.png); [lab901-A2-B0.png](../screen-audit-2026-10-21/lab901-A2-B0.png); [lab901-A2-B1.png](../screen-audit-2026-10-21/lab901-A2-B1.png); [lab901-A2-B2.png](../screen-audit-2026-10-21/lab901-A2-B2.png); [lab901-app-stop.png](../screen-audit-2026-10-21/lab901-app-stop.png); [lab901-app-run.png](../screen-audit-2026-10-21/lab901-app-run.png); [lab901-active-reset.png](../screen-audit-2026-10-21/lab901-active-reset.png); [lab901-reset-run.png](../screen-audit-2026-10-21/lab901-reset-run.png); [lab901-B-wrap5-final.png](../screen-audit-2026-10-21/lab901-B-wrap5-final.png); [evidence-review-lab901.md](../screen-audit-2026-10-21/evidence-review-lab901.md); [lab901-review-unique.json](../screen-audit-2026-10-21/lab901-review-unique.json)|
 
-**Remaining / reconciliation:** Exposed operands0/1/2/5/10 and all eight permissives/arithmetic/lifecycle covered. Arbitrary entry/overflow is not an exposed normal requirement; N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-01-sum-function.scene.json ](../../scenes/migrated/lab-9-01-sum-function.scene.json), [rungproof-next/docs/help/scenes/lab-9-01-sum-function.md ](../../docs/help/scenes/lab-9-01-sum-function.md)
-
-Declared action inventory (5): Toggle operand a valid; Toggle operand b valid; Toggle calculate request; Cycle operand_a (0, 1, 2, 5, 10); Cycle operand_b (0, 1, 2, 5, 10). Exact declarations/point ownership retained in JSON.
-
 ### lab-9-02-product-function
 
-Lab 9.2 - Product Function Block
+Lab 9.2 - Product Function Block — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-9-02-product-function-entry.png](../screen-audit-2026-10-21/breadth-lab-9-02-product-function-entry.png)|
 |controls|SCOPED_PASS|Physical operand selections0/1/2/5/10 and all eight validity/CALCULATE combinations responded in recorded cases; arbitrary or simultaneous entry remains untested.|[lab902-00-initial.png](../screen-audit-2026-10-21/lab902-00-initial.png); [lab902-01-selected2-5.png](../screen-audit-2026-10-21/lab902-01-selected2-5.png); [lab902-02-perm-100.png](../screen-audit-2026-10-21/lab902-02-perm-100.png); [lab902-03-perm-110.png](../screen-audit-2026-10-21/lab902-03-perm-110.png); [lab902-04-perm-010.png](../screen-audit-2026-10-21/lab902-04-perm-010.png); [lab902-05-perm-011.png](../screen-audit-2026-10-21/lab902-05-perm-011.png); [lab902-06-perm-111.png](../screen-audit-2026-10-21/lab902-06-perm-111.png); [lab902-07-perm-101.png](../screen-audit-2026-10-21/lab902-07-perm-101.png); [lab902-08-perm-001.png](../screen-audit-2026-10-21/lab902-08-perm-001.png); [lab902-09-perm-000.png](../screen-audit-2026-10-21/lab902-09-perm-000.png); [lab902-10-perm-100-again.png](../screen-audit-2026-10-21/lab902-10-perm-100-again.png); [lab902-11-perm-110-again.png](../screen-audit-2026-10-21/lab902-11-perm-110-again.png); [lab902-12-perm-111-again.png](../screen-audit-2026-10-21/lab902-12-perm-111-again.png); [lab902-13-A5-B5.png](../screen-audit-2026-10-21/lab902-13-A5-B5.png); [lab902-14-A10-B5.png](../screen-audit-2026-10-21/lab902-14-A10-B5.png); [lab902-15-A0-B5.png](../screen-audit-2026-10-21/lab902-15-A0-B5.png); [lab902-16-A1-B5.png](../screen-audit-2026-10-21/lab902-16-A1-B5.png); [lab902-17-A2-B5.png](../screen-audit-2026-10-21/lab902-17-A2-B5.png); [lab902-18-A2-B10.png](../screen-audit-2026-10-21/lab902-18-A2-B10.png); [lab902-19-A2-B0.png](../screen-audit-2026-10-21/lab902-19-A2-B0.png); [lab902-20-A2-B1.png](../screen-audit-2026-10-21/lab902-20-A2-B1.png); [lab902-21-A2-B2.png](../screen-audit-2026-10-21/lab902-21-A2-B2.png); [lab902-22-A2-B5.png](../screen-audit-2026-10-21/lab902-22-A2-B5.png); [lab902-23-app-stop.png](../screen-audit-2026-10-21/lab902-23-app-stop.png); [lab902-24-app-run.png](../screen-audit-2026-10-21/lab902-24-app-run.png); [lab902-25-active-reset.png](../screen-audit-2026-10-21/lab902-25-active-reset.png); [lab902-26-reset-run.png](../screen-audit-2026-10-21/lab902-26-reset-run.png); [evidence-review-lab902.md](../screen-audit-2026-10-21/evidence-review-lab902.md)|
@@ -1578,21 +1020,14 @@ Lab 9.2 - Product Function Block
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-9-02-product-function-entry.png](../screen-audit-2026-10-21/breadth-lab-9-02-product-function-entry.png)|
 |feedback|SCOPED_PASS|Physical A/B/PRODUCT digits agreed with seven visible Signals and green validity lamp. Value0 with validitytrue was distinguished from invalid0; stale numeric10 with validityfalse is allowed.|[lab902-00-initial.png](../screen-audit-2026-10-21/lab902-00-initial.png); [lab902-01-selected2-5.png](../screen-audit-2026-10-21/lab902-01-selected2-5.png); [lab902-02-perm-100.png](../screen-audit-2026-10-21/lab902-02-perm-100.png); [lab902-03-perm-110.png](../screen-audit-2026-10-21/lab902-03-perm-110.png); [lab902-04-perm-010.png](../screen-audit-2026-10-21/lab902-04-perm-010.png); [lab902-05-perm-011.png](../screen-audit-2026-10-21/lab902-05-perm-011.png); [lab902-06-perm-111.png](../screen-audit-2026-10-21/lab902-06-perm-111.png); [lab902-07-perm-101.png](../screen-audit-2026-10-21/lab902-07-perm-101.png); [lab902-08-perm-001.png](../screen-audit-2026-10-21/lab902-08-perm-001.png); [lab902-09-perm-000.png](../screen-audit-2026-10-21/lab902-09-perm-000.png); [lab902-10-perm-100-again.png](../screen-audit-2026-10-21/lab902-10-perm-100-again.png); [lab902-11-perm-110-again.png](../screen-audit-2026-10-21/lab902-11-perm-110-again.png); [lab902-12-perm-111-again.png](../screen-audit-2026-10-21/lab902-12-perm-111-again.png); [lab902-13-A5-B5.png](../screen-audit-2026-10-21/lab902-13-A5-B5.png); [lab902-14-A10-B5.png](../screen-audit-2026-10-21/lab902-14-A10-B5.png); [lab902-15-A0-B5.png](../screen-audit-2026-10-21/lab902-15-A0-B5.png); [lab902-16-A1-B5.png](../screen-audit-2026-10-21/lab902-16-A1-B5.png); [lab902-17-A2-B5.png](../screen-audit-2026-10-21/lab902-17-A2-B5.png); [lab902-18-A2-B10.png](../screen-audit-2026-10-21/lab902-18-A2-B10.png); [lab902-19-A2-B0.png](../screen-audit-2026-10-21/lab902-19-A2-B0.png); [lab902-20-A2-B1.png](../screen-audit-2026-10-21/lab902-20-A2-B1.png); [lab902-21-A2-B2.png](../screen-audit-2026-10-21/lab902-21-A2-B2.png); [lab902-22-A2-B5.png](../screen-audit-2026-10-21/lab902-22-A2-B5.png); [lab902-23-app-stop.png](../screen-audit-2026-10-21/lab902-23-app-stop.png); [lab902-24-app-run.png](../screen-audit-2026-10-21/lab902-24-app-run.png); [lab902-25-active-reset.png](../screen-audit-2026-10-21/lab902-25-active-reset.png); [lab902-26-reset-run.png](../screen-audit-2026-10-21/lab902-26-reset-run.png); [evidence-review-lab902.md](../screen-audit-2026-10-21/evidence-review-lab902.md)|
 
-**Remaining / reconciliation:** Exposed operand set/all eight valid combinations/validzero and lifecycle covered. Arbitrary simultaneous numeric entry is outside reviewed controls; N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-02-product-function.scene.json ](../../scenes/migrated/lab-9-02-product-function.scene.json), [rungproof-next/docs/help/scenes/lab-9-02-product-function.md ](../../docs/help/scenes/lab-9-02-product-function.md)
-
-Declared action inventory (5): Toggle factor a valid; Toggle factor b valid; Toggle calculate request; Cycle factor_a (0, 1, 2, 5, 10); Cycle factor_b (0, 1, 2, 5, 10). Exact declarations/point ownership retained in JSON.
-
 ### lab-9-03-sum-and-counter-function
 
-Lab 9.3 - Sum and Counter Function
+Lab 9.3 - Sum and Counter Function — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-9-03-sum-and-counter-function-entry.png](../screen-audit-2026-10-21/breadth-lab-9-03-sum-and-counter-function-entry.png)|
-|controls|SCOPED_PASS|Correctedphysicalcalculate/complete inputroute; operand2/5+valid-onlynocomplete stays0/invalid; request/valid/completeallTruequalified. Alltruthcombos/transienteventpilot unproven. Latest exact closure: Both independent A/B physical NEXT cycles0→1→2→5→10→0 directly show matching SUM with other operand0, resultValidTrue/eventCount1 throughout held CALL COMPLETE.|[sum-counter-preset-cycle-review.md](sum-counter-preset-cycle-review.md) plus preserved original JSON evidence.|
+|controls|SCOPED_PASS|Correctedphysicalcalculate/complete inputroute; operand2/5+valid-onlynocomplete stays0/invalid; request/valid/completeallTruequalified. Alltruthcombos/transienteventpilot unproven. Latest exact closure: Both independent A/B physical NEXT cycles0→1→2→5→10→0 directly show matching SUM with other operand0, resultValidTrue/eventCount1 throughout held CALL COMPLETE.|[evidence-review-lab903-legal.md](../screen-audit-2026-10-21/evidence-review-lab903-legal.md); [sum-counter-preset-cycle-review.md](sum-counter-preset-cycle-review.md)|
 |normal_outcome|SCOPED_PASS|Repaired supplied reference opened through native GUI, SUM7/COUNT1 held, fresh completionCOUNT2; Stop/Run retained count, Reset and fresh2/5 repeat. Original incompatible preset remains historical; no full numeric range claim.|[evidence-review-fix-shipped-sum-counter.md](../screen-audit-2026-10-21/evidence-review-fix-shipped-sum-counter.md)|
 |stop_reset_restart|SCOPED_PASS|AppStopvisible0/invalid; Runrepublishessum7/count6validwithoutnewevent; Resetclear.|[evidence-review-lab903-legal.md](../screen-audit-2026-10-21/evidence-review-lab903-legal.md)|
 |recovery|SCOPED_PASS|Invalidclearsvaliditywhilepreservingsum/count; restoreheldvalidnoextracount. Stop/Runretainedstate andResetfreshvalidzero recover.|[evidence-review-lab903-legal.md](../screen-audit-2026-10-21/evidence-review-lab903-legal.md)|
@@ -1600,18 +1035,11 @@ Lab 9.3 - Sum and Counter Function
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-9-03-sum-and-counter-function-entry.png](../screen-audit-2026-10-21/breadth-lab-9-03-sum-and-counter-function-entry.png)|
 |feedback|SCOPED_PASS|Native9Signals exacte arithmetic/count,physicalvaliditygreen/dark andchangingdisplayglyphsagree. Exactsmallprojecteddigits/transienteventpilot unproven.|[evidence-review-lab903-legal.md](../screen-audit-2026-10-21/evidence-review-lab903-legal.md)|
 
-**Remaining / reconciliation:** The named exposed-control gap is CLOSED by sum-counter-preset-cycle-review.md; retain original bounded lifecycle/precision limits, with no new crossproduct requirement.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-03-sum-and-counter-function.scene.json ](../../scenes/migrated/lab-9-03-sum-and-counter-function.scene.json), [rungproof-next/docs/help/scenes/lab-9-03-sum-and-counter-function.md ](../../docs/help/scenes/lab-9-03-sum-and-counter-function.md)
-
-Declared action inventory (5): Toggle inputs valid; Toggle calculate request; Toggle call complete; Cycle operand_a (0, 1, 2, 5, 10); Cycle operand_b (0, 1, 2, 5, 10). Exact declarations/point ownership retained in JSON.
-
 ### lab-9-04-function-selector
 
-Lab 9.4 - Function Selector
+Lab 9.4 - Function Selector — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-9-04-function-selector-entry.png](../screen-audit-2026-10-21/breadth-lab-9-04-function-selector-entry.png)|
 |controls|SCOPED_PASS|Physical choice selector0/1/2/99 and each operand selector0/1/2/5/10 observed. Each of three Boolean permissives separately dropped and restored. This is not all eight Boolean combinations, held/simultaneous input or arbitrary numeric entry coverage.|[lab904-00-initial.png](../screen-audit-2026-10-21/lab904-00-initial.png); [lab904-01-setup-invalid-choice0.png](../screen-audit-2026-10-21/lab904-01-setup-invalid-choice0.png); [lab904-02-choice1.png](../screen-audit-2026-10-21/lab904-02-choice1.png); [lab904-03-choice2.png](../screen-audit-2026-10-21/lab904-03-choice2.png); [lab904-04-choice99.png](../screen-audit-2026-10-21/lab904-04-choice99.png); [lab904-05-choice0.png](../screen-audit-2026-10-21/lab904-05-choice0.png); [lab904-06-choice1.png](../screen-audit-2026-10-21/lab904-06-choice1.png); [lab904-07-permissive0-off.png](../screen-audit-2026-10-21/lab904-07-permissive0-off.png); [lab904-08-permissive0-on.png](../screen-audit-2026-10-21/lab904-08-permissive0-on.png); [lab904-09-permissive1-off.png](../screen-audit-2026-10-21/lab904-09-permissive1-off.png); [lab904-10-permissive1-on.png](../screen-audit-2026-10-21/lab904-10-permissive1-on.png); [lab904-11-permissive2-off.png](../screen-audit-2026-10-21/lab904-11-permissive2-off.png); [lab904-12-permissive2-on.png](../screen-audit-2026-10-21/lab904-12-permissive2-on.png); [lab904-13-A5-sum.png](../screen-audit-2026-10-21/lab904-13-A5-sum.png); [lab904-14-A5-product.png](../screen-audit-2026-10-21/lab904-14-A5-product.png); [lab904-A10-product-recheck.png](../screen-audit-2026-10-21/lab904-A10-product-recheck.png); [lab904-16-A0-product.png](../screen-audit-2026-10-21/lab904-16-A0-product.png); [lab904-17-A1-product.png](../screen-audit-2026-10-21/lab904-17-A1-product.png); [lab904-18-A2-product.png](../screen-audit-2026-10-21/lab904-18-A2-product.png); [lab904-19-B10-product.png](../screen-audit-2026-10-21/lab904-19-B10-product.png); [lab904-20-B0-product.png](../screen-audit-2026-10-21/lab904-20-B0-product.png); [lab904-21-B1-product.png](../screen-audit-2026-10-21/lab904-21-B1-product.png); [lab904-22-B2-product.png](../screen-audit-2026-10-21/lab904-22-B2-product.png); [lab904-23-B5-product.png](../screen-audit-2026-10-21/lab904-23-B5-product.png); [lab904-24-app-stop.png](../screen-audit-2026-10-21/lab904-24-app-stop.png); [lab904-25-app-run.png](../screen-audit-2026-10-21/lab904-25-app-run.png); [lab904-26-active-reset.png](../screen-audit-2026-10-21/lab904-26-active-reset.png); [lab904-27-reset-run.png](../screen-audit-2026-10-21/lab904-27-reset-run.png); [lab904-28-fresh-repeated-sum.png](../screen-audit-2026-10-21/lab904-28-fresh-repeated-sum.png); [evidence-review-lab904.md](../screen-audit-2026-10-21/evidence-review-lab904.md); [lab904-review-unique.json](../screen-audit-2026-10-21/lab904-review-unique.json)|
@@ -1622,18 +1050,11 @@ Lab 9.4 - Function Selector
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-9-04-function-selector-entry.png](../screen-audit-2026-10-21/breadth-lab-9-04-function-selector-entry.png)|
 |feedback|SCOPED_PASS|Physical choice/A/B/RESULT digits, eight visible Signals and green validity lamp agreed for all clean reviewed frames. Numeric retention under invalid choice/permissive loss is distinct from validity and is not a demonstrated defect.|[lab904-00-initial.png](../screen-audit-2026-10-21/lab904-00-initial.png); [lab904-01-setup-invalid-choice0.png](../screen-audit-2026-10-21/lab904-01-setup-invalid-choice0.png); [lab904-02-choice1.png](../screen-audit-2026-10-21/lab904-02-choice1.png); [lab904-03-choice2.png](../screen-audit-2026-10-21/lab904-03-choice2.png); [lab904-04-choice99.png](../screen-audit-2026-10-21/lab904-04-choice99.png); [lab904-05-choice0.png](../screen-audit-2026-10-21/lab904-05-choice0.png); [lab904-06-choice1.png](../screen-audit-2026-10-21/lab904-06-choice1.png); [lab904-07-permissive0-off.png](../screen-audit-2026-10-21/lab904-07-permissive0-off.png); [lab904-08-permissive0-on.png](../screen-audit-2026-10-21/lab904-08-permissive0-on.png); [lab904-09-permissive1-off.png](../screen-audit-2026-10-21/lab904-09-permissive1-off.png); [lab904-10-permissive1-on.png](../screen-audit-2026-10-21/lab904-10-permissive1-on.png); [lab904-11-permissive2-off.png](../screen-audit-2026-10-21/lab904-11-permissive2-off.png); [lab904-12-permissive2-on.png](../screen-audit-2026-10-21/lab904-12-permissive2-on.png); [lab904-13-A5-sum.png](../screen-audit-2026-10-21/lab904-13-A5-sum.png); [lab904-14-A5-product.png](../screen-audit-2026-10-21/lab904-14-A5-product.png); [lab904-A10-product-recheck.png](../screen-audit-2026-10-21/lab904-A10-product-recheck.png); [lab904-16-A0-product.png](../screen-audit-2026-10-21/lab904-16-A0-product.png); [lab904-17-A1-product.png](../screen-audit-2026-10-21/lab904-17-A1-product.png); [lab904-18-A2-product.png](../screen-audit-2026-10-21/lab904-18-A2-product.png); [lab904-19-B10-product.png](../screen-audit-2026-10-21/lab904-19-B10-product.png); [lab904-20-B0-product.png](../screen-audit-2026-10-21/lab904-20-B0-product.png); [lab904-21-B1-product.png](../screen-audit-2026-10-21/lab904-21-B1-product.png); [lab904-22-B2-product.png](../screen-audit-2026-10-21/lab904-22-B2-product.png); [lab904-23-B5-product.png](../screen-audit-2026-10-21/lab904-23-B5-product.png); [lab904-24-app-stop.png](../screen-audit-2026-10-21/lab904-24-app-stop.png); [lab904-25-app-run.png](../screen-audit-2026-10-21/lab904-25-app-run.png); [lab904-26-active-reset.png](../screen-audit-2026-10-21/lab904-26-active-reset.png); [lab904-27-reset-run.png](../screen-audit-2026-10-21/lab904-27-reset-run.png); [lab904-28-fresh-repeated-sum.png](../screen-audit-2026-10-21/lab904-28-fresh-repeated-sum.png); [evidence-review-lab904.md](../screen-audit-2026-10-21/evidence-review-lab904.md); [lab904-review-unique.json](../screen-audit-2026-10-21/lab904-review-unique.json)|
 
-**Remaining / reconciliation:** All eight Boolean permissive combinations not covered, only individual drops/restores; complete truth table if required for the three-input validity contract. Exposed choice0/1/2/99 and arithmetic covered. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-04-function-selector.scene.json ](../../scenes/migrated/lab-9-04-function-selector.scene.json), [rungproof-next/docs/help/scenes/lab-9-04-function-selector.md ](../../docs/help/scenes/lab-9-04-function-selector.md)
-
-Declared action inventory (6): Toggle operand set valid; Toggle function select valid; Toggle calculate request; Next operand_a; Next operand_b; Next function (1 SUM, 2 PRODUCT). Exact declarations/point ownership retained in JSON.
-
 ### lab-9-10-box-volume
 
-Lab 9.10 - Box Volume Calculation
+Lab 9.10 - Box Volume Calculation — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-9-10-box-volume-entry.png](../screen-audit-2026-10-21/breadth-lab-9-10-box-volume-entry.png)|
 |controls|SCOPED_PASS|Corrected physical L/W/H selectors changed intended symbolic dimensions across0/250/500/720/850/1000, and each validity flag responded. Original assumed row ordering was a QA calibration error, not a demonstrated binding or hitbox bug.|[lab910-00-initial-r2.png](../screen-audit-2026-10-21/lab910-00-initial-r2.png); [lab910-01-flags-on-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-01-flags-on-zero-invalid-r2.png); [lab910-02-length250-r2.png](../screen-audit-2026-10-21/lab910-02-length250-r2.png); [lab910-03-length500-r2.png](../screen-audit-2026-10-21/lab910-03-length500-r2.png); [lab910-04-length720-r2.png](../screen-audit-2026-10-21/lab910-04-length720-r2.png); [lab910-05-length850-r2.png](../screen-audit-2026-10-21/lab910-05-length850-r2.png); [lab910-06-width250-r2.png](../screen-audit-2026-10-21/lab910-06-width250-r2.png); [lab910-07-width500-r2.png](../screen-audit-2026-10-21/lab910-07-width500-r2.png); [lab910-08-width720-r2.png](../screen-audit-2026-10-21/lab910-08-width720-r2.png); [lab910-09-height250-r2.png](../screen-audit-2026-10-21/lab910-09-height250-r2.png); [lab910-10-height500-r2.png](../screen-audit-2026-10-21/lab910-10-height500-r2.png); [lab910-11-height720-r2.png](../screen-audit-2026-10-21/lab910-11-height720-r2.png); [lab910-12-flag0-off-r2.png](../screen-audit-2026-10-21/lab910-12-flag0-off-r2.png); [lab910-13-flag0-on-r2.png](../screen-audit-2026-10-21/lab910-13-flag0-on-r2.png); [lab910-14-flag1-off-r2.png](../screen-audit-2026-10-21/lab910-14-flag1-off-r2.png); [lab910-15-flag1-on-r2.png](../screen-audit-2026-10-21/lab910-15-flag1-on-r2.png); [lab910-16-flag2-off-r2.png](../screen-audit-2026-10-21/lab910-16-flag2-off-r2.png); [lab910-17-flag2-on-r2.png](../screen-audit-2026-10-21/lab910-17-flag2-on-r2.png); [lab910-18-length1000-r2.png](../screen-audit-2026-10-21/lab910-18-length1000-r2.png); [lab910-19-width850-r2.png](../screen-audit-2026-10-21/lab910-19-width850-r2.png); [lab910-20-width1000-r2.png](../screen-audit-2026-10-21/lab910-20-width1000-r2.png); [lab910-21-height850-r2.png](../screen-audit-2026-10-21/lab910-21-height850-r2.png); [lab910-22-height1000-r2.png](../screen-audit-2026-10-21/lab910-22-height1000-r2.png); [lab910-23-length-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-23-length-zero-invalid-r2.png); [lab910-24-length250-recover-r2.png](../screen-audit-2026-10-21/lab910-24-length250-recover-r2.png); [lab910-25-width-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-25-width-zero-invalid-r2.png); [lab910-26-width250-recover-r2.png](../screen-audit-2026-10-21/lab910-26-width250-recover-r2.png); [lab910-27-height-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-27-height-zero-invalid-r2.png); [lab910-28-height250-recover-r2.png](../screen-audit-2026-10-21/lab910-28-height250-recover-r2.png); [lab910-29-app-stop-r2.png](../screen-audit-2026-10-21/lab910-29-app-stop-r2.png); [lab910-30-app-run-r2.png](../screen-audit-2026-10-21/lab910-30-app-run-r2.png); [lab910-31-active-reset-r2.png](../screen-audit-2026-10-21/lab910-31-active-reset-r2.png); [lab910-32-reset-run-r2.png](../screen-audit-2026-10-21/lab910-32-reset-run-r2.png); [lab910-33-fresh-repeated-valid-r2.png](../screen-audit-2026-10-21/lab910-33-fresh-repeated-valid-r2.png); [evidence-review-lab910-r2.md](../screen-audit-2026-10-21/evidence-review-lab910-r2.md)|
@@ -1644,40 +1065,26 @@ Lab 9.10 - Box Volume Calculation
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-9-10-box-volume-entry.png](../screen-audit-2026-10-21/breadth-lab-9-10-box-volume-entry.png)|
 |feedback|SCOPED_PASS|Readable native Signals establish exact dimensions/result; visible green lamp agrees with validity. Physical projected numeric digits and fine label legibility remain unproven; no numeric physical-readout pass is implied.|[lab910-00-initial-r2.png](../screen-audit-2026-10-21/lab910-00-initial-r2.png); [lab910-01-flags-on-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-01-flags-on-zero-invalid-r2.png); [lab910-02-length250-r2.png](../screen-audit-2026-10-21/lab910-02-length250-r2.png); [lab910-03-length500-r2.png](../screen-audit-2026-10-21/lab910-03-length500-r2.png); [lab910-04-length720-r2.png](../screen-audit-2026-10-21/lab910-04-length720-r2.png); [lab910-05-length850-r2.png](../screen-audit-2026-10-21/lab910-05-length850-r2.png); [lab910-06-width250-r2.png](../screen-audit-2026-10-21/lab910-06-width250-r2.png); [lab910-07-width500-r2.png](../screen-audit-2026-10-21/lab910-07-width500-r2.png); [lab910-08-width720-r2.png](../screen-audit-2026-10-21/lab910-08-width720-r2.png); [lab910-09-height250-r2.png](../screen-audit-2026-10-21/lab910-09-height250-r2.png); [lab910-10-height500-r2.png](../screen-audit-2026-10-21/lab910-10-height500-r2.png); [lab910-11-height720-r2.png](../screen-audit-2026-10-21/lab910-11-height720-r2.png); [lab910-12-flag0-off-r2.png](../screen-audit-2026-10-21/lab910-12-flag0-off-r2.png); [lab910-13-flag0-on-r2.png](../screen-audit-2026-10-21/lab910-13-flag0-on-r2.png); [lab910-14-flag1-off-r2.png](../screen-audit-2026-10-21/lab910-14-flag1-off-r2.png); [lab910-15-flag1-on-r2.png](../screen-audit-2026-10-21/lab910-15-flag1-on-r2.png); [lab910-16-flag2-off-r2.png](../screen-audit-2026-10-21/lab910-16-flag2-off-r2.png); [lab910-17-flag2-on-r2.png](../screen-audit-2026-10-21/lab910-17-flag2-on-r2.png); [lab910-18-length1000-r2.png](../screen-audit-2026-10-21/lab910-18-length1000-r2.png); [lab910-19-width850-r2.png](../screen-audit-2026-10-21/lab910-19-width850-r2.png); [lab910-20-width1000-r2.png](../screen-audit-2026-10-21/lab910-20-width1000-r2.png); [lab910-21-height850-r2.png](../screen-audit-2026-10-21/lab910-21-height850-r2.png); [lab910-22-height1000-r2.png](../screen-audit-2026-10-21/lab910-22-height1000-r2.png); [lab910-23-length-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-23-length-zero-invalid-r2.png); [lab910-24-length250-recover-r2.png](../screen-audit-2026-10-21/lab910-24-length250-recover-r2.png); [lab910-25-width-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-25-width-zero-invalid-r2.png); [lab910-26-width250-recover-r2.png](../screen-audit-2026-10-21/lab910-26-width250-recover-r2.png); [lab910-27-height-zero-invalid-r2.png](../screen-audit-2026-10-21/lab910-27-height-zero-invalid-r2.png); [lab910-28-height250-recover-r2.png](../screen-audit-2026-10-21/lab910-28-height250-recover-r2.png); [lab910-29-app-stop-r2.png](../screen-audit-2026-10-21/lab910-29-app-stop-r2.png); [lab910-30-app-run-r2.png](../screen-audit-2026-10-21/lab910-30-app-run-r2.png); [lab910-31-active-reset-r2.png](../screen-audit-2026-10-21/lab910-31-active-reset-r2.png); [lab910-32-reset-run-r2.png](../screen-audit-2026-10-21/lab910-32-reset-run-r2.png); [lab910-33-fresh-repeated-valid-r2.png](../screen-audit-2026-10-21/lab910-33-fresh-repeated-valid-r2.png); [evidence-review-lab910-r2.md](../screen-audit-2026-10-21/evidence-review-lab910-r2.md)|
 
-**Remaining / reconciliation:** Complete validity-flag truth combinations beyond individual drops; projected physical digits remain unread if physical readout correctness is claimed. Dimension selectors/zero invalidity/arithmetic and lifecycle covered. N1.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-10-box-volume.scene.json ](../../scenes/migrated/lab-9-10-box-volume.scene.json), [rungproof-next/docs/help/scenes/lab-9-10-box-volume.md ](../../docs/help/scenes/lab-9-10-box-volume.md)
-
-Declared action inventory (6): Toggle length valid; Toggle width valid; Toggle height valid; Next length (mm); Next width (mm); Next height (mm). Exact declarations/point ownership retained in JSON.
-
 ### lab-9-11-pallet-counting
 
-Lab 9.11 - Pallet Count Function â€” demo alias demo-4-batch-process
+Lab 9.11 - Pallet Count Function — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Opened this demo through numbered curriculum rail; matching demo title, scene and running local simulator observed. Standalone scenario path not covered. Same underlying scene ID, no duplicate standalone route.|[demo4-curriculum-progress.png](../screen-audit-2026-10-21/demo4-curriculum-progress.png)|
-|controls|SCOPED_PASS|Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-retention-repeat-review.md](demo4-retention-repeat-review.md); preserved original evidence in JSON.|
+|controls|SCOPED_PASS|Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-five-events.png](../screen-audit-2026-10-21/demo4-five-events.png); [demo4-curriculum-progress.png](../screen-audit-2026-10-21/demo4-curriculum-progress.png); [demo4-second-batch-first-event.png](../screen-audit-2026-10-21/demo4-second-batch-first-event.png); [demo4-retention-repeat-review.md](demo4-retention-repeat-review.md)|
 |normal_outcome|SCOPED_PASS|First five-event valid batch reached completion through visible controls; invalid/held-event edge cases remain untested.|[demo4-five-events.png](../screen-audit-2026-10-21/demo4-five-events.png); [demo4-curriculum-progress.png](../screen-audit-2026-10-21/demo4-curriculum-progress.png)|
-|stop_reset_restart|SCOPED_PASS|Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-retention-repeat-review.md](demo4-retention-repeat-review.md); preserved original evidence in JSON.|
-|recovery|SCOPED_PASS| Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-retention-repeat-review.md](demo4-retention-repeat-review.md); preserved original evidence in JSON.|
-|repeat|SCOPED_PASS|Machine Reset to zero and first valid event of second batch counted one. A second complete five-event batch was not established. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-retention-repeat-review.md](demo4-retention-repeat-review.md); preserved original evidence in JSON.|
-|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.||
-|feedback|SCOPED_PASS|Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-retention-repeat-review.md](demo4-retention-repeat-review.md); preserved original evidence in JSON.|
-
-**Remaining / reconciliation:** Actual machineSTOP acknowledgement/response remains unproven: named oldimage still shows Runningpilot lit. MachineRESET0 supported. Independent AppStop/count projection-retention and full second5eventbatch remain Q09; batch2count1 alone is not a fullrepeat.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-11-pallet-counting.scene.json ](../../scenes/migrated/lab-9-11-pallet-counting.scene.json), [rungproof-next/docs/help/scenes/lab-9-11-pallet-counting.md ](../../docs/help/scenes/lab-9-11-pallet-counting.md)
-
-Declared action inventory (6): Machine Start pushbutton; Machine Stop pushbutton; Machine Reset pushbutton; New pallet detection event; Pallet type valid; Count request. Exact declarations/point ownership retained in JSON.
+|stop_reset_restart|SCOPED_PASS|Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[breadth-lab-9-11-pallet-counting-run.png](../screen-audit-2026-10-21/breadth-lab-9-11-pallet-counting-run.png); [breadth-lab-9-11-pallet-counting-reset.png](../screen-audit-2026-10-21/breadth-lab-9-11-pallet-counting-reset.png); [demo4-retention-repeat-review.md](demo4-retention-repeat-review.md)|
+|recovery|SCOPED_PASS| Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-retention-repeat-review.md](demo4-retention-repeat-review.md)|
+|repeat|SCOPED_PASS|Machine Reset to zero and first valid event of second batch counted one. A second complete five-event batch was not established. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-second-batch-first-event.png](../screen-audit-2026-10-21/demo4-second-batch-first-event.png); [demo4-curriculum-progress.png](../screen-audit-2026-10-21/demo4-curriculum-progress.png); [demo4-retention-repeat-review.md](demo4-retention-repeat-review.md)|
+|navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[['breadth-lab-9-11-pallet-counting-entry.png']](../screen-audit-2026-10-21/['breadth-lab-9-11-pallet-counting-entry.png'])|
+|feedback|SCOPED_PASS|Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.|[demo4-five-events.png](../screen-audit-2026-10-21/demo4-five-events.png); [demo4-curriculum-progress.png](../screen-audit-2026-10-21/demo4-curriculum-progress.png); [demo4-second-batch-first-event.png](../screen-audit-2026-10-21/demo4-second-batch-first-event.png); [demo4-retention-repeat-review.md](demo4-retention-repeat-review.md)|
 
 ### lab-9-12-ev-charging-manager
 
-Lab 9.12 - EV Charging Manager
+Lab 9.12 - EV Charging Manager — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-lab-9-12-ev-charging-manager-entry.png](../screen-audit-2026-10-21/breadth-lab-9-12-ev-charging-manager-entry.png)|
 |controls|SCOPED_PASS|Reviewed A/B occupancy/plug/auth/ready allocation and guarded removal plusB-onlyrepeat cover named controls; all eligibilitypermutations are optional logic extension, not a new physicalcontrol. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-lab912.md](../screen-audit-2026-10-21/evidence-review-lab912.md)|
@@ -1688,18 +1095,11 @@ Lab 9.12 - EV Charging Manager
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-lab-9-12-ev-charging-manager-entry.png](../screen-audit-2026-10-21/breadth-lab-9-12-ev-charging-manager-entry.png)|
 |feedback|SCOPED_PASS|Native25frames physicalchargingindications/meterledgers andreadableSignalsagree; .0206667kWhâ‰ˆ20.67Wh, no meterprecision/projecteddigitsclaim.|[evidence-review-lab912.md](../screen-audit-2026-10-21/evidence-review-lab912.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Reviewed A/B occupancy/plug/auth/ready allocation and guarded removal plusB-onlyrepeat cover named controls; all eligibilitypermutations are optional logic extension, not a new physicalcontrol.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/lab-9-12-ev-charging-manager.scene.json ](../../scenes/migrated/lab-9-12-ev-charging-manager.scene.json), [rungproof-next/docs/help/scenes/lab-9-12-ev-charging-manager.md ](../../docs/help/scenes/lab-9-12-ev-charging-manager.md)
-
-Declared action inventory (8): Toggle bay occupied; Toggle customer authorized; Toggle charger ready; A connector fixture; B occupancy fixture; B authorization fixture; B ready fixture; B connector fixture. Exact declarations/point ownership retained in JSON.
-
 ### scene-1-conveyor-stop
 
-Conveyor Stop
+Conveyor Stop — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-scene-1-conveyor-stop-entry.png](../screen-audit-2026-10-21/breadth-scene-1-conveyor-stop-entry.png)|
 |controls|SCOPED_PASS|Only start/stop toggle declared; actual beamhold/blockedStart/resetrepeat and AppStop reviewed. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-standalone-scene1.md](../screen-audit-2026-10-21/evidence-review-standalone-scene1.md)|
@@ -1710,40 +1110,26 @@ Conveyor Stop
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-scene-1-conveyor-stop-entry.png](../screen-audit-2026-10-21/breadth-scene-1-conveyor-stop-entry.png)|
 |feedback|SCOPED_PASS|SelectedactualphysicalsensorholdandreadableSignalsagree; exactspeed/stoplatency/continuouscollisionunproven.|[evidence-review-standalone-scene1.md](../screen-audit-2026-10-21/evidence-review-standalone-scene1.md)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. Only start/stop toggle declared; actual beamhold/blockedStart/resetrepeat and AppStop reviewed.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/scene-1-conveyor-stop.scene.json ](../../scenes/migrated/scene-1-conveyor-stop.scene.json), [rungproof-next/docs/help/scenes/scene-1-conveyor-stop.md ](../../docs/help/scenes/scene-1-conveyor-stop.md)
-
-Declared action inventory (1): Start / stop conveyor. Exact declarations/point ownership retained in JSON.
-
 ### scene-2-conveyor-pusher
 
-Conveyor Pusher â€” demo alias demo-3-height-sorter
+Conveyor Pusher — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Opened this demo through numbered curriculum rail; matching demo title, scene and running local simulator observed. Standalone scenario path not covered. Same underlying scene ID, no duplicate standalone route.|[demo3-selected.png](../screen-audit-2026-10-21/demo3-selected.png)|
-|controls|SCOPED_PASS|Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[Current native review](demo3-enable-route-review.md); original provenance in JSON.|
+|controls|SCOPED_PASS|Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[demo3-normal-progress.png](../screen-audit-2026-10-21/demo3-normal-progress.png); [demo3-normal-checkpoints.jpg](../screen-audit-2026-10-21/demo3-normal-checkpoints.jpg); [demo3-overload-final-curriculum.png](../screen-audit-2026-10-21/demo3-overload-final-curriculum.png); [demo3-stop-trip-start-blocked.png](../screen-audit-2026-10-21/demo3-stop-trip-start-blocked.png); [demo3-reset-no-auto-restart.png](../screen-audit-2026-10-21/demo3-reset-no-auto-restart.png); [demo3-second-routing-run.png](../screen-audit-2026-10-21/demo3-second-routing-run.png); [demo3-overload-stop-trip-start-blocked.png](../screen-audit-2026-10-21/demo3-overload-stop-trip-start-blocked.png); [demo3-overload-reset-no-auto-restart.png](../screen-audit-2026-10-21/demo3-overload-reset-no-auto-restart.png); [demo3-overload-second-routing-run.png](../screen-audit-2026-10-21/demo3-overload-second-routing-run.png); [demo3-enable-route-review.md](demo3-enable-route-review.md)|
 |normal_outcome|SCOPED_PASS|Three-carton routing exercise reached recorded completion; verify individual geometry/sensor edge cases separately.|[demo3-normal-progress.png](../screen-audit-2026-10-21/demo3-normal-progress.png); [demo3-normal-checkpoints.jpg](../screen-audit-2026-10-21/demo3-normal-checkpoints.jpg); [demo3-overload-final-curriculum.png](../screen-audit-2026-10-21/demo3-overload-final-curriculum.png)|
-|stop_reset_restart|SCOPED_PASS|Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[Current native review](demo3-enable-route-review.md); original provenance in JSON.|
+|stop_reset_restart|SCOPED_PASS|App Run and combined breadth Stop+Reset/SCAN0 are captured. A later independent actual AppPlayback Stop checkpoint shows LOCAL RUNTIME STOPPED/SCAN18070 (demo3-r1-app-stopped-for-checkpoint.png); original input plan opens AppPlayback(203,34) thenStop(220,90). Q11 ENABLE interruption/freshStart is a distinct machine-permissive route, not proof of AppStop or an AppRun restart. No exact post-Stop reset/restart chain is newly inferred.|[breadth-scene-2-conveyor-pusher-run.png](../screen-audit-2026-10-21/breadth-scene-2-conveyor-pusher-run.png); [breadth-scene-2-conveyor-pusher-reset.png](../screen-audit-2026-10-21/breadth-scene-2-conveyor-pusher-reset.png); [demo3-enable-route-review.md](demo3-enable-route-review.md); [demo3-r1-app-stopped-for-checkpoint.png](demo3-r1-app-stopped-for-checkpoint.png); [demo3-r1-app-stopped-for-checkpoint.ocr.json](demo3-r1-app-stopped-for-checkpoint.ocr.json)|
 |recovery|SCOPED_PASS|Observed machine Stop/restart, simulated trip inhibition, clear+Reset+fresh Start, overload inhibition and recovery; checkpoint evidence only.|[demo3-stop-trip-start-blocked.png](../screen-audit-2026-10-21/demo3-stop-trip-start-blocked.png); [demo3-reset-no-auto-restart.png](../screen-audit-2026-10-21/demo3-reset-no-auto-restart.png); [demo3-second-routing-run.png](../screen-audit-2026-10-21/demo3-second-routing-run.png); [demo3-overload-stop-trip-start-blocked.png](../screen-audit-2026-10-21/demo3-overload-stop-trip-start-blocked.png); [demo3-overload-reset-no-auto-restart.png](../screen-audit-2026-10-21/demo3-overload-reset-no-auto-restart.png); [demo3-overload-second-routing-run.png](../screen-audit-2026-10-21/demo3-overload-second-routing-run.png); [demo3-overload-final-curriculum.png](../screen-audit-2026-10-21/demo3-overload-final-curriculum.png)|
-|repeat|SCOPED_PASS| Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[Current native review](demo3-enable-route-review.md); original provenance in JSON.|
-|navigation|FAIL|Scenario/rail entry and Immersive route still work. QA-UI-003 S2: Engineering Frame Process repeatedly shows uniform wall-like aperture; WholeScene exteriorroof; switchingImmersive restores actualprocess. No blank-scene load/controller failure or confirmed camera cause.|[demo3-frame-process-visibility-review.md](demo3-frame-process-visibility-review.md); preserved original evidence in JSON.|
-|feedback|SCOPED_PASS|Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[Current native review](demo3-enable-route-review.md); original provenance in JSON.|
-
-**Remaining / reconciliation:** Verify individual carton destinations/sensor and diverter outcomes rather than curriculum label alone; tie physical START/STOP/RESET/trip/overload to control cells and show fresh complete repeat. Existing recovery captures may reconcile some cells. N1.
-
-**Dedicated scene fault:** UNRESOLVED â€” Inspect contract subcheck; absence of a dedicated fault does not remove playback/permissive coverage.
-Contract: [rungproof-next/scenes/migrated/scene-2-conveyor-pusher.scene.json ](../../scenes/migrated/scene-2-conveyor-pusher.scene.json), [rungproof-next/docs/help/scenes/scene-2-conveyor-pusher.md ](../../docs/help/scenes/scene-2-conveyor-pusher.md)
-
-Declared action inventory (6): Machine Start pushbutton; Machine Stop pushbutton; Machine Reset pushbutton; System Enable selector; Simulated safety trip (training only); Simulated drive overload. Exact declarations/point ownership retained in JSON.
+|repeat|SCOPED_PASS| Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[demo3-enable-route-review.md](demo3-enable-route-review.md)|
+|navigation|FAIL|Scenario/rail entry and Immersive route still work. QA-UI-003 S2: Engineering Frame Process repeatedly shows uniform wall-like aperture; WholeScene exteriorroof; switchingImmersive restores actualprocess. No blank-scene load/controller failure or confirmed camera cause.|[['breadth-scene-2-conveyor-pusher-entry.png']](../screen-audit-2026-10-21/['breadth-scene-2-conveyor-pusher-entry.png']); [demo3-frame-process-visibility-review.md](demo3-frame-process-visibility-review.md)|
+|feedback|SCOPED_PASS|Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.|[demo3-normal-progress.png](../screen-audit-2026-10-21/demo3-normal-progress.png); [demo3-normal-checkpoints.jpg](../screen-audit-2026-10-21/demo3-normal-checkpoints.jpg); [demo3-overload-final-curriculum.png](../screen-audit-2026-10-21/demo3-overload-final-curriculum.png); [demo3-stop-trip-start-blocked.png](../screen-audit-2026-10-21/demo3-stop-trip-start-blocked.png); [demo3-reset-no-auto-restart.png](../screen-audit-2026-10-21/demo3-reset-no-auto-restart.png); [demo3-second-routing-run.png](../screen-audit-2026-10-21/demo3-second-routing-run.png); [demo3-overload-stop-trip-start-blocked.png](../screen-audit-2026-10-21/demo3-overload-stop-trip-start-blocked.png); [demo3-overload-reset-no-auto-restart.png](../screen-audit-2026-10-21/demo3-overload-reset-no-auto-restart.png); [demo3-overload-second-routing-run.png](../screen-audit-2026-10-21/demo3-overload-second-routing-run.png); [demo3-enable-route-review.md](demo3-enable-route-review.md)|
 
 ### tank-high-low
 
-Water Tank â€” High/Low Switches
+Water Tank â€” High/Low Switches — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-tank-high-low-entry.png](../screen-audit-2026-10-21/breadth-tank-high-low-entry.png)|
 |controls|SCOPED_PASS|PUMP/DRAIN and run/stop have accepted native response/cutoffs/priority/lifecycle; extra independent trip not declared. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-fix-tankhighlow.md](../screen-audit-2026-10-21/evidence-review-fix-tankhighlow.md); [fix-tankhighlow-normal-review.jpg](../screen-audit-2026-10-21/fix-tankhighlow-normal-review.jpg); [fix-tankhighlow-lifecycle-review.jpg](../screen-audit-2026-10-21/fix-tankhighlow-lifecycle-review.jpg)|
@@ -1754,18 +1140,11 @@ Water Tank â€” High/Low Switches
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-tank-high-low-entry.png](../screen-audit-2026-10-21/breadth-tank-high-low-entry.png)|
 |feedback|SCOPED_PASS|Selectedactualgauge/PCswitchhighlights/nativeSignalsagree; internalopaquecontents/hardwareswitchratingunproven.|[evidence-review-fix-tankhighlow.md](../screen-audit-2026-10-21/evidence-review-fix-tankhighlow.md); [fix-tankhighlow-normal-review.jpg](../screen-audit-2026-10-21/fix-tankhighlow-normal-review.jpg); [fix-tankhighlow-lifecycle-review.jpg](../screen-audit-2026-10-21/fix-tankhighlow-lifecycle-review.jpg)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. PUMP/DRAIN and run/stop have accepted native response/cutoffs/priority/lifecycle; extra independent trip not declared.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/tank-high-low.scene.json ](../../scenes/migrated/tank-high-low.scene.json), [rungproof-next/docs/help/scenes/tank-high-low.md ](../../docs/help/scenes/tank-high-low.md)
-
-Declared action inventory (4): Run simulated process; Toggle inlet pump request; Toggle drain request; Stop simulated process. Exact declarations/point ownership retained in JSON.
-
 ### tank-level
 
-Tank Level / 4â€“20 mA
+Tank Level / 4â€“20 mA — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-tank-level-entry.png](../screen-audit-2026-10-21/breadth-tank-level-entry.png)|
 |controls|SCOPED_PASS|PUMP/DRAIN and run/stop plusgauge/mA/cutoffs/priority/lifecycle reviewed; calibration and internalfluidvisibility not controltests. This credits actual exposed/mapped control response in cited native cases, not every declared hidden action or all phase permutations.|[evidence-review-fix-tanklevel.md](../screen-audit-2026-10-21/evidence-review-fix-tanklevel.md); [fix-tanklevel-review-compact.jpg](../screen-audit-2026-10-21/fix-tanklevel-review-compact.jpg); [fix-tanklevel-stop-gauge-review.jpg](../screen-audit-2026-10-21/fix-tanklevel-stop-gauge-review.jpg)|
@@ -1776,18 +1155,11 @@ Tank Level / 4â€“20 mA
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-tank-level-entry.png](../screen-audit-2026-10-21/breadth-tank-level-entry.png)|
 |feedback|SCOPED_PASS|Independentactualgaugeheight/nativelevel/mA/limitsagree. First3oldcamerabroadcropsnotgeometryproof; correctedstopgaugestripused. Internalcontents/precisecutofflatency/realcalibrationunproven.|[evidence-review-fix-tanklevel.md](../screen-audit-2026-10-21/evidence-review-fix-tanklevel.md); [fix-tanklevel-review-compact.jpg](../screen-audit-2026-10-21/fix-tanklevel-review-compact.jpg); [fix-tanklevel-stop-gauge-review.jpg](../screen-audit-2026-10-21/fix-tanklevel-stop-gauge-review.jpg)|
 
-**Remaining / reconciliation:** No additional exact exposed-control response gap identified. PUMP/DRAIN and run/stop plusgauge/mA/cutoffs/priority/lifecycle reviewed; calibration and internalfluidvisibility not controltests.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/tank-level.scene.json ](../../scenes/migrated/tank-level.scene.json), [rungproof-next/docs/help/scenes/tank-level.md ](../../docs/help/scenes/tank-level.md)
-
-Declared action inventory (4): Run simulated process; Toggle inlet pump request; Toggle drain request; Stop simulated process. Exact declarations/point ownership retained in JSON.
-
 ### tank-radar
 
-Water Tank â€” Radar Level
+Water Tank â€” Radar Level — no whole-scene PASS.
 
-| Requirement | Disposition | Exact observed scope | Evidence |
+| Requirement | Status | Exact scope | Evidence |
 |---|---|---|---|
 |load|SCOPED_PASS|Scenario menu reached matching title and non-empty expected scene render. Does not establish all equipment, fine layout, object interaction or running process.|[breadth-tank-radar-entry.png](../screen-audit-2026-10-21/breadth-tank-radar-entry.png)|
 |controls|PARTIAL|Physicalcycle/manualdraincontrols+playbacktested; inspectionviewroutecandidateunresolved.|[evidence-review-standalone-radar.md](../screen-audit-2026-10-21/evidence-review-standalone-radar.md)|
@@ -1797,83 +1169,3 @@ Water Tank â€” Radar Level
 |repeat|SCOPED_PASS|Resetfreshrepeat64.68/14.348fillTrue; exactlatency/echoaccuracyunproven.|[evidence-review-standalone-radar.md](../screen-audit-2026-10-21/evidence-review-standalone-radar.md)|
 |navigation|SCOPED_PASS|Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.|[breadth-tank-radar-entry.png](../screen-audit-2026-10-21/breadth-tank-radar-entry.png)|
 |feedback|SCOPED_PASS|Nativelevel/distance/mAandexternalgaugeagree; opaqueinternalsurface/beamunproven. QA-UX-CANDIDATE-003advertisedghostviewundiscovered, notarbitraryclickfailure.|[evidence-review-standalone-radar.md](../screen-audit-2026-10-21/evidence-review-standalone-radar.md)|
-
-**Remaining / reconciliation:** Advertised inspection ghostview has no equipment action/sceneControls mapping; shell generic actioncontainer hidden. Actual old body/transmitterclicks leave inspectionFalse/opaque. Supported clickroute is not established; contract/accessibility ambiguity remains, not hiddenAPI test or failed arbitraryclick.
-
-**Dedicated scene fault:** N/A â€” No declared simulation action or PC-owned point names a dedicated trip/fault/alarm route. Does not exclude normal Stop/permissives.
-Contract: [rungproof-next/scenes/migrated/tank-radar.scene.json ](../../scenes/migrated/tank-radar.scene.json), [rungproof-next/docs/help/scenes/tank-radar.md ](../../docs/help/scenes/tank-radar.md)
-
-Declared action inventory (5): Run simulated process; Toggle automatic cycle request; Toggle manual drain request; Stop simulated process; Inspection view: ghost shell and roof. Exact declarations/point ownership retained in JSON.
-
-## Efficient next native discovery cases — no repair plan
-
-1. **Grouping4.8 actual release Stop is closed**; **cable4.12 actual knife-stroke Stop is also closed**, with explicit freshStart recovery.
-2. **Coating5.10 moving-index Stop is closed**; **bag5.9 forward PAUSE transition** remains. Bag forward travel must continue with PAUSE false; only return travel is gated.
-3. **Demo1/2 AppStop cases are closed**. No repeat playback run is required merely to replace the original proposed intermediate value.
-4. **Parcel diagnostic V7 lifecycle**: native normal completion now proves three supported receivers/count3/complete/all four commands off. Actual Reset/Run/Start repeat now FAILS at count1. Later stalled-state Stop and subsequently phase30/count0 moving-handoff Stop/Run-alone recovery are observed; Reset repeat FAIL remains.
-5. **Lab9.3 finite physical selector cycle**: A NEXT/B NEXT each expose0/1/2/5/10. Old settled captures prove2/5 and reset0; capture1/10/wrap with the existing repaired reference, not arbitrary numeric entry or all25 operand pairs.
-
-Drawbridge descent acknowledgement loss and full restoration are now closed. Shared representative navigation and counter boundaries are also closed to their written scopes. The [current finite queue](native-test-queue.md) distinguishes executable cases from absent control routes, visual observability limits and contract questions. Historical parcel V3/V4 stalls remain controller-specific evidence; they no longer establish universal normal impossibility. Diagnostics footer QA-UI-002 remains an actual open finding.
-
-## Inputs and stale records
-
-- [coverage-ledger.json](../screen-audit-2026-10-21/coverage-ledger.json)
-- [QA-PROTOCOL.md](../screen-audit-2026-10-21/QA-PROTOCOL.md)
-- [route-reconciliation.md](../screen-audit-2026-10-21/route-reconciliation.md)
-- [postbackup-remaining-requirements.md](../screen-audit-2026-10-21/postbackup-remaining-requirements.md)
-- [postbackup-native-continuation-checkpoint.md](../screen-audit-2026-10-21/postbackup-native-continuation-checkpoint.md)
-- [postbackup-small-navigation-review.md](../screen-audit-2026-10-21/postbackup-small-navigation-review.md)
-- [postbackup-small-count45-review.md](../screen-audit-2026-10-21/postbackup-small-count45-review.md)
-- [postbackup-small-count46-review.md](../screen-audit-2026-10-21/postbackup-small-count46-review.md)
-- [postbackup-small-array-review.md](../screen-audit-2026-10-21/postbackup-small-array-review.md)
-
-SESSION-STATE handles are historical and are not test acceptance evidence. The older ledger5 blocked normal routes are not blindly retained: jug/drill/door/CNC are specifically superseded; parcelV7 now supersedes universal normal-impossible wording while preservingV3/V4 stallhistory. No new native test was run by this reconciliation.
-
-## Later exact-scope supersession
-
-[Demo1 count1 playback](demo1-appstop-review.md) closes Q06 without requiring count2. [Drawbridge descent and complete restoration](drawbridge-descent-review.md) closes Q01. [ParcelV7 normal](parcel-v7-native-review.md) proves3 physical supported receivers/count3/complete and4commandsOff on unchanged app; V7 phase30/count0 Stop/Run-alone recovery is now credited by the later review; Reset/repeat remains FAIL. EarlierV3/V4 failures remain their controller-specific outcomes. Use current [finite queue](native-test-queue.md) rather than stale initial priorities above.
-
-## V7 repeat failure supersession
-
-[Independent repeat review](parcel-v7-repeat-review.md) preserves the first successful normal batch and records a subsequent real Reset/Run/Start count1 stall. The earlier probe sent no moving-handoff Stop; its OCR miss is QA tooling, not an application defect. A later properly qualified run now closes that Stop/recovery subcase. Later real Stop20583 removes commands and holds the already-stalled scene. [Native Watch](parcel-v7-repeat-stall-watch-private.png) directly shows three private phase values50 and class2 after Stop; no root cause inferred.
-
-## Controlled parcel comparison
-
-[Independent review](parcel-v7-controlled-comparison-review.md) verifies13 original hashes: fresh scene reconstruction/same frozenV7 reaches3 again; subsequent same-scene AppReset/Run/Start without observer probe stalls1 again. Native RUNNING Watch phase50/class2 is observed. This strengthens history-dependence; exact geometry/rootcause remains separate source evidence.
-
-## Current control normalization
-
-The19 original BOUNDED_CONTROL_EVIDENCE_SUFFICIENT scenes now have SCOPED_PASS controls cells with exact cited native evidence; newly closed drawbridge adds one more. Historical PARTIAL cells remain under JSON supersedes. This does not inherit control behavior from shared code. Five legacy START-only scenes retain actual START evidence and an explicit unresolved Stop/Reset route/documentation note; no unexposed button is invented or credited.
-
-## Current parcel lifecycle disposition
-
-[Independent12-original handoff review](parcel-v7-handoff-recovery-review.md): exact phase30/class2 with count0, acceptedStop1333, held physicalpose/scans/all4commandsOff; Run alone reaches3/all_received/complete/all4Off/route0. Stop/recovery is CLOSED to this scope. Actual same-scene Reset/repeat remains FAIL; previous missing-Stop wording is superseded, not another open native task.
-
-## Additional named closures
-
-Q07 retained-REQUEST AppStop/Run freshTON, Q20 acknowledged activeTP retrigger/nonextension/freshretrigger, and Q22 active-inhibit Reset/Run declaredTrue markerbaseline are now independently closed. Exact20ms pulsepeak is not a new gate; Reset does not universally zero every output.
-
-Q04 initial-index AppStop/held/Run-alone is now [independently closed](coating-index-stop-review.md): actual supported movingpart, held-1.19 and recoveredexit2.23/alloff. No extra mandatory phase or precision case follows.
-
-## Further bookkeeping-only control reconciliation
-
-Seven current controls cells are normalized from explicit existing native reviews: grouping, cable, chainlift, coating, traffic, inboundtote and bag. Their mapped controls already show actual response; generic P described a distinct named phase observation or an unexposed/undefined control. This does not close Q02/Q03/Q05/Q08/Q12/Q19, infer a scannerTrue value from an image label, or invent midforward bagtransition proof. No new native run occurred.
-
-Q02 [qualified grouping release review](grouping-release-stop-review.md) now closes actualreleaseStop8670/settledhold/Run-alone→supportedcomplete9501. Earlier phase-invalid/transitional frames remain QA history, not a failed appStop.
-
-Q03 [knife review](cable-knife-stop-review.md) nowcloses outboundstrokeStop11326/.675hold, Run-alone stillinhibited andfreshSTART→home/complete/alloff. No appbug inferred from incompleteOCR.
-
-
-Current reconciliation: Q05 and Q24 are scoped CLOSED by [bag review](bag-forward-pause-review.md) and [operand cycle review](sum-counter-preset-cycle-review.md). Controls66 scoped-pass/11 partial; 25 non-scoped-pass cells remain (not all are executable new tests). Ready queue: Q08, Q09, Q10, Q11, Q12, Q18, Q19, Q21. Previous pending statements for these two cases are superseded. No application/source/UI change.
-
-
-Q19 CURRENT scoped closure: [native chain-lift review](chain-lift-upstroke-stop-review.md) proves loaded upstroke Stop/held15615, Run-alone inactivity, freshStart to supported receiver and actualhome/complete19520+. No sampled lowerTrue or extra downstroke gate. Current ready cases: Q08, Q09, Q10, Q11, Q12, Q18, Q21.
-
-
-Current Q21 [independent closure](pedestrian-active-walk-review.md): acknowledged active WALK CROSS; bounded8s idle/no replay; fresh CROSS works. Ready: Q08, Q09, Q10, Q11, Q12, Q18. This supersedes earlier Q21-pending statements.
-
-
-CURRENT: Q09/Q10 independently scoped CLOSED. Ready Q08, Q11, Q12, Q18. **QA-UI-003 S2 confirmed**: Demo3 Engineering→FrameProcess repeatedly hides process behind flatwall-like view; WholeScene shows exteriorroof; Immersive restores process. [Seven-original independent review](demo3-frame-process-visibility-review.md). Navigation cell FAIL is limited to this viewport workflow; load and controller acceptance are not failed. Camera/wall source hypothesis remains unconfirmed. Current incomplete cells 20; no whole-scene PASS.
-
-
-CURRENT Q11 CLOSED: [independent review](demo3-enable-route-review.md). 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement. Ready: Q08, Q12, Q18. QA-UI-003 Engineering framing failure remains OPEN independently. Current incomplete cells 16.

@@ -1,0 +1,30 @@
+[
+  {
+    "wait": 0.1,
+    "input": {
+      "y": 480,
+      "button": "middle",
+      "phase": "down",
+      "x": 522
+    }
+  },
+  {
+    "wait": 0.2,
+    "input": {
+      "y": 480,
+      "phase": "move",
+      "x": 467
+    }
+  },
+  {
+    "ocr": true,
+    "capture": "pickup-r1-control-pan",
+    "wait": 0.7,
+    "input": {
+      "y": 480,
+      "button": "middle",
+      "phase": "up",
+      "x": 467
+    }
+  }
+]

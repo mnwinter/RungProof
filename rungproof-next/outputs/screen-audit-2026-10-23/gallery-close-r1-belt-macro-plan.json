@@ -1,0 +1,159 @@
+[
+  {
+    "input": {
+      "x": 554,
+      "y": 325,
+      "button": "middle",
+      "phase": "down"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "move"
+    },
+    "wait": 0.15
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "button": "middle",
+      "phase": "up"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "input": {
+      "x": 533,
+      "y": 330,
+      "phase": "wheel",
+      "delta": 120
+    },
+    "wait": 0.12
+  },
+  {
+    "wait": 0.4,
+    "capture": "gallery-close-r1-belt-macro-stopped",
+    "ocr": true
+  }
+]

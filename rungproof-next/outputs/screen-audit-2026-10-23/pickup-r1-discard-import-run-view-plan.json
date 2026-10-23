@@ -1,0 +1,119 @@
+[
+  {
+    "wait": 0.8,
+    "capture": "pickup-r1-correct-scene",
+    "ocr": true,
+    "input": {
+      "y": 405,
+      "x": 392
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 34,
+      "x": 89
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 113,
+      "x": 162
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "y": 512,
+      "x": 456
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "text": "C:/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-21/test-projects/fixture-lab-2-18-pallet-pickup.rpproj.json"
+    }
+  },
+  {
+    "wait": 0.8,
+    "capture": "pickup-r1-fixture-import",
+    "ocr": true,
+    "input": {
+      "key": "Return"
+    }
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 203
+    }
+  },
+  {
+    "wait": 0.8,
+    "input": {
+      "y": 70,
+      "x": 220
+    }
+  },
+  {
+    "wait": 0.6,
+    "input": {
+      "y": 98,
+      "x": 944
+    }
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 110,
+      "x": 186
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "y": 89,
+      "x": 856
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "x": 893,
+      "delta": 1200,
+      "y": 296,
+      "phase": "wheel"
+    }
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "wait": 0.7,
+    "capture": "pickup-r1-engineering-home",
+    "ocr": true,
+    "input": {
+      "y": 174,
+      "x": 185
+    }
+  }
+]

@@ -1,0 +1,163 @@
+{
+  "status": "OFFLINE_PIXELS_ONLY",
+  "manual_physical_health_review_pending": true,
+  "source_sha256": "0d7902a96078798b95ac92eb9a4269b0aaa3a56a7c40add9e753570c5fcc7871",
+  "input_budget": {
+    "queue_a": 0,
+    "ready": 2
+  },
+  "observations": [],
+  "title_qualified": true,
+  "offline": {
+    "image": "offline-original.png",
+    "scan": 5416,
+    "running": true,
+    "cycle20": true,
+    "values": {
+      "controller_ready": false,
+      "road_a_clear": false,
+      "road_b_clear": false,
+      "road_a_occupied": false,
+      "road_b_occupied": false,
+      "crossing_clear": true,
+      "signal_conflict": false,
+      "road_a_green": false,
+      "road_a_amber": false,
+      "road_a_red": true,
+      "road_b_green": false,
+      "road_b_amber": false,
+      "road_b_red": true
+    },
+    "witnesses": {
+      "controller_ready": [
+        {
+          "raw": "\u2022 controller_ready False",
+          "value": false,
+          "y": 129.5
+        }
+      ],
+      "road_a_clear": [
+        {
+          "raw": "\u2022 road a clear False",
+          "value": false,
+          "y": 285.0
+        }
+      ],
+      "road_b_clear": [
+        {
+          "raw": "\u2022 road_b_clear False",
+          "value": false,
+          "y": 595.5
+        }
+      ],
+      "road_a_occupied": [
+        {
+          "raw": "\u2022 road_a_occupied False",
+          "value": false,
+          "y": 389.0
+        }
+      ],
+      "road_b_occupied": [
+        {
+          "raw": "\u2022 road_b_occupied False",
+          "value": false,
+          "y": 699.0
+        }
+      ],
+      "crossing_clear": [
+        {
+          "raw": "\u2022 crossing_clear True",
+          "value": true,
+          "y": 182.0
+        }
+      ],
+      "signal_conflict": [
+        {
+          "raw": "\u2022 signal_conflict False",
+          "value": false,
+          "y": 855.0
+        }
+      ],
+      "road_a_green": [
+        {
+          "raw": "\u2022 road_a_green False",
+          "value": false,
+          "y": 336.5
+        }
+      ],
+      "road_a_amber": [
+        {
+          "raw": "\u2022 road_a_amber False",
+          "value": false,
+          "y": 233.5
+        }
+      ],
+      "road_a_red": [
+        {
+          "raw": "\u2022 road a red True",
+          "value": true,
+          "y": 492.0
+        }
+      ],
+      "road_b_green": [
+        {
+          "raw": "\u2022 road_b_green False",
+          "value": false,
+          "y": 647.5
+        }
+      ],
+      "road_b_amber": [
+        {
+          "raw": "\u2022 road_b_amber False",
+          "value": false,
+          "y": 543.5
+        }
+      ],
+      "road_b_red": [
+        {
+          "raw": "\u2022 road_b_red True",
+          "value": true,
+          "y": 803.0
+        }
+      ]
+    },
+    "trigger": false
+  },
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 254018,
+      "sha256": "dcb0cd9f12116d468903271ef3ae1a88e660f7298b52555c5b45fcbe20b2b30a"
+    },
+    {
+      "file": "offline-original-title3x.png",
+      "bytes": 73659,
+      "sha256": "0b8df49bf59a082e536444462337818ee7771c4a71ac9d775520e539bd1ef28e"
+    },
+    {
+      "file": "offline-original-title3x.ocr.json",
+      "bytes": 1364,
+      "sha256": "2926d2c165c99b221aa5ddb5e491f1a1c0803eff2979b71354a7d7963df82dc5"
+    },
+    {
+      "file": "offline-original-header3x.png",
+      "bytes": 50990,
+      "sha256": "6da27dfd79ed57e6c789d393f13fcb8452807397ba8c9971be3b7b15f4fbb57a"
+    },
+    {
+      "file": "offline-original-header3x.ocr.json",
+      "bytes": 1158,
+      "sha256": "5e31b032ceb5effc8af1ca5b5e1f5999be8aba1a66748ca66f5d7be76a08a7e7"
+    },
+    {
+      "file": "offline-original-signals3x.png",
+      "bytes": 315009,
+      "sha256": "86e2301bfb7424e1138056317bab1cc9bc387fe948b9b8f42f6da1ed597c28a6"
+    },
+    {
+      "file": "offline-original-signals3x.ocr.json",
+      "bytes": 3785,
+      "sha256": "1fce17f811fbbe1a516de5701fde47ee26cb15895fd43550e21570ae090bef04"
+    }
+  ]
+}

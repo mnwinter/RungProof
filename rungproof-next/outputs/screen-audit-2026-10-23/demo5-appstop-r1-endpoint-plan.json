@@ -1,0 +1,5 @@
+[
+  {"wait": 0.25, "capture": "demo5-appstop-r1-run-alone-final-top", "ocr": true},
+  {"input": {"x": 927, "y": 484, "phase": "wheel", "delta": -720}, "wait": 0.4, "capture": "demo5-appstop-r1-run-alone-final-lower", "ocr": true},
+  {"wait": 2.2, "capture": "demo5-appstop-r1-run-alone-final-held", "ocr": true}
+]

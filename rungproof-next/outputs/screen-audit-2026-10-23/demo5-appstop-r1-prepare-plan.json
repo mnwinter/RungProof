@@ -1,0 +1,22 @@
+[
+  {
+    "input": {
+      "y": 365,
+      "x": 543
+    },
+    "ocr": true,
+    "wait": 0.7,
+    "capture": "demo5-appstop-r1-machine-reset-retains-permissives"
+  },
+  {
+    "input": {
+      "x": 891,
+      "delta": 1200,
+      "y": 296,
+      "phase": "wheel"
+    },
+    "ocr": true,
+    "wait": 0.7,
+    "capture": "demo5-appstop-r1-before-start"
+  }
+]

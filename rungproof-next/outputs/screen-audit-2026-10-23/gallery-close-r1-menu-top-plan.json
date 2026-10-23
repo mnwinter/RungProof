@@ -1,0 +1,3 @@
+[
+  {"input": {"x": 389, "y": 227, "phase": "wheel", "delta": 1200}, "wait": 0.4, "capture": "gallery-close-r1-menu-top", "ocr": true}
+]

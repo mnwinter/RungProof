@@ -1,0 +1,45 @@
+{
+  "result": "PASS",
+  "kind": "SYNTHETIC_COPY_ALL_LONGPATH_REHEARSAL_ONLY",
+  "created_utc": "2026-10-23T08:09:36.181917+00:00",
+  "elapsed_seconds": 0.249,
+  "checks": {
+    "frozen_helper_before": true,
+    "source_path_over_300": true,
+    "only_fixture_HEAD_stubbed": true,
+    "actual_snapshot_PASS": true,
+    "one_copy_zero_links": true,
+    "copy_path_over_300": true,
+    "paired_SHA_and_exact_bytes": true,
+    "portable_relative_targets_copy": true,
+    "immutable_copy_survives_base_change": true,
+    "actual_7zip_pipeline_PASS": true,
+    "one_public_payload": true,
+    "one_archive_part": true,
+    "archive_part_SHA": true,
+    "readback_path_over_300": true,
+    "actual_readback_exact_bytes_SHA": true,
+    "readback_exact_pathset": true,
+    "frozen_helper_after": true
+  },
+  "helper_sha256": "3c4b1837e10973b6abe8c88060cd91aa4d8d117f63f0f4a46125f694e1e61b18",
+  "sevenzip_sha256": "83967f1b02b43c4efeda302795722c809e0e81b8307de73558d10484d5676a7d",
+  "files": 1,
+  "payload_bytes": 36,
+  "relative_path_characters": 277,
+  "source_path_characters": 411,
+  "immutable_copy_path_characters": 477,
+  "extracted_path_characters": 425,
+  "archive_parts": [
+    {
+      "name": "rungproof-final-delta.7z.001",
+      "bytes": 969,
+      "sha256": "f7c38eccc92d989d618554f233f2123b4b98cf22902ad41194119c5a775aca1b"
+    }
+  ],
+  "mock_head": "FAKEHEAD_LONGPATH_REHEARSAL_ONLY",
+  "git_bundle": "NOT_TESTED_DISABLED",
+  "inventory": "EXPLICIT_MOCK_ROWS",
+  "private_fixture_root": "C:\\Users\\matt.winter\\AppData\\Local\\Temp\\RungProof-QA-20261023-RootOwned\\copy-all-longpath-rehearsal-20261023T081200Z",
+  "boundary": "One tiny synthetic approved-C-private file only. Actual snapshot/copy/hash/7-Zip/test/extract code exercised; no real userdata, D, Git refs, network, app or UI touched. This does not prove every production path or fresh production inventory closure. All artifacts retained; no deletion."
+}

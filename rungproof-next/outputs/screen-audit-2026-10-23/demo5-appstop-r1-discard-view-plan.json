@@ -1,0 +1,59 @@
+[
+  {
+    "capture": "demo5-appstop-r1-correct-scene",
+    "ocr": true,
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "wait": 0.8
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "x": 186,
+      "y": 110
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "x": 856,
+      "y": 89
+    }
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "capture": "demo5-appstop-r1-engineering-home",
+    "ocr": true,
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "wait": 0.7
+  },
+  {
+    "capture": "demo5-appstop-r1-initial-permissives",
+    "ocr": true,
+    "input": {
+      "delta": -600,
+      "y": 399,
+      "x": 891,
+      "phase": "wheel"
+    },
+    "wait": 0.7
+  }
+]

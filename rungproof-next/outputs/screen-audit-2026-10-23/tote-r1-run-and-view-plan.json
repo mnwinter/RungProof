@@ -1,0 +1,71 @@
+[
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 203
+    }
+  },
+  {
+    "ocr": true,
+    "wait": 0.8,
+    "capture": "tote-r1-loaded-running",
+    "input": {
+      "y": 70,
+      "x": 220
+    }
+  },
+  {
+    "wait": 0.6,
+    "input": {
+      "y": 98,
+      "x": 944
+    }
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 110,
+      "x": 186
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "y": 89,
+      "x": 856
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "y": 296,
+      "delta": 1200,
+      "x": 893,
+      "phase": "wheel"
+    }
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "ocr": true,
+    "wait": 0.7,
+    "capture": "tote-r1-engineering-home",
+    "input": {
+      "y": 174,
+      "x": 185
+    }
+  }
+]

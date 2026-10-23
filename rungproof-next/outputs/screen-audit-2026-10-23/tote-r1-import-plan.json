@@ -1,0 +1,44 @@
+[
+  {
+    "input": {
+      "y": 34,
+      "x": 89
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "y": 113,
+      "x": 162
+    },
+    "capture": "tote-r1-open-file-dialog",
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "y": 512,
+      "x": 456
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "text": "C:/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-21/test-projects/fixture-new-binding-lab-2-11-v3.rpproj.json"
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "capture": "tote-r1-fixture-import",
+    "ocr": true,
+    "wait": 0.8
+  }
+]

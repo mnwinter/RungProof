@@ -19,9 +19,10 @@ continuity that a fresh Codex session would otherwise lose.
    paths relative to the confirmed repository root, not the old C: location.
 3. For a restored machine, read [restore-and-backup.md](references/restore-and-backup.md).
    For resumed testing or fixes, read [lessons-learned.md](references/lessons-learned.md).
-4. Reconcile named remaining cases against their latest native reviews before
-   rerunning anything. Historical broad ledger cells can be stale; never
-   replace a specific later result with an earlier failure or filename guess.
+4. Read the current77-entry compendium,616-cell matrix and `repair-plan.md` in
+   the October23 QA folder. The original24 finite cases are accounted for;
+   six failed/partial cells are not six new tests. Reconcile latest reviews
+   before rerunning anything. Preserve earlier evidence as history.
 
 ## Continue the user's actual work
 
@@ -29,8 +30,9 @@ The full objective was a studio-style audit of all **77 unique scene IDs**:
 visible loading, exposed controls, normal result, Stop/Reset/restart,
 permissive/fault recovery, repeatability, feedback and navigation. Five demo
 aliases share scene identities; they are not five extra scenes. Overall
-acceptance remains incomplete. Preserve confirmed failures and untested cases
-separately, then maintain an effort/impact-prioritized repair plan.
+acceptance remains incomplete. The full issue list is compiled and the
+effort/impact-prioritized repair plan is prepared. Preserve failures and
+observation limits separately; the plan is not an implemented repair.
 
 The user authorized a local screen bridge when native computer control was
 unavailable, and later allowed fixes plus a timed Git backup. Do not treat

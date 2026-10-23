@@ -25,11 +25,28 @@ medium outbound phase50. Source analysis isolates a transform/world-AABB reset
 ordering hazard; no repaired application build is claimed. Read later scoped
 reviews before using historical broad failures or pending-case lists.
 
-Later scoped reviews close grouping release, cable outbound knife, bag forward
-pause policy, sum preset cycles, chain-lift upstroke, pedestrian active request
-and authored Demo4 retained count/full second batch. The native queue remains
-the execution authority. A byte-level proof of the historical raw archives is
-preserved on D; newer raw evidence still needs the final incremental upload.
+The current consolidated list now reconciles all77 unique entries/616 cells.
+All24 original finite cases are accounted for:18 scoped native closures,
+five exact source/native lifecycle-alias reconciliations and Q23 split between
+successful Stop/recovery and failed Reset/repeat. Authored Demo5's additional
+isolated AppStop/Run-alone case is closed through four supported placements,
+home and step100. Current reports additionally close traffic occupiedREADY,
+tote stationary scanning and manual pickup-endpoint JOG rejection.
+
+Six cells remain failed or partial: parcel repeat, Lab2.1 outer footer,
+Demo3 Engineering framing, radar action access, and gallery normal/feedback
+with no readable empty-belt motion witness. Lab2.1/2.6 also retain the known
+maintained-toggle wording contradiction. Read `scene-issue-compendium.md`,
+`current-compilation-validation.json` and the now-prepared `repair-plan.md` in
+the October23 QA folder. The global plan follows completed discovery; its
+candidate repairs are not implemented. The owned app/bridge were identity-
+checked and stopped at08:09UTC; all recorded UI handles are now historical.
+
+A byte-level proof of all84 historical archive parts is preserved on D.
+The verified interim backup remains a2ac82fb; later raw evidence still needs
+the new incremental upload. Final immutable snapshots must use COPY_ALL and
+preserve both Godotuserdata views. Native144-file staging plus independent
+Python readback now passes; that C-only proof is not yet a final D backup.
 
 The next-agent entry point is `skills/rungproof-playtest-handoff/SKILL.md`.
 The migration record is `RUNGPROOF-MIGRATION-2026-10-22.md`. The full native

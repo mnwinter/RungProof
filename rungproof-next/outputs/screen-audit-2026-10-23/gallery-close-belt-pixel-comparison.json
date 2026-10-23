@@ -1,0 +1,50 @@
+[
+  {
+    "a": "gallery-close-r2-qualified-on-a.png",
+    "b": "gallery-close-r2-qualified-on-b.png",
+    "beltPixels": 8892,
+    "beltChanged": 0,
+    "motorShaftChanged": 181,
+    "driveDrumChanged": 14
+  },
+  {
+    "a": "gallery-close-r2-qualified-on-b.png",
+    "b": "gallery-close-r2-qualified-on-c.png",
+    "beltPixels": 8892,
+    "beltChanged": 0,
+    "motorShaftChanged": 191,
+    "driveDrumChanged": 16
+  },
+  {
+    "a": "gallery-close-r2-qualified-on-c.png",
+    "b": "gallery-close-r2-qualified-on-d.png",
+    "beltPixels": 8892,
+    "beltChanged": 0,
+    "motorShaftChanged": 152,
+    "driveDrumChanged": 17
+  },
+  {
+    "a": "gallery-close-r2-qualified-off-a.png",
+    "b": "gallery-close-r2-qualified-off-b.png",
+    "beltPixels": 8892,
+    "beltChanged": 0,
+    "motorShaftChanged": 0,
+    "driveDrumChanged": 0
+  },
+  {
+    "a": "gallery-close-r2-qualified-off-b.png",
+    "b": "gallery-close-r2-qualified-off-c.png",
+    "beltPixels": 8892,
+    "beltChanged": 0,
+    "motorShaftChanged": 0,
+    "driveDrumChanged": 0
+  },
+  {
+    "a": "gallery-close-r2-qualified-on-c.png",
+    "b": "gallery-close-r2-qualified-off-c.png",
+    "beltPixels": 8892,
+    "beltChanged": 0,
+    "motorShaftChanged": 193,
+    "driveDrumChanged": 16
+  }
+]

@@ -1,5 +1,7 @@
 # Confirmed-issue reconciliation — 2026-10-23
 
+> **Historical snapshot notice —2026-10-23 reconciliation:** This issue narrative/table predates later native closures and QA-UI-003. Preserve its body as history. The authoritative CURRENT77-entry issue association is [scene-issue-compendium.md](scene-issue-compendium.md), with exact scopes in [coverage-reconciliation.json](coverage-reconciliation.json).
+
 Initial read-only reconciliation used canonical main d0c4566b. Later scoped native results are linked below; the application and original evidence remain unchanged. Current sources include independent native reviews and current help text. This report is an evidence index, not a newly repeated global walkthrough. Use `hard-issue-index.md`, `issue-scope-reconciliation.md` and `native-test-queue.json` for later closures when a historical section disagrees.
 
 **Current confirmed functional/presentation defects: two deduplicated issues.** There is also a still-current two-entry documentation/interaction contradiction (QA-SPEC-002), kept separate from faulty PLC/input execution. Remaining untested cases and candidates are not defects. No final remediation plan is selected.
@@ -59,7 +61,7 @@ Original evidence: [Lab2.1 held](../screen-audit-2026-10-21/lab201-material-call
 
 Superseding native review entry points: [2.11](../screen-audit-2026-10-21/evidence-review-lab211-plant-gap.md), [2.12](../screen-audit-2026-10-21/evidence-review-lab212-plant-gap.md), [jug](../screen-audit-2026-10-21/postbackup-jug-review.md), [drill](../screen-audit-2026-10-21/postbackup-small-drill-review.md), [door](../screen-audit-2026-10-21/evidence-review-fix-service-door.md), [CNC](../screen-audit-2026-10-21/postbackup-small-cnc-review.md), [tankhighlow](../screen-audit-2026-10-21/evidence-review-fix-tankhighlow.md), [tanklevel](../screen-audit-2026-10-21/evidence-review-fix-tanklevel.md), [commonStop](../screen-audit-2026-10-21/evidence-review-fix-commonstop.md), [visionselection](../screen-audit-2026-10-21/evidence-review-vision-class-route.md), [fume](../screen-audit-2026-10-21/evidence-review-fix-fume.md), [reference9.3](../screen-audit-2026-10-21/evidence-review-fix-shipped-sum-counter.md). Original PNGs referenced inside those reviews remain authoritative.
 
-## All77 entries: current confirmed-issue association
+## Historical77-entry confirmed-issue association (superseded)
 
 This table is an issue association index, **not a per-entry PASS table**. “None identified in reviewed records” leaves untested behavior intact. Five demo aliases refer to their existing scene IDs; they add no entries. Shared QA-UI-002 is listed only where demonstrated.
 

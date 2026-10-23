@@ -1,0 +1,11 @@
+[
+  {
+    "wait": 0.8,
+    "ocr": true,
+    "capture": "pickup-r1-selected-or-modal",
+    "input": {
+      "y": 61,
+      "x": 390
+    }
+  }
+]

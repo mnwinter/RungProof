@@ -1,0 +1,20 @@
+[
+  {
+    "capture": "traffic-r1-a-clear-on",
+    "ocr": true,
+    "input": {
+      "x": 419,
+      "y": 400
+    },
+    "wait": 0.8
+  },
+  {
+    "capture": "traffic-r1-b-clear-on",
+    "ocr": true,
+    "input": {
+      "x": 425,
+      "y": 404
+    },
+    "wait": 0.8
+  }
+]

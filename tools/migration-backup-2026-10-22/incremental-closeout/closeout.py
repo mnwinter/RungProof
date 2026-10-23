@@ -418,6 +418,28 @@ def verify_current_set(plan):
         raise RuntimeError("SOURCE_FILE_SET_CHANGED: refresh inventory; new/missing/read errors are not silently skipped")
 
 
+def snapshot_storage(row, target, copy_all=False):
+    """Choose storage without filesystem access; BASE_EXACT is inventory history.
+
+    Copy-all never reuses that mutable base path. Keep the absolute verified path
+    for existing archive consumers and identify receipt-owned copies portably.
+    """
+    copied = copy_all or row["private_storage"] != "BASE_EXACT"
+    if copied:
+        folder = "private-snapshot" if copy_all else "private-delta"
+        dest = target / folder / relative(row["tree"]) / relative(row["relative"])
+    else:
+        dest = Path(row["base_file"])
+    metadata = {
+        "private_storage": "RECEIPT_COPY" if copy_all else row["private_storage"],
+        "inventory_private_storage": row["private_storage"],
+        "verified_private_path": str(dest),
+        "verified_private_scope": "RECEIPT" if copied else "HISTORICAL_BASE",
+        "verified_private_relative": dest.relative_to(target).as_posix() if copied else None,
+    }
+    return dest, copied, metadata
+
+
 def snapshot(args):
     plan_path = Path(args.manifest).resolve()
     plan = load(plan_path)
@@ -431,6 +453,7 @@ def snapshot(args):
     if len(PurePosixPath(relative(name)).parts) != 1:
         raise ValueError("Receipt name must be one new directory name")
     target = new_directory(base / "incremental-2026-10-23" / name)
+    copy_all = getattr(args, "copy_all", False)
     rows, errors = [], []
     for row in plan["files"]:
         try:
@@ -440,8 +463,8 @@ def snapshot(args):
             current, _ = inspect_file(source, plan["git_object_format"], row["bytes"] if row.get("prefix_snapshot") else None, False)
             if current["sha256"] != row["sha256"] or current["bytes"] != row["bytes"]:
                 raise RuntimeError("SOURCE_CHANGED_SINCE_INVENTORY")
-            dest = Path(row["base_file"]) if row["private_storage"] == "BASE_EXACT" else target / "private-delta" / row["tree"] / row["relative"]
-            if row["private_storage"] != "BASE_EXACT":
+            dest, copied_file, storage = snapshot_storage(row, target, copy_all)
+            if copied_file:
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 with source.open("rb") as src, dest.open("xb") as dst:
                     remaining = row["bytes"]
@@ -455,7 +478,7 @@ def snapshot(args):
             # This paired D hash also catches a source race during the copy.
             if copied["sha256"] != row["sha256"] or copied["bytes"] != row["bytes"]:
                 raise RuntimeError("PRIVATE_D_HASH_MISMATCH")
-            rows.append({**row, "verified_private_path": str(dest), "paired_D_sha256": copied["sha256"]})
+            rows.append({**row, **storage, "paired_D_sha256": copied["sha256"]})
         except (OSError, RuntimeError, ValueError) as e:
             errors.append({"tree": row["tree"], "relative": row["relative"], "error": str(e)})
     try:
@@ -473,10 +496,14 @@ def snapshot(args):
         errors.append({"error": str(e)})
         bundle_hash = None
     receipt = {"schema": SCHEMA, "result": "PASS" if not errors else "INCOMPLETE", "created_utc": now(),
+               "snapshot_mode": "COPY_ALL" if copy_all else "LINKED_DELTA",
+               "copied_file_count": sum(r["verified_private_scope"] == "RECEIPT" for r in rows),
+               "linked_base_file_count": sum(r["verified_private_scope"] == "HISTORICAL_BASE" for r in rows),
                "manifest_sha256": hashlib.sha256(plan_path.read_bytes()).hexdigest(),
                "git_head": plan["git_head"], "historical_base_commit": BASE_COMMIT,
                "base": plan["base"], "files": rows, "errors": errors,
                "private_git_bundle": bundle_hash,
+               "private_git_bundle_relative": "private-git-all-refs.bundle" if bundle_hash else None,
                "public_proof": plan["public_proof"], "public_proof_sha256": plan["public_proof_sha256"],
                "deleted_since_base": plan["deleted_since_base"],
                "private_context_boundary": "Root+descendant JSONL complete-record prefixes at inventory time; later append is not claimed.",
@@ -575,7 +602,37 @@ def self_test():
     assert n == 2 and token not in cleaned and not CAP.search(cleaned)
     cleaned, n = scrub(raw.decode().encode("utf-16-le"), {token})
     assert n == 2 and token.decode().encode("utf-16-le") not in cleaned
-    print("PASS: pure in-memory path/redaction checks; no backup copy/archive/network activity")
+    # A later flat-mirror update must not redirect copy-all back to BASE_EXACT.
+    target = Path("new-receipt")
+    base_row = {"tree": "RungProof", "relative": "docs/final.md",
+                "private_storage": "BASE_EXACT", "base_file": "mutable-base/RungProof/docs/final.md"}
+    delta_row = {**base_row, "private_storage": "NEW_RECEIPT_DELTA", "base_file": None}
+    for row in (base_row, delta_row):
+        dest, copied, metadata = snapshot_storage(row, target, True)
+        assert copied and dest == target / "private-snapshot/RungProof/docs/final.md"
+        assert metadata["private_storage"] == "RECEIPT_COPY"
+        assert metadata["inventory_private_storage"] == row["private_storage"]
+        assert metadata["verified_private_scope"] == "RECEIPT"
+        assert metadata["verified_private_relative"] == "private-snapshot/RungProof/docs/final.md"
+        assert Path(metadata["verified_private_path"]) == target / metadata["verified_private_relative"]
+    dest, copied, metadata = snapshot_storage(base_row, target)
+    assert not copied and dest == Path(base_row["base_file"])
+    assert metadata["private_storage"] == "BASE_EXACT" and metadata["verified_private_relative"] is None
+    assert metadata["verified_private_scope"] == "HISTORICAL_BASE"
+    dest, copied, metadata = snapshot_storage(delta_row, target)
+    assert copied and dest == target / "private-delta/RungProof/docs/final.md"
+    assert metadata["private_storage"] == "NEW_RECEIPT_DELTA"
+    extra = {**delta_row, "tree": "godot-userdata", "relative": "settings.cfg", "public": "PRIVATE_ONLY"}
+    prefix = {**delta_row, "tree": "private-codex-context", "relative": "session.jsonl", "public": "PRIVATE_ONLY",
+              "prefix_snapshot": True, "bytes": 17, "session": {"snapshot_bytes": 17}}
+    for row in (extra, prefix):
+        dest, copied, metadata = snapshot_storage(row, target, True)
+        stored = {**row, **metadata}
+        assert copied and dest == target / "private-snapshot" / row["tree"] / row["relative"]
+        assert stored["public"] == "PRIVATE_ONLY"
+        if row.get("prefix_snapshot"):
+            assert stored["prefix_snapshot"] and stored["bytes"] == stored["session"]["snapshot_bytes"] == 17
+    print("PASS: pure in-memory path/redaction and linked/copy-all storage metadata checks; no backup copy/archive/network activity")
     return 0
 
 
@@ -595,6 +652,8 @@ def main():
     parser.add_argument("--session-root", action="append", default=None)
     parser.add_argument("--allow-container-hash", action="append", default=[])
     parser.add_argument("--bundle-git", action="store_true")
+    parser.add_argument("--copy-all", action="store_true",
+                        help="snapshot: copy every planned regular file into the new receipt instead of linking matched base files")
     args = parser.parse_args()
     args.root_thread = args.root_thread or [ROOT_THREAD]
     home = Path.home() / ".codex"
@@ -605,6 +664,8 @@ def main():
         parser.error("--sevenzip requires an explicit existing approved local7z.exe")
     if args.mode == "snapshot" and not args.manifest:
         parser.error("snapshot requires --manifest")
+    if args.copy_all and args.mode != "snapshot":
+        parser.error("--copy-all applies only to snapshot")
     if args.mode == "archive" and not args.receipt:
         parser.error("archive requires --receipt")
     return {"inventory": inventory, "prove-public": prove_public, "snapshot": snapshot, "archive": archive,

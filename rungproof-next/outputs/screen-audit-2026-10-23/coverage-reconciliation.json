@@ -8,20 +8,18 @@
       "SCOPED_PASS": 77
     },
     "controls": {
-      "SCOPED_PASS": 69,
-      "PARTIAL": 8
+      "SCOPED_PASS": 76,
+      "PARTIAL": 1
     },
     "normal_outcome": {
       "SCOPED_PASS": 76,
       "PARTIAL": 1
     },
     "stop_reset_restart": {
-      "SCOPED_PASS": 76,
-      "PARTIAL": 1
+      "SCOPED_PASS": 77
     },
     "recovery": {
-      "SCOPED_PASS": 76,
-      "PARTIAL": 1
+      "SCOPED_PASS": 77
     },
     "repeat": {
       "SCOPED_PASS": 76,
@@ -32,8 +30,8 @@
       "FAIL": 1
     },
     "feedback": {
-      "SCOPED_PASS": 74,
-      "PARTIAL": 2,
+      "SCOPED_PASS": 75,
+      "PARTIAL": 1,
       "FAIL": 1
     }
   },
@@ -221,7 +219,8 @@
       ],
       "contract_training_hints": [],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Simulated E-stop/reset and station/AppStop routes are covered. Capture any remaining declared reset/fresh-start input image explicitly if reconciling old reset-only bookkeeping; no belt texture-speed measurement is required. N1."
+      "remaining_before_controls_normalization": "Simulated E-stop/reset and station/AppStop routes are covered. Capture any remaining declared reset/fresh-start input image explicitly if reconciling old reset-only bookkeeping; no belt texture-speed measurement is required. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "equipment-gallery",
@@ -403,7 +402,8 @@
       ],
       "contract_training_hints": [],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Empty conveyor surface remains visually inconclusive. CNC/motor/fan bounded motion/hold reviewed. Establish observable contractual feature before proposing repeated empty-belt captures; no defect inferred."
+      "remaining_before_controls_normalization": "Empty conveyor surface remains visually inconclusive. CNC/motor/fan bounded motion/hold reviewed. Establish observable contractual feature before proposing repeated empty-belt captures; no defect inferred.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-10-01-drive-alarm-code-string",
@@ -812,7 +812,8 @@
         "PC supplies drive_alarm_text, drive_alarm_string_valid and alarm_reset; PLC computes alarm_code_found, alarm_match_valid and drive_alarm_active.",
         "Edit selected_alarm_code from F003 to F030, Apply and Verify + Load; observe reversed F003/F030 results, then Undo and Verify + Load to restore."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-10-02-chicken-label-print",
@@ -1024,7 +1025,8 @@
         "Printing captures exact PLC label_text and takes 0.6 s; actual print_complete permits a separate 0.5 s application; held requests do not duplicate jobs.",
         "Edit label_template from CHICKEN {0:F3} kg to CHICKEN {0:F2} kg, Apply and Verify + Load; measured 1.237 kg prints 1.24 kg, then restore with Undo and Verify + Load."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-10-03-vision-package-sorter",
@@ -1243,7 +1245,8 @@
         "Test the initial state, the valid condition, and at least one missing permissive."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Classes1/2/3/4 normal routes now reviewed; remove stale tracked class3/4-pending wording in a future authorized reconciliation. In-flight class changes and vision-valid/package loss while moving remain unverified controls/recovery cases. N1."
+      "remaining_before_controls_normalization": "Classes1/2/3/4 normal routes now reviewed; remove stale tracked class3/4-pending wording in a future authorized reconciliation. In-flight class changes and vision-valid/package loss while moving remain unverified controls/recovery cases. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-10-04-motor-enum-state",
@@ -1432,7 +1435,8 @@
         "Fault dominates Stop and fresh Start; a cleared fault input remains latched until Reset, and held Start cannot restart after Stop or fault Reset.",
         "Edit the Running transition MOV SourceA to Stopped, Apply and Verify + Load: fresh Start remains Stopped with motor_running FALSE; Undo and Verify + Load restores motion."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-10-05-motor-struct-data",
@@ -1679,7 +1683,8 @@
         "Test the initial state, the valid condition, and at least one missing permissive."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Exercise documented nonzero power/temperature STRUCT feedback and power_valid; only zero numeric fields were reviewed. BOOL truth/typed command/lifecycle already covered. N1."
+      "remaining_before_controls_normalization": "Exercise documented nonzero power/temperature STRUCT feedback and power_valid; only zero numeric fields were reviewed. BOOL truth/typed command/lifecycle already covered. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-10-06-ten-motor-array-startup",
@@ -2031,7 +2036,8 @@
         "Compare intended and wrong valid logic, then confirm invalid current logic cannot execute the previously loaded program."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Named all-zone traversal/end hold gap closed. No built-in timed ordering, automatic completion or required shaft-speed claim established. Existing permissive/lifecycle scopes remain separate."
+      "remaining_before_controls_normalization": "Named all-zone traversal/end hold gap closed. No built-in timed ordering, automatic completion or required shaft-speed claim established. Existing permissive/lifecycle scopes remain separate.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-11-06-wastewater-collection",
@@ -2268,7 +2274,8 @@
         "Observe simultaneous inflow and transfer, empty/full clamps, overflow, Stop freezing level, and Reset to 35%."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Record any documented overflow/inflow-at-full behavior and exposed inhibition route if available. Active readiness/clear loss and Stop/Run are covered. Exact hydraulic calibration/internal opaque levels are not required UI claims. N1."
+      "remaining_before_controls_normalization": "Record any documented overflow/inflow-at-full behavior and exposed inhibition route if available. Active readiness/clear loss and Stop/Run are covered. Exact hydraulic calibration/internal opaque levels are not required UI claims. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-11-07-multi-conveyor-pallet-route",
@@ -2505,7 +2512,8 @@
         "Test the initial state, the valid condition, and at least one missing permissive."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Common-stop physical route/requalification is closed. Abnormal downstream blockage distinct from normal handoff holds remains unverified if a real scene control supplies it; no fabricated stuck sensor. N1."
+      "remaining_before_controls_normalization": "Common-stop physical route/requalification is closed. Abnormal downstream blockage distinct from normal handoff holds remains unverified if a real scene control supplies it; no fabricated stuck sensor. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-11-11-service-elevator",
@@ -2732,7 +2740,8 @@
         "The new drum, car-roof anchors and changing rope length illustrate a connected hoist path. Rear upper stairs and side lower steps connect landings to floor; access gate is fixed open, without fabricated feedback or an engineered personnel-safety claim."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Post-backup native upperTrue at99.9999/bothOff and actual descending doorloss81.9999â†’settled56.6666/bothOff held twice, restoreâ†’lowerTrue/bothOff are independently reviewed. Specific upper/descent gaps closed. V2 one-second upper dwell is QA parameter after actual feedback, not app timing spec; all phaseÃ—qualification crossproducts not claimed. N1."
+      "remaining_before_controls_normalization": "Post-backup native upperTrue at99.9999/bothOff and actual descending doorloss81.9999â†’settled56.6666/bothOff held twice, restoreâ†’lowerTrue/bothOff are independently reviewed. Specific upper/descent gaps closed. V2 one-second upper dwell is QA parameter after actual feedback, not app timing spec; all phaseÃ—qualification crossproducts not claimed. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-11-12-mobile-traffic-lights",
@@ -2782,9 +2791,10 @@
         },
         "recovery": {
           "status": "SCOPED_PASS",
-          "scope": "Ready/Aclear/Bclearloss endpointsbothred andrestorestartupred; notoccupancyarrestproof. ActualoccupiedStopRuncommittedclearanceverified.",
+          "scope": "Ready/Aclear/Bclearloss endpointsbothred andrestorestartupred; notoccupancyarrestproof. ActualoccupiedStopRuncommittedclearanceverified. Q08 exact closure: Actual occupiedA−2.04/Agreen→acceptedREADYoff/allred→on13308stilloccupied/allred;13368+60scans/13424+116stillallred until13435clearTrue/Agreen; actualcommittedcar reaches supportedendpoint3.6/held.10hashes+Healthoff/on.",
           "evidence": [
-            "evidence-review-lab1112.md"
+            "evidence-review-lab1112.md",
+            "CURRENT_AUDIT:traffic-occupied-ready-review.md"
           ],
           "source": "coverage-ledger.json"
         },
@@ -2996,7 +3006,8 @@
             "evidence-review-lab1112.md"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-11-13-xy-palletizing",
@@ -3059,13 +3070,26 @@
           "source": "coverage-ledger.json"
         },
         "stop_reset_restart": {
-          "status": "PARTIAL",
-          "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.",
+          "status": "SCOPED_PASS",
+          "scope": "Genuine actual AppStop during unloaded Ytravel: STOPPED4246/Y−1980/allaxesOff/samephysicalpose held; AppRun alone resumespickup/carry/placement, nofreshmachineStart. Final14968actualhomeXYZ0/four supportedcartons;16408/16461placed4/layerTrue/step100/vacuumFalse/nofault. ExistingReset evidence retained. Distinct from ENABLEloss/freshStart policy; no allphase/carryingStop claim.",
           "evidence": [
             "breadth-lab-11-13-xy-palletizing-run.png",
-            "breadth-lab-11-13-xy-palletizing-reset.png"
+            "breadth-lab-11-13-xy-palletizing-reset.png",
+            "CURRENT_AUDIT:demo5-appstop-recovery-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.",
+              "evidence": [
+                "breadth-lab-11-13-xy-palletizing-run.png",
+                "breadth-lab-11-13-xy-palletizing-reset.png",
+                "CURRENT_AUDIT:demo5-appstop-recovery-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "recovery": {
           "status": "SCOPED_PASS",
@@ -3384,7 +3408,8 @@
         "A 750 ms pickup dwell enables vacuum. The CTU counts a completed placement plus home return, not elapsed time alone.",
         "Machine Stop, System Enable loss, pallet-permissive loss, or the simulated training trip clears every axis command and requires a fresh Start. Machine Reset returns the plant and PLC sequence to home."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-11-19-powder-batch-mixer",
@@ -3567,7 +3592,8 @@
         "Test the initial state, the valid condition, and at least one missing permissive."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Capture distinct slide-gate/discharge-valve motion and motor response if claiming those rendered actuators work; only three pilots are proven. Mid-mix Stop retention not reviewed. Mixing duration is a fixture parameter, not an invented process requirement. N1."
+      "remaining_before_controls_normalization": "Capture distinct slide-gate/discharge-valve motion and motor response if claiming those rendered actuators work; only three pilots are proven. Mid-mix Stop retention not reviewed. Mixing duration is a fixture parameter, not an invented process requirement. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-01-workstation-call",
@@ -3701,7 +3727,11 @@
         "Treat material_call_pressed as simulator-to-PLC inputs. The PLC should command only material_call_on.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": [
+        "QA-UI-002 S3",
+        "QA-SPEC-002 S4"
+      ]
     },
     {
       "scene_id": "lab-2-02-dual-confirmation",
@@ -3884,7 +3914,8 @@
         "Treat operator_confirmed, quality_confirmed as simulator-to-PLC inputs. The PLC should command only handoff_ready.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-03-service-marker-inhibit",
@@ -4057,7 +4088,8 @@
         "Treat marker_inhibit_pressed as simulator-to-PLC inputs. The PLC should command only service_marker_on.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-04-two-station-call",
@@ -4242,7 +4274,8 @@
         "Treat north_call_pressed, south_call_pressed as simulator-to-PLC inputs. The PLC should command only assistance_call_on.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-05-bay-light-selector",
@@ -4415,7 +4448,8 @@
         "Treat selector_position as simulator-to-PLC inputs. The PLC should command only bay_a_command, bay_b_command.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-06-ready-attention",
@@ -4584,7 +4618,10 @@
         "Treat request_held as simulator-to-PLC inputs. The PLC should command only ready_light, attention_light.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": [
+        "QA-SPEC-002 S4"
+      ]
     },
     {
       "scene_id": "lab-2-07-dual-contact-permissive",
@@ -4776,7 +4813,8 @@
         "Treat reset_request, stop_contact_nc as simulator-to-PLC inputs. The PLC should command only permit_output.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-08-inspection-vote",
@@ -4984,7 +5022,8 @@
         "Treat vote_a, vote_b as simulator-to-PLC inputs. The PLC should command only pass_indication, hold_indication, conflict_indication.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-09-maintenance-beacon",
@@ -5198,7 +5237,8 @@
         "Treat beacon_position as simulator-to-PLC inputs. The PLC should command only red_beacon, amber_beacon, green_beacon.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-10-dust-collector-seal-in",
@@ -5424,7 +5464,8 @@
         "Treat collector-start, collector-stop as simulator-to-PLC inputs. The PLC should command only collector_run.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-11-inbound-tote-stop",
@@ -5501,13 +5542,14 @@
           "source": "coverage-ledger.json / breadth-review-progress.md"
         },
         "feedback": {
-          "status": "PARTIAL",
-          "scope": "The selected scene, running local controller and explicit command rejection are visible in Health history. Normal process feedback and completion remain untested.",
+          "status": "SCOPED_PASS",
+          "scope": "The selected scene, running local controller and explicit command rejection are visible in Health history. Normal process feedback and completion remain untested. Latest exact Q12 closure: 42hashes: actualtote stationary atscanner with RUNNING4463→4490/conveyorOff/scanIncomplete; release4503scanComplete/conveyorOn then supportedendpoint7415/7479.",
           "evidence": [
             "lab211-health-history.png",
             "lab211-start-history-repro-full.png",
             "binding-visual-review.jsonl",
-            "provisional-issues.md"
+            "provisional-issues.md",
+            "CURRENT_AUDIT:tote-stationary-scan-review.md"
           ],
           "source": "coverage-ledger.json"
         }
@@ -5618,7 +5660,8 @@
             "evidence-review-lab211-plant-gap.md"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-12-assembly-lift",
@@ -5841,7 +5884,8 @@
         "Use a step/state approach and prove the transition order: raising → at top."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Normal raise/lower, limits, Stop hold/no auto-resume, repeat and Reset are closed. Simultaneous up/down is model-only evidence; native test requires a deliberate learner controller, not a nonexistent physical conflict button. N1."
+      "remaining_before_controls_normalization": "Normal raise/lower, limits, Stop hold/no auto-resume, repeat and Reset are closed. Simultaneous up/down is model-only evidence; native test requires a deliberate learner controller, not a nonexistent physical conflict button. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-13-coolant-jug-fill",
@@ -6082,7 +6126,8 @@
         "Treat jug_present, high_level_probe as simulator-to-PLC inputs. The PLC should command only conveyor_run, fill_valve_open, fill_skid_run. The leading-edge index sensor is placed from delivered jug/nozzle geometry so detection aligns the open neck. Fill rises at 100/2.2 percent per second only while stopped, with valve and skid commanded and the nozzle physically inside the neck. High probe indicates full; PLC decides valve closure and discharge. Belt command remains active independently of the displayed jug endpoint.",
         "Use a step/state approach and prove the transition order: indexing → filling → level reached → discharging → ready."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-14-sump-pump",
@@ -6099,12 +6144,24 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+          "status": "SCOPED_PASS",
+          "scope": "Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.",
           "evidence": [
-            "evidence-review-lab214.md"
+            "evidence-review-lab214.md",
+            "CURRENT_AUDIT:residual-obligations-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+              "evidence": [
+                "evidence-review-lab214.md",
+                "CURRENT_AUDIT:residual-obligations-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -6177,7 +6234,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.",
+      "remaining": "Exact local loaded-LAD alias reconciliation removes invented separate Stop/Reset hitbox obligations. Preserve native sampling/mode limits and genuine failures; see residual-obligations-review.md.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-2-14-sump-pump.scene.json",
         "rungproof-next/docs/help/scenes/lab-2-14-sump-pump.md"
@@ -6267,7 +6324,8 @@
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
       "route_documentation_status": "UNRESOLVED_UNEXPOSED_DECLARATIONS",
-      "remaining_before_route_reconciliation": "Abnormal float combinations/pump failure require an exposed or legitimate learner test contract before testing; normal hysteresis and active Stop recovery are covered. Physical motor rotation remains unverified. N1."
+      "remaining_before_route_reconciliation": "Abnormal float combinations/pump failure require an exposed or legitimate learner test contract before testing; normal hysteresis and active Stop recovery are covered. Physical motor rotation remains unverified. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-15-fume-extractor",
@@ -6467,7 +6525,8 @@
         "Treat hood_light_request, fan_selector_position as simulator-to-PLC inputs. The PLC should command only hood_light_on, fan_run, fan_speed_percent.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-16-safe-drill",
@@ -6756,7 +6815,8 @@
         "Treat left_hand_request, right_hand_request, workpiece_present, drill_at_top, drill_at_bottom as simulator-to-PLC inputs. The PLC should command only drill_run.",
         "Use a step/state approach and prove the transition order: spindle start → drilling → bottom dwell → retracting → cycle complete."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-17-pallet-robot",
@@ -6773,12 +6833,24 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+          "status": "SCOPED_PASS",
+          "scope": "Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.",
           "evidence": [
-            "evidence-review-lab217.md"
+            "evidence-review-lab217.md",
+            "CURRENT_AUDIT:residual-obligations-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+              "evidence": [
+                "evidence-review-lab217.md",
+                "CURRENT_AUDIT:residual-obligations-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -6851,7 +6923,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.",
+      "remaining": "Exact local loaded-LAD alias reconciliation removes invented separate Stop/Reset hitbox obligations. Preserve native sampling/mode limits and genuine failures; see residual-obligations-review.md.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-2-17-pallet-robot.scene.json",
         "rungproof-next/docs/help/scenes/lab-2-17-pallet-robot.md"
@@ -6944,7 +7016,8 @@
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
       "route_documentation_status": "UNRESOLVED_UNEXPOSED_DECLARATIONS",
-      "remaining_before_route_reconciliation": "Pallet-not-ready start qualification and moving outbound interruption are unverified. Distinguish robot carrying interruption from between-placement Stop already seen; expose/observe grip only if claiming it, not from occluded container arrangement. N1."
+      "remaining_before_route_reconciliation": "Pallet-not-ready start qualification and moving outbound interruption are unverified. Distinguish robot carrying interruption from between-placement Stop already seen; expose/observe grip only if claiming it, not from occluded container arrangement. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-18-pallet-pickup",
@@ -6961,10 +7034,11 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Namedphysicalbutton/modecontrols testedonlyasspecifiedinreport; otherguard/faultcasesremainopen.",
+          "status": "SCOPED_PASS",
+          "scope": "Namedphysicalbutton/modecontrols testedonlyasspecifiedinreport; otherguard/faultcasesremainopen. Q18 closure: Actual manualmode/pickup100/runFalse qualified, fresh JOG explicitlyrejected/newHealth; physicalsupportedpose/state holds276scans/5.52s.",
           "evidence": [
-            "evidence-review-lab218.md"
+            "evidence-review-lab218.md",
+            "CURRENT_AUDIT:pickup-endpoint-jog-review.md"
           ],
           "source": "coverage-ledger.json"
         },
@@ -7152,7 +7226,8 @@
         "Treat auto_mode, pickup_sensor, auto_start_request and manual_jog_request as simulator-to-PLC inputs. Start and Jog pulse their separate requests when a matching ladder input is loaded. The PLC should command only conveyor_run.",
         "Use a step/state approach and prove the transition order: automatic travel → pickup position."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-19-service-door",
@@ -7400,7 +7475,8 @@
         "Use a step/state approach and prove the transition order: opening → open limit.",
         "The freestanding beacons show raw NC input states: illuminated means TRUE (limit not reached); off means FALSE (limit reached in this reference). They are signal displays, not physical limit switches or cable-fault monitoring."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-20-bottle-shuttle",
@@ -7417,15 +7493,30 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+          "status": "SCOPED_PASS",
+          "scope": "Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.",
           "evidence": [
             "lab220-evidence-compact.jpg",
             "lab220-settled-observation.png",
             "lab220-interrupt-ui-checkpoints.jpg",
-            "evidence-review-lab220.md"
+            "evidence-review-lab220.md",
+            "CURRENT_AUDIT:residual-obligations-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+              "evidence": [
+                "lab220-evidence-compact.jpg",
+                "lab220-settled-observation.png",
+                "lab220-interrupt-ui-checkpoints.jpg",
+                "evidence-review-lab220.md",
+                "CURRENT_AUDIT:residual-obligations-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -7450,13 +7541,15 @@
           "source": "coverage-ledger.json"
         },
         "recovery": {
-          "status": "PARTIAL",
-          "scope": "Appinterruption continuation and homereset supported; dedicatedmachineStop/Reset, startwhilemoving and phase-specific/bothsensor/fault cases unproved. AppStopamber cannot be failed against sceneStopred without pathownership.",
+          "status": "SCOPED_PASS",
+          "scope": "Existing actual midtravel AppStop holds scan/pose1.2s; AppRun continuation, AppResetHome and shortpostResetRunHome. No separate machineStop/Reset semantic obligation in local loadedLAD alias mode. Actual right_sensor_activeTrue/reversal edge remains an unobserved normalfeedback witness, not failed recovery.",
           "evidence": [
             "lab220-evidence-compact.jpg",
             "lab220-settled-observation.png",
             "lab220-interrupt-ui-checkpoints.jpg",
-            "evidence-review-lab220.md"
+            "evidence-review-lab220.md",
+            "evidence-review-lab220.md",
+            "CURRENT_AUDIT:residual-obligations-review.md"
           ],
           "source": "coverage-ledger.json"
         },
@@ -7513,7 +7606,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.",
+      "remaining": "Exact local loaded-LAD alias reconciliation removes invented separate Stop/Reset hitbox obligations. Preserve native sampling/mode limits and genuine failures; see residual-obligations-review.md.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-2-20-bottle-shuttle.scene.json",
         "rungproof-next/docs/help/scenes/lab-2-20-bottle-shuttle.md"
@@ -7591,7 +7684,8 @@
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
       "route_documentation_status": "UNRESOLVED_UNEXPOSED_DECLARATIONS",
-      "remaining_before_route_reconciliation": "Capture right sensor True/reversal and dedicated machine Stop/Reset distinct from app playback. AppStop amber versus declared sceneStop red requires path clarification, not automatic wrong-color failure. N1."
+      "remaining_before_route_reconciliation": "Capture right sensor True/reversal and dedicated machine Stop/Reset distinct from app playback. AppStop amber versus declared sceneStop red requires path clarification, not automatic wrong-color failure. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-21-tote-finishing",
@@ -7608,12 +7702,24 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+          "status": "SCOPED_PASS",
+          "scope": "Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.",
           "evidence": [
-            "evidence-review-lab221.md"
+            "evidence-review-lab221.md",
+            "CURRENT_AUDIT:residual-obligations-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+              "evidence": [
+                "evidence-review-lab221.md",
+                "CURRENT_AUDIT:residual-obligations-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -7686,7 +7792,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.",
+      "remaining": "Exact local loaded-LAD alias reconciliation removes invented separate Stop/Reset hitbox obligations. Preserve native sampling/mode limits and genuine failures; see residual-obligations-review.md.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-2-21-tote-finishing.scene.json",
         "rungproof-next/docs/help/scenes/lab-2-21-tote-finishing.md"
@@ -7953,7 +8059,8 @@
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
       "route_documentation_status": "UNRESOLVED_UNEXPOSED_DECLARATIONS",
-      "remaining_before_route_reconciliation": "Explain documented cycle_complete/status semantics at successful discharge: physical exit/cap/label/inspection pass while cycle_complete stays False/amber. Not yet a confirmed defect. Distinct station interruptions/machineStop remain unverified. N1."
+      "remaining_before_route_reconciliation": "Explain documented cycle_complete/status semantics at successful discharge: physical exit/cap/label/inspection pass while cycle_complete stays False/amber. Not yet a confirmed defect. Distinct station interruptions/machineStop remain unverified. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-22-dual-spindle",
@@ -7970,12 +8077,24 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+          "status": "SCOPED_PASS",
+          "scope": "Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. Existing per-entry native lifecycle review remains the actual response evidence.",
           "evidence": [
-            "evidence-review-lab222.md"
+            "evidence-review-lab222.md",
+            "CURRENT_AUDIT:residual-obligations-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Actual mapped physical START accepted and produced the normal documented process in cited native review. Source declares separate Stop/Reset but no equipment mapping/visible legacy action panel exposes them; no direct response PASS for those ungrounded routes.",
+              "evidence": [
+                "evidence-review-lab222.md",
+                "CURRENT_AUDIT:residual-obligations-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -8048,7 +8167,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Physical START response is evidenced. Separate declared Stop/Reset has no grounded exposed route: retain route/documentation question, not a fictitious button test. Specific normal/status semantics remain only as named in cited reviews.",
+      "remaining": "Exact local loaded-LAD alias reconciliation removes invented separate Stop/Reset hitbox obligations. Preserve native sampling/mode limits and genuine failures; see residual-obligations-review.md.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-2-22-dual-spindle.scene.json",
         "rungproof-next/docs/help/scenes/lab-2-22-dual-spindle.md"
@@ -8214,7 +8333,8 @@
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
       "route_documentation_status": "UNRESOLVED_UNEXPOSED_DECLARATIONS",
-      "remaining_before_route_reconciliation": "Full SIM cycle_complete/status semantics at final home remain unresolved; scoped one-pass motion is covered. MachineStop distinct from appStop and deliberately forced transfer-before-both-home interlock are unverified; the latter needs a legitimate learner test, not hidden output forcing. N1."
+      "remaining_before_route_reconciliation": "Full SIM cycle_complete/status semantics at final home remain unresolved; scoped one-pass motion is covered. MachineStop distinct from appStop and deliberately forced transfer-before-both-home interlock are unverified; the latter needs a legitimate learner test, not hidden output forcing. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-23-parcel-sorter",
@@ -8231,11 +8351,15 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Current V4 accepted Start transports two parcels; original unbound-action FAIL is superseded for that input only. Complete batch still fails; no exhaustive control PASS.",
+          "status": "SCOPED_PASS",
+          "scope": "Actual mapped physical START plus native visible AppPlayback Stop/Reset response supports the tested local loaded-LAD control semantics. Exact source trace proves declared stop/reset actions are aliases of identical StopActiveController/ResetActiveController methods, no extra binding/condition/payload or distinct physical-control promise. Hidden action-ID clicks/hitboxes, externalPLC and unloaded modes are NOT newly credited. V7 START reaches3 supportedreceivers; actualphase30 AppStop/held/Runalone reaches3; actualReset invocation succeeds but two sameinstance repeats FAIL separately.",
           "evidence": [
             "postbackup-parcel-v4-isolation.md",
-            "postbackup-parcel-review.md"
+            "postbackup-parcel-review.md",
+            "CURRENT_AUDIT:residual-obligations-review.md",
+            "CURRENT_AUDIT:parcel-v7-native-review.md",
+            "CURRENT_AUDIT:parcel-v7-handoff-recovery-review.md",
+            "CURRENT_AUDIT:parcel-v7-controlled-comparison-review.md"
           ],
           "supersedes": {
             "status": "FAIL",
@@ -8247,7 +8371,32 @@
             ],
             "source": "coverage-ledger.json"
           },
-          "source": "specific native evidence reconciliation"
+          "source": "specific native evidence reconciliation",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Current V4 accepted Start transports two parcels; original unbound-action FAIL is superseded for that input only. Complete batch still fails; no exhaustive control PASS.",
+              "evidence": [
+                "postbackup-parcel-v4-isolation.md",
+                "postbackup-parcel-review.md",
+                "CURRENT_AUDIT:residual-obligations-review.md",
+                "CURRENT_AUDIT:parcel-v7-native-review.md",
+                "CURRENT_AUDIT:parcel-v7-handoff-recovery-review.md",
+                "CURRENT_AUDIT:parcel-v7-controlled-comparison-review.md"
+              ],
+              "supersedes": {
+                "status": "FAIL",
+                "scope": "Only named command paths confirmed failed: START SORT. Matching runtime RUNNING; explicit command-binding rejection at23:35:52. Health history explicitly says this scene action has no command binding in the loaded ladder program. Other control behaviors remain incompletely tested.",
+                "evidence": [
+                  "lab223-start-sort-health.png",
+                  "binding-visual-review.jsonl",
+                  "provisional-issues.md"
+                ],
+                "source": "coverage-ledger.json"
+              },
+              "source": "specific native evidence reconciliation"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -8393,7 +8542,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "V7 normal and actual phase30/count0 AppStop/Run-alone recovery now SCOPED_PASS. Two same-scene Reset/Run/Start attempts still FAIL count1; real scene reconstruction succeeds. Source-supported geometry/reset hypothesis remains separately qualified; no unique native cause or apprepair asserted.",
+      "remaining": "Exact local loaded-LAD alias reconciliation removes invented separate Stop/Reset hitbox obligations. Preserve native sampling/mode limits and genuine failures; see residual-obligations-review.md.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-2-23-parcel-sorter.scene.json",
         "rungproof-next/docs/help/scenes/lab-2-23-parcel-sorter.md"
@@ -8579,7 +8728,10 @@
           "conveyors_run": true
         },
         "cause_confidence": "Strong native history-dependence; geometry causal chain separately source-supported, not uniquely established by native images."
-      }
+      },
+      "current_issue_associations": [
+        "QA-PLANT-001 S2 (Reset repeat)"
+      ]
     },
     {
       "scene_id": "lab-2-24-robot-cnc",
@@ -9009,7 +9161,8 @@
         "Treat blank_at_pickup, cnc_ready, machining_complete as simulator-to-PLC inputs. The PLC should command only infeed_run, outfeed_run, robot_run, cnc_run.",
         "Use a step/state approach and prove the transition order: infeed blank → pickup → machining → machine complete → unload → outfeed → ready."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-2-25-inspection-toggle",
@@ -9150,7 +9303,8 @@
         "Treat toggle button pulse as simulator-to-PLC inputs. The PLC should command only inspection_light_on.",
         "List the required input and memory states before assigning any output. Test every state, including the all-false state."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-3-01-guarded-pallet-transfer",
@@ -9344,7 +9498,8 @@
         "transfer_run commands prescribed 0.45 m/s carton travel on the belt. transfer_complete retains at the supported exit; Reset reloads the infeed. Stop retains position. entry_carton_present and exit_carton_present report carton overlap with the installed optical routes; they are separate from manual path-clear fixtures.",
         "The explicit --audit-guarded-layout command writes .tools/plant-review-guarded-transfer.rpproj.json: a 20 ms ladder review reference that ANDs the three manual permissives and removes transfer_run at transfer_complete. Default lesson programs remain blank."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-3-02-robot-cell-safe-restart",
@@ -9524,7 +9679,8 @@
         "PC inputs are gate_closed, robot_ready, the reset_complete pulse (legacy tag name), and a separate motion_request pulse; PLC logic owns robot_enable and cell_ready.",
         "Test the initial state, the valid condition, and at least one missing permissive."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-01-press-count-lamp",
@@ -9711,7 +9867,8 @@
         "Inputs are simulator feedback (pulse_received); PLC logic owns threshold_lamp.",
         "Wait for pulse_received to return false before pressing again. The starter preset is three; Stop removes the lamp command and Reset clears the counter."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-02-counter-reset-lamp",
@@ -9936,7 +10093,8 @@
         "reset_pressed clears the counter; it takes priority if count and reset arrive in the same scan. Both buttons produce one accepted-scan pulse.",
         "The controller owns the counter and counter_lamp. The default exercise has no loaded solution; author or explicitly open a controller before Run."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-03-repeat-cycle-counter",
@@ -10130,7 +10288,8 @@
         "Enable the machine, then issue one START pulse. The explicit reference commands three actual dry strokes.",
         "The modeled Z head feeds 100 mm in 1 s, dwells 0.5 s, and returns in 1 s. These are chosen offline reference values, not an OEM machining specification."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-04-sequence-light-tower",
@@ -10319,7 +10478,8 @@
         "Start selects red; four separate Steps select amber, green, blue, then off. Idle scans must not advance.",
         "Reject Step before Start and repeated Start while active. Stop removes commands; a fresh Start begins again at red."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-05-dual-input-count-window",
@@ -10601,7 +10761,8 @@
         "The original offline reference enables window_ready only at A=2..3 and B=3..4, inclusive; extra presses beyond the limits remove it. These values are chosen training assumptions, not source-specified presets. Press order is unrestricted; there is no elapsed-time window.",
         "reset_pressed inhibits both count rungs and resets both CTUs before evaluating the indication. Author or explicitly open a controller before Run; no solution is automatically loaded."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-06-multi-press-confirmation",
@@ -10875,7 +11036,8 @@
         "The original offline reference enables confirmation_valid only at exactly A=2 and B=3; extra presses beyond the limits remove it. These values are chosen training assumptions, not source-specified presets. Press order is unrestricted; there is no elapsed-time window.",
         "reset_pressed inhibits both count rungs and resets both CTUs before evaluating the indication. Author or explicitly open a controller before Run; no solution is automatically loaded."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-07-parking-garage-entry",
@@ -11131,7 +11293,8 @@
         "Entry remains at the stop mark until barrier_raised. Stop freezes the plant; Run resumes. Application Reset empties both training bays and resets PLC memory."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Gate-closing obstruction/sensor-stuck behavior is unverified only if exposed/documented. Two bays/full guard, occupied exit Stop, clear/enable loss, REMOVE and Reset repeat covered. Exact pulse width is not established. N1."
+      "remaining_before_controls_normalization": "Gate-closing obstruction/sensor-stuck behavior is unverified only if exposed/documented. Two bays/full guard, occupied exit Stop, clear/enable loss, REMOVE and Reset repeat covered. Exact pulse width is not established. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-08-package-grouping",
@@ -11387,7 +11550,8 @@
             "evidence-review-lab408.md"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-09-chain-drive-lift",
@@ -11623,7 +11787,8 @@
             "evidence-review-lab49.md"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-10-cookie-packaging",
@@ -11831,7 +11996,8 @@
         "Observe six distinct beam crossings and six sealing cycles. Reset reloads six unwrapped trays and both counts return to zero."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "No new normal blocker: six/six and actual busy-head Stop recovery covered. Fault injection requires a documented input route; exact all-six stroke extremes/seal quality are not proven UI claims. N1."
+      "remaining_before_controls_normalization": "No new normal blocker: six/six and actual busy-head Stop recovery covered. Fault injection requires a documented input route; exact all-six stroke extremes/seal quality are not proven UI claims. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-11-barrel-fill-station",
@@ -12051,7 +12217,8 @@
         "Observe 150 L transferred from the 200 L source, then a supported barrel retained on the outfeed. Reset reloads the finite batch."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Documented low-source/downstream obstruction/fill-fault behavior remains unverified if legitimate controls/feedback permit it. Actual150+50 conservation and filling Stop/freshStart are covered. No calibrated hydraulic accuracy claim. N1."
+      "remaining_before_controls_normalization": "Documented low-source/downstream obstruction/fill-fault behavior remains unverified if legitimate controls/feedback permit it. Actual150+50 conservation and filling Stop/freshStart are covered. No calibrated hydraulic accuracy claim. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-4-12-cable-cut-length",
@@ -12296,7 +12463,8 @@
             "evidence-review-lab412.md"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-01-delayed-lamp",
@@ -12496,7 +12664,8 @@
         "Demo 2 already contains a two-second TON; the training editor uses that authored document.",
         "There is no manual delay_complete input. Timing uses accepted controller scans, not wall time while stopped."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-02-timed-lamp-off",
@@ -12783,7 +12952,8 @@
         "Removed time_active was a manually precomputed timer result. Rebind old projects to raw START and PLC TP output.",
         "The reference uses a three-second nonretriggerable pulse on accepted 20 ms scans; this is an original offline choice, not source-exact timing."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-03-rotary-flasher",
@@ -12917,7 +13087,8 @@
         "Removed flash_tick was a manually precomputed timer result; update older projects to PLC-owned timing.",
         "The 0.5 s half-period is an original offline training choice, not source-exact timing."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-04-alternating-lamps",
@@ -13058,7 +13229,8 @@
         "Removed alternate_phase was a manually precomputed sequence state; migrate older projects to PLC phase memory.",
         "The 0.5 s phase duration is an original offline choice absent from the source. A is amber; B is green."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-05-variable-flash-rate",
@@ -13218,7 +13390,8 @@
         "Neither rate or conflicting simultaneous rates inhibits the reference, with no implicit priority.",
         "FAST 0.2 s and SLOW 0.5 s half-periods are declared original offline choices, not source-exact timing."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-06-running-light-tower",
@@ -13379,7 +13552,8 @@
         "Replace obsolete tower_step_active with tower_red, tower_amber and tower_green in older projects; one green output cannot walk three tiers.",
         "The explicit original reference wraps green to red. Source specifies a pulse-driven sequence, without numeric timing or wrap detail. Separate Step presses need a released-input scan."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-07-pedestrian-crossing",
@@ -13562,7 +13736,8 @@
         "PLC logic owns signal colors, sequence state and timers. Green and WALK must never overlap.",
         "Open the reference explicitly or author your own ladder; exercise loading installs no solution."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-08-drawbridge-control",
@@ -13803,7 +13978,8 @@
         "Require both barriers closed and traffic-stopped feedback before either bridge direction.",
         "Open barriers only after HOME; release green only after barriers reach OPEN. No manual HOME toggle exists."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-09-bag-indexing-conveyor",
@@ -14035,7 +14211,8 @@
             "lab509-r1-clear-alone.png"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-5-10-coating-line",
@@ -14287,7 +14464,8 @@
             "../screen-audit-2026-10-23/coating-index-stop-review.md"
           ]
         }
-      ]
+      ],
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-6-07-luggage-weight-sort",
@@ -14577,7 +14755,8 @@
         "Load next bag is available only after an exit and with both travel commands off. Change fixture mass before departure. Default ladder remains blank."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Diverter-not-ready loss/recovery and class-boundary weights remain unverified where supported by exposed mass selector.12/22/32 routes, actual valid weighing, scaleReadyhold and StopResetrepeat covered. No exact transient pulse claim. N1."
+      "remaining_before_controls_normalization": "Diverter-not-ready loss/recovery and class-boundary weights remain unverified where supported by exposed mass selector.12/22/32 routes, actual valid weighing, scaleReadyhold and StopResetrepeat covered. No exact transient pulse claim. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-6-08-hand-dryer",
@@ -14746,7 +14925,8 @@
         "Use a nonretentive timer; withdrawing hands cancels the interval. A completed interval must wait for withdrawal before restarting."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Independent heater-inhibit/thermal fault manipulation is unverified and may be unexposed; do not invent it. Normal timeout/held no-retrigger, withdrawal/rearm, early cancel and lifecycle covered. Five seconds is QA parameter. N1."
+      "remaining_before_controls_normalization": "Independent heater-inhibit/thermal fault manipulation is unverified and may be unexposed; do not invent it. Normal timeout/held no-retrigger, withdrawal/rearm, early cancel and lifecycle covered. Five seconds is QA parameter. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-01-sum-function",
@@ -15115,7 +15295,8 @@
         "Require operand_a_valid, operand_b_valid and calculate_request before ADD writes sum_result.",
         "Always scan the calculation block so sum_result_valid clears on permissive loss."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-02-product-function",
@@ -15484,7 +15665,8 @@
         "Require factor_a_valid, factor_b_valid and calculate_request before MULTIPLY writes product_result.",
         "Always scan the calculation block so product_result_valid clears on permissive loss."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-03-sum-and-counter-function",
@@ -15718,7 +15900,8 @@
         "Use ADD for the sum, a rising call-complete edge qualified by inputs_valid and calculate_request for each counter event, and MOV the counter ACC to event_count after its update.",
         "The call_complete input is manually supplied PC feedback; the scene does not execute a machine call to generate it."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-04-function-selector",
@@ -16124,7 +16307,8 @@
         "FUNC NEXT cycles 0, 1 SUM, 2 PRODUCT, 99 invalid. Only 1 and 2 are supported.",
         "OPERANDS, FUNC VALID and CALCULATE are manual permissives. The program must also validate the numeric choice."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-10-box-volume",
@@ -16558,7 +16742,8 @@
         "The three buttons toggle manual dimension-valid flags. The reference also requires each numeric value to be 1..1000 mm before multiplying.",
         "The PLC-authored program owns volume_mm3 and volume_result_valid. An old displayed value is invalid while its lamp is off."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-11-pallet-counting",
@@ -16873,7 +17058,8 @@
         "Test the initial state, the valid condition, and at least one missing permissive.",
         "The DINT pallet_count is published after each counter scan. Stop clears the output image to zero while batch_count memory is retained; Run republishes that count, and Reset clears both."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "lab-9-12-ev-charging-manager",
@@ -17236,7 +17422,8 @@
         "The review reference grants 6 kW to one eligible bay or 3 kW each to two. PLC acknowledges the cumulative meter event ledger so Stop between a pulse and the next scan cannot lose or double-count it. The installed readout shows PLC accumulated kWh; standalone meter assets remain static."
       ],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Full exposed eligibility combinations/every unplug-remove guard permutation are unverified; selected guards and meterStop retention are covered. No billing calibration/long-run reconciliation claim. N1."
+      "remaining_before_controls_normalization": "Full exposed eligibility combinations/every unplug-remove guard permutation are unverified; selected guards and meterStop retention are covered. No billing calibration/long-run reconciliation claim. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "scene-1-conveyor-stop",
@@ -17401,7 +17588,8 @@
       ],
       "contract_training_hints": [],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Actual approach/beamstop/blockedStart/Resetrepeat and AppStop retained blockage reviewed. No downstream completion count required for this held-at-sensor lesson; N1."
+      "remaining_before_controls_normalization": "Actual approach/beamstop/blockedStart/Resetrepeat and AppStop retained blockage reviewed. No downstream completion count required for this held-at-sensor lesson; N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "scene-2-conveyor-pusher",
@@ -17477,11 +17665,13 @@
         },
         "stop_reset_restart": {
           "status": "SCOPED_PASS",
-          "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.",
+          "scope": "App Run and combined breadth Stop+Reset/SCAN0 are captured. A later independent actual AppPlayback Stop checkpoint shows LOCAL RUNTIME STOPPED/SCAN18070 (demo3-r1-app-stopped-for-checkpoint.png); original input plan opens AppPlayback(203,34) thenStop(220,90). Q11 ENABLE interruption/freshStart is a distinct machine-permissive route, not proof of AppStop or an AppRun restart. No exact post-Stop reset/restart chain is newly inferred.",
           "evidence": [
             "breadth-scene-2-conveyor-pusher-run.png",
             "breadth-scene-2-conveyor-pusher-reset.png",
-            "CURRENT_AUDIT:demo3-enable-route-review.md"
+            "CURRENT_AUDIT:demo3-enable-route-review.md",
+            "CURRENT_AUDIT:demo3-r1-app-stopped-for-checkpoint.png",
+            "CURRENT_AUDIT:demo3-r1-app-stopped-for-checkpoint.ocr.json"
           ],
           "source": "coverage-ledger.json",
           "superseded": [
@@ -17815,6 +18005,9 @@
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
       "issue_ids": [
         "QA-UI-003"
+      ],
+      "current_issue_associations": [
+        "QA-UI-003 S2"
       ]
     },
     {
@@ -18026,7 +18219,8 @@
       ],
       "contract_training_hints": [],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Both request routes, cutoffs/drain priority/midrangeStop/Resetfresh fill are reviewed. No direct internal surface/exact switch-latency claim or additional fault button assumed. N1."
+      "remaining_before_controls_normalization": "Both request routes, cutoffs/drain priority/midrangeStop/Resetfresh fill are reviewed. No direct internal surface/exact switch-latency claim or additional fault button assumed. N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "tank-level",
@@ -18245,7 +18439,8 @@
       ],
       "contract_training_hints": [],
       "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
-      "remaining_before_controls_normalization": "Physical gauge/ideal current scaling/cutoffs/drain priority/activeStopRun/Resetrepeat are reviewed. Real transmitter calibration and internal surface visibility are outside demonstrated scope; N1."
+      "remaining_before_controls_normalization": "Physical gauge/ideal current scaling/cutoffs/drain priority/activeStopRun/Resetrepeat are reviewed. Real transmitter calibration and internal surface visibility are outside demonstrated scope; N1.",
+      "current_issue_associations": []
     },
     {
       "scene_id": "tank-radar",
@@ -18464,7 +18659,10 @@
         }
       ],
       "contract_training_hints": [],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "current_issue_associations": [
+        "QA-UX-CANDIDATE-003 (access route)"
+      ]
     }
   ],
   "controls_normalization": {

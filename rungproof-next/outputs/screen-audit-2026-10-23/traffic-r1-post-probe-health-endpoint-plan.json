@@ -1,0 +1,57 @@
+[
+  {
+    "wait": 0.7,
+    "ocr": true,
+    "capture": "traffic-r1-post-probe-signals"
+  },
+  {
+    "input": {
+      "y": 89,
+      "x": 738
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "x": 891,
+      "y": 182,
+      "delta": 1200,
+      "phase": "wheel"
+    },
+    "ocr": true,
+    "capture": "traffic-r1-health-off-on-accepted",
+    "wait": 0.7
+  },
+  {
+    "input": {
+      "y": 89,
+      "x": 856
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 342,
+      "delta": -120,
+      "phase": "wheel"
+    },
+    "wait": 0.2
+  },
+  {
+    "input": {
+      "x": 510,
+      "y": 342,
+      "delta": -120,
+      "phase": "wheel"
+    },
+    "ocr": true,
+    "capture": "traffic-r1-committed-endpoint-wide",
+    "wait": 0.7
+  },
+  {
+    "wait": 0.7,
+    "ocr": true,
+    "capture": "traffic-r1-committed-endpoint-wide-held"
+  }
+]

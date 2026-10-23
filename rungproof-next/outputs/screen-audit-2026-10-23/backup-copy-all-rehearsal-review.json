@@ -1,0 +1,78 @@
+{
+  "result": "PASS",
+  "scope": "Actual snapshot/copy/paired-hash/archive/readback on four tiny synthetic local C files; not app/native acceptance or real D/Git backup proof.",
+  "created_utc": "2026-10-23T07:40:35.099332+00:00",
+  "elapsed_seconds": 0.419,
+  "helper_sha256": "3c4b1837e10973b6abe8c88060cd91aa4d8d117f63f0f4a46125f694e1e61b18",
+  "sevenzip_sha256": "83967f1b02b43c4efeda302795722c809e0e81b8307de73558d10484d5676a7d",
+  "fixture_files": 4,
+  "fixture_planned_bytes": 362,
+  "mock_head": "FAKEHEAD_REHEARSAL_NO_REAL_GIT",
+  "mocked_operations": [
+    "git rev-parse HEAD for fixture repository only"
+  ],
+  "git_bundle": "NOT_TESTED_DISABLED",
+  "inventory_classification": "Explicit mock inventory rows; production inventory discovery/classification not exercised.",
+  "checks": {
+    "approved_helper_bytes": true,
+    "exact_context_record_boundary": true,
+    "Git_stub_only_fixture_HEAD": true,
+    "linked-default-control_actual_snapshot_PASS": true,
+    "copy-all-under-test_actual_snapshot_PASS": true,
+    "copy_all_four_copies_zero_links": true,
+    "portable_path_RungProof/docs/matched.txt": true,
+    "paired_hash_RungProof/docs/matched.txt": true,
+    "portable_path_RungProof/docs/delta.txt": true,
+    "paired_hash_RungProof/docs/delta.txt": true,
+    "portable_path_private-extra/private-note.txt": true,
+    "paired_hash_private-extra/private-note.txt": true,
+    "portable_path_private-codex-context/mock-session.jsonl": true,
+    "paired_hash_private-codex-context/mock-session.jsonl": true,
+    "prefix_omits_incomplete_and_later_tail": true,
+    "default_still_links_one_base": true,
+    "copy_all_survives_base_refresh": true,
+    "linked_PASS_invalidated_by_base_refresh": true,
+    "archive_rejects_changed_linked_bytes": true,
+    "actual_7zip_archive_pipeline_PASS": true,
+    "archive_receipt_two_public_files": true,
+    "tiny_single_archive_part": true,
+    "archive_part_SHA256": true,
+    "readback_original_matched_payload": true,
+    "only_public_copy_redacted": true,
+    "source_delta_remains_original": true,
+    "private_snapshot_remains_unredacted": true,
+    "private_roots_excluded": true,
+    "readback_exact_file_set": true,
+    "helper_still_frozen": true
+  },
+  "archive_parts": [
+    {
+      "name": "rungproof-final-delta.7z.001",
+      "bytes": 1067,
+      "sha256": "dcbe20107558fe8ef2b937fc8c503b7951bc0d51b9d9be7ff3015a9ad000ae48"
+    }
+  ],
+  "public_files": [
+    {
+      "path": "RungProof/docs/matched.txt",
+      "source_sha256": "ce4b2a874f4758ccb3880d21977623d894d9056757eee752adbbfde168947bb3",
+      "public_sha256": "ce4b2a874f4758ccb3880d21977623d894d9056757eee752adbbfde168947bb3",
+      "public_bytes": 30,
+      "capability_replacements": 0
+    },
+    {
+      "path": "RungProof/docs/delta.txt",
+      "source_sha256": "ef83b760c21f1cc804e5316d3b57465c0d5b2aa23f675629ee853c7dc4d45e95",
+      "public_sha256": "d21ea86b7aad1bb74273349bf246d926eebda9fd87bb147636acedb9ae5578d3",
+      "public_bytes": 65,
+      "capability_replacements": 2
+    }
+  ],
+  "private_fixture_root": "C:\\Users\\matt.winter\\AppData\\Local\\Temp\\RungProof-QA-20261023-RootOwned\\backup-copy-all-rehearsal-20261023T074000Z",
+  "preservation": "Owned fixture, both snapshots, expected rejection work, archive and readback retained; no deletion.",
+  "boundaries": [
+    "No real D file, Git reference, network service, application or UI was touched.",
+    "Only a synthetic non-live capability and mock context records were used; contents omitted from this public report.",
+    "Public historical proof, native Godot userdata and real bundle verification remain root closeout obligations."
+  ]
+}

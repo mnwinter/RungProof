@@ -1,0 +1,11 @@
+[
+  {
+    "capture": "demo5-appstop-r1-selected-or-modal",
+    "wait": 0.8,
+    "input": {
+      "x": 283,
+      "y": 282
+    },
+    "ocr": true
+  }
+]
