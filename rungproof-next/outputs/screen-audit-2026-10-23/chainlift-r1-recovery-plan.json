@@ -1,0 +1,52 @@
+[
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 34,
+      "x": 203
+    }
+  },
+  {
+    "capture": "chainlift-r1-run-alone",
+    "ocr": true,
+    "input": {
+      "y": 70,
+      "x": 220
+    },
+    "wait": 0.6
+  },
+  {
+    "ocr": true,
+    "capture": "chainlift-r1-run-alone-held",
+    "wait": 2
+  },
+  {
+    "capture": "chainlift-r1-fresh-start",
+    "ocr": true,
+    "input": {
+      "y": 432,
+      "x": 624
+    },
+    "wait": 0.4
+  },
+  {
+    "ocr": true,
+    "capture": "chainlift-r1-recovery-upper",
+    "wait": 3
+  },
+  {
+    "ocr": true,
+    "capture": "chainlift-r1-recovery-transfer",
+    "wait": 5
+  },
+  {
+    "ocr": true,
+    "capture": "chainlift-r1-recovery-descent",
+    "wait": 2
+  },
+  {
+    "ocr": true,
+    "capture": "chainlift-r1-recovery-final",
+    "wait": 4
+  }
+]

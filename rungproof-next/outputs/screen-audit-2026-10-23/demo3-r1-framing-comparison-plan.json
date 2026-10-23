@@ -1,0 +1,43 @@
+[
+  {
+    "capture": "demo3-r1-frame-whole-scene",
+    "wait": 0.7,
+    "input": {
+      "x": 185,
+      "y": 194
+    },
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.25
+  },
+  {
+    "capture": "demo3-r1-frame-process-repeat",
+    "wait": 0.7,
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.25
+  },
+  {
+    "capture": "demo3-r1-immersive-after-process",
+    "wait": 0.7,
+    "input": {
+      "x": 185,
+      "y": 130
+    },
+    "ocr": true
+  }
+]

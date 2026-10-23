@@ -1,0 +1,96 @@
+{
+  "status": "OFFLINE_SAVED_SCENARIO_MENU_OBSERVED",
+  "label": "Lab 2.1 - Workstation Call Lamp",
+  "selection_sent": false,
+  "screen_only": true,
+  "native_session": false,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "matches": [
+    {
+      "text": "Lab 2.1 - Workstation Call Lamp",
+      "words": [
+        {
+          "text": "Lab",
+          "x": 16,
+          "y": 682,
+          "w": 40,
+          "h": 21
+        },
+        {
+          "text": "2.1",
+          "x": 63,
+          "y": 683,
+          "w": 32,
+          "h": 20
+        },
+        {
+          "text": "-",
+          "x": 103,
+          "y": 693,
+          "w": 8,
+          "h": 4
+        },
+        {
+          "text": "Workstation",
+          "x": 117,
+          "y": 682,
+          "w": 142,
+          "h": 20
+        },
+        {
+          "text": "Call",
+          "x": 267,
+          "y": 682,
+          "w": 42,
+          "h": 21
+        },
+        {
+          "text": "Lamp",
+          "x": 315,
+          "y": 684,
+          "w": 64,
+          "h": 24
+        }
+      ],
+      "crop_word_union": [
+        16,
+        682,
+        379,
+        708
+      ],
+      "native_click": [
+        351,
+        348
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "unique_exact_match": true,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.508,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 335163,
+      "sha256": "07f321bee0c115528aa3035f6712279dce0bf27347fffee9488bf4130c1b0552"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.png",
+      "bytes": 270111,
+      "sha256": "22eea1d1a41df6ae0622fc8294f43384c8cf0b007ef80b83d060b1e8670f7214"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.ocr.json",
+      "bytes": 9970,
+      "sha256": "5a840dbf87378e55d5f4c68b3f4c2558d78dfbd78260eefe0e7595fd68e865bf"
+    }
+  ]
+}

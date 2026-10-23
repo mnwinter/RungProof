@@ -1,0 +1,11 @@
+{
+  "status": "OFFLINE_UPSTROKE_WRONG_PHASE_MISSING_CONFLICT_CUTOFF_PASS",
+  "stop_attempted": false,
+  "screen_only": true,
+  "native_session": false,
+  "physical_pose_acceptance": false,
+  "required_precondition": "Root has physically Started and left actual App Playback menu open",
+  "no_bridge_endpoints": true,
+  "elapsed_seconds": 0.003,
+  "files": []
+}

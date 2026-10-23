@@ -1,0 +1,23 @@
+{
+  "status": "OFFLINE_ACTUAL_LOGIC_CONTEXT_GUARD_PASS",
+  "no_bridge_endpoints": true,
+  "ocrText": "LADDER LOGIC PROGRAM MING MONTORNC OFFLINE RI.'",
+  "owned_ocr_worker_returncode": 0,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 177912,
+      "sha256": "535bf2f5fe8b112f54ee75ece3e38bb67755ba64da3b7485f39c171606d45fc7"
+    },
+    {
+      "file": "offline-original-logic-context2x.png",
+      "bytes": 34936,
+      "sha256": "693494dc0b407c9217f0b648f4d6743c95014f78c8f5068aaf529bc19885aaf8"
+    },
+    {
+      "file": "offline-original-logic-context2x.ocr.json",
+      "bytes": 747,
+      "sha256": "b19a11ba1d6f6eebe8f08f950bde8781cf2f15e2101951664d28c90477f5b294"
+    }
+  ]
+}

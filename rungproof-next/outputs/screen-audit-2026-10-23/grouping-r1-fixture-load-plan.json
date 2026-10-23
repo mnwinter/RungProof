@@ -1,0 +1,29 @@
+[
+  {
+    "wait": 0.1,
+    "input": {
+      "y": 512,
+      "x": 456
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "text": "fixture-lab-4-08-package-grouping-feedback.rpproj.json"
+    }
+  },
+  {
+    "ocr": true,
+    "wait": 0.8,
+    "capture": "grouping-r1-fixture-loaded",
+    "input": {
+      "key": "Return"
+    }
+  }
+]

@@ -1,0 +1,43 @@
+[
+  {
+    "input": {
+      "y": 480,
+      "x": 493
+    },
+    "wait": 0.4,
+    "capture": "grouping-r3-load3"
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 134
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "y": 174,
+      "x": 185
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "phase": "wheel",
+      "y": 340,
+      "delta": 120,
+      "x": 510
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "phase": "wheel",
+      "y": 340,
+      "delta": 120,
+      "x": 510
+    },
+    "wait": 0.5,
+    "capture": "grouping-r3-third-feed-wide"
+  }
+]

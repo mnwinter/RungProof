@@ -1,0 +1,11 @@
+[
+  {
+    "capture": "bag-r1-pause-clear",
+    "wait": 0.5,
+    "ocr": true,
+    "input": {
+      "y": 379,
+      "x": 566
+    }
+  }
+]

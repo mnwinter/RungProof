@@ -1,0 +1,29 @@
+[
+  {
+    "wait": 0.7,
+    "capture": "demo3-r1-health-older-accepted-inputs",
+    "input": {
+      "y": 186,
+      "x": 892,
+      "phase": "wheel",
+      "delta": -360
+    },
+    "ocr": true
+  },
+  {
+    "wait": 0.25,
+    "input": {
+      "x": 203,
+      "y": 34
+    }
+  },
+  {
+    "wait": 0.7,
+    "capture": "demo3-r1-app-stopped-for-checkpoint",
+    "input": {
+      "x": 220,
+      "y": 90
+    },
+    "ocr": true
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "scope": "Read-only dirty tracked/untracked text scan; not universal DLP; no binary screenshot/transcript visual inspection. Values deliberately omitted.",
+  "scanned_files": 1318,
+  "findings": [
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/SESSION-STATE.json",
+      "matches": [
+        "local_capability_url"
+      ],
+      "sha256": "f535b5a7784b455c4253e4fd15bfdb7a1d60b120167c17c19d9a8d1f4c78f16d"
+    },
+    {
+      "path": "rungproof-next/outputs/screen-audit-2026-10-21/observe_small_array_zones.py",
+      "matches": [
+        "local_capability_url"
+      ],
+      "sha256": "528760c0b8861d3996561288eed5d1537d802807845831ae5e5701101db01fef"
+    }
+  ],
+  "private_context_filename_candidates": [
+    "rungproof-next/outputs/screen-audit-2026-10-21/SESSION-STATE.json",
+    "rungproof-next/outputs/screen-audit-2026-10-21/lab225-apprun-retains-private-state.png",
+    "rungproof-next/outputs/screen-audit-2026-10-23/parcel-v7-controlled-reset-private-live.ocr.json",
+    "rungproof-next/outputs/screen-audit-2026-10-23/parcel-v7-controlled-reset-private-live.png",
+    "rungproof-next/outputs/screen-audit-2026-10-23/parcel-v7-repeat-stall-watch-private.ocr.json",
+    "rungproof-next/outputs/screen-audit-2026-10-23/parcel-v7-repeat-stall-watch-private.png"
+  ]
+}

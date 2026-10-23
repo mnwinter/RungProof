@@ -1,0 +1,7 @@
+[
+  {
+    "ocr": true,
+    "wait": 0.3,
+    "capture": "grouping-r1-selection-settled"
+  }
+]

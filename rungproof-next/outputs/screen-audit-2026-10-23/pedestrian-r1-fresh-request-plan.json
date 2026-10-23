@@ -1,0 +1,28 @@
+[
+  {
+    "wait": 0.4,
+    "input": {
+      "x": 856,
+      "y": 89
+    }
+  },
+  {
+    "wait": 0.2,
+    "capture": "pedestrian-r1-fresh-idle-cross",
+    "input": {
+      "x": 441,
+      "y": 381
+    },
+    "ocr": true
+  },
+  {
+    "wait": 1.4,
+    "capture": "pedestrian-r1-fresh-walk",
+    "ocr": true
+  },
+  {
+    "wait": 5,
+    "capture": "pedestrian-r1-fresh-complete-idle",
+    "ocr": true
+  }
+]

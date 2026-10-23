@@ -1,0 +1,29 @@
+[
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 441,
+      "y": 448
+    },
+    "capture": "grouping-r2b-enable"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 466,
+      "y": 463
+    },
+    "capture": "grouping-r2b-clear"
+  },
+  {
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 493,
+      "y": 480
+    },
+    "capture": "grouping-r2b-load1"
+  }
+]

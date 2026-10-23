@@ -1,0 +1,19 @@
+[
+  {
+    "capture": "cable-r1-physical-start",
+    "wait": 0.4,
+    "ocr": true,
+    "input": {
+      "y": 420,
+      "x": 641
+    }
+  },
+  {
+    "capture": "cable-r1-playback-armed",
+    "wait": 0.5,
+    "input": {
+      "y": 34,
+      "x": 203
+    }
+  }
+]

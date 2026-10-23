@@ -1,0 +1,10 @@
+[
+  {
+    "input": {
+      "x": 441,
+      "y": 381
+    },
+    "wait": 0.2,
+    "capture": "pedestrian-r1-first-idle-cross"
+  }
+]

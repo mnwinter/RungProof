@@ -1,0 +1,190 @@
+{
+  "status": "OFFLINE_SAVED_LIFT_IMAGE_OBSERVED",
+  "stop_attempted": false,
+  "screen_only": true,
+  "native_session": false,
+  "physical_pose_acceptance": false,
+  "required_precondition": "Root has physically Started and left actual App Playback menu open",
+  "observation": {
+    "image": "offline-original.png",
+    "rows": {
+      "values": {
+        "lift_enable": false,
+        "lift_lower": false,
+        "chain_run": false,
+        "carton_on_lift": false,
+        "lift_home": true,
+        "lift_upper": false,
+        "carton_at_receiver": false,
+        "transfer_fault": false,
+        "destination_clear": true,
+        "cycle_active": false,
+        "box_present": true,
+        "carton_on_infeed": true,
+        "cycle_complete": false,
+        "lift_start": false,
+        "receiver_beam_blocked": false,
+        "receiver_occupied": false
+      },
+      "row_witnesses": {
+        "lift_enable": [
+          {
+            "text": "\u2022 lift_enable False",
+            "value": false,
+            "row_center_y": 544.0
+          }
+        ],
+        "lift_lower": [
+          {
+            "text": "\u2022 lift_lower False",
+            "value": false,
+            "row_center_y": 648.0
+          }
+        ],
+        "chain_run": [
+          {
+            "text": "\u2022 chain_run False",
+            "value": false,
+            "row_center_y": 336.5
+          }
+        ],
+        "carton_on_lift": [
+          {
+            "text": "\u2022 carton on lift False",
+            "value": false,
+            "row_center_y": 285.0
+          }
+        ],
+        "lift_home": [
+          {
+            "text": "\u2022 lift_home True",
+            "value": true,
+            "row_center_y": 596.0
+          }
+        ],
+        "lift_upper": [
+          {
+            "text": "\u2022 lift_upper False",
+            "value": false,
+            "row_center_y": 751.0
+          }
+        ],
+        "carton_at_receiver": [
+          {
+            "text": "\u2022 carton_at_receiver False",
+            "value": false,
+            "row_center_y": 182.0
+          }
+        ],
+        "transfer_fault": [
+          {
+            "text": "\u2022 transfer fault False",
+            "value": false,
+            "row_center_y": 906.0
+          }
+        ],
+        "destination_clear": [
+          {
+            "text": "\u2022 destination clear True",
+            "value": true,
+            "row_center_y": 492.0
+          }
+        ],
+        "cycle_active": [
+          {
+            "text": "\u2022 cycle_active False",
+            "value": false,
+            "row_center_y": 389.0
+          }
+        ],
+        "box_present": [
+          {
+            "text": "\u2022 box_present True",
+            "value": true,
+            "row_center_y": 130.5
+          }
+        ],
+        "carton_on_infeed": [
+          {
+            "text": "\u2022 carton_on_infeed True",
+            "value": true,
+            "row_center_y": 234.0
+          }
+        ],
+        "cycle_complete": [
+          {
+            "text": "\u2022 cycle_complete False",
+            "value": false,
+            "row_center_y": 440.5
+          }
+        ],
+        "lift_start": [
+          {
+            "text": "\u2022 lift start False",
+            "value": false,
+            "row_center_y": 699.0
+          }
+        ],
+        "receiver_beam_blocked": [
+          {
+            "text": "\u2022 receiver_beam_blocked False",
+            "value": false,
+            "row_center_y": 802.5
+          }
+        ],
+        "receiver_occupied": [
+          {
+            "text": "\u2022 receiver_occupied False",
+            "value": false,
+            "row_center_y": 855.0
+          }
+        ]
+      },
+      "loaded_upstroke_predicate_matched": false
+    },
+    "scan": 204,
+    "runtime_running": true,
+    "runtime_stopped": false
+  },
+  "stop_menu_observed": false,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 1.007,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 296970,
+      "sha256": "96af1fd2c8321cdf1a89996923c5e82e9f6b717b20c780f158ee97a63b8ee338"
+    },
+    {
+      "file": "offline-original-signals3x.png",
+      "bytes": 331777,
+      "sha256": "701bc7fbc1a078dec8ff9ee2bfae8864f2a439874adaad08aec782cf48ee3d22"
+    },
+    {
+      "file": "offline-original-signals3x.ocr.json",
+      "bytes": 4053,
+      "sha256": "dc8ed95d2c71804b3c597e2f8ce32707b7e21205541db0019ad587ba8e70980c"
+    },
+    {
+      "file": "offline-original-runtime-header3x.png",
+      "bytes": 50813,
+      "sha256": "04d71a0ae4ef8987f8e11e71fac7092d0ca67333512228e0b0499d93ad50c4ac"
+    },
+    {
+      "file": "offline-original-runtime-header3x.ocr.json",
+      "bytes": 1171,
+      "sha256": "51f23b5f3fa449d539cae98117bc29f04af708e25c94082e8c37239241c273b3"
+    },
+    {
+      "file": "offline-original-menu2x.png",
+      "bytes": 14190,
+      "sha256": "7e2eaf0313c5f83bdfa60aba021d946d7bddc22771d7f81ce636172ad60af06f"
+    },
+    {
+      "file": "offline-original-menu2x.ocr.json",
+      "bytes": 403,
+      "sha256": "5f254e80c8dd13764bac21f4cea2e1b6e34ae3916ffa94d577d1889752d4f103"
+    }
+  ]
+}

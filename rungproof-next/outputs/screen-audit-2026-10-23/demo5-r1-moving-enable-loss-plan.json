@@ -1,0 +1,37 @@
+[
+  {
+    "wait": 0.3,
+    "input": {
+      "delta": 1200,
+      "phase": "wheel",
+      "y": 300,
+      "x": 891
+    }
+  },
+  {
+    "input": {
+      "y": 399,
+      "x": 578
+    },
+    "wait": 0.3,
+    "capture": "demo5-r1-moving-before-disable-a"
+  },
+  {
+    "wait": 0.2,
+    "capture": "demo5-r1-moving-before-disable-b"
+  },
+  {
+    "input": {
+      "y": 395,
+      "x": 543
+    },
+    "wait": 0.35,
+    "capture": "demo5-r1-enable-off-settled",
+    "ocr": true
+  },
+  {
+    "wait": 1,
+    "capture": "demo5-r1-enable-off-held",
+    "ocr": true
+  }
+]

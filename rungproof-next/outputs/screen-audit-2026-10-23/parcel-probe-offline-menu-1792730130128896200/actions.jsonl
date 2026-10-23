@@ -1,0 +1,1 @@
+{"utc": "2026-10-23T04:35:30.196382+00:00", "kind": "DERIVED_CROP", "source": "offline-menu-original.png", "crop": {"file": "offline-menu-original-menu2x.png", "bytes": 24175, "sha256": "cb658cf7955d4e3b5b82d1ec402fda8a02774bedcb4c2133c0ae85cb8e9d9773"}, "native_box": [150, 45, 435, 135], "scale": 2, "alteration": "static crop and resample only; original remains intact"}

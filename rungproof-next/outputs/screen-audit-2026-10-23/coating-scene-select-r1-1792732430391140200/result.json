@@ -1,0 +1,152 @@
+{
+  "status": "EXACT_LABEL_CLICK_SENT_SELECTED_OR_MODAL_REVIEW_PENDING",
+  "label": "Lab 5.10 - Coating Line",
+  "selection_sent": true,
+  "screen_only": true,
+  "native_session": true,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "observations": 5,
+  "last_matches": [
+    {
+      "text": "Lab 5.10- Coating Line",
+      "words": [
+        {
+          "text": "Lab",
+          "x": 16,
+          "y": 467,
+          "w": 40,
+          "h": 21
+        },
+        {
+          "text": "5.10-",
+          "x": 64,
+          "y": 469,
+          "w": 62,
+          "h": 19
+        },
+        {
+          "text": "Coating",
+          "x": 132,
+          "y": 467,
+          "w": 88,
+          "h": 27
+        },
+        {
+          "text": "Line",
+          "x": 228,
+          "y": 467,
+          "w": 46,
+          "h": 21
+        }
+      ],
+      "crop_word_union": [
+        16,
+        467,
+        274,
+        494
+      ],
+      "native_click": [
+        324,
+        240
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "match_image": "menu-observe-04.png",
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 2.176,
+  "files": [
+    {
+      "file": "before-menu-input.png",
+      "bytes": 300594,
+      "sha256": "fc51c38864c4e82f082685f2bb03ac07ef87a438477c6c4edc0a22a142761cb9"
+    },
+    {
+      "file": "menu-observe-00.png",
+      "bytes": 347190,
+      "sha256": "0f15ea1389a546d5ea7867497905dc48b8fa61951fae10c3c5bb88cce3b429fa"
+    },
+    {
+      "file": "menu-observe-00-scenario-popup2x.png",
+      "bytes": 269445,
+      "sha256": "085ebf0c32de04a8560b250c677a8c10dc77bc0a154ca875530ae7ab8d55c148"
+    },
+    {
+      "file": "menu-observe-00-scenario-popup2x.ocr.json",
+      "bytes": 9962,
+      "sha256": "bbd6d70e56f50c7b0f16256645077035fd4910ec176757429d89c807db3a393d"
+    },
+    {
+      "file": "menu-observe-01.png",
+      "bytes": 363091,
+      "sha256": "02dff4149a5e0aaa39d04007ca0b661c0fd04ffb9e83be4febb4a0e877fd0693"
+    },
+    {
+      "file": "menu-observe-01-scenario-popup2x.png",
+      "bytes": 309534,
+      "sha256": "90cb74c7fc0366d1038bb10fe22a938faf094078dd477ad94218fcc2712a9b04"
+    },
+    {
+      "file": "menu-observe-01-scenario-popup2x.ocr.json",
+      "bytes": 11482,
+      "sha256": "d19b410c58b028722394494d36d366795a84bacd73afe99eda74d9f4b48901ce"
+    },
+    {
+      "file": "menu-observe-02.png",
+      "bytes": 354682,
+      "sha256": "8b333862dfb0959c33aa44efbbdd6ebbb7ed62a57b69a187cc567a4a51ac80dc"
+    },
+    {
+      "file": "menu-observe-02-scenario-popup2x.png",
+      "bytes": 289017,
+      "sha256": "2fa4721e9d043fe2694ce40d4cdc5fcd5179e9486a769c5bf5decddf92d2e56a"
+    },
+    {
+      "file": "menu-observe-02-scenario-popup2x.ocr.json",
+      "bytes": 11196,
+      "sha256": "7f4c696ef4f4d9688cc179175ebe44638dce86d21ca6263ba9576ff6a8cb31d9"
+    },
+    {
+      "file": "menu-observe-03.png",
+      "bytes": 354842,
+      "sha256": "feb6b784df2f6193fcbcd8ce702250540638020d11b3918cbed3e72708ecc8e2"
+    },
+    {
+      "file": "menu-observe-03-scenario-popup2x.png",
+      "bytes": 289017,
+      "sha256": "2fa4721e9d043fe2694ce40d4cdc5fcd5179e9486a769c5bf5decddf92d2e56a"
+    },
+    {
+      "file": "menu-observe-03-scenario-popup2x.ocr.json",
+      "bytes": 11196,
+      "sha256": "6cd20531a26b5dda4752b315994e80f9eb8d8383a747945162d8d29f6c85e04c"
+    },
+    {
+      "file": "menu-observe-04.png",
+      "bytes": 355058,
+      "sha256": "8cfbe6a5096a7f39d4936eef8b0944ea1e2d9c4b34ad811a71ffe7dc7592f4ec"
+    },
+    {
+      "file": "menu-observe-04-scenario-popup2x.png",
+      "bytes": 289480,
+      "sha256": "bddf0aec3cea89bce59018efc365f20a799c3cebf9f9081e8a3020ff163b0394"
+    },
+    {
+      "file": "menu-observe-04-scenario-popup2x.ocr.json",
+      "bytes": 11185,
+      "sha256": "8ce454a6710eaf0f71a026ad3fc8dfd6583a0566daa0775442da266e0d6fe5ec"
+    },
+    {
+      "file": "after-selection-or-modal.png",
+      "bytes": 354951,
+      "sha256": "d6464c5ff875ce6bba82765d09c6b095b7968ae1f3d1ab15c1b81484832dbd9e"
+    }
+  ]
+}

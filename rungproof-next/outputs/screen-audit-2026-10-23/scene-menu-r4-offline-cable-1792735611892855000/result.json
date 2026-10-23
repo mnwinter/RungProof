@@ -1,0 +1,98 @@
+{
+  "status": "OFFLINE_SAVED_SCENARIO_MENU_OBSERVED",
+  "label": null,
+  "identity": "Lab 4.12",
+  "selection_mode": "EXPLICIT_NUMERIC_ID",
+  "selection_sent": false,
+  "screen_only": true,
+  "native_session": false,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "matches": [
+    {
+      "text": "Lab 4.12 - Cable CLR-Length Cell",
+      "words": [
+        {
+          "text": "Lab",
+          "x": 16,
+          "y": 545,
+          "w": 40,
+          "h": 21
+        },
+        {
+          "text": "4.12",
+          "x": 63,
+          "y": 547,
+          "w": 49,
+          "h": 19
+        },
+        {
+          "text": "-",
+          "x": 117,
+          "y": 557,
+          "w": 9,
+          "h": 4
+        },
+        {
+          "text": "Cable",
+          "x": 132,
+          "y": 545,
+          "w": 64,
+          "h": 21
+        },
+        {
+          "text": "CLR-Length",
+          "x": 203,
+          "y": 545,
+          "w": 127,
+          "h": 27
+        },
+        {
+          "text": "Cell",
+          "x": 336,
+          "y": 545,
+          "w": 41,
+          "h": 21
+        }
+      ],
+      "crop_word_union": [
+        16,
+        545,
+        377,
+        572
+      ],
+      "native_click": [
+        350,
+        279
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "unique_exact_match": true,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.513,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 318006,
+      "sha256": "c7b22a983bc7ee8243ed18fb6e0ffa8b5528f64e92cb7e747eec3888378c27ae"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.png",
+      "bytes": 289042,
+      "sha256": "f5b104825512b5d4ee2720a08080ce82a97e8126c3081b644b09d57869aa9527"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.ocr.json",
+      "bytes": 11201,
+      "sha256": "e822f0c00f03961c0b9b643c554fa2d8535821b52081c43b1108005064872ad6"
+    }
+  ]
+}

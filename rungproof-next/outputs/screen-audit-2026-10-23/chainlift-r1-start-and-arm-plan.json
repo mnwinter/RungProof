@@ -1,0 +1,19 @@
+[
+  {
+    "input": {
+      "y": 432,
+      "x": 624
+    },
+    "wait": 0.4,
+    "ocr": true,
+    "capture": "chainlift-r1-physical-start"
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 203
+    },
+    "wait": 0.5,
+    "capture": "chainlift-r1-playback-armed"
+  }
+]

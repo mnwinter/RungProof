@@ -1,0 +1,92 @@
+[
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 556,
+      "y": 357
+    },
+    "capture": "sumcounter-r1-a-1"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 556,
+      "y": 357
+    },
+    "capture": "sumcounter-r1-a-2"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 556,
+      "y": 357
+    },
+    "capture": "sumcounter-r1-a-5"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 556,
+      "y": 357
+    },
+    "capture": "sumcounter-r1-a-10"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 556,
+      "y": 357
+    },
+    "capture": "sumcounter-r1-a-0"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 618,
+      "y": 378
+    },
+    "capture": "sumcounter-r1-b-1"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 618,
+      "y": 378
+    },
+    "capture": "sumcounter-r1-b-2"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 618,
+      "y": 378
+    },
+    "capture": "sumcounter-r1-b-5"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 618,
+      "y": 378
+    },
+    "capture": "sumcounter-r1-b-10"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "input": {
+      "x": 618,
+      "y": 378
+    },
+    "capture": "sumcounter-r1-b-0"
+  }
+]

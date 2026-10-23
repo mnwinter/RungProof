@@ -54,14 +54,12 @@
       "physical_control": "APP STOP/RUN during actual release; ENABLE/CLEAR/LOAD for setup",
       "fixture": "test-projects/fixture-lab-4-08-package-grouping-feedback.rpproj.json",
       "steps": [
-        "Run; ENABLE/CLEAR; LOAD each of3 only after actual staged/idle acceptance.",
-        "Wait group_releaseTrue and stop_position rising/raised or actual moving receiving group; APP STOP then held capture.",
-        "RUN; observe retained private count republishes, actual gate/carton recovery and receiver complete."
+        "Do not rerun the now-qualified release Stop/Run-alone case."
       ],
       "expected_observable": "CommandsFalse/frozen pose while stopped; Run retained count3 without extra CTU event; fixture release latch resumes transfer to receiver; final count3 retained/alloff.",
       "scope_justification": "Old release-checkpoint filenames were prereleaseFalse. Prior actual Stop was moving feed only. Do not time this by a fixed wait.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-4-08-package-grouping.md",
         "scenes/migrated/lab-4-08-package-grouping.scene.json"
@@ -94,7 +92,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "Run; ENABLE/CLEAR; LOAD each of3 only after actual staged/idle acceptance.",
+        "Wait group_releaseTrue and stop_position rising/raised or actual moving receiving group; APP STOP then held capture.",
+        "RUN; observe retained private count republishes, actual gate/carton recovery and receiver complete."
+      ],
+      "closure_review": "grouping-release-stop-review.md",
+      "closure_scope": "Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify."
     },
     {
       "id": "Q03",
@@ -102,14 +107,12 @@
       "physical_control": "APP STOP/RUN plus physical START while knife stroke active",
       "fixture": "test-projects/existing-cable-cut-reference.rpproj.json",
       "steps": [
-        "Run/START; wait actual cutter_fireTrue and cutter_homeFalse/intermediate cutter position.",
-        "APP STOP; capture held blade/length/stock and stopped scan.",
-        "RUN alone; inspect; if cycle inactive as existing feed-Stop policy, fresh START; observe actual blade return/cut/home."
+        "Do not rerun closed knife-phase Stop/explicit-resume case."
       ],
       "expected_observable": "Stop clears fire/feed and holds mechanical pose; Run may retain authorizationFalse until freshStart as existing reference; finish3m/7stock/home/alloff without refeeding cut length.",
       "scope_justification": "Feed Stop is proven; blade phase is distinct actuator. Exact start policy must be read from loaded native rung; do not assume timer labels or automatic completion while stopped.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-4-12-cable-cut-length.md",
         "scenes/migrated/lab-4-12-cable-cut-length.scene.json"
@@ -126,7 +129,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "Run/START; wait actual cutter_fireTrue and cutter_homeFalse/intermediate cutter position.",
+        "APP STOP; capture held blade/length/stock and stopped scan.",
+        "RUN alone; inspect; if cycle inactive as existing feed-Stop policy, fresh START; observe actual blade return/cut/home."
+      ],
+      "closure_review": "cable-knife-stop-review.md",
+      "closure_scope": "Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim."
     },
     {
       "id": "Q04",
@@ -187,14 +197,12 @@
       "physical_control": "PAUSE BLOCKED/CLEAR during forward travel",
       "fixture": "test-projects/fixture-lab-5-09-bag-indexing-conveyor.rpproj.json",
       "steps": [
-        "Reset/Run; set PAUSE CLEAR before START.",
-        "START forward; wait conveyor_runTrue/reverseFalse and actual intermediate position.",
-        "Toggle PAUSE BLOCKED; observe continued forward movement to EXIT; then reuse known CLEAR+freshSTART return."
+        "Do not rerun; apply exact independent native review scope."
       ],
       "expected_observable": "Forward run remainsTrue/speed+.5 and position advances despite pause_clearFalse; actual EXIT stops. Loss does NOT require forward arrest.",
       "scope_justification": "Fixture forward branch lacks pause_clear; BagIndexPlantModel only inhibits run AND reverse AND NOT pauseClear. Earlier false default already coexisted with forward travel; this new case checks an actual midtravel transition, not a missing safety interlock.",
       "policy": "Reference explicitly gates return only. Never report forward continued motion as failure.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-5-09-bag-indexing-conveyor.md",
         "scenes/migrated/lab-5-09-bag-indexing-conveyor.scene.json"
@@ -219,7 +227,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "Reset/Run; set PAUSE CLEAR before START.",
+        "START forward; wait conveyor_runTrue/reverseFalse and actual intermediate position.",
+        "Toggle PAUSE BLOCKED; observe continued forward movement to EXIT; then reuse known CLEAR+freshSTART return."
+      ],
+      "closure_review": "bag-forward-pause-review.md",
+      "closure_scope": "Actual pauseTrue→False midforward keeps speed+.5/runTrue and physical bag advances to EXIT; CLEAR alone remains idle; fresh START returns supported bag to ENTRY."
     },
     {
       "id": "Q06",
@@ -387,14 +402,12 @@
       "physical_control": "APP STOP/RUN and full second batch using NEW PALLET",
       "fixture": "AUTHORED Demo4 via numbered rail (existing program)",
       "steps": [
-        "START/TYPEOK/COUNTREQ; accumulate2 accepted NEWPALLETevents released.",
-        "APP STOP/held then RUN; record output count clear/retained republish distinct from machineSTOP.",
-        "MachineRESET; fresh START and5 separate valid NEWPALLET events to COUNT5/BATCHVALID, completing true secondbatch."
+        "Do not rerun; exact independent native scope closed."
       ],
       "expected_observable": "No phantom increment on Run; record retained counter/output semantics; second full5 not merely first event of secondbatch.",
-      "scope_justification": "Existing screenshot machineStop retains5 and machineReset0; curriculum pass only required batch2count1. Full repeat and AppStop remain distinct.",
+      "scope_justification": "Old named machineSTOP image shows runningpilot lit, so accepted machineSTOP is NOT proved by filename. MachineRESET0 is visible; secondbatchcount1 is not fullrepeat. Keep real machineSTOP response, AppStop and complete secondbatch distinct.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-9-11-pallet-counting.md",
         "scenes/migrated/lab-9-11-pallet-counting.scene.json"
@@ -450,7 +463,15 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "START/TYPEOK/COUNTREQ; accumulate2 accepted NEWPALLETevents released.",
+        "While count nonzero and machineRunningTrue, operate physical machineSTOP once; require native acceptedinput/machineRunningFalse with documented retainedcount, then physicalfreshSTART. Do not credit a decorativebutton or oldmisnamedframe.",
+        "APP STOP/held then RUN; record output count clear/retained republish distinct from machineSTOP.",
+        "MachineRESET; fresh START and5 separate valid NEWPALLET events to COUNT5/BATCHVALID, completing true secondbatch."
+      ],
+      "closure_review": "demo4-retention-repeat-review.md",
+      "closure_scope": "Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5."
     },
     {
       "id": "Q10",
@@ -458,14 +479,12 @@
       "physical_control": "ENABLE OFF/ON during actual gantry motion",
       "fixture": "AUTHORED Demo5 via numbered rail (existing program)",
       "steps": [
-        "Start qualified layer; wait actual nonhome gantry movement.",
-        "ENABLEOFF; capture commands and held axis counts/pose.",
-        "ENABLEON; inspect whether machineRunning latch cleared; freshSTART if documented, finish supported layer."
+        "Do not rerun; exact independent native scope closed."
       ],
       "expected_observable": "Disabled motion outputs off and actual axes held; restoration follows authored freshStart latch policy, no spontaneous unqualified move.",
       "scope_justification": "SIMTRIP/PALLET/STOP already reviewed; ENABLE is separate exposed selector without explicit loss checkpoint.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-11-13-xy-palletizing.md",
         "scenes/migrated/lab-11-13-xy-palletizing.scene.json"
@@ -521,7 +540,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "Start qualified layer; wait actual nonhome gantry movement.",
+        "ENABLEOFF; capture commands and held axis counts/pose.",
+        "ENABLEON; inspect whether machineRunning latch cleared; freshSTART if documented, finish supported layer."
+      ],
+      "closure_review": "demo5-enable-loss-review.md",
+      "closure_scope": "Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff."
     },
     {
       "id": "Q11",
@@ -529,14 +555,12 @@
       "physical_control": "ENABLE OFF/ON; observe actual carton destinations",
       "fixture": "AUTHORED Demo3 via numbered rail (existing program)",
       "steps": [
-        "From a fresh batch, observe one short carton main route and tall carton side route with sensor/diverter native feedback.",
-        "During actual motion ENABLEOFF/held; restore and use freshSTART according to native latch.",
-        "Complete next supported routes and capture receiver/part feedback."
+        "Do not rerun; exact bounded native review closed."
       ],
       "expected_observable": "Disabled commands/motion off; no unqualified restart. Physical main/side destination proof, not only curriculumPASSED.",
       "scope_justification": "STOP/TRIP/OVERLOAD routes already supported; ENABLE loss and individual destination geometry are narrower remaining cases.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/scene-2-conveyor-pusher.md",
         "scenes/migrated/scene-2-conveyor-pusher.scene.json"
@@ -592,7 +616,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "From a fresh batch, observe one short carton main route and tall carton side route with sensor/diverter native feedback.",
+        "During actual motion ENABLEOFF/held; restore and use freshSTART according to native latch.",
+        "Complete next supported routes and capture receiver/part feedback."
+      ],
+      "closure_review": "demo3-enable-route-review.md",
+      "closure_scope": "44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement."
     },
     {
       "id": "Q12",
@@ -679,14 +710,12 @@
       "physical_control": "APP STOP/RUN plus START during actual vertical lift",
       "fixture": "test-projects/existing-chain-lift-installation-reference.rpproj.json",
       "steps": [
-        "Run/freshSTART; wait lift vertical position changing (not first conveyorindex).",
-        "APP STOP/held then RUN; apply freshSTART if reference latch requires.",
-        "Observe actual descent and finalhome supported carton."
+        "Do not rerun; supplied qualified upstroke Stop/recovery scope is independently closed."
       ],
       "expected_observable": "Vertical pose held while stopped, qualified recovery to actual lower/home; no concealed position forcing.",
       "scope_justification": "Prior Stop index only; vertical actuator interruption is a distinct native phase. No nonexistent box/destination toggle added.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-4-09-chain-drive-lift.md",
         "scenes/migrated/lab-4-09-chain-drive-lift.scene.json"
@@ -703,7 +732,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "Run/freshSTART; wait lift vertical position changing (not first conveyorindex).",
+        "APP STOP/held then RUN; apply freshSTART if reference latch requires.",
+        "Observe actual descent and finalhome supported carton."
+      ],
+      "closure_review": "chain-lift-upstroke-stop-review.md",
+      "closure_scope": "Actual loaded upstroke Stop15615 holds supported midheight carton/tray/allcommandsOff; Run15646→15772 alone inactive; freshStart resumes to actualupper/receivertransfer then19520home/complete/allOff. No lowerTrue frame or continuous descent claim."
     },
     {
       "id": "Q20",
@@ -747,14 +783,12 @@
       "physical_control": "CROSS during actual WALK",
       "fixture": "test-projects/fixture-lab-5-07-pedestrian-crossing.rpproj.json",
       "steps": [
-        "PATHCLEAR; CROSS to actualWALK.",
-        "Press/release CROSS duringWALK, let current clearance/idle finish.",
-        "Observe no replayed walk until a new idle CROSS."
+        "Do not rerun; apply bounded independent native review."
       ],
       "expected_observable": "One bounded active request does not queue a secondcycle in existing phase0-only request ladder.",
       "scope_justification": "UnavailableCLEARANCE request is reviewed; activeWALK request is distinct explicitly momentary phase admission. No simultaneousPATHpriority test.",
       "policy": "Existing lesson/learner fixture contract; no precision/safety claim.",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "contract": [
         "docs/help/scenes/lab-5-07-pedestrian-crossing.md",
         "scenes/migrated/lab-5-07-pedestrian-crossing.scene.json"
@@ -779,7 +813,14 @@
         }
       ],
       "application_playback_anchor": "Visible App Playback menu Run/Stop/Reset; menu must be opened/grounded on current native screen. This is not a scene-specific machineStop.",
-      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices."
+      "grounding_boundary": "Source action/equipment association guides visible grounding; no inherited pixel coordinates, programmatic simulator calls or blind menu indices.",
+      "original_request_steps": [
+        "PATHCLEAR; CROSS to actualWALK.",
+        "Press/release CROSS duringWALK, let current clearance/idle finish.",
+        "Observe no replayed walk until a new idle CROSS."
+      ],
+      "closure_review": "pedestrian-active-walk-review.md",
+      "closure_scope": "Distinct Health-acknowledged active WALK CROSS preserves current cycle, then37 complete idle observations over400scans/8s/maxgap13 show no queued replay; fresh idle CROSS works and completes."
     },
     {
       "id": "Q22",
@@ -849,15 +890,12 @@
     {
       "id": "Q24",
       "scene_id": "lab-9-03-sum-and-counter-function",
-      "status": "READY_FOR_NATIVE",
+      "status": "CLOSED_SCOPED_NATIVE",
       "physical_control": "A NEXT numeric_display_0; B NEXT numeric_display_1",
       "fixture": "test-projects/repaired-09-sum-counter-reference.rpproj.json",
       "fixture_sha256": "a2740587a08156c961152b0ea1d3ed75afa1ed029523248af0039ef8287592bd",
       "steps": [
-        "Select9.3/load exact repairedreference viaUI; Reset/Run gives A0/B0.",
-        "Enable INPUTSVALID,CALCULATE,CALLCOMPLETE; initialqualified0+0 givesvalidsum0/count1.",
-        "Click A NEXT onceeach:1→2→5→10→0, capture eachreadablevalue/SUM whileB0; heldcomplete mustnotaddcounts.",
-        "Click B NEXT onceeach:1→2→5→10→0 withA0; captureeach, especially1/10/wrap; noextraeventcounts."
+        "Do not rerun; apply exact independent native review scope."
       ],
       "expected_observable": "Exact declaredfivepositioncycle and visible SUM equalsselectedoperand withother0, validityTrue/count1held; buttons mappedindependently.",
       "scope_justification": "Oldr4actionlog delivered A2/B5 and finalcapture2/5; intermediate1/10/wrapnotcaptured. These are finiteexposedvalues, not arbitrarynumericrange/overflow or full25crossproduct.",
@@ -872,7 +910,15 @@
           "action": "cycle-operand_b",
           "faceLabel": "B NEXT"
         }
-      ]
+      ],
+      "original_request_steps": [
+        "Select9.3/load exact repairedreference viaUI; Reset/Run gives A0/B0.",
+        "Enable INPUTSVALID,CALCULATE,CALLCOMPLETE; initialqualified0+0 givesvalidsum0/count1.",
+        "Click A NEXT onceeach:1→2→5→10→0, capture eachreadablevalue/SUM whileB0; heldcomplete mustnotaddcounts.",
+        "Click B NEXT onceeach:1→2→5→10→0 withA0; captureeach, especially1/10/wrap; noextraeventcounts."
+      ],
+      "closure_review": "sum-counter-preset-cycle-review.md",
+      "closure_scope": "Both independent A/B physical NEXT cycles0→1→2→5→10→0 directly show matching SUM with other operand0, resultValidTrue/eventCount1 throughout held CALL COMPLETE."
     }
   ],
   "partial_controls_adjudication": [
@@ -1145,8 +1191,8 @@
     },
     {
       "scene_id": "lab-11-12-mobile-traffic-lights",
-      "disposition": "EXECUTE_NAMED_CASE",
-      "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
+      "disposition": "CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE",
+      "reason": "All5 exposed actions have native responses: READY,Aclear,Bclear drops/restores yield bothred at endpoints; queueA/queueB introduce actual vehicles/crossings. Q08 occupied READYloss remains a named phase-recovery case, not proof that the READY control never worked.",
       "queue_ids": [
         "Q08"
       ],
@@ -1182,7 +1228,9 @@
       ],
       "existing_evidence": [
         "evidence-review-lab1112.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-11-13-xy-palletizing",
@@ -1269,8 +1317,8 @@
     },
     {
       "scene_id": "lab-2-11-inbound-tote-stop",
-      "disposition": "EXECUTE_NAMED_CASE",
-      "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
+      "disposition": "CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE",
+      "reason": "Mapped physical START is accepted and produces actual totefeed/scanner/downstream result with freshrepeat. No separate equipment-mapped Stop/Reset route is established. Q12 exact scannerTrue/identification observation remains separate; no hidden action PASS.",
       "queue_ids": [
         "Q12"
       ],
@@ -1295,7 +1343,9 @@
       ],
       "existing_evidence": [
         "evidence-review-lab211-plant-gap.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-2-12-assembly-lift",
@@ -1609,8 +1659,8 @@
     },
     {
       "scene_id": "lab-4-08-package-grouping",
-      "disposition": "EXECUTE_NAMED_CASE",
-      "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
+      "disposition": "CONTROL_AND_Q02_PHASE_CASE_CLOSED",
+      "reason": "MappedENABLE/CLEAR/LOADresponses supported; Q02 actualraisedreleaseStop/Run-alone→supportedcomplete9501 nowclosed. Earlier phaseinvalidattempts excluded.",
       "queue_ids": [
         "Q02"
       ],
@@ -1635,12 +1685,14 @@
       ],
       "existing_evidence": [
         "evidence-review-lab408.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-4-09-chain-drive-lift",
-      "disposition": "EXECUTE_NAMED_CASE",
-      "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
+      "disposition": "CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE",
+      "reason": "Only physical START is mapped; accepted START and freshStart after indexStop visibly advance carton/lift and reach supported receiver/home. No exposed boxAbsent/destinationBlocked/fault selector. Q19 verticalStop/trace remains separate.",
       "queue_ids": [
         "Q19"
       ],
@@ -1654,7 +1706,9 @@
       ],
       "existing_evidence": [
         "evidence-review-lab49.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-4-10-cookie-packaging",
@@ -1696,8 +1750,8 @@
     },
     {
       "scene_id": "lab-4-12-cable-cut-length",
-      "disposition": "EXECUTE_NAMED_CASE",
-      "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
+      "disposition": "CONTROL_AND_Q03_PHASE_CASE_CLOSED",
+      "reason": "PhysicalSTARTresponseandactualknifeStop/held/Run-aloneinhibited/freshSTARTcomplete reviewed. No new phasegate.",
       "queue_ids": [
         "Q03"
       ],
@@ -1711,11 +1765,13 @@
       ],
       "existing_evidence": [
         "evidence-review-lab412.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-5-07-pedestrian-crossing",
-      "disposition": "EXECUTE_NAMED_CASE",
+      "disposition": "CLOSED_SCOPED_NATIVE",
       "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
       "queue_ids": [
         "Q21"
@@ -1736,7 +1792,10 @@
       ],
       "existing_evidence": [
         "evidence-review-lab507.md"
-      ]
+      ],
+      "status": "SCOPED_PASS",
+      "current_status": "SCOPED_PASS",
+      "evidence": "pedestrian-active-walk-review.md"
     },
     {
       "scene_id": "lab-5-08-drawbridge-control",
@@ -1767,8 +1826,8 @@
     },
     {
       "scene_id": "lab-5-09-bag-indexing-conveyor",
-      "disposition": "EXECUTE_NAMED_CASE",
-      "reason": "Refer to exact queue cases; action inventory itself does not prove response.",
+      "disposition": "CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE",
+      "reason": "Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 actual midforward transition remains unobserved and its expected continuedmotion is not turned into a new PASS.",
       "queue_ids": [
         "Q05"
       ],
@@ -1788,12 +1847,14 @@
       ],
       "existing_evidence": [
         "evidence-review-lab509.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-5-10-coating-line",
-      "disposition": "Q04_PHASE_CASE_CLOSED",
-      "reason": "PhysicalSTART/readinessresponsesreviewed; actualinitialindexStop/Run-alone→exitnowclosed. No new unsupportedactiveSTART/inhibitfault requirement introduced.",
+      "disposition": "CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE",
+      "reason": "Physical START plus SPRAY READY and VENT READY each have explicit accepted/native response: missing-readiness start gates, freshqualifiedStart, individual ready losses/restores during spray. Q04 actual indexStop/Run-alone also closed. Undefined activeSTART/fault inputs add no control gap.",
       "queue_ids": [
         "Q04"
       ],
@@ -1819,7 +1880,9 @@
       ],
       "existing_evidence": [
         "evidence-review-lab510.md"
-      ]
+      ],
+      "current_control_status": "SCOPED_PASS",
+      "historical_control_status": "PARTIAL"
     },
     {
       "scene_id": "lab-6-07-luggage-weight-sort",
@@ -3466,8 +3529,8 @@
     {
       "scene_id": "lab-11-12-mobile-traffic-lights",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "Namedphysicalactions/guards andinterruptionroutes in independentreport tested; sensorfaults/rapid/simultaneouscasesunproven.",
+      "status": "SCOPED_PASS",
+      "scope": "All5 exposed actions have native responses: READY,Aclear,Bclear drops/restores yield bothred at endpoints; queueA/queueB introduce actual vehicles/crossings. Q08 occupied READYloss remains a named phase-recovery case, not proof that the READY control never worked.",
       "evidence": [
         "evidence-review-lab1112.md"
       ],
@@ -4991,8 +5054,8 @@
     {
       "scene_id": "lab-2-11-inbound-tote-stop",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "Nativeacceptednewrequest+PLCcommandoutputverified; originalmissingbindingdistinctfromconfirmedcommand-to-mechanicsfailure. Narrowplantimplementationbuilt98647butpostfixUIpending.",
+      "status": "SCOPED_PASS",
+      "scope": "Mapped physical START is accepted and produces actual totefeed/scanner/downstream result with freshrepeat. No separate equipment-mapped Stop/Reset route is established. Q12 exact scannerTrue/identification observation remains separate; no hidden action PASS.",
       "evidence": [
         "evidence-review-lab211-plant-gap.md"
       ],
@@ -7306,8 +7369,8 @@
     {
       "scene_id": "lab-4-08-package-grouping",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "ENABLE/CLEAR/LOAD physicallytested; prematureLOADexplicitHealthguard requiresidlefeed/freeposition, laterretrycount3works. Shortbeampulsepollmissnotappbug.",
+      "status": "SCOPED_PASS",
+      "scope": "ENABLE/CLEAR/LOAD each has an actual native effect: accepted loads give count1/2/3, premature LOAD explicitly guarded, active CLEAR loss holds and restoration resumes. No other mapped process control is declared. Release-specific AppStop Q02 remains separately untested.",
       "evidence": [
         "evidence-review-lab408.md"
       ],
@@ -7329,9 +7392,10 @@
       "scene_id": "lab-4-08-package-grouping",
       "requirement": "stop_reset_restart",
       "status": "SCOPED_PASS",
-      "scope": "ProperR3movingsecondcartonStop8409freezespose/sensorTrue1.2s/commandsoff/visiblecount0; Run8423republishcount2/moveswithoutduplicate. R2neverreachedStopexcluded.",
+      "scope": "Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.",
       "evidence": [
-        "evidence-review-lab408.md"
+        "evidence-review-lab408.md",
+        "../screen-audit-2026-10-23/grouping-release-stop-review.md"
       ],
       "reference_check": "ALL_EXIST",
       "not_a_full_family_pass": true
@@ -7340,9 +7404,10 @@
       "scene_id": "lab-4-08-package-grouping",
       "requirement": "recovery",
       "status": "SCOPED_PASS",
-      "scope": "Clearloss265â†’336freezesfirstcarton/runtimeadvances, restore585movesretainedcount1. ProperR3movingStop/Runretainedcount2recovers; release-specificStopnotproved.",
+      "scope": "Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.",
       "evidence": [
-        "evidence-review-lab408.md"
+        "evidence-review-lab408.md",
+        "../screen-audit-2026-10-23/grouping-release-stop-review.md"
       ],
       "reference_check": "ALL_EXIST",
       "not_a_full_family_pass": true
@@ -7394,8 +7459,8 @@
     {
       "scene_id": "lab-4-09-chain-drive-lift",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "Actual START identified from native pixels, accepted; earlier readonlyLED misclick excluded. Destinationblocked/boxabsent paths untested.",
+      "status": "SCOPED_PASS",
+      "scope": "Only physical START is mapped; accepted START and freshStart after indexStop visibly advance carton/lift and reach supported receiver/home. No exposed boxAbsent/destinationBlocked/fault selector. Q19 verticalStop/trace remains separate.",
       "evidence": [
         "evidence-review-lab49.md"
       ],
@@ -7658,8 +7723,8 @@
     {
       "scene_id": "lab-4-12-cable-cut-length",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "START/freshSTART and actual feedingAppStop/Run/Reset verified; knifeinterruption,heldStart/fault/distinctmachineStop untested.",
+      "status": "SCOPED_PASS",
+      "scope": "Only physical START is mapped; accepted normalStart and freshStart after feedStop visibly move cable, execute knife and reach3m/7stock/home. No independent sceneStop/fault button is mapped. Q03 knife-phase AppStop remains separate, not inherited.",
       "evidence": [
         "evidence-review-lab412.md"
       ],
@@ -7681,9 +7746,10 @@
       "scene_id": "lab-4-12-cable-cut-length",
       "requirement": "stop_reset_restart",
       "status": "SCOPED_PASS",
-      "scope": "AppStopfeeding scan93/.45+9.55m frozenearly/late1.2s; Runaloneinactive; freshSTART resumes. Reset0/10/home/outgoinglengthclear.",
+      "scope": "Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.",
       "evidence": [
-        "evidence-review-lab412.md"
+        "evidence-review-lab412.md",
+        "../screen-audit-2026-10-23/cable-knife-stop-review.md"
       ],
       "reference_check": "ALL_EXIST",
       "not_a_full_family_pass": true
@@ -7692,9 +7758,10 @@
       "scene_id": "lab-4-12-cable-cut-length",
       "requirement": "recovery",
       "status": "SCOPED_PASS",
-      "scope": "FreshSTART afterfeedStop/Run recovers3/7/allcompletionhomeTrue/off/nofault.",
+      "scope": "Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.",
       "evidence": [
-        "evidence-review-lab412.md"
+        "evidence-review-lab412.md",
+        "../screen-audit-2026-10-23/cable-knife-stop-review.md"
       ],
       "reference_check": "ALL_EXIST",
       "not_a_full_family_pass": true
@@ -8553,10 +8620,12 @@
     {
       "scene_id": "lab-5-09-bag-indexing-conveyor",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen.",
+      "status": "SCOPED_PASS",
+      "scope": "Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 actual midforward transition remains unobserved and its expected continuedmotion is not turned into a new PASS.",
       "evidence": [
-        "evidence-review-lab509.md"
+        "evidence-review-lab509.md",
+        "lab509-r1-start-forward.png",
+        "lab509-r1-clear-alone.png"
       ],
       "reference_check": "ALL_EXIST",
       "not_a_full_family_pass": true
@@ -8641,10 +8710,11 @@
     {
       "scene_id": "lab-5-10-coating-line",
       "requirement": "controls",
-      "status": "PARTIAL",
-      "scope": "SevenfreshSTART/sprayready/ventreadygatecasesverified; noqualifiedstartwithoutfreshSTART. ActiveSTART/inhibitfaultcontrols untested.",
+      "status": "SCOPED_PASS",
+      "scope": "Physical START plus SPRAY READY and VENT READY each have explicit accepted/native response: missing-readiness start gates, freshqualifiedStart, individual ready losses/restores during spray. Q04 actual indexStop/Run-alone also closed. Undefined activeSTART/fault inputs add no control gap.",
       "evidence": [
-        "evidence-review-lab510.md"
+        "evidence-review-lab510.md",
+        "../screen-audit-2026-10-23/coating-index-stop-review.md"
       ],
       "reference_check": "ALL_EXIST",
       "not_a_full_family_pass": true

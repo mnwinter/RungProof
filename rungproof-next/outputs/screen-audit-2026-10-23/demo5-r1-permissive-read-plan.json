@@ -1,0 +1,13 @@
+[
+  {
+    "input": {
+      "x": 891,
+      "phase": "wheel",
+      "delta": -600,
+      "y": 399
+    },
+    "wait": 0.4,
+    "capture": "demo5-r1-permissives-signals",
+    "ocr": true
+  }
+]

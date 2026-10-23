@@ -1,0 +1,48 @@
+[
+  {
+    "input": {
+      "x": 392,
+      "y": 405
+    },
+    "capture": "demo4-r1-correct-scene",
+    "ocr": true,
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 186,
+      "y": 110
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 134,
+      "y": 34
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 174
+    },
+    "capture": "demo4-r1-engineering-home",
+    "ocr": true,
+    "wait": 0.6
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "status": "OFFLINE_GUARDS_AND_PARSER_PASS",
+  "stop_attempted": false,
+  "phase_class_proven": false,
+  "screen_only": true,
+  "native_session": false,
+  "elapsed_seconds": 0.001,
+  "files": [
+    {
+      "file": "exclusive-write-test.txt",
+      "bytes": 5,
+      "sha256": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4"
+    }
+  ]
+}

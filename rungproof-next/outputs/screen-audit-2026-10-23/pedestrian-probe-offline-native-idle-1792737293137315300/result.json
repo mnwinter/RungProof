@@ -1,0 +1,139 @@
+{
+  "status": "OFFLINE_SAVED_PEDESTRIAN_IMAGE_OBSERVED",
+  "cross_attempted": false,
+  "native_session": false,
+  "screen_only": true,
+  "physical_lamp_acceptance": false,
+  "fresh_action_acknowledgement_proven": false,
+  "native_layout_baseline": "pedestrian-r1-path-clear.png",
+  "source_sha256": "5db9bc4a4eaf679bc2e311b8dee9fb793e8bb42f5958dbe424c339b7673ef530",
+  "accepted_scan_period_ms": 20,
+  "no_setup_or_further_requests": true,
+  "observation": {
+    "image": "offline-original.png",
+    "values": {
+      "clear_to_finish": true,
+      "pedestrian_walk": false,
+      "pedestrian_stop": true,
+      "vehicle_ready": true,
+      "vehicle_amber": false,
+      "vehicle_stop": false,
+      "crossing_request": false,
+      "sequence_running": false
+    },
+    "row_witnesses": {
+      "clear_to_finish": [
+        {
+          "raw": "\u2022 clear_to_finish True",
+          "value": true,
+          "row_y": 49.5
+        }
+      ],
+      "pedestrian_walk": [
+        {
+          "raw": "\u2022 pedestrian_walk False",
+          "value": false,
+          "row_y": 204.5
+        }
+      ],
+      "pedestrian_stop": [
+        {
+          "raw": "\u2022 pedestrian_stop True",
+          "value": true,
+          "row_y": 153.0
+        }
+      ],
+      "vehicle_ready": [
+        {
+          "raw": "\u2022 vehicle_ready True",
+          "value": true,
+          "row_y": 360.0
+        }
+      ],
+      "vehicle_amber": [
+        {
+          "raw": "\u2022 vehicle_amber False",
+          "value": false,
+          "row_y": 308.0
+        }
+      ],
+      "vehicle_stop": [
+        {
+          "raw": "\u2022 vehicle_stop False",
+          "value": false,
+          "row_y": 411.0
+        }
+      ],
+      "crossing_request": [
+        {
+          "raw": "\u2022 crossing_request False",
+          "value": false,
+          "row_y": 101.0
+        }
+      ],
+      "sequence_running": [
+        {
+          "raw": "\u2022 sequence_running False",
+          "value": false,
+          "row_y": 256.0
+        }
+      ]
+    },
+    "public_walk_predicate": false,
+    "scan": 5593,
+    "wall_seconds": 0.0,
+    "runtime_running": true,
+    "physical_lamp_acceptance": false,
+    "fresh_action_acknowledgement_proven": false
+  },
+  "no_bridge_endpoints": true,
+  "idle_coverage": {
+    "first_idle_scan": null,
+    "last_complete_idle_scan": null,
+    "accepted_idle_span_scans": 0,
+    "accepted_idle_span_seconds": 0.0,
+    "maximum_complete_sample_gap_scans": 0,
+    "maximum_complete_sample_gap_wall_seconds": 0,
+    "complete_idle_samples": 0,
+    "parse_misses": [],
+    "uncovered_observations": [],
+    "active_after_idle": [],
+    "first_observed_clearance_scan": null,
+    "possible_replay_after_clearance": [],
+    "post_click_max_complete_sample_gap_scans": 0,
+    "post_click_parse_misses": [],
+    "partial_reasons": [],
+    "bounded_no_replay_coverage_observed": false,
+    "physical_lamp_acceptance": false,
+    "fresh_action_acknowledgement_proven": false
+  },
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.524,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 254465,
+      "sha256": "e53bc3d67f2c80bb9fbdecba90d0b99924a44be372339c8bda83b3d33ca3b054"
+    },
+    {
+      "file": "offline-original-signals3x.png",
+      "bytes": 161770,
+      "sha256": "28599af73a593709f539ba6a376d45aedbf6f0a5e8d13c43c2f5cf8fef0c7134"
+    },
+    {
+      "file": "offline-original-signals3x.ocr.json",
+      "bytes": 1997,
+      "sha256": "09bda39371cad8421d2fef59b9173a2189de6570f4bedefc5c69b13e2124ce7f"
+    },
+    {
+      "file": "offline-original-runtime-header3x.png",
+      "bytes": 51090,
+      "sha256": "b771ba8413efb0e798da434ebd46466cae98959c600697e4c738609329fa93eb"
+    },
+    {
+      "file": "offline-original-runtime-header3x.ocr.json",
+      "bytes": 1175,
+      "sha256": "02a51e457d696c74d96bc2d13f746f03d345313fff9228113c5bc82e5ce1a3a3"
+    }
+  ]
+}

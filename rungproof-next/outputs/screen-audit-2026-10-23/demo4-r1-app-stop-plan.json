@@ -1,0 +1,39 @@
+[
+  {
+    "input": {
+      "y": 34,
+      "x": 203
+    },
+    "wait": 0.25
+  },
+  {
+    "wait": 0.65,
+    "capture": "demo4-r1-app-stop-settled",
+    "input": {
+      "y": 90,
+      "x": 220
+    },
+    "ocr": true
+  },
+  {
+    "wait": 1,
+    "capture": "demo4-r1-app-stop-held",
+    "ocr": true
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 203
+    },
+    "wait": 0.25
+  },
+  {
+    "wait": 0.65,
+    "capture": "demo4-r1-app-run-retained-count",
+    "input": {
+      "y": 70,
+      "x": 220
+    },
+    "ocr": true
+  }
+]

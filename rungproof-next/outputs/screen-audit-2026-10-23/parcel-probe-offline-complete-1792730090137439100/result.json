@@ -1,0 +1,86 @@
+{
+  "status": "OFFLINE_SAVED_IMAGE_OBSERVED",
+  "stop_attempted": false,
+  "phase_class_proven": false,
+  "screen_only": true,
+  "native_session": false,
+  "rows": {
+    "values": {
+      "sorted_count": "3",
+      "infeed_run": "false",
+      "primary_table_loaded": "false",
+      "table_transfer_run": "false",
+      "route_position": "0"
+    },
+    "row_witnesses": {
+      "sorted_count": [
+        {
+          "line": 10,
+          "text": "\u2022 sorted_count 3",
+          "value": "3"
+        }
+      ],
+      "infeed_run": [
+        {
+          "line": 1,
+          "text": "\u2022 infeed run False",
+          "value": "false"
+        }
+      ],
+      "primary_table_loaded": [
+        {
+          "line": 7,
+          "text": "\u2022 primary_table_loaded False",
+          "value": "false"
+        }
+      ],
+      "table_transfer_run": [
+        {
+          "line": 13,
+          "text": "\u2022 table transfer run False",
+          "value": "false"
+        }
+      ],
+      "route_position": [
+        {
+          "line": 8,
+          "text": "\u2022 route_position O",
+          "value": "0"
+        }
+      ]
+    },
+    "mandatory_match": false,
+    "home_route": true,
+    "phase_class_proven": false
+  },
+  "scan": 12119,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.553,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 232619,
+      "sha256": "c03676a1b11870fc3392129715f4d1dc1db6e62aefd860a0696a56be2148a89e"
+    },
+    {
+      "file": "offline-original-io2x.png",
+      "bytes": 219711,
+      "sha256": "ddc5f77aef6b5f9351e4fd90757b26f456a674a752ca7cad98c20d45db122d67"
+    },
+    {
+      "file": "offline-original-io2x.ocr.json",
+      "bytes": 4195,
+      "sha256": "a88c9cca832f824c7c8bd9c41fd5cb74ea2b6f95f347e73b7216bc1c9cda9afe"
+    },
+    {
+      "file": "offline-original-header3x.png",
+      "bytes": 51333,
+      "sha256": "e3725e85b3ea74c619f22f952127004230d28a013bbc3d90724f8c9dd43f9f1c"
+    },
+    {
+      "file": "offline-original-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "8da8c675cb9de6e14942eabbdaabfa163fdc69be3dd4bfc16bfb5517321da709"
+    }
+  ]
+}

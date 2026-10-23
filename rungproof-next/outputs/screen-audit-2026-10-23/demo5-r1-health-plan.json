@@ -1,0 +1,16 @@
+[
+  {
+    "input": {
+      "y": 89,
+      "x": 738
+    },
+    "wait": 0.7,
+    "ocr": true,
+    "capture": "demo5-r1-health-enable-history"
+  },
+  {
+    "ocr": true,
+    "wait": 0.4,
+    "capture": "demo5-r1-health-enable-history-settled"
+  }
+]

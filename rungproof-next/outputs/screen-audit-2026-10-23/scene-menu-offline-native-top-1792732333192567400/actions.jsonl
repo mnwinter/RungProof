@@ -1,0 +1,1 @@
+{"utc": "2026-10-23T05:12:13.283087+00:00", "kind": "DERIVED_CROP", "source": "offline-original.png", "crop": {"file": "offline-original-scenario-popup2x.png", "bytes": 270111, "sha256": "22eea1d1a41df6ae0622fc8294f43384c8cf0b007ef80b83d060b1e8670f7214"}, "native_box": [252, 0, 508, 660], "scale": 2, "alteration": "static crop and resample only; original remains intact"}

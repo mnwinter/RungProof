@@ -1,0 +1,9 @@
+{
+  "status": "OFFLINE_WATCH_PARSER_AND_CUTOFF_GUARDS_PASS",
+  "stop_attempted": false,
+  "screen_watch_only": true,
+  "physical_pose_acceptance": false,
+  "native_session": false,
+  "elapsed_seconds": 0.0,
+  "files": []
+}

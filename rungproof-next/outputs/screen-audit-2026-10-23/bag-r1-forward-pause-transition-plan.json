@@ -1,0 +1,35 @@
+[
+  {
+    "ocr": true,
+    "capture": "bag-r1-forward-start",
+    "wait": 0.4,
+    "input": {
+      "y": 369,
+      "x": 547
+    }
+  },
+  {
+    "capture": "bag-r1-forward-before-block",
+    "ocr": true,
+    "wait": 1
+  },
+  {
+    "ocr": true,
+    "capture": "bag-r1-forward-after-block",
+    "wait": 0.4,
+    "input": {
+      "y": 370,
+      "x": 556
+    }
+  },
+  {
+    "capture": "bag-r1-forward-blocked-moving",
+    "ocr": true,
+    "wait": 2
+  },
+  {
+    "capture": "bag-r1-forward-exit",
+    "ocr": true,
+    "wait": 5
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "status": "OFFLINE_EXACT_LABEL_DUPLICATE_AND_CUTOFF_GUARDS_PASS",
+  "label": "Lab 5.10 - Coating Line",
+  "selection_sent": false,
+  "screen_only": true,
+  "native_session": false,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "no_bridge_endpoints": true,
+  "elapsed_seconds": 0.0,
+  "files": []
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "capture": "pedestrian-r1-selected-or-modal",
+    "wait": 0.7,
+    "ocr": true
+  }
+]

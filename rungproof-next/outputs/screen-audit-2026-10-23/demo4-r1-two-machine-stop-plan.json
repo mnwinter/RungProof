@@ -1,0 +1,43 @@
+[
+  {
+    "wait": 0.5,
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "capture": "demo4-r1-first-pallet",
+    "ocr": true
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "capture": "demo4-r1-count-two",
+    "ocr": true
+  },
+  {
+    "wait": 0.6,
+    "input": {
+      "x": 594,
+      "y": 379
+    },
+    "capture": "demo4-r1-actual-machine-stop",
+    "ocr": true
+  },
+  {
+    "wait": 1,
+    "ocr": true,
+    "capture": "demo4-r1-machine-stop-held"
+  },
+  {
+    "wait": 0.6,
+    "input": {
+      "x": 565,
+      "y": 375
+    },
+    "capture": "demo4-r1-machine-restart-retains-two",
+    "ocr": true
+  }
+]

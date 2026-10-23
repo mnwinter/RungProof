@@ -1,0 +1,67 @@
+{
+  "status": "QA_PHASE_CASE_PENDING_PROBE_ENDED",
+  "stop_attempted": false,
+  "screen_watch_only": true,
+  "physical_pose_acceptance": false,
+  "native_session": true,
+  "error_code": "REQUIRED_WATCH_NAME_VALUE_ROWS_UNOBSERVED_NO_STOP",
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 1.492,
+  "files": [
+    {
+      "file": "before-input.png",
+      "bytes": 231521,
+      "sha256": "530dfa271399d8ab62103db9851222b2ada66933ae72e69d64e88894c7632218"
+    },
+    {
+      "file": "logic-open-before-watch-click.png",
+      "bytes": 148134,
+      "sha256": "1ec05331ccf005d4aca80397295645e1b823d182b02fa34ffefe75f51556a6a4"
+    },
+    {
+      "file": "logic-open-before-watch-click-logic-context2x.png",
+      "bytes": 35169,
+      "sha256": "44476f1cc245c87c2e400f892430eaae607d11027af41d01c475a374c31bdf95"
+    },
+    {
+      "file": "logic-open-before-watch-click-logic-context2x.ocr.json",
+      "bytes": 684,
+      "sha256": "9aeb6bffa0fdd0034d94270d8bacbc71c42ab4076a9c3f0eebc1a6943b9e026e"
+    },
+    {
+      "file": "watch-before-menu.png",
+      "bytes": 177721,
+      "sha256": "860371a7310bb30bb8efdcc02f13190cda414e2023773f0f4a94a0f0b7197d0c"
+    },
+    {
+      "file": "watch-before-menu-watch-header2x.png",
+      "bytes": 31047,
+      "sha256": "b2172571c43c704f2a1988dbdc048168be6c72bf026e05d51cf16f926f48c659"
+    },
+    {
+      "file": "watch-before-menu-watch-header2x.ocr.json",
+      "bytes": 929,
+      "sha256": "6f92c5c05bd8cceecfb9121d7115e31da05adb43f787ef66d92a6115534768cd"
+    },
+    {
+      "file": "watch-before-menu-name-and-monitor3x.png",
+      "bytes": 143232,
+      "sha256": "78f75daeba976b2598a10ec0991c71504d20cee031452b432cc774c299e0c7ca"
+    },
+    {
+      "file": "watch-before-menu-name-and-monitor3x.ocr.json",
+      "bytes": 2028,
+      "sha256": "ca8d8025d5145e43a23d2847f6e41e696a5115f80e47ba2dc5ba328bba70fc63"
+    },
+    {
+      "file": "watch-before-menu-runtime-header3x.png",
+      "bytes": 52472,
+      "sha256": "b13e1378c5d4fd53c3f5c3be8a57fbab4854774c2429fe827e001b824916fa95"
+    },
+    {
+      "file": "watch-before-menu-runtime-header3x.ocr.json",
+      "bytes": 1169,
+      "sha256": "5e5895cb1cdf319cfc81668ead8f797ae1da00413daa51bc84af6e5eeb60e580"
+    }
+  ]
+}

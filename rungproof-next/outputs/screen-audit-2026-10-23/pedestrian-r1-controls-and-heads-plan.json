@@ -1,0 +1,49 @@
+[
+  {
+    "input": {
+      "delta": 120,
+      "phase": "wheel",
+      "x": 510,
+      "y": 340
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "delta": 120,
+      "phase": "wheel",
+      "x": 510,
+      "y": 340
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "delta": 120,
+      "phase": "wheel",
+      "x": 510,
+      "y": 340
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "delta": 120,
+      "phase": "wheel",
+      "x": 510,
+      "y": 340
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "delta": 120,
+      "phase": "wheel",
+      "x": 510,
+      "y": 340
+    },
+    "capture": "pedestrian-r1-controls-and-heads",
+    "ocr": true,
+    "wait": 0.6
+  }
+]

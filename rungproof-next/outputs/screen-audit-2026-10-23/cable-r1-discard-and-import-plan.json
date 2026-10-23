@@ -1,0 +1,52 @@
+[
+  {
+    "input": {
+      "y": 405,
+      "x": 392
+    },
+    "capture": "cable-r1-correct-scene",
+    "wait": 0.7,
+    "ocr": true
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 34,
+      "x": 89
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 113,
+      "x": 162
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "y": 512,
+      "x": 456
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "key": "Ctrl+A"
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "text": "existing-cable-cut-reference.rpproj.json"
+    }
+  },
+  {
+    "input": {
+      "key": "Return"
+    },
+    "capture": "cable-r1-fixture-import",
+    "wait": 0.8,
+    "ocr": true
+  }
+]

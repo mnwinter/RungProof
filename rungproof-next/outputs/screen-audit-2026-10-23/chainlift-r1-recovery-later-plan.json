@@ -1,0 +1,12 @@
+[
+  {
+    "wait": 0.4,
+    "capture": "chainlift-r1-recovery-later",
+    "ocr": true
+  },
+  {
+    "wait": 2,
+    "capture": "chainlift-r1-recovery-later-held",
+    "ocr": true
+  }
+]

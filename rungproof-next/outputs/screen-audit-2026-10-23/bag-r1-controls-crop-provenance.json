@@ -1,0 +1,12 @@
+{
+  "source": "bag-r1-controls-near.png",
+  "source_sha256": "2310b2742cff703dbd62b1356a93a81cb927c6482ba7531e575fa73ebca4a956",
+  "native_box": [
+    536,
+    347,
+    606,
+    408
+  ],
+  "scale": 8,
+  "crop": "bag-r1-controls-crop.png"
+}

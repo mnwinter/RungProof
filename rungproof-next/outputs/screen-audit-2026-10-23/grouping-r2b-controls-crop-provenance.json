@@ -1,0 +1,13 @@
+{
+  "source": "grouping-r2b-controls-view.png",
+  "source_sha256": "d18f90ce67fdf8081c29013efeb14cd541e69b611729408686f6f88ac395bbba",
+  "crop": "grouping-r2b-controls-crop.png",
+  "native_box": [
+    440,
+    367,
+    526,
+    467
+  ],
+  "scale": 8,
+  "alteration": "Crop and resample actual native pixels only"
+}

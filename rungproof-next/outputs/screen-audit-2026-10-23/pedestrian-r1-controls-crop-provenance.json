@@ -1,0 +1,12 @@
+{
+  "source": "pedestrian-r1-controls-and-heads.png",
+  "source_sha256": "f0322fed544ea0c4f8bd8e8ef8a8c525f11b2253c318ebbdcb29c61e24f26315",
+  "crop": "pedestrian-r1-controls-crop.png",
+  "native_box": [
+    399,
+    366,
+    457,
+    432
+  ],
+  "scale": 10
+}

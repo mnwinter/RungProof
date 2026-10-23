@@ -1,0 +1,82 @@
+{
+  "status": "QA_PHASE_CASE_PENDING_PROBE_ENDED",
+  "stop_attempted": false,
+  "screen_watch_only": true,
+  "physical_pose_acceptance": false,
+  "native_session": true,
+  "error_code": "STOP_MENU_TEXT_UNOBSERVED_NO_STOP",
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 1.692,
+  "files": [
+    {
+      "file": "before-input.png",
+      "bytes": 231377,
+      "sha256": "adcccef80d91172a136bd2962bc6a913521342a9e37b0d33fd99aa6dd4c6e4bf"
+    },
+    {
+      "file": "logic-open-before-watch-click.png",
+      "bytes": 147808,
+      "sha256": "60c2aecaa689b0744445ed6292c62d0231a2a8b4644712c9199c0845ee9e3034"
+    },
+    {
+      "file": "logic-open-before-watch-click-logic-context2x.png",
+      "bytes": 34693,
+      "sha256": "1f2cd6ca4891fbec1c6a7cc64500da569aaeda15f680488ae33e28b7267c94f4"
+    },
+    {
+      "file": "logic-open-before-watch-click-logic-context2x.ocr.json",
+      "bytes": 734,
+      "sha256": "276c9cc47ec0256beea3d06944aa225e2e362767f84c210246ca0f4903b8b065"
+    },
+    {
+      "file": "watch-before-menu.png",
+      "bytes": 177305,
+      "sha256": "719ccebd5830e2d6e79df95d4cb598a2081e0bd861f7fdacf0baf5d8c3b4a6e8"
+    },
+    {
+      "file": "watch-before-menu-watch-header2x.png",
+      "bytes": 31047,
+      "sha256": "b2172571c43c704f2a1988dbdc048168be6c72bf026e05d51cf16f926f48c659"
+    },
+    {
+      "file": "watch-before-menu-watch-header2x.ocr.json",
+      "bytes": 929,
+      "sha256": "2a26c3c216cb094293f8521ee01d5450fca9798f5dc75bf12354052469699f03"
+    },
+    {
+      "file": "watch-before-menu-name-and-monitor3x.png",
+      "bytes": 143232,
+      "sha256": "78f75daeba976b2598a10ec0991c71504d20cee031452b432cc774c299e0c7ca"
+    },
+    {
+      "file": "watch-before-menu-name-and-monitor3x.ocr.json",
+      "bytes": 2028,
+      "sha256": "f864110b49d13e21122813384b1b7840451e4fdad548f834cfd78110404adf93"
+    },
+    {
+      "file": "watch-before-menu-runtime-header3x.png",
+      "bytes": 51838,
+      "sha256": "090358498268ea3775f676e1c817c89b6b0a227fa93daeafa0af783d521f06ff"
+    },
+    {
+      "file": "watch-before-menu-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "70e55f1791323615029aa212023fe24366b241f77f0d6030914287cd903c420c"
+    },
+    {
+      "file": "watch-menu-armed.png",
+      "bytes": 183021,
+      "sha256": "fd45ed716ef40f08d1caa8e6708411f3b15fedfb2714afaf317c221f28893719"
+    },
+    {
+      "file": "watch-menu-armed-menu2x.png",
+      "bytes": 24160,
+      "sha256": "dfbc6b0f8e9548f5095ef0e69bc260296130a78ac8e1d37f2dbafada04fc0902"
+    },
+    {
+      "file": "watch-menu-armed-menu2x.ocr.json",
+      "bytes": 905,
+      "sha256": "ab4b15f4289348e3dda93f046a432e3a1498a29835447edc2f044872034bfd54"
+    }
+  ]
+}

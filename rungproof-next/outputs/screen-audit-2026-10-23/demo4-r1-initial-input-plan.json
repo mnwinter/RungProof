@@ -1,0 +1,29 @@
+[
+  {
+    "input": {
+      "x": 565,
+      "y": 349
+    },
+    "wait": 0.4,
+    "ocr": true,
+    "capture": "demo4-r1-type-valid"
+  },
+  {
+    "input": {
+      "x": 595,
+      "y": 354
+    },
+    "wait": 0.4,
+    "ocr": true,
+    "capture": "demo4-r1-count-request"
+  },
+  {
+    "input": {
+      "x": 565,
+      "y": 375
+    },
+    "wait": 0.4,
+    "ocr": true,
+    "capture": "demo4-r1-machine-start"
+  }
+]

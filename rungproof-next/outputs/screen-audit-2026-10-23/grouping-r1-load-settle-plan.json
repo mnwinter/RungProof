@@ -1,0 +1,7 @@
+[
+  {
+    "capture": "grouping-r1-load-settled",
+    "wait": 0.3,
+    "ocr": true
+  }
+]

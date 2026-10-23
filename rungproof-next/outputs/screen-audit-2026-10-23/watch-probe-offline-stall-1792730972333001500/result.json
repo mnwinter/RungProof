@@ -1,0 +1,106 @@
+{
+  "status": "OFFLINE_SAVED_WATCH_OBSERVED",
+  "stop_attempted": false,
+  "screen_watch_only": true,
+  "physical_pose_acceptance": false,
+  "native_session": false,
+  "watch_context": true,
+  "watch": {
+    "values": {
+      "qa_step": 50,
+      "qa_scan_step": 50,
+      "qa_class": 2
+    },
+    "row_witnesses": {
+      "qa_step": [
+        {
+          "name_text": "qa_step",
+          "monitor_text": "50",
+          "value": 50,
+          "name_center_y": 444.0,
+          "monitor_word": {
+            "text": "50",
+            "x": 339,
+            "y": 424,
+            "w": 40,
+            "h": 30
+          }
+        }
+      ],
+      "qa_scan_step": [
+        {
+          "name_text": "qa_scan_step -",
+          "monitor_text": "50",
+          "value": 50,
+          "name_center_y": 512.0,
+          "monitor_word": {
+            "text": "50",
+            "x": 338,
+            "y": 494,
+            "w": 41,
+            "h": 29
+          }
+        }
+      ],
+      "qa_class": [
+        {
+          "name_text": "qa_class",
+          "monitor_text": "2",
+          "value": 2,
+          "name_center_y": 651.0,
+          "monitor_word": {
+            "text": "2",
+            "x": 338,
+            "y": 633,
+            "w": 20,
+            "h": 30
+          }
+        }
+      ]
+    },
+    "target_rows_matched": false,
+    "screen_watch_only": true,
+    "physical_pose_acceptance": false
+  },
+  "scan": 4732,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.673,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 177912,
+      "sha256": "535bf2f5fe8b112f54ee75ece3e38bb67755ba64da3b7485f39c171606d45fc7"
+    },
+    {
+      "file": "offline-original-watch-header2x.png",
+      "bytes": 31047,
+      "sha256": "b2172571c43c704f2a1988dbdc048168be6c72bf026e05d51cf16f926f48c659"
+    },
+    {
+      "file": "offline-original-watch-header2x.ocr.json",
+      "bytes": 927,
+      "sha256": "1d7d0b940f5a8a8cdbc18e6fa97438e54af1b524f4599a013a6cbf25e7fa4579"
+    },
+    {
+      "file": "offline-original-name-and-monitor3x.png",
+      "bytes": 144999,
+      "sha256": "81d7702174943efa0bf0aef299494e22c3a9162c081222a04e5a290ab95b585c"
+    },
+    {
+      "file": "offline-original-name-and-monitor3x.ocr.json",
+      "bytes": 2164,
+      "sha256": "b1394c38ebbb34582148c1b3100ca1794dbfd7d4390a65de5369387fad571632"
+    },
+    {
+      "file": "offline-original-runtime-header3x.png",
+      "bytes": 52196,
+      "sha256": "b5e90048116aaef7009d09c8286e783b4a018878e50adfddadfd5ade93f23f1f"
+    },
+    {
+      "file": "offline-original-runtime-header3x.ocr.json",
+      "bytes": 1108,
+      "sha256": "186f50ed865724a187c795ed04ccb79bd9f1a0e7f20b9a656ec717a8c4e11c45"
+    }
+  ]
+}

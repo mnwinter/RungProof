@@ -1,0 +1,31 @@
+[
+  {
+    "input": {
+      "x": 510,
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel"
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 510,
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel"
+    },
+    "wait": 0.3
+  },
+  {
+    "capture": "grouping-r2b-controls-near",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 510,
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel"
+    }
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "wait": 0.25,
+    "input": {
+      "x": 134,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 185,
+      "y": 130
+    },
+    "wait": 0.7,
+    "ocr": true,
+    "capture": "demo3-r1-return-physical-held"
+  }
+]

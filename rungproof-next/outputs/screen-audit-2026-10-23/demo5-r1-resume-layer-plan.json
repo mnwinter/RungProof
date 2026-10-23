@@ -1,0 +1,39 @@
+[
+  {
+    "input": {
+      "x": 856,
+      "y": 89
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 578,
+      "y": 399
+    },
+    "capture": "demo5-r1-fresh-start-resumes",
+    "wait": 0.8,
+    "ocr": true
+  },
+  {
+    "capture": "demo5-r1-resumed-layer-observe-1",
+    "wait": 4,
+    "ocr": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "demo5-r1-resumed-layer-observe-2",
+    "wait": 4,
+    "ocr": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "demo5-r1-resumed-layer-observe-3",
+    "wait": 4,
+    "ocr": true
+  }
+]

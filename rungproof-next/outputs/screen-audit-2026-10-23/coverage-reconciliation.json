@@ -8,34 +8,32 @@
       "SCOPED_PASS": 77
     },
     "controls": {
-      "SCOPED_PASS": 57,
-      "PARTIAL": 20
+      "SCOPED_PASS": 69,
+      "PARTIAL": 8
     },
     "normal_outcome": {
       "SCOPED_PASS": 76,
       "PARTIAL": 1
     },
     "stop_reset_restart": {
-      "SCOPED_PASS": 74,
-      "PARTIAL": 3
+      "SCOPED_PASS": 76,
+      "PARTIAL": 1
     },
     "recovery": {
-      "SCOPED_PASS": 75,
-      "PARTIAL": 1,
-      "NOT_TESTED": 1
+      "SCOPED_PASS": 76,
+      "PARTIAL": 1
     },
     "repeat": {
-      "SCOPED_PASS": 74,
-      "FAIL": 1,
-      "PARTIAL": 1,
-      "NOT_TESTED": 1
+      "SCOPED_PASS": 76,
+      "FAIL": 1
     },
     "navigation": {
-      "SCOPED_PASS": 77
+      "SCOPED_PASS": 76,
+      "FAIL": 1
     },
     "feedback": {
-      "SCOPED_PASS": 72,
-      "PARTIAL": 4,
+      "SCOPED_PASS": 74,
+      "PARTIAL": 2,
       "FAIL": 1
     }
   },
@@ -2751,12 +2749,20 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Namedphysicalactions/guards andinterruptionroutes in independentreport tested; sensorfaults/rapid/simultaneouscasesunproven.",
+          "status": "SCOPED_PASS",
+          "scope": "All5 exposed actions have native responses: READY,Aclear,Bclear drops/restores yield bothred at endpoints; queueA/queueB introduce actual vehicles/crossings. Q08 occupied READYloss remains a named phase-recovery case, not proof that the READY control never worked.",
           "evidence": [
             "evidence-review-lab1112.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "Namedphysicalactions/guards andinterruptionroutes in independentreport tested; sensorfaults/rapid/simultaneouscasesunproven.",
+            "evidence": [
+              "evidence-review-lab1112.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -2982,7 +2988,15 @@
         "A committed vehicle clears under amber/red or entry-fixture loss. Application Stop freezes plant time. Opposing green commands remain visibly diagnosable and inhibit new entries; occupied all-red delays the next release.",
         "Cart antennas illustrate the shared command source only. No measured radio synchronization or link-health signal is claimed."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab1112.md"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-11-13-xy-palletizing",
@@ -2999,13 +3013,14 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions.",
+          "status": "SCOPED_PASS",
+          "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Latest exact closure: Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff.",
           "evidence": [
             "demo5-layer-settled.png",
             "demo5-stop-recovery-progress.png",
             "demo5-trip-permissive-progress.png",
-            "demo5-second-layer-final.png"
+            "demo5-second-layer-final.png",
+            "CURRENT_AUDIT:demo5-enable-loss-review.md"
           ],
           "supersedes": {
             "status": "NOT_TESTED",
@@ -3013,7 +3028,27 @@
             "evidence": [],
             "source": "coverage-ledger.json"
           },
-          "source": "specific native evidence reconciliation"
+          "source": "specific native evidence reconciliation",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions.",
+              "evidence": [
+                "demo5-layer-settled.png",
+                "demo5-stop-recovery-progress.png",
+                "demo5-trip-permissive-progress.png",
+                "demo5-second-layer-final.png",
+                "CURRENT_AUDIT:demo5-enable-loss-review.md"
+              ],
+              "supersedes": {
+                "status": "NOT_TESTED",
+                "scope": "",
+                "evidence": [],
+                "source": "coverage-ledger.json"
+              },
+              "source": "specific native evidence reconciliation"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -3034,13 +3069,27 @@
         },
         "recovery": {
           "status": "SCOPED_PASS",
-          "scope": "Observed machine Stop/fresh Start, simulated trip clear/Reset/fresh Start, and pallet-permissive loss/restore/Reset/fresh Start. Checkpoint and curriculum procedure evidence only; other fault/reset variants remain open.",
+          "scope": "Observed machine Stop/fresh Start, simulated trip clear/Reset/fresh Start, and pallet-permissive loss/restore/Reset/fresh Start. Checkpoint and curriculum procedure evidence only; other fault/reset variants remain open. Latest exact closure: Actual unloadedgantry ENABLEloss during motion freezes Y−1200/allaxesOff; restoredTrue5933/5960 alone holds step10. FreshStart completes firstlayer4 supportedcartons/homeXYZ0/axesOff.",
           "evidence": [
             "demo5-stop-recovery-progress.png",
             "demo5-trip-permissive-progress.png",
-            "demo5-second-layer-final.png"
+            "demo5-second-layer-final.png",
+            "CURRENT_AUDIT:demo5-enable-loss-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "SCOPED_PASS",
+              "scope": "Observed machine Stop/fresh Start, simulated trip clear/Reset/fresh Start, and pallet-permissive loss/restore/Reset/fresh Start. Checkpoint and curriculum procedure evidence only; other fault/reset variants remain open.",
+              "evidence": [
+                "demo5-stop-recovery-progress.png",
+                "demo5-trip-permissive-progress.png",
+                "demo5-second-layer-final.png",
+                "CURRENT_AUDIT:demo5-enable-loss-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "repeat": {
           "status": "SCOPED_PASS",
@@ -5392,12 +5441,20 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Nativeacceptednewrequest+PLCcommandoutputverified; originalmissingbindingdistinctfromconfirmedcommand-to-mechanicsfailure. Narrowplantimplementationbuilt98647butpostfixUIpending.",
+          "status": "SCOPED_PASS",
+          "scope": "Mapped physical START is accepted and produces actual totefeed/scanner/downstream result with freshrepeat. No separate equipment-mapped Stop/Reset route is established. Q12 exact scannerTrue/identification observation remains separate; no hidden action PASS.",
           "evidence": [
             "evidence-review-lab211-plant-gap.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "Nativeacceptednewrequest+PLCcommandoutputverified; originalmissingbindingdistinctfromconfirmedcommand-to-mechanicsfailure. Narrowplantimplementationbuilt98647butpostfixUIpending.",
+            "evidence": [
+              "evidence-review-lab211-plant-gap.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -5553,7 +5610,15 @@
         "Treat tote_at_scanner, scan_complete as simulator-to-PLC inputs. The PLC should command only conveyor_run. The automatic scanner finishes identification after 0.8 s continuously stopped with the tote blocking its beam; moving before completion restarts identification. Commanded belt speed is 0.75 m/s until the PLC removes conveyor_run. The displayed tote remains at the supported route endpoint after arrival; that position limit does not stop the commanded belt.",
         "Use a step/state approach and prove the transition order: feeding → scanning → clearing → ready."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab211-plant-gap.md"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-2-12-assembly-lift",
@@ -11083,12 +11148,20 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "ENABLE/CLEAR/LOAD physicallytested; prematureLOADexplicitHealthguard requiresidlefeed/freeposition, laterretrycount3works. Shortbeampulsepollmissnotappbug.",
+          "status": "SCOPED_PASS",
+          "scope": "ENABLE/CLEAR/LOAD each has an actual native effect: accepted loads give count1/2/3, premature LOAD explicitly guarded, active CLEAR loss holds and restoration resumes. No other mapped process control is declared. Release-specific AppStop Q02 remains separately untested.",
           "evidence": [
             "evidence-review-lab408.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "ENABLE/CLEAR/LOAD physicallytested; prematureLOADexplicitHealthguard requiresidlefeed/freeposition, laterretrycount3works. Shortbeampulsepollmissnotappbug.",
+            "evidence": [
+              "evidence-review-lab408.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -11100,19 +11173,37 @@
         },
         "stop_reset_restart": {
           "status": "SCOPED_PASS",
-          "scope": "ProperR3movingsecondcartonStop8409freezespose/sensorTrue1.2s/commandsoff/visiblecount0; Run8423republishcount2/moveswithoutduplicate. R2neverreachedStopexcluded.",
+          "scope": "Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.",
           "evidence": [
-            "evidence-review-lab408.md"
+            "evidence-review-lab408.md",
+            "../screen-audit-2026-10-23/grouping-release-stop-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "SCOPED_PASS",
+            "scope": "ProperR3movingsecondcartonStop8409freezespose/sensorTrue1.2s/commandsoff/visiblecount0; Run8423republishcount2/moveswithoutduplicate. R2neverreachedStopexcluded.",
+            "evidence": [
+              "evidence-review-lab408.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Independent9-original Q02 native closure"
         },
         "recovery": {
           "status": "SCOPED_PASS",
-          "scope": "Clearloss265â†’336freezesfirstcarton/runtimeadvances, restore585movesretainedcount1. ProperR3movingStop/Runretainedcount2recovers; release-specificStopnotproved.",
+          "scope": "Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify.",
           "evidence": [
-            "evidence-review-lab408.md"
+            "evidence-review-lab408.md",
+            "../screen-audit-2026-10-23/grouping-release-stop-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "SCOPED_PASS",
+            "scope": "Clearloss265â†’336freezesfirstcarton/runtimeadvances, restore585movesretainedcount1. ProperR3movingStop/Runretainedcount2recovers; release-specificStopnotproved.",
+            "evidence": [
+              "evidence-review-lab408.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Independent9-original Q02 native closure"
         },
         "repeat": {
           "status": "SCOPED_PASS",
@@ -11161,7 +11252,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "AppStop during actual raised-gate group release/transfer remains unverified; previous Stop was moving feed. Normal three cartons and recovered final are covered. Keep count3 retained, not invented completion reset. N1.",
+      "remaining": "Q02 qualified raised-gate release AppStop/settledhold/Run-alone complete now closed. Existing3loads/guard/clear/enable/repeat evidence retained. No additional arbitraryphase, exactpulse or nonexistentfault gate.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-4-08-package-grouping.scene.json",
         "rungproof-next/docs/help/scenes/lab-4-08-package-grouping.md"
@@ -11288,7 +11379,15 @@
         "Command the conveyor and group-stop release using raw enable/path and actual staged-group feedback.",
         "Three cartons, 0.4 m/s and a one-second stop stroke are original offline training choices."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab408.md"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-4-09-chain-drive-lift",
@@ -11305,12 +11404,20 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Actual START identified from native pixels, accepted; earlier readonlyLED misclick excluded. Destinationblocked/boxabsent paths untested.",
+          "status": "SCOPED_PASS",
+          "scope": "Only physical START is mapped; accepted START and freshStart after indexStop visibly advance carton/lift and reach supported receiver/home. No exposed boxAbsent/destinationBlocked/fault selector. Q19 verticalStop/trace remains separate.",
           "evidence": [
             "evidence-review-lab49.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "Actual START identified from native pixels, accepted; earlier readonlyLED misclick excluded. Destinationblocked/boxabsent paths untested.",
+            "evidence": [
+              "evidence-review-lab49.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -11322,17 +11429,19 @@
         },
         "stop_reset_restart": {
           "status": "SCOPED_PASS",
-          "scope": "AppStop freezes scan/pose, clearscommands; Runalone doesnotresume; freshSTART resumes; AppReset restoresinfeed/home clearbaseline.",
+          "scope": "AppStop freezes scan/pose, clearscommands; Runalone doesnotresume; freshSTART resumes; AppReset restoresinfeed/home clearbaseline. Q19 exact closure: Actual loaded upstroke Stop15615 holds supported midheight carton/tray/allcommandsOff; Run15646→15772 alone inactive; freshStart resumes to actualupper/receivertransfer then19520home/complete/allOff. No lowerTrue frame or continuous descent claim.",
           "evidence": [
-            "evidence-review-lab49.md"
+            "evidence-review-lab49.md",
+            "CURRENT_AUDIT:chain-lift-upstroke-stop-review.md"
           ],
           "source": "coverage-ledger.json"
         },
         "recovery": {
           "status": "SCOPED_PASS",
-          "scope": "FreshSTART after AppStop/Run recovery completes receiver/home cycle; actual final8checks supersede premature wait screenshot, not an appfailure.",
+          "scope": "FreshSTART after AppStop/Run recovery completes receiver/home cycle; actual final8checks supersede premature wait screenshot, not an appfailure. Q19 exact closure: Actual loaded upstroke Stop15615 holds supported midheight carton/tray/allcommandsOff; Run15646→15772 alone inactive; freshStart resumes to actualupper/receivertransfer then19520home/complete/allOff. No lowerTrue frame or continuous descent claim.",
           "evidence": [
-            "evidence-review-lab49.md"
+            "evidence-review-lab49.md",
+            "CURRENT_AUDIT:chain-lift-upstroke-stop-review.md"
           ],
           "source": "coverage-ledger.json"
         },
@@ -11381,7 +11490,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Destination-blocked/box-absent qualification and mid-vertical-motion Stop need legitimate exposed cases; captured Stop was initial index. Capture actual lowering trace if claiming it, final home alone is narrower. N1.",
+      "remaining": "Q19 loaded upstroke Stop/explicit recovery is closed. No newly invented sampled-downstroke requirement; retain exact timing/safety-rated scope limits.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-4-09-chain-drive-lift.scene.json",
         "rungproof-next/docs/help/scenes/lab-4-09-chain-drive-lift.md"
@@ -11506,7 +11615,15 @@
         "Feedback is PC-owned and position-derived; PLC logic owns chain_run, lift_enable, lift_lower and cycle status.",
         "Stop holds every load/carriage/belt pose. Run alone must not resume; fresh Start may resume the held cycle."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab49.md"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-4-10-cookie-packaging",
@@ -11951,12 +12068,20 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "START/freshSTART and actual feedingAppStop/Run/Reset verified; knifeinterruption,heldStart/fault/distinctmachineStop untested.",
+          "status": "SCOPED_PASS",
+          "scope": "Only physical START is mapped; accepted normalStart and freshStart after feedStop visibly move cable, execute knife and reach3m/7stock/home. No independent sceneStop/fault button is mapped. Q03 knife-phase AppStop remains separate, not inherited.",
           "evidence": [
             "evidence-review-lab412.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "START/freshSTART and actual feedingAppStop/Run/Reset verified; knifeinterruption,heldStart/fault/distinctmachineStop untested.",
+            "evidence": [
+              "evidence-review-lab412.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -11968,19 +12093,37 @@
         },
         "stop_reset_restart": {
           "status": "SCOPED_PASS",
-          "scope": "AppStopfeeding scan93/.45+9.55m frozenearly/late1.2s; Runaloneinactive; freshSTART resumes. Reset0/10/home/outgoinglengthclear.",
+          "scope": "Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.",
           "evidence": [
-            "evidence-review-lab412.md"
+            "evidence-review-lab412.md",
+            "../screen-audit-2026-10-23/cable-knife-stop-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "SCOPED_PASS",
+            "scope": "AppStopfeeding scan93/.45+9.55m frozenearly/late1.2s; Runaloneinactive; freshSTART resumes. Reset0/10/home/outgoinglengthclear.",
+            "evidence": [
+              "evidence-review-lab412.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Independent8-original/5xoriginalbladecomparison Q03 closure"
         },
         "recovery": {
           "status": "SCOPED_PASS",
-          "scope": "FreshSTART afterfeedStop/Run recovers3/7/allcompletionhomeTrue/off/nofault.",
+          "scope": "Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim.",
           "evidence": [
-            "evidence-review-lab412.md"
+            "evidence-review-lab412.md",
+            "../screen-audit-2026-10-23/cable-knife-stop-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "SCOPED_PASS",
+            "scope": "FreshSTART afterfeedStop/Run recovers3/7/allcompletionhomeTrue/off/nofault.",
+            "evidence": [
+              "evidence-review-lab412.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Independent8-original/5xoriginalbladecomparison Q03 closure"
         },
         "repeat": {
           "status": "SCOPED_PASS",
@@ -12027,7 +12170,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Knife-active Stop/recovery distinct from feeding Stop remains unverified; low-stock/missing-cable faults need exposed/legitimate contracts. Normal3m/7m, cutter home and retained supported part covered. N1.",
+      "remaining": "Q03 actual outboundknife Stop/held, Run-alone noresume, freshSTART recovery/home nowclosed. No arbitraryfault, distinctunmappedmachineStop or precision-cut gate.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-4-12-cable-cut-length.scene.json",
         "rungproof-next/docs/help/scenes/lab-4-12-cable-cut-length.md"
@@ -12145,7 +12288,15 @@
         "PC owns actual length, stock and knife feedback. PLC owns feed, cutter and cycle authorization.",
         "Stop holds feed and blade pose; Run needs a fresh Start. Completion retains one 3 m piece until Reset."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab412.md"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-5-01-delayed-lamp",
@@ -13245,10 +13396,11 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen.",
+          "status": "SCOPED_PASS",
+          "scope": "Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen. Q21 closure: Distinct Health-acknowledged active WALK CROSS preserves current cycle, then37 complete idle observations over400scans/8s/maxgap13 show no queued replay; fresh idle CROSS works and completes.",
           "evidence": [
-            "evidence-review-lab507.md"
+            "evidence-review-lab507.md",
+            "CURRENT_AUDIT:pedestrian-active-walk-review.md"
           ],
           "source": "coverage-ledger.json"
         },
@@ -13668,12 +13820,44 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen.",
+          "status": "SCOPED_PASS",
+          "scope": "Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 actual midforward transition is now independently reviewed. Latest exact closure: Actual pauseTrue→False midforward keeps speed+.5/runTrue and physical bag advances to EXIT; CLEAR alone remains idle; fresh START returns supported bag to ENTRY.",
           "evidence": [
-            "evidence-review-lab509.md"
+            "evidence-review-lab509.md",
+            "lab509-r1-start-forward.png",
+            "lab509-r1-clear-alone.png",
+            "CURRENT_AUDIT:bag-forward-pause-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen.",
+            "evidence": [
+              "evidence-review-lab509.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution",
+          "superseded": [
+            {
+              "status": "SCOPED_PASS",
+              "scope": "Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 actual midforward transition remains unobserved and its expected continuedmotion is not turned into a new PASS.",
+              "evidence": [
+                "evidence-review-lab509.md",
+                "lab509-r1-start-forward.png",
+                "lab509-r1-clear-alone.png",
+                "CURRENT_AUDIT:bag-forward-pause-review.md"
+              ],
+              "supersedes": {
+                "status": "PARTIAL",
+                "scope": "Namedphysicalactions/interlocks in independentreport exercised; independentinhibit/abnormalfeedback/simultaneouscases remainopen.",
+                "evidence": [
+                  "evidence-review-lab509.md"
+                ],
+                "source": "coverage-ledger.json"
+              },
+              "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -13745,7 +13929,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Forward-direction pause loss and fresh START midtravel are unverified/need documented policy. Reverse CLEARloss, Stop/Run and both endpoint repeat covered. Independent inhibition is not necessarily an operator control. N1.",
+      "remaining": "The named exposed-control gap is CLOSED by bag-forward-pause-review.md; retain original bounded lifecycle/precision limits, with no new crossproduct requirement.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-5-09-bag-indexing-conveyor.scene.json",
         "rungproof-next/docs/help/scenes/lab-5-09-bag-indexing-conveyor.md"
@@ -13841,7 +14025,17 @@
         "conveyor_run is the run enable. conveyor_reverse selects reverse while run is enabled; both true means valid reverse, not conflicting direction coils.",
         "PAUSE CLEAR is a manual maintained acknowledgement, not an automatic obstruction detector. A new START at EXIT requests the return."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab509.md",
+            "lab509-r1-start-forward.png",
+            "lab509-r1-clear-alone.png"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-5-10-coating-line",
@@ -13858,12 +14052,21 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "SevenfreshSTART/sprayready/ventreadygatecasesverified; noqualifiedstartwithoutfreshSTART. ActiveSTART/inhibitfaultcontrols untested.",
+          "status": "SCOPED_PASS",
+          "scope": "Physical START plus SPRAY READY and VENT READY each have explicit accepted/native response: missing-readiness start gates, freshqualifiedStart, individual ready losses/restores during spray. Q04 actual indexStop/Run-alone also closed. Undefined activeSTART/fault inputs add no control gap.",
           "evidence": [
-            "evidence-review-lab510.md"
+            "evidence-review-lab510.md",
+            "../screen-audit-2026-10-23/coating-index-stop-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "supersedes": {
+            "status": "PARTIAL",
+            "scope": "SevenfreshSTART/sprayready/ventreadygatecasesverified; noqualifiedstartwithoutfreshSTART. ActiveSTART/inhibitfaultcontrols untested.",
+            "evidence": [
+              "evidence-review-lab510.md"
+            ],
+            "source": "coverage-ledger.json"
+          },
+          "source": "Further adversarial action inventory vs explicit native review reconciliation; no new UI execution"
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -14075,7 +14278,16 @@
         "STATION and EXIT are calculated from actual workpiece body and finite optical beams. PLC owns index, spray and ventilation commands.",
         "Index to STATION, stop, ventilate while spraying for 2 s, purge for 1 s, discharge to EXIT. These are illustrative reference times."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "controls_reconciliation_history": [
+        {
+          "reason": "Generic P was about other phases, nonexistent faults or unspecified cases, not an unresponsive mapped control.",
+          "source_reviews": [
+            "evidence-review-lab510.md",
+            "../screen-audit-2026-10-23/coating-index-stop-review.md"
+          ]
+        }
+      ]
     },
     {
       "scene_id": "lab-6-07-luggage-weight-sort",
@@ -15289,12 +15501,24 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Correctedphysicalcalculate/complete inputroute; operand2/5+valid-onlynocomplete stays0/invalid; request/valid/completeallTruequalified. Alltruthcombos/transienteventpilot unproven.",
+          "status": "SCOPED_PASS",
+          "scope": "Correctedphysicalcalculate/complete inputroute; operand2/5+valid-onlynocomplete stays0/invalid; request/valid/completeallTruequalified. Alltruthcombos/transienteventpilot unproven. Latest exact closure: Both independent A/B physical NEXT cycles0→1→2→5→10→0 directly show matching SUM with other operand0, resultValidTrue/eventCount1 throughout held CALL COMPLETE.",
           "evidence": [
-            "evidence-review-lab903-legal.md"
+            "evidence-review-lab903-legal.md",
+            "CURRENT_AUDIT:sum-counter-preset-cycle-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Correctedphysicalcalculate/complete inputroute; operand2/5+valid-onlynocomplete stays0/invalid; request/valid/completeallTruequalified. Alltruthcombos/transienteventpilot unproven.",
+              "evidence": [
+                "evidence-review-lab903-legal.md",
+                "CURRENT_AUDIT:sum-counter-preset-cycle-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -15369,7 +15593,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Repaired reference load/normal/heldStopResetrepeat reviewed. Physical A NEXT/B NEXT exact0/1/2/5/10 cycle is exposed; oldlogs capture2/5 and reset0, not settled1/10/wrap. Finite Q24 verifies missing selectorpositions, not arbitrary arithmetic/permutations.",
+      "remaining": "The named exposed-control gap is CLOSED by sum-counter-preset-cycle-review.md; retain original bounded lifecycle/precision limits, with no new crossproduct requirement.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-9-03-sum-and-counter-function.scene.json",
         "rungproof-next/docs/help/scenes/lab-9-03-sum-and-counter-function.md"
@@ -16351,12 +16575,13 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions.",
+          "status": "SCOPED_PASS",
+          "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.",
           "evidence": [
             "demo4-five-events.png",
             "demo4-curriculum-progress.png",
-            "demo4-second-batch-first-event.png"
+            "demo4-second-batch-first-event.png",
+            "CURRENT_AUDIT:demo4-retention-repeat-review.md"
           ],
           "supersedes": {
             "status": "NOT_TESTED",
@@ -16364,7 +16589,26 @@
             "evidence": [],
             "source": "coverage-ledger.json"
           },
-          "source": "specific native evidence reconciliation"
+          "source": "specific native evidence reconciliation",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions.",
+              "evidence": [
+                "demo4-five-events.png",
+                "demo4-curriculum-progress.png",
+                "demo4-second-batch-first-event.png",
+                "CURRENT_AUDIT:demo4-retention-repeat-review.md"
+              ],
+              "supersedes": {
+                "status": "NOT_TESTED",
+                "scope": "",
+                "evidence": [],
+                "source": "coverage-ledger.json"
+              },
+              "source": "specific native evidence reconciliation"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -16376,28 +16620,66 @@
           "source": "coverage-ledger.json"
         },
         "stop_reset_restart": {
-          "status": "PARTIAL",
-          "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.",
+          "status": "SCOPED_PASS",
+          "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.",
           "evidence": [
             "breadth-lab-9-11-pallet-counting-run.png",
-            "breadth-lab-9-11-pallet-counting-reset.png"
+            "breadth-lab-9-11-pallet-counting-reset.png",
+            "CURRENT_AUDIT:demo4-retention-repeat-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.",
+              "evidence": [
+                "breadth-lab-9-11-pallet-counting-run.png",
+                "breadth-lab-9-11-pallet-counting-reset.png",
+                "CURRENT_AUDIT:demo4-retention-repeat-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "recovery": {
-          "status": "NOT_TESTED",
-          "scope": "",
-          "evidence": [],
-          "source": "coverage-ledger.json"
+          "status": "SCOPED_PASS",
+          "scope": " Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.",
+          "evidence": [
+            "CURRENT_AUDIT:demo4-retention-repeat-review.md"
+          ],
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "NOT_TESTED",
+              "scope": "",
+              "evidence": [
+                "CURRENT_AUDIT:demo4-retention-repeat-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "repeat": {
-          "status": "PARTIAL",
-          "scope": "Machine Reset to zero and first valid event of second batch counted one. A second complete five-event batch was not established.",
+          "status": "SCOPED_PASS",
+          "scope": "Machine Reset to zero and first valid event of second batch counted one. A second complete five-event batch was not established. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.",
           "evidence": [
             "demo4-second-batch-first-event.png",
-            "demo4-curriculum-progress.png"
+            "demo4-curriculum-progress.png",
+            "CURRENT_AUDIT:demo4-retention-repeat-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Machine Reset to zero and first valid event of second batch counted one. A second complete five-event batch was not established.",
+              "evidence": [
+                "demo4-second-batch-first-event.png",
+                "demo4-curriculum-progress.png",
+                "CURRENT_AUDIT:demo4-retention-repeat-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "navigation": {
           "status": "SCOPED_PASS",
@@ -16410,12 +16692,13 @@
           "source": "coverage-ledger.json / breadth-review-progress.md"
         },
         "feedback": {
-          "status": "PARTIAL",
-          "scope": "Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open.",
+          "status": "SCOPED_PASS",
+          "scope": "Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open. Latest exact closure: Actual machineStop retains count2; freshStart retains2. AppStop15308 projects0/frozen; Run15339 restores2 but machine remainsOff until freshStart. Firstvalid5→machineReset0→freshStart and five separate NEWPALLET events→actualsecondvalid5.",
           "evidence": [
             "demo4-five-events.png",
             "demo4-curriculum-progress.png",
-            "demo4-second-batch-first-event.png"
+            "demo4-second-batch-first-event.png",
+            "CURRENT_AUDIT:demo4-retention-repeat-review.md"
           ],
           "supersedes": {
             "status": "NOT_TESTED",
@@ -16423,7 +16706,26 @@
             "evidence": [],
             "source": "coverage-ledger.json"
           },
-          "source": "specific native evidence reconciliation"
+          "source": "specific native evidence reconciliation",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open.",
+              "evidence": [
+                "demo4-five-events.png",
+                "demo4-curriculum-progress.png",
+                "demo4-second-batch-first-event.png",
+                "CURRENT_AUDIT:demo4-retention-repeat-review.md"
+              ],
+              "supersedes": {
+                "status": "NOT_TESTED",
+                "scope": "",
+                "evidence": [],
+                "source": "coverage-ledger.json"
+              },
+              "source": "specific native evidence reconciliation"
+            }
+          ]
         }
       },
       "contract_subchecks": {
@@ -16451,7 +16753,7 @@
         ],
         "primary_case_statuses_changed": false
       },
-      "remaining": "Tie machineSTART/STOP/RESET and NEWPALLET held/invalid-event cases to actual per-control/count evidence; generic controls/recovery/feedback cells remain empty. AppStop numeric0/Run retained count requires separate path evidence; machineStop retained count is not that path. N1. Second complete five-event batch remains unverified: first event of second batch is not a completed repeat.",
+      "remaining": "Actual machineSTOP acknowledgement/response remains unproven: named oldimage still shows Runningpilot lit. MachineRESET0 supported. Independent AppStop/count projection-retention and full second5eventbatch remain Q09; batch2count1 alone is not a fullrepeat.",
       "contract_sources": [
         "rungproof-next/scenes/migrated/lab-9-11-pallet-counting.scene.json",
         "rungproof-next/docs/help/scenes/lab-9-11-pallet-counting.md"
@@ -17116,8 +17418,8 @@
           "source": "coverage-ledger.json"
         },
         "controls": {
-          "status": "PARTIAL",
-          "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions.",
+          "status": "SCOPED_PASS",
+          "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.",
           "evidence": [
             "demo3-normal-progress.png",
             "demo3-normal-checkpoints.jpg",
@@ -17127,7 +17429,8 @@
             "demo3-second-routing-run.png",
             "demo3-overload-stop-trip-start-blocked.png",
             "demo3-overload-reset-no-auto-restart.png",
-            "demo3-overload-second-routing-run.png"
+            "demo3-overload-second-routing-run.png",
+            "CURRENT_AUDIT:demo3-enable-route-review.md"
           ],
           "supersedes": {
             "status": "NOT_TESTED",
@@ -17135,7 +17438,32 @@
             "evidence": [],
             "source": "coverage-ledger.json"
           },
-          "source": "specific native evidence reconciliation"
+          "source": "specific native evidence reconciliation",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Known operator sequence and named recovery actions have native evidence in cited checkpoints. Exact exhaustive exposed-control mapping still needs reconciliation; NOT_TESTED would erase known actions.",
+              "evidence": [
+                "demo3-normal-progress.png",
+                "demo3-normal-checkpoints.jpg",
+                "demo3-overload-final-curriculum.png",
+                "demo3-stop-trip-start-blocked.png",
+                "demo3-reset-no-auto-restart.png",
+                "demo3-second-routing-run.png",
+                "demo3-overload-stop-trip-start-blocked.png",
+                "demo3-overload-reset-no-auto-restart.png",
+                "demo3-overload-second-routing-run.png",
+                "CURRENT_AUDIT:demo3-enable-route-review.md"
+              ],
+              "supersedes": {
+                "status": "NOT_TESTED",
+                "scope": "",
+                "evidence": [],
+                "source": "coverage-ledger.json"
+              },
+              "source": "specific native evidence reconciliation"
+            }
+          ]
         },
         "normal_outcome": {
           "status": "SCOPED_PASS",
@@ -17148,13 +17476,26 @@
           "source": "coverage-ledger.json"
         },
         "stop_reset_restart": {
-          "status": "PARTIAL",
-          "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.",
+          "status": "SCOPED_PASS",
+          "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.",
           "evidence": [
             "breadth-scene-2-conveyor-pusher-run.png",
-            "breadth-scene-2-conveyor-pusher-reset.png"
+            "breadth-scene-2-conveyor-pusher-reset.png",
+            "CURRENT_AUDIT:demo3-enable-route-review.md"
           ],
-          "source": "coverage-ledger.json"
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Visible app Run reached RUNNING. Following app Stop then Reset showed STOPPED/SCAN 0. There is no separate Stop checkpoint, so an independent Stop transition is not established. Machine behavior and subsequent restart remain outside this breadth case.",
+              "evidence": [
+                "breadth-scene-2-conveyor-pusher-run.png",
+                "breadth-scene-2-conveyor-pusher-reset.png",
+                "CURRENT_AUDIT:demo3-enable-route-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "recovery": {
           "status": "SCOPED_PASS",
@@ -17171,24 +17512,50 @@
           "source": "coverage-ledger.json"
         },
         "repeat": {
-          "status": "NOT_TESTED",
-          "scope": "",
-          "evidence": [],
-          "source": "coverage-ledger.json"
+          "status": "SCOPED_PASS",
+          "scope": " Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.",
+          "evidence": [
+            "CURRENT_AUDIT:demo3-enable-route-review.md"
+          ],
+          "source": "coverage-ledger.json",
+          "superseded": [
+            {
+              "status": "NOT_TESTED",
+              "scope": "",
+              "evidence": [
+                "CURRENT_AUDIT:demo3-enable-route-review.md"
+              ],
+              "source": "coverage-ledger.json"
+            }
+          ]
         },
         "navigation": {
-          "status": "SCOPED_PASS",
-          "scope": "Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.",
+          "status": "FAIL",
+          "scope": "Scenario/rail entry and Immersive route still work. QA-UI-003 S2: Engineering Frame Process repeatedly shows uniform wall-like aperture; WholeScene exteriorroof; switchingImmersive restores actualprocess. No blank-scene load/controller failure or confirmed camera cause.",
           "evidence": [
             [
               "breadth-scene-2-conveyor-pusher-entry.png"
-            ]
+            ],
+            "CURRENT_AUDIT:demo3-frame-process-visibility-review.md"
           ],
-          "source": "coverage-ledger.json / breadth-review-progress.md"
+          "source": "coverage-ledger.json / breadth-review-progress.md",
+          "superseded": [
+            {
+              "status": "SCOPED_PASS",
+              "scope": "Correct Scenario-menu entry and subsequent scene switch in77-entry breadth. Not all return/logic/help paths. Shared representative Browser/Viewer covered separately.",
+              "evidence": [
+                [
+                  "breadth-scene-2-conveyor-pusher-entry.png"
+                ],
+                "CURRENT_AUDIT:demo3-frame-process-visibility-review.md"
+              ],
+              "source": "coverage-ledger.json / breadth-review-progress.md"
+            }
+          ]
         },
         "feedback": {
-          "status": "PARTIAL",
-          "scope": "Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open.",
+          "status": "SCOPED_PASS",
+          "scope": "Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open. Q11 exact closure: 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement.",
           "evidence": [
             "demo3-normal-progress.png",
             "demo3-normal-checkpoints.jpg",
@@ -17198,7 +17565,8 @@
             "demo3-second-routing-run.png",
             "demo3-overload-stop-trip-start-blocked.png",
             "demo3-overload-reset-no-auto-restart.png",
-            "demo3-overload-second-routing-run.png"
+            "demo3-overload-second-routing-run.png",
+            "CURRENT_AUDIT:demo3-enable-route-review.md"
           ],
           "supersedes": {
             "status": "NOT_TESTED",
@@ -17206,7 +17574,32 @@
             "evidence": [],
             "source": "coverage-ledger.json"
           },
-          "source": "specific native evidence reconciliation"
+          "source": "specific native evidence reconciliation",
+          "superseded": [
+            {
+              "status": "PARTIAL",
+              "scope": "Normal/recovery or batch-count checkpoints provide bounded physical/curriculum feedback; individual destination/held-event and exhaustive indicator coverage remain open.",
+              "evidence": [
+                "demo3-normal-progress.png",
+                "demo3-normal-checkpoints.jpg",
+                "demo3-overload-final-curriculum.png",
+                "demo3-stop-trip-start-blocked.png",
+                "demo3-reset-no-auto-restart.png",
+                "demo3-second-routing-run.png",
+                "demo3-overload-stop-trip-start-blocked.png",
+                "demo3-overload-reset-no-auto-restart.png",
+                "demo3-overload-second-routing-run.png",
+                "CURRENT_AUDIT:demo3-enable-route-review.md"
+              ],
+              "supersedes": {
+                "status": "NOT_TESTED",
+                "scope": "",
+                "evidence": [],
+                "source": "coverage-ledger.json"
+              },
+              "source": "specific native evidence reconciliation"
+            }
+          ]
         }
       },
       "contract_subchecks": {
@@ -17419,7 +17812,10 @@
         "HEIGHT MM shows the measured carton height. The PLC routes values above 600 mm to the side conveyor and values at or below 600 mm to the main conveyor.",
         "DONE advances only after destination feedback completes a carton. Clearing a stop, trip, or overload does not restart motion; issue a fresh machine START."
       ],
-      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button."
+      "control_inventory_disposition": "Declared action list retained for exact action-to-evidence matching; a scoped PASS does not automatically credit any uncited action. Hidden/nonrendered action route must be distinguished from an exposed button.",
+      "issue_ids": [
+        "QA-UI-003"
+      ]
     },
     {
       "scene_id": "tank-high-low",
@@ -18094,6 +18490,15 @@
       "tank-level",
       "lab-5-08-drawbridge-control"
     ],
-    "rule": "19 original bounded-control cohort plus newly closed drawbridge; historical PARTIAL preserved under supersedes. Five unexposed-declaration route questions remain separate and are not credited for unclicked controls."
+    "rule": "19 original bounded-control cohort plus newly closed drawbridge; historical PARTIAL preserved under supersedes. Five unexposed-declaration route questions remain separate and are not credited for unclicked controls.",
+    "later_reconciled_scope_ids": [
+      "lab-4-08-package-grouping",
+      "lab-4-12-cable-cut-length",
+      "lab-4-09-chain-drive-lift",
+      "lab-5-10-coating-line",
+      "lab-11-12-mobile-traffic-lights",
+      "lab-2-11-inbound-tote-stop",
+      "lab-5-09-bag-indexing-conveyor"
+    ]
   }
 }

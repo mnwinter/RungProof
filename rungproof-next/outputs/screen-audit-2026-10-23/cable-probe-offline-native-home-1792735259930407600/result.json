@@ -1,0 +1,176 @@
+{
+  "status": "OFFLINE_SAVED_CABLE_IMAGE_OBSERVED",
+  "stop_attempted": false,
+  "screen_only": true,
+  "native_session": false,
+  "physical_pose_acceptance": false,
+  "required_precondition": "Root has started feed and left actual App Playback menu open",
+  "observation": {
+    "image": "offline-original.png",
+    "rows": {
+      "values": {
+        "cutter_fire": false,
+        "cut_done": false,
+        "cutter_home": true,
+        "length_reached": false,
+        "feed_run": false,
+        "cut_fault": false,
+        "cycle_active": false,
+        "cycle_complete": false,
+        "cut_complete": false,
+        "batch_start": false,
+        "cable_present": true,
+        "cutter_position": 0.0,
+        "measured_length_m": 0.0,
+        "stock_remaining_m": null,
+        "feed_speed_mps": 0.0
+      },
+      "row_witnesses": {
+        "cutter_fire": [
+          {
+            "text": "\u2022 cutter_fire False",
+            "value": false,
+            "row_center_y": 259.5
+          }
+        ],
+        "cut_done": [
+          {
+            "text": "\u2022 cut_done False",
+            "value": false,
+            "row_center_y": 190.0
+          }
+        ],
+        "cutter_home": [
+          {
+            "text": "\u2022 cutter home True",
+            "value": true,
+            "row_center_y": 293.5
+          }
+        ],
+        "length_reached": [
+          {
+            "text": "\u2022 length_reached False",
+            "value": false,
+            "row_center_y": 500.5
+          }
+        ],
+        "feed_run": [
+          {
+            "text": "\u2022 feed run False",
+            "value": false,
+            "row_center_y": 431.5
+          }
+        ],
+        "cut_fault": [
+          {
+            "text": "\u2022 cut fault False",
+            "value": false,
+            "row_center_y": 224.5
+          }
+        ],
+        "cycle_active": [
+          {
+            "text": "\u2022 cycle_active False",
+            "value": false,
+            "row_center_y": 362.5
+          }
+        ],
+        "cycle_complete": [
+          {
+            "text": "\u2022 cycle_complete False",
+            "value": false,
+            "row_center_y": 397.0
+          }
+        ],
+        "cut_complete": [
+          {
+            "text": "\u2022 cut_complete False",
+            "value": false,
+            "row_center_y": 155.5
+          }
+        ],
+        "batch_start": [
+          {
+            "text": "\u2022 batch start False",
+            "value": false,
+            "row_center_y": 86.5
+          }
+        ],
+        "cable_present": [
+          {
+            "text": "\u2022 cable_present True",
+            "value": true,
+            "row_center_y": 121.5
+          }
+        ],
+        "cutter_position": [
+          {
+            "text": "\u2022 cutter_position O",
+            "value": 0.0,
+            "row_center_y": 328.5
+          }
+        ],
+        "measured_length_m": [
+          {
+            "text": "\u2022 measured_length_m O",
+            "value": 0.0,
+            "row_center_y": 535.5
+          }
+        ],
+        "stock_remaining_m": [],
+        "feed_speed_mps": [
+          {
+            "text": "\u2022 feed_speed_mps O",
+            "value": 0.0,
+            "row_center_y": 466.5
+          }
+        ]
+      },
+      "outbound_knife_predicate_matched": false
+    },
+    "scan": 204,
+    "runtime_running": true,
+    "runtime_stopped": false
+  },
+  "stop_menu_observed": false,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.577,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 271351,
+      "sha256": "81a7ebf9a1aa5a0186b9427cc7edce556cb5b3b7b28334f1b6a2e3d5507cd722"
+    },
+    {
+      "file": "offline-original-signals2x.png",
+      "bytes": 171641,
+      "sha256": "33db77153f5d2a6bb6374e570d2b3b3b24456b47f61d732265645431e9978ca2"
+    },
+    {
+      "file": "offline-original-signals2x.ocr.json",
+      "bytes": 3577,
+      "sha256": "be551e9b9f597b232e581cd28956df5ad8ac871736abcfd053e882d9eb6a9066"
+    },
+    {
+      "file": "offline-original-runtime-header3x.png",
+      "bytes": 50813,
+      "sha256": "04d71a0ae4ef8987f8e11e71fac7092d0ca67333512228e0b0499d93ad50c4ac"
+    },
+    {
+      "file": "offline-original-runtime-header3x.ocr.json",
+      "bytes": 1167,
+      "sha256": "1fe83bc0f8e74f70ba721541713313ff122d4acbdf4d824bdf6cfd4cd940bd7a"
+    },
+    {
+      "file": "offline-original-menu2x.png",
+      "bytes": 14190,
+      "sha256": "7e2eaf0313c5f83bdfa60aba021d946d7bddc22771d7f81ce636172ad60af06f"
+    },
+    {
+      "file": "offline-original-menu2x.ocr.json",
+      "bytes": 399,
+      "sha256": "4ff8b6c7b1874b6b65815f7109efe37d426799318782e468b4c6c040dab72cef"
+    }
+  ]
+}

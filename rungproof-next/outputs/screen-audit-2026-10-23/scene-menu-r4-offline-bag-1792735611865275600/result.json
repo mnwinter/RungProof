@@ -1,0 +1,84 @@
+{
+  "status": "OFFLINE_SAVED_SCENARIO_MENU_OBSERVED",
+  "label": null,
+  "identity": "Lab 5.9",
+  "selection_mode": "EXPLICIT_NUMERIC_ID",
+  "selection_sent": false,
+  "screen_only": true,
+  "native_session": false,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "matches": [
+    {
+      "text": "Lab 5.9- Indexing Corweyor",
+      "words": [
+        {
+          "text": "Lab",
+          "x": 16,
+          "y": 869,
+          "w": 40,
+          "h": 21
+        },
+        {
+          "text": "5.9-",
+          "x": 64,
+          "y": 871,
+          "w": 47,
+          "h": 19
+        },
+        {
+          "text": "Indexing",
+          "x": 168,
+          "y": 869,
+          "w": 100,
+          "h": 27
+        },
+        {
+          "text": "Corweyor",
+          "x": 273,
+          "y": 871,
+          "w": 109,
+          "h": 25
+        }
+      ],
+      "crop_word_union": [
+        16,
+        869,
+        382,
+        896
+      ],
+      "native_click": [
+        352,
+        441
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "unique_exact_match": true,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.522,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 331217,
+      "sha256": "fcc05fee6c7a66c70f22ce6616ffe428ccaec225dedbb2005abe69fd777b5309"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.png",
+      "bytes": 288142,
+      "sha256": "a98ea020f61ec13b3754562a024199246b5957cc281d89307d3c05658527027c"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.ocr.json",
+      "bytes": 11113,
+      "sha256": "a620def90eb4a66afc62b6ec67a57077c8403b3bd3596c861a48143492958573"
+    }
+  ]
+}

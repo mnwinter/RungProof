@@ -1,0 +1,25 @@
+[
+  {
+    "input": {
+      "x": 409,
+      "y": 306
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 451,
+      "y": 322
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 497,
+      "y": 340
+    },
+    "ocr": true,
+    "wait": 0.5,
+    "capture": "sumcounter-r1-qualified-zero"
+  }
+]

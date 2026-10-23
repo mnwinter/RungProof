@@ -1,0 +1,25 @@
+[
+  {
+    "input": {
+      "y": 480,
+      "x": 493
+    },
+    "ocr": true,
+    "wait": 0.5,
+    "capture": "grouping-r2b-load2"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "ocr": true,
+    "wait": 2,
+    "capture": "grouping-r2b-second-staged"
+  }
+]

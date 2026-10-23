@@ -1,0 +1,20 @@
+[
+  {
+    "input": {
+      "x": 410,
+      "y": 399
+    },
+    "capture": "pedestrian-r1-path-clear",
+    "wait": 0.5,
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 738,
+      "y": 89
+    },
+    "capture": "pedestrian-r1-health-before-cross",
+    "wait": 0.5,
+    "ocr": true
+  }
+]

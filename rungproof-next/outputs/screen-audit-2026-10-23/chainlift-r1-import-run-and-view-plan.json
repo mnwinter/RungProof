@@ -1,0 +1,103 @@
+[
+  {
+    "capture": "chainlift-r1-correct-scene",
+    "ocr": true,
+    "input": {
+      "y": 405,
+      "x": 392
+    },
+    "wait": 0.7
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 89
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "y": 113,
+      "x": 162
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "y": 512,
+      "x": 456
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "text": "existing-chain-lift-installation-reference.rpproj.json"
+    },
+    "wait": 0.3
+  },
+  {
+    "capture": "chainlift-r1-fixture-import",
+    "ocr": true,
+    "input": {
+      "key": "Return"
+    },
+    "wait": 0.8
+  },
+  {
+    "input": {
+      "y": 646,
+      "x": 45
+    },
+    "wait": 0.7
+  },
+  {
+    "input": {
+      "y": 98,
+      "x": 944
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 134
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "y": 110,
+      "x": 186
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "y": 89,
+      "x": 856
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "y": 34,
+      "x": 134
+    },
+    "wait": 0.3
+  },
+  {
+    "capture": "chainlift-r1-engineering-home",
+    "ocr": true,
+    "input": {
+      "y": 174,
+      "x": 185
+    },
+    "wait": 0.6
+  }
+]

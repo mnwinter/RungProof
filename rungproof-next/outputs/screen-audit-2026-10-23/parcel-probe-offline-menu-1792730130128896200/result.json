@@ -1,0 +1,27 @@
+{
+  "status": "OFFLINE_MENU_OCR_PASS",
+  "menuText": [
+    "\u2014 Run simulator scan",
+    "Stop simulator scan",
+    "Reset simulator scene"
+  ],
+  "noBridgeEndpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "files": [
+    {
+      "file": "offline-menu-original.png",
+      "bytes": 238642,
+      "sha256": "d6c6040de5506ccd1f7842ec148c160ba7582ca3d7d73cb0b4149597f8546824"
+    },
+    {
+      "file": "offline-menu-original-menu2x.png",
+      "bytes": 24175,
+      "sha256": "cb658cf7955d4e3b5b82d1ec402fda8a02774bedcb4c2133c0ae85cb8e9d9773"
+    },
+    {
+      "file": "offline-menu-original-menu2x.ocr.json",
+      "bytes": 906,
+      "sha256": "556ef9d8da2a42c00cee729a0a417b1cf0605d96ec6e1834c72901ac71ccef76"
+    }
+  ]
+}

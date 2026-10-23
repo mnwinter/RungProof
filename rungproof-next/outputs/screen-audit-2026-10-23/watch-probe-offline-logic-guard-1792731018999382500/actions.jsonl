@@ -1,0 +1,1 @@
+{"utc": "2026-10-23T04:50:19.060215+00:00", "kind": "DERIVED_CROP", "source": "offline-original.png", "crop": {"file": "offline-original-logic-context2x.png", "bytes": 34936, "sha256": "693494dc0b407c9217f0b648f4d6743c95014f78c8f5068aaf529bc19885aaf8"}, "native_box": [0, 70, 650, 130], "scale": 2, "alteration": "static crop and resample only; original remains intact"}

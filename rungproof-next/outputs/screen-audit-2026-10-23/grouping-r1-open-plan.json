@@ -1,0 +1,25 @@
+[
+  {
+    "wait": 0.7,
+    "input": {
+      "y": 405,
+      "x": 392
+    }
+  },
+  {
+    "wait": 0.2,
+    "input": {
+      "y": 34,
+      "x": 89
+    }
+  },
+  {
+    "ocr": true,
+    "input": {
+      "y": 113,
+      "x": 162
+    },
+    "wait": 0.4,
+    "capture": "grouping-r1-filepicker"
+  }
+]

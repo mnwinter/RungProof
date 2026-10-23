@@ -1,0 +1,168 @@
+{
+  "no_bridge_endpoints": true,
+  "native_actions_executed": false,
+  "selection_mode_explicit_only": true,
+  "actual_saved_id_cases": [
+    {
+      "source": "scene-menu-r4-offline-bag-1792735611865275600\\offline-original-scenario-popup2x.ocr.json",
+      "identity": [
+        "5",
+        "9"
+      ],
+      "unique_identity_match": [
+        {
+          "text": "Lab 5.9- Indexing Corweyor",
+          "words": [
+            {
+              "text": "Lab",
+              "x": 16,
+              "y": 869,
+              "w": 40,
+              "h": 21
+            },
+            {
+              "text": "5.9-",
+              "x": 64,
+              "y": 871,
+              "w": 47,
+              "h": 19
+            },
+            {
+              "text": "Indexing",
+              "x": 168,
+              "y": 869,
+              "w": 100,
+              "h": 27
+            },
+            {
+              "text": "Corweyor",
+              "x": 273,
+              "y": 871,
+              "w": 109,
+              "h": 25
+            }
+          ],
+          "crop_word_union": [
+            16,
+            869,
+            382,
+            896
+          ],
+          "native_click": [
+            352,
+            441
+          ],
+          "native_popup": [
+            252,
+            0,
+            508,
+            660
+          ],
+          "scale": 2
+        }
+      ],
+      "strict_full_label_still_unmatched": "Lab 5.9 - Bag Indexing Conveyor",
+      "worker_returncode": 0
+    },
+    {
+      "source": "scene-menu-r4-offline-cable-1792735611892855000\\offline-original-scenario-popup2x.ocr.json",
+      "identity": [
+        "4",
+        "12"
+      ],
+      "unique_identity_match": [
+        {
+          "text": "Lab 4.12 - Cable CLR-Length Cell",
+          "words": [
+            {
+              "text": "Lab",
+              "x": 16,
+              "y": 545,
+              "w": 40,
+              "h": 21
+            },
+            {
+              "text": "4.12",
+              "x": 63,
+              "y": 547,
+              "w": 49,
+              "h": 19
+            },
+            {
+              "text": "-",
+              "x": 117,
+              "y": 557,
+              "w": 9,
+              "h": 4
+            },
+            {
+              "text": "Cable",
+              "x": 132,
+              "y": 545,
+              "w": 64,
+              "h": 21
+            },
+            {
+              "text": "CLR-Length",
+              "x": 203,
+              "y": 545,
+              "w": 127,
+              "h": 27
+            },
+            {
+              "text": "Cell",
+              "x": 336,
+              "y": 545,
+              "w": 41,
+              "h": 21
+            }
+          ],
+          "crop_word_union": [
+            16,
+            545,
+            377,
+            572
+          ],
+          "native_click": [
+            350,
+            279
+          ],
+          "native_popup": [
+            252,
+            0,
+            508,
+            660
+          ],
+          "scale": 2
+        }
+      ],
+      "strict_full_label_still_unmatched": "Lab 4.12 - Cable Cut-Length Cell",
+      "worker_returncode": 0
+    }
+  ],
+  "actual_near_id_source": "scene-menu-offline-native-top-1792732333192567400\\offline-original-scenario-popup2x.ocr.json",
+  "Lab_2_1": [
+    {
+      "text": "Lab 2.1 - Workstation Call Lamp",
+      "click": [
+        351,
+        348
+      ]
+    }
+  ],
+  "Lab_2_10": [
+    {
+      "text": "Lab 2.10- Dust Collector Sed-ln",
+      "click": [
+        351,
+        528
+      ]
+    }
+  ],
+  "full_label_default_unchanged": true,
+  "settlement_seconds": 0.6,
+  "max_settle_frames": 10,
+  "helper_sha256": "fd274e922396b2b3757c722693021dab6fd6a5d9d77dfda7e34382f910c9fa01",
+  "r3_preserved_sha256": "01fb03e0733a56629b7c2ebcfd0e7457cbab5418ea457811ec50b6b4f7b0b693",
+  "actual_selected_title_proven": false
+}

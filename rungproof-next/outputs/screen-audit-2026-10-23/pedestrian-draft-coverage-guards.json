@@ -1,0 +1,18 @@
+{
+  "scope": "Synthetic passive bookkeeping and syntax only; not native qualification",
+  "source": "pedestrian_active_walk_request_probe.draft.py.txt",
+  "checks": [
+    "400scans with20scan gaps qualifies coverage",
+    "399scans with20scan gaps remains unfinished",
+    "39scan gaps allowed;40scan gaps partial",
+    "parse miss retained; surrounding combined gap checked",
+    "active output survives later return to idle; coverage never restarts",
+    "wrong active field surfaces even when another field is unreadable",
+    "nonmonotonic scan and stopped runtime make coverage partial",
+    "sequence_runningTrue cannot establish first idle",
+    "native layout qualification gate remains closed"
+  ],
+  "result": "PASS",
+  "bridge_endpoints_called": false,
+  "native_qualified": false
+}

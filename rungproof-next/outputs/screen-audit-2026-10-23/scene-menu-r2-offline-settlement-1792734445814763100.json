@@ -1,0 +1,36 @@
+{
+  "no_bridge_endpoints": true,
+  "native_actions_executed": false,
+  "actual_saved_popup_layouts_differ": true,
+  "before_target": [
+    {
+      "text": "Lab 48. . Package Grouping Station",
+      "click": [
+        360,
+        607
+      ]
+    }
+  ],
+  "after_target": [
+    {
+      "text": "Lab 48- Package Grouping Station",
+      "click": [
+        360,
+        198
+      ]
+    }
+  ],
+  "changing_layout_resets_settlement": true,
+  "unchanged_synthetic_repeat_after_minimum_span_qualifies": true,
+  "synthetic_repeated_image_is_not_native_settlement_proof": true,
+  "source_ocr": [
+    "grouping-select-r1-1792734198077020300\\menu-observe-02-scenario-popup2x.ocr.json",
+    "scene-menu-r2-offline-after-1792734424143096800\\offline-original-scenario-popup2x.ocr.json"
+  ],
+  "source_sha256": [
+    "467ffc4681854959fc180828f78eaa14b9c6f25dbafda86f7b544a3aadc24a55",
+    "04b2072dc13f9df3c7f19eee42d89ecc4cc61758ea382417b8d7ca4cb0991fe7"
+  ],
+  "helper_sha256": "9a1e74584f8e7a1ff5b661c2e134e1f001e8e3e4e41c74195f9e686204bf98e1",
+  "r1_preserved_sha256": "113241de55b6e98b0ba3ccd9c509ee8fca9a6250c482785747c6306b3f5ede8f"
+}

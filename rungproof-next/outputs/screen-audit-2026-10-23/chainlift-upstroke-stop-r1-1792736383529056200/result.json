@@ -1,0 +1,1104 @@
+{
+  "status": "APP_STOP_SENT_UPSTROKE_HOLD_REVIEW_PENDING",
+  "stop_attempted": true,
+  "screen_only": true,
+  "native_session": true,
+  "physical_pose_acceptance": false,
+  "required_precondition": "Root has physically Started and left actual App Playback menu open",
+  "observations": 17,
+  "last_observation": {
+    "image": "observe-016.png",
+    "rows": {
+      "values": {
+        "lift_enable": true,
+        "lift_lower": false,
+        "chain_run": false,
+        "carton_on_lift": true,
+        "lift_home": false,
+        "lift_upper": false,
+        "carton_at_receiver": false,
+        "transfer_fault": false,
+        "destination_clear": true,
+        "cycle_active": true,
+        "box_present": false,
+        "carton_on_infeed": false,
+        "cycle_complete": false,
+        "lift_start": false,
+        "receiver_beam_blocked": false,
+        "receiver_occupied": false
+      },
+      "row_witnesses": {
+        "lift_enable": [
+          {
+            "text": "\u2022 lift_enable True",
+            "value": true,
+            "row_center_y": 544.5
+          }
+        ],
+        "lift_lower": [
+          {
+            "text": "\u2022 lift_lower False",
+            "value": false,
+            "row_center_y": 647.5
+          }
+        ],
+        "chain_run": [
+          {
+            "text": "\u2022 chain_run False",
+            "value": false,
+            "row_center_y": 337.0
+          }
+        ],
+        "carton_on_lift": [
+          {
+            "text": "\u2022 carton on lift True",
+            "value": true,
+            "row_center_y": 285.0
+          }
+        ],
+        "lift_home": [
+          {
+            "text": "\u2022 lift_home False",
+            "value": false,
+            "row_center_y": 595.5
+          }
+        ],
+        "lift_upper": [
+          {
+            "text": "\u2022 lift_upper False",
+            "value": false,
+            "row_center_y": 750.5
+          }
+        ],
+        "carton_at_receiver": [
+          {
+            "text": "\u2022 carton_at_receiver False",
+            "value": false,
+            "row_center_y": 182.0
+          }
+        ],
+        "transfer_fault": [
+          {
+            "text": "\u2022 transfer fault False",
+            "value": false,
+            "row_center_y": 906.0
+          }
+        ],
+        "destination_clear": [
+          {
+            "text": "\u2022 destination clear True",
+            "value": true,
+            "row_center_y": 492.0
+          }
+        ],
+        "cycle_active": [
+          {
+            "text": "\u2022 cycle_active True",
+            "value": true,
+            "row_center_y": 389.0
+          }
+        ],
+        "box_present": [
+          {
+            "text": "\u2022 box_present False",
+            "value": false,
+            "row_center_y": 129.5
+          }
+        ],
+        "carton_on_infeed": [
+          {
+            "text": "\u2022 carton_on_infeed False",
+            "value": false,
+            "row_center_y": 233.5
+          }
+        ],
+        "cycle_complete": [
+          {
+            "text": "\u2022 cycle_complete False",
+            "value": false,
+            "row_center_y": 440.5
+          }
+        ],
+        "lift_start": [
+          {
+            "text": "\u2022 lift start False",
+            "value": false,
+            "row_center_y": 699.0
+          }
+        ],
+        "receiver_beam_blocked": [
+          {
+            "text": "\u2022 receiver_beam_blocked False",
+            "value": false,
+            "row_center_y": 802.5
+          }
+        ],
+        "receiver_occupied": [
+          {
+            "text": "\u2022 receiver_occupied False",
+            "value": false,
+            "row_center_y": 854.5
+          }
+        ]
+      },
+      "loaded_upstroke_predicate_matched": true
+    },
+    "scan": 15594,
+    "runtime_running": true,
+    "runtime_stopped": false
+  },
+  "consecutive_upstroke_frames": 2,
+  "match_image": "observe-016.png",
+  "stop_checkpoints": [
+    {
+      "image": "stop-immediate.png",
+      "rows": {
+        "values": {
+          "lift_enable": true,
+          "lift_lower": false,
+          "chain_run": false,
+          "carton_on_lift": true,
+          "lift_home": false,
+          "lift_upper": false,
+          "carton_at_receiver": false,
+          "transfer_fault": false,
+          "destination_clear": true,
+          "cycle_active": true,
+          "box_present": false,
+          "carton_on_infeed": false,
+          "cycle_complete": false,
+          "lift_start": false,
+          "receiver_beam_blocked": false,
+          "receiver_occupied": false
+        },
+        "row_witnesses": {
+          "lift_enable": [
+            {
+              "text": "\u2022 lift_enable True",
+              "value": true,
+              "row_center_y": 544.5
+            }
+          ],
+          "lift_lower": [
+            {
+              "text": "\u2022 lift_lower False",
+              "value": false,
+              "row_center_y": 647.5
+            }
+          ],
+          "chain_run": [
+            {
+              "text": "\u2022 chain_run False",
+              "value": false,
+              "row_center_y": 337.0
+            }
+          ],
+          "carton_on_lift": [
+            {
+              "text": "\u2022 carton on lift True",
+              "value": true,
+              "row_center_y": 285.0
+            }
+          ],
+          "lift_home": [
+            {
+              "text": "\u2022 lift_home False",
+              "value": false,
+              "row_center_y": 595.5
+            }
+          ],
+          "lift_upper": [
+            {
+              "text": "\u2022 lift_upper False",
+              "value": false,
+              "row_center_y": 750.5
+            }
+          ],
+          "carton_at_receiver": [
+            {
+              "text": "\u2022 carton_at_receiver False",
+              "value": false,
+              "row_center_y": 182.0
+            }
+          ],
+          "transfer_fault": [
+            {
+              "text": "\u2022 transfer fault False",
+              "value": false,
+              "row_center_y": 906.0
+            }
+          ],
+          "destination_clear": [
+            {
+              "text": "\u2022 destination clear True",
+              "value": true,
+              "row_center_y": 492.0
+            }
+          ],
+          "cycle_active": [
+            {
+              "text": "\u2022 cycle_active True",
+              "value": true,
+              "row_center_y": 389.0
+            }
+          ],
+          "box_present": [
+            {
+              "text": "\u2022 box_present False",
+              "value": false,
+              "row_center_y": 129.5
+            }
+          ],
+          "carton_on_infeed": [
+            {
+              "text": "\u2022 carton_on_infeed False",
+              "value": false,
+              "row_center_y": 233.5
+            }
+          ],
+          "cycle_complete": [
+            {
+              "text": "\u2022 cycle_complete False",
+              "value": false,
+              "row_center_y": 440.5
+            }
+          ],
+          "lift_start": [
+            {
+              "text": "\u2022 lift start False",
+              "value": false,
+              "row_center_y": 699.0
+            }
+          ],
+          "receiver_beam_blocked": [
+            {
+              "text": "\u2022 receiver_beam_blocked False",
+              "value": false,
+              "row_center_y": 802.5
+            }
+          ],
+          "receiver_occupied": [
+            {
+              "text": "\u2022 receiver_occupied False",
+              "value": false,
+              "row_center_y": 854.5
+            }
+          ]
+        },
+        "loaded_upstroke_predicate_matched": true
+      },
+      "scan": 15613,
+      "runtime_running": true,
+      "runtime_stopped": false
+    },
+    {
+      "image": "stop-settled.png",
+      "rows": {
+        "values": {
+          "lift_enable": false,
+          "lift_lower": false,
+          "chain_run": false,
+          "carton_on_lift": true,
+          "lift_home": false,
+          "lift_upper": false,
+          "carton_at_receiver": false,
+          "transfer_fault": false,
+          "destination_clear": true,
+          "cycle_active": false,
+          "box_present": false,
+          "carton_on_infeed": false,
+          "cycle_complete": false,
+          "lift_start": false,
+          "receiver_beam_blocked": false,
+          "receiver_occupied": false
+        },
+        "row_witnesses": {
+          "lift_enable": [
+            {
+              "text": "\u2022 lift_enable False",
+              "value": false,
+              "row_center_y": 544.0
+            }
+          ],
+          "lift_lower": [
+            {
+              "text": "\u2022 lift_lower False",
+              "value": false,
+              "row_center_y": 647.5
+            }
+          ],
+          "chain_run": [
+            {
+              "text": "\u2022 chain_run False",
+              "value": false,
+              "row_center_y": 337.0
+            }
+          ],
+          "carton_on_lift": [
+            {
+              "text": "\u2022 carton on lift True",
+              "value": true,
+              "row_center_y": 285.0
+            }
+          ],
+          "lift_home": [
+            {
+              "text": "\u2022 lift_home False",
+              "value": false,
+              "row_center_y": 595.5
+            }
+          ],
+          "lift_upper": [
+            {
+              "text": "\u2022 lift_upper False",
+              "value": false,
+              "row_center_y": 750.5
+            }
+          ],
+          "carton_at_receiver": [
+            {
+              "text": "\u2022 carton_at_receiver False",
+              "value": false,
+              "row_center_y": 182.0
+            }
+          ],
+          "transfer_fault": [
+            {
+              "text": "\u2022 transfer fault False",
+              "value": false,
+              "row_center_y": 906.0
+            }
+          ],
+          "destination_clear": [
+            {
+              "text": "\u2022 destination clear True",
+              "value": true,
+              "row_center_y": 492.0
+            }
+          ],
+          "cycle_active": [
+            {
+              "text": "\u2022 cycle_active False",
+              "value": false,
+              "row_center_y": 389.0
+            }
+          ],
+          "box_present": [
+            {
+              "text": "\u2022 box_present False",
+              "value": false,
+              "row_center_y": 129.5
+            }
+          ],
+          "carton_on_infeed": [
+            {
+              "text": "\u2022 carton_on_infeed False",
+              "value": false,
+              "row_center_y": 233.5
+            }
+          ],
+          "cycle_complete": [
+            {
+              "text": "\u2022 cycle_complete False",
+              "value": false,
+              "row_center_y": 440.5
+            }
+          ],
+          "lift_start": [
+            {
+              "text": "\u2022 lift start False",
+              "value": false,
+              "row_center_y": 699.0
+            }
+          ],
+          "receiver_beam_blocked": [
+            {
+              "text": "\u2022 receiver_beam_blocked False",
+              "value": false,
+              "row_center_y": 802.5
+            }
+          ],
+          "receiver_occupied": [
+            {
+              "text": "\u2022 receiver_occupied False",
+              "value": false,
+              "row_center_y": 854.5
+            }
+          ]
+        },
+        "loaded_upstroke_predicate_matched": false
+      },
+      "scan": 15615,
+      "runtime_running": false,
+      "runtime_stopped": true
+    },
+    {
+      "image": "stop-held.png",
+      "rows": {
+        "values": {
+          "lift_enable": false,
+          "lift_lower": false,
+          "chain_run": false,
+          "carton_on_lift": true,
+          "lift_home": false,
+          "lift_upper": false,
+          "carton_at_receiver": false,
+          "transfer_fault": false,
+          "destination_clear": true,
+          "cycle_active": false,
+          "box_present": false,
+          "carton_on_infeed": false,
+          "cycle_complete": false,
+          "lift_start": false,
+          "receiver_beam_blocked": false,
+          "receiver_occupied": false
+        },
+        "row_witnesses": {
+          "lift_enable": [
+            {
+              "text": "\u2022 lift_enable False",
+              "value": false,
+              "row_center_y": 544.0
+            }
+          ],
+          "lift_lower": [
+            {
+              "text": "\u2022 lift_lower False",
+              "value": false,
+              "row_center_y": 647.5
+            }
+          ],
+          "chain_run": [
+            {
+              "text": "\u2022 chain_run False",
+              "value": false,
+              "row_center_y": 337.0
+            }
+          ],
+          "carton_on_lift": [
+            {
+              "text": "\u2022 carton on lift True",
+              "value": true,
+              "row_center_y": 285.0
+            }
+          ],
+          "lift_home": [
+            {
+              "text": "\u2022 lift_home False",
+              "value": false,
+              "row_center_y": 595.5
+            }
+          ],
+          "lift_upper": [
+            {
+              "text": "\u2022 lift_upper False",
+              "value": false,
+              "row_center_y": 750.5
+            }
+          ],
+          "carton_at_receiver": [
+            {
+              "text": "\u2022 carton_at_receiver False",
+              "value": false,
+              "row_center_y": 182.0
+            }
+          ],
+          "transfer_fault": [
+            {
+              "text": "\u2022 transfer fault False",
+              "value": false,
+              "row_center_y": 906.0
+            }
+          ],
+          "destination_clear": [
+            {
+              "text": "\u2022 destination clear True",
+              "value": true,
+              "row_center_y": 492.0
+            }
+          ],
+          "cycle_active": [
+            {
+              "text": "\u2022 cycle_active False",
+              "value": false,
+              "row_center_y": 389.0
+            }
+          ],
+          "box_present": [
+            {
+              "text": "\u2022 box_present False",
+              "value": false,
+              "row_center_y": 129.5
+            }
+          ],
+          "carton_on_infeed": [
+            {
+              "text": "\u2022 carton_on_infeed False",
+              "value": false,
+              "row_center_y": 233.5
+            }
+          ],
+          "cycle_complete": [
+            {
+              "text": "\u2022 cycle_complete False",
+              "value": false,
+              "row_center_y": 440.5
+            }
+          ],
+          "lift_start": [
+            {
+              "text": "\u2022 lift start False",
+              "value": false,
+              "row_center_y": 699.0
+            }
+          ],
+          "receiver_beam_blocked": [
+            {
+              "text": "\u2022 receiver_beam_blocked False",
+              "value": false,
+              "row_center_y": 802.5
+            }
+          ],
+          "receiver_occupied": [
+            {
+              "text": "\u2022 receiver_occupied False",
+              "value": false,
+              "row_center_y": 854.5
+            }
+          ]
+        },
+        "loaded_upstroke_predicate_matched": false
+      },
+      "scan": 15615,
+      "runtime_running": false,
+      "runtime_stopped": true
+    }
+  ],
+  "stopped_between_endpoints_observed": true,
+  "stopped_scan_held": false,
+  "stopped_commands_cleared": false,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 7.138,
+  "files": [
+    {
+      "file": "observe-000.png",
+      "bytes": 313905,
+      "sha256": "de8ad2d0bf3f8257ef4c9bd05d671a8a3f45f94d3715380079b8206a84c716e2"
+    },
+    {
+      "file": "observe-000-menu2x.png",
+      "bytes": 24175,
+      "sha256": "cb658cf7955d4e3b5b82d1ec402fda8a02774bedcb4c2133c0ae85cb8e9d9773"
+    },
+    {
+      "file": "observe-000-menu2x.ocr.json",
+      "bytes": 897,
+      "sha256": "bcdca8972fe4ceac26c7fa5747c4370da5a629ba0ce24d17fd274b53c8ad1ff9"
+    },
+    {
+      "file": "observe-000-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-000-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "cd5c2fd447a13af606d955121c6338f8230cfeb076155fcf6e2fd722cac14f6d"
+    },
+    {
+      "file": "observe-000-runtime-header3x.png",
+      "bytes": 51409,
+      "sha256": "eec966baa6925cebb6467746d939f7da87f01e590b686161d8df113be135f741"
+    },
+    {
+      "file": "observe-000-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "62d6ec41e30649442cb19db9356d9c10ed2a99e9fff6f93e3245ee1eeda97839"
+    },
+    {
+      "file": "observe-001.png",
+      "bytes": 313886,
+      "sha256": "d451818f42727f3ebbafbfb981c22400999005b8f66b1702ac94443acfc45be6"
+    },
+    {
+      "file": "observe-001-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-001-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "677cae9a4a24e523090dc8d45fb3d059868b917fabd4b35c7af7c91a9d4746e5"
+    },
+    {
+      "file": "observe-001-runtime-header3x.png",
+      "bytes": 51390,
+      "sha256": "af687e169407100bd0cb84fe0d2ffc50666a63ffb6b9d7e56fab453fa44688c7"
+    },
+    {
+      "file": "observe-001-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "51bb6996f3fafb1e46d57b182c851e235227efdaed99ff8bb9faaaeda949218b"
+    },
+    {
+      "file": "observe-002.png",
+      "bytes": 313822,
+      "sha256": "f0d4e7930ff5c8c1dde808581d45a579badfea127abd83ca6d21145ce033be0c"
+    },
+    {
+      "file": "observe-002-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-002-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "89b03b604544c0ba0436c00c437df0397479e6e21956e343a0534255cf852e39"
+    },
+    {
+      "file": "observe-002-runtime-header3x.png",
+      "bytes": 51387,
+      "sha256": "06387abc724cd81c9634a26b8d5880517cc4142f74a167a8855ebb7fa9ec9443"
+    },
+    {
+      "file": "observe-002-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "372d58eb6ced0d317893c259e5d8d1200fbc68674bda81136101f24924539e26"
+    },
+    {
+      "file": "observe-003.png",
+      "bytes": 313865,
+      "sha256": "22a5b683f571b561ba9b7476276d9df3e35682f8e591ad13d2e4e2f6f28edaa7"
+    },
+    {
+      "file": "observe-003-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-003-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "35732d195a2420223f263847804e07ad06880e60f1f704f20decde10238cd758"
+    },
+    {
+      "file": "observe-003-runtime-header3x.png",
+      "bytes": 51486,
+      "sha256": "952a6ba90af55b39d575127a6f37e44f900b2dcc976440623434bf06c98ee7ab"
+    },
+    {
+      "file": "observe-003-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "56e1f8f7756bbb1ce2cbcc1d0c459b547c23e63d398896a74cd085630b318d20"
+    },
+    {
+      "file": "observe-004.png",
+      "bytes": 313885,
+      "sha256": "fc5f4ee87921c6d8deb91882b1591ed34f7c78eca916a2ef928270b95438f43c"
+    },
+    {
+      "file": "observe-004-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-004-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "3da9dac9cce185f0280404c88e68f73490c0a0c0f471617a3af0397e85b340ed"
+    },
+    {
+      "file": "observe-004-runtime-header3x.png",
+      "bytes": 51466,
+      "sha256": "1bcabaa43651f1bd5fe62db27122559e8edc0f0ffa0424c96ed58458022cf260"
+    },
+    {
+      "file": "observe-004-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "128d26fd09c308de9f0bd571c78a9f8019864763b59c5ca084cdf7046d48e354"
+    },
+    {
+      "file": "observe-005.png",
+      "bytes": 313866,
+      "sha256": "1c65ad8511957c517e52322ea99aff91a14a62ef86794cd2a8f97e771081a289"
+    },
+    {
+      "file": "observe-005-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-005-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "dc543f618c734797bafa5f1119914d70871e72796de44fc4e463dc694a9382d0"
+    },
+    {
+      "file": "observe-005-runtime-header3x.png",
+      "bytes": 51469,
+      "sha256": "34bb20e1857de929cf76b55937b78be235f96096132b4fba4f26c9315ff9969b"
+    },
+    {
+      "file": "observe-005-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "89864ef3db6978f42bea04434f6ee1bd376de5c534553c4db7d03449bb53a865"
+    },
+    {
+      "file": "observe-006.png",
+      "bytes": 313916,
+      "sha256": "74e70f02243e1faa2e7f2e4c9aaa33fa00e852f2bf78baa3f2826afb175adbaa"
+    },
+    {
+      "file": "observe-006-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-006-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "7c6b5fa9e3f47da02dd11bf44a182b203b227463114ed0ff3b6df10674bbd5db"
+    },
+    {
+      "file": "observe-006-runtime-header3x.png",
+      "bytes": 51532,
+      "sha256": "b934f1ef3faf5ba01a7feb26b1c6c511ab596e02139c97757ec902dca503efcc"
+    },
+    {
+      "file": "observe-006-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "da7341b8fdf333b18d815d0d161ed70db2806dda6ca135286ea60ac2e80fa954"
+    },
+    {
+      "file": "observe-007.png",
+      "bytes": 313930,
+      "sha256": "c09cd291e0c85b7671b6075c36d98c0007aa6b5e7bd995066e7c424c7996b862"
+    },
+    {
+      "file": "observe-007-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-007-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "7bd1283518bab3307d2ece492f8b0dfafbfb06eb69577770533a92c8fcca0032"
+    },
+    {
+      "file": "observe-007-runtime-header3x.png",
+      "bytes": 51446,
+      "sha256": "2e333d4bffdeac7a8d9f4fe2335450ecba17717cda57e882df269d3dfc66e2fc"
+    },
+    {
+      "file": "observe-007-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "5c2068ab2a6ca75acd16dba4b45d6eed92fe5c2dc3b27d077ce98116018d11bf"
+    },
+    {
+      "file": "observe-008.png",
+      "bytes": 313996,
+      "sha256": "0bc6512be53d04e13bdc1360033d5d6f5037ebed10f9a9e843537aa44b6ecf6c"
+    },
+    {
+      "file": "observe-008-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-008-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "eea2269b479e561f7ced515ab932c3c26ff9e6ff0a6348e300583e62dc77b5a7"
+    },
+    {
+      "file": "observe-008-runtime-header3x.png",
+      "bytes": 51495,
+      "sha256": "56e1c766a7e63a7cd9af6d9835711777bfb71f019184ca5af2b895b4e89cf8eb"
+    },
+    {
+      "file": "observe-008-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "57fbf015614a7a900fd17dcb7c69a15408342c525a69b839ca0e312dbe33c268"
+    },
+    {
+      "file": "observe-009.png",
+      "bytes": 314198,
+      "sha256": "942cfdaf0aab68ba5391a1e6dad85fde3faefc8141e25880e4ce03b11cae3d4a"
+    },
+    {
+      "file": "observe-009-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-009-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "a3e3120d5a08bc2c7dcd22202921a05dfdcf45ebf4ac8aefd5bc79beba965076"
+    },
+    {
+      "file": "observe-009-runtime-header3x.png",
+      "bytes": 51444,
+      "sha256": "4b04bab3e040e6f2211423d8c509f1a4a9fc75fe77ff453bf8162f4a2e0fe08f"
+    },
+    {
+      "file": "observe-009-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "b6595599413775daad9e93343a2d97411c6c30a3e50c1b1622068274061390b1"
+    },
+    {
+      "file": "observe-010.png",
+      "bytes": 314281,
+      "sha256": "80e36bf388373bf4855e6ead7c7298254e207c53a0258f7dbf6867d6854fad59"
+    },
+    {
+      "file": "observe-010-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-010-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "d3b6fcf46f5af05368ab0fc4e450d5901a4e72d87d03c1904f6064114f12c4cb"
+    },
+    {
+      "file": "observe-010-runtime-header3x.png",
+      "bytes": 51389,
+      "sha256": "326addcd6169cc14fc1902b315922e1b3ccf2726c62095d8ccd06214424b9baa"
+    },
+    {
+      "file": "observe-010-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "f5c6b8a9884d632a98a39a4342859bc78bdabf26aafa6648c327ee343db53f0e"
+    },
+    {
+      "file": "observe-011.png",
+      "bytes": 314335,
+      "sha256": "9a692d20a235c23bcbe17f5528e22f114274a20aa109fe3a0fbf23a3db83eaf0"
+    },
+    {
+      "file": "observe-011-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-011-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "0697472477086e0d8787935121ad326699dba3eff6e43700274d62bac8a00437"
+    },
+    {
+      "file": "observe-011-runtime-header3x.png",
+      "bytes": 51496,
+      "sha256": "ab520ec4073f8f2ce5344548bee22f213468499503217ebfe7104bfdfc00997d"
+    },
+    {
+      "file": "observe-011-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "9fe2e78275fbcc72affe371551d98b27e39e2633a43ce23af04fa9ec8b5eba9a"
+    },
+    {
+      "file": "observe-012.png",
+      "bytes": 314424,
+      "sha256": "b230d987159d9e83c501dd71faec89ae1d0a59275004e77cd8bd234a4af74cc8"
+    },
+    {
+      "file": "observe-012-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-012-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "fdb448e07ee78a378f2fcd50338e922bbb71e47dce73908adddf9868e846169a"
+    },
+    {
+      "file": "observe-012-runtime-header3x.png",
+      "bytes": 51502,
+      "sha256": "4900b919ee7213924a356fa9b0724d3f844ffb0f2a695ca5454f5d2110734130"
+    },
+    {
+      "file": "observe-012-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "7c6b1508eb2820f930b57f62d4f0e1877b5fb7392aa500eb39e09f253982515c"
+    },
+    {
+      "file": "observe-013.png",
+      "bytes": 314553,
+      "sha256": "c228f2261726a38707d53ee48eb5b0ee0f84e751ff15d0a6911b372446495909"
+    },
+    {
+      "file": "observe-013-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-013-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "25af551e650ea02fd60be4aed6285eaae0366dd664d45b2e186ec19f0349e3d3"
+    },
+    {
+      "file": "observe-013-runtime-header3x.png",
+      "bytes": 51514,
+      "sha256": "8074ed582ba58a527a8e0291b8b9b80ae42e231a18b41672741299f4e477d8ad"
+    },
+    {
+      "file": "observe-013-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "bc232fd07269ea9f54fffe41d013c6aca32538a09e9415a9a02e61568f6c7081"
+    },
+    {
+      "file": "observe-014.png",
+      "bytes": 314634,
+      "sha256": "e4ca32c234e363098efacd343691e830dff8c21207091e1fb671861ac32d7430"
+    },
+    {
+      "file": "observe-014-signals3x.png",
+      "bytes": 331501,
+      "sha256": "9fa51a2e0de5c8969f40943443ffeafa5e231547d6dc8cbb67b141f71ec32c4c"
+    },
+    {
+      "file": "observe-014-signals3x.ocr.json",
+      "bytes": 4036,
+      "sha256": "0a969ffa89fb4f5d2486eae9936d62b97e8e4767f49c413bf7180eef4b4b5621"
+    },
+    {
+      "file": "observe-014-runtime-header3x.png",
+      "bytes": 51505,
+      "sha256": "d213e76e5e0d1cdb8bacfba40b42b2fe5f5bb42bb8d3e51b48f0357b71bfdbbb"
+    },
+    {
+      "file": "observe-014-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "c00db54e67390f695cd413e1fc60b91d94423caacc96eda5d1b4193a273ed8fa"
+    },
+    {
+      "file": "observe-015.png",
+      "bytes": 314611,
+      "sha256": "78242cc83f47a9e1b0171477735a3f2667b729d763ca492969ae93a1f0e0f791"
+    },
+    {
+      "file": "observe-015-signals3x.png",
+      "bytes": 332575,
+      "sha256": "6b6239e756a0957add33e5b2902f78f46da3a435a513f6cc79149c4d883ee31e"
+    },
+    {
+      "file": "observe-015-signals3x.ocr.json",
+      "bytes": 4039,
+      "sha256": "de44f438985dd516ab229b1b5b9c75109d922334a9ead4d8f5adfeabc9fff63e"
+    },
+    {
+      "file": "observe-015-runtime-header3x.png",
+      "bytes": 51457,
+      "sha256": "c9c0f5f5f8680ec2449c5c364b5600e59c99bb4ba04574ce80627fb916a1807a"
+    },
+    {
+      "file": "observe-015-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "0fc691c94eface28083265fa59ac13aaf18c69ebfa39e0d7682aad3ca9e612a3"
+    },
+    {
+      "file": "observe-016.png",
+      "bytes": 314629,
+      "sha256": "fc0faebfe1f2fae714cbf81a135eebce4807c2a0ef651130e793c904b682d367"
+    },
+    {
+      "file": "observe-016-signals3x.png",
+      "bytes": 332575,
+      "sha256": "6b6239e756a0957add33e5b2902f78f46da3a435a513f6cc79149c4d883ee31e"
+    },
+    {
+      "file": "observe-016-signals3x.ocr.json",
+      "bytes": 4039,
+      "sha256": "9ff1879d1677b2b1e138b1b9db3159086c3843d35df68dab14f73b4aece7f92b"
+    },
+    {
+      "file": "observe-016-runtime-header3x.png",
+      "bytes": 51490,
+      "sha256": "cbce59a67c2a8f3b4ea85a96973d362dbe8bf10d5a636f149a97b7f42045e7c4"
+    },
+    {
+      "file": "observe-016-runtime-header3x.ocr.json",
+      "bytes": 1163,
+      "sha256": "0556633c462b35f0605c31b0ae0de1c625b7c87e03b6797680bf5d8c343d276b"
+    },
+    {
+      "file": "observe-016-menu2x.png",
+      "bytes": 24175,
+      "sha256": "cb658cf7955d4e3b5b82d1ec402fda8a02774bedcb4c2133c0ae85cb8e9d9773"
+    },
+    {
+      "file": "observe-016-menu2x.ocr.json",
+      "bytes": 897,
+      "sha256": "c754e4883ab8e937c41dd1ff8116cc426ee29bcec44ceac6ec45f53b09e8e93f"
+    },
+    {
+      "file": "stop-immediate.png",
+      "bytes": 314703,
+      "sha256": "5e679796933806c3b87dec78f7663a0b42a5ce55c8d37ee5e57f43707d8557f1"
+    },
+    {
+      "file": "stop-immediate-signals3x.png",
+      "bytes": 332575,
+      "sha256": "6b6239e756a0957add33e5b2902f78f46da3a435a513f6cc79149c4d883ee31e"
+    },
+    {
+      "file": "stop-immediate-signals3x.ocr.json",
+      "bytes": 4042,
+      "sha256": "b2fb25f6262f0d68bc7bc30d13556466464d78e60f17bf7729ccef2e4def88a1"
+    },
+    {
+      "file": "stop-immediate-runtime-header3x.png",
+      "bytes": 51447,
+      "sha256": "cdffd8b67be1a3f903120c84059796c11ed14b10843e82fa1bc29666fc8ca055"
+    },
+    {
+      "file": "stop-immediate-runtime-header3x.ocr.json",
+      "bytes": 1166,
+      "sha256": "3ec11a066826e677599452c0e9853c7913bb0f7d6a664db7199220d0754e5e68"
+    },
+    {
+      "file": "stop-settled.png",
+      "bytes": 309610,
+      "sha256": "a1dae47e712e9617b0516d8eb0d0e2f6658edefd32d035e15fc45192fc3423eb"
+    },
+    {
+      "file": "stop-settled-signals3x.png",
+      "bytes": 334496,
+      "sha256": "58dbf52680af8a4a3b55a72d89f95660c2440b907862d1beca8d1aaac49f42ed"
+    },
+    {
+      "file": "stop-settled-signals3x.ocr.json",
+      "bytes": 4046,
+      "sha256": "08e7145c93038a9630c91ec90c5d2dc44faeee8e492b93c63c2199188c085481"
+    },
+    {
+      "file": "stop-settled-runtime-header3x.png",
+      "bytes": 50350,
+      "sha256": "270e7afb48180c8168bdcd478c6e1d0d4ce4d3b0b85851dd09fc8683947c0dcd"
+    },
+    {
+      "file": "stop-settled-runtime-header3x.ocr.json",
+      "bytes": 1107,
+      "sha256": "98466cd4ded03b047953c2068b2896752bdc539088bbdc48b873ca7e0b8a6b8e"
+    },
+    {
+      "file": "stop-held.png",
+      "bytes": 309610,
+      "sha256": "a1dae47e712e9617b0516d8eb0d0e2f6658edefd32d035e15fc45192fc3423eb"
+    },
+    {
+      "file": "stop-held-signals3x.png",
+      "bytes": 334496,
+      "sha256": "58dbf52680af8a4a3b55a72d89f95660c2440b907862d1beca8d1aaac49f42ed"
+    },
+    {
+      "file": "stop-held-signals3x.ocr.json",
+      "bytes": 4043,
+      "sha256": "5b3c4ea0b0c936f767af300c1baead3af653689fc7ac0b9b6178ea1ccceb5182"
+    },
+    {
+      "file": "stop-held-runtime-header3x.png",
+      "bytes": 50350,
+      "sha256": "270e7afb48180c8168bdcd478c6e1d0d4ce4d3b0b85851dd09fc8683947c0dcd"
+    },
+    {
+      "file": "stop-held-runtime-header3x.ocr.json",
+      "bytes": 1104,
+      "sha256": "8a9ea1092afdb940950d727689c43d2b247570d39b6979cc8ac158303e5a5d1b"
+    }
+  ]
+}

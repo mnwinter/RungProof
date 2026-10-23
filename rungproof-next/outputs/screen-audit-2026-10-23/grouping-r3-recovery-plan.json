@@ -1,0 +1,39 @@
+[
+  {
+    "capture": "grouping-r3-held-second",
+    "ocr": true,
+    "wait": 0.4
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "x": 203,
+      "y": 34
+    }
+  },
+  {
+    "input": {
+      "x": 220,
+      "y": 70
+    },
+    "capture": "grouping-r3-run-alone",
+    "ocr": true,
+    "wait": 0.6
+  },
+  {
+    "capture": "grouping-r3-recovery-moving",
+    "ocr": true,
+    "wait": 2
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "grouping-r3-recovery-complete",
+    "ocr": true,
+    "wait": 3
+  }
+]

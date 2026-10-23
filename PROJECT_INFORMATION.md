@@ -25,6 +25,12 @@ medium outbound phase50. Source analysis isolates a transform/world-AABB reset
 ordering hazard; no repaired application build is claimed. Read later scoped
 reviews before using historical broad failures or pending-case lists.
 
+Later scoped reviews close grouping release, cable outbound knife, bag forward
+pause policy, sum preset cycles, chain-lift upstroke, pedestrian active request
+and authored Demo4 retained count/full second batch. The native queue remains
+the execution authority. A byte-level proof of the historical raw archives is
+preserved on D; newer raw evidence still needs the final incremental upload.
+
 The next-agent entry point is `skills/rungproof-playtest-handoff/SKILL.md`.
 The migration record is `RUNGPROOF-MIGRATION-2026-10-22.md`. The full native
 77-scene acceptance audit remains incomplete; read the skill's current-state

@@ -1,0 +1,11 @@
+[
+  {
+    "input": {
+      "x": 152,
+      "y": 282
+    },
+    "capture": "demo3-r1-rail-selected",
+    "wait": 0.8,
+    "ocr": true
+  }
+]

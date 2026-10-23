@@ -1,0 +1,89 @@
+[
+  {
+    "input": {
+      "x": 565,
+      "y": 375
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "wait": 0.4
+  },
+  {
+    "capture": "demo4-r1-first-full-five",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 657,
+      "y": 387
+    }
+  },
+  {
+    "capture": "demo4-r1-machine-reset-zero",
+    "ocr": true,
+    "wait": 0.6,
+    "input": {
+      "x": 625,
+      "y": 383
+    }
+  },
+  {
+    "capture": "demo4-r1-second-start-zero",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 565,
+      "y": 375
+    }
+  },
+  {
+    "capture": "demo4-r1-second-batch-first",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 657,
+      "y": 387
+    }
+  },
+  {
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "x": 657,
+      "y": 387
+    },
+    "wait": 0.4
+  },
+  {
+    "capture": "demo4-r1-second-full-five",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 657,
+      "y": 387
+    }
+  }
+]

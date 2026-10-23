@@ -1,0 +1,22 @@
+[
+  {
+    "wait": 0.4,
+    "input": {
+      "x": 510,
+      "phase": "wheel",
+      "y": 340,
+      "delta": 120
+    }
+  },
+  {
+    "input": {
+      "x": 510,
+      "phase": "wheel",
+      "y": 340,
+      "delta": 120
+    },
+    "ocr": true,
+    "wait": 0.6,
+    "capture": "sumcounter-r1-controls-near"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "ocr": true,
+    "capture": "demo3-r1-engineering-settled",
+    "wait": 0.7
+  },
+  {
+    "ocr": true,
+    "capture": "demo3-r1-view-menu",
+    "input": {
+      "y": 34,
+      "x": 134
+    },
+    "wait": 0.6
+  }
+]

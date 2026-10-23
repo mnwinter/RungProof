@@ -1,0 +1,48 @@
+[
+  {
+    "input": {
+      "y": 374,
+      "x": 610,
+      "button": "middle",
+      "phase": "down"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "y": 374,
+      "x": 540,
+      "phase": "move"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "y": 374,
+      "x": 540,
+      "button": "middle",
+      "phase": "up"
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "y": 340,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "wait": 0.4
+  },
+  {
+    "ocr": true,
+    "input": {
+      "y": 340,
+      "x": 510,
+      "delta": 120,
+      "phase": "wheel"
+    },
+    "capture": "grouping-r2b-controls-view",
+    "wait": 0.6
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "ocr": true,
+    "input": {
+      "y": 218,
+      "x": 350
+    },
+    "wait": 0.8,
+    "capture": "bag-r1-selected-or-modal"
+  }
+]

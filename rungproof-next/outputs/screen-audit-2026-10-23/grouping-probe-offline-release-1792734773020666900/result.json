@@ -1,0 +1,138 @@
+{
+  "status": "OFFLINE_SAVED_GROUPING_IMAGE_OBSERVED",
+  "stop_attempted": false,
+  "screen_only": true,
+  "native_session": false,
+  "physical_pose_acceptance": false,
+  "observation": {
+    "rows": {
+      "values": {
+        "group_count": "3",
+        "group_release": "true",
+        "group_conveyor_run": "true",
+        "machine_enabled": "true",
+        "release_clear": "true",
+        "stop_position": "100",
+        "stop_raised": "true",
+        "transfer_complete": "false",
+        "stop_lowered": "false",
+        "group_ready": "true",
+        "group_staged": "false"
+      },
+      "row_witnesses": {
+        "group_count": [
+          {
+            "text": "\u2022 group_count 3",
+            "value": "3",
+            "row_center_y": 121.5
+          }
+        ],
+        "group_release": [
+          {
+            "text": "\u2022 group_release True",
+            "value": "true",
+            "row_center_y": 190.0
+          }
+        ],
+        "group_conveyor_run": [
+          {
+            "text": "\u2022 group_conveyor_run True",
+            "value": "true",
+            "row_center_y": 86.5
+          }
+        ],
+        "machine_enabled": [
+          {
+            "text": "\u2022 machine_enabled True",
+            "value": "true",
+            "row_center_y": 259.5
+          }
+        ],
+        "release_clear": [
+          {
+            "text": "\u2022 release_clear True",
+            "value": "true",
+            "row_center_y": 397.5
+          }
+        ],
+        "stop_position": [
+          {
+            "text": "\u2022 stop_position 100",
+            "value": "100",
+            "row_center_y": 466.5
+          }
+        ],
+        "stop_raised": [
+          {
+            "text": "\u2022 stop_raised True",
+            "value": "true",
+            "row_center_y": 500.5
+          }
+        ],
+        "transfer_complete": [
+          {
+            "text": "\u2022 transfer_complete False",
+            "value": "false",
+            "row_center_y": 535.5
+          }
+        ],
+        "stop_lowered": [
+          {
+            "text": "\u2022 stop_lowered False",
+            "value": "false",
+            "row_center_y": 431.5
+          }
+        ],
+        "group_ready": [
+          {
+            "text": "\u2022 group_ready True",
+            "value": "true",
+            "row_center_y": 155.5
+          }
+        ],
+        "group_staged": [
+          {
+            "text": "\u2022 group_staged False",
+            "value": "false",
+            "row_center_y": 224.5
+          }
+        ]
+      },
+      "release_predicate_matched": true
+    },
+    "scan": 10728,
+    "runtime_running": true,
+    "runtime_stopped": false,
+    "image": "offline-original.png"
+  },
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.545,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 269328,
+      "sha256": "10aac02cd548ee91b04937e0fb5d4ffb388edc0cf96c94c2e97e81847adf20c4"
+    },
+    {
+      "file": "offline-original-signals2x.png",
+      "bytes": 185826,
+      "sha256": "3001132893d4068d15d45e90c1cbea116882d9a7a3334a139e31ec30ca91e971"
+    },
+    {
+      "file": "offline-original-signals2x.ocr.json",
+      "bytes": 3382,
+      "sha256": "d628067d13287af63b08d790d59d984137c02519428a8ab8326b7439dce05611"
+    },
+    {
+      "file": "offline-original-runtime-header3x.png",
+      "bytes": 51501,
+      "sha256": "d53012d43c2deebf20fb36d8caeb6edda936ed41d92084e4fe3432704c80ceb6"
+    },
+    {
+      "file": "offline-original-runtime-header3x.ocr.json",
+      "bytes": 1172,
+      "sha256": "586a6d69fb781fedf5f178a145bee304cf476db76bd7e0204e73d9f58b2448f9"
+    }
+  ]
+}

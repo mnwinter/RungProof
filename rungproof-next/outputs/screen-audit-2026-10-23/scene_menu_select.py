@@ -1,4 +1,4 @@
-"""Root-invoked exact-label Scenario selection from actual native pixels only.
+"""Root-invoked exact-label or explicit numeric-ID selection from native pixels.
 
 Start with the Scenario menu CLOSED. Never dismiss a modal, Run, or edit.
 Agent validation uses saved PNGs/offline parsers only; root owns live inputs.
@@ -8,6 +8,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import re
 import signal
 import time
 import parcel_handoff_probe as base
@@ -18,9 +19,11 @@ OPEN=(281,34)
 WHEEL=(379,253)
 MAX_OBSERVATIONS=6
 FRESH_SECONDS=1.5
+SETTLE_SECONDS=.6
+MAX_SETTLE_FRAMES=10
 
-def exact_rows(ocr,label):
-    """Join OCR fragments on the same physical row; match the whole row only."""
+def popup_rows(ocr):
+    """Join fragments on one physical row, retaining exact text and geometry."""
     width,height=(POPUP[2]-POPUP[0])*SCALE,(POPUP[3]-POPUP[1])*SCALE
     if (ocr.get('width'),ocr.get('height'))!=(width,height):
         raise base.ProbeError('SCENARIO_OCR_CROP_DIMENSIONS_CHANGED')
@@ -37,19 +40,61 @@ def exact_rows(ocr,label):
         row=next((r for r in rows if abs(r['anchor_y']-center)<=8),None)
         if row is None:row={'anchor_y':center,'words':[]};rows.append(row)
         row['words'].append(word)
-    matches=[]
+    parsed=[]
     for row in rows:
         ordered=sorted(row['words'],key=lambda w:w['x'])
         text=' '.join(w['text'] for w in ordered)
-        if base.canon(text)!=base.canon(label):continue
         left=min(w['x'] for w in ordered);right=max(w['x']+w['w'] for w in ordered)
         top=min(w['y'] for w in ordered);bottom=max(w['y']+w['h'] for w in ordered)
         click=[round(POPUP[0]+(left+right)/2/SCALE),round(POPUP[1]+(top+bottom)/2/SCALE)]
         if not(POPUP[0]<click[0]<POPUP[2] and POPUP[1]<click[1]<POPUP[3]):
             raise base.ProbeError('SCENARIO_ROW_CENTROID_OUTSIDE_POPUP')
-        matches.append({'text':text,'words':ordered,'crop_word_union':[left,top,right,bottom],
+        parsed.append({'text':text,'words':ordered,'crop_word_union':[left,top,right,bottom],
                         'native_click':click,'native_popup':list(POPUP),'scale':SCALE})
-    return matches
+    return parsed
+
+def exact_rows(ocr,label):
+    return [row for row in popup_rows(ocr) if base.canon(row['text'])==base.canon(label)]
+
+def read_identity(text,request=False):
+    # Preserve the period and both complete ASCII digit groups. Never turn
+    # OCR letters into digits, or conflate Lab2.1 with Lab2.10/2.1.0.
+    text=text.strip()
+    pattern=r'\s*Lab\s*([0-9]+)\s*\.\s*([0-9]+)'
+    match=(re.fullmatch(pattern,text,re.IGNORECASE) if request else
+           re.match('^'+pattern+r'(?=\s|[-\u2013\u2014\u2022:]|$)',text,re.IGNORECASE))
+    return match.groups() if match else None
+
+def selection_rows(rows,label,identity=None):
+    if identity is not None:return [r for r in rows if read_identity(r['text'])==identity]
+    return [r for r in rows if base.canon(r['text'])==base.canon(label)]
+
+def layout_signature(rows):
+    # Match every observed popup row's normalized full text and exact box,
+    # not merely the requested row while a queued scroll is still arriving.
+    return tuple((base.canon(r['text']),*r['crop_word_union']) for r in rows)
+
+class MenuStability:
+    def __init__(self):self.previous=None;self.since=0;self.consecutive=0
+    def observe(self,signature,captured):
+        if signature and signature==self.previous:self.consecutive+=1
+        else:self.previous=signature;self.since=captured;self.consecutive=1
+        return bool(signature and self.consecutive>=2 and captured-self.since>=SETTLE_SECONDS)
+
+def settled_menu(bridge,worker,evidence,stage,label,hard_end,identity=None):
+    stability=MenuStability()
+    for number in range(MAX_SETTLE_FRAMES):
+        base.guard()
+        if time.monotonic()>=hard_end:raise base.ProbeError('MENU_SETTLEMENT_BUDGET_EXPIRED_NO_SELECTION')
+        image,captured=bridge.capture(stage+'-settle-%02d.png'%number)
+        rows=popup_rows(worker.read(evidence.crop(image,POPUP,'scenario-popup2x',SCALE)))
+        signature=layout_signature(rows);ready=stability.observe(signature,captured)
+        evidence.event('ACTUAL_POPUP_ROW_SETTLEMENT',image=image.name,row_count=len(rows),
+                       row_layout_sha256=hashlib.sha256(repr(signature).encode()).hexdigest(),
+                       consecutive=stability.consecutive,stable_seconds=captured-stability.since,settled=ready)
+        if ready:return image,captured,selection_rows(rows,label,identity)
+        time.sleep(min(.08,max(0,hard_end-time.monotonic())))
+    raise base.ProbeError('POPUP_ROWS_NOT_SETTLED_NO_SELECTION')
 
 def wheel(bridge,evidence,delta):
     bridge.health();base.guard()
@@ -74,20 +119,42 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     mode=p.add_mutually_exclusive_group(required=True)
     mode.add_argument('--session',type=Path);mode.add_argument('--offline-image',type=Path);mode.add_argument('--self-test',action='store_true')
-    p.add_argument('--prefix',default='scene-menu-select');p.add_argument('--label',required=True)
+    p.add_argument('--prefix',default='scene-menu-select')
+    target=p.add_mutually_exclusive_group(required=True)
+    target.add_argument('--label',help='Strict normalized full visible row label (default selection mode)')
+    target.add_argument('--identity',help='Explicit exact Lab numeric identity, e.g. Lab 5.9; title confirmation remains required')
     args=p.parse_args();base.guard()
-    if not base.canon(args.label) or len(args.label)>180:raise base.ProbeError('INVALID_EXACT_SCENARIO_LABEL')
+    identity=read_identity(args.identity,request=True) if args.identity else None
+    if args.identity and identity is None:raise base.ProbeError('INVALID_EXACT_LAB_NUMERIC_IDENTITY')
+    if args.label is not None and (not base.canon(args.label) or len(args.label)>180):raise base.ProbeError('INVALID_EXACT_SCENARIO_LABEL')
     e=base.Evidence(args.prefix);began=time.monotonic();hard_end=began+22;worker=None
-    result={'status':'SCENARIO_LABEL_UNOBSERVED','label':args.label,'selection_sent':False,
+    result={'status':'SCENARIO_LABEL_UNOBSERVED','label':args.label,'identity':args.identity,
+            'selection_mode':'EXPLICIT_NUMERIC_ID' if identity else 'STRICT_FULL_LABEL','selection_sent':False,
             'screen_only':True,'native_session':bool(args.session),'scene_loaded_proven':False,
             'required_precondition':'Scenario menu closed at invocation'}
     try:
         if args.self_test:
+            test_label=args.label or args.identity+' - Example scene'
             def sample(text,y=140):return {'text':text,'x':20,'y':y,'w':280,'h':24}
             make=lambda words:{'width':512,'height':1320,'lines':[{'words':words}]}
-            assert len(exact_rows(make([sample(args.label)]),args.label))==1
-            assert not exact_rows(make([sample(args.label+' extra')]),args.label)
-            assert len(exact_rows(make([sample(args.label),sample(args.label,180)]),args.label))==2
+            assert len(exact_rows(make([sample(test_label)]),test_label))==1
+            assert not exact_rows(make([sample(test_label+' extra')]),test_label)
+            assert len(exact_rows(make([sample(test_label),sample(test_label,180)]),test_label))==2
+            assert read_identity('Lab 2.1 - title')==('2','1')
+            assert read_identity('Lab 2.10 - title')==('2','10')
+            for text in ['Lab 21 - title','Lab 2,1 - title','Lab 2.I - title','Lab 2.1.0 - title','prefix Lab 2.1 - title','Lab 2.1X - title']:
+                assert read_identity(text) is None
+            id_rows=popup_rows(make([sample('Lab 2.1 - OCR unreadable'),sample('Lab 2.10 - other',180)]))
+            assert len(selection_rows(id_rows,None,('2','1')))==1
+            assert len(selection_rows(id_rows,None,('2','10')))==1
+            assert len(selection_rows(popup_rows(make([sample('Lab 2.1 - A'),sample('Lab 2.1 - B',180)])),None,('2','1')))==2
+            stable=MenuStability();signature=layout_signature(popup_rows(make([sample(test_label)])))
+            assert not stable.observe(signature,1.0)
+            assert not stable.observe(signature,1.3)
+            assert stable.observe(signature,1.7)
+            moved=layout_signature(popup_rows(make([sample(test_label,180)])))
+            assert not stable.observe(moved,1.8)
+            assert not stable.observe(signature,1.9)
             try:base.guard(base.DEADLINE)
             except base.ProbeError:pass
             else:raise AssertionError('Cutoff not guarded')
@@ -98,24 +165,28 @@ def main():
             if base.ROOT not in source.parents or not source.is_file():raise base.ProbeError('OFFLINE_IMAGE_OUTSIDE_AUDIT')
             image,_=e.save('offline-original.png',source.read_bytes())
             crop=e.crop(image,POPUP,'scenario-popup2x',SCALE)
-            matches=exact_rows(worker.read(crop),args.label)
+            matches=selection_rows(popup_rows(worker.read(crop)),args.label,identity)
             result.update(status='OFFLINE_SAVED_SCENARIO_MENU_OBSERVED',matches=matches,unique_exact_match=len(matches)==1,no_bridge_endpoints=True);return
         bridge=base.Bridge(json.loads(args.session.read_text(encoding='utf-8-sig')),e,hard_end)
         bridge.capture('before-menu-input.png')
         bridge.click(OPEN,'OPEN_REVIEWED_SCENARIO_MENU_FROM_CLOSED')
-        wheel(bridge,e,1200);wheel(bridge,e,1200)
+        for top_number in range(2):
+            wheel(bridge,e,1200)
+            current=settled_menu(bridge,worker,e,'top-%d'%top_number,args.label,hard_end,identity)
         for number in range(MAX_OBSERVATIONS):
             base.guard()
-            image,captured=bridge.capture('menu-observe-%02d.png'%number)
-            matches=exact_rows(worker.read(e.crop(image,POPUP,'scenario-popup2x',SCALE)),args.label)
-            e.event('EXACT_VISIBLE_LABEL_OBSERVATION',image=image.name,number=number,matches=matches)
+            image,captured,matches=current
+            e.event('VISIBLE_SCENARIO_SELECTION_OBSERVATION',image=image.name,number=number,matches=matches,
+                    selection_mode=result['selection_mode'],label=args.label,identity=args.identity)
             result.update(observations=number+1,last_matches=matches)
             if len(matches)>1:
                 result['status']='DUPLICATE_EXACT_VISIBLE_LABEL_NO_SELECTION';return
             if len(matches)==1 and click_fresh(bridge,e,matches[0],image,captured):
                 result.update(status='EXACT_LABEL_CLICK_SENT_SELECTED_OR_MODAL_REVIEW_PENDING',selection_sent=True,match_image=image.name)
                 bridge.capture('after-selection-or-modal.png');return
-            if number+1<MAX_OBSERVATIONS and time.monotonic()<hard_end:wheel(bridge,e,-600)
+            if number+1<MAX_OBSERVATIONS and time.monotonic()<hard_end:
+                wheel(bridge,e,-600)
+                current=settled_menu(bridge,worker,e,'menu-%02d'%(number+1),args.label,hard_end,identity)
     except BaseException as exc:
         result.update(status='SCENARIO_SELECTION_UNOBSERVED_PROBE_ENDED',error_code=str(exc) if isinstance(exc,base.ProbeError) else type(exc).__name__)
     finally:

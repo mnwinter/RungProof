@@ -1,0 +1,22 @@
+[
+  {
+    "input": {
+      "x": 510,
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel"
+    },
+    "wait": 0.4
+  },
+  {
+    "capture": "cable-r1-controls-and-knife",
+    "input": {
+      "x": 510,
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel"
+    },
+    "ocr": true,
+    "wait": 0.6
+  }
+]

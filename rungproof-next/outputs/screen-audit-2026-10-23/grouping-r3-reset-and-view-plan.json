@@ -1,0 +1,119 @@
+[
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 34,
+      "x": 203
+    }
+  },
+  {
+    "capture": "grouping-r3-reset",
+    "ocr": true,
+    "wait": 0.7,
+    "input": {
+      "y": 110,
+      "x": 230
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 34,
+      "x": 203
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 70,
+      "x": 220
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 174,
+      "x": 185
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "phase": "down",
+      "y": 374,
+      "button": "middle",
+      "x": 610
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "phase": "move",
+      "y": 374,
+      "x": 540
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "phase": "up",
+      "y": 374,
+      "button": "middle",
+      "x": 540
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "y": 340,
+      "x": 510
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "y": 340,
+      "x": 510
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "y": 340,
+      "x": 510
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "y": 340,
+      "x": 510
+    }
+  },
+  {
+    "capture": "grouping-r3-controls",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "y": 340,
+      "x": 510
+    }
+  }
+]

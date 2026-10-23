@@ -4,34 +4,32 @@
       "SCOPED_PASS": 77
     },
     "controls": {
-      "SCOPED_PASS": 57,
-      "PARTIAL": 20
+      "SCOPED_PASS": 69,
+      "PARTIAL": 8
     },
     "normal_outcome": {
       "SCOPED_PASS": 76,
       "PARTIAL": 1
     },
     "stop_reset_restart": {
-      "SCOPED_PASS": 74,
-      "PARTIAL": 3
+      "SCOPED_PASS": 76,
+      "PARTIAL": 1
     },
     "recovery": {
-      "SCOPED_PASS": 75,
-      "PARTIAL": 1,
-      "NOT_TESTED": 1
+      "SCOPED_PASS": 76,
+      "PARTIAL": 1
     },
     "repeat": {
-      "SCOPED_PASS": 74,
-      "FAIL": 1,
-      "PARTIAL": 1,
-      "NOT_TESTED": 1
+      "SCOPED_PASS": 76,
+      "FAIL": 1
     },
     "navigation": {
-      "SCOPED_PASS": 77
+      "SCOPED_PASS": 76,
+      "FAIL": 1
     },
     "feedback": {
-      "SCOPED_PASS": 72,
-      "PARTIAL": 4,
+      "SCOPED_PASS": 74,
+      "PARTIAL": 2,
       "FAIL": 1
     }
   },
@@ -47,16 +45,6 @@
       "PARTIAL"
     ],
     [
-      "lab-11-12-mobile-traffic-lights",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-11-13-xy-palletizing",
-      "controls",
-      "PARTIAL"
-    ],
-    [
       "lab-11-13-xy-palletizing",
       "stop_reset_restart",
       "PARTIAL"
@@ -65,11 +53,6 @@
       "lab-2-01-workstation-call",
       "feedback",
       "FAIL"
-    ],
-    [
-      "lab-2-11-inbound-tote-stop",
-      "controls",
-      "PARTIAL"
     ],
     [
       "lab-2-11-inbound-tote-stop",
@@ -122,84 +105,9 @@
       "FAIL"
     ],
     [
-      "lab-4-08-package-grouping",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-4-09-chain-drive-lift",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-4-12-cable-cut-length",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-5-07-pedestrian-crossing",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-5-09-bag-indexing-conveyor",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-5-10-coating-line",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-9-03-sum-and-counter-function",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-9-11-pallet-counting",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "lab-9-11-pallet-counting",
-      "stop_reset_restart",
-      "PARTIAL"
-    ],
-    [
-      "lab-9-11-pallet-counting",
-      "recovery",
-      "NOT_TESTED"
-    ],
-    [
-      "lab-9-11-pallet-counting",
-      "repeat",
-      "PARTIAL"
-    ],
-    [
-      "lab-9-11-pallet-counting",
-      "feedback",
-      "PARTIAL"
-    ],
-    [
       "scene-2-conveyor-pusher",
-      "controls",
-      "PARTIAL"
-    ],
-    [
-      "scene-2-conveyor-pusher",
-      "stop_reset_restart",
-      "PARTIAL"
-    ],
-    [
-      "scene-2-conveyor-pusher",
-      "repeat",
-      "NOT_TESTED"
-    ],
-    [
-      "scene-2-conveyor-pusher",
-      "feedback",
-      "PARTIAL"
+      "navigation",
+      "FAIL"
     ],
     [
       "tank-radar",
@@ -208,26 +116,26 @@
     ]
   ],
   "ready_queue_ids": [
-    "Q02",
-    "Q03",
-    "Q05",
     "Q08",
-    "Q09",
-    "Q10",
-    "Q11",
     "Q12",
-    "Q18",
-    "Q19",
-    "Q21",
-    "Q24"
+    "Q18"
   ],
   "closed_queue_ids": [
     "Q01",
+    "Q02",
+    "Q03",
     "Q04",
+    "Q05",
     "Q06",
     "Q07",
+    "Q09",
+    "Q10",
+    "Q11",
+    "Q19",
     "Q20",
-    "Q22"
+    "Q21",
+    "Q22",
+    "Q24"
   ],
   "split_case": "Q23 Stop/recovery CLOSED; Reset/repeat FAIL",
   "boundary": "Not every non-S cell is another executable test."

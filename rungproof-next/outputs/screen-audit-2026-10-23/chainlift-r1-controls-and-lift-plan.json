@@ -1,0 +1,22 @@
+[
+  {
+    "input": {
+      "delta": 120,
+      "y": 340,
+      "x": 510,
+      "phase": "wheel"
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "delta": 120,
+      "y": 340,
+      "x": 510,
+      "phase": "wheel"
+    },
+    "wait": 0.6,
+    "capture": "chainlift-r1-controls-and-lift",
+    "ocr": true
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "wait": 0.6,
+    "input": {
+      "y": 34,
+      "x": 281
+    }
+  },
+  {
+    "wait": 0.6,
+    "input": {
+      "x": 379,
+      "y": 253,
+      "delta": 1200,
+      "phase": "wheel"
+    }
+  },
+  {
+    "wait": 0.6,
+    "capture": "grouping-r2-menu-top",
+    "input": {
+      "x": 379,
+      "y": 253,
+      "delta": 1200,
+      "phase": "wheel"
+    },
+    "ocr": true
+  }
+]

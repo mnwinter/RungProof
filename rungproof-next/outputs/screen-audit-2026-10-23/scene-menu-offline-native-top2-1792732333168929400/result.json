@@ -1,0 +1,89 @@
+{
+  "status": "OFFLINE_SAVED_SCENARIO_MENU_OBSERVED",
+  "label": "Water Tank - Radar Level",
+  "selection_sent": false,
+  "screen_only": true,
+  "native_session": false,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "matches": [
+    {
+      "text": "Water Tank \u2014 Radar Level",
+      "words": [
+        {
+          "text": "Water",
+          "x": 15,
+          "y": 596,
+          "w": 70,
+          "h": 20
+        },
+        {
+          "text": "Tank",
+          "x": 91,
+          "y": 594,
+          "w": 58,
+          "h": 22
+        },
+        {
+          "text": "\u2014",
+          "x": 156,
+          "y": 606,
+          "w": 23,
+          "h": 5
+        },
+        {
+          "text": "Radar",
+          "x": 185,
+          "y": 594,
+          "w": 69,
+          "h": 22
+        },
+        {
+          "text": "Level",
+          "x": 261,
+          "y": 594,
+          "w": 58,
+          "h": 22
+        }
+      ],
+      "crop_word_union": [
+        15,
+        594,
+        319,
+        616
+      ],
+      "native_click": [
+        336,
+        302
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "unique_exact_match": true,
+  "no_bridge_endpoints": true,
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 0.505,
+  "files": [
+    {
+      "file": "offline-original.png",
+      "bytes": 359085,
+      "sha256": "30d245756c46b7595fe7206bec896fc45dbbd554bb59a073ed7061a09c20e7fb"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.png",
+      "bytes": 270090,
+      "sha256": "bc18fad03e105e2751651f11869f1010bc80d1ee47696695cdcc51bed389f9f1"
+    },
+    {
+      "file": "offline-original-scenario-popup2x.ocr.json",
+      "bytes": 9971,
+      "sha256": "e7ee1033b49a6ab3866af38c7088e7765c59e5d236d80bda18a02fc33a5466c7"
+    }
+  ]
+}

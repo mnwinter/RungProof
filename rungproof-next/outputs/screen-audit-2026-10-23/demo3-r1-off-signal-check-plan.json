@@ -1,0 +1,43 @@
+[
+  {
+    "wait": 0.25,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "wait": 0.6,
+    "input": {
+      "y": 110,
+      "x": 186
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "y": 89,
+      "x": 856
+    }
+  },
+  {
+    "wait": 0.7,
+    "input": {
+      "delta": 1200,
+      "y": 296,
+      "phase": "wheel",
+      "x": 893
+    },
+    "capture": "demo3-r1-enable-off-signals-top",
+    "ocr": true
+  },
+  {
+    "wait": 0.7,
+    "input": {
+      "y": 89,
+      "x": 738
+    },
+    "capture": "demo3-r1-health-enable-off",
+    "ocr": true
+  }
+]

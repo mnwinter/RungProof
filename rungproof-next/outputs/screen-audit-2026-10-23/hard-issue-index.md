@@ -9,11 +9,15 @@ Current routing index, not a repair plan. Application/source unchanged. Native o
 | QA-PLANT-001 / parcel Reset repeat | V7 fresh-load normal3 receipts PASS; actual phase30/count0 AppStop/Run-alone recovery PASS. Two same-scene Reset repeats stallcount1: reliability FAIL. No universal normal-impossible claim. | [Controlled comparison](parcel-v7-controlled-comparison-review.md), [handoff recovery](parcel-v7-handoff-recovery-review.md), [first normal](parcel-v7-native-review.md) |
 | QA-UI-002 diagnostic footer | Valid authored runtime executes and ErrorList clears, outer RUNBLOCKED persists. Actual native repro done; no new closure. | [Exact diagnostics review](../screen-audit-2026-10-21/postbackup-diagnostics-review.md) |
 
+| QA-UI-003 S2 / Demo3 Engineering framing | Engineering Frame Process repeatedly shows wall-like aperture; WholeScene exteriorroof. Immersive restores process. Navigation/viewport route FAIL; load/controller behavior remains valid. Camera/wall cause is hypothesis. | [Seven-original native review](demo3-frame-process-visibility-review.md) |
+
 ## Source/model causal material — not native acceptance
 
 - [Hard-issue model index](hard-issue-model-case-index.json):52 recorded model cases, grouped baseline:12, scan-sweep:4, meter:8, class-meter:5, retentive-meter:15, late-stop:8. `nativeAcceptance` is false for these diagnostics; model success is not a physical walkthrough.
 - [Source provenance](hard-issue-analysis-provenance.json): sourceCommit `d0c4566bc956706ab3430e25d4142b03f4431e9c`; applicationChanges=False; nativeAcceptance=False.
 - [Parcel reset decision table](parcel-sensor-reset-decision-table.md) and [causal analysis](hard-issue-analysis.md) explain transform/AABB initialization and admission alternatives. Native fresh-scene versus reset comparison supports history dependence but does not uniquely prove the stored geometry or a verified fix.
+
+- [Independent challenge](independent-challenge.md) checks the proposed parcel-reset explanation against actual source: no stronger current authored countercause found; nonidentity parent/bounds-origin counterexamples limit broader geometry claims, not a new mandatory gate.
 
 ## Candidates and route questions
 
@@ -21,7 +25,7 @@ Current routing index, not a repair plan. Application/source unchanged. Native o
 |---|---|
 | Radar inspection ghost view | Advertised action lacks grounded equipment mapping; body/transmitter attempts remainFalse/opaque. Contract/accessibility candidate, not failed arbitrary click or N/A. [Route analysis](native-test-queue.md) |
 | Gallery empty-belt motion | Featureless surface inconclusive; mapped CNC/fan/motor responses reviewed. Not a confirmed dead control. [Gallery review](../screen-audit-2026-10-21/postbackup-small-gallery-review.md) |
-| Five legacy declared Stop/Reset routes | Physical START responses supported; separate declared actions have no mapped equipment route and generic action bank is hidden. Explicit route/documentation question, not five invented button tests. [All77 action inventory](native-test-queue.json) |
+| Five legacy declared Stop/Reset routes | Physical START responses supported; separate declared actions have no mapped equipment route and generic action bank is hidden. [Legacy START-path analysis](legacy-start-path-analysis.md) limits this to documentation/exposure and mode-specific readouts, not blanket missing mechanics. [All77 action inventory](native-test-queue.json) |
 | Earlier Discard/cache navigation | Never confirmed; representative Cancel/Discard/Save/reopen routes now reviewed. Do not resurrect as a callback defect without a new failed transition. [Navigation](../screen-audit-2026-10-21/postbackup-small-navigation-review.md) |
 | Stop wording / curriculum marker / default framing | Specification or presentation candidates remain separate from successful actual recovery; use original issue history for exact scope. [Baseline issue history](issue-reconciliation.md) |
 
@@ -35,25 +39,16 @@ Current routing index, not a repair plan. Application/source unchanged. Native o
 
 ## Current finite native queue
 
-12 READY cases. Q01/Q04/Q06/Q07/Q20/Q22 scoped CLOSED. Q23 Stop/recovery CLOSED while Reset/repeat FAIL remains recorded.
+**3 READY; 15 scoped closures; Q23 Stop/recovery closed but Reset/repeat FAIL.** Matrix has **16 non-SCOPED_PASS cells**, including confirmed failures and route/visual questions; these are not16 additional executable tests. Application/source unchanged; no whole-audit acceptance or final remediation plan.
 
-| Case | Scene | Actual UI control / observation |
+| Case | Scene | Remaining observation |
 |---|---|---|
-|Q02|lab-4-08-package-grouping|APP STOP/RUN during actual release; ENABLE/CLEAR/LOAD for setup|
-|Q03|lab-4-12-cable-cut-length|APP STOP/RUN plus physical START while knife stroke active|
-|Q05|lab-5-09-bag-indexing-conveyor|PAUSE BLOCKED/CLEAR during forward travel|
 |Q08|lab-11-12-mobile-traffic-lights|Controller READY while actual vehicle occupies crossing|
-|Q09|lab-9-11-pallet-counting|APP STOP/RUN and full second batch using NEW PALLET|
-|Q10|lab-11-13-xy-palletizing|ENABLE OFF/ON during actual gantry motion|
-|Q11|scene-2-conveyor-pusher|ENABLE OFF/ON; observe actual carton destinations|
 |Q12|lab-2-11-inbound-tote-stop|Physical START; observe scanner phase|
 |Q18|lab-2-18-pallet-pickup|Manual JOG at actual completed pickup|
-|Q19|lab-4-09-chain-drive-lift|APP STOP/RUN plus START during actual vertical lift|
-|Q21|lab-5-07-pedestrian-crossing|CROSS during actual WALK|
-|Q24|lab-9-03-sum-and-counter-function|A NEXT numeric_display_0; B NEXT numeric_display_1|
 
-Exact procedures/fixtures: [queue](native-test-queue.md), [JSON](native-test-queue.json). Current matrix:34 non-SCOPED_PASS cells, including failures and route/visual questions—not34 extra tests. [Matrix](coverage-reconciliation.md), [finite cells](remaining-finite-cells.json).
+Closed supplied scopes: [Q01](drawbridge-descent-review.md), [Q02](grouping-release-stop-review.md), [Q03](cable-knife-stop-review.md), [Q04](coating-index-stop-review.md), [Q05](bag-forward-pause-review.md), [Q06](demo1-appstop-review.md), [Q07](demo2-appstop-review.md), [Q09](demo4-retention-repeat-review.md), [Q10](demo5-enable-loss-review.md), [Q11](demo3-enable-route-review.md), [Q19](chain-lift-upstroke-stop-review.md), [Q20](timed-lamp-active-retrigger-review.md), [Q21](pedestrian-active-walk-review.md), [Q22](marker-inhibit-reset-review.md), [Q24](sum-counter-preset-cycle-review.md).
 
-Newest closure: [coating initial-index Stop/Run-alone](coating-index-stop-review.md). Public index/bothReady/ventFalse plus physical movingbody qualifies the phase; no exact timing/privatephase test is added. Other recent closures: [Demo2](demo2-appstop-review.md), [activeTP](timed-lamp-active-retrigger-review.md), [markerReset](marker-inhibit-reset-review.md). Earlier requests remain historical JSON supersessions.
+[Exact procedures/grounding](native-test-queue.md), [machine-readable queue](native-test-queue.json), [all77 matrix](coverage-reconciliation.md), [finite incomplete cells](remaining-finite-cells.json).
 
-No final remediation plan or whole-audit acceptance asserted.
+Legacy bounded limits remain honest:2.20 rightbeam/direction witness is an existing named feedback limit;2.17 carrying-load Stop is an unobserved limit beyond reviewed intermediate Stop, not an automatic new all-phase gate. Gallery empty-belt visibility and radar action exposure are unresolved questions above. Review-specific timing, physical visibility and sampling limits remain in the linked native evidence.

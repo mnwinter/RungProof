@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "verified_utc": "2026-10-23T06:27:58.9094953Z",
+  "archive_parts": 84,
+  "proven_paths": 110504,
+  "proof_sha256": "e44bcf3c8323ad1d3925ad19554b095648728d038de4082e4ebf617d41318b4c",
+  "helper_sha256": "94800ebf00ae14b3ad4a75f3732db96c14e70d888b8f74c38f8a80ca82c309c2",
+  "method": "Local immutable archive part hashes, integrity tests, extraction and per-file SHA256; no fresh network verification claimed",
+  "proof": "D:/RungProof-Backup-2026-10-22/incremental-2026-10-23/archive-proof-20261023/HISTORICAL-PUBLIC-HASH-PROOF.json",
+  "historical_receipts_unchanged": true,
+  "final_cutoff_closeout_pending": true
+}

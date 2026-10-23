@@ -1,0 +1,10 @@
+{
+  "status": "OFFLINE_GROUPING_PREDICATE_AND_CUTOFF_GUARDS_PASS",
+  "stop_attempted": false,
+  "screen_only": true,
+  "native_session": false,
+  "physical_pose_acceptance": false,
+  "no_bridge_endpoints": true,
+  "elapsed_seconds": 0.001,
+  "files": []
+}

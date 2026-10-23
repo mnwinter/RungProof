@@ -1,0 +1,11 @@
+[
+  {
+    "capture": "pedestrian-r1-ready-before-request",
+    "ocr": true,
+    "wait": 0.5,
+    "input": {
+      "x": 856,
+      "y": 89
+    }
+  }
+]

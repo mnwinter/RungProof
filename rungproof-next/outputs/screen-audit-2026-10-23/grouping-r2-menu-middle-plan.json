@@ -1,0 +1,13 @@
+[
+  {
+    "wait": 0.8,
+    "input": {
+      "y": 253,
+      "delta": -600,
+      "phase": "wheel",
+      "x": 379
+    },
+    "capture": "grouping-r2-menu-middle",
+    "ocr": true
+  }
+]

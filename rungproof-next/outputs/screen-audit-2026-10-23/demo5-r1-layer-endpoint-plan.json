@@ -1,0 +1,21 @@
+[
+  {
+    "wait": 0.7,
+    "ocr": true,
+    "capture": "demo5-r1-resumed-layer-endpoint-top"
+  },
+  {
+    "input": {
+      "y": 399,
+      "phase": "wheel",
+      "x": 891,
+      "delta": -600
+    },
+    "wait": 0.7
+  },
+  {
+    "wait": 0.4,
+    "ocr": true,
+    "capture": "demo5-r1-resumed-layer-endpoint-bottom"
+  }
+]

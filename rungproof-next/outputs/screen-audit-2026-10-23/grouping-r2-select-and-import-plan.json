@@ -1,0 +1,52 @@
+[
+  {
+    "wait": 0.9,
+    "capture": "grouping-r2-scene-selected",
+    "input": {
+      "x": 360,
+      "y": 607
+    },
+    "ocr": true
+  },
+  {
+    "input": {
+      "x": 89,
+      "y": 34
+    },
+    "wait": 0.3
+  },
+  {
+    "input": {
+      "x": 162,
+      "y": 113
+    },
+    "wait": 0.5
+  },
+  {
+    "input": {
+      "x": 456,
+      "y": 512
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "key": "Ctrl+A"
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "text": "fixture-lab-4-08-package-grouping-feedback.rpproj.json"
+    },
+    "wait": 0.3
+  },
+  {
+    "wait": 1,
+    "capture": "grouping-r2-fixture-import",
+    "input": {
+      "key": "Return"
+    },
+    "ocr": true
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "wait": 0.7,
+    "ocr": true,
+    "capture": "sumcounter-r1-selected-or-modal"
+  }
+]

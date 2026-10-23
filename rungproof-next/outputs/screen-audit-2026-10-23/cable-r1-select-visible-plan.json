@@ -1,0 +1,11 @@
+[
+  {
+    "wait": 0.8,
+    "capture": "cable-r1-selected-or-modal",
+    "input": {
+      "y": 57,
+      "x": 350
+    },
+    "ocr": true
+  }
+]

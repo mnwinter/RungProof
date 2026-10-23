@@ -1,0 +1,28 @@
+[
+  {
+    "ocr": true,
+    "capture": "bag-r1-clear-for-return",
+    "wait": 0.4,
+    "input": {
+      "x": 556,
+      "y": 370
+    }
+  },
+  {
+    "ocr": true,
+    "capture": "bag-r1-return-start",
+    "wait": 0.4,
+    "input": {
+      "x": 547,
+      "y": 369
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "ocr": true,
+    "wait": 3,
+    "capture": "bag-r1-return-entry"
+  }
+]

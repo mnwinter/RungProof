@@ -8,7 +8,7 @@ All616 reconciled cells were inspected programmatically for their written scope/
 
 Direct originals confirm count4.5 A2/B4Truegreen→A2/B5False/dark;4.6 A2/B3Truegreen→A2/B4False/dark; ARRAY8True then9True actualnativevalues; Demo4 Reset0/dark, but its named machineSTOP image retainsyellowRunning and cannot prove stoppedstate. CurriculumDemo4 requires only secondbatchcount1. Do not turn that into a completed secondbatch. Demo3/5 curriculumscreens corroborate stated procedures, not all actuator geometry.
 
-## Finite queue —12 ready cases,6 scoped closures,1 split Stop/recovery closure plus Reset/repeat failure
+## Finite queue —3 ready cases,15 scoped closures,1 split Stop/recovery closure plus Reset/repeat failure
 
 Q01 and Q06 are closed below. Start with the first remaining READY case; authoritative current statuses are in JSON.
 
@@ -18,41 +18,21 @@ Common procedure: select matching scene; open listed existing project through no
 
 Actual descending acknowledgement loss holds the physical deck at45.85, then restoration reaches home, barriers open and traffic release. Do not rerun this case. [Independent review](drawbridge-descent-review.md).
 
-### Q02 — lab-4-08-package-grouping
+### Q02 — lab-4-08-package-grouping — CLOSED
 
-**Control:** APP STOP/RUN during actual release; ENABLE/CLEAR/LOAD for setup  
-**Existing input:** `test-projects/fixture-lab-4-08-package-grouping-feedback.rpproj.json`
+Qualified actual active release: count3/releaseTrue/conveyorTrue/gate100/raisedTrue/completeFalse at8603/8616 and armedrecheck8649. AcceptedStop settles8670: projectedcount0/outputsOff, actualraisedgate/cartonpose held across two settledframes. Run alone8700 restorescount3/release withoutnewLOAD; actualsupportedgroup advances to receiver, complete9501/count3/alloff/gatelowered0. Earliertransitionalmenu frame and completedphaseStop do not qualify. [Independent review](grouping-release-stop-review.md).
 
-1. Run; ENABLE/CLEAR; LOAD each of3 only after actual staged/idle acceptance.
-2. Wait group_releaseTrue and stop_position rising/raised or actual moving receiving group; APP STOP then held capture.
-3. RUN; observe retained private count republishes, actual gate/carton recovery and receiver complete.
+### Q03 — lab-4-12-cable-cut-length — CLOSED
 
-**Observe:** CommandsFalse/frozen pose while stopped; Run retained count3 without extra CTU event; fixture release latch resumes transfer to receiver; final count3 retained/alloff.
-
-**Why still required:** Old release-checkpoint filenames were prereleaseFalse. Prior actual Stop was moving feed only. Do not time this by a fixed wait.
-
-**Boundary:** Existing lesson/learner fixture contract; no precision/safety claim.
-
-### Q03 — lab-4-12-cable-cut-length
-
-**Control:** APP STOP/RUN plus physical START while knife stroke active  
-**Existing input:** `test-projects/existing-cable-cut-reference.rpproj.json`
-
-1. Run/START; wait actual cutter_fireTrue and cutter_homeFalse/intermediate cutter position.
-2. APP STOP; capture held blade/length/stock and stopped scan.
-3. RUN alone; inspect; if cycle inactive as existing feed-Stop policy, fresh START; observe actual blade return/cut/home.
-
-**Observe:** Stop clears fire/feed and holds mechanical pose; Run may retain authorizationFalse until freshStart as existing reference; finish3m/7stock/home/alloff without refeeding cut length.
-
-**Why still required:** Feed Stop is proven; blade phase is distinct actuator. Exact start policy must be read from loaded native rung; do not assume timer labels or automatic completion while stopped.
-
-**Boundary:** Existing lesson/learner fixture contract; no precision/safety claim.
+Actual outboundknife11305/.15/fireTrue/homeFalse/doneFalse→acceptedStop11326/.675 bladeheld/length3stock7/feed-fire-activeOff; Run11356→11481 retains.675/inactive; freshphysicalSTART11531 resumesstroke/return→11657home/cutComplete/cycleComplete/noFault/allactuatorOff. Actualbladecomparison supports displacement/hold, no exactlength/precisionclaim. [Independent review](cable-knife-stop-review.md).
 
 ### Q04 — lab-5-10-coating-line — CLOSED
 
 Initial index uniquely qualified by actual position-1.64/indexTrue/speed.5/bothReadyTrue/sprayFalse/ventFalse at20937. AppStop20982 holds actual supportedworkpiece at-1.19/all3outputsOff/scanunchanged; Run alone20992 resumesindex→station.01spray+vent→supportedexit2.23/all3Off stable. No privatephase or exact spraytiming claim. [Independent review](coating-index-stop-review.md).
 
 ### Q05 — lab-5-09-bag-indexing-conveyor
+
+**CURRENT: CLOSED_SCOPED_NATIVE.** Do not rerun; [exact independent closure](bag-forward-pause-review.md). Following original procedure is retained as history.
 
 **Control:** PAUSE BLOCKED/CLEAR during forward travel  
 **Existing input:** `test-projects/fixture-lab-5-09-bag-indexing-conveyor.rpproj.json`
@@ -92,20 +72,24 @@ Retained REQUESTTrue after AppStop4862: elapsed0/lampFalse and frozen scan; Run 
 
 ### Q09 — lab-9-11-pallet-counting
 
-**Control:** APP STOP/RUN and full second batch using NEW PALLET  
-**Existing input:** `AUTHORED Demo4 via numbered rail (existing program)`
+**CURRENT CLOSED_SCOPED_NATIVE:** [demo4-retention-repeat-review.md](demo4-retention-repeat-review.md). Original procedure below is historical.
+
+**Control:** APP STOP/RUN and full second batch using NEW PALLET
+
+**Existing input:** AUTHORED Demo4 via numbered rail (existing program)
 
 1. START/TYPEOK/COUNTREQ; accumulate2 accepted NEWPALLETevents released.
-2. APP STOP/held then RUN; record output count clear/retained republish distinct from machineSTOP.
-3. MachineRESET; fresh START and5 separate valid NEWPALLET events to COUNT5/BATCHVALID, completing true secondbatch.
+2. While count nonzero and machineRunningTrue, operate physical machineSTOP once; require native acceptedinput/machineRunningFalse with documented retainedcount, then physicalfreshSTART. Do not credit a decorativebutton or oldmisnamedframe.
+3. APP STOP/held then RUN; record output count clear/retained republish distinct from machineSTOP.
+4. MachineRESET; fresh START and5 separate valid NEWPALLET events to COUNT5/BATCHVALID, completing true secondbatch.
 
 **Observe:** No phantom increment on Run; record retained counter/output semantics; second full5 not merely first event of secondbatch.
 
-**Why still required:** Existing screenshot machineStop retains5 and machineReset0; curriculum pass only required batch2count1. Full repeat and AppStop remain distinct.
-
-**Boundary:** Existing lesson/learner fixture contract; no precision/safety claim.
+**Why still required:** Old named machineSTOP image shows runningpilot lit, so accepted machineSTOP is NOT proved by filename. MachineRESET0 is visible; secondbatchcount1 is not fullrepeat. Keep real machineSTOP response, AppStop and complete secondbatch distinct.
 
 ### Q10 — lab-11-13-xy-palletizing
+
+**CURRENT CLOSED_SCOPED_NATIVE:** [demo5-enable-loss-review.md](demo5-enable-loss-review.md). Original procedure below is historical.
 
 **Control:** ENABLE OFF/ON during actual gantry motion  
 **Existing input:** `AUTHORED Demo5 via numbered rail (existing program)`
@@ -185,6 +169,8 @@ R2 actual accepted START status at active scan9461 with lampON; OFF9572 is111sca
 
 ### Q21 — lab-5-07-pedestrian-crossing
 
+**CURRENT: CLOSED_SCOPED_NATIVE.** Do not rerun; [exact independent closure](pedestrian-active-walk-review.md). Following original procedure is retained as history.
+
 **Control:** CROSS during actual WALK  
 **Existing input:** `test-projects/fixture-lab-5-07-pedestrian-crossing.rpproj.json`
 
@@ -216,10 +202,10 @@ Historical P is preserved in matrix JSON. Current normalized scopes are explicit
 |lab-11-06-wastewater-collection|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||Inflow/readiness/outlet actions and active qualification changes reviewed; no operator overflow/sensorforce route established.|
 |lab-11-07-multi-conveyor-pallet-route|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||All3 clears plus actual commonSTOP response/requalification reviewed. Extra imaginary jam/stuck sensor is unsupported.|
 |lab-11-11-service-elevator|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||All3 toggles and moving loss/restoration reviewed, plus native upper/descent/lower. No mandatory everyphase×everypermissive expansion.|
-|lab-11-12-mobile-traffic-lights|PARTIAL|EXECUTE_NAMED_CASE|Q08|Refer to exact queue cases; action inventory itself does not prove response.|
+|lab-11-12-mobile-traffic-lights|SCOPED_PASS|CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE|Q08|All5 exposed actions have native responses: READY,Aclear,Bclear drops/restores yield bothred at endpoints; queueA/queueB introduce actual vehicles/crossings. Q08 occupied READYloss remains a named phase-recovery case, not proof that the READY control never worked.|
 |lab-11-13-xy-palletizing|PARTIAL|EXECUTE_NAMED_CASE|Q10|Refer to exact queue cases; action inventory itself does not prove response.|
 |lab-11-19-powder-batch-mixer|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||All3 physical toggles have named native effects; actuator geometry is a separate presentation observation, not an untouched control.|
-|lab-2-11-inbound-tote-stop|PARTIAL|EXECUTE_NAMED_CASE|Q12|Refer to exact queue cases; action inventory itself does not prove response.|
+|lab-2-11-inbound-tote-stop|SCOPED_PASS|CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE|Q12|Mapped physical START is accepted and produces actual totefeed/scanner/downstream result with freshrepeat. No separate equipment-mapped Stop/Reset route is established. Q12 exact scannerTrue/identification observation remains separate; no hidden action PASS.|
 |lab-2-12-assembly-lift|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||Raise/lower/Stop/Reset normal+restart reviewed; no physical conflict input exists. Simultaneous ladder-output forcing is not operator control.|
 |lab-2-14-sump-pump|PARTIAL|NO_EXPOSED_STOP_RESET_ROUTE||START physical response reviewed. Declared sceneStop/Reset have no equipment action mapping; legacy action panel hidden. Keep documentary route question separate, not executable fake button tests.|
 |lab-2-17-pallet-robot|PARTIAL|NO_EXPOSED_STOP_RESET_ROUTE||START physical response reviewed. Declared sceneStop/Reset have no equipment action mapping; legacy action panel hidden. Keep documentary route question separate, not executable fake button tests.|
@@ -229,15 +215,15 @@ Historical P is preserved in matrix JSON. Current normalized scopes are explicit
 |lab-2-22-dual-spindle|PARTIAL|NO_EXPOSED_STOP_RESET_ROUTE||START physical response reviewed. Declared sceneStop/Reset have no equipment action mapping; legacy action panel hidden. Keep documentary route question separate, not executable fake button tests.|
 |lab-2-23-parcel-sorter|PARTIAL|V7_NORMAL_PASS_REPEAT_FAIL|Q23|Normal3 and phase30/count0 Stop/Run-alone recovery proved; same-scene Reset/repeat fails count1. No missing handoffStop task.|
 |lab-4-07-parking-garage-entry|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||ENABLE/CLEAR/ENTER/EXIT/REMOVE have actual responses/guards/recovery. No stucksensor or gate-obstruction UI action declared.|
-|lab-4-08-package-grouping|PARTIAL|EXECUTE_NAMED_CASE|Q02|Refer to exact queue cases; action inventory itself does not prove response.|
-|lab-4-09-chain-drive-lift|PARTIAL|EXECUTE_NAMED_CASE|Q19|Refer to exact queue cases; action inventory itself does not prove response.|
+|lab-4-08-package-grouping|SCOPED_PASS|CONTROL_AND_Q02_PHASE_CASE_CLOSED|Q02|QualifiedreleaseStop8670/settledhold/Run-alone→supportedcomplete9501; earlierphaseinvalidattemptsexcluded.|
+|lab-4-09-chain-drive-lift|SCOPED_PASS|CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE|Q19|Only physical START is mapped; accepted START and freshStart after indexStop visibly advance carton/lift and reach supported receiver/home. No exposed boxAbsent/destinationBlocked/fault selector. Q19 verticalStop/trace remains separate.|
 |lab-4-10-cookie-packaging|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||Only physical START is declared and response/restart reviewed. Distinct machineSTOP/fault button is not exposed by this contract.|
 |lab-4-11-barrel-fill-station|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||Only START declared and normal/freshStart/fillingStop reviewed. Low-source/obstruction outputs are not operatorfault controls.|
-|lab-4-12-cable-cut-length|PARTIAL|EXECUTE_NAMED_CASE|Q03|Refer to exact queue cases; action inventory itself does not prove response.|
-|lab-5-07-pedestrian-crossing|PARTIAL|EXECUTE_NAMED_CASE|Q21|Refer to exact queue cases; action inventory itself does not prove response.|
+|lab-4-12-cable-cut-length|SCOPED_PASS|CONTROL_AND_Q03_PHASE_CASE_CLOSED|Q03|ActualoutboundknifeStopheld.675, Runaloneinactive andfreshStart→home/complete/alloff reviewed.|
+|lab-5-07-pedestrian-crossing|SCOPED_PASS|CLOSED_SCOPED_NATIVE|Q21|See pedestrian-active-walk-review.md for acknowledged active request/no replay/fresh usability.|
 |lab-5-08-drawbridge-control|SCOPED_PASS|CLOSED_EXPOSED_SELECTORS|Q01|Bothphysicalselectors have actualnativeascent/descent/acklossrestore responses. Q01closed; noindependentinhibitbutton invented.|
-|lab-5-09-bag-indexing-conveyor|PARTIAL|EXECUTE_NAMED_CASE|Q05|Refer to exact queue cases; action inventory itself does not prove response.|
-|lab-5-10-coating-line|PARTIAL|Q04_PHASE_CASE_CLOSED|Q04|ActualinitialindexStop/held/Run-alone toexit2.23/alloff independentlyclosed; existingphysicalreadinessactionsalreadyreviewed.|
+|lab-5-09-bag-indexing-conveyor|SCOPED_PASS|CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE|Q05|Both physical START and PAUSE selector have native responses: freshStart forward with pauseFalse; blockedStart atEXIT withoutCLEAR; CLEARTrue alone does not run; freshStart returns; returnCLEARloss/restoration holds/resumes. Q05 now directly closed by bag-forward-pause-review.md.|
+|lab-5-10-coating-line|SCOPED_PASS|CONTROL_RESPONSES_PROVED_PHASE_CASE_SEPARATE|Q04|Physical START plus SPRAY READY and VENT READY each have explicit accepted/native response: missing-readiness start gates, freshqualifiedStart, individual ready losses/restores during spray. Q04 actual indexStop/Run-alone also closed. Undefined activeSTART/fault inputs add no control gap.|
 |lab-6-07-luggage-weight-sort|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||LOAD, SCALE READY and masscycle12/22/32 all reviewed. No diverter-ready action or boundarymass selection exists; arbitrary massforce is invented.|
 |lab-6-08-hand-dryer|SCOPED_PASS|BOUNDED_CONTROL_EVIDENCE_SUFFICIENT||Only insert/withdraw hands declared; actual timeout/rearm/cancel reviewed. No independent heater-inhibit knob exists.|
 |lab-9-03-sum-and-counter-function|PARTIAL|EXECUTE_NAMED_CASE|Q24|Bothphysicaloperandselectorsmapped;2/5/reset0reviewed, finite1/10/wrappositions lacksettledproof. No hiddenvalues or25paircrossproduct.|
@@ -262,7 +248,7 @@ Historical P is preserved in matrix JSON. Current normalized scopes are explicit
 
 ## Auditability
 
-[Machine-readable queue/adjudication/all616 cell references](native-test-queue.json). [Original reconciliation](coverage-reconciliation.md). Old21October reports are linked by name in the JSON evidence arrays; original images remain authoritative. The current12 READY cases are finite; Q01/Q06 are closed and Q23 has a recorded repeat failure; completion of this queue must still reconcile recorded outcomes and actual failures before a final remediation plan. No blanket whole-scene acceptance is asserted.
+[Machine-readable queue/adjudication/all616 cell references](native-test-queue.json). [Original reconciliation](coverage-reconciliation.md). Old21October reports are linked by name in the JSON evidence arrays; original images remain authoritative. The current3 READY cases are finite; Q01/Q06 are closed and Q23 has a recorded repeat failure; completion of this queue must still reconcile recorded outcomes and actual failures before a final remediation plan. No blanket whole-scene acceptance is asserted.
 
 ## Action-route correction after deeper source check
 
@@ -293,4 +279,19 @@ Current Q23 is STOP_RECOVERY_CLOSED_RESET_REPEAT_FAIL. First normal success and 
 
 Q23 current split: native Stop/recovery CLOSED; Reset/repeat FAIL recorded. Earlier no-Stop probe remains historical QA evidence only.
 
-Current closures: Q01/Q04/Q06/Q07/Q20/Q22. Q23 Stop/recovery is closed with Reset/repeat FAIL separate.12 cases remain READY; no required capture of a20ms pulsepeak and no allzeroReset rule.
+Current closures: Q01/Q02/Q03/Q04/Q05/Q06/Q07/Q20/Q22/Q24. Q23 Stop/recovery is closed with Reset/repeat FAIL separate.3 cases remain READY; no required capture of a20ms pulsepeak and no allzeroReset rule.
+
+
+Current reconciliation: Q05 and Q24 are scoped CLOSED by [bag review](bag-forward-pause-review.md) and [operand cycle review](sum-counter-preset-cycle-review.md). Controls66 scoped-pass/11 partial; 25 non-scoped-pass cells remain (not all are executable new tests). Ready queue: Q08, Q09, Q10, Q11, Q12, Q18, Q19, Q21. Previous pending statements for these two cases are superseded. No application/source/UI change.
+
+
+Q19 CURRENT scoped closure: [native chain-lift review](chain-lift-upstroke-stop-review.md) proves loaded upstroke Stop/held15615, Run-alone inactivity, freshStart to supported receiver and actualhome/complete19520+. No sampled lowerTrue or extra downstroke gate. Current ready cases: Q08, Q09, Q10, Q11, Q12, Q18, Q21.
+
+
+Current Q21 [independent closure](pedestrian-active-walk-review.md): acknowledged active WALK CROSS; bounded8s idle/no replay; fresh CROSS works. Ready: Q08, Q09, Q10, Q11, Q12, Q18. This supersedes earlier Q21-pending statements.
+
+
+CURRENT: Q09/Q10 independently scoped CLOSED. Ready Q08, Q11, Q12, Q18. **QA-UI-003 S2 confirmed**: Demo3 Engineering→FrameProcess repeatedly hides process behind flatwall-like view; WholeScene shows exteriorroof; Immersive restores process. [Seven-original independent review](demo3-frame-process-visibility-review.md). Navigation cell FAIL is limited to this viewport workflow; load and controller acceptance are not failed. Camera/wall source hypothesis remains unconfirmed. Current incomplete cells 20; no whole-scene PASS.
+
+
+CURRENT Q11 CLOSED: [independent review](demo3-enable-route-review.md). 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement. Ready: Q08, Q12, Q18. QA-UI-003 Engineering framing failure remains OPEN independently. Current incomplete cells 16.

@@ -1,0 +1,12 @@
+{
+  "source": "demo4-r1-engineering-home.png",
+  "source_sha256": "e7996b0faba22efc757d5704691da49c4bdefb45c182a1ac740e5de3b76ebf8e",
+  "crop": "demo4-r1-controls-crop.png",
+  "native_box": [
+    548,
+    332,
+    685,
+    400
+  ],
+  "scale": 7
+}

@@ -1,0 +1,11 @@
+{
+  "status": "OFFLINE_CABLE_PREDICATE_COUNTEREXAMPLES_AND_CUTOFF_PASS",
+  "stop_attempted": false,
+  "screen_only": true,
+  "native_session": false,
+  "physical_pose_acceptance": false,
+  "required_precondition": "Root has started feed and left actual App Playback menu open",
+  "no_bridge_endpoints": true,
+  "elapsed_seconds": 0.004,
+  "files": []
+}

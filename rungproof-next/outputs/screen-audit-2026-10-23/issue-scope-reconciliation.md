@@ -22,7 +22,7 @@ Application, old evidence, Git and D backup are unchanged. This is discovery rec
 
 ## Current execution scope
 
-[Native queue](native-test-queue.md):12 READY cases, six scoped closures and Q23 Stop/recovery CLOSED with Reset/repeat FAIL. Its JSON is the exact current case list, not a generic request to rerun every PARTIAL cell. Priorities remain grouping release, knife stroke, bag forward PAUSE transition (continued motion expected), while Demo2 AppStop is now closed. Lab9.3 finite operand1/10/wrap cases use actual A NEXT/B NEXT controls; no arbitrary values or25-pair expansion.
+[Native queue](native-test-queue.md):3 READY cases, eight scoped closures and Q23 Stop/recovery CLOSED with Reset/repeat FAIL. Its JSON is the exact current case list, not a generic request to rerun every PARTIAL cell. Grouping release is now closed; remaining cases include knife stroke, bag forward PAUSE transition (continued motion expected), while Demo2 AppStop is now closed. Lab9.3 finite operand1/10/wrap cases use actual A NEXT/B NEXT controls; no arbitrary values or25-pair expansion.
 
 The19 original bounded-control scenes plus the newly closed drawbridge are now normalized to SCOPED_PASS controls with native citations. Historical P remains in JSON supersedes. No source-only or untested action was converted to a behavioral pass.
 
@@ -33,3 +33,22 @@ The19 original bounded-control scenes plus the newly closed drawbridge are now n
 Additional scoped closures: Q07 retained-REQUEST freshTON after AppStop; Q20 acknowledged activeTP trigger/nonextension/freshretrigger; Q22 activeinhibit→ResetSTOPPED0 declared outputTrue→Runbaseline. References are in the current matrix and hard index; exact20ms peak and allzeroReset are not requirements.
 
 Q04 coatinginitialindexStop/Run-alone→supportedexit2.23/alloff is now closed by10-originalreview. Its initial ventFalse predicate and actualmovingcube are observed; no pendingindexStopcase remains.
+
+Q02 qualified raised-release Stop8670/settledhold and Run-alone→supportedcomplete9501 is now closed. Earlier phase-invalid manualattempts/transitionalhelperframe are excluded, not appfaults.
+
+Q03 actualoutboundknifeStop/held.675, Run-aloneinhibited andfreshSTART→home/complete isclosed. Legacy START-mode/source debts are described in [focusedanalysis](legacy-start-path-analysis.md); no blanketarchitecturefailure or repeatedfalseSIMreadout rediscoveryisneeded.
+
+
+Current reconciliation: Q05 and Q24 are scoped CLOSED by [bag review](bag-forward-pause-review.md) and [operand cycle review](sum-counter-preset-cycle-review.md). Controls66 scoped-pass/11 partial; 25 non-scoped-pass cells remain (not all are executable new tests). Ready queue: Q08, Q09, Q10, Q11, Q12, Q18, Q19, Q21. Previous pending statements for these two cases are superseded. No application/source/UI change.
+
+
+Q19 CURRENT scoped closure: [native chain-lift review](chain-lift-upstroke-stop-review.md) proves loaded upstroke Stop/held15615, Run-alone inactivity, freshStart to supported receiver and actualhome/complete19520+. No sampled lowerTrue or extra downstroke gate. Current ready cases: Q08, Q09, Q10, Q11, Q12, Q18, Q21.
+
+
+Current Q21 [independent closure](pedestrian-active-walk-review.md): acknowledged active WALK CROSS; bounded8s idle/no replay; fresh CROSS works. Ready: Q08, Q09, Q10, Q11, Q12, Q18. This supersedes earlier Q21-pending statements.
+
+
+CURRENT: Q09/Q10 independently scoped CLOSED. Ready Q08, Q11, Q12, Q18. **QA-UI-003 S2 confirmed**: Demo3 Engineering→FrameProcess repeatedly hides process behind flatwall-like view; WholeScene shows exteriorroof; Immersive restores process. [Seven-original independent review](demo3-frame-process-visibility-review.md). Navigation cell FAIL is limited to this viewport workflow; load and controller acceptance are not failed. Camera/wall source hypothesis remains unconfirmed. Current incomplete cells 20; no whole-scene PASS.
+
+
+CURRENT Q11 CLOSED: [independent review](demo3-enable-route-review.md). 44-original review: actual moving ENABLEloss holds carton/darkpilot, HealthFalse/True confirms restoration alone idle; freshStart resumes. Physical420 main/DONE1;820 pusherextended→supportedside/DONE2 retained afterretract;600 main/DONE3. Controller intentionally cycles22+, no autostop requirement. Ready: Q08, Q12, Q18. QA-UI-003 Engineering framing failure remains OPEN independently. Current incomplete cells 16.

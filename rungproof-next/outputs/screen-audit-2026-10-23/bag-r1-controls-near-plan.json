@@ -1,0 +1,48 @@
+[
+  {
+    "input": {
+      "phase": "down",
+      "x": 610,
+      "button": "middle",
+      "y": 374
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "phase": "move",
+      "x": 580,
+      "y": 374
+    },
+    "wait": 0.1
+  },
+  {
+    "input": {
+      "phase": "up",
+      "x": 580,
+      "button": "middle",
+      "y": 374
+    },
+    "wait": 0.4
+  },
+  {
+    "input": {
+      "phase": "wheel",
+      "x": 510,
+      "y": 340,
+      "delta": 120
+    },
+    "wait": 0.3
+  },
+  {
+    "capture": "bag-r1-controls-near",
+    "wait": 0.5,
+    "input": {
+      "phase": "wheel",
+      "x": 510,
+      "y": 340,
+      "delta": 120
+    },
+    "ocr": true
+  }
+]

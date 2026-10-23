@@ -1,0 +1,62 @@
+[
+  {
+    "wait": 0.3,
+    "input": {
+      "x": 441,
+      "y": 448
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "x": 466,
+      "y": 463
+    }
+  },
+  {
+    "capture": "grouping-r3-load1",
+    "wait": 0.4,
+    "ocr": true,
+    "input": {
+      "x": 493,
+      "y": 480
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "grouping-r3-first-staged",
+    "ocr": true,
+    "wait": 4
+  },
+  {
+    "capture": "grouping-r3-load2",
+    "wait": 0.4,
+    "ocr": true,
+    "input": {
+      "x": 493,
+      "y": 480
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "capture": "grouping-r3-second-staged",
+    "ocr": true,
+    "wait": 2
+  }
+]

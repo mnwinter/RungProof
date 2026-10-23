@@ -1,0 +1,136 @@
+{
+  "status": "EXACT_LABEL_CLICK_SENT_SELECTED_OR_MODAL_REVIEW_PENDING",
+  "label": "Lab 4.8 - Package Grouping Station",
+  "selection_sent": true,
+  "screen_only": true,
+  "native_session": true,
+  "scene_loaded_proven": false,
+  "required_precondition": "Scenario menu closed at invocation",
+  "observations": 3,
+  "last_matches": [
+    {
+      "text": "Lab 48. . Package Grouping Station",
+      "words": [
+        {
+          "text": "Lab",
+          "x": 16,
+          "y": 1200,
+          "w": 40,
+          "h": 22
+        },
+        {
+          "text": "48.",
+          "x": 63,
+          "y": 1202,
+          "w": 48,
+          "h": 20
+        },
+        {
+          "text": ".",
+          "x": 79,
+          "y": 1217,
+          "w": 4,
+          "h": 4
+        },
+        {
+          "text": "Package",
+          "x": 119,
+          "y": 1200,
+          "w": 95,
+          "h": 28
+        },
+        {
+          "text": "Grouping",
+          "x": 219,
+          "y": 1201,
+          "w": 108,
+          "h": 27
+        },
+        {
+          "text": "Station",
+          "x": 334,
+          "y": 1201,
+          "w": 81,
+          "h": 21
+        }
+      ],
+      "crop_word_union": [
+        16,
+        1200,
+        415,
+        1228
+      ],
+      "native_click": [
+        360,
+        607
+      ],
+      "native_popup": [
+        252,
+        0,
+        508,
+        660
+      ],
+      "scale": 2
+    }
+  ],
+  "match_image": "menu-observe-02.png",
+  "owned_ocr_worker_returncode": 0,
+  "elapsed_seconds": 1.789,
+  "files": [
+    {
+      "file": "before-menu-input.png",
+      "bytes": 267512,
+      "sha256": "bca785480a03ca4abd89a712d06b358f6ed53b996a8c6617ae88dab2563c280c"
+    },
+    {
+      "file": "menu-observe-00.png",
+      "bytes": 321092,
+      "sha256": "407c024eee1853bc10a7c969387f8dab08ce131aed0b7ce7725b7ab7ce6b6159"
+    },
+    {
+      "file": "menu-observe-00-scenario-popup2x.png",
+      "bytes": 300505,
+      "sha256": "457f109e288ec97dfb21631389f3d96badafa5229051ba3fe2ddca6fc9972cd3"
+    },
+    {
+      "file": "menu-observe-00-scenario-popup2x.ocr.json",
+      "bytes": 11347,
+      "sha256": "4a754e9400f769f91a88d41c6f835ec26f329e00265803712ba9d87966245045"
+    },
+    {
+      "file": "menu-observe-01.png",
+      "bytes": 310032,
+      "sha256": "9c2be40ba7a3a6d40fe9599ee9b47f58bfe4bb50d5ad1b34d05010ab076c2e39"
+    },
+    {
+      "file": "menu-observe-01-scenario-popup2x.png",
+      "bytes": 270085,
+      "sha256": "0e1572c52d016e5dcf76393c34f6a169968f0c12f0d4961b52a0c0eaf2f690c8"
+    },
+    {
+      "file": "menu-observe-01-scenario-popup2x.ocr.json",
+      "bytes": 9958,
+      "sha256": "a9cdd0d2b9b383bcd88a3eca70a317c90b42feb9225434dbda4ab5780956205c"
+    },
+    {
+      "file": "menu-observe-02.png",
+      "bytes": 325054,
+      "sha256": "96bb79a2758f1bbef17ccbe1d775025b1f0449e121b4d19fbc489102081549c8"
+    },
+    {
+      "file": "menu-observe-02-scenario-popup2x.png",
+      "bytes": 309548,
+      "sha256": "add7cd04f5ff6e46d796210ea0de8d4ce3b8b9c85f202fe38bd4e8c9b33dbf32"
+    },
+    {
+      "file": "menu-observe-02-scenario-popup2x.ocr.json",
+      "bytes": 11477,
+      "sha256": "467ffc4681854959fc180828f78eaa14b9c6f25dbafda86f7b544a3aadc24a55"
+    },
+    {
+      "file": "after-selection-or-modal.png",
+      "bytes": 316937,
+      "sha256": "661c75b7fb960b3fd6b4785828fdc051d419752cbf53428d67f26af3927d000d"
+    }
+  ]
+}

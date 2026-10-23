@@ -137,9 +137,26 @@ automated diagnostic coverage omits the outer status. Current
 `reset-transform-impact-analysis.md` found no equally direct duplicate of the
 parcel transform/geometry ordering seam in the other inspected plant adapters.
 
-The verified D:/Git base at d0c4566b does not yet cover subsequent October23
-evidence/userdata/skill changes. The final closeout must create a separate
-verified incremental addendum and pause the goal/automation at the cutoff.
+The verified D:/Git base at d0c4566b has a later verified interim at824f9b56,
+with its own D receipt and latest-checkpoint pointer. Newer October23 work is
+still accumulating. Read the current native checkpoint for scoped closures,
+including chain-lift upstroke, pedestrian active retrigger and authored Demo4
+retention/full repeat. Do not repeat them based on older queue prose.
+
+Current later reviews also close authored Demo5 moving ENABLE loss/recovery and
+Demo3 ENABLE loss plus actual420-main/820-side placement. Demo3 is one recycled
+mesh with continuous cycles; side transfer is not far-end takeaway completion.
+QA-UI-003 remains a confirmed Demo3 Engineering Frame Process visibility issue;
+Immersive is a demonstrated workaround. Keep this distinct from controller
+acceptance. Read `demo3-frame-process-visibility-review.md` and its seven hashes.
+
+All84 historical archive parts have been independently tested/extracted into
+an exact stored-path hash proof, now preserved on D under
+`incremental-2026-10-23/archive-proof-20261023/`. This enables a byte-based final
+raw-evidence delta; it does not itself upload that delta. The reviewed helper
+and instructions are `tools/migration-backup-2026-10-22/incremental-closeout/`.
+The final closeout must refresh native userdata, private root/descendant task
+context, skill, Git and D with new receipts, then pause the goal/automation.
 
 Before devising the final prioritized all-scene remediation plan, reconcile
 the full remaining requirements and issue list. No full-application PASS,

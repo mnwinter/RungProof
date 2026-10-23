@@ -1,0 +1,16 @@
+[
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 4,
+    "ocr": true,
+    "capture": "grouping-r2b-first-staged"
+  }
+]

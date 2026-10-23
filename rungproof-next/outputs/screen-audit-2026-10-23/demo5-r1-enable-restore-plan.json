@@ -1,0 +1,38 @@
+[
+  {
+    "wait": 0.3,
+    "capture": "demo5-r1-disable-permissive-false",
+    "input": {
+      "y": 399,
+      "x": 891,
+      "delta": -600,
+      "phase": "wheel"
+    },
+    "ocr": true
+  },
+  {
+    "wait": 0.5,
+    "capture": "demo5-r1-enable-restored-no-start",
+    "input": {
+      "x": 543,
+      "y": 395
+    },
+    "ocr": true
+  },
+  {
+    "wait": 1,
+    "capture": "demo5-r1-enable-restored-held-idle",
+    "ocr": true
+  },
+  {
+    "wait": 0.3,
+    "capture": "demo5-r1-enable-restored-axis-hold",
+    "input": {
+      "y": 300,
+      "x": 891,
+      "delta": 1200,
+      "phase": "wheel"
+    },
+    "ocr": true
+  }
+]

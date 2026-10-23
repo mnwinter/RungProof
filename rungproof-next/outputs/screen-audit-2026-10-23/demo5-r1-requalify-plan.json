@@ -1,0 +1,20 @@
+[
+  {
+    "input": {
+      "y": 395,
+      "x": 543
+    },
+    "ocr": true,
+    "wait": 0.4,
+    "capture": "demo5-r1-enable-after-reset"
+  },
+  {
+    "input": {
+      "y": 373,
+      "x": 617
+    },
+    "ocr": true,
+    "wait": 0.4,
+    "capture": "demo5-r1-pallet-after-reset"
+  }
+]

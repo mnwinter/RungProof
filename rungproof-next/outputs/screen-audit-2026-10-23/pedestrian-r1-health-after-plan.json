@@ -1,0 +1,11 @@
+[
+  {
+    "ocr": true,
+    "capture": "pedestrian-r1-health-two-cross",
+    "wait": 0.5,
+    "input": {
+      "x": 738,
+      "y": 89
+    }
+  }
+]

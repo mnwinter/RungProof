@@ -1,0 +1,49 @@
+[
+  {
+    "wait": 0.1,
+    "input": {
+      "button": "middle",
+      "y": 374,
+      "phase": "down",
+      "x": 610
+    }
+  },
+  {
+    "wait": 0.1,
+    "input": {
+      "button": "middle",
+      "y": 374,
+      "phase": "move",
+      "x": 540
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "button": "middle",
+      "y": 374,
+      "phase": "up",
+      "x": 540
+    }
+  },
+  {
+    "wait": 0.4,
+    "input": {
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel",
+      "x": 510
+    }
+  },
+  {
+    "ocr": true,
+    "capture": "grouping-r2-controls-view",
+    "wait": 0.6,
+    "input": {
+      "delta": 120,
+      "y": 340,
+      "phase": "wheel",
+      "x": 510
+    }
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "input": {
+      "y": 480,
+      "x": 493
+    },
+    "wait": 0.3,
+    "capture": "grouping-r2b-load3"
+  },
+  {
+    "wait": 0.2,
+    "input": {
+      "y": 34,
+      "x": 134
+    }
+  },
+  {
+    "wait": 0.5,
+    "input": {
+      "y": 174,
+      "x": 185
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "x": 510,
+      "y": 340
+    }
+  },
+  {
+    "wait": 0.3,
+    "input": {
+      "phase": "wheel",
+      "delta": 120,
+      "x": 510,
+      "y": 340
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "ocr": true,
+    "wait": 3,
+    "capture": "grouping-r2b-release-candidate"
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "input": {
+      "y": 395,
+      "x": 543
+    },
+    "ocr": true,
+    "wait": 0.4,
+    "capture": "demo5-r1-enable-on"
+  },
+  {
+    "input": {
+      "y": 373,
+      "x": 617
+    },
+    "ocr": true,
+    "wait": 0.4,
+    "capture": "demo5-r1-pallet-valid"
+  },
+  {
+    "input": {
+      "y": 365,
+      "x": 543
+    },
+    "ocr": true,
+    "wait": 0.5,
+    "capture": "demo5-r1-machine-reset"
+  }
+]

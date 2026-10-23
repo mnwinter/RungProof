@@ -1,0 +1,142 @@
+"""Q21 parser draft only; no Bridge, input, or live entry point.
+
+Native signal ROI and CROSS coordinate remain unqualified until root supplies
+current saved images. Physical lamp and Health history acceptance stay with root.
+No live use permitted from this parser-only draft.
+"""
+import parcel_handoff_probe as base
+
+EXPECTED = {
+    'clear_to_finish': True,
+    'pedestrian_walk': True,
+    'pedestrian_stop': False,
+    'vehicle_ready': False,
+    'vehicle_amber': False,
+    'vehicle_stop': True,
+}
+KEYS = tuple(EXPECTED) + ('crossing_request', 'sequence_running')
+NATIVE_LAYOUT_QUALIFIED = False
+IDLE = {'clear_to_finish': True, 'pedestrian_walk': False,
+        'pedestrian_stop': True, 'vehicle_ready': True,
+        'vehicle_amber': False, 'vehicle_stop': False}
+ACCEPTED_SCAN_MS = 20  # Frozen current fixture, line 7; not measured wall time.
+REQUIRED_IDLE_SCANS = 400
+MAX_GAP_EXCLUSIVE = 40
+
+
+def parse_exact_bool_rows(ocr, row_tolerance):
+    """Join only same-height words, then accept exact field name and BOOL suffix.
+
+    Tolerance must be grounded for the actual static crop scale. Unknown,
+    conflicting, or missing fields remain None. No semantic/OCR aliases.
+    """
+    rows = []
+    words = [word for line in ocr.get('lines', []) for word in line.get('words', [])]
+    for word in sorted(words, key=lambda w: (w['y'] + w['h']/2, w['x'])):
+        center = word['y'] + word['h']/2
+        row = next((r for r in rows if abs(r['anchor_y'] - center) <= row_tolerance), None)
+        if row is None:
+            row = {'anchor_y': center, 'words': []}
+            rows.append(row)
+        row['words'].append(word)
+    found = {key: [] for key in KEYS}
+    for row in rows:
+        raw = ' '.join(word['text'] for word in sorted(row['words'], key=lambda w: w['x']))
+        text = base.canon(raw)
+        for key in KEYS:
+            name = base.canon(key)
+            if text.startswith(name):
+                value = {'true': True, 'false': False}.get(text[len(name):])
+                if value is not None:
+                    found[key].append({'raw': raw, 'value': value, 'row_y': row['anchor_y']})
+    values = {key: next(iter(s)) if len(s) == 1 else None
+              for key, items in found.items() for s in [{item['value'] for item in items}]}
+    return {'values': values, 'row_witnesses': found,
+            'public_walk_predicate': all(values[key] is value for key, value in EXPECTED.items())}
+
+
+def require_native_qualification():
+    if not NATIVE_LAYOUT_QUALIFIED:
+        raise base.ProbeError('CURRENT_NATIVE_LAYOUT_AND_CONTROL_QUALIFICATION_PENDING_NO_INPUT')
+
+
+class IdleCoverage:
+    """Passive observation bookkeeping only; never requests state or UI input.
+
+    Input records must come from actual full native images in the future live
+    helper. Synthetic records exercise bookkeeping only. Once coverage is broken
+    it is not silently restarted, and any readable non-idle field is surfaced.
+    """
+    def __init__(self):
+        self.first_idle_scan = None
+        self.last_scan = None
+        self.last_complete_scan = None
+        self.last_complete_wall = None
+        self.max_scan_gap = 0
+        self.max_wall_gap = 0
+        self.complete_samples = 0
+        self.parse_misses = []
+        self.uncovered_observations = []
+        self.active_after_idle = []
+        self.invalid_reasons = []
+
+    def add(self, observation):
+        values = observation['values']
+        scan = observation.get('scan')
+        scan_valid = type(scan) is int and scan >= 0
+        running = observation.get('runtime_running') is True
+        complete = all(type(values.get(key)) is bool for key in IDLE)
+        idle = complete and all(values[key] is expected for key, expected in IDLE.items()) and values.get('sequence_running') is not True
+        if self.first_idle_scan is None:
+            if not (scan_valid and running and idle):
+                return self.snapshot()
+            self.first_idle_scan = scan
+        else:
+            wrong = {key: values.get(key) for key, expected in IDLE.items()
+                     if type(values.get(key)) is bool and values[key] is not expected}
+            # A true sequence_running is another active-output witness even if
+            # some other required row is unreadable. It is not required to start.
+            if values.get('sequence_running') is True:
+                wrong['sequence_running'] = True
+            if wrong:
+                self.active_after_idle.append({'image': observation['image'], 'scan': scan, 'fields': wrong})
+        if not running:
+            self.invalid_reasons.append('RUNTIME_NOT_RUNNING_AFTER_FIRST_IDLE')
+        if scan_valid and self.last_scan is not None and scan < self.last_scan:
+            self.invalid_reasons.append('NON_MONOTONIC_SCAN_AFTER_FIRST_IDLE')
+        if scan_valid:
+            self.last_scan = scan
+        if not (scan_valid and running and idle):
+            miss = {'image': observation['image'], 'scan': scan,
+                    'complete_fields': complete, 'runtime_running': running}
+            self.uncovered_observations.append(miss)
+            if not complete or not scan_valid:
+                self.parse_misses.append(miss)
+            if scan_valid and self.last_complete_scan is not None and scan-self.last_complete_scan >= MAX_GAP_EXCLUSIVE:
+                self.invalid_reasons.append('IDLE_SAMPLE_SCAN_GAP_TOO_LARGE')
+            return self.snapshot()
+        if self.last_complete_scan is not None:
+            gap = scan-self.last_complete_scan
+            self.max_scan_gap = max(self.max_scan_gap, gap)
+            self.max_wall_gap = max(self.max_wall_gap, observation['wall_seconds']-self.last_complete_wall)
+            if gap >= MAX_GAP_EXCLUSIVE:
+                self.invalid_reasons.append('IDLE_SAMPLE_SCAN_GAP_TOO_LARGE')
+        self.last_complete_scan = scan
+        self.last_complete_wall = observation['wall_seconds']
+        self.complete_samples += 1
+        return self.snapshot()
+
+    def snapshot(self):
+        span = (self.last_complete_scan-self.first_idle_scan
+                if self.first_idle_scan is not None and self.last_complete_scan is not None else 0)
+        return {'first_idle_scan': self.first_idle_scan, 'last_complete_idle_scan': self.last_complete_scan,
+                'accepted_idle_span_scans': span, 'accepted_idle_span_seconds': span*ACCEPTED_SCAN_MS/1000,
+                'maximum_complete_sample_gap_scans': self.max_scan_gap,
+                'maximum_complete_sample_gap_wall_seconds': self.max_wall_gap,
+                'complete_idle_samples': self.complete_samples,
+                'parse_misses': self.parse_misses, 'uncovered_observations': self.uncovered_observations,
+                'active_after_idle': self.active_after_idle,
+                'partial_reasons': sorted(set(self.invalid_reasons)),
+                'bounded_no_replay_coverage_observed': span >= REQUIRED_IDLE_SCANS
+                    and not self.invalid_reasons and not self.active_after_idle,
+                'physical_lamp_acceptance': False, 'fresh_action_acknowledgement_proven': False}
