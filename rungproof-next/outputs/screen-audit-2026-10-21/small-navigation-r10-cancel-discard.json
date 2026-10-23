@@ -1,0 +1,1 @@
+[{"input":{"x":530,"y":380},"wait":1.5,"capture":"small-navigation-r10-cancel-preserves-count45"},{"input":{"x":110,"y":533},"wait":0.8,"capture":"small-navigation-r10-reprompt"},{"input":{"x":433,"y":380},"wait":2},{"wait":1,"capture":"small-navigation-r10-browser-demo1-settled"}]

@@ -1,0 +1,15 @@
+# Post-backup small-client CNC recovery review
+
+New untracked evidence only, no source/tracked-report/Git changes. Actual client1021×660; parent exclusively drives grounded native input via the QA-only guarded bridge. Original1600px helper coordinates are not treated as valid here.
+
+Actual `postbackup-small-cnc-review-compact.jpg` shows infeed blank changes position from moving to stopped; stopped and held match the blank/robot pose. Native stop Signals explicitly reads stock_actual_x-3.10001, cycleFalse/machiningFalse, infeed/outfeed/CNC/robot/gripFalse. This demonstrates active infeed interruption/freeze rather than an already-completed hold.
+
+Native resume progresses through robot/material movement. The screenshot named `small-cnc-r3-resumed-final.png` at scan5761 is still in process: machining_completeTrue, cycle_completeFalse, part_at_exitFalse, robot_runTrue, robot_at_targetTrue, gripFalse, blank at outfeed start. Thus machining/unload/park progress is visible, but that timed filename must not be credited as final completion. No stall or application defect inferred from a single pending-state snapshot. Final endpoint/Reset/repeat remain pending parent terminal/current native evidence.
+
+## Later actual endpoint resolves pending timed frame
+Actual `small-cnc-r3-completion-1.png` at scan11167 now visibly reads cycle_completeTrue/machining_completeTrue/part_at_exitTrue and infeed/outfeed/CNC/robot/gripFalse. Yellow part is retained at the downstream end; robot is parked, at_targetTrue and clear_of_enclosureTrue. Parent's same-row visible-condition job terminal0 matches that image. Thus active infeed Stop→Run recovery does complete; the earlier timed-final observation remains accurately labeled in-progress. Reset/fresh repeat/active cutting guard sample pending next evidence.
+
+## Active cut and fresh-repeat evidence
+Actual `small-cnc-r4-cut-5.png` visibly reads cnc_runTrue, accessClosedTrue, clampClosedTrue, cutPermittedTrue, readyTrue, robotClearOfEnclosureTrue, gripFalse and both conveyorsFalse. Machine enclosure is visibly closed and robot remains clear/parked; this now provides an actual active-cut qualification checkpoint, rather than a phase filename. Robot servo command remainsTrue at its reached parked target in that frame, so no robot-command-off claim is made during cutting. This is modeled process proof, not a hardware safety validation or evidence of material removal quality.
+
+Later actual `small-cnc-r4-repeat-completion-1.png` shows cycleTrue/machiningTrue/partAtExitTrue and all monitored motion/grip commandsOff with the part retained downstream. Parent confirms Reset/fresh-repeat setup and native same-row condition terminal0. Together with the earlier active Stop/Run recovery, the repaired2.24 request/plant subcases are resolved for these observed normal, active-infeed interruption/recovery and Reset/fresh-repeat routes in B5. Deliberate unsafe-command injection, interruption during gripping/cutting and exact timing remain untested boundaries. Only this new untracked report was amended.

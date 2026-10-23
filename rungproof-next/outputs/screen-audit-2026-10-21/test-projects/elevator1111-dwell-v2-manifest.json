@@ -1,0 +1,15 @@
+{
+  "file": "fixture-lab-11-11-service-elevator-v2.rpproj.json",
+  "sourceSceneId": "lab-11-11-service-elevator",
+  "sha256": "cd0f239fbca69db98e80017dc239448323d6dd6a231285c4cb78e125291bf585",
+  "preserved_original": "fixture-lab-11-11-service-elevator.rpproj.json",
+  "preserved_original_sha256": "30aaacef217b3c25205859ca92d8617fc1357d0c6f780425c91adb6e7f67b507",
+  "change": "Add TON1000ms enabled by actual at_upper_landing AND original three permissives; latch dwell-complete; original down rung adds dwell-complete contact. Existing upper-seen seal, up rung, original down permissives/low limit, Reset semantics preserved.",
+  "boundary": "QA observation dwell, not specification-required timing. Upper feedback remains actualPC; no timer-generated endpoint. If permissives fail before dwell finishes, TON restarts on restore. Once dwell complete, existing down permissive loss/restore behavior remains unchanged. Reset clears learner latch/timer.",
+  "validation": {
+    "mode": "B5 actual project load/compiler/current SceneIO only; no runtime behavior",
+    "passed": true,
+    "issueCount": 0,
+    "exitCode": 0
+  }
+}

@@ -1,0 +1,1 @@
+[{"name":"postbackup-jug-r2-stop-signals","expected":{"conveyor_run":false,"fill_valve_open":false,"fill_skid_run":false,"cycle_complete":false},"keep_monitor":true}]

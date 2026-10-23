@@ -2368,3 +2368,24 @@
 {"utc_ns": 1792705624086753100, "plan": "fix-plant216-r2-monitor.json", "input": {"x": 422, "y": 39}, "delivery": "Input delivered; verify visible result"}
 {"utc_ns": 1792705624440199000, "plan": "fix-plant216-r2-monitor.json", "input": {"x": 485, "y": 125}, "delivery": "Input delivered; verify visible result"}
 {"utc_ns": 1792705624770012300, "plan": "fix-plant216-r2-monitor.json", "input": {"x": 1418, "y": 101}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792706913736421700, "plan": "postbackup-jug-r1-monitor.json", "input": {"x": 422, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792706914091022900, "plan": "postbackup-jug-r1-monitor.json", "input": {"x": 485, "y": 125}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792706914436599300, "plan": "postbackup-jug-r1-monitor.json", "input": {"x": 1418, "y": 101}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792706942270528300, "plan": "postbackup-jug-r2-monitor.json", "input": {"x": 422, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792706942616511000, "plan": "postbackup-jug-r2-monitor.json", "input": {"x": 485, "y": 125}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792706942946069300, "plan": "postbackup-jug-r2-monitor.json", "input": {"x": 1418, "y": 101}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707595420502200, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707595913705200, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 496, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707596242294500, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 525, "y": 125}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707596989550600, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 422, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707597334355000, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 485, "y": 125}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707597681480300, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 1418, "y": 101}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707599286527500, "plan": "postbackup-jug-r3-monitor.json", "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707641470855100, "plan": "postbackup-jug-r4-monitor.json", "input": {"x": 422, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707641815058400, "plan": "postbackup-jug-r4-monitor.json", "input": {"x": 485, "y": 125}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707642145136100, "plan": "postbackup-jug-r4-monitor.json", "input": {"x": 1418, "y": 101}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707643753338400, "plan": "postbackup-jug-r4-monitor.json", "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792708073503328000, "plan": "postbackup-cnc-r1-monitor.json", "input": {"x": 422, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792708073833357600, "plan": "postbackup-cnc-r1-monitor.json", "input": {"x": 485, "y": 125}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792708074179035100, "plan": "postbackup-cnc-r1-monitor.json", "input": {"x": 1418, "y": 101}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792708098472497200, "plan": "postbackup-cnc-r1-confirm.json", "input": {"x": 1500, "y": 650, "phase": "wheel", "delta": -480}, "delivery": "Input delivered; verify visible result"}

@@ -1,0 +1,1 @@
+[{"wait":2,"capture":"small-elevator-r3-settled-held-signals"},{"input":{"x":282,"y":25},"wait":0.4},{"input":{"x":325,"y":99},"wait":0.5},{"input":{"x":541,"y":468},"wait":5,"capture":"small-elevator-r4-restored-lower"},{"input":{"x":282,"y":25},"wait":0.4},{"input":{"x":325,"y":83},"wait":0.4},{"input":{"x":899,"y":68},"wait":0.1,"capture":"small-elevator-r4-lower-signals"}]

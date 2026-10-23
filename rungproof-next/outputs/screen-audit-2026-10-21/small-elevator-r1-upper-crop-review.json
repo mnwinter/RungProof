@@ -1,0 +1,10 @@
+{
+  "found": [
+    {
+      "original": "small-elevator-r1-upper-6.png",
+      "text": "\u2022 at_lower_landing False \u2022 at_upper_landing True \u2022 call_vdid True \u2022 99.9999 \u2022 direction_conflict False \u2022 doors_closed True \u2022 Imding_dear True \u2022 lift_down_cmd False \u2022 lift_up_cmd False",
+      "sha256": "9f9c580295b31fa99e61502efbbd97172ede1ea5623ef44c2982e9ca7f27a4b8"
+    }
+  ],
+  "original_frames": 35
+}

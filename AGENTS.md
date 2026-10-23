@@ -8,6 +8,11 @@ asset, or external-PLC work, load
 [`skills/rungproof-development/SKILL.md`](skills/rungproof-development/SKILL.md)
 and only the task-relevant references it routes to.
 
+For the October 2026 screen-playtest/migration continuation, also read
+[`skills/rungproof-playtest-handoff/SKILL.md`](skills/rungproof-playtest-handoff/SKILL.md).
+It identifies current native evidence, remaining failures and the verified
+backup/restoration records; old session handles are historical.
+
 ## Project rules
 
 - Read `CONTEXT.md`, `PROJECT_INFORMATION.md`, `README.md`, and the relevant

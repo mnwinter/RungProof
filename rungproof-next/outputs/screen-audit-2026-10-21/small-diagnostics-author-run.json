@@ -1,0 +1,1 @@
+[{"input":{"x":354,"y":185},"wait":0.5,"capture":"small-diagnostics-authored-contact"},{"input":{"x":335,"y":25},"wait":0.5},{"input":{"x":360,"y":53},"wait":1,"capture":"small-diagnostics-authored-run"},{"wait":4,"capture":"small-diagnostics-settled"}]

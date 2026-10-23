@@ -1,0 +1,1 @@
+[{"input":{"x":771,"y":407},"wait":5,"capture":"small-parcel-r1-first-transfer"},{"wait":10,"capture":"small-parcel-r1-first-route"},{"wait":15,"capture":"small-parcel-r1-second-route"},{"wait":20,"capture":"small-parcel-r1-third-route"}]

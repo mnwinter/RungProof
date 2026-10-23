@@ -1,0 +1,1 @@
+[{"input":{"x":500,"y":330,"phase":"wheel","delta":120},"wait":0.1},{"input":{"x":500,"y":330,"phase":"wheel","delta":120},"wait":0.1},{"input":{"x":500,"y":330,"phase":"wheel","delta":120},"wait":0.7,"capture":"small-gallery-r2-controls"}]

@@ -1,0 +1,1 @@
+[{"capture":"small-array-r3-current-signals"},{"input":{"x":282,"y":25},"wait":0.4},{"input":{"x":325,"y":99},"wait":0.5},{"input":{"x":500,"y":330,"phase":"wheel","delta":120},"wait":0.2},{"input":{"x":500,"y":330,"phase":"wheel","delta":120},"wait":0.5,"capture":"small-array-r3-end-candidate"},{"wait":5,"capture":"small-array-r3-end-held-candidate"}]

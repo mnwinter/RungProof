@@ -2594,3 +2594,34 @@
 {"utc_ns": 1792705621634588800, "plan": "fix-plant216-r2-trip.json", "step": {"wait": 1, "capture": "fix-plant216-r2-held"}, "capture_sha256": "b946d8d30861a4e633ed863817e11f0bb6d510a3c6e3f9ec6502fd332fd7f447"}
 {"utc_ns": 1792705661260511200, "plan": "remediation-b5-prebuild-stop.json", "step": {"click": [496, 39], "wait": 0.6}}
 {"utc_ns": 1792705662038501900, "plan": "remediation-b5-prebuild-stop.json", "step": {"click": [525, 102], "wait": 0.5, "capture": "remediation-b5-prebuild-stopped"}, "capture_sha256": "06b883921bf8ea29723874da4fd459b0a39d3ca7b77a78851d30750b8efd46c8"}
+{"utc_ns": 1792706886323282800, "plan": "postbackup-jug-r1-flow.json", "step": {"click": [422, 39], "wait": 0.6}}
+{"utc_ns": 1792706887104315200, "plan": "postbackup-jug-r1-flow.json", "step": {"click": [485, 148], "wait": 0.6}}
+{"utc_ns": 1792706887834814700, "plan": "postbackup-jug-r1-flow.json", "step": {"click": [1077, 547], "wait": 1, "capture": "postbackup-jug-r1-moving"}, "capture_sha256": "bf74d67f07f7944e8c9427ec3d7c5cf46d5f9df780fe31b45a40a937f53b157d"}
+{"utc_ns": 1792706889062064600, "plan": "postbackup-jug-r1-flow.json", "step": {"wait": 3, "capture": "postbackup-jug-r1-filling"}, "capture_sha256": "fea615559ac666e25935918ce4f705229ea650f16f3848307ea4ac747f483a50"}
+{"utc_ns": 1792706892163074900, "plan": "postbackup-jug-r1-flow.json", "step": {"wait": 3, "capture": "postbackup-jug-r1-discharge"}, "capture_sha256": "b9a1d18b322368a055f896b181a3aa1a27941db9959658d894b26103d06950a6"}
+{"utc_ns": 1792706895260774500, "plan": "postbackup-jug-r1-flow.json", "step": {"wait": 6, "capture": "postbackup-jug-r1-end"}, "capture_sha256": "6be927ab4f4d424314eeb11ddc1b5fbb36c2ea899e110e8dab10a2fe89c8ed89"}
+{"utc_ns": 1792706931634974600, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [496, 39], "wait": 0.6}}
+{"utc_ns": 1792706932404204300, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [525, 125], "wait": 0.5}}
+{"utc_ns": 1792706933033340800, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [496, 39], "wait": 0.6}}
+{"utc_ns": 1792706933763324200, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [525, 80], "wait": 0.4}}
+{"utc_ns": 1792706934293794800, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [1265, 39], "wait": 0.5}}
+{"utc_ns": 1792706934936327300, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [422, 39], "wait": 0.6}}
+{"utc_ns": 1792706935667142300, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [485, 148], "wait": 0.6}}
+{"utc_ns": 1792706936396839300, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [1077, 547], "wait": 3.5, "capture": "postbackup-jug-r2-active"}, "capture_sha256": "64e115287c0f46681950b7d11e51d3f558f839f2b5c0a0f72d86b54d194a4e1c"}
+{"utc_ns": 1792706940122034500, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [496, 39], "wait": 0.4}}
+{"utc_ns": 1792706940661724600, "plan": "postbackup-jug-r2-stop.json", "step": {"click": [525, 102], "wait": 0.3, "capture": "postbackup-jug-r2-stopped"}, "capture_sha256": "b67bd43868945d71dc22ce3b4b37ae18e700f3b6806014c929adcb2a52ea0486"}
+{"utc_ns": 1792706941183870600, "plan": "postbackup-jug-r2-stop.json", "step": {"wait": 2, "capture": "postbackup-jug-r2-held"}, "capture_sha256": "b38e35b5e0cc31cdae490b39b4d5f0a48d915511a092085533b51afd54bd95de"}
+{"utc_ns": 1792706957834319200, "plan": "postbackup-jug-r3-resume.json", "step": {"click": [496, 39], "wait": 0.6}}
+{"utc_ns": 1792706958621834000, "plan": "postbackup-jug-r3-resume.json", "step": {"click": [525, 80], "wait": 12, "capture": "postbackup-jug-r3-resumed-end"}, "capture_sha256": "3fac474e665bf1f3ba69cc067cc584a896836c0bcedb8fbc57880b828ba4efaa"}
+{"utc_ns": 1792707609457914500, "plan": "postbackup-jug-r4-repeat.json", "step": {"click": [496, 39], "wait": 0.6}}
+{"utc_ns": 1792707610220559500, "plan": "postbackup-jug-r4-repeat.json", "step": {"click": [525, 80], "wait": 0.4}}
+{"utc_ns": 1792707610761492600, "plan": "postbackup-jug-r4-repeat.json", "step": {"click": [1265, 39], "wait": 0.5}}
+{"utc_ns": 1792707611405984900, "plan": "postbackup-jug-r4-repeat.json", "step": {"click": [422, 39], "wait": 0.6}}
+{"utc_ns": 1792707612137216400, "plan": "postbackup-jug-r4-repeat.json", "step": {"click": [485, 148], "wait": 0.6}}
+{"utc_ns": 1792707612880264500, "plan": "postbackup-jug-r4-repeat.json", "step": {"click": [1077, 547], "wait": 13, "capture": "postbackup-jug-r4-repeat-end"}, "capture_sha256": "63adf519ee6433ccaddb3de9457aeb71f99ba3ff39f9897e58cce1a11b567bc6"}
+{"utc_ns": 1792708000873241200, "plan": "postbackup-cnc-r1-flow.json", "step": {"click": [422, 39], "wait": 0.6}}
+{"utc_ns": 1792708001638972100, "plan": "postbackup-cnc-r1-flow.json", "step": {"click": [485, 148], "wait": 0.6, "capture": "postbackup-cnc-r1-baseline"}, "capture_sha256": "9d587d1bf6d2baa11c642476e0b2a58807cfabbf340ba55734ba0306d79b2a1f"}
+{"utc_ns": 1792708002493722400, "plan": "postbackup-cnc-r1-flow.json", "step": {"click": [1257, 579], "wait": 13, "capture": "postbackup-cnc-r1-pickup"}, "capture_sha256": "3b8847f3140530f72762d8b45e8766645d37e73de57643f5725e401ddce23edc"}
+{"utc_ns": 1792708015741816600, "plan": "postbackup-cnc-r1-flow.json", "step": {"wait": 12, "capture": "postbackup-cnc-r1-cut"}, "capture_sha256": "3a946aa3c76e527883ced30e6454c8de31115f826ab31a8d2e00563b6d7f775a"}
+{"utc_ns": 1792708027843343600, "plan": "postbackup-cnc-r1-flow.json", "step": {"wait": 13, "capture": "postbackup-cnc-r1-place"}, "capture_sha256": "9e22ceac5fd44d92aa9e91d1f2708a3fabd1cfaa0aeef248414a8cf725909ce8"}
+{"utc_ns": 1792708040942609900, "plan": "postbackup-cnc-r1-flow.json", "step": {"wait": 18, "capture": "postbackup-cnc-r1-end"}, "capture_sha256": "aae2f7a0b81ac03a5f153973b0c50cfd346b988be76f0c9011104d579bee80a2"}

@@ -1,0 +1,1 @@
+[{"input":{"x":420,"y":525},"wait":0.1},{"input":{"key":"Ctrl+A"},"wait":0.1},{"input":{"text":"lab-4-06-multi-press-confirmation-v2.rpproj.json"},"wait":0.2},{"input":{"x":383,"y":554},"wait":1.5},{"input":{"x":335,"y":25},"wait":0.5},{"input":{"x":360,"y":53},"wait":1.5},{"input":{"x":798,"y":25},"wait":1,"capture":"small-count46-r4-loaded"}]

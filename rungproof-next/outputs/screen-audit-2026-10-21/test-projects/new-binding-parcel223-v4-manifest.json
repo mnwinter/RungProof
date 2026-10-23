@@ -1,0 +1,17 @@
+{
+  "file": "fixture-new-binding-lab-2-23-v4.rpproj.json",
+  "sourceSceneId": "lab-2-23-parcel-sorter",
+  "sha256": "a6a7422019e7a9f85e7f527ddee859f98aa09b1dfa6a1e6a70338c33301fc7fb",
+  "preserved_v3": "fixture-new-binding-lab-2-23-v3.rpproj.json",
+  "preserved_v3_sha256": "23526133ab0534e65b833b1fa8275f04a9a27d10835448afcc68fb85c6d3eae4",
+  "exact_change": "Only table_transfer_run admission stages20/30 add NC primary_table_loaded; outbound stage50 remains enabled. Final all_parcels_received inhibit retained. No input/output declarations, routes, transitions, infeed run, or gate commands changed.",
+  "before": "(step20 OR step30 OR step50) AND NOT all_parcels_received",
+  "after": "(((step20 OR step30) AND NOT primary_table_loaded) OR step50) AND NOT all_parcels_received",
+  "boundary": "Diagnostic learner fixture correction testing scan-order overshoot hypothesis. Not proof of model correctness or app defect; native full cycle remains root-only. V3 unchanged.",
+  "validation": {
+    "mode": "existing B5 --headless --mcp-project/--mcp-scene; no runtime input",
+    "passed": true,
+    "issueCount": 0,
+    "exitCode": 0
+  }
+}

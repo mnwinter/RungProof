@@ -1,0 +1,1 @@
+[{"click":[422,39],"wait":0.6},{"click":[485,148],"wait":0.6},{"click":[1077,547],"wait":1,"capture":"postbackup-jug-r1-moving"},{"wait":3,"capture":"postbackup-jug-r1-filling"},{"wait":3,"capture":"postbackup-jug-r1-discharge"},{"wait":6,"capture":"postbackup-jug-r1-end"}]

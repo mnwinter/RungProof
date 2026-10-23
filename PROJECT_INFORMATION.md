@@ -9,6 +9,16 @@
 
 ## Current architecture
 
+### October 2026 playtest and laptop migration
+
+The next-agent entry point is `skills/rungproof-playtest-handoff/SKILL.md`.
+The migration record is `RUNGPROOF-MIGRATION-2026-10-22.md`. The full native
+77-scene acceptance audit remains incomplete; read the skill's current-state
+reference and latest individual native reviews before repeating old cases or
+assuming historical ledger cells are current. The deadline application backup
+was `41188c70bb86e3305f7cd7c8759f000f9c396729`; later migration work preserves
+newer QA evidence and saved drafts without claiming a new application fix.
+
 `rungproof-next/` is the current Godot 4.7.2/.NET 10 application. It contains
 the integrated ladder editor, virtual controller, visual scene catalog,
 training challenges, deterministic offline test harnesses, and current runtime

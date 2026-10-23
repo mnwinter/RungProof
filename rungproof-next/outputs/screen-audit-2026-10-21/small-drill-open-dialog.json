@@ -1,0 +1,1 @@
+[{"input":{"x":422,"y":387},"wait":0.8,"capture":"small-drill-loaded"},{"input":{"x":247,"y":25},"wait":0.5},{"input":{"x":313,"y":85},"wait":0.6,"capture":"small-drill-file-dialog"}]

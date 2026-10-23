@@ -1,0 +1,1 @@
+[{"name":"postbackup-cnc-r1-final-signals","expected":{"cycle_complete":true,"machining_complete":true,"part_at_exit":true,"infeed_run":false,"outfeed_run":false,"robot_run":false,"cnc_run":false},"keep_monitor":true}]

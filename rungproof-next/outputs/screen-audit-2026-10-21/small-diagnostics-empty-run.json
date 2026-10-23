@@ -1,0 +1,1 @@
+[{"input":{"x":422,"y":387},"wait":0.8},{"input":{"x":335,"y":25},"wait":0.5},{"input":{"x":360,"y":53},"wait":0.6,"capture":"small-diagnostics-empty-run"}]

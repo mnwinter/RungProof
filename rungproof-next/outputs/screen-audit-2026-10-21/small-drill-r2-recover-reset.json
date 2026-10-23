@@ -1,0 +1,1 @@
+[{"input":{"x":335,"y":25},"wait":0.5},{"input":{"x":360,"y":53},"wait":5,"capture":"small-drill-r2-resumed-complete"},{"input":{"x":335,"y":25},"wait":0.5},{"input":{"x":360,"y":83},"wait":0.6,"capture":"small-drill-r2-reset"}]

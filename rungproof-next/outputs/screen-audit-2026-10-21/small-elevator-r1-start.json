@@ -1,0 +1,1 @@
+[{"input":{"x":528,"y":462},"wait":0.1},{"input":{"x":541,"y":468},"wait":0.1},{"input":{"x":554,"y":474},"wait":0.1},{"input":{"x":282,"y":25},"wait":0.4},{"input":{"x":325,"y":83},"wait":0.4},{"input":{"x":899,"y":68},"wait":0.1,"capture":"small-elevator-r1-start-signals"}]

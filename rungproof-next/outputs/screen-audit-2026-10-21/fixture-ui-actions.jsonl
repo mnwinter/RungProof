@@ -1694,3 +1694,21 @@
 {"utc_ns": 1792706427270149000, "scene": "lab-2-13-coolant-jug-fill", "input": {"x": 596, "y": 754}, "delivery": "Input delivered; verify visible result"}
 {"utc_ns": 1792706428952974400, "scene": "lab-2-13-coolant-jug-fill", "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
 {"utc_ns": 1792706429796262200, "scene": "lab-2-13-coolant-jug-fill", "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707659982367900, "scene": "lab-2-24-robot-cnc", "input": {"key": "Escape"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707660437048300, "scene": "lab-2-24-robot-cnc", "input": {"x": 595, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707661880515400, "scene": "lab-2-24-robot-cnc", "input": {"key": "Home"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707664853604500, "scene": "lab-2-24-robot-cnc", "input": {"keys": ["Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down", "Down"]}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707666092548300, "scene": "lab-2-24-robot-cnc", "input": {"key": "Return"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707668269992000, "scene": "lab-2-24-robot-cnc", "input": {"x": 666, "y": 537}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707670886063800, "scene": "lab-2-24-robot-cnc", "input": {"x": 369, "y": 39}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707671236191200, "scene": "lab-2-24-robot-cnc", "input": {"x": 477, "y": 129}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707672886998100, "scene": "lab-2-24-robot-cnc", "input": {"x": 781, "y": 145}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707673164388500, "scene": "lab-2-24-robot-cnc", "input": {"key": "Ctrl+A"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707673291274100, "scene": "lab-2-24-robot-cnc", "input": {"text": "/Users/matt.winter/Documents/RungProof/rungproof-next/outputs/screen-audit-2026-10-21/test-projects"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707673390570500, "scene": "lab-2-24-robot-cnc", "input": {"key": "Return"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707673836105700, "scene": "lab-2-24-robot-cnc", "input": {"x": 642, "y": 711}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707674091994000, "scene": "lab-2-24-robot-cnc", "input": {"key": "Ctrl+A"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707674168448200, "scene": "lab-2-24-robot-cnc", "input": {"text": "fixture-new-binding-lab-2-24-v3.rpproj.json"}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707674337385600, "scene": "lab-2-24-robot-cnc", "input": {"x": 596, "y": 754}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707676036868400, "scene": "lab-2-24-robot-cnc", "input": {"x": 52, "y": 884}, "delivery": "Input delivered; verify visible result"}
+{"utc_ns": 1792707676887902100, "scene": "lab-2-24-robot-cnc", "input": {"x": 1265, "y": 39}, "delivery": "Input delivered; verify visible result"}

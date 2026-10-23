@@ -1,0 +1,1 @@
+[{"input":{"x":190,"y":513},"wait":0.5,"capture":"small-diagnostics-error-list-after-run"},{"wait":4,"capture":"small-diagnostics-error-list-settled"}]

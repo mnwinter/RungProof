@@ -1,0 +1,1 @@
+[{"click":[422,39],"wait":0.6},{"click":[485,148],"wait":0.6,"capture":"postbackup-cnc-r1-baseline"},{"click":[1257,579],"wait":13,"capture":"postbackup-cnc-r1-pickup"},{"wait":12,"capture":"postbackup-cnc-r1-cut"},{"wait":13,"capture":"postbackup-cnc-r1-place"},{"wait":18,"capture":"postbackup-cnc-r1-end"}]
