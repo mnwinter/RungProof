@@ -1,7 +1,7 @@
 {
   "purpose": "Operational handoff for the active UI audit; verify live handles before resuming",
   "app_pid": 9672,
-  "bridge_url": "http://127.0.0.1:51946/LOCAL_CAPABILITY_REDACTED",
+  "bridge_url": "http://127.0.0.1:51946/REDACTED",
   "bridge_exec_session": 27952,
   "bridge_version": 9,
   "breadth_exec_session": 64454,

@@ -24,7 +24,7 @@ try {
     }
     # Current local continuity is copied, never overwritten, with local capability redacted.
     $session = [IO.File]::ReadAllText((Join-Path $audit 'SESSION-STATE.json'))
-    $session = [regex]::Replace($session, $capability, 'http://127.0.0.1:51946/LOCAL_CAPABILITY_REDACTED')
+    $session = [regex]::Replace($session, $capability, 'http://127.0.0.1:51946/REDACTED')
     [IO.File]::WriteAllText((Join-Path $audit 'backup-session-state-sanitized.json'), $session, [Text.UTF8Encoding]::new($false))
     $selected.Add("$prefix/backup-session-state-sanitized.json")
     # *.log is ignored. Text copies preserve ignored build/test evidence, including B5 once present.
@@ -34,7 +34,7 @@ try {
     foreach ($file in Get-ChildItem $audit -Filter 'remediation*.log' -File) {
         $dest = Join-Path $logDir ($file.Name + '.txt')
         $raw = [IO.File]::ReadAllText($file.FullName)
-        $safe = [regex]::Replace($raw, $capability, 'http://127.0.0.1:51946/LOCAL_CAPABILITY_REDACTED')
+        $safe = [regex]::Replace($raw, $capability, 'http://127.0.0.1:51946/REDACTED')
         [IO.File]::WriteAllText($dest, $safe, [Text.UTF8Encoding]::new($false))
         $logManifest += [pscustomobject]@{original=$file.Name;original_sha256=(Get-FileHash $file.FullName -Algorithm SHA256).Hash.ToLower();copy="$prefix/backup-evidence-logs/$($file.Name).txt";copy_sha256=(Get-FileHash $dest -Algorithm SHA256).Hash.ToLower()}
         $selected.Add("$prefix/backup-evidence-logs/$($file.Name).txt")
@@ -57,7 +57,7 @@ try {
         $leaf = $hash.Substring(0,10) + '-' + [IO.Path]::GetFileName($path)
         $dest = "$prefix/backup-sanitized/$leaf"
         [IO.Directory]::CreateDirectory((Join-Path $audit 'backup-sanitized')) | Out-Null
-        [IO.File]::WriteAllText((Join-Path $repo $dest), [regex]::Replace($raw,$capability,'http://127.0.0.1:51946/LOCAL_CAPABILITY_REDACTED'), [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText((Join-Path $repo $dest), [regex]::Replace($raw,$capability,'http://127.0.0.1:51946/REDACTED'), [Text.UTF8Encoding]::new($false))
         $final.Add($dest)
         $redactions += [pscustomobject]@{original=$path;original_sha256=$hash;sanitized=$dest;url_matches=$hits.Count}
     }

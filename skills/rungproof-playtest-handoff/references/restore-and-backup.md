@@ -21,6 +21,20 @@ completed backup claims; this document alone is not proof of a verified copy.
 - `backup-tools/`, manifests and reports: copy/archive/checksum evidence and
   restoration helpers. Private local state remains local.
 
+Eighteen old audit folders use junctions to shared assets/toolchains. Physical
+data is backed up once; `junction-map.json` records relative aliases. exFAT
+cannot store Windows junctions. After restoring to NTFS, preview this skill's
+`scripts/restore-junctions.ps1 -Root <checkout>` and use `-Apply` only when its
+preview is correct. It refuses to overwrite existing paths. The main checkout
+has its own tools/assets; the aliases belong to old audit checkouts. Expanded
+logical file counts are larger than physical backup counts.
+
+Installed Python and native PowerShell exposed different Godot AppData contents
+during migration. Both views are preserved separately; native application
+userdata was independently hashed with PowerShell. Use native
+`Godot-userdata-RungProof` for the application. The Python-view copy is
+supplementary evidence, not a replacement.
+
 Preserve C: originals until a verified backup and restore check are complete.
 The D: volume was a separate physical disk, exFAT, labelled `Winter_Bkup` at
 migration time. A future reinstall must preserve that disk/volume; a full
@@ -44,7 +58,8 @@ drive letters from these historical values.
    directory to make it discoverable, or explicitly read the repository skill.
    The required `SKILL.md` and its `references/` travel together. Existing
    project guidance remains authoritative for application development.
-5. Use `rungproof-next/README.md` and `docs/DEVELOPMENT_SETUP.md` to launch/build.
+5. Use `rungproof-next/README.md` and `rungproof-next/docs/DEVELOPMENT_SETUP.md`
+   to launch/build.
    Bundled Godot must be the .NET build. Restore NuGet packages when missing;
    old caches/virtual environments may embed user-specific paths and are
    preserved for recovery, not guaranteed portable installations.

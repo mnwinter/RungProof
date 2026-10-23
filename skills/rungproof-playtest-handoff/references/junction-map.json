@@ -1,0 +1,92 @@
+[
+  {
+    "path": "rungproof-next/.tools/cua-audit-dbwatch-20261019/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-demo5-db-layout-20261019/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-properties-20261019/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-screen-20261019/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-tag-cancel-current-20261019/assets",
+    "target": "rungproof-next/.tools/cua-audit-globaldb-latest-20261019/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-tag-cancel-current-20261019/.tools/dotnet",
+    "target": "rungproof-next/.tools/dotnet",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-tag-cancel-current-20261019/.tools/godot",
+    "target": "rungproof-next/.tools/godot",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-ui-actions-current-20261019/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-ui-actions-current-20261019/.tools/dotnet",
+    "target": "rungproof-next/.tools/dotnet",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-ui-actions-current-20261019/.tools/godot",
+    "target": "rungproof-next/.tools/godot",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-watch-20261019b/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-audit-watch-fix-20261019/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-sandbox/.godot",
+    "target": "rungproof-next/.godot",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-sandbox/assets",
+    "target": "rungproof-next/assets",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-sandbox/challenges",
+    "target": "rungproof-next/challenges",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-sandbox/programs",
+    "target": "rungproof-next/programs",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-sandbox/scenes",
+    "target": "rungproof-next/scenes",
+    "kind": "junction"
+  },
+  {
+    "path": "rungproof-next/.tools/cua-sandbox/src",
+    "target": "rungproof-next/src",
+    "kind": "junction"
+  }
+]
